@@ -61,11 +61,22 @@ storiesOf('Explore Page', module).add('view', () => (
   </div>
 ));
 
-storiesOf('Explore Assets Page', module)
-  .addDecorator(story => (
-    <div style={{ position: 'relative', top: '90px' }}>{story()}</div>
-  ))
-  .add('view', () => <ExploreAssetsPage />);
+storiesOf('Explore Assets Page', module).add('view', () => (
+  <ExploreAssetsPage />
+));
+
+storiesOf('Asset', module).add('view', () => (
+  <Asset
+    image={require('../images/Solar Panel 2.png')}
+    path="/solar-energy"
+    funded="2000"
+    goal="4000"
+    city="Lisbon"
+    country="Portugal"
+    name="Solar Powered Bench"
+    clickHandler={action('Clicked to contribute')}
+  />
+));
 
 storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
 
@@ -78,8 +89,6 @@ storiesOf('Address', module).add('view', () => <Address />);
 storiesOf('Category', module).add('view', () => <Category />);
 
 storiesOf('Button', module).add('view', () => <Button />);
-
-storiesOf('Asset', module).add('view', () => <Asset />);
 
 storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
 
