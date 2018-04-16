@@ -1,0 +1,17 @@
+.exploreAssetsPage {
+  width: 100%;
+  margin: 0px;
+  max-width: 1370px;
+  margin: 0 auto;
+  padding-top: 53px;
+}
+.exploreAssetsPage .exploreAssetsPage__back-button {
+  position: absolute;
+  top: -42px;
+  height: 32px;
+  width: 112px;
+  border: solid 2px #125ac4;
+  font-weight: bold;
+  font-family: 'Roboto';
+  color: #125ac4;
+}

@@ -1,0 +1,12 @@
+.explorePage {
+  width: 100%;
+  margin: 0px;
+  max-width: 1370px;
+  margin: 0 auto;
+}
+.explorePage .explorePage__category {
+  width: 312px;
+  margin: 0px 15px 30px 15px;
+  cursor: pointer;
+  padding: 0px;
+}
