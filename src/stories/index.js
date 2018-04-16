@@ -5,6 +5,8 @@ import { action } from '@storybook/addon-actions';
 
 import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
+import '../styles/index.css';
+import '../styles/NavigationBar.css';
 
 import { AppHeader } from '../components/AppHeader';
 import { NavigationOption } from '../components/NavigationOption';
@@ -27,25 +29,43 @@ import { AssetFunding } from '../components/AssetFunding';
 import { ConfirmationPopup } from '../components/ConfirmationPopup';
 import { Grid } from 'semantic-ui-react';
 import { AppSidebar } from '../components/AppSidebar';
-import { Achievements } from '../components/Achievements';
+import { NavigationBar } from '../components/NavigationBar';
 
-storiesOf('Sidebar', module)
-  .addDecorator(story => (
-    <div className="grid" style={{ width: '100%', height: '100vh' }}>
-      {story()}
-    </div>
-  ))
-  .add('view', () => {
-    return <AppSidebar clickHandler={action('Clicked nav button')} />;
-  });
+const Header = (
+  <AppHeader
+    exchangeRate={2.13}
+    myBitBalance={215}
+    ethBalance={20}
+    address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
+  />
+);
 
-storiesOf('Header', module).add('view', () => <AppHeader />);
+storiesOf('Header', module)
+  .add('Normal view', () => Header)
+  .add('Loading', () => <AppHeader />);
 
-storiesOf('Explore Page', module).add('view', () => <ExplorePage />);
-
-storiesOf('Explore Assets Page', module).add('view', () => (
-  <ExploreAssetsPage />
+storiesOf('Navigation Bar', module).add('view', () => (
+  <NavigationBar clickHandler={action('Clicked nav bar option')} />
 ));
+
+storiesOf('Header & Nav Bar', module).add('view', () => (
+  <div>
+    {Header}
+    <NavigationBar clickHandler={action('Clicked nav bar option')} />
+  </div>
+));
+
+storiesOf('Explore Page', module).add('view', () => (
+  <div className="page-wrapper">
+    <ExplorePage clickHandler={action('Clicked category')} />
+  </div>
+));
+
+storiesOf('Explore Assets Page', module)
+  .addDecorator(story => (
+    <div style={{ position: 'relative', top: '90px' }}>{story()}</div>
+  ))
+  .add('view', () => <ExploreAssetsPage />);
 
 storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
 
@@ -78,36 +98,3 @@ storiesOf('Transaction History', module).add('view', () => (
 ));
 
 storiesOf('Row', module).add('view', () => <Row />);
-
-storiesOf('NavigationOption', module).add('view', () => <NavigationOption />);
-
-const achievements = [
-  {
-    title: 'Q4 2016',
-    description: 'idea conceived'
-  },
-  {
-    title: 'Q4 2016',
-    description: 'idea conceived'
-  },
-  {
-    title: 'Q4 2016',
-    description: 'idea conceived'
-  },
-  {
-    title: 'Q4 2016',
-    description: 'idea conceived'
-  },
-  {
-    title: 'Q4 2016',
-    description: 'idea conceived'
-  },
-  {
-    title: 'Q4 2016',
-    description: 'idea conceived'
-  }
-];
-
-storiesOf('Achievements', module).add('view', () => (
-  <Achievements achievements={achievements} />
-));

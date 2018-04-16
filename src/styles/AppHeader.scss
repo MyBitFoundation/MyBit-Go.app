@@ -1,21 +1,92 @@
-$headerHeight: 74px;
+$headerHeight: 90px;
 
 .AppHeader {
-	height: $headerHeight;
-	background-color: #200344;
+    height: $headerHeight;
+    background-image: linear-gradient(to right, #0b3f9c, #2e58db);;
     margin: 0px 0px;
     color: white;
 
-    .AppHeader_logo {
+    .AppHeader__logo {
         padding: 0 25px;
         margin: auto 0;
-        height: 47px;
+        height: 73px;
     }
 
-    .AppHeader_connect{
-    	position: relative;
-    	line-height: $headerHeight;
-    	padding-left: 10px;
-    	height: max-content;
+    .AppHeader__exchange-rate{
+        line-height: $headerHeight;
+        font-size: 14px;
+    }
+
+    .AppHeader__exchange-rate--is-loading{
+        float: left;
+        top: 27px;
+        position: relative;
+    }
+
+    .AppHeader__account-info{
+        position: absolute;
+        right: 60px;
+        height: $headerHeight;
+    }
+
+    .AppHeader__balance{
+        text-align: right;
+        height: $headerHeight;
+        float: left;
+        position: relative;
+        margin-right: 20px;
+
+        & .AppHeader__balance-header{
+            font-size: 18px;
+            padding-top: 25px;
+            position: relative;
+            top: 2px;
+            display: inherit;
+        }
+
+        & .AppHeader__balance-info{
+            font-size: 14px;
+        }
+
+        & .AppHeader__balance--is-loading{
+            top: 42px;
+            position: absolute;
+            right: 15px;
+        }
+    }
+
+    .AppHeader__balance-myb{
+        padding-right: 10px;
+    }
+
+    .AppHeader__address{
+        height: $headerHeight;
+        float: left;
+
+        & .AppHeader__address-value{
+            font-size: 14px;
+            padding-left: 50px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 120px;
+            line-height: 1;
+        }
+
+        & .AppHeader__address--is-loading{
+            position: absolute;
+            top: 28px;
+        }
+
+        & .AppHeader_address--is-loading-text{
+            padding-left: 32px;
+            line-height: $headerHeight;
+        }
+    }
+
+    .AppHeader__address .paper{
+        top: 25px;
+        position: relative;
+        display: inherit !important;
     }
 }
