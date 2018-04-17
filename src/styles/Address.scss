@@ -1,0 +1,33 @@
+@import "./Constants.scss";
+
+.Address{
+    height: $headerHeight;
+    float: left;
+
+    &__value{
+        font-size: 14px;
+        padding-left: 50px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 120px;
+        line-height: 1;
+        margin: 0px 0px;
+    }
+
+    &--is-loading{
+        position: absolute;
+        top: 28px;
+    }
+
+    &__text--is-loading{
+        padding-left: 32px;
+        line-height: $headerHeight;
+    }
+}
+
+.AppHeader .paper{
+    top: 25px;
+    position: relative;
+    display: inherit !important;
+}

@@ -1,4 +1,6 @@
 import React from 'react';
+import { noop } from '../constants';
+var classNames = require('classnames');
 
 export const NavigationOption = ({
   name,
@@ -6,18 +8,22 @@ export const NavigationOption = ({
   clickHandler,
   selectable,
   selected
-}) => (
-  <div
-    className={'col AppNavigationBar__option-col'}
-    onClick={selectable ? () => clickHandler(name) : undefined}
-  >
+}) => {
+  var optionClass = classNames({
+    AppNavigationBar__option: true,
+    'AppNavigationBar__option--is-selected': selected,
+    'AppNavigationBar__option--is-selectable': selectable
+  });
+
+  return (
     <div
-      className={`AppNavigationBar__option ${selected &&
-        'AppNavigationBar__option--selected'} ${selectable &&
-        'AppNavigationBar__option--selectable'}`}
+      className={'col AppNavigationBar__option-col'}
+      onClick={selectable ? () => clickHandler(name) : noop}
     >
-      <img className="AppNavigationBar__option-img" src={icon} />
-      <p className="AppNavigationBar__option-text">{name}</p>
+      <div className={optionClass}>
+        <img className="AppNavigationBar__option-img" src={icon} />
+        <p className="AppNavigationBar__option-text">{name}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
