@@ -40,7 +40,7 @@
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
     "run-test": "react-scripts test --env=jsdom",
-    "test": "npm-run-all -p build-css test",
+    "test": "npm-run-all build-css run-test",
     "precommit": "lint-staged",
     "eject": "react-scripts eject",
     "start-storybook": "cross-env start-storybook -p $PORT -c .storybook",
