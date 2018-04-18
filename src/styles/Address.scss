@@ -4,7 +4,7 @@
     height: $headerHeight;
     float: left;
 
-    &__value{
+    &__text{
         font-size: 14px;
         padding-left: 50px;
         text-overflow: ellipsis;
@@ -20,7 +20,7 @@
         top: 28px;
     }
 
-    &__text--is-loading{
+    &__loading-message{
         padding-left: 32px;
         line-height: $headerHeight;
     }

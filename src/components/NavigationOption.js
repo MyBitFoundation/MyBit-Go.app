@@ -21,7 +21,7 @@ export const NavigationOption = ({
       onClick={selectable ? () => clickHandler(name) : noop}
     >
       <div className={optionClass}>
-        <img className="AppNavigationBar__option-img" src={icon} />
+        <img alt={name} className="AppNavigationBar__option-img" src={icon} />
         <p className="AppNavigationBar__option-text">{name}</p>
       </div>
     </div>

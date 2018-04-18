@@ -9,12 +9,12 @@ export const Address = ({ address }) => {
       {!address ? (
         <div>
           <Loading className="Address--is-loading" small withOverlay={false} />
-          <span className="Address__text--is-loading">Loading account</span>
+          <span className="Address__loading-message">Loading account</span>
         </div>
       ) : (
         <div>
           <Jazzicon diameter={39} seed={Math.random(100).toString()} />
-          <p className="Address__value">{address}</p>
+          <p className="Address__text">{address}</p>
         </div>
       )}
     </div>
