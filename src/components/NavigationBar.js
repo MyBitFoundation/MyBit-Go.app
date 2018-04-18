@@ -1,8 +1,7 @@
 import React from 'react';
-import logo from '../images/mybit-logo-white.svg';
 import '../styles/NavigationBar.css';
-import { Module, ModuleBody } from 'carbon-components-react';
 import { NavigationOption } from './NavigationOption';
+import { debug } from '../constants';
 
 export const NavigationBar = ({ clickHandler }) => {
   const menuOptions = [
@@ -36,9 +35,7 @@ export const NavigationBar = ({ clickHandler }) => {
       icon={menuItem.icon}
       selectable={menuItem.selectable}
       selected={menuItem.selected}
-      clickHandler={
-        !clickHandler ? name => console.log('Clicked ', name) : clickHandler
-      }
+      clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
     />
   ));
 

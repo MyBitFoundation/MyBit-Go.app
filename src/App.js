@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Grid, Header } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import './styles/App.css';
 
 import { AppHeader } from './components/AppHeader';
 import { NavigationBar } from './components/NavigationBar';
-import { ExploreAssetsPage } from './components/ExploreAssetsPage';
 import { default as AppContent } from './components/AppContent';
 
 import { connect } from 'react-redux';
@@ -22,7 +21,9 @@ class App extends Component {
           address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
         />
         <NavigationBar />
-        <ExploreAssetsPage />
+        <Grid>
+          <AppContent />
+        </Grid>
       </div>
     );
   }

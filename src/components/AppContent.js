@@ -5,11 +5,9 @@ import {
   Segment,
   Header,
   Button,
-  Progress,
-  Table
+  Progress
 } from 'semantic-ui-react';
 import { getWeb3Async } from '../util/web3';
-import { keccak256 } from 'js-sha3';
 
 /* Smart Contract Utils not Apps */
 import { default as DatabaseUtil } from './contracts/DatabaseUtil';
@@ -18,12 +16,7 @@ import { default as AssetCreationUtil } from './contracts/AssetCreationUtil';
 
 import FundingHubUtil from './contracts/FundingHubUtil';
 
-/* APIs */
-import UpholdApi from '../apis/uphold';
-import CoinbaseApi from '../apis/coinbase';
-
 /* Images  */
-import Accounts from './Accounts';
 import asset from '../images/bitcoin-atm.png';
 import metamaskAccount from '../images/metamask-account.png';
 
@@ -60,7 +53,8 @@ export default class AppContent extends React.Component {
       const fundingDeadline = parseInt(
         await dbInstance.uintStored(
           await hashFunctionsInstance.stringBytes('fundingDeadline', assetID)
-        )
+        ),
+        10
       );
       const humanReadableDate = new Date(fundingDeadline * 1000).toString();
       const amountToBeRaised = web3.fromWei(
@@ -101,7 +95,6 @@ export default class AppContent extends React.Component {
       web3,
       isWeb3synced,
       amountRaised,
-      fundingDeadline,
       amountToBeRaised,
       percentageBar,
       assetID,
