@@ -39,17 +39,13 @@
     "start": "cross-env NODE_ENV=development npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
-    "run-test": "react-scripts test --env=jsdom",
-    "test": "npm-run-all -p build-css test",
+    "test": "react-scripts test --env=jsdom",
     "precommit": "lint-staged",
     "eject": "react-scripts eject",
     "start-storybook": "cross-env start-storybook -p $PORT -c .storybook",
     "storybook": "cross-env PORT=8080 npm-run-all -p watch-css start-storybook",
     "run-storybook": "build-storybook -c .storybook -o .out",
-    "build-storybook": "npm-run-all build-css run-storybook",
-    "deploy:dev": "surge build/ --domain mybit-dapp-ui-dev.surge.sh",
-    "deploy:prod": "surge build/ --domain mybit-dapp-ui.surge.sh",
-    "deploy": "surge build/"
+    "build-storybook": "npm-run-all build-css run-storybook"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.0",
@@ -59,7 +55,6 @@
     "babel-core": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "cross-env": "^5.1.4",
-    "ws": "3.3.2",
-    "surge": "^0.20.1"
+    "ws": "3.3.2"
   }
 }
