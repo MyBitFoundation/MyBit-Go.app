@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from '../images/mybit-logo-white.svg';
 import '../styles/AppHeader.css';
 import { Logo } from './Logo';
 import { ExchangeRate } from './ExchangeRate';

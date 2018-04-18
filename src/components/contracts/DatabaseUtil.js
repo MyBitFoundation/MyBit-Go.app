@@ -14,7 +14,7 @@ export default class DatabaseUtil {
 
   async uintStored(_bytes32) {
     const uintStored = await this.instance.uintStorageAsync(_bytes32);
-    return parseInt(uintStored);
+    return parseInt(uintStored, 10);
   }
 
   async stringStorage(_bytes32) {

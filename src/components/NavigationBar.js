@@ -1,7 +1,5 @@
 import React from 'react';
-import logo from '../images/mybit-logo-white.svg';
 import '../styles/NavigationBar.css';
-import { Module, ModuleBody } from 'carbon-components-react';
 import { NavigationOption } from './NavigationOption';
 import { debug } from '../constants';
 
