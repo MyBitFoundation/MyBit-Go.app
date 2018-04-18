@@ -1,8 +1,9 @@
 import React from 'react';
 import '../styles/ExplorePage.css';
+import { debug } from '../constants';
 
 export const ExplorePage = ({ clickHandler }) => {
-  const images = [
+  const categoriesInfo = [
     {
       image: require('../images/category-cryptocurrency-atm.png'),
       path: '/crypto-currency-atm'
@@ -21,16 +22,12 @@ export const ExplorePage = ({ clickHandler }) => {
     }
   ];
 
-  const categories = images.map(category => (
+  const categories = categoriesInfo.map(category => (
     <div key={category.path} className="col-center explorePage__category">
       <img
         src={category.image}
         onClick={
-          clickHandler
-            ? clickHandler
-            : () => {
-                console.log('Going to: ', category.path);
-              }
+          clickHandler ? clickHandler : debug(`Going to: ${category.path}`)
         }
       />
     </div>
