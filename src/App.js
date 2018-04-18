@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Grid, Header } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import './styles/App.css';
 
 import { AppHeader } from './components/AppHeader';
-import { AppSidebar } from './components/AppSidebar';
+import { NavigationBar } from './components/NavigationBar';
 import { default as AppContent } from './components/AppContent';
 
 import { connect } from 'react-redux';
@@ -14,26 +14,15 @@ class App extends Component {
     this.props.sendTestAction(false);
     return (
       <div>
-        <AppHeader />
+        <AppHeader
+          exchangeRate={2.13}
+          myBitBalance={215}
+          ethBalance={20}
+          address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
+        />
+        <NavigationBar />
         <Grid>
-          <Grid.Row>
-            <AppSidebar />
-            <Grid.Column
-              width={13}
-              style={{
-                position: 'fixed',
-                top: '74px',
-                right: '0',
-                padding: '20px'
-              }}
-            >
-              <Grid>
-                <Grid.Column width={16}>
-                  <AppContent />
-                </Grid.Column>
-              </Grid>
-            </Grid.Column>
-          </Grid.Row>
+          <AppContent />
         </Grid>
       </div>
     );
