@@ -37,55 +37,76 @@ export default class FundingHubUtil {
   }
 
   async returnContributers(_assetID) {
-    return parseInt(totalContributorsPerAssetID[_assetID]);
+    return parseInt(totalContributorsPerAssetID[_assetID], 10);
   }
 
   async fund(_assetID, _value) {
     let ethValue = this.web3.toWei(_value);
     let iT = this.instance;
     let w3 = this.web3;
-    this.instance.fund.estimateGas(_assetID,
-      {from:this.web3.eth.coinbase,value:ethValue}, async function(error,result){
-        if(!error){
+    this.instance.fund.estimateGas(
+      _assetID,
+      { from: this.web3.eth.coinbase, value: ethValue },
+      async function(error, result) {
+        if (!error) {
           await iT.fundAsync(_assetID, {
-            from:w3.eth.coinbase,value:ethValue, gas:parseInt(result)});
-          }
-      });
-    }
+            from: w3.eth.coinbase,
+            value: ethValue,
+            gas: parseInt(result, 10)
+          });
+        }
+      }
+    );
+  }
 
   async payout(_assetID) {
     let iT = this.instance;
     let w3 = this.web3;
-    this.instance.payout.estimateGas(_assetID,
-      {from:this.web3.eth.coinbase}, async function(error,result){
-        if(!error){
+    this.instance.payout.estimateGas(
+      _assetID,
+      { from: this.web3.eth.coinbase },
+      async function(error, result) {
+        if (!error) {
           await iT.payoutAsync(_assetID, {
-            from:w3.eth.coinbase, gas:parseInt(result)});
-          }
-      });
-    }
+            from: w3.eth.coinbase,
+            gas: parseInt(result, 10)
+          });
+        }
+      }
+    );
+  }
 
   async initiateRefund(_assetID) {
     let iT = this.instance;
     let w3 = this.web3;
-    this.instance.initiateRefund.estimateGas(_assetID,
-      {from:this.web3.eth.coinbase}, async function(error,result){
-        if(!error){
+    this.instance.initiateRefund.estimateGas(
+      _assetID,
+      { from: this.web3.eth.coinbase },
+      async function(error, result) {
+        if (!error) {
           await iT.initiateRefundAsync(_assetID, {
-            from:w3.eth.coinbase, gas:parseInt(result)});
-          }
-      });
-    }
+            from: w3.eth.coinbase,
+            gas: parseInt(result, 10)
+          });
+        }
+      }
+    );
+  }
 
   async refund(_assetID) {
     let iT = this.instance;
     let w3 = this.web3;
-    this.instance.refundAsync.estimateGas(_assetID,
-      {from:this.web3.eth.coinbase}, async function(error,result){
-        if(!error){
+    this.instance.refundAsync.estimateGas(
+      _assetID,
+      { from: this.web3.eth.coinbase },
+      async function(error, result) {
+        if (!error) {
           await iT.refundAsync(_assetID, {
-            from:w3.eth.coinbase, gas:parseInt(result)});
-          }
-      });
-    }
+            from: w3.eth.coinbase,
+            gas: parseInt(result, 10)
+          });
+        }
+      }
+    );
+  }
 }

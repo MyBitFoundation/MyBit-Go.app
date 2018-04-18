@@ -13,7 +13,8 @@ export const ExchangeRate = ({ value }) => {
         />
       )}
       <span className="AppHeader__exchange-rate">
-        {value && `$${value}`} <b>{USD_MYB_SYMBOL}</b>
+        {value && `$${value}`}
+        <b>{USD_MYB_SYMBOL}</b>
       </span>
     </div>
   );
