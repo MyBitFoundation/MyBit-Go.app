@@ -24,6 +24,7 @@ export const Asset = ({
         >
           <div className="asset__image-holder-gradient" />
           <img
+            alt="Location icon"
             className="asset__image-holder-location-icon"
             src={locationIcon}
           />

@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react';
 import './styles/App.css';
 
 import { AppHeader } from './components/AppHeader';
 import { NavigationBar } from './components/NavigationBar';
 import { ExploreAssetsPage } from './components/ExploreAssetsPage';
-
-import { default as AppContent } from './components/AppContent';
 
 import { connect } from 'react-redux';
 import * as actions from './actions';
