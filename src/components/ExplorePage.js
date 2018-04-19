@@ -23,7 +23,7 @@ export const ExplorePage = ({ clickHandler }) => {
   ];
 
   const categories = categoriesInfo.map(category => (
-    <div key={category.path} className="col-center explorePage__category">
+    <div key={category.path} className="col-center ExplorePage__category">
       <img
         src={category.image}
         onClick={
@@ -33,5 +33,5 @@ export const ExplorePage = ({ clickHandler }) => {
     </div>
   ));
 
-  return <div className="explorePage grid-center">{categories}</div>;
+  return <div className="ExplorePage grid-center">{categories}</div>;
 };
