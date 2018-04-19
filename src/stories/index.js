@@ -63,9 +63,54 @@ storiesOf('Explore Page', module).add('view', () => (
 
 storiesOf('Explore Assets Page', module)
   .addDecorator(story => (
-    <div style={{ position: 'relative', top: '90px' }}>{story()}</div>
+    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
   ))
-  .add('view', () => <ExploreAssetsPage />);
+  .add('Normal view', () => (
+    <ExploreAssetsPage
+      assetsInfo={[
+        {
+          image: require('../images/Solar-Panel.png'),
+          path: '/crypto-currency-atm',
+          funded: '1000',
+          goal: '4000',
+          city: 'Lisbon',
+          country: 'Portugal',
+          name: 'Solar Powered Bench'
+        },
+        {
+          image: require('../images/Solar-Panel-2.png'),
+          path: '/solar-energy',
+          funded: '2000',
+          goal: '4000',
+          city: 'Lisbon',
+          country: 'Portugal',
+          name: 'Solar Powered Bench'
+        },
+        {
+          image: require('../images/bitcoin-atm-4-2.png'),
+          path: '/crypto-currency-atm',
+          funded: '3000',
+          goal: '4000',
+          city: 'Lisbon',
+          country: 'Portugal',
+          name: 'Bitcoin ATM'
+        },
+        {
+          image: require('../images/bitcoin-atm-4-2.png'),
+          path: '/solar-energy',
+          funded: '4000',
+          goal: '4000',
+          city: 'Lisbon',
+          country: 'Portugal',
+          name: 'Bitcoin ATM'
+        }
+      ]}
+    />
+  ))
+  .add('Loading', () => <ExploreAssetsPage loading={true} assetsInfo={[]} />)
+  .add('No assets', () => (
+    <ExploreAssetsPage loading={false} assetsInfo={[]} category="Solar Panel" />
+  ));
 
 storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
 

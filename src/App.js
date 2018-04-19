@@ -4,6 +4,8 @@ import './styles/App.css';
 
 import { AppHeader } from './components/AppHeader';
 import { NavigationBar } from './components/NavigationBar';
+import { ExploreAssetsPage } from './components/ExploreAssetsPage';
+
 import { default as AppContent } from './components/AppContent';
 
 import { connect } from 'react-redux';
@@ -21,9 +23,13 @@ class App extends Component {
           address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
         />
         <NavigationBar />
-        <Grid>
-          <AppContent />
-        </Grid>
+        <div className="page-wrapper">
+          <ExploreAssetsPage
+            loading={false}
+            assetsInfo={[]}
+            category="Solar Panel"
+          />
+        </div>
       </div>
     );
   }
