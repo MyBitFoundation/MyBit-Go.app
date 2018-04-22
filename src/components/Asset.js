@@ -16,33 +16,33 @@ export const Asset = ({
 }) => {
   let barWidth = Math.ceil(100 * funded / goal) + '%';
   return (
-    <div className="col-3_md-4_sm-6_xs-12 asset">
-      <div className="asset__container">
+    <div className="col-3_md-4_sm-6_xs-12 Asset">
+      <div className="Asset__container">
         <div
-          className="asset__image-holder"
+          className="Asset__image-holder"
           style={{ backgroundImage: 'url(' + image + ')' }}
         >
-          <div className="asset__image-holder-gradient" />
+          <div className="Asset__image-holder-gradient" />
           <img
             alt="Location icon"
-            className="asset__image-holder-location-icon"
+            className="Asset__image-holder-location-icon"
             src={locationIcon}
           />
-          <b className="asset__image-holder-name">{name}</b>
-          <p className="asset__image-holder-location">
+          <b className="Asset__image-holder-name">{name}</b>
+          <p className="Asset__image-holder-location">
             {city}, <span>{country}</span>
           </p>
         </div>
-        <div className="asset__details">
-          <p className="asset__details-funded">
+        <div className="Asset__details">
+          <p className="Asset__details-funded">
             Funded: <b>${funded}</b>
           </p>
-          <p className="asset__details-goal">
+          <p className="Asset__details-goal">
             Goal: <b>${goal}</b>
           </p>
-          <div className="asset__details-progress-bar">
+          <div className="Asset__details-progress-bar">
             <div
-              className="asset__details-progress-bar-fill"
+              className="Asset__details-progress-bar-fill"
               style={{ width: barWidth }}
             />
           </div>
@@ -52,7 +52,7 @@ export const Asset = ({
                 ? clickHandler
                 : () => debug(`Clicked to contribute, path: ${path}`)
             }
-            className="asset__details-contribute"
+            className="Asset__details-contribute"
           >
             CONTRIBUTE
           </Button>

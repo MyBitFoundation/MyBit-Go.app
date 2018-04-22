@@ -13,7 +13,7 @@ export const ExploreAssetsPage = ({
   const backButton = (
     <Button
       kind="secondary"
-      className="exploreAssetsPage__back-button"
+      className="ExploreAssetsPage__back-button"
       onClick={debug('Clicked to go back')}
     >
       BACK
@@ -46,8 +46,8 @@ export const ExploreAssetsPage = ({
   const loadingElement = loading && (
     <div style={{ width: '100%' }}>
       {backButton}
-      <Loading className="exploreAssetsPage--is-loading" withOverlay={false} />
-      <p className="exploreAssetsPage-loading-message">Loading assets</p>
+      <Loading className="ExploreAssetsPage--is-loading" withOverlay={false} />
+      <p className="ExploreAssetsPage-loading-message">Loading assets</p>
     </div>
   );
 
@@ -55,7 +55,7 @@ export const ExploreAssetsPage = ({
     !loading && assetsInfo.length === 0 ? (
       <div style={{ width: '100%' }}>
         {backButton}
-        <p className="exploreAssetsPage__message-no-elements">{`No assets found in the ${category} category.`}</p>
+        <p className="ExploreAssetsPage__message-no-elements">{`No assets found in the ${category} category.`}</p>
       </div>
     ) : null;
 
@@ -63,5 +63,5 @@ export const ExploreAssetsPage = ({
     ? loadingElement
     : assetsInfo.length === 0 ? noElements : assets;
 
-  return <div className="exploreAssetsPage grid">{toRender}</div>;
+  return <div className="ExploreAssetsPage grid">{toRender}</div>;
 };
