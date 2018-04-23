@@ -1,40 +1,47 @@
 import React from 'react';
 import '../styles/ExplorePage.css';
+import { debug } from '../constants';
 
 export const ExplorePage = ({ clickHandler }) => {
-  const images = [
+  const categoriesInfo = [
     {
       image: require('../images/category-cryptocurrency-atm.png'),
-      path: '/crypto-currency-atm'
+      path: '/crypto-currency-atm',
+      name: 'Cryptocurrency ATM'
     },
     {
       image: require('../images/category-solar-energy.png'),
-      path: '/solar-energy'
+      path: '/solar-energy',
+      name: 'Solar Energy'
     },
     {
       image: require('../images/category-cryptocurrency-atm.png'),
-      path: '/crypto-currency-atm2'
+      path: '/crypto-currency-atm2',
+      name: 'Cryptocurrency ATM'
     },
     {
       image: require('../images/category-solar-energy.png'),
-      path: '/solar-energy2'
+      path: '/solar-energy2',
+      name: 'Solar Energy'
     }
   ];
 
-  const categories = images.map(category => (
-    <div key={category.path} className="col-center explorePage__category">
-      <img
-        src={category.image}
+  const categories = categoriesInfo.map(category => (
+    <div
+      key={category.path}
+      className="col-3_md-4_sm-6_xs-12 ExplorePage__category"
+    >
+      <div
+        className="ExplorePage__image-container"
         onClick={
-          clickHandler
-            ? clickHandler
-            : () => {
-                console.log('Going to: ', category.path);
-              }
+          clickHandler ? clickHandler : debug(`Going to: ${category.path}`)
         }
-      />
+        style={{ backgroundImage: 'url(' + category.image + ')' }}
+      >
+        <p className="ExplorePage__category-name">{category.name}</p>
+      </div>
     </div>
   ));
 
-  return <div className="explorePage grid-center">{categories}</div>;
+  return <div className="ExplorePage grid">{categories}</div>;
 };

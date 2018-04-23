@@ -3,7 +3,7 @@ import './styles/App.css';
 
 import { AppHeader } from './components/AppHeader';
 import { NavigationBar } from './components/NavigationBar';
-import { ExploreAssetsPage } from './components/ExploreAssetsPage';
+import { ExplorePage } from './components/ExplorePage';
 
 import { connect } from 'react-redux';
 import * as actions from './actions';
@@ -21,11 +21,7 @@ class App extends Component {
         />
         <NavigationBar />
         <div className="page-wrapper">
-          <ExploreAssetsPage
-            loading={false}
-            assetsInfo={[]}
-            category="Solar Panel"
-          />
+          <ExplorePage />
         </div>
       </div>
     );
