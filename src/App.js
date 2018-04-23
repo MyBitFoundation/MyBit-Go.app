@@ -4,7 +4,7 @@ import './styles/App.css';
 
 import { AppHeader } from './components/AppHeader';
 import { NavigationBar } from './components/NavigationBar';
-import { default as AppContent } from './components/AppContent';
+import { ExplorePage } from './components/ExplorePage';
 
 import { connect } from 'react-redux';
 import * as actions from './actions';
@@ -21,9 +21,9 @@ class App extends Component {
           address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
         />
         <NavigationBar />
-        <Grid>
-          <AppContent />
-        </Grid>
+        <div className="page-wrapper">
+          <ExplorePage />
+        </div>
       </div>
     );
   }
