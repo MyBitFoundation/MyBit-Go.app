@@ -18,24 +18,16 @@ jobs:
       - run: yarn build-storybook
 
       - deploy:
-          name: Deploy Storybook to Surge
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              yarn run deploy-storybook:dev
-            elif [ "${CIRCLE_BRANCH}" == "master" ]; then
-              yarn run deploy-storybook:prod
-            else
-              SANITIZED_BRANCH=$(tr "/" "-" <<<$CIRCLE_BRANCH)
-              yarn run deploy --domain storybook-pr-${SANITIZED_BRANCH}-mybit-dapp-ui-dev.surge.sh
-            fi
-
-          name: Deploy Application to Surge
+          name: Deploy to Surge
           command: |
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               yarn run deploy:dev
+              yarn run deploy-storybook:dev
             elif [ "${CIRCLE_BRANCH}" == "master" ]; then
+              yarn run deploy-storybook:prod
               yarn run deploy:prod
             else
               SANITIZED_BRANCH=$(tr "/" "-" <<<$CIRCLE_BRANCH)
+              yarn run deploy --domain storybook-pr-${SANITIZED_BRANCH}-mybit-dapp-ui-dev.surge.sh
               yarn run deploy --domain pr-${SANITIZED_BRANCH}-mybit-dapp-ui-dev.surge.sh
             fi
