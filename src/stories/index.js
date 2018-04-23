@@ -79,8 +79,6 @@ storiesOf('Category', module).add('view', () => <Category />);
 
 storiesOf('Button', module).add('view', () => <Button />);
 
-storiesOf('Asset', module).add('view', () => <Asset />);
-
 storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
 
 storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
