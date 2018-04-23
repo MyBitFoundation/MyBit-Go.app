@@ -42,6 +42,7 @@
     "run-test": "react-scripts test --env=jsdom",
     "test": "npm-run-all build-css run-test",
     "precommit": "lint-staged",
+    "format": "prettier --single-quote --write src/*.js src/**/*.js",
     "eject": "react-scripts eject",
     "start-storybook": "cross-env start-storybook -p $PORT -c .storybook",
     "storybook": "cross-env PORT=8080 npm-run-all -p watch-css start-storybook",
