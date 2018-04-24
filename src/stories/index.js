@@ -8,6 +8,8 @@ import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
 
+import { getWeb3Async } from '../util/web3';
+
 import { AppHeader } from '../components/AppHeader';
 import { NavigationOption } from '../components/NavigationOption';
 import { Address } from '../components/Address';
@@ -25,7 +27,7 @@ import { Row } from '../components/Row';
 import { AssetDetailsPage } from '../components/AssetDetailsPage';
 import { AssetHero } from '../components/AssetHero';
 import { AssetDetails } from '../components/AssetDetails';
-import { AssetFunding } from '../components/AssetFunding';
+import { default as AssetFunding } from '../components/AssetFunding';
 import { ConfirmationPopup } from '../components/ConfirmationPopup';
 import { Grid } from 'semantic-ui-react';
 import { AppSidebar } from '../components/AppSidebar';
@@ -130,7 +132,24 @@ storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
 
 storiesOf('Asset Details', module).add('view', () => <AssetDetails />);
 
-storiesOf('Asset Funding', module).add('view', () => <AssetFunding />);
+//@TODO Refactor this into a wrappeable component through React.children
+class AssetFundingWeb3Wrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { web3: undefined };
+  }
+  async componentDidMount() {
+    this.setState({ web3: await getWeb3Async() });
+  }
+  render() {
+    const { web3 } = this.state;
+    return <div>{web3 && <AssetFunding web3={web3} />}</div>;
+  }
+}
+
+storiesOf('Asset Funding', module).add('view', () => (
+  <AssetFundingWeb3Wrapper />
+));
 
 storiesOf('Confirmation Popup', module).add('view', () => (
   <ConfirmationPopup />

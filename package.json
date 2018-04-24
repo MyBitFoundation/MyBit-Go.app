@@ -24,7 +24,7 @@
     "redux-logger": "^3.0.6",
     "semantic-ui-css": "^2.3.0",
     "semantic-ui-react": "^0.78.3",
-    "web3": "0.18.2"
+    "web3": "0.19.0"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json,css}": [
@@ -48,6 +48,9 @@
     "storybook": "cross-env PORT=8080 npm-run-all -p watch-css start-storybook",
     "run-storybook": "build-storybook -c .storybook -o .out",
     "build-storybook": "npm-run-all build-css run-storybook",
+    "deploy-storybook:dev": "surge .out/ --domain storybook-mybit-dapp-ui-dev.surge.sh",
+    "deploy-storybook:prod": "surge .out/ --domain storybook-mybit-dapp-ui.surge.sh",
+    "deploy-storybook": "surge .out/",
     "deploy:dev": "surge build/ --domain mybit-dapp-ui-dev.surge.sh",
     "deploy:prod": "surge build/ --domain mybit-dapp-ui.surge.sh",
     "deploy": "surge build/"
