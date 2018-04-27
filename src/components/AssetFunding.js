@@ -28,7 +28,7 @@ class AssetFunding extends Component {
     const { web3 } = this.props || {};
     if (web3.isConnected()) {
       const assetID =
-        '0xcbb8744ce8cb288674fbafe1b6c111c6d86308af6b2e7d396780104341a1cf8e';
+        '0xc481012a7563a254e34971fa6eb679d6556726ebfafa7c0cb62d444f90b6f82c';
       const hashFunctionsInstance = new HashFunctionsUtil();
       const databaseInstance = new DatabaseUtil();
       await hashFunctionsInstance.load(web3);
