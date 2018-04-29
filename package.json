@@ -53,7 +53,9 @@
     "deploy-storybook": "surge .out/",
     "deploy:dev": "surge build/ --domain mybit-dapp-ui-dev.surge.sh",
     "deploy:prod": "surge build/ --domain mybit-dapp-ui.surge.sh",
-    "deploy": "surge build/"
+    "deploy": "surge build/",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.0",
