@@ -7,14 +7,17 @@ import './styles/semantic-custom.css';
 import 'gridlex/dist/gridlex.min.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { Provider } from 'react-redux';
+import { connect, Provider } from 'react-redux';
+import { BrowserRouter, withRouter } from 'react-router-dom';
 import configureStore from './store/configureStore';
 
 const store = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );

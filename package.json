@@ -20,6 +20,7 @@
     "react-dom": "^16.2.0",
     "react-jazzicon": "0.0.1",
     "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "^1.1.1",
     "redux-logger": "^3.0.6",
     "semantic-ui-css": "^2.3.0",

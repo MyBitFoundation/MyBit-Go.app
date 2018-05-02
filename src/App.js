@@ -5,11 +5,14 @@ import { AppHeader } from './components/AppHeader';
 import { NavigationBar } from './components/NavigationBar';
 import { ExplorePage } from './components/ExplorePage';
 
-import { connect } from 'react-redux';
+import { connect, Provider } from 'react-redux';
+import { BrowserRouter, withRouter } from 'react-router-dom';
+
 import * as actions from './actions';
 
 class App extends Component {
   render() {
+    // TODO: Do you really want this to happen on _every_ render?
     this.props.sendTestAction(false);
     return (
       <div>
@@ -36,4 +39,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actions)(App);
+export default withRouter(connect(mapStateToProps, actions)(App));
