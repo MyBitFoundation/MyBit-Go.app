@@ -60,3 +60,4 @@ typings/
 
 # css files
 *.css
+.idea
