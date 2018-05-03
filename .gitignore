@@ -60,3 +60,7 @@ typings/
 
 # css files
 *.css
+.idea
+
+# vim
+*.swp

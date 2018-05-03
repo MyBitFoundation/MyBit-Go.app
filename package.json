@@ -17,10 +17,12 @@
     "node-sass-chokidar": "^1.1.0",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.11.1",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-jazzicon": "0.0.1",
     "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "^1.1.1",
     "redux-logger": "^3.0.6",
     "semantic-ui-css": "^2.3.0",
@@ -54,7 +56,9 @@
     "deploy-storybook": "surge .out/",
     "deploy:dev": "surge build/ --domain mybit-dapp-ui-dev.surge.sh",
     "deploy:prod": "surge build/ --domain mybit-dapp-ui.surge.sh",
-    "deploy": "surge build/"
+    "deploy": "surge build/",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.0",
@@ -65,6 +69,13 @@
     "babel-runtime": "^6.26.0",
     "compression-webpack-plugin": "^1.1.11",
     "cross-env": "^5.1.4",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "surge": "^0.20.1",
     "ws": "3.3.2"
