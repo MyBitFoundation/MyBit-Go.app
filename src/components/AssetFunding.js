@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
 import { promisifyAll } from 'bluebird';
 
-/* --- First way ---*/
 import { default as DatabaseUtil } from './contracts/DatabaseUtil';
 import { default as HashFunctionsUtil } from './contracts/HashFunctionsUtil';
-
-/* --- Second Way way ---*/
-import {
-  DATABASE_CONTRACT_ADDRESS,
-  DATABASE_ABI_INTERFACE
-} from './contracts/Database.js';
 
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
@@ -45,7 +38,7 @@ class AssetFunding extends Component {
         )
       });
 
-      console.log('amountToBeRaised', amountToBeRaised);
+      console.log('amountToBeRaised', this.state.amountToBeRaised);
     }
   }
 
