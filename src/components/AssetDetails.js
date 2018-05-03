@@ -20,7 +20,7 @@ export class AssetDetails extends React.Component {
       endingAt: ''
     };
     this.setDateDetails = this.setDateDetails.bind(this);
-    this.setDateInterval;
+    this.setDateInterval = undefined;
     this.endDateLocal = dayjs(this.props.information.dueDate);
     this.clearInterval = this.clearInterval.bind(this);
     this.runningMinInterval = false;
@@ -48,7 +48,7 @@ export class AssetDetails extends React.Component {
     if (maxInvestment === 0) {
       this.setState({
         timeToGo: 'Funding goal has been reached',
-        daysToGo: days,
+        daysToGo: 0,
         endingAt: ''
       });
       this.clearInterval();
@@ -242,7 +242,11 @@ export class AssetDetails extends React.Component {
           </Button>
         </div>
         <div className="AssetDetails__right col_lg-6 col_md-12">
-          <img className="AssetDetails__right-image" src={bakgroundImage} />
+          <img
+            alt="Background image"
+            className="AssetDetails__right-image"
+            src={bakgroundImage}
+          />
           <div className="AssetDetails__right-wrapper">
             <b className="AssetDetails__right-title-details">Asset Details</b>
             <p className="AssetDetails__right-content-details">
