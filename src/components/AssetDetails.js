@@ -20,7 +20,6 @@ export class AssetDetails extends React.Component {
       endingAt: ''
     };
     this.setDateDetails = this.setDateDetails.bind(this);
-    this.setDateInterval = undefined;
     this.endDateLocal = dayjs(this.props.information.dueDate);
     this.clearInterval = this.clearInterval.bind(this);
     this.runningMinInterval = false;
