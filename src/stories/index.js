@@ -140,7 +140,8 @@ storiesOf('Asset Details Page', module)
   .addDecorator(story => (
     <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
   ))
-  .add('view', () => <AssetDetailsPage information={assetInfo} />);
+  .add('Normal view', () => <AssetDetailsPage information={assetInfo} />)
+  .add('Loading', () => <AssetDetailsPage />);
 
 const daysToGo = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
