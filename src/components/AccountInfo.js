@@ -21,7 +21,7 @@ export const AccountInfo = ({ myBitBalance, ethBalance, address }) => {
           </span>
         )}
       </div>
-      <Address address={address} />
+      <Address className="AccountInfo__address" address={address} />
     </div>
   );
 };

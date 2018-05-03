@@ -14,7 +14,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto';
-  position: relative; 
+  position: relative;
   font-weight: normal;
 }
 
@@ -25,7 +25,8 @@ html {
   box-sizing: border-box; }
 
 .grid{
-  margin: 0px 0px;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
 }
 
 b{
@@ -34,4 +35,54 @@ b{
 
 .page-wrapper{
   padding: 0px 50px 0px 50px;
+}
+
+.bx--btn--primary{
+  background-color: #2DB84B;
+
+  &:hover{
+    background-color: #3ECD5D;
+  }
+
+  &:active{
+    background-color: #3ECD5D;
+  }
+
+  &:focus{
+    border: 2px solid #2DB84B;
+    outline: none;
+    background-color: #2DB84B;
+  }
+}
+
+
+.bx--btn--primary:disabled{
+  background-color: #2DB84B;
+
+  &:hover{
+    background-color: #2DB84B;
+  }
+
+  &:active{
+    background-color: #2DB84B;
+  }
+
+  &:focus{
+    border: 2px solid #2DB84B;
+    outline: none;
+    background-color: #2DB84B;
+  }
+}
+
+.bx--btn--secondary{
+
+  &:hover{
+    background-color: #125ac4;
+  }
+
+  &:focus{
+    border: 2px solid #125ac4;
+    outline: none;
+    background-color: #125ac4;
+  }
 }

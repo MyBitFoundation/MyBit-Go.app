@@ -118,9 +118,67 @@ storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
 
 storiesOf('Transactions Page', module).add('view', () => <TransactionsPage />);
 
-storiesOf('Asset Details Page', module).add('view', () => <AssetDetailsPage />);
+let assetInfo = {
+  assetName: 'Bitcoin ATM',
+  city: 'Zug',
+  country: 'Switzerland',
+  dueDate: new Date().setDate(new Date().getDate() + 2),
+  raised: 50000,
+  goal: 100000,
+  investors: 5,
+  minInvestment: 950,
+  maxInvestment: 9990,
+  expectedReturn: 18,
+  details:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi turpis metus, pretium eget venenatis quis, fringilla in mauris. Phasellus sit amet massa tellus. Proin eros augue, lobortis eget ex sit amet, accumsan tristique lorem.',
+  description:
+    'Proin luctus, neque eget tincidunt molestie, orci leo fringilla mauris, at tristique nisl quam vel turpis. Curabitur aliquam ante ac nulla vulputate, non vehicula quam venenatis. Sed pellentesque est justo, ac faucibus ex rutrum a. Sed placerat magna vitae justo tempus, in imperdiet enim pellentesque. Ut eget pulvinar massa. Morbi vitae turpis justo. Quisque tincidunt odio et eros vulputate sollicitudin. Nulla erat ipsum, tincidunt elementum felis eu, commodo sagittis lacus. Donec et ullamcorper est. Nullam tincidunt enim in tempus consequat.',
+  address: '0xDe384n4aw4fs52'
+};
 
-storiesOf('Address', module).add('view', () => <Address />);
+storiesOf('Asset Details Page', module)
+  .addDecorator(story => (
+    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
+  ))
+  .add('view', () => <AssetDetailsPage information={assetInfo} />);
+
+const daysToGo = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+assetInfo['dueDate'] = new Date().setDate(new Date().getDate() - 2);
+const expired = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+assetInfo['dueDate'] = new Date().setDate(new Date().getDate() + 1);
+const oneDayToGoTomorrow = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+assetInfo['dueDate'] = new Date().setDate(new Date().getDate() + 0.0001);
+const oneDayToGoToday = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+assetInfo['raised'] = 100000;
+const funded = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+storiesOf('Asset Details', module)
+  .addDecorator(story => (
+    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
+  ))
+  .add('More than 1 day to go', () => daysToGo)
+  .add('1 day to go (tomorrow)', () => oneDayToGoTomorrow)
+  .add('1 day to go (today)', () => oneDayToGoToday)
+  .add('End date expired', () => expired)
+  .add('Goal reached', () => funded);
+
+storiesOf('Address', module).add('Normal', () => (
+  <Address address={'0x123f681646d4a755815f9cb19e1acc8565a0c2ac'} />
+));
 
 storiesOf('Category', module).add('view', () => <Category />);
 
@@ -129,8 +187,6 @@ storiesOf('Button', module).add('view', () => <Button />);
 storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
 
 storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
-
-storiesOf('Asset Details', module).add('view', () => <AssetDetails />);
 
 //@TODO Refactor this into a wrappeable component through React.children
 class AssetFundingWeb3Wrapper extends React.Component {

@@ -9,6 +9,7 @@
     "carbon-components-react": "^5.41.6",
     "carbon-icons": "^6.3.2",
     "classnames": "^2.2.5",
+    "dayjs": "^1.5.16",
     "gridlex": "^2.7.1",
     "husky": "^0.14.3",
     "js-sha3": "^0.7.0",

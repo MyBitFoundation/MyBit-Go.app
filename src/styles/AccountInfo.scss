@@ -12,8 +12,8 @@
 	    position: relative;
 	    margin-right: 20px;
     }
-    
-	&__balance-header{
+
+    &__balance-header{
         font-size: 18px;
         padding-top: 25px;
         position: relative;
@@ -34,5 +34,10 @@
     &__balance-myb{
         padding-right: 10px;
     }
-	
+
+    &__address{
+      float: left;
+      margin-top: 25px;
+    }
+
 }
