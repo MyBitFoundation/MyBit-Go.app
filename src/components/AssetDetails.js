@@ -242,7 +242,7 @@ export class AssetDetails extends React.Component {
         </div>
         <div className="AssetDetails__right col_lg-6 col_md-12">
           <img
-            alt="Background image"
+            alt="Asset details background"
             className="AssetDetails__right-image"
             src={bakgroundImage}
           />
