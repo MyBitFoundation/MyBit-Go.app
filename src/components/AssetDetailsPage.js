@@ -24,13 +24,7 @@ export class AssetDetailsPage extends React.Component {
   }
 
   componenWillUnmount() {
-    this.clearInterval();
-  }
-
-  clearInterval() {
-    if (this.coinMarketCapInterval) {
-      clearInterval(this.coinMarketCapInterval);
-    }
+    clearInterval(this.coinMarketCapInterval);
   }
 
   getEthereumValue() {
