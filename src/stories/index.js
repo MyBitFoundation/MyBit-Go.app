@@ -28,8 +28,6 @@ import { AssetDetailsPage } from '../components/AssetDetailsPage';
 import { AssetHero } from '../components/AssetHero';
 import { AssetDetails } from '../components/AssetDetails';
 import { default as AssetFunding } from '../components/AssetFunding';
-import { ConfirmationPopup } from '../components/ConfirmationPopup';
-import { Grid } from 'semantic-ui-react';
 import { AppSidebar } from '../components/AppSidebar';
 import { NavigationBar } from '../components/NavigationBar';
 
@@ -140,7 +138,29 @@ storiesOf('Asset Details Page', module)
   .addDecorator(story => (
     <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
   ))
-  .add('Normal view', () => <AssetDetailsPage information={assetInfo} />)
+  .add('Normal view', () => (
+    <AssetDetailsPage
+      information={
+        (assetInfo = {
+          assetName: 'Bitcoin ATM',
+          city: 'Zug',
+          country: 'Switzerland',
+          dueDate: new Date().setDate(new Date().getDate() + 2),
+          raised: 50000,
+          goal: 100000,
+          investors: 5,
+          minInvestment: 950,
+          maxInvestment: 9990,
+          expectedReturn: 18,
+          details:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi turpis metus, pretium eget venenatis quis, fringilla in mauris. Phasellus sit amet massa tellus. Proin eros augue, lobortis eget ex sit amet, accumsan tristique lorem.',
+          description:
+            'Proin luctus, neque eget tincidunt molestie, orci leo fringilla mauris, at tristique nisl quam vel turpis. Curabitur aliquam ante ac nulla vulputate, non vehicula quam venenatis. Sed pellentesque est justo, ac faucibus ex rutrum a. Sed placerat magna vitae justo tempus, in imperdiet enim pellentesque. Ut eget pulvinar massa. Morbi vitae turpis justo. Quisque tincidunt odio et eros vulputate sollicitudin. Nulla erat ipsum, tincidunt elementum felis eu, commodo sagittis lacus. Donec et ullamcorper est. Nullam tincidunt enim in tempus consequat.',
+          address: '0xDe384n4aw4fs52'
+        })
+      }
+    />
+  ))
   .add('Loading', () => <AssetDetailsPage />);
 
 const daysToGo = (
@@ -206,10 +226,6 @@ class AssetFundingWeb3Wrapper extends React.Component {
 
 storiesOf('Asset Funding', module).add('view', () => (
   <AssetFundingWeb3Wrapper />
-));
-
-storiesOf('Confirmation Popup', module).add('view', () => (
-  <ConfirmationPopup />
 ));
 
 storiesOf('Transaction History', module).add('view', () => (

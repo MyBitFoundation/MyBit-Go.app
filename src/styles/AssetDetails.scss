@@ -136,13 +136,6 @@
       padding-right: 10px;
     }
 
-    &-contribute-button{
-      display: block;
-      width: 100%;
-      margin-top: 25px;
-      padding: 0px;
-    }
-
     &-contribution-inactive{
       color: #d9d9d9;
     }
@@ -185,6 +178,11 @@
       }
     }
   }
+}
+
+.bx--btn--primary:nth-child(1){
+  width: 100%;
+  margin-top: 30px;
 }
 
 .bx--slider__range-label{

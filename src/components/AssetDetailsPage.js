@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Loading } from 'carbon-components-react';
+import { Button, Loading, ModalWrapper } from 'carbon-components-react';
 import { AssetDetails } from './AssetDetails';
 import { debug } from '../constants';
 import '../styles/AssetDetailsPage.css';
@@ -9,7 +9,6 @@ export class AssetDetailsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      popup: false,
       loading: true,
       currentEthInUsd: -1
     };
@@ -78,11 +77,12 @@ export class AssetDetailsPage extends React.Component {
       <AssetDetails
         information={this.props.information}
         currentEthInUsd={this.state.currentEthInUsd}
+        handleContributeClicked={this.handleContributeClicked}
       />
     );
 
     return (
-      <div>
+      <div style={{ position: 'relative' }}>
         {backButton}
         {loadingElement}
         {assetDetails}

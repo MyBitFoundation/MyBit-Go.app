@@ -28,7 +28,7 @@ class App extends Component {
               country: 'Switzerland',
               endDate: 'Fri, Apr 27',
               dueDate: new Date().setDate(new Date().getDate() + 2),
-              raised: 99930,
+              raised: 50000,
               goal: 100000,
               investors: 5,
               minInvestment: 950,

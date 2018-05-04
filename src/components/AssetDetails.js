@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Slider } from 'carbon-components-react';
+import { Button, Slider, ModalWrapper } from 'carbon-components-react';
+import { ConfirmationPopup } from './ConfirmationPopup';
 import { Address } from './Address';
 import '../styles/AssetDetails.css';
 import { debug } from '../constants';
@@ -17,11 +18,16 @@ export class AssetDetails extends React.Component {
       ),
       daysToGo: 0,
       timeToGo: '',
-      endingAt: ''
+      endingAt: '',
+      acceptedTos: false,
+      displayWarning: false
     };
     this.setDateDetails = this.setDateDetails.bind(this);
     this.endDateLocal = dayjs(this.props.information.dueDate);
     this.clearInterval = this.clearInterval.bind(this);
+    this.handleConfirmClicked = this.handleConfirmClicked.bind(this);
+    this.setAcceptedTos = this.setAcceptedTos.bind(this);
+    this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
   }
 
@@ -111,6 +117,27 @@ export class AssetDetails extends React.Component {
         }, 60000);
         this.runningMinInterval = true;
       }
+    }
+  }
+
+  setAcceptedTos(acceptedTos) {
+    this.setState({ acceptedTos: acceptedTos });
+    if (acceptedTos && this.state.displayWarning) {
+      this.setState({ displayWarning: false });
+    }
+  }
+
+  getAcceptedTos() {
+    return this.state.acceptedTos;
+  }
+
+  handleConfirmClicked() {
+    if (!this.state.acceptedTos) {
+      this.setState({ displayWarning: true });
+    } else {
+      //TODO process transaction
+      this.setState({ acceptedTos: false });
+      return true;
     }
   }
 
@@ -230,15 +257,25 @@ export class AssetDetails extends React.Component {
           <b className="AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
             1.87 ETH
           </b>
-          <Button
-            className="AssetDetails__left-contribute-button"
-            onClick={debug('Clicked to go back')}
-            disabled={
-              this.state.daysToGo < 0 || maxInvestment === 0 ? true : false
+          <ModalWrapper
+            id="ConfirmationPopup__container"
+            buttonTriggerText="Contribute"
+            children={
+              <ConfirmationPopup
+                amountUsd={this.state.currentSelectedAmount}
+                amountEth={etherValue}
+                ownership={ownership}
+                setAcceptedTos={this.setAcceptedTos}
+                displayWarning={this.state.displayWarning}
+                getAcceptedTos={this.getAcceptedTos}
+              />
             }
-          >
-            CONTRIBUTE
-          </Button>
+            shouldCloseAfterSubmit
+            modalBeforeContent={false}
+            primaryButtonText="Confirm"
+            secondaryButtonText="Cancel"
+            handleSubmit={this.handleConfirmClicked.bind(this)}
+          />
         </div>
         <div className="AssetDetails__right col_lg-6 col_md-12">
           <img

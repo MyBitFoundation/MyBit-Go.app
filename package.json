@@ -25,8 +25,6 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.1.4",
     "redux-logger": "^3.0.6",
-    "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.78.3",
     "web3": "0.19.0"
   },
   "lint-staged": {
