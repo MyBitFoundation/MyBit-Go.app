@@ -1,5 +1,5 @@
 import React from 'react';
-import { ToggleSmall, Button } from 'carbon-components-react';
+import { ToggleSmall } from 'carbon-components-react';
 import '../styles/ConfirmationPopup.css';
 
 export const ConfirmationPopup = ({

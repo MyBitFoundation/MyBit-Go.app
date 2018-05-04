@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button, Slider, ModalWrapper } from 'carbon-components-react';
+import { Slider, ModalWrapper } from 'carbon-components-react';
 import { ConfirmationPopup } from './ConfirmationPopup';
 import { Address } from './Address';
 import '../styles/AssetDetails.css';
-import { debug } from '../constants';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
 import bakgroundImage from '../images/asset-details-page-header.png';

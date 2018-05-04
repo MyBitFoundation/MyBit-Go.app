@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Loading, ModalWrapper } from 'carbon-components-react';
+import { Button, Loading } from 'carbon-components-react';
 import { AssetDetails } from './AssetDetails';
 import { debug } from '../constants';
 import '../styles/AssetDetailsPage.css';
