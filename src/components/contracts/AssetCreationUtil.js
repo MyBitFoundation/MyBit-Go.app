@@ -1,8 +1,6 @@
 import { promisifyAll } from 'bluebird';
+import * as AssetCreation from './AssetCreation.js';
 
-import ABIInterfaceArray from '../../util/abi/AssetCreation.json';
-
-const SMART_CONTRACT_ADDRESS = '0x81C78897D9C1f222a389ED34f65d49e9EF72741A';
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
 
@@ -10,8 +8,8 @@ var assetIDInstallerID;
 
 export default class AssetCreationUtil {
   async load(web3, assetID) {
-    const abi = await web3.eth.contract(ABIInterfaceArray);
-    var instance = instancePromisifier(abi.at(SMART_CONTRACT_ADDRESS));
+    const abi = await web3.eth.contract(AssetCreation.ABI);
+    var instance = instancePromisifier(abi.at(AssetCreation.ADDRESS));
     assetIDInstallerID = {};
 
     /* Create Listeners */

@@ -1,8 +1,6 @@
 import { promisifyAll } from 'bluebird';
+import * as FundingHub from './FundingHub.js';
 
-import ABIInterfaceArray from '../../util/abi/FundingHub.json';
-
-const SMART_CONTRACT_ADDRESS = '0x566019cdaD6ece4b37B5551d23be8f453fDd467F';
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
 
@@ -10,8 +8,8 @@ var totalContributorsPerAssetID;
 
 export default class FundingHubUtil {
   async load(web3, assetID) {
-    const abi = await web3.eth.contract(ABIInterfaceArray);
-    this.instance = instancePromisifier(abi.at(SMART_CONTRACT_ADDRESS));
+    const abi = await web3.eth.contract(FundingHub.ABI);
+    this.instance = instancePromisifier(abi.at(FundingHub.ADDRESS));
     this.web3 = web3;
 
     totalContributorsPerAssetID = {};

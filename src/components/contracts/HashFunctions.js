@@ -1,6 +1,5 @@
-export const DATABASE_CONTRACT_ADDRESS =
-  '0x7468b3e61888EeAd21f45e7130548c37886aF0E1';
-export const DATABASE_ABI_INTERFACE = [
+export const ADDRESS = '0x7468b3e61888EeAd21f45e7130548c37886aF0E1';
+export const ABI = [
   {
     constant: true,
     inputs: [
