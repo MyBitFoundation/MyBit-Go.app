@@ -1,14 +1,13 @@
 import { promisifyAll } from 'bluebird';
-import ABIInterfaceArray from '../../util/abi/Database.json';
+import * as Database from './Database.js';
 
-const SMART_CONTRACT_ADDRESS = '0x5ef04587FF75d4563E3088C465f4De1D8dCffCB0';
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
 
 export default class DatabaseUtil {
   async load(web3) {
-    const abi = await web3.eth.contract(ABIInterfaceArray);
-    this.instance = instancePromisifier(abi.at(SMART_CONTRACT_ADDRESS));
+    const abi = await web3.eth.contract(Database.ABI);
+    this.instance = instancePromisifier(abi.at(Database.ADDRESS));
     this.web3 = web3;
   }
 

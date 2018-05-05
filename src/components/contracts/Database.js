@@ -1,6 +1,5 @@
-export const DATABASE_CONTRACT_ADDRESS =
-  '0x5ef04587FF75d4563E3088C465f4De1D8dCffCB0';
-export const DATABASE_ABI_INTERFACE = [
+export const ADDRESS = '0x5ef04587FF75d4563E3088C465f4De1D8dCffCB0';
+export const ABI = [
   {
     constant: true,
     inputs: [
@@ -187,28 +186,6 @@ export const DATABASE_ABI_INTERFACE = [
       }
     ],
     name: 'setBytes32',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: '_functionSigner',
-        type: 'address'
-      },
-      {
-        name: '_oldContractManager',
-        type: 'address'
-      },
-      {
-        name: '_newContractManager',
-        type: 'address'
-      }
-    ],
-    name: 'changeContractManager',
     outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
