@@ -274,6 +274,9 @@ export class AssetDetails extends React.Component {
             primaryButtonText="Confirm"
             secondaryButtonText="Cancel"
             handleSubmit={this.handleConfirmClicked.bind(this)}
+            disabled={
+              this.state.daysToGo < 0 || maxInvestment === 0 ? true : false
+            }
           />
         </div>
         <div className="AssetDetails__right col_lg-6 col_md-12">
