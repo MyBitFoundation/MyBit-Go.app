@@ -4,7 +4,7 @@ import * as FundingHub from './FundingHub.js';
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
 
-var totalContributorsPerAssetID;
+let totalContributorsPerAssetID;
 
 export default class FundingHubUtil {
   async load(web3, assetID) {
@@ -16,7 +16,7 @@ export default class FundingHubUtil {
 
     this.LogNewFunder = this.instance.LogNewFunder(
       { _assetID: assetID },
-      { fromBlock: 0, toBlock: 'latest' }
+      { fromBlock: 0, toBlock: 'latest' },
     );
     this.setEventListeners();
   }
@@ -25,9 +25,9 @@ export default class FundingHubUtil {
     /* Listen for the events */
     let _assetID;
     let _totalContributors = 0;
-    this.LogNewFunder.watch(function(e, r) {
+    this.LogNewFunder.watch((e, r) => {
       if (!e) {
-        _assetID = r['args']['_assetID'];
+        _assetID = r.args._assetID;
         _totalContributors += 1;
         totalContributorsPerAssetID[_assetID] = _totalContributors;
       }
@@ -39,72 +39,72 @@ export default class FundingHubUtil {
   }
 
   async fund(_assetID, _value) {
-    let ethValue = this.web3.toWei(_value);
-    let iT = this.instance;
-    let w3 = this.web3;
+    const ethValue = this.web3.toWei(_value);
+    const iT = this.instance;
+    const w3 = this.web3;
     this.instance.fund.estimateGas(
       _assetID,
       { from: this.web3.eth.coinbase, value: ethValue },
-      async function(error, result) {
+      async (error, result) => {
         if (!error) {
           await iT.fundAsync(_assetID, {
             from: w3.eth.coinbase,
             value: ethValue,
-            gas: parseInt(result, 10)
+            gas: parseInt(result, 10),
           });
         }
-      }
+      },
     );
   }
 
   async payout(_assetID) {
-    let iT = this.instance;
-    let w3 = this.web3;
+    const iT = this.instance;
+    const w3 = this.web3;
     this.instance.payout.estimateGas(
       _assetID,
       { from: this.web3.eth.coinbase },
-      async function(error, result) {
+      async (error, result) => {
         if (!error) {
           await iT.payoutAsync(_assetID, {
             from: w3.eth.coinbase,
-            gas: parseInt(result, 10)
+            gas: parseInt(result, 10),
           });
         }
-      }
+      },
     );
   }
 
   async initiateRefund(_assetID) {
-    let iT = this.instance;
-    let w3 = this.web3;
+    const iT = this.instance;
+    const w3 = this.web3;
     this.instance.initiateRefund.estimateGas(
       _assetID,
       { from: this.web3.eth.coinbase },
-      async function(error, result) {
+      async (error, result) => {
         if (!error) {
           await iT.initiateRefundAsync(_assetID, {
             from: w3.eth.coinbase,
-            gas: parseInt(result, 10)
+            gas: parseInt(result, 10),
           });
         }
-      }
+      },
     );
   }
 
   async refund(_assetID) {
-    let iT = this.instance;
-    let w3 = this.web3;
+    const iT = this.instance;
+    const w3 = this.web3;
     this.instance.refundAsync.estimateGas(
       _assetID,
       { from: this.web3.eth.coinbase },
-      async function(error, result) {
+      async (error, result) => {
         if (!error) {
           await iT.refundAsync(_assetID, {
             from: w3.eth.coinbase,
-            gas: parseInt(result, 10)
+            gas: parseInt(result, 10),
           });
         }
-      }
+      },
     );
   }
 }

@@ -8,17 +8,15 @@ export const AppHeader = ({
   exchangeRate,
   myBitBalance,
   ethBalance,
-  address
-}) => {
-  return (
-    <div className="grid AppHeader">
-      <Logo className="AppHeader__logo" />
-      <ExchangeRate value={exchangeRate} />
-      <AccountInfo
-        myBitBalance={myBitBalance}
-        ethBalance={ethBalance}
-        address={address}
-      />
-    </div>
-  );
-};
+  address,
+}) => (
+  <div className="grid AppHeader">
+    <Logo className="AppHeader__logo" />
+    <ExchangeRate value={exchangeRate} />
+    <AccountInfo
+      myBitBalance={myBitBalance}
+      ethBalance={ethBalance}
+      address={address}
+    />
+  </div>
+);

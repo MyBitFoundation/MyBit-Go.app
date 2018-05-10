@@ -9,23 +9,23 @@ export const NavigationBar = ({ clickHandler }) => {
       name: 'Explore',
       icon: require('../images/search.png'),
       selectable: true,
-      selected: true
+      selected: true,
     },
     {
       name: 'Portfolio',
       icon: require('../images/chart-area.png'),
-      selectable: true
+      selectable: true,
     },
     {
       name: 'Transactions',
       icon: require('../images/history.png'),
-      selectable: true
+      selectable: true,
     },
     { name: 'Saved', icon: require('../images/star.png') },
     { name: 'List Asset', icon: require('../images/plus.png') },
     { name: 'Staking', icon: require('../images/cubes.png') },
     { name: 'Exchange', icon: require('../images/exchange-alt.png') },
-    { name: 'Knowledge Base', icon: require('../images/question.png') }
+    { name: 'Knowledge Base', icon: require('../images/question.png') },
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (

@@ -10,7 +10,7 @@ class Accounts extends Component {
       accounts: [],
       accountsMap: {},
       loadingAccounts: false,
-      loadingBalance: false
+      loadingBalance: false,
     };
     this.loadBalance = this.loadBalance.bind(this);
   }
@@ -21,7 +21,7 @@ class Accounts extends Component {
       console.log('Loading accounts...');
       const accounts = await web3.eth.getAccountsAsync();
       console.log('Accounts loaded.');
-      this.setState({ loadingAccounts: false, accounts: accounts });
+      this.setState({ loadingAccounts: false, accounts });
     }, ARTIFICIAL_DELAY_IN_MS);
   }
   async loadBalance(account) {
@@ -30,13 +30,13 @@ class Accounts extends Component {
     setTimeout(async () => {
       const balance = await parseEtherFromBalance(
         web3,
-        await web3.eth.getBalanceAsync(account)
+        await web3.eth.getBalanceAsync(account),
       );
       const { accountsMap } = this.state;
       console.log('Balance for account', account, balance);
       this.setState({
         loadingBalance: false,
-        accountsMap: Object.assign(accountsMap, { [account]: balance })
+        accountsMap: Object.assign(accountsMap, { [account]: balance }),
       });
     }, ARTIFICIAL_DELAY_IN_MS);
   }

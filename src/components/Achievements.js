@@ -24,10 +24,8 @@ export class Achievements extends Component {
 }
 
 Achievements.propTypes = {
-  achievements: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired
-    })
-  )
+  achievements: PropTypes.arrayOf(PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+  })),
 };

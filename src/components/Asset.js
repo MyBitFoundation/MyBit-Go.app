@@ -12,15 +12,15 @@ export const Asset = ({
   path,
   city,
   country,
-  name
+  name,
 }) => {
-  let barWidth = Math.ceil(100 * funded / goal) + '%';
+  const barWidth = `${Math.ceil(100 * funded / goal)  }%`;
   return (
     <div className="col-3_md-4_sm-6_xs-12 Asset">
       <div className="Asset__container">
         <div
           className="Asset__image-holder"
-          style={{ backgroundImage: 'url(' + image + ')' }}
+          style={{ backgroundImage: `url(${  image  })` }}
         >
           <div className="Asset__image-holder-gradient" />
           <img
@@ -48,9 +48,7 @@ export const Asset = ({
           </div>
           <Button
             onClick={
-              clickHandler
-                ? clickHandler
-                : () => debug(`Clicked to contribute, path: ${path}`)
+              clickHandler || () => debug(`Clicked to contribute, path: ${path}`)
             }
             className="Asset__details-contribute"
           >

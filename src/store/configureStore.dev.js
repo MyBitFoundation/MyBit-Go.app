@@ -10,7 +10,7 @@ export default function configureStore() {
   // Logging Middleware
   const logger = createLogger({
     level: 'info',
-    collapsed: true
+    collapsed: true,
   });
   middleware.push(logger);
 

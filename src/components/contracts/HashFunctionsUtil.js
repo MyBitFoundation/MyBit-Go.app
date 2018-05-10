@@ -20,7 +20,7 @@ export default class HashFunctionsUtil {
     const stakingIDRes = await this.instance.getStakingIDAsync(
       _staker,
       _blockNumber,
-      _amount
+      _amount,
     );
     return stakingIDRes;
   }
@@ -43,7 +43,7 @@ export default class HashFunctionsUtil {
   async stringAddress(_string, _address) {
     const stringAddressRes = await this.instance.stringAddressAsync(
       _string,
-      _address
+      _address,
     );
     return stringAddressRes;
   }
@@ -51,7 +51,7 @@ export default class HashFunctionsUtil {
   async stringBytes(_string, _bytes) {
     const stringBytesRes = await this.instance.stringBytesAsync(
       _string,
-      _bytes
+      _bytes,
     );
     return stringBytesRes;
   }
@@ -65,7 +65,7 @@ export default class HashFunctionsUtil {
     const stringBytesAddressRes = await this.instance.stringBytesAddressAsync(
       _string,
       _bytes,
-      _address
+      _address,
     );
     return stringBytesAddressRes;
   }
@@ -74,7 +74,7 @@ export default class HashFunctionsUtil {
     const addressUintUintRes = await this.instance.addressUintUintAsync(
       _address,
       _uint,
-      _uint2
+      _uint2,
     );
     return addressUintUintRes;
   }
@@ -84,7 +84,7 @@ export default class HashFunctionsUtil {
       _contractAddress,
       _owner,
       _fnName,
-      _recipient
+      _recipient,
     );
     return getAuthorizeHashRes;
   }
@@ -93,7 +93,7 @@ export default class HashFunctionsUtil {
     const uintUintUintRes = await this.instance.getAuthorizeHashAsync(
       _uint,
       _uint1,
-      _uint2
+      _uint2,
     );
     return uintUintUintRes;
   }

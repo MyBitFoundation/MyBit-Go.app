@@ -1,23 +1,24 @@
 import React from 'react';
 import { noop } from '../constants';
-var classNames = require('classnames');
+
+const classNames = require('classnames');
 
 export const NavigationOption = ({
   name,
   icon,
   clickHandler,
   selectable,
-  selected
+  selected,
 }) => {
-  var optionClass = classNames({
+  const optionClass = classNames({
     AppNavigationBar__option: true,
     'AppNavigationBar__option--is-selected': selected,
-    'AppNavigationBar__option--is-selectable': selectable
+    'AppNavigationBar__option--is-selectable': selectable,
   });
 
   return (
     <div
-      className={'col AppNavigationBar__option-col'}
+      className="col AppNavigationBar__option-col"
       onClick={selectable ? () => clickHandler(name) : noop}
     >
       <div className={optionClass}>

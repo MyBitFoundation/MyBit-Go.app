@@ -14,7 +14,7 @@ class AssetFunding extends Component {
       hashFunctionsInstance: null,
       databaseInstance: null,
       amountToBeRaised: null,
-      assetID: null
+      assetID: null,
     };
   }
   async componentDidMount() {
@@ -28,14 +28,12 @@ class AssetFunding extends Component {
       await databaseInstance.load(web3);
 
       this.setState({
-        hashFunctionsInstance: hashFunctionsInstance,
-        databaseInstance: databaseInstance,
+        hashFunctionsInstance,
+        databaseInstance,
         amountToBeRaised: web3.fromWei(
-          await databaseInstance.uintStored(
-            await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)
-          ),
-          'ether'
-        )
+          await databaseInstance.uintStored(await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)),
+          'ether',
+        ),
       });
 
       console.log('amountToBeRaised', this.state.amountToBeRaised);

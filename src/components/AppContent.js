@@ -5,7 +5,7 @@ import {
   Segment,
   Header,
   Button,
-  Progress
+  Progress,
 } from 'semantic-ui-react';
 import { getWeb3Async } from '../util/web3';
 
@@ -26,7 +26,7 @@ export default class AppContent extends React.Component {
     this.state = {
       web3: null,
       isWeb3synced: false,
-      assetID: null
+      assetID: null,
     };
   }
 
@@ -45,45 +45,35 @@ export default class AppContent extends React.Component {
       await assetCreationInstance.load(web3, assetID);
 
       const amountRaised = web3.fromWei(
-        await dbInstance.uintStored(
-          await hashFunctionsInstance.stringBytes('amountRaised', assetID)
-        ),
-        'ether'
+        await dbInstance.uintStored(await hashFunctionsInstance.stringBytes('amountRaised', assetID)),
+        'ether',
       );
       const fundingDeadline = parseInt(
-        await dbInstance.uintStored(
-          await hashFunctionsInstance.stringBytes('fundingDeadline', assetID)
-        ),
-        10
+        await dbInstance.uintStored(await hashFunctionsInstance.stringBytes('fundingDeadline', assetID)),
+        10,
       );
       const humanReadableDate = new Date(fundingDeadline * 1000).toString();
       const amountToBeRaised = web3.fromWei(
-        await dbInstance.uintStored(
-          await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)
-        ),
-        'ether'
+        await dbInstance.uintStored(await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)),
+        'ether',
       );
       const percentageBar = amountRaised / amountToBeRaised * 100;
 
-      const installerID = await assetCreationInstance.returnInstallerID(
-        assetID
-      );
-      const totalContributors = await fundingHubInstance.returnContributers(
-        assetID
-      );
+      const installerID = await assetCreationInstance.returnInstallerID(assetID);
+      const totalContributors = await fundingHubInstance.returnContributers(assetID);
       console.log(totalContributors);
 
       this.setState({
-        web3: web3,
+        web3,
         isWeb3synced: true,
-        assetID: assetID,
-        amountRaised: amountRaised,
-        fundingDeadline: fundingDeadline,
-        amountToBeRaised: amountToBeRaised,
-        percentageBar: percentageBar,
-        humanReadableDate: humanReadableDate,
-        installerID: installerID,
-        totalContributors: totalContributors
+        assetID,
+        amountRaised,
+        fundingDeadline,
+        amountToBeRaised,
+        percentageBar,
+        humanReadableDate,
+        installerID,
+        totalContributors,
       });
       // Fixed assetID for testing
       // Currently not a real assetID
@@ -100,7 +90,7 @@ export default class AppContent extends React.Component {
       assetID,
       humanReadableDate,
       installerID,
-      totalContributors
+      totalContributors,
     } = this.state;
 
     return (
@@ -116,11 +106,11 @@ export default class AppContent extends React.Component {
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 display: 'block',
-                marginTop: '5px'
+                marginTop: '5px',
               }}
             >
               Contribute{' '}
-              {/* fundingHubInstance.fund(assetID, grabValueFromField)*/}
+              {/* fundingHubInstance.fund(assetID, grabValueFromField) */}
             </Button>
           </Grid.Column>
           <Grid.Column width={12}>

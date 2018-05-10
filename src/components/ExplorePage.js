@@ -7,23 +7,23 @@ export const ExplorePage = ({ clickHandler }) => {
     {
       image: require('../images/category-cryptocurrency-atm.png'),
       path: '/crypto-currency-atm',
-      name: 'Cryptocurrency ATM'
+      name: 'Cryptocurrency ATM',
     },
     {
       image: require('../images/category-solar-energy.png'),
       path: '/solar-energy',
-      name: 'Solar Energy'
+      name: 'Solar Energy',
     },
     {
       image: require('../images/category-cryptocurrency-atm.png'),
       path: '/crypto-currency-atm2',
-      name: 'Cryptocurrency ATM'
+      name: 'Cryptocurrency ATM',
     },
     {
       image: require('../images/category-solar-energy.png'),
       path: '/solar-energy2',
-      name: 'Solar Energy'
-    }
+      name: 'Solar Energy',
+    },
   ];
 
   const categories = categoriesInfo.map(category => (
@@ -34,9 +34,9 @@ export const ExplorePage = ({ clickHandler }) => {
       <div
         className="ExplorePage__image-container"
         onClick={
-          clickHandler ? clickHandler : debug(`Going to: ${category.path}`)
+          clickHandler || debug(`Going to: ${category.path}`)
         }
-        style={{ backgroundImage: 'url(' + category.image + ')' }}
+        style={{ backgroundImage: `url(${category.image})` }}
       >
         <p className="ExplorePage__category-name">{category.name}</p>
       </div>

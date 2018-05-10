@@ -77,7 +77,7 @@ storiesOf('Explore Assets Page', module)
           goal: '4000',
           city: 'Lisbon',
           country: 'Portugal',
-          name: 'Solar Powered Bench'
+          name: 'Solar Powered Bench',
         },
         {
           image: require('../images/Solar-Panel-2.png'),
@@ -86,7 +86,7 @@ storiesOf('Explore Assets Page', module)
           goal: '4000',
           city: 'Lisbon',
           country: 'Portugal',
-          name: 'Solar Powered Bench'
+          name: 'Solar Powered Bench',
         },
         {
           image: require('../images/bitcoin-atm-4-2.png'),
@@ -95,7 +95,7 @@ storiesOf('Explore Assets Page', module)
           goal: '4000',
           city: 'Lisbon',
           country: 'Portugal',
-          name: 'Bitcoin ATM'
+          name: 'Bitcoin ATM',
         },
         {
           image: require('../images/bitcoin-atm-4-2.png'),
@@ -104,12 +104,12 @@ storiesOf('Explore Assets Page', module)
           goal: '4000',
           city: 'Lisbon',
           country: 'Portugal',
-          name: 'Bitcoin ATM'
-        }
+          name: 'Bitcoin ATM',
+        },
       ]}
     />
   ))
-  .add('Loading', () => <ExploreAssetsPage loading={true} assetsInfo={[]} />)
+  .add('Loading', () => <ExploreAssetsPage loading assetsInfo={[]} />)
   .add('No assets', () => (
     <ExploreAssetsPage loading={false} assetsInfo={[]} category="Solar Panel" />
   ));
@@ -132,7 +132,7 @@ storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
 
 storiesOf('Asset Details', module).add('view', () => <AssetDetails />);
 
-//@TODO Refactor this into a wrappeable component through React.children
+// @TODO Refactor this into a wrappeable component through React.children
 class AssetFundingWeb3Wrapper extends React.Component {
   constructor(props) {
     super(props);

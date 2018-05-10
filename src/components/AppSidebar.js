@@ -11,7 +11,7 @@ export const AppSidebar = ({ clickHandler = undefined }) => {
     { name: 'Staking' },
     { name: 'Exchange Asset' },
     { name: 'Transaction History' },
-    { name: 'FAQ & Tutorials' }
+    { name: 'FAQ & Tutorials' },
   ];
 
   const sidebarMenu = menuOptions.map(menuItem => (

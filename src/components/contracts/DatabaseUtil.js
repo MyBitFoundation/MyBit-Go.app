@@ -22,8 +22,8 @@ export default class DatabaseUtil {
   }
 
   async addressStorage(_bytes32) {
-    var addressStored = await this.instance.addressStorageAsync(_bytes32, {
-      from: this.web3.eth.coinbase
+    const addressStored = await this.instance.addressStorageAsync(_bytes32, {
+      from: this.web3.eth.coinbase,
     });
     return addressStored;
   }

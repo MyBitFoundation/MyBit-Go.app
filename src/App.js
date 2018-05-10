@@ -30,14 +30,14 @@ const App = ({ sendTestAction }) => {
 };
 
 App.propTypes = {
-  sendTestAction: PropTypes.func.isRequired
+  sendTestAction: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   console.log('printing a variable from redux state: ', state.example.testVar);
 
   return {
-    testVar: state.example.testVar
+    testVar: state.example.testVar,
   };
 };
 

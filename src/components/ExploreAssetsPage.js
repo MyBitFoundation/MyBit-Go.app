@@ -8,7 +8,7 @@ export const ExploreAssetsPage = ({
   clickHandler,
   loading,
   assetsInfo,
-  category
+  category,
 }) => {
   const backButton = (
     <Button
@@ -25,23 +25,21 @@ export const ExploreAssetsPage = ({
     : assetsInfo.length === 0
       ? null
       : [
-          backButton,
-          assetsInfo.map(asset => {
-            return (
-              <Asset
-                key={asset.path}
-                clickHandler={clickHandler}
-                funded={asset.funded}
-                goal={asset.goal}
-                image={asset.image}
-                path={asset.path}
-                city={asset.city}
-                country={asset.country}
-                name={asset.name}
-              />
-            );
-          })
-        ];
+        backButton,
+        assetsInfo.map(asset => (
+          <Asset
+            key={asset.path}
+            clickHandler={clickHandler}
+            funded={asset.funded}
+            goal={asset.goal}
+            image={asset.image}
+            path={asset.path}
+            city={asset.city}
+            country={asset.country}
+            name={asset.name}
+          />
+        )),
+      ];
 
   const loadingElement = loading && (
     <div style={{ width: '100%' }}>
