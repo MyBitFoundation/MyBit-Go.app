@@ -18,7 +18,7 @@ let AUTH_HEADER = {
   Authorization: '',
 };
 
-export const UpholdApi = {
+const UpholdApi = {
   async userDetails(_accessToken) {
     AUTH_HEADER = `Bearer ${_accessToken}`;
     const userDetails = await req.request({
@@ -41,14 +41,14 @@ export const UpholdApi = {
     return userVerified;
   },
 
-  async accessToken(_tempToken) {
-    const acessToken = await req.request({
+  async accessToken() {
+    const accessToken = await req.request({
       method: 'get',
       url: URLS.codeForAccess,
       header: AUTH_HEADER,
     });
-    console.log('Access Token: ', acessToken);
-    return acessToken;
+    console.log('Access Token: ', accessToken);
+    return accessToken;
   },
 
   async currencyTicker() {
@@ -119,7 +119,6 @@ export const UpholdApi = {
 
   async cardTransactions(_accessToken, _cardLabel) {
     AUTH_HEADER = `Bearer ${_accessToken}`;
-    let cardId = '';
     const results = await req.request({
       method: 'get',
       url: URLS.cards,
@@ -128,7 +127,6 @@ export const UpholdApi = {
     const resultJson = JSON.parse(results);
     resultJson.forEach(async (card) => {
       if (card.label === _cardLabel) {
-        cardId = card.id;
         const transactions = await req.request({
           method: 'get',
           url: URLS.cards,
@@ -136,6 +134,9 @@ export const UpholdApi = {
         });
         return JSON.parse(transactions);
       }
+      return {}; // TODO: Is this an appropriate return?
     });
   },
 };
+
+export default UpholdApi;

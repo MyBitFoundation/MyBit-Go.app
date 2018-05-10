@@ -1,5 +1,5 @@
 import { promisifyAll } from 'bluebird';
-import * as Database from './Database.js';
+import * as Database from './Database';
 
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });

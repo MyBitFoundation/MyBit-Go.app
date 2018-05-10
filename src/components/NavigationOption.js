@@ -1,9 +1,12 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
+// TODO: Fix the JSX linting errors
 import React from 'react';
+import PropTypes from 'prop-types';
 import { noop } from '../constants';
 
 const classNames = require('classnames');
 
-export const NavigationOption = ({
+const NavigationOption = ({
   name,
   icon,
   clickHandler,
@@ -28,3 +31,13 @@ export const NavigationOption = ({
     </div>
   );
 };
+
+NavigationOption.propTypes = {
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  clickHandler: PropTypes.func.isRequired,
+  selectable: PropTypes.bool.isRequired,
+  selected: PropTypes.bool.isRequired,
+};
+
+export default NavigationOption;

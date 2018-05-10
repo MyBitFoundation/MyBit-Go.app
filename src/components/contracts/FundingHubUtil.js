@@ -1,18 +1,20 @@
 import { promisifyAll } from 'bluebird';
-import * as FundingHub from './FundingHub.js';
+import * as FundingHub from './FundingHub';
 
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
 
-let totalContributorsPerAssetID;
-
 export default class FundingHubUtil {
+  constructor() {
+    this.totalContributorsPerAssetID = {};
+  }
+
   async load(web3, assetID) {
     const abi = await web3.eth.contract(FundingHub.ABI);
     this.instance = instancePromisifier(abi.at(FundingHub.ADDRESS));
     this.web3 = web3;
 
-    totalContributorsPerAssetID = {};
+    this.totalContributorsPerAssetID = {};
 
     this.LogNewFunder = this.instance.LogNewFunder(
       { _assetID: assetID },
@@ -23,19 +25,18 @@ export default class FundingHubUtil {
 
   async setEventListeners() {
     /* Listen for the events */
-    let _assetID;
-    let _totalContributors = 0;
-    this.LogNewFunder.watch((e, r) => {
-      if (!e) {
-        _assetID = r.args._assetID;
-        _totalContributors += 1;
-        totalContributorsPerAssetID[_assetID] = _totalContributors;
+    let totalContributors = 0;
+    this.LogNewFunder.watch((error, result) => {
+      if (!error) {
+        const { _assetID: assetID } = result.args;
+        totalContributors += 1;
+        this.totalContributorsPerAssetID[assetID] = totalContributors;
       }
     });
   }
 
-  async returnContributers(_assetID) {
-    return parseInt(totalContributorsPerAssetID[_assetID], 10);
+  async returnContributers(assetID) {
+    return parseInt(this.totalContributorsPerAssetID[assetID], 10);
   }
 
   async fund(_assetID, _value) {

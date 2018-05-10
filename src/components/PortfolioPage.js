@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const PortfolioPage = () => <div />;
+const PortfolioPage = () => <div />;
+export default PortfolioPage;

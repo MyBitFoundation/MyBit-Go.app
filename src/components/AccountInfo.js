@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 import { Address } from './Address';
 import '../styles/AccountInfo.css';
 
-export const AccountInfo = ({ myBitBalance, ethBalance, address }) => (
+const AccountInfo = ({ myBitBalance, ethBalance, address }) => (
   <div className="AccountInfo">
     <div className="AccountInfo__balance">
       <b className="AccountInfo__balance-header">Balance</b>
@@ -23,3 +24,11 @@ export const AccountInfo = ({ myBitBalance, ethBalance, address }) => (
     <Address address={address} />
   </div>
 );
+
+AccountInfo.propTypes = {
+  myBitBalance: PropTypes.number.isRequired,
+  ethBalance: PropTypes.number.isRequired,
+  address: PropTypes.string.isRequired,
+};
+
+export default AccountInfo;

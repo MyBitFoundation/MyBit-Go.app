@@ -10,9 +10,9 @@ import {
 import { getWeb3Async } from '../util/web3';
 
 /* Smart Contract Utils not Apps */
-import { default as DatabaseUtil } from './contracts/DatabaseUtil';
-import { default as HashFunctionsUtil } from './contracts/HashFunctionsUtil';
-import { default as AssetCreationUtil } from './contracts/AssetCreationUtil';
+import DatabaseUtil from './contracts/DatabaseUtil';
+import HashFunctionsUtil from './contracts/HashFunctionsUtil';
+import AssetCreationUtil from './contracts/AssetCreationUtil';
 
 import FundingHubUtil from './contracts/FundingHubUtil';
 
@@ -30,7 +30,7 @@ export default class AppContent extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     const web3 = await getWeb3Async();
     if (web3.isConnected()) {
       const assetID =
@@ -57,7 +57,7 @@ export default class AppContent extends React.Component {
         await dbInstance.uintStored(await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)),
         'ether',
       );
-      const percentageBar = amountRaised / amountToBeRaised * 100;
+      const percentageBar = (amountRaised / amountToBeRaised) * 100;
 
       const installerID = await assetCreationInstance.returnInstallerID(assetID);
       const totalContributors = await fundingHubInstance.returnContributers(assetID);
@@ -68,7 +68,7 @@ export default class AppContent extends React.Component {
         isWeb3synced: true,
         assetID,
         amountRaised,
-        fundingDeadline,
+        // fundingDeadline,
         amountToBeRaised,
         percentageBar,
         humanReadableDate,
@@ -130,7 +130,7 @@ export default class AppContent extends React.Component {
                       <p>
                         Our machines represent is the man on the street, the guy
                         who just wants to put in $10 in bitcoin or $200 in
-                        bitcoin. We didn't know what to expect, there's always a
+                        bitcoin. We didn&#39;t know what to expect, there&#39;s always a
                         question mark until you realize that your operators are
                         actually profitable and that this is a service that can
                         really work.

@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const SmallInfoPanel = () => <div />;
+const SmallInfoPanel = () => <div />;
+export default SmallInfoPanel;

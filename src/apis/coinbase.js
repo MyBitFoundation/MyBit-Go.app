@@ -27,8 +27,8 @@ const URLS = {
   revoke_access: 'https://api.coinbase.com/oauth/revoke',
 };
 
-export const CoinbaseApi = {
-  async initiateVerification(_tempCode) {},
+const CoinbaseApi = {
+  // async initiateVerification(_tempCode) {},
 
   async validBank(_accessToken) {
     HEADER.Authorization = `Bearer ${_accessToken}`;
@@ -38,12 +38,13 @@ export const CoinbaseApi = {
       headers: HEADER,
     });
     const responseData = JSON.parse(response.body).data;
-    for (let index = 0; index < responseData.length; index++) {
+    for (let index = 0; index < responseData.length; index += 1) {
       if (responseData[index].allow_withdraw) {
         console.log(`Valid Bank${responseData[index].allow_withdraw}`);
         return responseData[index].allow_withdraw;
       }
     }
+    return false; // TODO: Is this an appropriate return value?
   },
 
   async getAccountID(_accessToken) {
@@ -66,12 +67,13 @@ export const CoinbaseApi = {
       headers: HEADER,
     });
     const responseData = JSON.parse(response.body).data;
-    for (let index = 0; index < responseData.length; index++) {
+    for (let index = 0; index < responseData.length; index += 1) {
       if (responseData[index].name === 'ETH Wallet') {
         console.log(`ethwallet: ${responseData[index].id}`);
         return responseData[index].id;
       }
     }
+    return null; // TODO: Is this an appropriate return value?
   },
 
   async postTransaction(
@@ -79,7 +81,7 @@ export const CoinbaseApi = {
     _ethWalletId,
     _amountToSend,
     _addressToSend,
-    _verification,
+    // _verification,
   ) {
     TRANSACTIONHEADER.Authorization = `Bearer ${_accessToken}`;
     TRANSACTIONSEND.to = _addressToSend;
@@ -154,3 +156,5 @@ export const CoinbaseApi = {
     return response;
   },
 };
+
+export default CoinbaseApi;

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@storybook/addon-actions": "^3.4.3",
+    "@storybook/react": "^3.4.3",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "carbon-components": "^8.18.5",
@@ -20,6 +22,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.1.1",
+    "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "semantic-ui-css": "^2.3.0",
     "semantic-ui-react": "^0.78.3",
@@ -49,10 +52,6 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^3.4.0",
-    "@storybook/addon-links": "^3.4.0",
-    "@storybook/addons": "^3.4.0",
-    "@storybook/react": "^3.4.0",
     "babel-core": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "compression-webpack-plugin": "^1.1.11",

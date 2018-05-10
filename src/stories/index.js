@@ -11,14 +11,14 @@ import '../styles/NavigationBar.css';
 import { getWeb3Async } from '../util/web3';
 
 import { AppHeader } from '../components/AppHeader';
-import { NavigationOption } from '../components/NavigationOption';
+// import { NavigationOption } from '../components/NavigationOption';
 import { Address } from '../components/Address';
 import { ExplorePage } from '../components/ExplorePage';
 import { Category } from '../components/Category';
 import { ExploreAssetsPage } from '../components/ExploreAssetsPage';
-import { FiltersBar } from '../components/FiltersBar';
+// import { FiltersBar } from '../components/FiltersBar';
 import { Button } from '../components/Button';
-import { Asset } from '../components/Asset';
+// import { Asset } from '../components/Asset';
 import { PortfolioPage } from '../components/PortfolioPage';
 import { SmallInfoPanel } from '../components/SmallInfoPanel';
 import { TransactionsPage } from '../components/TransactionsPage';
@@ -27,11 +27,15 @@ import { Row } from '../components/Row';
 import { AssetDetailsPage } from '../components/AssetDetailsPage';
 import { AssetHero } from '../components/AssetHero';
 import { AssetDetails } from '../components/AssetDetails';
-import { default as AssetFunding } from '../components/AssetFunding';
+import AssetFunding from '../components/AssetFunding';
 import { ConfirmationPopup } from '../components/ConfirmationPopup';
-import { Grid } from 'semantic-ui-react';
-import { AppSidebar } from '../components/AppSidebar';
+// import { Grid } from 'semantic-ui-react';
+// import { AppSidebar } from '../components/AppSidebar';
 import { NavigationBar } from '../components/NavigationBar';
+
+const solarPanel1 = require('../images/Solar-Panel.png');
+const solarPanel2 = require('../images/Solar-Panel-2.png');
+const bitcoinAtm = require('../images/bitcoin-atm-4-2.png');
 
 const Header = (
   <AppHeader
@@ -71,7 +75,7 @@ storiesOf('Explore Assets Page', module)
     <ExploreAssetsPage
       assetsInfo={[
         {
-          image: require('../images/Solar-Panel.png'),
+          image: solarPanel1,
           path: '/crypto-currency-atm',
           funded: '1000',
           goal: '4000',
@@ -80,7 +84,7 @@ storiesOf('Explore Assets Page', module)
           name: 'Solar Powered Bench',
         },
         {
-          image: require('../images/Solar-Panel-2.png'),
+          image: solarPanel2,
           path: '/solar-energy',
           funded: '2000',
           goal: '4000',
@@ -89,7 +93,7 @@ storiesOf('Explore Assets Page', module)
           name: 'Solar Powered Bench',
         },
         {
-          image: require('../images/bitcoin-atm-4-2.png'),
+          image: bitcoinAtm,
           path: '/crypto-currency-atm',
           funded: '3000',
           goal: '4000',
@@ -98,7 +102,7 @@ storiesOf('Explore Assets Page', module)
           name: 'Bitcoin ATM',
         },
         {
-          image: require('../images/bitcoin-atm-4-2.png'),
+          image: bitcoinAtm,
           path: '/solar-energy',
           funded: '4000',
           goal: '4000',
@@ -132,13 +136,13 @@ storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
 
 storiesOf('Asset Details', module).add('view', () => <AssetDetails />);
 
-// @TODO Refactor this into a wrappeable component through React.children
+// @TODO Refactor this into a wrappable component through React.children
 class AssetFundingWeb3Wrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = { web3: undefined };
   }
-  async componentDidMount() {
+  async componentWillMount() {
     this.setState({ web3: await getWeb3Async() });
   }
   render() {

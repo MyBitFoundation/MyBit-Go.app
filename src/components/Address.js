@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
 
-export const Address = ({ address }) => (
+const Address = ({ address }) => (
   <div className="Address">
     {!address ? (
       <div>
@@ -18,3 +19,9 @@ export const Address = ({ address }) => (
       )}
   </div>
 );
+
+Address.propTypes = {
+  address: PropTypes.string.isRequired,
+};
+
+export default Address;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 import { USD_MYB_SYMBOL } from '../constants';
 
@@ -17,3 +18,9 @@ export const ExchangeRate = ({ value }) => (
     </span>
   </div>
 );
+
+ExchangeRate.propTypes = {
+  value: PropTypes.number.isRequired,
+};
+
+export default ExchangeRate;

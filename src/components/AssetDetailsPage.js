@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const AssetDetailsPage = () => <div />;
+const AssetDetailsPage = () => <div />;
+export default AssetDetailsPage;

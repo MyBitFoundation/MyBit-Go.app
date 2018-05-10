@@ -1,5 +1,5 @@
 import { promisifyAll } from 'bluebird';
-import * as FundingHub from './FundingHub.js';
+import * as FundingHub from './FundingHub';
 
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
