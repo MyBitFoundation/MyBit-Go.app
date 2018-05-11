@@ -40,7 +40,7 @@ NavigationOption.propTypes = {
   selected: PropTypes.bool.isRequired,
 };
 
-NavigationOption.defaultProps ={
+NavigationOption.defaultProps = {
   clickHandler: () => noop,
 };
 
