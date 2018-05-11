@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../styles/AppHeader.css';
-import { Logo } from './Logo';
-import { ExchangeRate } from './ExchangeRate';
-import { AccountInfo } from './AccountInfo';
+import Logo from './Logo';
+import ExchangeRate from './ExchangeRate';
+import AccountInfo from './AccountInfo';
 
 const AppHeader = ({
   exchangeRate,

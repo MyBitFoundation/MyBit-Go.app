@@ -1,4 +1,4 @@
-import { TEST_ACTION } from './types';
+import TEST_ACTION from './types';
 
 const sendTestAction = val => ({
   type: TEST_ACTION,

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
-import { Address } from './Address';
+import Address from './Address';
 import '../styles/AccountInfo.css';
 
 const AccountInfo = ({ myBitBalance, ethBalance, address }) => (

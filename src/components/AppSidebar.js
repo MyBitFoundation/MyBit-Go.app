@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../styles/AppSidebar.css';
-import { NavigationOption } from './NavigationOption';
+import NavigationOption from './NavigationOption';
 
 const AppSidebar = ({ clickHandler }) => {
   const menuOptions = [

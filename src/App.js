@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import './styles/App.css';
 
-import { AppHeader } from './components/AppHeader';
-import { NavigationBar } from './components/NavigationBar';
-import { ExplorePage } from './components/ExplorePage';
+import AppHeader from './components/AppHeader';
+import NavigationBar from './components/NavigationBar';
+import ExplorePage from './components/ExplorePage';
 
 import * as actions from './actions';
 

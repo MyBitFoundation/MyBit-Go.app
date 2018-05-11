@@ -7,7 +7,7 @@ import {
   Button,
   Progress,
 } from 'semantic-ui-react';
-import { getWeb3Async } from '../util/web3';
+import getWeb3Async from '../util/web3';
 
 /* Smart Contract Utils not Apps */
 import DatabaseUtil from './contracts/DatabaseUtil';
