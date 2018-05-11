@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../styles/NavigationBar.css';
-import { NavigationOption } from './NavigationOption';
+import NavigationOption from './NavigationOption';
 import { debug } from '../constants';
 
 const exploreIcon = require('../images/search.png');
