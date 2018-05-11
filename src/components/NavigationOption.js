@@ -35,9 +35,13 @@ const NavigationOption = ({
 NavigationOption.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  clickHandler: PropTypes.func.isRequired,
+  clickHandler: PropTypes.func,
   selectable: PropTypes.bool.isRequired,
   selected: PropTypes.bool.isRequired,
+};
+
+NavigationOption.defaultProps ={
+  clickHandler: () => noop,
 };
 
 export default NavigationOption;
