@@ -52,27 +52,27 @@
     &-funding-wrapper{
       margin-top: 30px;
       text-align: center;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: start;
     }
 
     &-funds-raised{
       border-right: 1px solid #575757;
       padding-left: 0px;
       text-align: left;
-      float: left;
       padding-right: 20px;
       height: 57px;
     }
 
     &-funds-goal{
       border-right: 1px solid #575757;
-      float: left;
       padding: 0px 20px;
       height: 57px;
     }
 
     &-funds-investors{
-      padding-left: 20px;
-      float: left;
+      padding: 0px 20px;
     }
 
     &-funding-title{
@@ -90,7 +90,7 @@
 
     &-calculate-title{
       font-weight: 700;
-      margin-top: 130px;
+      margin-top: 40px;
       font-size: 20px;
     }
 
