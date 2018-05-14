@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import './styles/App.css';
 
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import ExplorePage from './components/ExplorePage';
 
-import { connect } from 'react-redux';
 import * as actions from './actions';
 
 const App = ({ state, sendTestAction }) => (

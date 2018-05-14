@@ -8,30 +8,30 @@ import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
 
-import { getWeb3Async } from '../util/web3';
+import getWeb3Async from '../util/web3';
 
-import { AppHeader } from '../components/AppHeader';
+import AppHeader from '../components/AppHeader';
 // import { NavigationOption } from '../components/NavigationOption';
-import { Address } from '../components/Address';
-import { ExplorePage } from '../components/ExplorePage';
-import { Category } from '../components/Category';
-import { ExploreAssetsPage } from '../components/ExploreAssetsPage';
+import Address from '../components/Address';
+import ExplorePage from '../components/ExplorePage';
+import Category from '../components/Category';
+import ExploreAssetsPage from '../components/ExploreAssetsPage';
 // import { FiltersBar } from '../components/FiltersBar';
-import { Button } from '../components/Button';
+import Button from '../components/Button';
 // import { Asset } from '../components/Asset';
-import { PortfolioPage } from '../components/PortfolioPage';
-import { SmallInfoPanel } from '../components/SmallInfoPanel';
-import { TransactionsPage } from '../components/TransactionsPage';
-import { TransactionHistory } from '../components/TransactionHistory';
-import { Row } from '../components/Row';
-import { AssetDetailsPage } from '../components/AssetDetailsPage';
-import { AssetHero } from '../components/AssetHero';
-import { AssetDetails } from '../components/AssetDetails';
+import PortfolioPage from '../components/PortfolioPage';
+import SmallInfoPanel from '../components/SmallInfoPanel';
+import TransactionsPage from '../components/TransactionsPage';
+import TransactionHistory from '../components/TransactionHistory';
+import Row from '../components/Row';
+import AssetDetailsPage from '../components/AssetDetailsPage';
+import AssetHero from '../components/AssetHero';
+import AssetDetails from '../components/AssetDetails';
 import AssetFunding from '../components/AssetFunding';
-import { ConfirmationPopup } from '../components/ConfirmationPopup';
+import ConfirmationPopup from '../components/ConfirmationPopup';
 // import { Grid } from 'semantic-ui-react';
 // import { AppSidebar } from '../components/AppSidebar';
-import { NavigationBar } from '../components/NavigationBar';
+import NavigationBar from '../components/NavigationBar';
 
 const solarPanel1 = require('../images/Solar-Panel.png');
 const solarPanel2 = require('../images/Solar-Panel-2.png');
@@ -214,8 +214,6 @@ storiesOf('Button', module).add('view', () => <Button />);
 storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
 
 storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
-
-storiesOf('Asset Details', module).add('view', () => <AssetDetails />);
 
 // @TODO Refactor this into a wrappable component through React.children
 class AssetFundingWeb3Wrapper extends React.Component {

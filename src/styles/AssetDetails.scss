@@ -224,26 +224,3 @@
 .bx--slider--disabled .bx--slider__thumb:active{
   background-color: #2db84b;
 }
-
-
-@media only screen and (max-width: 1095px) {
-    .AssetDetails__left-funds-investors p:nth-child(1) {
-        width: 100px;
-    }
-}
-
-@media only screen and (max-width: 1024px) {
-    .AssetDetails__left-funds-investors p:nth-child(1) {
-        width: 100%;
-    }
-}
-
-@media only screen and (max-width: 1024px) {
-    .AssetDetails__left-funds-investors p:nth-child(1) {
-        width: 100%;
-    }
-
-    .AssetDetails__left{
-      padding-right: 0px;
-    }
-}
