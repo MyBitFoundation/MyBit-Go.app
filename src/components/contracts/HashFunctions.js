@@ -5,165 +5,165 @@ export const ABI = [
     inputs: [
       {
         name: '_param',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'addressHash',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_name',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     name: 'stringHash',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_param',
-        type: 'string'
+        type: 'string',
       },
       {
         name: '_paramTwo',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     name: 'stringString',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes'
+        type: 'bytes',
       },
       {
         name: '_user',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_amount',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_price',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_buyOrder',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     name: 'getOrderID',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_param',
-        type: 'string'
+        type: 'string',
       },
       {
         name: '_paramTwo',
-        type: 'bytes32'
+        type: 'bytes32',
       },
       {
         name: '_paramThree',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'stringBytesAddress',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_param',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'uintHash',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_param',
-        type: 'string'
+        type: 'string',
       },
       {
         name: '_paramTwo',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'stringUint',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -172,112 +172,112 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_staker',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_blockNumber',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_amount',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'getStakingID',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_param',
-        type: 'string'
+        type: 'string',
       },
       {
         name: '_paramTwo',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'stringBytes',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_param',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_paramTwo',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_paramThree',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'addressUintUint',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_param',
-        type: 'string'
+        type: 'string',
       },
       {
         name: '_paramTwo',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'stringAddress',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -286,94 +286,94 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_name',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     name: 'contractHash',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_paramOne',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_paramTwo',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_paramThree',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'uintUintUint',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_contractAddress',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_owner',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_fnName',
-        type: 'string'
+        type: 'string',
       },
       {
         name: '_recipient',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'getAuthorizeHash',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     inputs: [],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'constructor'
-  }
+    type: 'constructor',
+  },
 ];

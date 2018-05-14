@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const TransactionsPage = () => <div />;
+const TransactionsPage = () => <div />;
+export default TransactionsPage;

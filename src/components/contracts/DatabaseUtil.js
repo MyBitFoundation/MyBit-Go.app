@@ -1,5 +1,5 @@
 import { promisifyAll } from 'bluebird';
-import * as Database from './Database.js';
+import * as Database from './Database';
 
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
@@ -22,8 +22,8 @@ export default class DatabaseUtil {
   }
 
   async addressStorage(_bytes32) {
-    var addressStored = await this.instance.addressStorageAsync(_bytes32, {
-      from: this.web3.eth.coinbase
+    const addressStored = await this.instance.addressStorageAsync(_bytes32, {
+      from: this.web3.eth.coinbase,
     });
     return addressStored;
   }

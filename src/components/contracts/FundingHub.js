@@ -5,37 +5,37 @@ export const ABI = [
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'initiateRefund',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_functionInitiator',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_holdingAddress',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'destroy',
     outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -44,85 +44,85 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'refund',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'fund',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: true,
     stateMutability: 'payable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'payout',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     inputs: [
       {
         name: '_database',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'constructor'
+    type: 'constructor',
   },
   {
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'fallback'
+    type: 'fallback',
   },
   {
     anonymous: false,
@@ -130,21 +130,21 @@ export const ABI = [
       {
         indexed: true,
         name: '_funder',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: true,
         name: '_assetID',
-        type: 'bytes32'
+        type: 'bytes32',
       },
       {
         indexed: true,
         name: '_timestamp',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogNewFunder',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -152,21 +152,21 @@ export const ABI = [
       {
         indexed: true,
         name: '_sender',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: true,
         name: '_amount',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: true,
         name: '_timestamp',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogAssetFunded',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -174,21 +174,21 @@ export const ABI = [
       {
         indexed: true,
         name: '_assetID',
-        type: 'bytes32'
+        type: 'bytes32',
       },
       {
         indexed: true,
         name: '_amountRaised',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: true,
         name: '_timestamp',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogAssetFundingFailed',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -196,21 +196,21 @@ export const ABI = [
       {
         indexed: true,
         name: '_assetID',
-        type: 'bytes32'
+        type: 'bytes32',
       },
       {
         indexed: true,
         name: '_currentEthPrice',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: true,
         name: '_timestamp',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogAssetFundingSuccess',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -218,21 +218,21 @@ export const ABI = [
       {
         indexed: true,
         name: '_funder',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: true,
         name: '_amount',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: true,
         name: '_timestamp',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogRefund',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -240,21 +240,21 @@ export const ABI = [
       {
         indexed: true,
         name: '_assetID',
-        type: 'bytes32'
+        type: 'bytes32',
       },
       {
         indexed: true,
         name: '_amount',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: true,
         name: '_blockNumber',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogAssetPayout',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -262,21 +262,21 @@ export const ABI = [
       {
         indexed: true,
         name: '_locationSent',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: true,
         name: '_amountSent',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: true,
         name: '_caller',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'LogDestruction',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -284,20 +284,20 @@ export const ABI = [
       {
         indexed: false,
         name: '_value1',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: false,
         name: '_value2',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: false,
         name: '_value3',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'fundingLimitModifier',
-    type: 'event'
-  }
+    type: 'event',
+  },
 ];

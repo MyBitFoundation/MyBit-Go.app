@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const Category = () => <div />;
+const Category = () => <div />;
+export default Category;

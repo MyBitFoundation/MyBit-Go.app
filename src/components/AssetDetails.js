@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const AssetDetails = () => <div />;
+const AssetDetails = () => <div />;
+export default AssetDetails;

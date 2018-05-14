@@ -1,29 +1,35 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
+// TODO: Fix the JSX linting errors
 import React from 'react';
+import PropTypes from 'prop-types';
 import '../styles/ExplorePage.css';
 import { debug } from '../constants';
 
-export const ExplorePage = ({ clickHandler }) => {
+const cryptocurrencyAtm = require('../images/category-cryptocurrency-atm.png');
+const solarEnergy = require('../images/category-solar-energy.png');
+
+const ExplorePage = ({ clickHandler }) => {
   const categoriesInfo = [
     {
-      image: require('../images/category-cryptocurrency-atm.png'),
+      image: cryptocurrencyAtm,
       path: '/crypto-currency-atm',
-      name: 'Cryptocurrency ATM'
+      name: 'Cryptocurrency ATM',
     },
     {
-      image: require('../images/category-solar-energy.png'),
+      image: solarEnergy,
       path: '/solar-energy',
-      name: 'Solar Energy'
+      name: 'Solar Energy',
     },
     {
-      image: require('../images/category-cryptocurrency-atm.png'),
+      image: cryptocurrencyAtm,
       path: '/crypto-currency-atm2',
-      name: 'Cryptocurrency ATM'
+      name: 'Cryptocurrency ATM',
     },
     {
-      image: require('../images/category-solar-energy.png'),
+      image: solarEnergy,
       path: '/solar-energy2',
-      name: 'Solar Energy'
-    }
+      name: 'Solar Energy',
+    },
   ];
 
   const categories = categoriesInfo.map(category => (
@@ -34,9 +40,9 @@ export const ExplorePage = ({ clickHandler }) => {
       <div
         className="ExplorePage__image-container"
         onClick={
-          clickHandler ? clickHandler : debug(`Going to: ${category.path}`)
+          clickHandler || debug(`Going to: ${category.path}`)
         }
-        style={{ backgroundImage: 'url(' + category.image + ')' }}
+        style={{ backgroundImage: `url(${category.image})` }}
       >
         <p className="ExplorePage__category-name">{category.name}</p>
       </div>
@@ -45,3 +51,10 @@ export const ExplorePage = ({ clickHandler }) => {
 
   return <div className="ExplorePage grid">{categories}</div>;
 };
+
+ExplorePage.propTypes = {
+  clickHandler: PropTypes.func.isRequired,
+};
+
+
+export default ExplorePage;

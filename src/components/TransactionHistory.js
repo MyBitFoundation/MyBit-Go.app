@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const TransactionHistory = () => <div />;
+const TransactionHistory = () => <div />;
+export default TransactionHistory;

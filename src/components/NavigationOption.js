@@ -1,23 +1,27 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
+// TODO: Fix the JSX linting errors
 import React from 'react';
+import PropTypes from 'prop-types';
 import { noop } from '../constants';
-var classNames = require('classnames');
 
-export const NavigationOption = ({
+const classNames = require('classnames');
+
+const NavigationOption = ({
   name,
   icon,
   clickHandler,
   selectable,
-  selected
+  selected,
 }) => {
-  var optionClass = classNames({
+  const optionClass = classNames({
     AppNavigationBar__option: true,
     'AppNavigationBar__option--is-selected': selected,
-    'AppNavigationBar__option--is-selectable': selectable
+    'AppNavigationBar__option--is-selectable': selectable,
   });
 
   return (
     <div
-      className={'col AppNavigationBar__option-col'}
+      className="col AppNavigationBar__option-col"
       onClick={selectable ? () => clickHandler(name) : noop}
     >
       <div className={optionClass}>
@@ -27,3 +31,17 @@ export const NavigationOption = ({
     </div>
   );
 };
+
+NavigationOption.propTypes = {
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  clickHandler: PropTypes.func,
+  selectable: PropTypes.bool.isRequired,
+  selected: PropTypes.bool.isRequired,
+};
+
+NavigationOption.defaultProps = {
+  clickHandler: () => noop,
+};
+
+export default NavigationOption;

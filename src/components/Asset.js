@@ -1,10 +1,11 @@
 import React from 'react';
-import '../styles/Asset.css';
+import PropTypes from 'prop-types';
 import { Button } from 'carbon-components-react';
+import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
 import { debug } from '../constants';
 
-export const Asset = ({
+const Asset = ({
   clickHandler,
   funded,
   goal,
@@ -12,15 +13,15 @@ export const Asset = ({
   path,
   city,
   country,
-  name
+  name,
 }) => {
-  let barWidth = Math.ceil(100 * funded / goal) + '%';
+  const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
     <div className="col-3_md-4_sm-6_xs-12 Asset">
       <div className="Asset__container">
         <div
           className="Asset__image-holder"
-          style={{ backgroundImage: 'url(' + image + ')' }}
+          style={{ backgroundImage: `url(${image})` }}
         >
           <div className="Asset__image-holder-gradient" />
           <img
@@ -47,11 +48,7 @@ export const Asset = ({
             />
           </div>
           <Button
-            onClick={
-              clickHandler
-                ? clickHandler
-                : () => debug(`Clicked to contribute, path: ${path}`)
-            }
+            onClick={clickHandler || (() => debug(`Clicked to contribute, path: ${path}`))}
             className="Asset__details-contribute"
           >
             CONTRIBUTE
@@ -61,3 +58,16 @@ export const Asset = ({
     </div>
   );
 };
+
+Asset.propTypes = {
+  clickHandler: PropTypes.func.isRequired,
+  funded: PropTypes.bool.isRequired,
+  goal: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  country: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+};
+
+export default Asset;

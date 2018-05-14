@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const ConfirmationPopup = () => <div />;
+const ConfirmationPopup = () => <div />;
+export default ConfirmationPopup;
