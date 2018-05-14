@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import '../styles/AppSidebar.css';
-import { NavigationOption } from './NavigationOption';
+import NavigationOption from './NavigationOption';
 
-export const AppSidebar = ({ clickHandler = undefined }) => {
+const AppSidebar = ({ clickHandler }) => {
   const menuOptions = [
     { name: 'Explore' },
     { name: 'List Asset' },
@@ -11,7 +12,7 @@ export const AppSidebar = ({ clickHandler = undefined }) => {
     { name: 'Staking' },
     { name: 'Exchange Asset' },
     { name: 'Transaction History' },
-    { name: 'FAQ & Tutorials' }
+    { name: 'FAQ & Tutorials' },
   ];
 
   const sidebarMenu = menuOptions.map(menuItem => (
@@ -26,3 +27,13 @@ export const AppSidebar = ({ clickHandler = undefined }) => {
 
   return <div className="col-3 AppSidebar">{sidebarMenu}</div>;
 };
+
+AppSidebar.propTypes = {
+  clickHandler: PropTypes.func,
+};
+
+AppSidebar.defaultProps = {
+  clickHandler: undefined,
+};
+
+export default AppSidebar;

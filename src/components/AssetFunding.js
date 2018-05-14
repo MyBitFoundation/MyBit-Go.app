@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import { promisifyAll } from 'bluebird';
+// import { promisifyAll } from 'bluebird';
 
-import { default as DatabaseUtil } from './contracts/DatabaseUtil';
-import { default as HashFunctionsUtil } from './contracts/HashFunctionsUtil';
+import DatabaseUtil from './contracts/DatabaseUtil';
+import HashFunctionsUtil from './contracts/HashFunctionsUtil';
 
-const instancePromisifier = instance =>
-  promisifyAll(instance, { suffix: 'Async' });
+// const instancePromisifier = instance =>
+//   promisifyAll(instance, { suffix: 'Async' });
 
 class AssetFunding extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hashFunctionsInstance: null,
-      databaseInstance: null,
+      // hashFunctionsInstance: null,
+      // databaseInstance: null,
       amountToBeRaised: null,
-      assetID: null
+      // assetID: null,
     };
   }
-  async componentDidMount() {
+  async componentWillMount() {
     const { web3 } = this.props || {};
     if (web3.isConnected()) {
       const assetID =
@@ -28,14 +28,12 @@ class AssetFunding extends Component {
       await databaseInstance.load(web3);
 
       this.setState({
-        hashFunctionsInstance: hashFunctionsInstance,
-        databaseInstance: databaseInstance,
+        // hashFunctionsInstance,
+        // databaseInstance,
         amountToBeRaised: web3.fromWei(
-          await databaseInstance.uintStored(
-            await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)
-          ),
-          'ether'
-        )
+          await databaseInstance.uintStored(await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)),
+          'ether',
+        ),
       });
 
       console.log('amountToBeRaised', this.state.amountToBeRaised);

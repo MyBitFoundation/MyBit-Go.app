@@ -3,6 +3,20 @@ import React, { Component } from 'react';
 import { parseEtherFromBalance } from '../util/helpers';
 import { ARTIFICIAL_DELAY_IN_MS } from '../constants';
 
+const renderAccountsBalanceInfo = (accounts, loadingBalance, accountsMap, loadBalance) => {
+  const getAccountEthBalance =
+      account => (accountsMap[account] ? ` ${accountsMap[account]} ETH ` : ' N/A ETH ');
+  const getAccountBalance =
+      account => (loadingBalance ? ' Loading your balance ' : getAccountEthBalance(account));
+  return accounts.map(account => (
+    <pre key={account}>
+      Account: {account}<br />
+      Balance: {getAccountBalance(account)}
+      <button onClick={() => loadBalance(account)}>Get Balance</button>
+    </pre>
+  ));
+};
+
 class Accounts extends Component {
   constructor(props) {
     super(props);
@@ -10,18 +24,18 @@ class Accounts extends Component {
       accounts: [],
       accountsMap: {},
       loadingAccounts: false,
-      loadingBalance: false
+      loadingBalance: false,
     };
     this.loadBalance = this.loadBalance.bind(this);
   }
-  async componentDidMount() {
+  async componentWillMount() {
     const { web3 } = this.props;
     this.setState({ loadingAccounts: true });
     setTimeout(async () => {
       console.log('Loading accounts...');
       const accounts = await web3.eth.getAccountsAsync();
       console.log('Accounts loaded.');
-      this.setState({ loadingAccounts: false, accounts: accounts });
+      this.setState({ loadingAccounts: false, accounts });
     }, ARTIFICIAL_DELAY_IN_MS);
   }
   async loadBalance(account) {
@@ -30,13 +44,13 @@ class Accounts extends Component {
     setTimeout(async () => {
       const balance = await parseEtherFromBalance(
         web3,
-        await web3.eth.getBalanceAsync(account)
+        await web3.eth.getBalanceAsync(account),
       );
       const { accountsMap } = this.state;
       console.log('Balance for account', account, balance);
       this.setState({
         loadingBalance: false,
-        accountsMap: Object.assign(accountsMap, { [account]: balance })
+        accountsMap: Object.assign(accountsMap, { [account]: balance }),
       });
     }, ARTIFICIAL_DELAY_IN_MS);
   }
@@ -46,21 +60,12 @@ class Accounts extends Component {
         {this.state.loadingAccounts && <span>Loading...</span>}
         {this.state.accounts.length > 0 && (
           <div>
-            {this.state.accounts.map(account => (
-              <pre key={account}>
-                Account: {account}
-                <br />
-                Balance:
-                {this.state.loadingBalance
-                  ? ' Loading your balance '
-                  : this.state.accountsMap[account]
-                    ? ` ${this.state.accountsMap[account]} ETH `
-                    : ' N/A ETH '}
-                <button onClick={() => this.loadBalance(account)}>
-                  Get Balance
-                </button>
-              </pre>
-            ))}
+            {renderAccountsBalanceInfo(
+              this.state.accounts,
+              this.state.loadingBalance,
+              this.state.accountsMap,
+              this.loadBalance,
+            )}
           </div>
         )}
       </div>

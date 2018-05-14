@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@storybook/addon-actions": "^3.4.3",
+    "@storybook/react": "^3.4.3",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "carbon-components": "^8.18.22",
@@ -11,27 +13,19 @@
     "classnames": "^2.2.5",
     "dayjs": "^1.5.18",
     "gridlex": "^2.7.1",
-    "husky": "^0.14.3",
     "js-sha3": "^0.7.0",
-    "lint-staged": "^7.0.5",
-    "node-sass-chokidar": "^1.2.2",
+    "node-sass-chokidar": "^1.1.0",
     "npm-run-all": "^4.1.2",
-    "prettier": "^1.12.1",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-jazzicon": "0.0.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "^1.1.4",
+    "react-scripts": "^1.1.1",
+    "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "web3": "0.19.0"
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": [
-      "prettier --single-quote --write",
-      "git add"
-    ]
   },
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
@@ -42,8 +36,6 @@
     "build": "npm-run-all build-css build-js",
     "run-test": "react-scripts test --env=jsdom",
     "test": "npm-run-all build-css run-test",
-    "precommit": "lint-staged",
-    "format": "prettier --single-quote --write src/*.js src/**/*.js",
     "eject": "react-scripts eject",
     "start-storybook": "cross-env start-storybook -p $PORT -c .storybook",
     "storybook": "cross-env PORT=8080 npm-run-all -p watch-css start-storybook",
@@ -59,11 +51,7 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^3.4.3",
-    "@storybook/addon-links": "^3.4.3",
-    "@storybook/addons": "^3.4.0",
-    "@storybook/react": "^3.4.3",
-    "babel-core": "^6.26.3",
+    "babel-core": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "compression-webpack-plugin": "^1.1.11",
     "cross-env": "^5.1.4",

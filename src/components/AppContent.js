@@ -5,14 +5,14 @@ import {
   Segment,
   Header,
   Button,
-  Progress
+  Progress,
 } from 'semantic-ui-react';
-import { getWeb3Async } from '../util/web3';
+import getWeb3Async from '../util/web3';
 
 /* Smart Contract Utils not Apps */
-import { default as DatabaseUtil } from './contracts/DatabaseUtil';
-import { default as HashFunctionsUtil } from './contracts/HashFunctionsUtil';
-import { default as AssetCreationUtil } from './contracts/AssetCreationUtil';
+import DatabaseUtil from './contracts/DatabaseUtil';
+import HashFunctionsUtil from './contracts/HashFunctionsUtil';
+import AssetCreationUtil from './contracts/AssetCreationUtil';
 
 import FundingHubUtil from './contracts/FundingHubUtil';
 
@@ -26,11 +26,11 @@ export default class AppContent extends React.Component {
     this.state = {
       web3: null,
       isWeb3synced: false,
-      assetID: null
+      assetID: null,
     };
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     const web3 = await getWeb3Async();
     if (web3.isConnected()) {
       const assetID =
@@ -45,45 +45,35 @@ export default class AppContent extends React.Component {
       await assetCreationInstance.load(web3, assetID);
 
       const amountRaised = web3.fromWei(
-        await dbInstance.uintStored(
-          await hashFunctionsInstance.stringBytes('amountRaised', assetID)
-        ),
-        'ether'
+        await dbInstance.uintStored(await hashFunctionsInstance.stringBytes('amountRaised', assetID)),
+        'ether',
       );
       const fundingDeadline = parseInt(
-        await dbInstance.uintStored(
-          await hashFunctionsInstance.stringBytes('fundingDeadline', assetID)
-        ),
-        10
+        await dbInstance.uintStored(await hashFunctionsInstance.stringBytes('fundingDeadline', assetID)),
+        10,
       );
       const humanReadableDate = new Date(fundingDeadline * 1000).toString();
       const amountToBeRaised = web3.fromWei(
-        await dbInstance.uintStored(
-          await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)
-        ),
-        'ether'
+        await dbInstance.uintStored(await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)),
+        'ether',
       );
-      const percentageBar = amountRaised / amountToBeRaised * 100;
+      const percentageBar = (amountRaised / amountToBeRaised) * 100;
 
-      const installerID = await assetCreationInstance.returnInstallerID(
-        assetID
-      );
-      const totalContributors = await fundingHubInstance.returnContributers(
-        assetID
-      );
+      const installerID = await assetCreationInstance.returnInstallerID(assetID);
+      const totalContributors = await fundingHubInstance.returnContributers(assetID);
       console.log(totalContributors);
 
       this.setState({
-        web3: web3,
+        web3,
         isWeb3synced: true,
-        assetID: assetID,
-        amountRaised: amountRaised,
-        fundingDeadline: fundingDeadline,
-        amountToBeRaised: amountToBeRaised,
-        percentageBar: percentageBar,
-        humanReadableDate: humanReadableDate,
-        installerID: installerID,
-        totalContributors: totalContributors
+        assetID,
+        amountRaised,
+        // fundingDeadline,
+        amountToBeRaised,
+        percentageBar,
+        humanReadableDate,
+        installerID,
+        totalContributors,
       });
       // Fixed assetID for testing
       // Currently not a real assetID
@@ -100,7 +90,7 @@ export default class AppContent extends React.Component {
       assetID,
       humanReadableDate,
       installerID,
-      totalContributors
+      totalContributors,
     } = this.state;
 
     return (
@@ -116,11 +106,11 @@ export default class AppContent extends React.Component {
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 display: 'block',
-                marginTop: '5px'
+                marginTop: '5px',
               }}
             >
               Contribute{' '}
-              {/* fundingHubInstance.fund(assetID, grabValueFromField)*/}
+              {/* fundingHubInstance.fund(assetID, grabValueFromField) */}
             </Button>
           </Grid.Column>
           <Grid.Column width={12}>
@@ -140,7 +130,7 @@ export default class AppContent extends React.Component {
                       <p>
                         Our machines represent is the man on the street, the guy
                         who just wants to put in $10 in bitcoin or $200 in
-                        bitcoin. We didn't know what to expect, there's always a
+                        bitcoin. We didn&#39;t know what to expect, there&#39;s always a
                         question mark until you realize that your operators are
                         actually profitable and that this is a service that can
                         really work.

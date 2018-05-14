@@ -1,4 +1,4 @@
-import { TEST_ACTION } from '../actions/types';
+import TEST_ACTION from '../actions/types';
 
 const INITIAL_STATE = { testVar: true };
 

@@ -1,14 +1,13 @@
 import { promisifyAll } from 'bluebird';
-import ABIInterfaceArray from '../../util/abi/HashFunctions.json';
+import * as FundingHub from './FundingHub';
 
-const SMART_CONTRACT_ADDRESS = '0xBb8737ACA3d995D08076856C785F2CeC47F2996b';
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
 
 export default class HashFunctionsUtil {
   async load(web3) {
-    const abi = await web3.eth.contract(ABIInterfaceArray);
-    this.instance = instancePromisifier(abi.at(SMART_CONTRACT_ADDRESS));
+    const abi = await web3.eth.contract(FundingHub.ABI);
+    this.instance = instancePromisifier(abi.at(FundingHub.ADDRESS));
     this.web3 = web3;
   }
 
@@ -17,10 +16,12 @@ export default class HashFunctionsUtil {
     return uintHashRes;
   }
 
-
   async stakingID(_staker, _blockNumber, _amount) {
     const stakingIDRes = await this.instance.getStakingIDAsync(
-      _staker, _blockNumber, _amount);
+      _staker,
+      _blockNumber,
+      _amount,
+    );
     return stakingIDRes;
   }
 
@@ -39,47 +40,61 @@ export default class HashFunctionsUtil {
     return contractHashRes;
   }
 
-  async stringAddress(_string, _address){
+  async stringAddress(_string, _address) {
     const stringAddressRes = await this.instance.stringAddressAsync(
-      _string, _address);
+      _string,
+      _address,
+    );
     return stringAddressRes;
   }
 
-  async stringBytes(_string, _bytes){
+  async stringBytes(_string, _bytes) {
     const stringBytesRes = await this.instance.stringBytesAsync(
-      _string, _bytes);
+      _string,
+      _bytes,
+    );
     return stringBytesRes;
   }
 
-  async stringUint(_string, _uint){
-    const stringUintRes = await this.instance.stringUintAsync(
-      _string, _uint);
+  async stringUint(_string, _uint) {
+    const stringUintRes = await this.instance.stringUintAsync(_string, _uint);
     return stringUintRes;
   }
 
-  async stringBytesAddress(_string, _bytes, _address){
+  async stringBytesAddress(_string, _bytes, _address) {
     const stringBytesAddressRes = await this.instance.stringBytesAddressAsync(
-      _string, _bytes, _address);
+      _string,
+      _bytes,
+      _address,
+    );
     return stringBytesAddressRes;
   }
 
-  async addressUintUint(_address, _uint, _uint2){
+  async addressUintUint(_address, _uint, _uint2) {
     const addressUintUintRes = await this.instance.addressUintUintAsync(
-      _address, _uint, _uint2);
+      _address,
+      _uint,
+      _uint2,
+    );
     return addressUintUintRes;
   }
 
-  async getAuthorizeHash(_contractAddress, _owner, _fnName, _recipient){
+  async getAuthorizeHash(_contractAddress, _owner, _fnName, _recipient) {
     const getAuthorizeHashRes = await this.instance.getAuthorizeHashAsync(
-      _contractAddress, _owner, _fnName, _recipient);
+      _contractAddress,
+      _owner,
+      _fnName,
+      _recipient,
+    );
     return getAuthorizeHashRes;
   }
 
-  async uintUintUint(_uint, _uint1, _uint2){
+  async uintUintUint(_uint, _uint1, _uint2) {
     const uintUintUintRes = await this.instance.getAuthorizeHashAsync(
-      _uint, _uint1, _uint2);
+      _uint,
+      _uint1,
+      _uint2,
+    );
     return uintUintUintRes;
   }
-
-
 }

@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from '../reducers';
 import { createLogger } from 'redux-logger';
+import rootReducer from '../reducers';
 
 export default function configureStore() {
   // Redux Configuration
@@ -10,7 +10,7 @@ export default function configureStore() {
   // Logging Middleware
   const logger = createLogger({
     level: 'info',
-    collapsed: true
+    collapsed: true,
   });
   middleware.push(logger);
 

@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const AssetHero = () => <div />;
+const AssetHero = () => <div />;
+export default AssetHero;
