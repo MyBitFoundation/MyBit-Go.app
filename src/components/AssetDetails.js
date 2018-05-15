@@ -7,20 +7,20 @@ import '../styles/AssetDetails.css';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
 import bakgroundImage from '../images/asset-details-page-header.png';
-var dayjs = require('dayjs');
+
+const dayjs = require('dayjs');
 
 class AssetDetails extends React.Component {
   constructor(props) {
     super(props);
+    const { goal, raised } = this.props.information;
     this.state = {
-      currentSelectedAmount: Math.floor(
-        (this.props.information.goal - this.props.information.raised) / 2
-      ),
+      currentSelectedAmount: Math.floor((goal - raised) / 2),
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
       acceptedTos: false,
-      displayWarning: false
+      displayWarning: false,
     };
     this.setDateDetails = this.setDateDetails.bind(this);
     this.endDateLocal = dayjs(this.props.information.dueDate);
@@ -35,64 +35,50 @@ class AssetDetails extends React.Component {
     this.setDateDetails();
   }
 
-  componenWillUnmount() {
-    this.clearInterval();
-  }
-
-  clearInterval() {
-    if (this.setDateInterval) {
-      clearInterval(this.setDateInterval);
-    }
-  }
-
   setDateDetails() {
     const maxInvestment =
       this.props.information.goal - this.props.information.raised;
 
-    //funding goal has been reached
+    // funding goal has been reached
     if (maxInvestment === 0) {
       this.setState({
         timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
-        endingAt: ''
+        endingAt: '',
       });
       this.clearInterval();
       return;
     }
-    //funding period has reached end date
+    // funding period has reached end date
     if (dayjs(new Date()) > this.endDateLocal) {
       this.setState({
         daysToGo: -1,
         timeToGo: 'Funding period has ended',
-        endingAt: `Funding period has ended on ${dayjs(
-          this.endDateLocal
-        ).format('dddd, MMMM D')}`
+        endingAt: `Funding period has ended on ${dayjs(this.endDateLocal).format('dddd, MMMM D')}`,
       });
       this.clearInterval();
       return;
     }
     const days = this.endDateLocal.diff(dayjs(), 'days');
     const seconds = this.endDateLocal.diff(dayjs(), 'seconds');
-    let calculateRemainingTime = dayjs()
+    const calculateRemainingTime = dayjs()
       .startOf('day')
       .add(seconds, 'seconds');
 
-    //less than 1 day until funding period ends
+    // less than 1 day until funding period ends
     if (days === 0) {
       const secondsToEndDate = this.endDateLocal.diff(dayjs(), 'seconds');
       const aux = dayjs()
         .startOf('day')
         .add(86400, 'seconds');
-      let secondsToMidnight = aux.diff(dayjs(), 'seconds');
+      const secondsToMidnight = aux.diff(dayjs(), 'seconds');
       let day = 'today';
       if (secondsToEndDate > secondsToMidnight) day = 'tomorrow';
 
       this.setState({
         timeToGo: `Ending in ${calculateRemainingTime.hour()}h ${calculateRemainingTime.minute()}m ${calculateRemainingTime.second()}s`,
         daysToGo: 0,
-        endingAt: `Funding period ends ${day} at ${dayjs(
-          this.endDateLocal
-        ).format('H:mm:ss')}`
+        endingAt: `Funding period ends ${day} at ${dayjs(this.endDateLocal).format('H:mm:ss')}`,
       });
 
       if (!this.setDateInterval || this.runningMinInterval) {
@@ -102,14 +88,12 @@ class AssetDetails extends React.Component {
         this.runningMinInterval = false;
       }
     } else {
-      //1 or more days until funding period ends
+      // 1 or more days until funding period ends
       const dayString = days === 1 ? 'day' : 'days';
       this.setState({
         timeToGo: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go`,
         daysToGo: days,
-        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format(
-          'dddd, MMMM D'
-        )} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`
+        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format('dddd, MMMM D')} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`,
       });
       if (!this.setDateInterval) {
         this.setDateInterval = setInterval(() => {
@@ -121,7 +105,7 @@ class AssetDetails extends React.Component {
   }
 
   setAcceptedTos(acceptedTos) {
-    this.setState({ acceptedTos: acceptedTos });
+    this.setState({ acceptedTos });
     if (acceptedTos && this.state.displayWarning) {
       this.setState({ displayWarning: false });
     }
@@ -131,28 +115,33 @@ class AssetDetails extends React.Component {
     return this.state.acceptedTos;
   }
 
-  handleConfirmClicked() {
-    if (!this.state.acceptedTos) {
-      this.setState({ displayWarning: true });
-    } else {
-      //TODO process transaction
-      this.setState({ acceptedTos: false });
-      return true;
+  clearInterval() {
+    if (this.setDateInterval) {
+      clearInterval(this.setDateInterval);
     }
   }
 
+  componenWillUnmount() {
+    this.clearInterval();
+  }
+
+  handleConfirmClicked() {
+    if (!this.state.acceptedTos) {
+      this.setState({ displayWarning: true });
+      return false;
+    }
+    // TODO process transaction
+    this.setState({ acceptedTos: false });
+    return true;
+  }
+
   render() {
-    const maxInvestment =
-      this.state.daysToGo < 0
-        ? 0
-        : this.props.information.goal - this.props.information.raised;
-    const ownership =
-      this.state.currentSelectedAmount * 100 / this.props.information.goal;
-    const etherValue = Number((
-      this.state.currentSelectedAmount / this.props.currentEthInUsd
-    ).toFixed(2));
-    let minInvestment =
-      this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
+    const maxInvestment = this.state.daysToGo < 0 ? 0 :
+      this.props.information.goal - this.props.information.raised;
+    const ownership = (this.state.currentSelectedAmount * 100) / this.props.information.goal;
+    const etherValue = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
+      .toFixed(2));
+    let minInvestment = this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
 
     if (maxInvestment <= 100 && maxInvestment > 0 && this.state.daysToGo > 0) {
       minInvestment = 1;
@@ -214,15 +203,11 @@ class AssetDetails extends React.Component {
             value={this.state.currentSelectedAmount}
             min={minInvestment}
             max={maxInvestment}
-            onChange={arg => {
-              this.setState({ currentSelectedAmount: arg.value });
-            }}
+            onChange={arg => this.setState({ currentSelectedAmount: arg.value })}
             hideTextInput
-            disabled={
-              this.state.daysToGo < 0 || maxInvestment === 0 ? true : false
-            }
+            disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           />
-          {/*100USD minimum as per connor's indication*/}
+          {/* 100USD minimum as per connor's indication */}
           <p className="AssetDetails__left-slider-min">
             Min. <b>{minInvestment} USD</b>
           </p>
@@ -260,25 +245,22 @@ class AssetDetails extends React.Component {
           <ModalWrapper
             id="ConfirmationPopup__container"
             buttonTriggerText="Contribute"
-            children={
-              <ConfirmationPopup
-                amountUsd={this.state.currentSelectedAmount}
-                amountEth={etherValue}
-                ownership={ownership}
-                setAcceptedTos={this.setAcceptedTos}
-                displayWarning={this.state.displayWarning}
-                getAcceptedTos={this.getAcceptedTos}
-              />
-            }
             shouldCloseAfterSubmit
             modalBeforeContent={false}
             primaryButtonText="Confirm"
             secondaryButtonText="Cancel"
-            handleSubmit={this.handleConfirmClicked.bind(this)}
-            disabled={
-              this.state.daysToGo < 0 || maxInvestment === 0 ? true : false
-            }
-          />
+            handleSubmit={this.handleConfirmClicked}
+            disabled={this.state.daysToGo < 0 || maxInvestment === 0}
+          >
+            <ConfirmationPopup
+              amountUsd={this.state.currentSelectedAmount}
+              amountEth={etherValue}
+              ownership={ownership}
+              setAcceptedTos={this.setAcceptedTos}
+              displayWarning={this.state.displayWarning}
+              getAcceptedTos={this.getAcceptedTos}
+            />
+          </ModalWrapper>
         </div>
         <div className="AssetDetails__right col_lg-6 col_md-12">
           <img
@@ -298,7 +280,7 @@ class AssetDetails extends React.Component {
             <b className="AssetDetails__right-title-details">Asset manager</b>
             <Address
               address={this.props.information.address}
-              className={'AssetDetails__right-address'}
+              className="AssetDetails__right-address"
             />
           </div>
         </div>
@@ -308,8 +290,18 @@ class AssetDetails extends React.Component {
 }
 
 AssetDetails.propTypes = {
-  information: PropTypes.object.isRequired,
-  currentEthInUsd: PropTypes.number.isRequired
+  information: PropTypes.shape({
+    dueDate: PropTypes.number.isRequired,
+    goal: PropTypes.number.isRequired,
+    raised: PropTypes.number.isRequired,
+    assetName: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
+    details: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+  }).isRequired,
+  currentEthInUsd: PropTypes.number.isRequired,
 };
 
 export default AssetDetails;

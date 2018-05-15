@@ -10,9 +10,8 @@ import ExplorePage from './components/ExplorePage';
 
 import * as actions from './actions';
 
-const App = ({ state, sendTestAction }) => (
+const App = ({ sendTestAction }) => (
   <div>
-    {console.log(state)}
     <AppHeader
       exchangeRate={2.13}
       myBitBalance={215}
@@ -31,7 +30,6 @@ const App = ({ state, sendTestAction }) => (
 
 App.propTypes = {
   sendTestAction: PropTypes.func.isRequired,
-  state: PropTypes.shape({}).isRequired,
 };
 
 const mapStateToProps = state => ({ state });

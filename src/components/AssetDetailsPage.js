@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Loading } from 'carbon-components-react';
+import axios from 'axios';
 import AssetDetails from './AssetDetails';
 import { debug } from '../constants';
 import '../styles/AssetDetailsPage.css';
-import axios from 'axios';
+
 
 class AssetDetailsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      currentEthInUsd: -1
+      currentEthInUsd: -1,
     };
 
     this.getEthereumValue = this.getEthereumValue.bind(this);
@@ -24,31 +24,26 @@ class AssetDetailsPage extends React.Component {
     this.getEthereumValue();
   }
 
+  getEthereumValue() {
+    axios
+      .get('https://api.coinmarketcap.com/v2/ticker/1027/')
+      .then((response) => {
+        try {
+          this.setState({
+            currentEthInUsd: response.data.data.quotes.USD.price,
+          });
+        } catch (err) {
+          debug(err);
+        }
+      }).catch(err => debug(err));
+  }
+
   componenWillUnmount() {
     clearInterval(this.coinMarketCapInterval);
   }
 
-  getEthereumValue() {
-    axios
-      .get('https://api.coinmarketcap.com/v2/ticker/1027/')
-      .then(response => {
-        try {
-          this.setState({
-            currentEthInUsd: response.data.data.quotes.USD.price
-          });
-          if (this.props.information) {
-            this.setState({ loading: false });
-          }
-        } catch (err) {
-          debug(err);
-        }
-      })
-      .catch(function(err) {
-        debug(err);
-      });
-  }
-
   render() {
+    const loading = this.state.currentEthInUsd === -1 || !this.props.information;
     const backButton = (
       <Button
         kind="secondary"
@@ -59,7 +54,7 @@ class AssetDetailsPage extends React.Component {
       </Button>
     );
 
-    const loadingElement = this.state.loading && (
+    const loadingElement = loading && (
       <div style={{ width: '100%', position: 'relative', top: '50px' }}>
         <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
         <p className="AssetDetailsPage-loading-message">
@@ -68,7 +63,7 @@ class AssetDetailsPage extends React.Component {
       </div>
     );
 
-    const assetDetails = !this.state.loading && (
+    const assetDetails = !loading && (
       <AssetDetails
         information={this.props.information}
         currentEthInUsd={this.state.currentEthInUsd}
@@ -86,8 +81,12 @@ class AssetDetailsPage extends React.Component {
   }
 }
 
+AssetDetailsPage.defaultProps = {
+  information: undefined,
+};
+
 AssetDetailsPage.propTypes = {
-  information: PropTypes.object
+  information: PropTypes.shape({}),
 };
 
 export default AssetDetailsPage;
