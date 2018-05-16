@@ -14,14 +14,14 @@ const AccountInfo = ({ myBitBalance, ethBalance, address }) => (
           small
           withOverlay={false}
         />
-        ) : (
-          <span className="AccountInfo__balance-info">
-            {myBitBalance} <b className="AccountInfo__balance-myb">MYB</b>
-            {ethBalance} <b>ETH</b>
-          </span>
-        )}
+      ) : (
+        <span className="AccountInfo__balance-info">
+          {myBitBalance} <b className="AccountInfo__balance-myb">MYB</b>
+          {ethBalance} <b>ETH</b>
+        </span>
+      )}
     </div>
-    <Address address={address} />
+    <Address className="AccountInfo__address" address={address} />
   </div>
 );
 

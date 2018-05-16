@@ -6,7 +6,8 @@ import App from './App';
 Enzyme.configure({ adapter: new Adapter() });
 
 it('renders without crashing', () => {
-  const wrapper = shallow(<App />);
+  const toRender = <App />;
+  const wrapper = shallow(toRender);
   const expected = 1;
   const actual = wrapper.length;
   expect(actual).toEqual(expected);

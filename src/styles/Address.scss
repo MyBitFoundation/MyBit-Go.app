@@ -1,8 +1,7 @@
 @import "./Constants.scss";
 
 .Address{
-    height: $headerHeight;
-    float: left;
+  height: 39px;
 
     &__text{
         font-size: 14px;
@@ -13,6 +12,8 @@
         width: 120px;
         line-height: 1;
         margin: 0px 0px;
+        position: relative;
+        top: -25px;
     }
 
     &--is-loading{
@@ -22,12 +23,12 @@
 
     &__loading-message{
         padding-left: 32px;
-        line-height: $headerHeight;
+        position: relative;
+        top: 12px;
     }
 }
 
 .AppHeader .paper{
-    top: 25px;
     position: relative;
     display: inherit !important;
 }

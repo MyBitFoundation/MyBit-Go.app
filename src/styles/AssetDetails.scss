@@ -1,0 +1,226 @@
+.AssetDetails{
+  padding-top: 25px;
+
+  &__left{
+    padding-left: 0px;
+    padding-right: 50px;
+
+    &-name{
+      font-size: 34px;
+      display: block;
+      color: #383838;
+      padding-bottom: 10px;
+    }
+
+    &-image-holder-location-icon{
+      height: 20px;
+      position: relative;
+      top: 3px;
+    }
+
+    &-image-holder-calendar-icon{
+      position: relative;
+      top: 3px;
+    }
+
+    &-location{
+      font-size: 18px;
+      color: #383838;
+      display: inline-block;
+      padding-left: 13px;
+    }
+
+    &-days-to-go-wrapper{
+      display: block;
+      padding-top: 40px;
+    }
+
+    &-days-to-go{
+      color: #125ac4;
+      font-size: 20px;
+      font-weight: 700;
+      display: inline-block;
+      padding-left: 18px;
+    }
+
+    &-due-date{
+      font-size: 14px;
+      color: #383838;
+      padding-top: 6px;
+    }
+
+    &-funding-wrapper{
+      margin-top: 30px;
+      text-align: center;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: start;
+    }
+
+    &-funds-raised{
+      border-right: 1px solid #575757;
+      padding-left: 0px;
+      text-align: left;
+      padding-right: 20px;
+      height: 57px;
+    }
+
+    &-funds-goal{
+      border-right: 1px solid #575757;
+      padding: 0px 20px;
+      height: 57px;
+    }
+
+    &-funds-investors{
+      padding: 0px 20px;
+    }
+
+    &-funding-title{
+      font-size: 14px;
+      font-weight: 500;
+      color: #383838;
+    }
+
+    &-funding-value{
+      font-size: 18px;
+      color: black;
+      position: relative;
+      top: 6px;
+    }
+
+    &-calculate-title{
+      font-weight: 700;
+      margin-top: 40px;
+      font-size: 20px;
+    }
+
+    &-slider-min{
+      width: max-content;
+      float: left;
+      padding-top: 10px;
+    }
+
+    &-slider-max{
+      text-align: right;
+      padding-top: 10px;
+    }
+
+    &-contribution{
+      font-size: 18px;
+      padding-top: 20px;
+      display: inline-block;
+      padding-right: 10px;
+    }
+
+    &-separator{
+      height: 31px;
+      border-right: 1px solid black;
+      display: inline-block;
+      position: relative;
+      top: 9px;
+      margin-right: 10px;
+    }
+
+    &-contribution-value{
+      color: #125ac4;
+    }
+
+    &-contribution-bordered{
+      display: inline-block;
+      padding-right: 10px;
+    }
+
+    &-ownership{
+      font-size: 18px;
+      padding-top: 20px;
+      padding-right: 10px;
+    }
+
+    &-contribution-inactive{
+      color: #d9d9d9;
+    }
+  }
+
+  &__right{
+    padding: 0px 0px;
+    background-color: rgba(231, 232, 235, 0.63);
+
+    &-image{
+      width: 100%;
+    }
+
+    &-wrapper{
+      padding: 0px 22px;
+    }
+
+    &-title-details{
+      font-size: 20px;
+      color: #383838;
+      display: block;
+      margin-top: 30px;
+    }
+
+    &-content-details{
+      font-size: 14px;
+      color: #383838;
+      margin-top: 20px;
+    }
+
+    &-address{
+      margin-top: 20px;
+      margin-bottom: 40px;
+
+      & p{
+        top: -28px;
+        width: max-content;
+        color: #125ac4;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.bx--btn--primary:nth-child(1){
+  width: 100%;
+  margin-top: 30px;
+}
+
+.bx--slider__range-label{
+  display: none;
+}
+
+.bx--slider{
+  margin: 0px 0px;
+}
+
+.bx--slider-container{
+  max-width: 100%;
+}
+
+.bx--form-item{
+  margin: 0px 0px;
+}
+
+.bx--slider__track{
+  background-color: rgba(31, 77, 193, 0.1);
+}
+
+.bx--slider__thumb{
+  background-color: #2db84b;
+
+  &:active{
+    background-color: #2db84b;
+  }
+  &:focus{
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.bx--slider__filled-track{
+  background-image: linear-gradient(268deg, #3ecd5d, #2db84b);
+}
+
+.bx--slider--disabled .bx--slider__thumb:active{
+  background-color: #2db84b;
+}
