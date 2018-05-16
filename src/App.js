@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import './styles/App.css';
@@ -17,7 +17,7 @@ import NavigationBar from './components/NavigationBar';
 
 import * as actions from './actions';
 
-const App = ({ sendTestAction }) => (
+const App = () => (
   <div>
     <AppHeader
       exchangeRate={2.13}
@@ -37,15 +37,10 @@ const App = ({ sendTestAction }) => (
         <Route path="*" component={NotFoundPage} />
       </Switch>
     </div>
-    <div>
-      <button onClick={() => sendTestAction('clicked')}>Click me!</button>
-    </div>
   </div>
 );
 
-App.propTypes = {
-  sendTestAction: PropTypes.func.isRequired,
-};
+App.propTypes = {};
 
 const mapStateToProps = state => ({ state });
 const mapDispatchToProps =
