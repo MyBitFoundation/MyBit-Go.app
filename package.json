@@ -48,8 +48,8 @@
     "deploy:dev": "surge build/ --domain mybit-dapp-ui-dev.surge.sh",
     "deploy:prod": "surge build/ --domain mybit-dapp-ui.surge.sh",
     "deploy": "surge build/",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint:fix": "eslint --ignore-path .gitignore --fix ."
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
