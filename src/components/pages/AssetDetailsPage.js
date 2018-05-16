@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Loading } from 'carbon-components-react';
 import axios from 'axios';
-import AssetDetails from './AssetDetails';
-import { debug } from '../constants';
-import '../styles/AssetDetailsPage.css';
+import AssetDetails from '../AssetDetails';
+import { debug } from '../../constants';
+import '../../styles/AssetDetailsPage.css';
 
 
 class AssetDetailsPage extends React.Component {
