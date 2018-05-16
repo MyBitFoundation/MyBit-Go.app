@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import '../styles/NavigationBar.css';
 import NavigationOption from './NavigationOption';
 import { debug } from '../constants';
@@ -15,10 +16,14 @@ const knowledgeBaseIcon = require('../images/question.png');
 
 const NavigationBar = ({ clickHandler }) => {
   const menuOptions = [{
-    name: 'Explore', icon: exploreIcon, selectable: true, selected: true,
+    name: 'Explore', icon: exploreIcon, selectable: true, selected: true, url: '/',
   },
-  { name: 'Portfolio', icon: portfolioIcon, selectable: true },
-  { name: 'Transactions', icon: transactionsIcon, selectable: true },
+  {
+    name: 'Portfolio', icon: portfolioIcon, selectable: true, url: '/portfolio',
+  },
+  {
+    name: 'Transactions', icon: transactionsIcon, selectable: true, url: '/transaction-history',
+  },
   { name: 'Saved', icon: savedIcon },
   { name: 'List Asset', icon: listAssetIcon },
   { name: 'Staking', icon: stakingIcon },
@@ -27,14 +32,16 @@ const NavigationBar = ({ clickHandler }) => {
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    <NavigationOption
-      key={menuItem.name}
-      name={menuItem.name}
-      icon={menuItem.icon}
-      selectable={menuItem.selectable}
-      selected={menuItem.selected}
-      clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
-    />
+    <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
+      <NavigationOption
+        key={menuItem.name}
+        name={menuItem.name}
+        icon={menuItem.icon}
+        selectable={menuItem.selectable}
+        selected={menuItem.selected}
+        clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
+      />
+    </Link>
   ));
 
   return (
