@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Loading } from 'carbon-components-react';
-import '../styles/ExploreAssetsPage.css';
-import Asset from './Asset';
+import '../../styles/ExploreAssetsPage.css';
+import Asset from '../Asset';
 
-import { debug } from '../constants';
+import { debug } from '../../constants';
 
 const ExploreAssetsPage = ({
   clickHandler,

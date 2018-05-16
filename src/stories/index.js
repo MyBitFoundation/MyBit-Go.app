@@ -10,27 +10,23 @@ import '../styles/NavigationBar.css';
 
 import getWeb3Async from '../util/web3';
 
-import AppHeader from '../components/AppHeader';
-// import { NavigationOption } from '../components/NavigationOption';
+import AssetDetailsPage from '../components/pages/AssetDetailsPage';
+import ExploreAssetsPage from '../components/pages/ExploreAssetsPage';
+import ExplorePage from '../components/pages/ExplorePage';
+import PortfolioPage from '../components/pages/PortfolioPage';
+import TransactionHistoryPage from '../components/pages/TransactionHistoryPage';
+
 import Address from '../components/Address';
-import ExplorePage from '../components/ExplorePage';
-import Category from '../components/Category';
-import ExploreAssetsPage from '../components/ExploreAssetsPage';
-// import { FiltersBar } from '../components/FiltersBar';
-import Button from '../components/Button';
-// import { Asset } from '../components/Asset';
-import PortfolioPage from '../components/PortfolioPage';
-import SmallInfoPanel from '../components/SmallInfoPanel';
-import TransactionsPage from '../components/TransactionsPage';
-import TransactionHistory from '../components/TransactionHistory';
-import Row from '../components/Row';
-import AssetDetailsPage from '../components/AssetDetailsPage';
+import AppHeader from '../components/AppHeader';
 import AssetHero from '../components/AssetHero';
 import AssetDetails from '../components/AssetDetails';
 import AssetFunding from '../components/AssetFunding';
-// import { Grid } from 'semantic-ui-react';
-// import { AppSidebar } from '../components/AppSidebar';
+import Button from '../components/Button';
+import Category from '../components/Category';
+import ConfirmationPopup from '../components/ConfirmationPopup';
 import NavigationBar from '../components/NavigationBar';
+import Row from '../components/Row';
+import SmallInfoPanel from '../components/SmallInfoPanel';
 
 const solarPanel1 = require('../images/Solar-Panel.png');
 const solarPanel2 = require('../images/Solar-Panel-2.png');
@@ -119,74 +115,9 @@ storiesOf('Explore Assets Page', module)
 
 storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
 
-storiesOf('Transactions Page', module).add('view', () => <TransactionsPage />);
+storiesOf('Asset Details Page', module).add('view', () => <AssetDetailsPage />);
 
-const assetInfo = {
-  assetName: 'Bitcoin ATM',
-  city: 'Zug',
-  country: 'Switzerland',
-  dueDate: new Date().setDate(new Date().getDate() + 2),
-  raised: 50000,
-  goal: 100000,
-  investors: 5,
-  minInvestment: 950,
-  maxInvestment: 9990,
-  expectedReturn: 18,
-  details:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi turpis metus, pretium eget venenatis quis, fringilla in mauris. Phasellus sit amet massa tellus. Proin eros augue, lobortis eget ex sit amet, accumsan tristique lorem.',
-  description:
-    'Proin luctus, neque eget tincidunt molestie, orci leo fringilla mauris, at tristique nisl quam vel turpis. Curabitur aliquam ante ac nulla vulputate, non vehicula quam venenatis. Sed pellentesque est justo, ac faucibus ex rutrum a. Sed placerat magna vitae justo tempus, in imperdiet enim pellentesque. Ut eget pulvinar massa. Morbi vitae turpis justo. Quisque tincidunt odio et eros vulputate sollicitudin. Nulla erat ipsum, tincidunt elementum felis eu, commodo sagittis lacus. Donec et ullamcorper est. Nullam tincidunt enim in tempus consequat.',
-  address: '0xDe384n4aw4fs52',
-};
-
-storiesOf('Asset Details Page', module)
-  .addDecorator(story => (
-    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
-  ))
-  .add('Normal view', () => (
-    <AssetDetailsPage
-      information={assetInfo}
-    />
-  ))
-  .add('Loading', () => <AssetDetailsPage />);
-
-const daysToGo = (
-  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
-);
-
-assetInfo.dueDate = new Date().setDate(new Date().getDate() - 2);
-const expired = (
-  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
-);
-
-assetInfo.dueDate = new Date().setDate(new Date().getDate() + 1);
-const oneDayToGoTomorrow = (
-  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
-);
-
-assetInfo.dueDate = new Date().setDate(new Date().getDate() + 0.0001);
-const oneDayToGoToday = (
-  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
-);
-
-assetInfo.raised = 100000;
-const funded = (
-  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
-);
-
-storiesOf('Asset Details', module)
-  .addDecorator(story => (
-    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
-  ))
-  .add('More than 1 day to go', () => daysToGo)
-  .add('1 day to go (tomorrow)', () => oneDayToGoTomorrow)
-  .add('1 day to go (today)', () => oneDayToGoToday)
-  .add('End date expired', () => expired)
-  .add('Goal reached', () => funded);
-
-storiesOf('Address', module).add('Normal', () => (
-  <Address address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac" />
-));
+storiesOf('Address', module).add('view', () => <Address />);
 
 storiesOf('Category', module).add('view', () => <Category />);
 
@@ -195,6 +126,8 @@ storiesOf('Button', module).add('view', () => <Button />);
 storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
 
 storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
+
+storiesOf('Asset Details', module).add('view', () => <AssetDetails />);
 
 // @TODO Refactor this into a wrappable component through React.children
 class AssetFundingWeb3Wrapper extends React.Component {
@@ -215,8 +148,12 @@ storiesOf('Asset Funding', module).add('view', () => (
   <AssetFundingWeb3Wrapper />
 ));
 
+storiesOf('Confirmation Popup', module).add('view', () => (
+  <ConfirmationPopup />
+));
+
 storiesOf('Transaction History', module).add('view', () => (
-  <TransactionHistory />
+  <TransactionHistoryPage />
 ));
 
 storiesOf('Row', module).add('view', () => <Row />);
