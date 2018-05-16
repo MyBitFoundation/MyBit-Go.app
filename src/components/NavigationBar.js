@@ -22,7 +22,7 @@ const NavigationBar = ({ clickHandler }) => {
     name: 'Portfolio', icon: portfolioIcon, selectable: true, url: '/portfolio',
   },
   {
-    name: 'Transactions', icon: transactionsIcon, selectable: true, url: '/transactions-history',
+    name: 'Transactions', icon: transactionsIcon, selectable: true, url: '/transaction-history',
   },
   { name: 'Saved', icon: savedIcon },
   { name: 'List Asset', icon: listAssetIcon },
