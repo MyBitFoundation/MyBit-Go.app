@@ -1,0 +1,119 @@
+.ConfirmationPopup{
+  height: 403px;
+  width: 348px;
+  background-color: #ffffff;
+  font-family: 'Roboto';
+
+  &__title{
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 50px;
+    border-bottom: 2px solid #dfe3e6;
+  }
+
+  &__wrapper{
+    padding: 0px 20px;
+    padding-top: 20px;
+    position: relative;
+  }
+
+  &__description{
+    font-size: 18px;
+    color: #5a6872;
+    padding-top: 10px;
+  }
+
+  &__description-amount{
+    position: absolute;
+    right: 20px;
+    font-size: 15px;
+    font-weight: 700;
+    color: black;
+  }
+
+  &__description-amount-right{
+    display: block;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+  }
+
+  &__line{
+    padding-top: 40px;
+    border-bottom: 1px solid #dfe3e6;
+  }
+
+  &__description-cost{
+    color: black;
+    padding-top: 20px;
+    line-height: 1;
+  }
+
+  &__tos-wrapper{
+    display: flex;
+    padding: 0px 40px;
+    padding-top: 13px;
+  }
+
+  &__tos-text{
+    font-size: 14px;
+    width: 165px;
+    text-align: center;
+  }
+
+  &__tos-message-error{
+    font-size: 14px;
+    color: red;
+    text-align: center;
+  }
+}
+
+#ConfirmationPopup__container .bx--modal-container{
+  height: 520px;
+  width: 348px;
+  padding: 0px 0px;
+  border-top: none;
+  min-width: auto;
+  min-height: auto;
+}
+
+#ConfirmationPopup__container .bx--modal-header{
+  display: none;
+}
+
+#ConfirmationPopup__container .bx--modal-content{
+  margin-bottom: 0px;
+}
+
+#ConfirmationPopup__container .bx--modal-footer{
+  margin: 0px 0px;
+  padding: 0px 0px;
+  background-color: white;
+}
+
+#ConfirmationPopup__container .bx--modal__buttons-container{
+  position: relative;
+}
+
+
+#ConfirmationPopup__container .bx--btn--secondary{
+  width: 100%;
+  position: absolute;
+  top: 50px;
+  left: 0px;
+}
+
+#ConfirmationPopup__container .bx--btn--primary{
+  width: 100%;
+  position: absolute;
+  margin: 0px 0px;
+  left: 0px;
+}
+
+
+#ConfirmationPopup__container .bx--modal-footer{
+  padding: 0px 20px;
+  padding-top: 10px;
+}

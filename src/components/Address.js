@@ -4,8 +4,8 @@ import { Loading } from 'carbon-components-react';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
 
-const Address = ({ address }) => (
-  <div className="Address">
+const Address = ({ address, className }) => (
+  <div className={className}>
     {!address ? (
       <div>
         <Loading className="Address--is-loading" small withOverlay={false} />
@@ -22,6 +22,7 @@ const Address = ({ address }) => (
 
 Address.propTypes = {
   address: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
 };
 
 export default Address;
