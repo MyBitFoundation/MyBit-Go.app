@@ -2,11 +2,11 @@
 // TODO: Fix the JSX linting errors
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../styles/ExplorePage.css';
-import { debug } from '../constants';
+import '../../styles/ExplorePage.css';
+import { debug } from '../../constants';
 
-const cryptocurrencyAtm = require('../images/category-cryptocurrency-atm.png');
-const solarEnergy = require('../images/category-solar-energy.png');
+const cryptocurrencyAtm = require('../../images/category-cryptocurrency-atm.png');
+const solarEnergy = require('../../images/category-solar-energy.png');
 
 const ExplorePage = ({ clickHandler }) => {
   const categoriesInfo = [

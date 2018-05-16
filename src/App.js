@@ -6,7 +6,7 @@ import './styles/App.css';
 
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
-import ExplorePage from './components/ExplorePage';
+import ExplorePage from './components/pages/ExplorePage';
 
 import * as actions from './actions';
 
