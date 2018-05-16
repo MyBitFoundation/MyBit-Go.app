@@ -8,30 +8,25 @@ import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
 
-import { getWeb3Async } from '../util/web3';
+import getWeb3Async from '../util/web3';
 
-import { AppHeader } from '../components/AppHeader';
-// import { NavigationOption } from '../components/NavigationOption';
-import { Address } from '../components/Address';
-import { ExplorePage } from '../components/pages/ExplorePage';
-import { Category } from '../components/Category';
-import { ExploreAssetsPage } from '../components/pages/ExploreAssetsPage';
-// import { FiltersBar } from '../components/FiltersBar';
-import { Button } from '../components/Button';
-// import { Asset } from '../components/Asset';
-import { PortfolioPage } from '../components/pages/PortfolioPage';
-import { SmallInfoPanel } from '../components/SmallInfoPanel';
-import { TransactionsPage } from '../components/TransactionsPage';
-import { TransactionHistory } from '../components/TransactionHistory';
-import { Row } from '../components/Row';
-import { AssetDetailsPage } from '../components/pages/AssetDetailsPage';
-import { AssetHero } from '../components/AssetHero';
-import { AssetDetails } from '../components/AssetDetails';
+import AssetDetailsPage from '../components/pages/AssetDetailsPage';
+import ExploreAssetsPage from '../components/pages/ExploreAssetsPage';
+import ExplorePage from '../components/pages/ExplorePage';
+import PortfolioPage from '../components/pages/PortfolioPage';
+import TransactionHistoryPage from '../components/pages/TransactionHistoryPage';
+
+import Address from '../components/Address';
+import AppHeader from '../components/AppHeader';
+import AssetHero from '../components/AssetHero';
+import AssetDetails from '../components/AssetDetails';
 import AssetFunding from '../components/AssetFunding';
-import { ConfirmationPopup } from '../components/ConfirmationPopup';
-// import { Grid } from 'semantic-ui-react';
-// import { AppSidebar } from '../components/AppSidebar';
-import { NavigationBar } from '../components/NavigationBar';
+import Button from '../components/Button';
+import Category from '../components/Category';
+import ConfirmationPopup from '../components/ConfirmationPopup';
+import NavigationBar from '../components/NavigationBar';
+import Row from '../components/Row';
+import SmallInfoPanel from '../components/SmallInfoPanel';
 
 const solarPanel1 = require('../images/Solar-Panel.png');
 const solarPanel2 = require('../images/Solar-Panel-2.png');
@@ -120,8 +115,6 @@ storiesOf('Explore Assets Page', module)
 
 storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
 
-storiesOf('Transactions Page', module).add('view', () => <TransactionsPage />);
-
 storiesOf('Asset Details Page', module).add('view', () => <AssetDetailsPage />);
 
 storiesOf('Address', module).add('view', () => <Address />);
@@ -160,7 +153,7 @@ storiesOf('Confirmation Popup', module).add('view', () => (
 ));
 
 storiesOf('Transaction History', module).add('view', () => (
-  <TransactionHistory />
+  <TransactionHistoryPage />
 ));
 
 storiesOf('Row', module).add('view', () => <Row />);
