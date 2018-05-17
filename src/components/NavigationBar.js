@@ -39,7 +39,7 @@ const NavigationBar = ({ clickHandler }) => {
         icon={menuItem.icon}
         selectable={menuItem.selectable}
         selected={menuItem.selected}
-        clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
+        clickHandler={clickHandler(menuItem.name)}
       />
     </Link>
   ));
@@ -50,7 +50,11 @@ const NavigationBar = ({ clickHandler }) => {
 };
 
 NavigationBar.propTypes = {
-  clickHandler: PropTypes.func.isRequired,
+  clickHandler: PropTypes.func,
+};
+
+NavigationBar.defaultProps = {
+  clickHandler: debug,
 };
 
 
