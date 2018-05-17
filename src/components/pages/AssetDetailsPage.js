@@ -24,6 +24,10 @@ class AssetDetailsPage extends React.Component {
     this.getEthereumValue();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.coinMarketCapInterval);
+  }
+
   getEthereumValue() {
     axios
       .get('https://api.coinmarketcap.com/v2/ticker/1027/')
@@ -38,11 +42,8 @@ class AssetDetailsPage extends React.Component {
       }).catch(err => debug(err));
   }
 
-  componenWillUnmount() {
-    clearInterval(this.coinMarketCapInterval);
-  }
-
   render() {
+    const { assetId, category } = this.props.match.params;
     const loading = this.state.currentEthInUsd === -1 || !this.props.information;
     const backButton = (
       <Button
@@ -74,6 +75,7 @@ class AssetDetailsPage extends React.Component {
     return (
       <div style={{ position: 'relative' }}>
         {backButton}
+        <h1>{`${category} / ${assetId}`}</h1>
         {loadingElement}
         {assetDetails}
       </div>
@@ -81,12 +83,13 @@ class AssetDetailsPage extends React.Component {
   }
 }
 
-AssetDetailsPage.defaultProps = {
-  information: undefined,
-};
-
 AssetDetailsPage.propTypes = {
   information: PropTypes.shape({}),
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+};
+
+AssetDetailsPage.defaultProps = {
+  information: undefined,
 };
 
 export default AssetDetailsPage;

@@ -1,7 +1,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import './styles/App.css';
 
 import AssetDetailsPage from './components/pages/AssetDetailsPage';
@@ -28,11 +28,12 @@ const App = () => (
     <NavigationBar />
     <div className="page-wrapper">
       <Switch>
-        <Route exact path="/" component={ExplorePage} />
-        <Route exact path="/asset-details" component={AssetDetailsPage} />
+        <Route exact path="/" component={() => <Redirect to="/explore" />} />
         <Route exact path="/asset-payment" component={AssetPaymentPage} />
+        <Route exact path="/explore" component={ExplorePage} />
+        <Route exact path="/explore/:category" component={ExploreAssetsPage} />
+        <Route exact path="/explore/:category/:assetId" component={AssetDetailsPage} />
         <Route exact path="/portfolio" component={PortfolioPage} />
-        <Route exact path="/explore-assets" component={ExploreAssetsPage} />
         <Route exact path="/transaction-history" component={TransactionHistoryPage} />
         <Route path="*" component={NotFoundPage} />
       </Switch>
