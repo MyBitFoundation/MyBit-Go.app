@@ -2,37 +2,38 @@
 // TODO: Fix the JSX linting errors
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';
 
 const cryptocurrencyAtm = require('../../images/category-cryptocurrency-atm.png');
 const solarEnergy = require('../../images/category-solar-energy.png');
 
-const ExplorePage = ({ clickHandler }) => {
-  const categoriesInfo = [
-    {
-      image: cryptocurrencyAtm,
-      path: '/crypto-currency-atm',
-      name: 'Cryptocurrency ATM',
-    },
-    {
-      image: solarEnergy,
-      path: '/solar-energy',
-      name: 'Solar Energy',
-    },
-    {
-      image: cryptocurrencyAtm,
-      path: '/crypto-currency-atm2',
-      name: 'Cryptocurrency ATM',
-    },
-    {
-      image: solarEnergy,
-      path: '/solar-energy2',
-      name: 'Solar Energy',
-    },
-  ];
+const categoriesInfo = [
+  {
+    image: cryptocurrencyAtm,
+    path: 'crypto-currency-atm',
+    name: 'Cryptocurrency ATM',
+  },
+  {
+    image: solarEnergy,
+    path: 'solar-energy',
+    name: 'Solar Energy',
+  },
+  {
+    image: cryptocurrencyAtm,
+    path: 'crypto-currency-atm2',
+    name: 'Cryptocurrency ATM',
+  },
+  {
+    image: solarEnergy,
+    path: 'solar-energy2',
+    name: 'Solar Energy',
+  },
+];
 
-  const categories = categoriesInfo.map(category => (
+const renderCategories = (categories, clickHandler) => categories.map(category => (
+  <Link to={`/explore/${category.path}`} href={`/explore/${category.path}`}>
     <div
       key={category.path}
       className="col-3_md-4_sm-6_xs-12 ExplorePage__category"
@@ -47,13 +48,20 @@ const ExplorePage = ({ clickHandler }) => {
         <p className="ExplorePage__category-name">{category.name}</p>
       </div>
     </div>
-  ));
+  </Link>
+));
 
-  return <div className="ExplorePage grid">{categories}</div>;
-};
+
+const ExplorePage =
+  ({ clickHandler }) =>
+    <div className="ExplorePage grid">{renderCategories(categoriesInfo, clickHandler)}</div>;
 
 ExplorePage.propTypes = {
-  clickHandler: PropTypes.func.isRequired,
+  clickHandler: PropTypes.func,
+};
+
+ExplorePage.defaultProps = {
+  clickHandler: () => {},
 };
 
 
