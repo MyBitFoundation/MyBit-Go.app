@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import '../styles/NavigationBar.css';
 import NavigationOption from './NavigationOption';
 import { debug } from '../constants';
@@ -32,16 +31,15 @@ const NavigationBar = ({ clickHandler }) => {
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
-      <NavigationOption
-        key={menuItem.name}
-        name={menuItem.name}
-        icon={menuItem.icon}
-        selectable={menuItem.selectable}
-        selected={menuItem.selected}
-        clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
-      />
-    </Link>
+    <NavigationOption
+      url={menuItem.url}
+      key={menuItem.name}
+      name={menuItem.name}
+      icon={menuItem.icon}
+      selectable={menuItem.selectable}
+      selected={menuItem.selected}
+      clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
+    />
   ));
 
   return (
