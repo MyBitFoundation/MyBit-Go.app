@@ -2,6 +2,7 @@
 // TODO: Fix the JSX linting errors
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { noop } from '../constants';
 
 const classNames = require('classnames');
@@ -12,6 +13,7 @@ const NavigationOption = ({
   clickHandler,
   selectable,
   selected,
+  url
 }) => {
   const optionClass = classNames({
     AppNavigationBar__option: true,
@@ -20,15 +22,12 @@ const NavigationOption = ({
   });
 
   return (
-    <div
-      className="col AppNavigationBar__option-col"
-      onClick={selectable ? () => clickHandler(name) : noop}
-    >
+    <Link className="col AppNavigationBar__option-col" to={url || '/'} href={url || '/'}>
       <div className={optionClass}>
         <img alt={name} className="AppNavigationBar__option-img" src={icon} />
         <p className="AppNavigationBar__option-text">{name}</p>
       </div>
-    </div>
+    </Link>
   );
 };
 

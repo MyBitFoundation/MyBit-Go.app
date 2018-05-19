@@ -33,20 +33,20 @@ const categoriesInfo = [
 ];
 
 const renderCategories = (categories, clickHandler) => categories.map(category => (
-  <Link to={`/explore/${category.path}`} href={`/explore/${category.path}`}>
+  <Link
+    to={`/explore/${category.path}`}
+    href={`/explore/${category.path}`}
+    key={category.path}
+    className="col-3_md-4_sm-6_xs-12 ExplorePage__category"
+  >
     <div
-      key={category.path}
-      className="col-3_md-4_sm-6_xs-12 ExplorePage__category"
+      className="ExplorePage__image-container"
+      onClick={
+        clickHandler || debug(`Going to: ${category.path}`)
+      }
+      style={{ backgroundImage: `url(${category.image})` }}
     >
-      <div
-        className="ExplorePage__image-container"
-        onClick={
-          clickHandler || debug(`Going to: ${category.path}`)
-        }
-        style={{ backgroundImage: `url(${category.image})` }}
-      >
-        <p className="ExplorePage__category-name">{category.name}</p>
-      </div>
+      <p className="ExplorePage__category-name">{category.name}</p>
     </div>
   </Link>
 ));

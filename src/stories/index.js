@@ -2,6 +2,8 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+import MemoryRouter from 'react-router/MemoryRouter';
+import { assetsInfo, assetInfo } from './constants';
 
 import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
@@ -28,9 +30,10 @@ import NavigationBar from '../components/NavigationBar';
 import Row from '../components/Row';
 import SmallInfoPanel from '../components/SmallInfoPanel';
 
-const solarPanel1 = require('../images/Solar-Panel.png');
-const solarPanel2 = require('../images/Solar-Panel-2.png');
-const bitcoinAtm = require('../images/bitcoin-atm-4-2.png');
+
+const MemoryDecorator = (story) => (
+  <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
+)
 
 const Header = (
   <AppHeader
@@ -45,77 +48,43 @@ storiesOf('Header', module)
   .add('Normal view', () => Header)
   .add('Loading', () => <AppHeader />);
 
-storiesOf('Navigation Bar', module).add('view', () => (
-  <NavigationBar clickHandler={action('Clicked nav bar option')} />
-));
-
-storiesOf('Header & Nav Bar', module).add('view', () => (
-  <div>
-    {Header}
+storiesOf('Navigation Bar', module)
+  .addDecorator(MemoryDecorator)
+  .add('view', () => (
     <NavigationBar clickHandler={action('Clicked nav bar option')} />
-  </div>
 ));
 
-storiesOf('Explore Page', module).add('view', () => (
-  <div className="page-wrapper">
-    <ExplorePage clickHandler={action('Clicked category')} />
-  </div>
+storiesOf('Header & Nav Bar', module)
+  .addDecorator(MemoryDecorator)
+  .add('view', () => (
+    <div>
+      {Header}
+      <NavigationBar clickHandler={action('Clicked nav bar option')} />
+    </div>
+));
+
+storiesOf('Explore Page', module)
+  .addDecorator(MemoryDecorator)
+  .add('view', () => (
+    <div className="page-wrapper">
+      <ExplorePage clickHandler={action('Clicked category')} />
+    </div>
 ));
 
 storiesOf('Explore Assets Page', module)
-  .addDecorator(story => (
-    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
-  ))
+  .addDecorator(MemoryDecorator)
   .add('Normal view', () => (
     <ExploreAssetsPage
-      assetsInfo={[
-        {
-          image: solarPanel1,
-          path: '/crypto-currency-atm',
-          funded: '1000',
-          goal: '4000',
-          city: 'Lisbon',
-          country: 'Portugal',
-          name: 'Solar Powered Bench',
-        },
-        {
-          image: solarPanel2,
-          path: '/solar-energy',
-          funded: '2000',
-          goal: '4000',
-          city: 'Lisbon',
-          country: 'Portugal',
-          name: 'Solar Powered Bench',
-        },
-        {
-          image: bitcoinAtm,
-          path: '/crypto-currency-atm',
-          funded: '3000',
-          goal: '4000',
-          city: 'Lisbon',
-          country: 'Portugal',
-          name: 'Bitcoin ATM',
-        },
-        {
-          image: bitcoinAtm,
-          path: '/solar-energy',
-          funded: '4000',
-          goal: '4000',
-          city: 'Lisbon',
-          country: 'Portugal',
-          name: 'Bitcoin ATM',
-        },
-      ]}
+      assetsInfo={assetsInfo}
+      match= {{params:{category: "Solar Panel"}}}
     />
   ))
-  .add('Loading', () => <ExploreAssetsPage loading assetsInfo={[]} />)
+  .add('Loading', () => <ExploreAssetsPage loading assetsInfo={[]} match={{params:{category: "Solar Panel"}}} />)
   .add('No assets', () => (
-    <ExploreAssetsPage loading={false} assetsInfo={[]} category="Solar Panel" />
+    <ExploreAssetsPage loading={false} assetsInfo={[]} match={{params:{category: "Solar Panel"}}} category="Solar Panel" />
   ));
 
 storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
-
-storiesOf('Asset Details Page', module).add('view', () => <AssetDetailsPage />);
 
 storiesOf('Address', module).add('view', () => <Address />);
 
@@ -127,7 +96,51 @@ storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
 
 storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
 
-storiesOf('Asset Details', module).add('view', () => <AssetDetails />);
+storiesOf('Asset Details Page', module)
+  .addDecorator(story => (
+    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
+  ))
+  .add('Normal view', () => (
+    <AssetDetailsPage
+      information={{...assetInfo}}
+      match={{params:{category: "Solar Panel", assetId: "123"}}}
+    />
+  ))
+  .add('Loading', () => <AssetDetailsPage match={{params:{category: "Solar Panel", assetId: "123"}}} />);
+
+const daysToGo = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+assetInfo['dueDate'] = new Date().setDate(new Date().getDate() - 2);
+const expired = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+assetInfo['dueDate'] = new Date().setDate(new Date().getDate() + 1);
+const oneDayToGoTomorrow = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+assetInfo['dueDate'] = new Date().setDate(new Date().getDate() + 0.0001);
+const oneDayToGoToday = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+assetInfo['raised'] = 100000;
+const funded = (
+  <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
+);
+
+storiesOf('Asset Details', module)
+  .addDecorator(story => (
+    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
+  ))
+  .add('More than 1 day to go', () => daysToGo)
+  .add('1 day to go (tomorrow)', () => oneDayToGoTomorrow)
+  .add('1 day to go (today)', () => oneDayToGoToday)
+  .add('End date expired', () => expired)
+  .add('Goal reached', () => funded);
 
 // @TODO Refactor this into a wrappable component through React.children
 class AssetFundingWeb3Wrapper extends React.Component {
@@ -146,10 +159,6 @@ class AssetFundingWeb3Wrapper extends React.Component {
 
 storiesOf('Asset Funding', module).add('view', () => (
   <AssetFundingWeb3Wrapper />
-));
-
-storiesOf('Confirmation Popup', module).add('view', () => (
-  <ConfirmationPopup />
 ));
 
 storiesOf('Transaction History', module).add('view', () => (
