@@ -3,17 +3,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { noop } from '../constants';
 
 const classNames = require('classnames');
 
 const NavigationOption = ({
   name,
   icon,
-  clickHandler,
   selectable,
   selected,
-  url
+  url,
 }) => {
   const optionClass = classNames({
     AppNavigationBar__option: true,
@@ -34,13 +32,9 @@ const NavigationOption = ({
 NavigationOption.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  clickHandler: PropTypes.func,
   selectable: PropTypes.bool.isRequired,
   selected: PropTypes.bool.isRequired,
-};
-
-NavigationOption.defaultProps = {
-  clickHandler: () => noop,
+  url: PropTypes.string.isRequired,
 };
 
 export default NavigationOption;

@@ -2,13 +2,13 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import MemoryRouter from 'react-router/MemoryRouter';
-import { assetsInfo, assetInfo } from './constants';
+import MemoryRouter from 'react-router-dom/MemoryRouter';
 
 import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
+import { assetsInfo, assetInfo } from './constants';
 
 import getWeb3Async from '../util/web3';
 
@@ -25,15 +25,14 @@ import AssetDetails from '../components/AssetDetails';
 import AssetFunding from '../components/AssetFunding';
 import Button from '../components/Button';
 import Category from '../components/Category';
-import ConfirmationPopup from '../components/ConfirmationPopup';
 import NavigationBar from '../components/NavigationBar';
 import Row from '../components/Row';
 import SmallInfoPanel from '../components/SmallInfoPanel';
 
 
-const MemoryDecorator = (story) => (
+const MemoryDecorator = story => (
   <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
-)
+);
 
 const Header = (
   <AppHeader
@@ -52,7 +51,7 @@ storiesOf('Navigation Bar', module)
   .addDecorator(MemoryDecorator)
   .add('view', () => (
     <NavigationBar clickHandler={action('Clicked nav bar option')} />
-));
+  ));
 
 storiesOf('Header & Nav Bar', module)
   .addDecorator(MemoryDecorator)
@@ -61,7 +60,7 @@ storiesOf('Header & Nav Bar', module)
       {Header}
       <NavigationBar clickHandler={action('Clicked nav bar option')} />
     </div>
-));
+  ));
 
 storiesOf('Explore Page', module)
   .addDecorator(MemoryDecorator)
@@ -69,19 +68,19 @@ storiesOf('Explore Page', module)
     <div className="page-wrapper">
       <ExplorePage clickHandler={action('Clicked category')} />
     </div>
-));
+  ));
 
 storiesOf('Explore Assets Page', module)
   .addDecorator(MemoryDecorator)
   .add('Normal view', () => (
     <ExploreAssetsPage
       assetsInfo={assetsInfo}
-      match= {{params:{category: "Solar Panel"}}}
+      match={{ params: { category: 'Solar Panel' } }}
     />
   ))
-  .add('Loading', () => <ExploreAssetsPage loading assetsInfo={[]} match={{params:{category: "Solar Panel"}}} />)
+  .add('Loading', () => <ExploreAssetsPage loading assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} />)
   .add('No assets', () => (
-    <ExploreAssetsPage loading={false} assetsInfo={[]} match={{params:{category: "Solar Panel"}}} category="Solar Panel" />
+    <ExploreAssetsPage loading={false} assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} category="Solar Panel" />
   ));
 
 storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
@@ -102,32 +101,32 @@ storiesOf('Asset Details Page', module)
   ))
   .add('Normal view', () => (
     <AssetDetailsPage
-      information={{...assetInfo}}
-      match={{params:{category: "Solar Panel", assetId: "123"}}}
+      information={{ ...assetInfo }}
+      match={{ params: { category: 'Solar Panel', assetId: '123' } }}
     />
   ))
-  .add('Loading', () => <AssetDetailsPage match={{params:{category: "Solar Panel", assetId: "123"}}} />);
+  .add('Loading', () => <AssetDetailsPage match={{ params: { category: 'Solar Panel', assetId: '123' } }} />);
 
 const daysToGo = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
 );
 
-assetInfo['dueDate'] = new Date().setDate(new Date().getDate() - 2);
+assetInfo.dueDate = new Date().setDate(new Date().getDate() - 2);
 const expired = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
 );
 
-assetInfo['dueDate'] = new Date().setDate(new Date().getDate() + 1);
+assetInfo.dueDate = new Date().setDate(new Date().getDate() + 1);
 const oneDayToGoTomorrow = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
 );
 
-assetInfo['dueDate'] = new Date().setDate(new Date().getDate() + 0.0001);
+assetInfo.dueDate = new Date().setDate(new Date().getDate() + 0.0001);
 const oneDayToGoToday = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
 );
 
-assetInfo['raised'] = 100000;
+assetInfo.raised = 100000;
 const funded = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
 );
