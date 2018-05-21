@@ -48,7 +48,11 @@ const NavigationBar = ({ clickHandler }) => {
 };
 
 NavigationBar.propTypes = {
-  clickHandler: PropTypes.func.isRequired,
+  clickHandler: PropTypes.func,
+};
+
+NavigationBar.defaultProps = {
+  clickHandler: debug,
 };
 
 

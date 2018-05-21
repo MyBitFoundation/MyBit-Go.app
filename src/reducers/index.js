@@ -1,8 +1,15 @@
 import { combineReducers } from 'redux';
-import exampleReducer from './exampleReducer';
+
+import assets from './assets';
+import errors from './errors';
+import portfolio from './portfolio';
+import user from './user';
 
 const rootReducer = combineReducers({
-  example: exampleReducer,
+  assets,
+  errors,
+  portfolio,
+  user,
 });
 
 export default rootReducer;

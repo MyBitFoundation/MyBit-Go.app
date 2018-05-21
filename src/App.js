@@ -1,5 +1,5 @@
-import React from 'react';
-// import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import './styles/App.css';
@@ -17,34 +17,43 @@ import NavigationBar from './components/NavigationBar';
 
 import * as actions from './actions';
 
-const App = () => (
-  <div>
-    <AppHeader
-      exchangeRate={2.13}
-      myBitBalance={215}
-      ethBalance={20}
-      address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
-    />
-    <NavigationBar />
-    <div className="page-wrapper">
-      <Switch>
-        <Route exact path="/" component={() => <Redirect to="/explore" />} />
-        <Route exact path="/asset-payment" component={AssetPaymentPage} />
-        <Route exact path="/explore" component={ExplorePage} />
-        <Route exact path="/explore/:category" component={ExploreAssetsPage} />
-        <Route exact path="/explore/:category/:assetId" component={AssetDetailsPage} />
-        <Route exact path="/portfolio" component={PortfolioPage} />
-        <Route exact path="/transaction-history" component={TransactionHistoryPage} />
-        <Route path="*" component={NotFoundPage} />
-      </Switch>
-    </div>
-  </div>
-);
+class App extends Component {
+  componentWillMount() {
+    this.props.fetchAssets();
+  }
 
-App.propTypes = {};
+  render() {
+    return (
+      <div>
+        <AppHeader
+          exchangeRate={2.13}
+          myBitBalance={215}
+          ethBalance={20}
+          address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
+        />
+        <NavigationBar />
+        <div className="page-wrapper">
+          <Switch>
+            <Route exact path="/" component={() => <Redirect to="/explore" />} />
+            <Route exact path="/asset-payment" component={AssetPaymentPage} />
+            <Route exact path="/explore" component={ExplorePage} />
+            <Route exact path="/explore/:category" component={ExploreAssetsPage} />
+            <Route exact path="/explore/:category/:assetId" component={AssetDetailsPage} />
+            <Route exact path="/portfolio" component={PortfolioPage} />
+            <Route exact path="/transaction-history" component={TransactionHistoryPage} />
+            <Route path="*" component={NotFoundPage} />
+          </Switch>
+        </div>
+      </div>
+    );
+  }
+}
+
+App.propTypes = {
+  fetchAssets: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = state => ({ state });
-const mapDispatchToProps =
-    dispatch => ({ sendTestAction: value => dispatch(actions.sendTestAction(value)) });
+const mapDispatchToProps = dispatch => ({ fetchAssets: () => dispatch(actions.fetchAssets()) });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
