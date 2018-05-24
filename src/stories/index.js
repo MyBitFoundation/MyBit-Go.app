@@ -8,7 +8,7 @@ import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
-import { assetsInfo, assetInfo } from './constants';
+import { assetsInfo, assetInfo, portfolio } from './constants';
 
 import getWeb3Async from '../util/web3';
 
@@ -18,7 +18,7 @@ import ExplorePage from '../components/pages/ExplorePage';
 import PortfolioPage from '../components/pages/PortfolioPage';
 import TransactionHistoryPage from '../components/pages/TransactionHistoryPage';
 
-import Address from '../components/Address';
+
 import AppHeader from '../components/AppHeader';
 import AssetHero from '../components/AssetHero';
 import AssetDetails from '../components/AssetDetails';
@@ -28,6 +28,8 @@ import Category from '../components/Category';
 import NavigationBar from '../components/NavigationBar';
 import Row from '../components/Row';
 import SmallInfoPanel from '../components/SmallInfoPanel';
+
+import Address from '../components/Address';
 
 
 const MemoryDecorator = story => (
@@ -83,7 +85,9 @@ storiesOf('Explore Assets Page', module)
     <ExploreAssetsPage loading={false} assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} category="Solar Panel" />
   ));
 
-storiesOf('Portfolio Page', module).add('view', () => <PortfolioPage />);
+storiesOf('Portfolio Page', module)
+  .add('Normal view', () => <PortfolioPage portfolioValue={portfolio.portfolioValue} revenue={portfolio.revenue} />)
+  .add('Loading', () => <PortfolioPage />);
 
 storiesOf('Address', module).add('view', () => <Address />);
 

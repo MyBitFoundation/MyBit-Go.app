@@ -1,19 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'carbon-components-react';
+import { Link } from 'react-router-dom';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
 import { debug } from '../constants';
+import bitcoinAtm from '../images/bitcoin-atm.png';
 
 const Asset = ({
   clickHandler,
   funded,
   goal,
-  image,
-  path,
   city,
   country,
   name,
+  category,
+  id,
 }) => {
   const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
@@ -21,7 +23,7 @@ const Asset = ({
       <div className="Asset__container">
         <div
           className="Asset__image-holder"
-          style={{ backgroundImage: `url(${image})` }}
+          style={{ backgroundImage: `url(${bitcoinAtm})` }}
         >
           <div className="Asset__image-holder-gradient" />
           <img
@@ -47,27 +49,36 @@ const Asset = ({
               style={{ width: barWidth }}
             />
           </div>
-          <Button
-            onClick={clickHandler || (() => debug(`Clicked to contribute, path: ${path}`))}
-            className="Asset__details-contribute"
+          <Link
+            to={`/explore/${category}/${id}`}
+            href={`/explore/${category}/${id}`}
           >
-            CONTRIBUTE
-          </Button>
+            <Button
+              onClick={clickHandler || (() => debug(`Clicked to contribute, asset id: ${id}`))}
+              className="Asset__details-contribute"
+            >
+              CONTRIBUTE
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
 
+Asset.defaultProps = {
+  clickHandler: undefined,
+};
+
 Asset.propTypes = {
-  clickHandler: PropTypes.func.isRequired,
-  funded: PropTypes.bool.isRequired,
+  funded: PropTypes.number.isRequired,
   goal: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  path: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
   country: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  clickHandler: PropTypes.func,
+  id: PropTypes.string.isRequired,
 };
 
 export default Asset;

@@ -17,30 +17,35 @@ import NavigationBar from './components/NavigationBar';
 
 import * as actions from './actions';
 
+import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
+
 class App extends Component {
   componentWillMount() {
-    this.props.fetchAssets();
+    this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
+    this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
+
+    setTimeout(() => {
+      this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
+      this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
+    }, 5 * 60000);
   }
 
   render() {
     return (
       <div>
         <AppHeader
-          exchangeRate={2.13}
-          myBitBalance={215}
-          ethBalance={20}
-          address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
+          state={this.props.state}
         />
-        <NavigationBar />
+        <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">
           <Switch>
             <Route exact path="/" component={() => <Redirect to="/explore" />} />
             <Route exact path="/asset-payment" component={AssetPaymentPage} />
             <Route exact path="/explore" component={ExplorePage} />
-            <Route exact path="/explore/:category" component={ExploreAssetsPage} />
-            <Route exact path="/explore/:category/:assetId" component={AssetDetailsPage} />
-            <Route exact path="/portfolio" component={PortfolioPage} />
-            <Route exact path="/transaction-history" component={TransactionHistoryPage} />
+            <Route exact path="/explore/:category" component={match => <ExploreAssetsPage state={this.props.state} match={match.match} />} />
+            <Route exact path="/explore/:category/:assetId" component={match => <AssetDetailsPage state={this.props.state} match={match.match} />} />
+            <Route exact path="/portfolio" component={() => <PortfolioPage state={this.props.state} />} />
+            <Route exact path="/transaction-history" component={() => <TransactionHistoryPage state={this.props.state} setTransactionHistoryFilters={this.props.setTransactionHistoryFilters} />} />
             <Route path="*" component={NotFoundPage} />
           </Switch>
         </div>
@@ -50,10 +55,13 @@ class App extends Component {
 }
 
 App.propTypes = {
-  fetchAssets: PropTypes.func.isRequired,
+  fetchPriceFromCoinmarketcap: PropTypes.func.isRequired,
+  setTransactionHistoryFilters: PropTypes.func.isRequired,
+  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
+
 };
 
 const mapStateToProps = state => ({ state });
-const mapDispatchToProps = dispatch => ({ fetchAssets: () => dispatch(actions.fetchAssets()) });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, actions)(App));

@@ -4,9 +4,9 @@ import { Loading } from 'carbon-components-react';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
 
-const Address = ({ address, className }) => (
+const Address = ({ userName, className }) => (
   <div className={className}>
-    {!address ? (
+    {!userName ? (
       <div>
         <Loading className="Address--is-loading" small withOverlay={false} />
         <span className="Address__loading-message">Loading account</span>
@@ -14,14 +14,18 @@ const Address = ({ address, className }) => (
       ) : (
         <div>
           <Jazzicon diameter={39} seed={Math.random(100).toString()} />
-          <p className="Address__text">{address}</p>
+          <p className="Address__text">{userName}</p>
         </div>
       )}
   </div>
 );
 
+Address.defaultProps = {
+  userName: undefined,
+};
+
 Address.propTypes = {
-  address: PropTypes.string.isRequired,
+  userName: PropTypes.string,
   className: PropTypes.string.isRequired,
 };
 

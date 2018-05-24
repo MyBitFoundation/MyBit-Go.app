@@ -168,7 +168,7 @@ class AssetDetails extends React.Component {
               src={calendarIcon}
             />
             <p className="AssetDetails__left-days-to-go">
-              {this.state.timeToGo}{' '}
+              {this.state.timeToGo}
             </p>
           </div>
           <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
@@ -279,7 +279,7 @@ class AssetDetails extends React.Component {
             </p>
             <b className="AssetDetails__right-title-details">Asset manager</b>
             <Address
-              address={this.props.information.address}
+              userName={this.props.information.address}
               className="AssetDetails__right-address"
             />
           </div>
@@ -288,6 +288,10 @@ class AssetDetails extends React.Component {
     );
   }
 }
+
+AssetDetails.defaultProps = {
+  currentEthInUsd: undefined,
+};
 
 AssetDetails.propTypes = {
   information: PropTypes.shape({
@@ -301,7 +305,7 @@ AssetDetails.propTypes = {
     description: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
   }).isRequired,
-  currentEthInUsd: PropTypes.number.isRequired,
+  currentEthInUsd: PropTypes.number,
 };
 
 export default AssetDetails;
