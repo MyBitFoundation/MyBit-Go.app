@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
+// TODO: The previously suppressed error can actually be avoided with better syntax
 import getWeb3Async from '../util/web3';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
+import * as FundingHub from '../constants/contracts/FundingHub';
 
 const web3 = getWeb3Async();
 
@@ -22,10 +24,18 @@ export const fetchAssets = () => async (dispatch, getState) => {
   try {
     getState();
     const assetCreationContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
-    const fundingHubContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
+    const fundingHubContract = new web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
+
     const logAssetInfoEvents =
       await assetCreationContract
         .getPastEvents('LogAssetInfo', { fromBlock: 0, toBlock: 'latest' });
+    const logAssetFundingSuccessEvents =
+      await fundingHubContract
+        .getPastEvents('LogAssetFundingSuccess', { fromBlock: 0, toBlock: 'latest' });
+    const logAssetFundingStartedEvents =
+      await assetCreationContract
+        .getPastEvents('LogAssetFundingStarted', { fromBlock: 0, toBlock: 'latest' });
+
     const logAssetInfo = logAssetInfoEvents
       .map(({ returnValues }) => returnValues)
       .map(object => ({
@@ -33,10 +43,25 @@ export const fetchAssets = () => async (dispatch, getState) => {
         installerID: object._installerID,
         amountToBeRaised: object._amountToBeRaised,
       }));
-    const logAssetFundingSuccessEvents =
-      await fundingHubContract
-        .getPastEvents('LogAssetFundingSuccess', { fromBlock: 0, toBlock: 'latest' });
-    console.log(logAssetInfo, logAssetFundingSuccessEvents);
+    const logAssetFundingSuccess = logAssetFundingSuccessEvents
+      .map(({ returnValues }) => returnValues)
+      .map(object => ({
+        assetID: object._assetID,
+        currentEthPrice: object._currentEthPrice,
+        timestamp: object._timestamp,
+      }));
+    const logAssetFundingStarted = logAssetFundingStartedEvents
+      .map(({ returnValues }) => returnValues)
+      .map(object => ({
+        assetID: object._assetID,
+        assetType: object._assetType,
+        creator: object._creator,
+      }));
+
+    console.log(logAssetInfo);
+    console.log(logAssetFundingSuccess);
+    console.log(logAssetFundingStarted);
+
     const assets = [];
     dispatch(fetchAssetsSuccess(assets));
   } catch (error) {
