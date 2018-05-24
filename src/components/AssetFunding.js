@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 // import { promisifyAll } from 'bluebird';
 
-import DatabaseUtil from './contracts/DatabaseUtil';
-import HashFunctionsUtil from './contracts/HashFunctionsUtil';
+import DatabaseUtil from '../constants/contracts/DatabaseUtil';
+import HashFunctionsUtil from '../constants/contracts/HashFunctionsUtil';
 
 // const instancePromisifier = instance =>
 //   promisifyAll(instance, { suffix: 'Async' });

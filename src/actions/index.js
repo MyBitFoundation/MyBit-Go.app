@@ -1,3 +1,9 @@
+/* eslint-disable no-underscore-dangle */
+import getWeb3Async from '../util/web3';
+import * as AssetCreation from '../constants/contracts/AssetCreation';
+
+const web3 = getWeb3Async();
+
 // Action constants
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const FETCH_ASSETS_SUCCESS = 'FETCH_ASSETS_SUCCESS';
@@ -14,11 +20,47 @@ export const fetchAssets = () => async (dispatch, getState) => {
   dispatch(clearErrors());
   dispatch({ type: FETCH_ASSETS });
   try {
-    getState(); // TODO: Get the user credentials, etc
-    // TODO: Fetch with web3
-    const data = [1, 2, 3];
-    dispatch(fetchAssetsSuccess(data));
+    getState();
+    const assetCreationContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
+    const fundingHubContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
+    const logAssetInfoEvents =
+      await assetCreationContract
+        .getPastEvents('LogAssetInfo', { fromBlock: 0, toBlock: 'latest' });
+    const logAssetInfo = logAssetInfoEvents
+      .map(({ returnValues }) => returnValues)
+      .map(object => ({
+        assetID: object._assetID,
+        installerID: object._installerID,
+        amountToBeRaised: object._amountToBeRaised,
+      }));
+    const logAssetFundingSuccessEvents =
+      await fundingHubContract
+        .getPastEvents('LogAssetFundingSuccess', { fromBlock: 0, toBlock: 'latest' });
+    console.log(logAssetInfo, logAssetFundingSuccessEvents);
+    const assets = [];
+    dispatch(fetchAssetsSuccess(assets));
   } catch (error) {
     dispatch(fetchAssetsFailure(error));
   }
 };
+
+// TODO: as followed
+
+// Categories from AssetCreation/LogAssetFundingStarted comes from _assetType
+
+// Creator of an asset which comes from AssetCreation/LogAssetFundingStarted
+// from _creator
+
+// Funds raised and funding goals coming from AssetCreation/LogAssetInfo events and
+// FundingHub/LogAssetFundingSuccess (frontend note: more fetchAssets functionality)
+
+// LogNewFunder from FundingHub which lists the funding of particular
+// assets by event by owner (to be able to build up a user's portfolio)
+
+// Given a user, he should be able to fund a currently listed asset, looking for Payable functions,
+// (Kyle to halp)
+
+// Total asset revenue for an owner's owned assets and a breakdown by
+// categories of the user's owned assets
+
+// Transaction History functionality needs to be built (Kyle to halp)
