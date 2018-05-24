@@ -4,6 +4,8 @@ import getWeb3Async from '../util/web3';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as FundingHub from '../constants/contracts/FundingHub';
 
+import { mergeAllLogsByAssetId, mergeAndSumFundingEvents } from '../util/helpers';
+
 const web3 = getWeb3Async();
 
 // Action constants
@@ -49,7 +51,12 @@ export const fetchAssets = () => async (dispatch, getState) => {
         assetID: object._assetID,
         currentEthPrice: object._currentEthPrice,
         timestamp: object._timestamp,
-      }));
+      }))
+      .sort((a, b) => {
+        if (a.assetID < b.assetID) { return -1; }
+        if (a.assetID > b.assetID) { return 1; }
+        return 0;
+      });
     const logAssetFundingStarted = logAssetFundingStartedEvents
       .map(({ returnValues }) => returnValues)
       .map(object => ({
@@ -58,11 +65,19 @@ export const fetchAssets = () => async (dispatch, getState) => {
         creator: object._creator,
       }));
 
-    console.log(logAssetInfo);
-    console.log(logAssetFundingSuccess);
-    console.log(logAssetFundingStarted);
+    const talliedLogsAssetFundingSuccess = mergeAndSumFundingEvents(logAssetFundingSuccess);
 
-    const assets = [];
+    const combinedLogs =
+      logAssetInfo
+        .concat(talliedLogsAssetFundingSuccess)
+        .concat(logAssetFundingStarted)
+        .sort((a, b) => {
+          if (a.assetID < b.assetID) { return -1; }
+          if (a.assetID > b.assetID) { return 1; }
+          return 0;
+        });
+
+    const assets = mergeAllLogsByAssetId(combinedLogs);
     dispatch(fetchAssetsSuccess(assets));
   } catch (error) {
     dispatch(fetchAssetsFailure(error));
