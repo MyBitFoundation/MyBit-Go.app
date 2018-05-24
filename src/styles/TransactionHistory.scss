@@ -1,0 +1,50 @@
+.Transactions{
+
+  display: flex;
+
+  &__table-name{
+    font-size: 18px;
+    color: #152935;
+    padding-left: 20px;
+  }
+
+  &__history{
+    margin-top: 50px;
+  }
+
+  &__history-table{
+    border: none;
+    max-width: 560px;
+    font-family: 'Roboto';
+    margin-top: 10px;
+    overflow: hidden;
+  }
+
+  &__history-table-header{
+    background-color: #f5f7fa
+  }
+
+  &__overflowOption{
+    margin-left: 20px;
+    transform: rotate(90deg);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  &__history-column-header .bx--table-sort__svg{
+    opacity: 0.3;
+  }
+
+  & .bx--table-row:hover{
+
+    & .Transactions__overflowOption {
+      opacity: 1;
+      transition: opacity 0.1s;
+    }
+  }
+
+  & .bx--table-sort__svg{
+    position: relative;
+    left: 10px;
+  }
+}
