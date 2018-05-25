@@ -3,10 +3,9 @@
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
-import * as FundingHub from '../constants/contracts/FundingHub';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from '../constants';
 
-import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId, mergeAndSumFundingEvents } from '../util/helpers';
+import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId } from '../util/helpers';
 
 const web3 = getWeb3Async();
 
@@ -82,14 +81,11 @@ export const fetchAssets = () => async (dispatch, getState) => {
   try {
     const apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
     const assetCreationContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
-    // const fundingHubContract = new web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
 
     const logAssetInfoEvents =
       await assetCreationContract
         .getPastEvents('LogAssetInfo', { fromBlock: 0, toBlock: 'latest' });
-    // const logAssetFundingSuccessEvents =
-    //   await fundingHubContract
-    //     .getPastEvents('LogAssetFundingSuccess', { fromBlock: 0, toBlock: 'latest' });
+
     const logAssetFundingStartedEvents =
       await assetCreationContract
         .getPastEvents('LogAssetFundingStarted', { fromBlock: 0, toBlock: 'latest' });
@@ -101,18 +97,7 @@ export const fetchAssets = () => async (dispatch, getState) => {
         installerID: object._installerID,
         amountToBeRaised: object._amountToBeRaised,
       }));
-    // const logAssetFundingSuccess = logAssetFundingSuccessEvents
-    //   .map(({ returnValues }) => returnValues)
-    //   .map(object => ({
-    //     assetID: object._assetID,
-    //     currentEthPrice: object._currentEthPrice,
-    //     timestamp: object._timestamp,
-    //   }))
-    //   .sort((a, b) => {
-    //     if (a.assetID < b.assetID) { return -1; }
-    //     if (a.assetID > b.assetID) { return 1; }
-    //     return 0;
-    //   });
+
     const logAssetFundingStarted = logAssetFundingStartedEvents
       .map(({ returnValues }) => returnValues)
       .map(object => ({
@@ -120,8 +105,6 @@ export const fetchAssets = () => async (dispatch, getState) => {
         assetType: object._assetType,
         creator: object._creator,
       }));
-
-    // const talliedLogsAssetFundingSuccess = mergeAndSumFundingEvents(logAssetFundingSuccess);
 
     const combinedLogs =
       logAssetInfo
@@ -158,11 +141,8 @@ export const fetchAssets = () => async (dispatch, getState) => {
 
 // TODO: as followed
 
-// Funds raised and funding goals coming from AssetCreation/LogAssetInfo events and
-// FundingHub/LogAssetFundingSuccess (frontend note: more fetchAssets functionality)
-
 // LogNewFunder from FundingHub which lists the funding of particular
-// assets by event by owner (to be able to build up a user's portfolio)
+// assets by event by owner (to be able to build up a user's portfolio) (also Kyle to help)
 
 // Given a user, he should be able to fund a currently listed asset, looking for Payable functions,
 // (Kyle to halp)
