@@ -5,6 +5,7 @@ import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as FundingHub from '../constants/contracts/FundingHub';
 
 import { mergeAllLogsByAssetId, mergeAndSumFundingEvents } from '../util/helpers';
+import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId, mergeAndSumFundingEvents } from '../util/helpers';
 
 const web3 = getWeb3Async();
 
