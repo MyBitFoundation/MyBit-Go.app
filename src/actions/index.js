@@ -3,6 +3,7 @@
 import getWeb3Async from '../util/web3';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as FundingHub from '../constants/contracts/FundingHub';
+import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from '../constants';
 
 import { mergeAllLogsByAssetId, mergeAndSumFundingEvents } from '../util/helpers';
 import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId, mergeAndSumFundingEvents } from '../util/helpers';
@@ -14,13 +15,66 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const FETCH_ASSETS_SUCCESS = 'FETCH_ASSETS_SUCCESS';
 export const FETCH_ASSETS_FAILURE = 'FETCH_ASSETS_FAILURE';
 export const FETCH_ASSETS = 'FETCH_ASSETS';
+export const FETCH_MYBIT_PRICE_USD = 'FETCH_MYBIT_PRICE_USD';
+export const FETCH_MYBIT_PRICE_USD_SUCCESS = 'FETCH_MYBIT_PRICE_USD_SUCCESS';
+export const FETCH_MYBIT_PRICE_USD_FAILURE = 'FETCH_MYBIT_PRICE_USD_FAILURE';
+export const FETCH_ETHEREUM_PRICE_USD = 'FETCH_ETHEREUM_PRICE_USD';
+export const FETCH_ETHEREUM_PRICE_USD_SUCCESS = 'FETCH_ETHEREUM_PRICE_USD_SUCCESS';
+export const FETCH_ETHEREUM_PRICE_USD_FAILURE = 'FETCH_ETHEREUM_PRICE_USD_FAILURE';
 
 // Synchronous action creators
 export const fetchAssetsSuccess = assets => ({ type: FETCH_ASSETS_SUCCESS, payload: { assets } });
 export const fetchAssetsFailure = error => ({ type: FETCH_ASSETS_FAILURE, payload: { error } });
+export const fetchMyBitPriceUSDSuccess =
+    price => ({ type: FETCH_MYBIT_PRICE_USD_SUCCESS, payload: { price } });
+export const fetchMyBitPriceUSDFailure =
+    error => ({ type: FETCH_MYBIT_PRICE_USD_FAILURE, payload: { error } });
+export const fetchEthereumPriceUSDSuccess =
+    price => ({ type: FETCH_ETHEREUM_PRICE_USD_SUCCESS, payload: { price } });
+export const fetchEthereumPriceUSDFailure =
+    error => ({ type: FETCH_ETHEREUM_PRICE_USD_FAILURE, payload: { error } });
 export const clearErrors = () => ({ type: CLEAR_ERRORS });
 
 // Asynchronous action creators
+export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
+  switch (ticker) {
+    case MYBIT_TICKER_COINMARKETCAP:
+      dispatch({ type: FETCH_MYBIT_PRICE_USD });
+      break;
+    case ETHEREUM_TICKER_COINMARKETCAP:
+      dispatch({ type: FETCH_ETHEREUM_PRICE_USD });
+      break;
+    default:
+      throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
+  }
+  try {
+    const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
+    const jsonResponse = response.json();
+    const { price } = jsonResponse.data.data.quotes.USD;
+    switch (ticker) {
+      case MYBIT_TICKER_COINMARKETCAP:
+        dispatch({ type: FETCH_MYBIT_PRICE_USD_SUCCESS, payload: { price } });
+        break;
+      case ETHEREUM_TICKER_COINMARKETCAP:
+        dispatch({ type: FETCH_ETHEREUM_PRICE_USD_SUCCESS, payload: { price } });
+        break;
+      default:
+        throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
+    }
+  } catch (error) {
+    switch (ticker) {
+      case MYBIT_TICKER_COINMARKETCAP:
+        dispatch({ type: FETCH_MYBIT_PRICE_USD_FAILURE, payload: { error } });
+        break;
+      case ETHEREUM_TICKER_COINMARKETCAP:
+        dispatch({ type: FETCH_ETHEREUM_PRICE_USD_FAILURE, payload: { error } });
+        break;
+      default:
+        throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
+    }
+  }
+};
+
 export const fetchAssets = () => async (dispatch, getState) => {
   dispatch(clearErrors());
   dispatch({ type: FETCH_ASSETS });
