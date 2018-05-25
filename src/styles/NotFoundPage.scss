@@ -1,0 +1,71 @@
+@import 'include-media/dist/_include-media.scss';
+
+.NotFoundPage{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__image{
+    width: 90%;
+    max-width: 700px;
+
+    @include media('>=tablet') {
+        width: 55%;
+    }
+
+    @include media('>=desktop') {
+        width: 30%;
+    }
+  }
+
+  &__header-text{
+    font-size: 30px;
+    font-weight: 800;
+    color: #125ac4;
+    margin-top: -10px;
+    @include media('>=tablet') {
+        font-size: 80px;
+        margin-top: -40px;
+    }
+  }
+
+  &__message-text{
+    font-size: 15px;
+    color: #125ac4;
+    text-align: center;
+    @include media('>=tablet') {
+       font-size: 30px;
+    }
+  }
+
+  &__background-circle-right{
+    background-image: linear-gradient(to top, #f2f4f7, #ffffff);
+    border-radius: 50%;
+    width: 600px;
+    position: absolute;
+    z-index: -1;
+    right: -370px;
+    height: 110%;
+    top: 102px;
+    display: none;
+    @include media('>=desktop') {
+       display: block;
+    }
+  }
+
+  &__background-circle-left{
+    background-image: linear-gradient(to bottom, #f2f4f7, #ffffff);
+    border-radius: 50%;
+    width: 1200px;
+    position: absolute;
+    z-index: -1;
+    left: -650px;
+    height: 1200px;
+    bottom: -750px;
+    display: none;
+    @include media('>=desktop') {
+       display: block;
+    }
+  }
+}
