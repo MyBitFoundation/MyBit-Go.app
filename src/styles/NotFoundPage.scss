@@ -6,12 +6,11 @@
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: 165px;
-  height: calc(100vh - 165px);
+  top: 166px;
+  height: calc(100vh - 166px);
   width: 100%;
   left:0px;
   overflow: hidden;
-  z-index: -1;
 
   &__image{
     width: 70%;
@@ -73,6 +72,27 @@
     display: none;
     @include media('>=desktop') {
        display: block;
+    }
+  }
+
+  &__home-btn{
+    text-decoration: none;
+    margin-top: 20px;
+
+    & button{
+      height: 32px;
+      font-family: 'Roboto';
+      color: #ffffff;
+      border: 2px solid #125ac4;
+      margin-top: 10px;
+      background-color: #125ac4;
+      text-decoration: none;
+      z-index: 10;
+
+      &:hover{
+        background-color: #ffffff;
+        color: #125ac4;
+      }
     }
   }
 
