@@ -1,34 +1,19 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';
+import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
 
-const cryptocurrencyAtm = require('../../images/category-cryptocurrency-atm.png');
-const solarEnergy = require('../../images/category-solar-energy.png');
-
-const categoriesInfo = [
-  {
-    image: solarEnergy,
-    path: 'coffee-machines',
-    name: 'Coffee Machines',
-  },
-  {
-    image: cryptocurrencyAtm,
-    path: 'crypto-currency-atm',
-    name: 'Cryptocurrency ATM\'s',
-  },
-  {
-    image: solarEnergy,
-    path: 'solar-energy',
-    name: 'Solar Energy',
-  },
-  {
-    image: cryptocurrencyAtm,
-    path: 'miscellaneous',
-    name: 'Miscellaneous',
-  },
-];
+const getCategories =
+    assets =>
+      [...new Set(assets.map(asset => asset.category))]
+        .map(category => ({
+          image: getImageForCategory(category),
+          path: category,
+          name: getPrettyCategoryName(category),
+        }));
 
 const renderCategories = (categories, clickHandler) => categories.map(category => (
   <Link
@@ -58,10 +43,10 @@ class ExplorePage extends Component {
 
   render() {
     const { state } = this.props;
-    if (!state.assets.length) {
+    if (state.loading.assets) {
       return <div>Loading...</div>;
     }
-    return (<div className="ExplorePage grid">{renderCategories(categoriesInfo, this.props.clickHandler)}</div>);
+    return (<div className="ExplorePage grid">{renderCategories(getCategories(state.assets), this.props.clickHandler)}</div>);
   }
 }
 
