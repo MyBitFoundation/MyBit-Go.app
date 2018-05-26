@@ -1,8 +1,8 @@
 const initialState = {
-  userName: '',
+  userName: '0x123f681646d4a755815f9cb19e1acc8565a0c2ac',
   token: '',
-  ethBalance: 0.0,
-  myBitBalance: 0.0,
+  ethBalance: 20,
+  myBitBalance: 215,
 };
 
 const user = (state = initialState, action) => {

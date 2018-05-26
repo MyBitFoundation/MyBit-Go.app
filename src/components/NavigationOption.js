@@ -32,9 +32,16 @@ const NavigationOption = ({
 NavigationOption.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  selectable: PropTypes.bool.isRequired,
-  selected: PropTypes.bool.isRequired,
-  url: PropTypes.string.isRequired,
+  selectable: PropTypes.bool,
+  selected: PropTypes.bool,
+  url: PropTypes.string,
+};
+
+
+NavigationOption.defaultProps = {
+  selected: false,
+  selectable: false,
+  url: '',
 };
 
 export default NavigationOption;

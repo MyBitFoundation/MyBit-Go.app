@@ -19,8 +19,13 @@ const ExchangeRate = ({ value }) => (
   </div>
 );
 
+
+ExchangeRate.defaultProps = {
+  value: undefined,
+};
+
 ExchangeRate.propTypes = {
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
 };
 
 export default ExchangeRate;

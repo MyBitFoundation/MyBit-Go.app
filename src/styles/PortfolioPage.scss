@@ -1,0 +1,81 @@
+.Portfolio{
+
+  padding-top: 50px;
+
+  &__tile-expandable{
+      width: 283px;
+
+      &:focus{
+        outline: none;
+      }
+
+      & .bx--tile__chevron:focus{
+        outline: none;
+      }
+  }
+
+  &__tile{
+    height: 78px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    & div{
+      width: 70%;
+    }
+  }
+
+  & .bx--tile-content__below-the-fold .Portfolio__tile:nth-child(odd){
+    background-color: #f5f7fa;
+  }
+
+  &__tile-img{
+    height: 27px;
+    width: 30px;
+  }
+
+  & .bx--tile--expandable{
+    background-color: #ffffff;
+    padding:  0px 0px;
+  }
+
+  & .bx--tile__chevron svg{
+    fill: #125ac4;
+  }
+
+  & p{
+    padding: 2px 0px;
+    margin: 0px 0px;
+    color: #575757;
+    line-height: 0.9;
+  }
+
+  & b{
+    color: #125ac4;
+  }
+
+  &__revenue{
+    margin-left: 30px;
+  }
+
+  &__revenue b{
+    color: #2db84b;
+  }
+
+  &__wrapper{
+    display: flex;
+  }
+}
+
+
+@media only screen and (max-width: 695px) {
+    .Portfolio__wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .Portfolio__revenue{
+      margin-left: 0px;
+      margin-top: 30px;
+    }
+}

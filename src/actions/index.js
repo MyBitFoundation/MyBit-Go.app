@@ -14,6 +14,7 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const FETCH_ASSETS_SUCCESS = 'FETCH_ASSETS_SUCCESS';
 export const FETCH_ASSETS_FAILURE = 'FETCH_ASSETS_FAILURE';
 export const FETCH_ASSETS = 'FETCH_ASSETS';
+export const CHANGE_TRANSACTION_HISTORY_FILTERS = 'CHANGE_TRANSACTION_HISTORY_FILTERS';
 export const FETCH_MYBIT_PRICE_USD = 'FETCH_MYBIT_PRICE_USD';
 export const FETCH_MYBIT_PRICE_USD_SUCCESS = 'FETCH_MYBIT_PRICE_USD_SUCCESS';
 export const FETCH_MYBIT_PRICE_USD_FAILURE = 'FETCH_MYBIT_PRICE_USD_FAILURE';
@@ -33,6 +34,12 @@ export const fetchEthereumPriceUSDSuccess =
 export const fetchEthereumPriceUSDFailure =
     error => ({ type: FETCH_ETHEREUM_PRICE_USD_FAILURE, payload: { error } });
 export const clearErrors = () => ({ type: CLEAR_ERRORS });
+export const setTransactionHistoryFilters = (itemsPerPage, currentPage, sortBy, sortDir) => ({
+  type: CHANGE_TRANSACTION_HISTORY_FILTERS,
+  payload: {
+    itemsPerPage, currentPage, sortBy, sortDir,
+  },
+});
 
 // Asynchronous action creators
 export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
@@ -52,10 +59,16 @@ export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
     const { price } = jsonResponse.data.quotes.USD;
     switch (ticker) {
       case MYBIT_TICKER_COINMARKETCAP:
-        dispatch({ type: FETCH_MYBIT_PRICE_USD_SUCCESS, payload: { price } });
+        dispatch({
+          type: FETCH_MYBIT_PRICE_USD_SUCCESS,
+          payload: { price: Math.round(price * 100) / 100 },
+        });
         break;
       case ETHEREUM_TICKER_COINMARKETCAP:
-        dispatch({ type: FETCH_ETHEREUM_PRICE_USD_SUCCESS, payload: { price } });
+        dispatch({
+          type: FETCH_ETHEREUM_PRICE_USD_SUCCESS,
+          payload: { price: Math.round(price * 100) / 100 },
+        });
         break;
       default:
         throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');

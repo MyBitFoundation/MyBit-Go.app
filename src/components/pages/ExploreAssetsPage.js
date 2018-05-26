@@ -1,17 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button, Loading } from 'carbon-components-react';
+import { Button } from 'carbon-components-react';
 import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
-
-import { debug } from '../../constants';
+import LoadingPage from './LoadingPage';
 
 const ExploreAssetsPage = ({
-  clickHandler,
-  loading,
-  assetsInfo,
+  state,
   match,
 }) => {
   const { category } = match.params;
@@ -20,72 +17,72 @@ const ExploreAssetsPage = ({
     return <NotFoundPage />;
   }
 
+  const loading = state.assets.loaded;
+  const assetsInfo = state.assets[category];
+  const assetsInfoArray = assetsInfo ? Object.entries(assetsInfo) : null;
+
   const backButton = (
-    <Link to="/explore" href="/explore">
+    <Link key="/explore" to="/explore" href="/explore">
       <Button
         kind="secondary"
         className="ExploreAssetsPage__back-button"
-        onClick={debug('Clicked to go back')}
       >
       BACK
       </Button>
     </Link>
   );
 
-  const assets = loading || assetsInfo.length === 0
+  const assets = loading || !assetsInfoArray || assetsInfoArray.length === 0
     ? null
     : [
       backButton,
-      assetsInfo.map(asset => (
-        <Asset
-          key={asset.path}
-          clickHandler={clickHandler}
-          funded={asset.funded}
-          goal={asset.goal}
-          image={asset.image}
-          path={asset.path}
-          city={asset.city}
-          country={asset.country}
-          name={asset.name}
-        />
-      )),
+      assetsInfoArray.map((asset) => {
+        const key = asset[0];
+        const value = asset[1];
+        return (
+          <Asset
+            id={key}
+            key={key}
+            funded={value.raised}
+            goal={value.goal}
+            city={value.city}
+            country={value.country}
+            name={value.assetName}
+            category={category}
+          />
+        );
+      }),
     ];
 
   const loadingElement = loading && (
-    <div style={{ width: '100%' }}>
-      {backButton}
-      <Loading className="ExploreAssetsPage--is-loading" withOverlay={false} />
-      <p className="ExploreAssetsPage-loading-message">Loading assets</p>
-    </div>
+    <LoadingPage
+      message="Loading assets"
+      hasBackButton
+      path="/explore"
+    />
   );
 
   const noElements =
-    !loading && assetsInfo.length === 0 ? (
+    !loading && (!assetsInfoArray || assetsInfoArray.length === 0) ? (
       <div style={{ width: '100%' }}>
         {backButton}
         <p className="ExploreAssetsPage__message-no-elements">{`No assets found in the ${category} category.`}</p>
       </div>
     ) : null;
-  const elementsToDisplay = assetsInfo.length ? assets : noElements;
-  const toRender = loading ? loadingElement : elementsToDisplay;
+
 
   return (
     <div className="ExploreAssetsPage grid">
-      <h1>{category}</h1>
-      {toRender}
+      {noElements}
+      {loadingElement}
+      {assets}
     </div>
   );
 };
 
 ExploreAssetsPage.propTypes = {
-  clickHandler: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  assetsInfo: PropTypes.string,
+  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
-};
-
-ExploreAssetsPage.defaultProps = {
-  assetsInfo: [],
 };
 
 export default ExploreAssetsPage;

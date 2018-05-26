@@ -1,51 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Loading } from 'carbon-components-react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 import AssetDetails from '../AssetDetails';
 import { debug } from '../../constants';
 import '../../styles/AssetDetailsPage.css';
 
+const AssetDetailsPage = ({
+  state,
+  match,
+}) => {
+  const { assetId, category } = match.params;
 
-class AssetDetailsPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentEthInUsd: -1,
-    };
+  const asset = state.assets[category][assetId];
 
-    this.getEthereumValue = this.getEthereumValue.bind(this);
-    this.coinMarketCapInterval = setInterval(() => {
-      this.getEthereumValue();
-    }, 5 * 60000);
-  }
-
-  componentDidMount() {
-    this.getEthereumValue();
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.coinMarketCapInterval);
-  }
-
-  getEthereumValue() {
-    axios
-      .get('https://api.coinmarketcap.com/v2/ticker/1027/')
-      .then((response) => {
-        try {
-          this.setState({
-            currentEthInUsd: response.data.data.quotes.USD.price,
-          });
-        } catch (err) {
-          debug(err);
-        }
-      }).catch(err => debug(err));
-  }
-
-  render() {
-    const { assetId, category } = this.props.match.params;
-    const loading = this.state.currentEthInUsd === -1 || !this.props.information;
-    const backButton = (
+  const loading = !state.misc.currentEthInUsd || !asset;
+  const backButton = (
+    <Link
+      to={`/explore/${category}`}
+      href={`/explore/${category}`}
+    >
       <Button
         kind="secondary"
         className="AssetDetailsPage__back-button"
@@ -53,43 +27,37 @@ class AssetDetailsPage extends React.Component {
       >
         BACK
       </Button>
-    );
+    </Link>
+  );
 
-    const loadingElement = loading && (
-      <div style={{ width: '100%', position: 'relative', top: '50px' }}>
-        <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
-        <p className="AssetDetailsPage-loading-message">
-          Loading asset information
-        </p>
-      </div>
-    );
+  const loadingElement = loading && (
+    <div style={{ width: '100%', position: 'relative', top: '50px' }}>
+      <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
+      <p className="AssetDetailsPage-loading-message">
+        Loading asset information
+      </p>
+    </div>
+  );
 
-    const assetDetails = !loading && (
-      <AssetDetails
-        information={this.props.information}
-        currentEthInUsd={this.state.currentEthInUsd}
-        handleContributeClicked={this.handleContributeClicked}
-      />
-    );
+  const assetDetails = !loading && (
+    <AssetDetails
+      information={asset}
+      currentEthInUsd={state.misc.currentEthInUsd}
+    />
+  );
 
-    return (
-      <div style={{ position: 'relative' }}>
-        {backButton}
-        <h1>{`${category} / ${assetId}`}</h1>
-        {loadingElement}
-        {assetDetails}
-      </div>
-    );
-  }
-}
-
-AssetDetailsPage.propTypes = {
-  information: PropTypes.shape({}),
-  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  return (
+    <div style={{ position: 'relative' }}>
+      {backButton}
+      {loadingElement}
+      {assetDetails}
+    </div>
+  );
 };
 
-AssetDetailsPage.defaultProps = {
-  information: undefined,
+AssetDetailsPage.propTypes = {
+  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
 export default AssetDetailsPage;
