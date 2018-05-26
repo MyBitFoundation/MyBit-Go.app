@@ -1,36 +1,19 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
-// TODO: Fix the JSX linting errors
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';
+import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
 
-const cryptocurrencyAtm = require('../../images/category-cryptocurrency-atm.png');
-const solarEnergy = require('../../images/category-solar-energy.png');
-
-const categoriesInfo = [
-  {
-    image: cryptocurrencyAtm,
-    path: 'crypto-currency-atm',
-    name: 'Cryptocurrency ATM',
-  },
-  {
-    image: solarEnergy,
-    path: 'solar-energy',
-    name: 'Solar Energy',
-  },
-  {
-    image: cryptocurrencyAtm,
-    path: 'crypto-currency-atm2',
-    name: 'Cryptocurrency ATM',
-  },
-  {
-    image: solarEnergy,
-    path: 'solar-energy2',
-    name: 'Solar Energy',
-  },
-];
+const getCategories =
+    assets =>
+      [...new Set(assets.map(asset => asset.category))]
+        .map(category => ({
+          image: getImageForCategory(category),
+          path: category,
+          name: getPrettyCategoryName(category),
+        }));
 
 const renderCategories = (categories, clickHandler) => categories.map(category => (
   <Link
@@ -52,12 +35,25 @@ const renderCategories = (categories, clickHandler) => categories.map(category =
 ));
 
 
-const ExplorePage =
-  ({ clickHandler }) =>
-    <div className="ExplorePage grid">{renderCategories(categoriesInfo, clickHandler)}</div>;
+class ExplorePage extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+  }
+
+  render() {
+    const { state } = this.props;
+    if (state.loading.assets) {
+      return <div>Loading...</div>;
+    }
+    return (<div className="ExplorePage grid">{renderCategories(getCategories(state.assets), this.props.clickHandler)}</div>);
+  }
+}
+
 
 ExplorePage.propTypes = {
   clickHandler: PropTypes.func,
+  state: PropTypes.shape().isRequired,
 };
 
 ExplorePage.defaultProps = {

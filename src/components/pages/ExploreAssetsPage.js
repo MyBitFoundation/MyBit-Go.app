@@ -6,6 +6,7 @@ import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
+import { getPrettyCategoryName } from '../../util/helpers';
 
 const ExploreAssetsPage = ({
   state,
@@ -17,9 +18,9 @@ const ExploreAssetsPage = ({
     return <NotFoundPage />;
   }
 
-  const loading = state.assets.loaded;
-  const assetsInfo = state.assets[category];
-  const assetsInfoArray = assetsInfo ? Object.entries(assetsInfo) : null;
+  const loading = state.assets.length === 0;
+  const assetsInCategory =
+    state.assets.filter(asset => asset.category === match.params.category);
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
@@ -32,27 +33,21 @@ const ExploreAssetsPage = ({
     </Link>
   );
 
-  const assets = loading || !assetsInfoArray || assetsInfoArray.length === 0
-    ? null
-    : [
-      backButton,
-      assetsInfoArray.map((asset) => {
-        const key = asset[0];
-        const value = asset[1];
-        return (
-          <Asset
-            id={key}
-            key={key}
-            funded={value.raised}
-            goal={value.goal}
-            city={value.city}
-            country={value.country}
-            name={value.assetName}
-            category={category}
-          />
-        );
-      }),
-    ];
+  const assets = [
+    backButton,
+    assetsInCategory.map(asset => (
+      <Asset
+        id={asset.assetID}
+        key={asset.assetID}
+        funded={asset.amountRaisedInUSD}
+        goal={asset.amountToBeRaised}
+        city="unknown"
+        country="unknown"
+        name="unknown"
+        category={getPrettyCategoryName(asset.category)}
+      />
+    )),
+  ];
 
   const loadingElement = loading && (
     <LoadingPage
@@ -62,18 +57,21 @@ const ExploreAssetsPage = ({
     />
   );
 
-  const noElements =
-    !loading && (!assetsInfoArray || assetsInfoArray.length === 0) ? (
-      <div style={{ width: '100%' }}>
-        {backButton}
-        <p className="ExploreAssetsPage__message-no-elements">{`No assets found in the ${category} category.`}</p>
-      </div>
-    ) : null;
+  // const noElements =
+  //   !loading && (
+  //     <div style={{ width: '100%' }}>
+  //       {backButton}
+  //       <p
+  //         className="ExploreAssetsPage__message-no-elements"
+  //       >
+  //         {`No assets found in the ${category} category.`}
+  //       </p>
+  //     </div>
+  //   );
 
 
   return (
     <div className="ExploreAssetsPage grid">
-      {noElements}
       {loadingElement}
       {assets}
     </div>

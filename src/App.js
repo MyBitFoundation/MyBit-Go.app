@@ -24,13 +24,15 @@ class App extends Component {
     this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
     this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
 
+    const timeout = 30 * 1000;
     setTimeout(() => {
       this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
       this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
-    }, 5 * 60000);
+    }, timeout);
   }
 
   render() {
+    const { state, setTransactionHistoryFilters } = this.props;
     return (
       <div>
         <AppHeader
@@ -41,11 +43,11 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={() => <Redirect to="/explore" />} />
             <Route exact path="/asset-payment" component={AssetPaymentPage} />
-            <Route exact path="/explore" component={ExplorePage} />
-            <Route exact path="/explore/:category" component={match => <ExploreAssetsPage state={this.props.state} match={match.match} />} />
-            <Route exact path="/explore/:category/:assetId" component={match => <AssetDetailsPage state={this.props.state} match={match.match} />} />
-            <Route exact path="/portfolio" component={() => <PortfolioPage state={this.props.state} />} />
-            <Route exact path="/transaction-history" component={() => <TransactionHistoryPage state={this.props.state} setTransactionHistoryFilters={this.props.setTransactionHistoryFilters} />} />
+            <Route exact path="/explore" render={props => <ExplorePage state={state} {...props} />} />
+            <Route exact path="/explore/:category" render={props => <ExploreAssetsPage state={state} {...props} />} />
+            <Route exact path="/explore/:category/:assetId" render={props => <AssetDetailsPage state={state} {...props} />} />
+            <Route exact path="/portfolio" render={props => <PortfolioPage state={state} {...props} />} />
+            <Route exact path="/transaction-history" render={props => <TransactionHistoryPage state={state} setTransactionHistoryFilters={setTransactionHistoryFilters} {...props} />} />
             <Route path="*" component={NotFoundPage} />
           </Switch>
         </div>
@@ -59,7 +61,6 @@ App.propTypes = {
   setTransactionHistoryFilters: PropTypes.func.isRequired,
   state: PropTypes.shape({ params: PropTypes.object }).isRequired,
   location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
-
 };
 
 const mapStateToProps = state => ({ state });
