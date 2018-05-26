@@ -38,7 +38,7 @@ const Asset = ({
         </div>
         <div className="Asset__details">
           <p className="Asset__details-funded">
-            Funded: <b>${funded}</b>
+            Funded: <b>${Math.round(funded)}</b>
           </p>
           <p className="Asset__details-goal">
             Goal: <b>${goal}</b>
