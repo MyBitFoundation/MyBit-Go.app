@@ -13,15 +13,15 @@ const stakingIcon = require('../images/cubes.png');
 const exchangeIcon = require('../images/exchange-alt.png');
 const knowledgeBaseIcon = require('../images/question.png');
 
-const NavigationBar = ({ clickHandler }) => {
+const NavigationBar = ({ clickHandler, currentPath }) => {
   const menuOptions = [{
-    name: 'Explore', icon: exploreIcon, selectable: true, selected: true, url: '/',
+    name: 'Explore', icon: exploreIcon, selectable: true, selected: currentPath.indexOf('/explore') !== -1, url: '/',
   },
   {
-    name: 'Portfolio', icon: portfolioIcon, selectable: true, url: '/portfolio',
+    name: 'Portfolio', icon: portfolioIcon, selectable: true, selected: currentPath === '/portfolio', url: '/portfolio',
   },
   {
-    name: 'Transactions', icon: transactionsIcon, selectable: true, url: '/transaction-history',
+    name: 'Transactions', icon: transactionsIcon, selectable: true, selected: currentPath === '/transaction-history', url: '/transaction-history',
   },
   { name: 'Saved', icon: savedIcon },
   { name: 'List Asset', icon: listAssetIcon },
@@ -49,6 +49,7 @@ const NavigationBar = ({ clickHandler }) => {
 
 NavigationBar.propTypes = {
   clickHandler: PropTypes.func,
+  currentPath: PropTypes.string.isRequired,
 };
 
 NavigationBar.defaultProps = {

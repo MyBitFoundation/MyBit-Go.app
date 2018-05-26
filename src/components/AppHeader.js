@@ -6,27 +6,21 @@ import ExchangeRate from './ExchangeRate';
 import AccountInfo from './AccountInfo';
 
 const AppHeader = ({
-  exchangeRate,
-  myBitBalance,
-  ethBalance,
-  address,
+  state,
 }) => (
   <div className="grid AppHeader">
     <Logo className="AppHeader__logo" />
-    <ExchangeRate value={exchangeRate} />
+    <ExchangeRate value={state.misc.currentMybitInUsd} />
     <AccountInfo
-      myBitBalance={myBitBalance}
-      ethBalance={ethBalance}
-      address={address}
+      myBitBalance={state.user.myBitBalance}
+      ethBalance={state.user.ethBalance}
+      userName={state.user.userName}
     />
   </div>
 );
 
 AppHeader.propTypes = {
-  exchangeRate: PropTypes.number.isRequired,
-  myBitBalance: PropTypes.number.isRequired,
-  ethBalance: PropTypes.number.isRequired,
-  address: PropTypes.string.isRequired,
+  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
 export default AppHeader;

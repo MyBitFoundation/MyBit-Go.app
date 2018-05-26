@@ -1,0 +1,26 @@
+.LoadingPage{
+
+  &__back-button{
+    top: 11px;
+    height: 32px;
+    width: 112px;
+    border: solid 2px #125ac4;
+    font-weight: bold;
+    font-family: 'Roboto';
+    color: #125ac4;
+    margin-top: 10px;
+  }
+
+  &__wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: 50px;
+  }
+
+  &__message{
+    text-align: center;
+    font-size: 26px;
+  }
+}
