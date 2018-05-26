@@ -6,7 +6,6 @@ import misc from './misc';
 import portfolio from './portfolio';
 import user from './user';
 import transactions from './transactions';
-import misc from './misc';
 
 const rootReducer = combineReducers({
   assets,
@@ -15,7 +14,6 @@ const rootReducer = combineReducers({
   portfolio,
   user,
   transactions,
-  misc,
 });
 
 export default rootReducer;
