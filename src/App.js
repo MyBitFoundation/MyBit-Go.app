@@ -28,7 +28,6 @@ class App extends Component {
     setTimeout(() => {
       this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
       this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
-    }, 5 * 60000);
     }, timeout);
   }
 
