@@ -61,13 +61,13 @@ export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
       case MYBIT_TICKER_COINMARKETCAP:
         dispatch({
           type: FETCH_MYBIT_PRICE_USD_SUCCESS,
-          payload: { price: Math.round((price * 100) / 100) },
+          payload: { price: Math.round(price * 100) / 100 },
         });
         break;
       case ETHEREUM_TICKER_COINMARKETCAP:
         dispatch({
           type: FETCH_ETHEREUM_PRICE_USD_SUCCESS,
-          payload: { price: Math.round((price * 100) / 100) },
+          payload: { price: Math.round(price * 100) / 100 },
         });
         break;
       default:
