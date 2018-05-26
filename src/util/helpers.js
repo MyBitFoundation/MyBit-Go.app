@@ -1,3 +1,6 @@
+import cryptocurrencyAtmCategoryImage from '../images/category-cryptocurrency-atm.png';
+import solarEnergyCategoryImage from '../images/category-solar-energy.png';
+
 export const parseEtherFromBalance = (web3, balance) => web3.fromWei(parseInt(balance, 10), 'ether');
 
 export const mergeAllLogsByAssetId = (logs) => {
@@ -75,3 +78,26 @@ export const getAssetIDFromHash = (web3, assetIDHash) => {
       return '';
   }
 };
+
+export const getPrettyCategoryName = (category) => {
+  switch (category) {
+    case 'coffeemachine':
+      return 'Coffee Machines';
+    case 'uncategorized':
+      return 'Uncategorized';
+    default:
+      return 'Unknown';
+  }
+};
+
+export const getImageForCategory = (category) => {
+  switch (category) {
+    case 'coffeemachine':
+      return cryptocurrencyAtmCategoryImage;
+    case 'uncategorized':
+      return solarEnergyCategoryImage;
+    default:
+      return cryptocurrencyAtmCategoryImage;
+  }
+};
+
