@@ -32,7 +32,7 @@ class App extends Component {
   }
 
   render() {
-    const { state, fetchAssets, setTransactionHistoryFilters } = this.props;
+    const { state, setTransactionHistoryFilters } = this.props;
     return (
       <div>
         <AppHeader
@@ -57,7 +57,6 @@ class App extends Component {
 }
 
 App.propTypes = {
-  fetchAssets: PropTypes.func.isRequired,
   fetchPriceFromCoinmarketcap: PropTypes.func.isRequired,
   setTransactionHistoryFilters: PropTypes.func.isRequired,
   state: PropTypes.shape({ params: PropTypes.object }).isRequired,
