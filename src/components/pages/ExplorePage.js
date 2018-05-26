@@ -1,6 +1,4 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
-// TODO: Fix the JSX linting errors
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import '../../styles/ExplorePage.css';
@@ -11,9 +9,14 @@ const solarEnergy = require('../../images/category-solar-energy.png');
 
 const categoriesInfo = [
   {
+    image: solarEnergy,
+    path: 'coffee-machines',
+    name: 'Coffee Machines',
+  },
+  {
     image: cryptocurrencyAtm,
     path: 'crypto-currency-atm',
-    name: 'Cryptocurrency ATM',
+    name: 'Cryptocurrency ATM\'s',
   },
   {
     image: solarEnergy,
@@ -22,13 +25,8 @@ const categoriesInfo = [
   },
   {
     image: cryptocurrencyAtm,
-    path: 'crypto-currency-atm2',
-    name: 'Cryptocurrency ATM',
-  },
-  {
-    image: solarEnergy,
-    path: 'solar-energy2',
-    name: 'Solar Energy',
+    path: 'miscellaneous',
+    name: 'Miscellaneous',
   },
 ];
 
@@ -52,12 +50,25 @@ const renderCategories = (categories, clickHandler) => categories.map(category =
 ));
 
 
-const ExplorePage =
-  ({ clickHandler }) =>
-    <div className="ExplorePage grid">{renderCategories(categoriesInfo, clickHandler)}</div>;
+class ExplorePage extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+  }
+
+  render() {
+    const { state } = this.props;
+    if (!state.assets.length) {
+      return <div>Loading...</div>;
+    }
+    return (<div className="ExplorePage grid">{renderCategories(categoriesInfo, this.props.clickHandler)}</div>);
+  }
+}
+
 
 ExplorePage.propTypes = {
   clickHandler: PropTypes.func,
+  state: PropTypes.shape().isRequired,
 };
 
 ExplorePage.defaultProps = {
