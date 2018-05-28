@@ -24,6 +24,7 @@ jobs:
       - deploy:
           name: Deploy to Surge
           command: |
+            mv build/index.html build/200.html
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               yarn run deploy:dev
               yarn run deploy-storybook:dev
