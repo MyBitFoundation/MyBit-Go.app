@@ -38,8 +38,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 enhancers.push(applyMiddleware(...middleware));
 const enhancer = composeEnhancers(...enhancers);
 
-const store = createStore(rootReducer, {}, enhancer);
-
+const initialState = {};
+const store = createStore(rootReducer, initialState, enhancer);
 const history = createHistory();
 
 store.dispatch(fetchAssets());
