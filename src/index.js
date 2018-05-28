@@ -20,13 +20,15 @@ const enhancers = [];
 
 middleware.push(ReduxThunk);
 
-// Logging Middleware
-const logger = createLogger({
-  level: 'info',
-  collapsed: true,
-});
+if (process.env.NODE_ENV !== 'production') {
+  // Logging Middleware
+  const logger = createLogger({
+    level: 'info',
+    collapsed: true,
+  });
 
-middleware.push(logger);
+  middleware.push(logger);
+}
 
 // If Redux DevTools Extension is installed use it, otherwise use Redux compose
 /* eslint-disable no-underscore-dangle */
