@@ -41,7 +41,7 @@ const TransactionHistoryPage = ({ state, setTransactionHistoryFilters }) => {
       {!loadedTransactions &&
         <LoadingPage
           message="Loading transactions"
-          hasBackButton
+          hasBackButton={false}
         />
       }
       {loadedTransactions &&
@@ -64,7 +64,7 @@ const TransactionHistoryPage = ({ state, setTransactionHistoryFilters }) => {
               </TableHead>
               <TableBody>
                 {transactionsToRender.map((transaction, index) => (
-                  <TableRow key={transaction.date + transaction.amount} even={index % 2 !== 0}>
+                  <TableRow key={transaction.date + index} even={index % 2 !== 0}>
                     <TableData>
                       {transaction.date}
                     </TableData>

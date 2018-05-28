@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@storybook/addon-actions": "^3.4.5",
+    "@storybook/addons": "^3.4.5",
     "@storybook/react": "^3.4.5",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",

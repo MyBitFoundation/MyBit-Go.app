@@ -10,7 +10,13 @@ export const CHANGE_TRANSACTION_HISTORY_FILTERS = 'CHANGE_TRANSACTION_HISTORY_FI
 export const FETCH_MYBIT_PRICE_USD = 'FETCH_MYBIT_PRICE_USD';
 export const FETCH_ETHEREUM_PRICE_USD = 'FETCH_ETHEREUM_PRICE_USD';
 
+// Actions for storybook
+export const RESET_STATE = 'RESET_STATE';
+export const FILL_STATE = 'FILL_STATE';
+
 // Synchronous action creators
+export const resetState = () => ({ type: RESET_STATE });
+export const fillState = newState => ({ type: FILL_STATE, payload: newState });
 export const fetchAssetsSuccess = assets => ({ type: FETCH_ASSETS_SUCCESS, payload: { assets } });
 export const fetchAssetsFailure = error => ({ type: FETCH_ASSETS_FAILURE, payload: { error } });
 export const clearErrors = () => ({ type: CLEAR_ERRORS });

@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import MemoryRouter from 'react-router-dom/MemoryRouter';
+import { connect } from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
+import addonAPI from '@storybook/addons';
+
+import * as actions from '../actions';
 
 import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
-import { assetsInfo, assetInfo, portfolio } from './constants';
+import { assetsInfo, assetInfo, portfolio, noTransactions } from './constants';
+
 
 import getWeb3Async from '../util/web3';
 
@@ -31,6 +37,11 @@ import SmallInfoPanel from '../components/SmallInfoPanel';
 
 import Address from '../components/Address';
 
+import configureStore from '../store/configureStore';
+
+import ComponentWithState from './ComponentWithState';
+
+
 
 const MemoryDecorator = story => (
   <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
@@ -46,8 +57,8 @@ const Header = (
 );
 
 storiesOf('Header', module)
-  .add('Normal view', () => Header)
-  .add('Loading', () => <AppHeader />);
+  .add('Normal view', () => <Provider children={<AppHeader />} />)
+  .add('Loading', () => <Provider children={<AppHeader />} />);
 
 storiesOf('Navigation Bar', module)
   .addDecorator(MemoryDecorator)
@@ -164,8 +175,27 @@ storiesOf('Asset Funding', module).add('view', () => (
   <AssetFundingWeb3Wrapper />
 ));
 
-storiesOf('Transaction History', module).add('view', () => (
-  <TransactionHistoryPage />
-));
 
-storiesOf('Row', module).add('view', () => <Row />);
+
+const store = configureStore();
+
+function Provider({ children, functionName, withData, specificData }) {
+  return (
+    <ReduxProvider store={store}>
+      <MemoryRouter initialEntries={['/']}>
+        <ComponentWithState withData={withData} children={children} functionName={functionName} specificData={specificData} />
+      </MemoryRouter>
+    </ReduxProvider>
+  );
+};
+
+storiesOf('Transaction History', module)
+.add('Loading', (storyDetails) => (
+  <Provider withData={false} children={<TransactionHistoryPage/>} functions={["setTransactionHistoryFilters"]} />
+))
+.add('No transactions', (storyDetails) => (
+  <Provider withData children={<TransactionHistoryPage/>} functions={["setTransactionHistoryFilters"]} specificData={noTransactions} />
+))
+.add('With transactions', (api) => (
+  <Provider withData children={<TransactionHistoryPage/>} functions={["setTransactionHistoryFilters"]} />
+))
