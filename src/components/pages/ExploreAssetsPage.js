@@ -18,7 +18,7 @@ const ExploreAssetsPage = ({
     return <NotFoundPage />;
   }
 
-  const loading = state.assets.length === 0;
+  const loading = state.loading.assets;
   const assetsInCategory =
     state.assets.filter(asset => asset.category === match.params.category);
 
@@ -69,11 +69,9 @@ const ExploreAssetsPage = ({
   //     </div>
   //   );
 
-
   return (
     <div className="ExploreAssetsPage grid">
-      {loadingElement}
-      {assets}
+      {loading ? loadingElement : assets}
     </div>
   );
 };
