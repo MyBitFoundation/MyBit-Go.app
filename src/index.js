@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createLogger } from 'redux-logger';
+import { applyMiddleware, compose, createStore } from 'redux';
+import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter } from 'react-router-redux';
@@ -7,11 +10,36 @@ import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import './styles/index.css';
 import App from './App';
+import rootReducer from './reducers';
 import registerServiceWorker from './registerServiceWorker';
-import configureStore from './store/configureStore';
 import { fetchAssets } from './actions';
 
-const store = configureStore();
+// Redux Configuration
+const middleware = [];
+const enhancers = [];
+
+middleware.push(ReduxThunk);
+
+// Logging Middleware
+const logger = createLogger({
+  level: 'info',
+  collapsed: true,
+});
+
+middleware.push(logger);
+
+// If Redux DevTools Extension is installed use it, otherwise use Redux compose
+/* eslint-disable no-underscore-dangle */
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+  : compose;
+
+// Apply Middleware & Compose Enhancers
+enhancers.push(applyMiddleware(...middleware));
+const enhancer = composeEnhancers(...enhancers);
+
+const store = createStore(rootReducer, {}, enhancer);
+
 const history = createHistory();
 
 store.dispatch(fetchAssets());
