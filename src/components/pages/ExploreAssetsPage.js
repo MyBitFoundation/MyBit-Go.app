@@ -69,9 +69,18 @@ const ExploreAssetsPage = ({
   //     </div>
   //   );
 
+  let renderedOutput = null;
+  if (loading) {
+    renderedOutput = loadingElement;
+  } else if (assets[1].length === 0) {
+    renderedOutput = <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />;
+  } else {
+    renderedOutput = assets;
+  }
+
   return (
     <div className="ExploreAssetsPage grid">
-      {loading ? loadingElement : assets}
+      {renderedOutput}
     </div>
   );
 };
