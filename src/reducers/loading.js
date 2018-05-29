@@ -2,20 +2,25 @@ import * as Actions from '../actions';
 
 const initialState = {
   assets: true,
-  prices: true,
+  priceMybit: true,
+  priceEther: true,
   user: true,
+  transactionHistory: true,
+  portfolio: true,
 };
 
 const loading = (state = initialState, action) => {
   switch (action.type) {
     case Actions.FETCH_ETHEREUM_PRICE_USD:
+      return { ...state, priceEther: true };
     case Actions.FETCH_MYBIT_PRICE_USD:
-      return { ...state, prices: true };
+      return { ...state, priceMybit: true };
     case Actions.FETCH_ETHEREUM_PRICE_USD_SUCCESS:
     case Actions.FETCH_ETHEREUM_PRICE_USD_FAILURE:
+      return { ...state, priceEther: false };
     case Actions.FETCH_MYBIT_PRICE_USD_SUCCESS:
     case Actions.FETCH_MYBIT_PRICE_USD_FAILURE:
-      return { ...state, prices: false };
+      return { ...state, priceMybit: false };
     case Actions.FETCH_ASSETS:
       return { ...state, assets: true };
     case Actions.FETCH_ASSETS_SUCCESS:

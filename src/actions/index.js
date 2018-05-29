@@ -49,12 +49,19 @@ export const setTransactionHistoryFilters = (itemsPerPage, currentPage, sortBy, 
 
 // Asynchronous action creators
 export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
+  let actionSuccessful;
+  let actionFailure;
+
   switch (ticker) {
     case MYBIT_TICKER_COINMARKETCAP:
       dispatch({ type: FETCH_MYBIT_PRICE_USD });
+      actionSuccessful = FETCH_MYBIT_PRICE_USD_SUCCESS;
+      actionFailure = FETCH_MYBIT_PRICE_USD_FAILURE;
       break;
     case ETHEREUM_TICKER_COINMARKETCAP:
       dispatch({ type: FETCH_ETHEREUM_PRICE_USD });
+      actionSuccessful = FETCH_ETHEREUM_PRICE_USD_SUCCESS;
+      actionFailure = FETCH_ETHEREUM_PRICE_USD_FAILURE;
       break;
     default:
       throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
@@ -63,33 +70,13 @@ export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
     const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
     const jsonResponse = await response.json();
     const { price } = jsonResponse.data.quotes.USD;
-    switch (ticker) {
-      case MYBIT_TICKER_COINMARKETCAP:
-        dispatch({
-          type: FETCH_MYBIT_PRICE_USD_SUCCESS,
-          payload: { price: Math.round(price * 100) / 100 },
-        });
-        break;
-      case ETHEREUM_TICKER_COINMARKETCAP:
-        dispatch({
-          type: FETCH_ETHEREUM_PRICE_USD_SUCCESS,
-          payload: { price: Math.round(price * 100) / 100 },
-        });
-        break;
-      default:
-        throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
-    }
+
+    dispatch({
+      type: actionSuccessful,
+      payload: { price: Math.round(price * 100) / 100 },
+    });
   } catch (error) {
-    switch (ticker) {
-      case MYBIT_TICKER_COINMARKETCAP:
-        dispatch({ type: FETCH_MYBIT_PRICE_USD_FAILURE, payload: { error } });
-        break;
-      case ETHEREUM_TICKER_COINMARKETCAP:
-        dispatch({ type: FETCH_ETHEREUM_PRICE_USD_FAILURE, payload: { error } });
-        break;
-      default:
-        throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
-    }
+    dispatch({ type: actionFailure, payload: { error } });
   }
 };
 
