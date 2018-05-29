@@ -33,21 +33,23 @@ const ExploreAssetsPage = ({
     </Link>
   );
 
-  const assets = [
-    backButton,
-    assetsInCategory.map(asset => (
-      <Asset
-        id={asset.assetID}
-        key={asset.assetID}
-        funded={asset.amountRaisedInUSD}
-        goal={asset.amountToBeRaised}
-        city="unknown"
-        country="unknown"
-        name="unknown"
-        category={getPrettyCategoryName(asset.category)}
-      />
-    )),
-  ];
+  const assets = (
+    <div className="ExploreAssetsPage grid">
+      {backButton}
+      {assetsInCategory.map(asset => (
+        <Asset
+          id={asset.assetID}
+          key={asset.assetID}
+          funded={asset.amountRaisedInUSD}
+          goal={asset.amountToBeRaised}
+          city="unknown"
+          country="unknown"
+          name="unknown"
+          category={getPrettyCategoryName(asset.category)}
+        />
+      ))}
+    </div>
+  );
 
   const loadingElement = loading && (
     <LoadingPage
@@ -60,14 +62,14 @@ const ExploreAssetsPage = ({
   let renderedOutput = null;
   if (loading) {
     renderedOutput = loadingElement;
-  } else if (assets[1].length === 0) {
+  } else if (assetsInCategory.length === 0) {
     renderedOutput = <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />;
   } else {
     renderedOutput = assets;
   }
 
   return (
-    <div className="ExploreAssetsPage grid">
+    <div>
       {renderedOutput}
     </div>
   );
