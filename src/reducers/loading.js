@@ -26,6 +26,24 @@ const loading = (state = initialState, action) => {
     case Actions.FETCH_ASSETS_SUCCESS:
     case Actions.FETCH_ASSETS_FAILURE:
       return { ...state, assets: false };
+    case Actions.RESET_STATE:
+      return {
+        assets: true,
+        priceMybit: true,
+        priceEther: true,
+        user: true,
+        transactionHistory: true,
+        portfolio: true,
+      };
+    case Actions.FILL_STATE:
+      return {
+        assets: false,
+        priceMybit: false,
+        priceEther: false,
+        user: false,
+        transactionHistory: false,
+        portfolio: false,
+      };
     default:
       return state;
   }
