@@ -1,12 +1,19 @@
+import * as Actions from '../actions';
+
 const initialState = {
-  userName: '0x123f681646d4a755815f9cb19e1acc8565a0c2ac',
-  token: '',
-  ethBalance: 20,
-  myBitBalance: 215,
+  userName: '',
+  ethBalance: '0',
+  myBitBalance: '0',
 };
 
 const user = (state = initialState, action) => {
   switch (action.type) {
+    case Actions.LOAD_METAMASK_USER_DETAILS_SUCCESS:
+      return {
+        userName: action.payload.details.userName,
+        ethBalance: action.payload.details.ethBalance,
+        myBitBalance: action.payload.details.myBitBalance,
+      };
     default:
       return state;
   }
