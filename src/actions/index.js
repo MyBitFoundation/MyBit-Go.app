@@ -3,7 +3,6 @@
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
-import * as FundingHub from '../constants/contracts/FundingHub';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from '../constants';
 
 import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId } from '../util/helpers';
