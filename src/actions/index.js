@@ -3,6 +3,7 @@
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
+import * as MyBitToken from '../constants/contracts/MyBitToken';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from '../constants';
 
 import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId } from '../util/helpers';
@@ -54,8 +55,10 @@ export const loadMetamaskUserDetails = () => async (dispatch) => {
   try {
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
-    // TODO: MyBit balance
-    const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance: '0' };
+    const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
+    const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call();
+    console.log(myBitBalance);
+    const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance };
     dispatch(loadMetamaskUserDetailsSuccess(details));
   } catch (error) {
     dispatch(loadMetamaskUserDetailsFailure(error));
