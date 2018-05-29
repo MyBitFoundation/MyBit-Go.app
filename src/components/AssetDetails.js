@@ -149,8 +149,8 @@ class AssetDetails extends React.Component {
     }
 
     return (
-      <div className="AssetDetails grid">
-        <div className="AssetDetails__left col_lg-6 col_md-12">
+      <div className="AssetDetails">
+        <div className="AssetDetails__left">
           <b className="AssetDetails__left-name">
             {this.props.information.assetName}
           </b>
@@ -263,7 +263,7 @@ class AssetDetails extends React.Component {
             />
           </ModalWrapper>
         </div>
-        <div className="AssetDetails__right col_lg-6 col_md-12">
+        <div className="AssetDetails__right">
           <img
             alt="Asset details background"
             className="AssetDetails__right-image"
