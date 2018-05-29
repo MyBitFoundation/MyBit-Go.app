@@ -138,7 +138,8 @@ class AssetDetails extends React.Component {
   render() {
     const maxInvestment = this.state.daysToGo < 0 ? 0 :
       this.props.information.amountToBeRaised - this.props.information.amountRaisedInUSD;
-    const ownership = (this.state.currentSelectedAmount * 100) / this.props.information.amountToBeRaised;
+    const ownership =
+    (this.state.currentSelectedAmount * 100) / this.props.information.amountToBeRaised;
     const etherValue = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
       .toFixed(2));
     let minInvestment = this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
@@ -296,14 +297,14 @@ AssetDetails.defaultProps = {
 AssetDetails.propTypes = {
   information: PropTypes.shape({
     dueDate: PropTypes.number.isRequired,
-    goal: PropTypes.number.isRequired,
-    raised: PropTypes.number.isRequired,
+    amountToBeRaised: PropTypes.number.isRequired,
+    amountRaisedInUSD: PropTypes.number.isRequired,
     assetName: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
     country: PropTypes.string.isRequired,
     details: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    address: PropTypes.string.isRequired,
+    creator: PropTypes.string.isRequired,
   }).isRequired,
   currentEthInUsd: PropTypes.number,
 };

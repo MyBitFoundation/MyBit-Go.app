@@ -1,19 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import MemoryRouter from 'react-router-dom/MemoryRouter';
-import { connect } from 'react-redux';
 import { Provider as ReduxProvider } from 'react-redux';
-import addonAPI from '@storybook/addons';
-
-import * as actions from '../actions';
+import PropTypes from 'prop-types';
 
 import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
-import { assetsInfo, assetInfo, portfolio, noTransactions, headerLoading, header, explorePage } from './constants';
 
 import getWeb3Async from '../util/web3';
 
@@ -24,43 +20,44 @@ import PortfolioPage from '../components/pages/PortfolioPage';
 import TransactionHistoryPage from '../components/pages/TransactionHistoryPage';
 
 import AppHeader from '../components/AppHeader';
-import AssetHero from '../components/AssetHero';
 import AssetDetails from '../components/AssetDetails';
 import AssetFunding from '../components/AssetFunding';
 import Button from '../components/Button';
-import Category from '../components/Category';
 import NavigationBar from '../components/NavigationBar';
-import Row from '../components/Row';
-import SmallInfoPanel from '../components/SmallInfoPanel';
 
 import Address from '../components/Address';
 
-import configureStore from '../store/configureStore';
+import store from '..';
+import { assetInfo, portfolio, noTransactions, headerLoading, header, explorePage } from './constants';
 
 import ComponentWithState from './ComponentWithState';
 
 const MemoryDecorator = (story, kind, isHeader = false) => (
-  <MemoryRouter initialEntries={['/']}><div className={!isHeader ? "page-wrapper" : "aaa"}>{story()}</div></MemoryRouter>
+  <MemoryRouter initialEntries={['/']}><div className={!isHeader ? 'page-wrapper' : 'aaa'}>{story()}</div></MemoryRouter>
 );
+
 const Header = (
   <AppHeader
     state={header}
   />
 );
 
-const store = configureStore();
-
-function Provider({
+const Provider = ({
   children, functions, withData, specificData,
-}) {
-  return (
+}) =>
+  (
     <ReduxProvider store={store}>
       <MemoryRouter initialEntries={['/']}>
-        <ComponentWithState withData={withData} children={children} functions={functions} specificData={specificData} />
+        <ComponentWithState
+          withData={withData}
+          functions={functions}
+          specificData={specificData}
+        >
+          {children}
+        </ComponentWithState>
       </MemoryRouter>
     </ReduxProvider>
   );
-}
 
 storiesOf('Header', module)
   .addDecorator((story, kind) => MemoryDecorator(story, kind, true))
@@ -85,7 +82,7 @@ storiesOf('Header & Nav Bar', module)
 storiesOf('Explore Page', module)
   .addDecorator(MemoryDecorator)
   .add('Normal View', () => (
-    <ExplorePage state={{loading: {assets: true}}} clickHandler={action('Clicked category')} />
+    <ExplorePage state={{ loading: { assets: true } }} clickHandler={action('Clicked category')} />
   ))
   .add('Loading', () => (
     <ExplorePage state={explorePage} clickHandler={action('Clicked category')} />
@@ -99,15 +96,15 @@ storiesOf('Explore Assets Page', module)
       match={{ params: { category: 'uncategorized' } }}
     />
   ))
-  .add('Loading', () => <ExploreAssetsPage state={{...explorePage, loading: {assets: true}}} match={{ params: { category: 'Solar Panel' } }} />)
+  .add('Loading', () => <ExploreAssetsPage state={{ ...explorePage, loading: { assets: true } }} match={{ params: { category: 'Solar Panel' } }} />)
   .add('No assets', () => (
-    <ExploreAssetsPage state={{...explorePage, loading: {assets: false}}} match={{ params: { category: 'Solar Panel' } }} />
+    <ExploreAssetsPage state={{ ...explorePage, loading: { assets: false } }} match={{ params: { category: 'Solar Panel' } }} />
   ));
 
 storiesOf('Portfolio Page', module)
   .addDecorator(MemoryDecorator)
   .add('Normal view', () => <PortfolioPage state={portfolio} />)
-  .add('Loading', () => <PortfolioPage state={{portfolio: {loaded: false}}}/>);
+  .add('Loading', () => <PortfolioPage state={{ portfolio: { loaded: false } }} />);
 
 storiesOf('Address', module).add('view', () => <Address userName="0x123f681646d4a755815f9cb19e1acc8565a0c2ac" />);
 
@@ -117,11 +114,11 @@ storiesOf('Asset Details Page', module)
   .addDecorator(MemoryDecorator)
   .add('Normal view', () => (
     <AssetDetailsPage
-      state={{...explorePage, loading: {assets: true}, misc: {currentEthInUsd: 600}}}
+      state={{ ...explorePage, loading: { assets: true }, misc: { currentEthInUsd: 600 } }}
       match={{ params: { category: 'uncategorized', assetId: '0xc481012a7563a254e34971fa6eb679d6556726ebfafa7c0cb62d444f90b6f82c' } }}
     />
   ))
-  .add('Loading', () => <AssetDetailsPage state={{...explorePage, loading: {assets: true}, misc: {}}} match={{ params: { category: 'Solar Panel', assetId: '123' } }} />);
+  .add('Loading', () => <AssetDetailsPage state={{ ...explorePage, loading: { assets: true }, misc: {} }} match={{ params: { category: 'Solar Panel', assetId: '123' } }} />);
 
 const daysToGo = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
@@ -177,12 +174,31 @@ storiesOf('Asset Funding', module).add('view', () => (
 ));
 
 storiesOf('Transaction History', module)
-  .add('Loading', storyDetails => (
-    <Provider withData={false} children={<TransactionHistoryPage />} functions={['setTransactionHistoryFilters']} />
+  .add('Loading', () => (
+    <Provider withData={false} functions={['setTransactionHistoryFilters']}>
+      <TransactionHistoryPage />
+    </Provider>
   ))
-  .add('No transactions', storyDetails => (
-    <Provider withData children={<TransactionHistoryPage />} functions={['setTransactionHistoryFilters']} specificData={noTransactions} />
+  .add('No transactions', () => (
+    <Provider withData functions={['setTransactionHistoryFilters']} specificData={noTransactions}>
+      <TransactionHistoryPage />
+    </Provider>
   ))
-  .add('With transactions', api => (
-    <Provider withData children={<TransactionHistoryPage />} functions={['setTransactionHistoryFilters']} />
+  .add('With transactions', () => (
+    <Provider withData functions={['setTransactionHistoryFilters']} >
+      <TransactionHistoryPage />
+    </Provider>
   ));
+
+
+Provider.defaultProps = {
+  functions: undefined,
+  specificData: undefined,
+};
+
+Provider.propTypes = {
+  children: PropTypes.element.isRequired,
+  functions: PropTypes.arrayOf(PropTypes.string),
+  withData: PropTypes.bool.isRequired,
+  specificData: PropTypes.shape({ params: PropTypes.object }),
+};

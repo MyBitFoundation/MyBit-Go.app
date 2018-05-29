@@ -15,7 +15,12 @@ const PortfolioPage = ({ state }) => {
 
   return (
     <div>
-      {!loadedPortfolio && <LoadingPage message="Loading portfolio" />}
+      {!loadedPortfolio &&
+        <LoadingPage
+          message="Loading portfolio"
+          hasBackButton={false}
+        />
+      }
       {loadedPortfolio && (
         <div className="Portfolio">
           <div className="Portfolio__wrapper">

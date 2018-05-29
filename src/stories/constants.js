@@ -1,42 +1,3 @@
-const solarPanel1 = require('../images/Solar-Panel.png');
-const solarPanel2 = require('../images/Solar-Panel-2.png');
-const bitcoinAtm = require('../images/bitcoin-atm.png');
-
-export const assetsInfo =
-[{
-  image: solarPanel1,
-  path: '/crypto-currency-atm',
-  funded: '1000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Solar Powered Bench',
-}, {
-  image: solarPanel2,
-  path: '/solar-energy',
-  funded: '2000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Solar Powered Bench',
-}, {
-  image: bitcoinAtm,
-  path: '/crypto-currency-atm',
-  funded: '3000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Bitcoin ATM',
-}, {
-  image: bitcoinAtm,
-  path: '/solar-energy',
-  funded: '4000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Bitcoin ATM',
-}];
-
 export const assetInfo = {
   assetName: 'Bitcoin ATM',
   city: 'Zug',
@@ -53,7 +14,8 @@ export const assetInfo = {
   address: '0xDe384n4aw4fs52',
 };
 
-export const newState = { transactionsHistory : [{
+export const newState = {
+  transactionsHistory: [{
     date: 'January 01, 2018, 19:51', amount: 1.5, status: 'Complete', type: 'ETH', txId: '0x5eed7527dee715e9c068cda49fee0c1e147845ebad84514ede2dd89919b114b2',
   }, {
     date: 'March 02, 2018, 19:51', amount: 3, status: 'Complete', type: 'ETH', txId: '0x5eed7527dee715e9c068cda49fee0c1e147845ebad84514ede2dd89919b114b2',
@@ -87,32 +49,38 @@ export const newState = { transactionsHistory : [{
     date: 'March 05, 2018, 19:51', amount: 13.22, status: 'Complete', type: 'ETH', txId: '0x5eed7527dee715e9c068cda49fee0c1e147845ebad84514ede2dd89919b114b2',
   }, {
     date: 'March 05, 2018, 19:51', amount: -17.87, status: 'Complete', type: 'ETH', txId: '0x5eed7527dee715e9c068cda49fee0c1e147845ebad84514ede2dd89919b114b2',
-  }]
-}
+  }],
+};
 
-export const noTransactions = { transactionsHistory : [] }
+export const noTransactions = { transactionsHistory: [] };
 
-export const headerLoading = {user: {}, misc:{}}
+export const headerLoading = { user: {}, misc: {} };
 
-export const header = {user: {userName: "0x123f681646d4a755815f9cb19e1acc8565a0c2ac", ethBalance: 20, myBitBalance: 215}, misc:{currentMybitInUsd: 2.68}}
+export const header = { user: { userName: '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', ethBalance: 20, myBitBalance: 215 }, misc: { currentMybitInUsd: 2.68 } };
 
-export const explorePage = {assets:
+export const explorePage = {
+  assets:
   [
-    {assetID: "0xc481012a7563a254e34971fa6eb679d6556726ebfafa7c0cb62d444f90b6f82c",
-    installerID: "0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55",
-    amountToBeRaised: "200",
-    assetType: "0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55",
-    creator: "0x00854dcc5872fB3cCc1bBcFda849F4dCdF53172F",
-    amountRaisedInUSD: "212.704",
-    category: "coffeemachine",},
-    {assetID: "0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1",
-    installerID: "0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55",
-    amountToBeRaised: "200",
-    assetType: "0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55",
-    creator: "0x00854dcc5872fB3cCc1bBcFda849F4dCdF53172F",
-    amountRaisedInUSD: "212.704",
-    category: "uncategorized",}]
-, loading: {assets: false}}
+    {
+      assetID: '0xc481012a7563a254e34971fa6eb679d6556726ebfafa7c0cb62d444f90b6f82c',
+      installerID: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
+      amountToBeRaised: '200',
+      assetType: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
+      creator: '0x00854dcc5872fB3cCc1bBcFda849F4dCdF53172F',
+      amountRaisedInUSD: '212.704',
+      category: 'coffeemachine',
+    },
+    {
+      assetID: '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1',
+      installerID: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
+      amountToBeRaised: '200',
+      assetType: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
+      creator: '0x00854dcc5872fB3cCc1bBcFda849F4dCdF53172F',
+      amountRaisedInUSD: '212.704',
+      category: 'uncategorized',
+    }],
+  loading: { assets: false },
+};
 
 
 export const portfolio = {
@@ -123,14 +91,14 @@ export const portfolio = {
         {
           name: 'Bitcoin ATM',
           ownership: '18',
-          value: '2000'
+          value: '2000',
         },
         {
           name: 'Bitcoin ATM',
           ownership: '10',
-          value: '4000'
-        }
-      ]
+          value: '4000',
+        },
+      ],
     },
     portfolioRevenue: {
       value: 3450,
@@ -138,15 +106,15 @@ export const portfolio = {
         {
           name: 'Bitcoin ATM',
           totalRevenue: '1330',
-          monthlyRevenue: '120'
+          monthlyRevenue: '120',
         },
         {
           name: 'Bitcoin ATM',
           totalRevenue: '1880',
-          monthlyRevenue: '120'
-        }
-      ]
+          monthlyRevenue: '120',
+        },
+      ],
     },
-    loaded: true
-  }
-}
+    loaded: true,
+  },
+};

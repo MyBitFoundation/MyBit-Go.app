@@ -12,13 +12,14 @@ const AssetDetailsPage = ({
 }) => {
   const { assetId, category } = match.params;
 
-  const asset = state.assets.find(asset => asset.assetID === assetId);
+  const asset = state.assets.find(element => element.assetID === assetId);
 
   const loading = !state.misc.currentEthInUsd || !asset;
+
   const backButton = (
     <Link
-      to={`/explore/${category}`}
-      href={`/explore/${category}`}
+      to={`/explore/${category.toLowerCase()}`}
+      href={`/explore/${category.toLowerCase()}`}
     >
       <Button
         kind="secondary"

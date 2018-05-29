@@ -57,24 +57,18 @@ const ExploreAssetsPage = ({
     />
   );
 
- const noElements =
-   (!loading && assetsInCategory.length === 0) && (
-     <div style={{ width: '100%' }}>
-       {backButton}
-       <p
-         className="ExploreAssetsPage__message-no-elements"
-       >
-         {`No assets found in the ${category} category.`}
-       </p>
-     </div>
-   );
-
+  let renderedOutput = null;
+  if (loading) {
+    renderedOutput = loadingElement;
+  } else if (assets[1].length === 0) {
+    renderedOutput = <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />;
+  } else {
+    renderedOutput = assets;
+  }
 
   return (
     <div className="ExploreAssetsPage grid">
-      {loadingElement}
-      {assets}
-      {noElements}
+      {renderedOutput}
     </div>
   );
 };
