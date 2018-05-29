@@ -28,7 +28,7 @@ import NavigationBar from '../components/NavigationBar';
 import Address from '../components/Address';
 
 import store from '..';
-import { assetInfo, portfolio, noTransactions, headerLoading, header, explorePage } from './constants';
+import { assetInfo, portfolio, noTransactions, headerLoading, header, explorePage, portfolioLoading } from './constants';
 
 import ComponentWithState from './ComponentWithState';
 
@@ -104,7 +104,7 @@ storiesOf('Explore Assets Page', module)
 storiesOf('Portfolio Page', module)
   .addDecorator(MemoryDecorator)
   .add('Normal view', () => <PortfolioPage state={portfolio} />)
-  .add('Loading', () => <PortfolioPage state={{ portfolio: { loaded: false } }} />);
+  .add('Loading', () => <PortfolioPage state={portfolioLoading} />);
 
 storiesOf('Address', module).add('view', () => <Address userName="0x123f681646d4a755815f9cb19e1acc8565a0c2ac" />);
 

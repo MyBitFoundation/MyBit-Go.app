@@ -115,6 +115,19 @@ export const portfolio = {
         },
       ],
     },
-    loaded: true,
+  },
+  loading: {
+    portfolio: false,
+  },
+};
+
+
+export const portfolioLoading = {
+  portfolio: {
+    portfolioValue: {},
+    portfolioRevenue: {},
+  },
+  loading: {
+    portfolio: true,
   },
 };
