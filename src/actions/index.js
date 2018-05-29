@@ -3,6 +3,7 @@
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
+import * as FundingHub from '../constants/contracts/FundingHub';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from '../constants';
 
 import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId } from '../util/helpers';
@@ -21,6 +22,9 @@ export const FETCH_MYBIT_PRICE_USD_FAILURE = 'FETCH_MYBIT_PRICE_USD_FAILURE';
 export const FETCH_ETHEREUM_PRICE_USD = 'FETCH_ETHEREUM_PRICE_USD';
 export const FETCH_ETHEREUM_PRICE_USD_SUCCESS = 'FETCH_ETHEREUM_PRICE_USD_SUCCESS';
 export const FETCH_ETHEREUM_PRICE_USD_FAILURE = 'FETCH_ETHEREUM_PRICE_USD_FAILURE';
+export const LOAD_METAMASK_USER_DETAILS = 'LOAD_METAMASK_USER_DETAILS';
+export const LOAD_METAMASK_USER_DETAILS_SUCCESS = 'LOAD_METAMASK_USER_DETAILS_SUCCESS';
+export const LOAD_METAMASK_USER_DETAILS_FAILURE = 'LOAD_METAMASK_USER_DETAILS_FAILURE';
 
 // Synchronous action creators
 export const fetchAssetsSuccess = assets => ({ type: FETCH_ASSETS_SUCCESS, payload: { assets } });
@@ -40,8 +44,25 @@ export const setTransactionHistoryFilters = (itemsPerPage, currentPage, sortBy, 
     itemsPerPage, currentPage, sortBy, sortDir,
   },
 });
+export const loadMetamaskUserDetailsSuccess =
+    details => ({ type: LOAD_METAMASK_USER_DETAILS_SUCCESS, payload: { details } });
+export const loadMetamaskUserDetailsFailure =
+  error => ({ type: LOAD_METAMASK_USER_DETAILS_FAILURE, payload: { error } });
 
 // Asynchronous action creators
+export const loadMetamaskUserDetails = () => async (dispatch) => {
+  dispatch({ type: LOAD_METAMASK_USER_DETAILS });
+  try {
+    const accounts = await web3.eth.getAccounts();
+    const balance = await web3.eth.getBalance(accounts[0]);
+    // TODO: MyBit balance
+    const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance: '0' };
+    dispatch(loadMetamaskUserDetailsSuccess(details));
+  } catch (error) {
+    dispatch(loadMetamaskUserDetailsFailure(error));
+  }
+};
+
 export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
   switch (ticker) {
     case MYBIT_TICKER_COINMARKETCAP:

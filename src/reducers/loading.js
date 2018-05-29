@@ -21,6 +21,11 @@ const loading = (state = initialState, action) => {
     case Actions.FETCH_ASSETS_SUCCESS:
     case Actions.FETCH_ASSETS_FAILURE:
       return { ...state, assets: false };
+    case Actions.LOAD_METAMASK_USER_DETAILS:
+      return { ...state, user: true };
+    case Actions.LOAD_METAMASK_USER_DETAILS_SUCCESS:
+    case Actions.LOAD_METAMASK_USER_DETAILS_FAILURE:
+      return { ...state, user: false };
     default:
       return state;
   }

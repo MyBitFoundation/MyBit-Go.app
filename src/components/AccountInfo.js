@@ -26,14 +26,14 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => (
 );
 
 AccountInfo.defaultProps = {
-  myBitBalance: undefined,
-  ethBalance: undefined,
-  userName: undefined,
+  myBitBalance: '',
+  ethBalance: '',
+  userName: '',
 };
 
 AccountInfo.propTypes = {
-  myBitBalance: PropTypes.number,
-  ethBalance: PropTypes.number,
+  myBitBalance: PropTypes.string,
+  ethBalance: PropTypes.string,
   userName: PropTypes.string,
 };
 
