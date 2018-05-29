@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Loading } from 'carbon-components-react';
+import { Button } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
 import AssetDetails from '../AssetDetails';
 import { debug } from '../../constants';
 import '../../styles/AssetDetailsPage.css';
+import LoadingPage from './LoadingPage';
 
 const AssetDetailsPage = ({
   state,
@@ -12,13 +13,14 @@ const AssetDetailsPage = ({
 }) => {
   const { assetId, category } = match.params;
 
-  const asset = state.assets[category][assetId];
+  const asset = state.assets.find(element => element.assetID === assetId);
 
   const loading = !state.misc.currentEthInUsd || !asset;
+
   const backButton = (
     <Link
-      to={`/explore/${category}`}
-      href={`/explore/${category}`}
+      to={`/explore/${category.toLowerCase()}`}
+      href={`/explore/${category.toLowerCase()}`}
     >
       <Button
         kind="secondary"
@@ -31,24 +33,25 @@ const AssetDetailsPage = ({
   );
 
   const loadingElement = loading && (
-    <div style={{ width: '100%', position: 'relative', top: '50px' }}>
-      <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
-      <p className="AssetDetailsPage-loading-message">
-        Loading asset information
-      </p>
-    </div>
+  <LoadingPage
+    message="Loading asset information"
+    hasBackButton
+    path="/explore"
+  />
   );
 
   const assetDetails = !loading && (
-    <AssetDetails
-      information={asset}
-      currentEthInUsd={state.misc.currentEthInUsd}
-    />
+    <div>
+      {backButton}
+      <AssetDetails
+        information={asset}
+        currentEthInUsd={state.misc.currentEthInUsd}
+      />
+    </div>
   );
 
   return (
     <div style={{ position: 'relative' }}>
-      {backButton}
       {loadingElement}
       {assetDetails}
     </div>

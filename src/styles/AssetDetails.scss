@@ -1,9 +1,21 @@
+@import 'include-media/dist/_include-media.scss';
+
 .AssetDetails{
   padding-top: 25px;
+  display: flex;
+
+  @include media('<desktop') {
+    flex-direction: column;
+  }
 
   &__left{
-    padding-left: 0px;
-    padding-right: 50px;
+    width: 50%;
+    margin-right: 30px;
+
+    @include media('<desktop') {
+        width: 100%;
+        margin-right: 0px;
+    }
 
     &-name{
       font-size: 34px;
@@ -142,8 +154,15 @@
   }
 
   &__right{
-    padding: 0px 0px;
     background-color: rgba(231, 232, 235, 0.63);
+    width: 50%;
+    margin-left: 30px;
+
+    @include media('<desktop') {
+      width: 100%;
+      margin-left: 0px;
+      margin-top: 30px;
+    }
 
     &-image{
       width: 100%;
@@ -197,7 +216,7 @@
   }
 
   .bx--form-item{
-    margin: 0px 0px;
+    margin-right: 11px;
   }
 
   .bx--slider__track{

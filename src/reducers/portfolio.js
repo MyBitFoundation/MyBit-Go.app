@@ -9,7 +9,6 @@ const initialState = {
     value: 3450,
     assets: [{ name: 'Bitcoin ATM', totalRevenue: '1330', monthlyRevenue: '120' }, { name: 'Bitcoin ATM', totalRevenue: '1880', monthlyRevenue: '120' }],
   },
-  loaded: true,
 };
 
 const portfolio = (state = initialState, action) => {

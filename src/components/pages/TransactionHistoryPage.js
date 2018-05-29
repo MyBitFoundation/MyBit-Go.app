@@ -15,7 +15,7 @@ const OverflowMenuCuston = ({ url }) => (
 );
 
 const TransactionHistoryPage = ({ state, setTransactionHistoryFilters }) => {
-  const loadedTransactions = state.transactions.loaded;
+  const loading = state.loading.transactionHistory;
   let transactionsToRender = [...state.transactions.history];
   const { currentPage } = state.transactions;
   const { itemsPerPage } = state.transactions;
@@ -38,13 +38,13 @@ const TransactionHistoryPage = ({ state, setTransactionHistoryFilters }) => {
 
   return (
     <div>
-      {!loadedTransactions &&
+      {loading &&
         <LoadingPage
           message="Loading transactions"
-          hasBackButton
+          hasBackButton={false}
         />
       }
-      {loadedTransactions &&
+      {!loading &&
         <div className="Transactions">
           <div className="Transactions__history">
             <b className="Transactions__table-name">Transaction History</b>
@@ -64,7 +64,7 @@ const TransactionHistoryPage = ({ state, setTransactionHistoryFilters }) => {
               </TableHead>
               <TableBody>
                 {transactionsToRender.map((transaction, index) => (
-                  <TableRow key={transaction.date + transaction.amount} even={index % 2 !== 0}>
+                  <TableRow key={transaction.txId} even={index % 2 !== 0}>
                     <TableData>
                       {transaction.date}
                     </TableData>

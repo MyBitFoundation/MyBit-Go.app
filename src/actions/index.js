@@ -22,7 +22,13 @@ export const FETCH_ETHEREUM_PRICE_USD = 'FETCH_ETHEREUM_PRICE_USD';
 export const FETCH_ETHEREUM_PRICE_USD_SUCCESS = 'FETCH_ETHEREUM_PRICE_USD_SUCCESS';
 export const FETCH_ETHEREUM_PRICE_USD_FAILURE = 'FETCH_ETHEREUM_PRICE_USD_FAILURE';
 
+// Actions for storybook
+export const RESET_STATE = 'RESET_STATE';
+export const FILL_STATE = 'FILL_STATE';
+
 // Synchronous action creators
+export const resetState = () => ({ type: RESET_STATE });
+export const fillState = newState => ({ type: FILL_STATE, payload: newState });
 export const fetchAssetsSuccess = assets => ({ type: FETCH_ASSETS_SUCCESS, payload: { assets } });
 export const fetchAssetsFailure = error => ({ type: FETCH_ASSETS_FAILURE, payload: { error } });
 export const fetchMyBitPriceUSDSuccess =
@@ -43,12 +49,19 @@ export const setTransactionHistoryFilters = (itemsPerPage, currentPage, sortBy, 
 
 // Asynchronous action creators
 export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
+  let actionSuccessful;
+  let actionFailure;
+
   switch (ticker) {
     case MYBIT_TICKER_COINMARKETCAP:
       dispatch({ type: FETCH_MYBIT_PRICE_USD });
+      actionSuccessful = FETCH_MYBIT_PRICE_USD_SUCCESS;
+      actionFailure = FETCH_MYBIT_PRICE_USD_FAILURE;
       break;
     case ETHEREUM_TICKER_COINMARKETCAP:
       dispatch({ type: FETCH_ETHEREUM_PRICE_USD });
+      actionSuccessful = FETCH_ETHEREUM_PRICE_USD_SUCCESS;
+      actionFailure = FETCH_ETHEREUM_PRICE_USD_FAILURE;
       break;
     default:
       throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
@@ -57,33 +70,13 @@ export const fetchPriceFromCoinmarketcap = ticker => async (dispatch) => {
     const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
     const jsonResponse = await response.json();
     const { price } = jsonResponse.data.quotes.USD;
-    switch (ticker) {
-      case MYBIT_TICKER_COINMARKETCAP:
-        dispatch({
-          type: FETCH_MYBIT_PRICE_USD_SUCCESS,
-          payload: { price: Math.round(price * 100) / 100 },
-        });
-        break;
-      case ETHEREUM_TICKER_COINMARKETCAP:
-        dispatch({
-          type: FETCH_ETHEREUM_PRICE_USD_SUCCESS,
-          payload: { price: Math.round(price * 100) / 100 },
-        });
-        break;
-      default:
-        throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
-    }
+
+    dispatch({
+      type: actionSuccessful,
+      payload: { price: Math.round(price * 100) / 100 },
+    });
   } catch (error) {
-    switch (ticker) {
-      case MYBIT_TICKER_COINMARKETCAP:
-        dispatch({ type: FETCH_MYBIT_PRICE_USD_FAILURE, payload: { error } });
-        break;
-      case ETHEREUM_TICKER_COINMARKETCAP:
-        dispatch({ type: FETCH_ETHEREUM_PRICE_USD_FAILURE, payload: { error } });
-        break;
-      default:
-        throw new Error('Invalid ticker provided to fetchPriceFromCoinmarketcap');
-    }
+    dispatch({ type: actionFailure, payload: { error } });
   }
 };
 

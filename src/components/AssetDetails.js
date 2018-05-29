@@ -13,9 +13,9 @@ import bakgroundImage from '../images/asset-details-page-header.png';
 class AssetDetails extends React.Component {
   constructor(props) {
     super(props);
-    const { goal, raised } = this.props.information;
+    const { amountToBeRaised, amountRaisedInUSD } = this.props.information;
     this.state = {
-      currentSelectedAmount: Math.floor((goal - raised) / 2),
+      currentSelectedAmount: Math.floor((amountToBeRaised - amountRaisedInUSD) / 2),
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
@@ -37,7 +37,7 @@ class AssetDetails extends React.Component {
 
   setDateDetails() {
     const maxInvestment =
-      this.props.information.goal - this.props.information.raised;
+      this.props.information.amountToBeRaised - this.props.information.amountRaisedInUSD;
 
     // funding goal has been reached
     if (maxInvestment === 0) {
@@ -137,8 +137,9 @@ class AssetDetails extends React.Component {
 
   render() {
     const maxInvestment = this.state.daysToGo < 0 ? 0 :
-      this.props.information.goal - this.props.information.raised;
-    const ownership = (this.state.currentSelectedAmount * 100) / this.props.information.goal;
+      this.props.information.amountToBeRaised - this.props.information.amountRaisedInUSD;
+    const ownership =
+    (this.state.currentSelectedAmount * 100) / this.props.information.amountToBeRaised;
     const etherValue = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
       .toFixed(2));
     let minInvestment = this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
@@ -148,8 +149,8 @@ class AssetDetails extends React.Component {
     }
 
     return (
-      <div className="AssetDetails grid">
-        <div className="AssetDetails__left col_lg-6 col_md-12">
+      <div className="AssetDetails">
+        <div className="AssetDetails__left">
           <b className="AssetDetails__left-name">
             {this.props.information.assetName}
           </b>
@@ -179,13 +180,13 @@ class AssetDetails extends React.Component {
                 className="AssetDetails__left-funding-value"
                 style={{ color: '#2db84b' }}
               >
-                {this.props.information.raised.toLocaleString()} USD
+                {this.props.information.amountRaisedInUSD.toLocaleString()} USD
               </b>
             </div>
             <div className="AssetDetails__left-funds-goal">
               <p className="AssetDetails__left-funding-title">Funding goal</p>
               <b className="AssetDetails__left-funding-value">
-                {this.props.information.goal.toLocaleString()} USD
+                {this.props.information.amountToBeRaised.toLocaleString()} USD
               </b>
             </div>
             <div className="AssetDetails__left-funds-investors">
@@ -262,7 +263,7 @@ class AssetDetails extends React.Component {
             />
           </ModalWrapper>
         </div>
-        <div className="AssetDetails__right col_lg-6 col_md-12">
+        <div className="AssetDetails__right">
           <img
             alt="Asset details background"
             className="AssetDetails__right-image"
@@ -279,7 +280,7 @@ class AssetDetails extends React.Component {
             </p>
             <b className="AssetDetails__right-title-details">Asset manager</b>
             <Address
-              userName={this.props.information.address}
+              userName={this.props.information.creator}
               className="AssetDetails__right-address"
             />
           </div>
@@ -296,14 +297,14 @@ AssetDetails.defaultProps = {
 AssetDetails.propTypes = {
   information: PropTypes.shape({
     dueDate: PropTypes.number.isRequired,
-    goal: PropTypes.number.isRequired,
-    raised: PropTypes.number.isRequired,
+    amountToBeRaised: PropTypes.number.isRequired,
+    amountRaisedInUSD: PropTypes.number.isRequired,
     assetName: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
     country: PropTypes.string.isRequired,
     details: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    address: PropTypes.string.isRequired,
+    creator: PropTypes.string.isRequired,
   }).isRequired,
   currentEthInUsd: PropTypes.number,
 };

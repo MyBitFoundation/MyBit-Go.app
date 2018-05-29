@@ -9,14 +9,19 @@ import BarChart from '../../images/chart-bar.png';
 import LineChart from '../../images/chart-line.png';
 
 const PortfolioPage = ({ state }) => {
-  const loadedPortfolio = state.portfolio.loaded;
+  const loading = state.loading.portfolio;
   const { portfolioRevenue } = state.portfolio;
   const { portfolioValue } = state.portfolio;
 
   return (
     <div>
-      {!loadedPortfolio && <LoadingPage message="Loading portfolio" />}
-      {loadedPortfolio && (
+      {loading &&
+        <LoadingPage
+          message="Loading portfolio"
+          hasBackButton={false}
+        />
+      }
+      {!loading && (
         <div className="Portfolio">
           <div className="Portfolio__wrapper">
             <div>

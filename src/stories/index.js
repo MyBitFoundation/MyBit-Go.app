@@ -3,12 +3,13 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import MemoryRouter from 'react-router-dom/MemoryRouter';
+import { Provider as ReduxProvider } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
-import { assetsInfo, assetInfo, portfolio } from './constants';
 
 import getWeb3Async from '../util/web3';
 
@@ -18,98 +19,106 @@ import ExplorePage from '../components/pages/ExplorePage';
 import PortfolioPage from '../components/pages/PortfolioPage';
 import TransactionHistoryPage from '../components/pages/TransactionHistoryPage';
 
-
 import AppHeader from '../components/AppHeader';
-import AssetHero from '../components/AssetHero';
 import AssetDetails from '../components/AssetDetails';
 import AssetFunding from '../components/AssetFunding';
 import Button from '../components/Button';
-import Category from '../components/Category';
 import NavigationBar from '../components/NavigationBar';
-import Row from '../components/Row';
-import SmallInfoPanel from '../components/SmallInfoPanel';
 
 import Address from '../components/Address';
 
+import store from '..';
+import { assetInfo, portfolio, noTransactions, headerLoading, header, explorePage, portfolioLoading } from './constants';
 
-const MemoryDecorator = story => (
-  <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
+import ComponentWithState from './ComponentWithState';
+
+const MemoryDecorator = (story, kind, isHeader = false) => (
+  <MemoryRouter initialEntries={['/']}><div className={!isHeader ? 'page-wrapper' : 'aaa'}>{story()}</div></MemoryRouter>
 );
 
 const Header = (
   <AppHeader
-    exchangeRate={2.13}
-    myBitBalance={215}
-    ethBalance={20}
-    address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
+    state={header}
   />
 );
 
+const Provider = ({
+  children, functions, withData, specificData,
+}) =>
+  (
+    <ReduxProvider store={store}>
+      <MemoryRouter initialEntries={['/']}>
+        <ComponentWithState
+          withData={withData}
+          functions={functions}
+          specificData={specificData}
+        >
+          {children}
+        </ComponentWithState>
+      </MemoryRouter>
+    </ReduxProvider>
+  );
+
 storiesOf('Header', module)
+  .addDecorator((story, kind) => MemoryDecorator(story, kind, true))
   .add('Normal view', () => Header)
-  .add('Loading', () => <AppHeader />);
+  .add('Loading', () => <AppHeader state={headerLoading} />);
 
 storiesOf('Navigation Bar', module)
-  .addDecorator(MemoryDecorator)
+  .addDecorator((story, kind) => MemoryDecorator(story, kind, true))
   .add('view', () => (
-    <NavigationBar clickHandler={action('Clicked nav bar option')} />
+    <NavigationBar currentPath="/explore" clickHandler={action('Clicked nav bar option')} />
   ));
 
 storiesOf('Header & Nav Bar', module)
-  .addDecorator(MemoryDecorator)
+  .addDecorator((story, kind) => MemoryDecorator(story, kind, true))
   .add('view', () => (
     <div>
       {Header}
-      <NavigationBar clickHandler={action('Clicked nav bar option')} />
+      <NavigationBar currentPath="/explore" clickHandler={action('Clicked nav bar option')} />
     </div>
   ));
 
 storiesOf('Explore Page', module)
   .addDecorator(MemoryDecorator)
-  .add('view', () => (
-    <div className="page-wrapper">
-      <ExplorePage clickHandler={action('Clicked category')} />
-    </div>
+  .add('Normal View', () => (
+    <ExplorePage state={{ loading: { assets: true } }} clickHandler={action('Clicked category')} />
+  ))
+  .add('Loading', () => (
+    <ExplorePage state={explorePage} clickHandler={action('Clicked category')} />
   ));
 
 storiesOf('Explore Assets Page', module)
   .addDecorator(MemoryDecorator)
   .add('Normal view', () => (
     <ExploreAssetsPage
-      assetsInfo={assetsInfo}
-      match={{ params: { category: 'Solar Panel' } }}
+      state={explorePage}
+      match={{ params: { category: 'uncategorized' } }}
     />
   ))
-  .add('Loading', () => <ExploreAssetsPage loading assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} />)
+  .add('Loading', () => <ExploreAssetsPage state={{ ...explorePage, loading: { assets: true } }} match={{ params: { category: 'Solar Panel' } }} />)
   .add('No assets', () => (
-    <ExploreAssetsPage loading={false} assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} category="Solar Panel" />
+    <ExploreAssetsPage state={{ ...explorePage, loading: { assets: false } }} match={{ params: { category: 'Solar Panel' } }} />
   ));
 
 storiesOf('Portfolio Page', module)
-  .add('Normal view', () => <PortfolioPage portfolioValue={portfolio.portfolioValue} revenue={portfolio.revenue} />)
-  .add('Loading', () => <PortfolioPage />);
+  .addDecorator(MemoryDecorator)
+  .add('Normal view', () => <PortfolioPage state={portfolio} />)
+  .add('Loading', () => <PortfolioPage state={portfolioLoading} />);
 
-storiesOf('Address', module).add('view', () => <Address />);
-
-storiesOf('Category', module).add('view', () => <Category />);
+storiesOf('Address', module).add('view', () => <Address userName="0x123f681646d4a755815f9cb19e1acc8565a0c2ac" />);
 
 storiesOf('Button', module).add('view', () => <Button />);
 
-storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
-
-storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
-
 storiesOf('Asset Details Page', module)
-  .addDecorator(story => (
-    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
-  ))
+  .addDecorator(MemoryDecorator)
   .add('Normal view', () => (
     <AssetDetailsPage
-      information={{ ...assetInfo }}
-      match={{ params: { category: 'Solar Panel', assetId: '123' } }}
+      state={{ ...explorePage, loading: { assets: true }, misc: { currentEthInUsd: 600 } }}
+      match={{ params: { category: 'uncategorized', assetId: '0xc481012a7563a254e34971fa6eb679d6556726ebfafa7c0cb62d444f90b6f82c' } }}
     />
   ))
-  .add('Loading', () => <AssetDetailsPage match={{ params: { category: 'Solar Panel', assetId: '123' } }} />);
+  .add('Loading', () => <AssetDetailsPage state={{ ...explorePage, loading: { assets: true }, misc: {} }} match={{ params: { category: 'Solar Panel', assetId: '123' } }} />);
 
 const daysToGo = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
@@ -164,8 +173,32 @@ storiesOf('Asset Funding', module).add('view', () => (
   <AssetFundingWeb3Wrapper />
 ));
 
-storiesOf('Transaction History', module).add('view', () => (
-  <TransactionHistoryPage />
-));
+storiesOf('Transaction History', module)
+  .add('Loading', () => (
+    <Provider withData={false} functions={['setTransactionHistoryFilters']}>
+      <TransactionHistoryPage />
+    </Provider>
+  ))
+  .add('No transactions', () => (
+    <Provider withData functions={['setTransactionHistoryFilters']} specificData={noTransactions}>
+      <TransactionHistoryPage />
+    </Provider>
+  ))
+  .add('With transactions', () => (
+    <Provider withData functions={['setTransactionHistoryFilters']} >
+      <TransactionHistoryPage />
+    </Provider>
+  ));
 
-storiesOf('Row', module).add('view', () => <Row />);
+
+Provider.defaultProps = {
+  functions: undefined,
+  specificData: undefined,
+};
+
+Provider.propTypes = {
+  children: PropTypes.element.isRequired,
+  functions: PropTypes.arrayOf(PropTypes.string),
+  withData: PropTypes.bool.isRequired,
+  specificData: PropTypes.shape({ params: PropTypes.object }),
+};
