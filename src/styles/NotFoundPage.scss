@@ -14,11 +14,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 80px;
+    margin-top: 50px;
 
     @include media('>=tablet') {
-        top: 120px;
+        margin-top: 120px;
     }
   }
 
@@ -49,8 +48,10 @@
     font-size: 15px;
     color: #125ac4;
     text-align: center;
+    padding: 0px 25px;
     @include media('>=tablet') {
        font-size: 30px;
+       width: 900px;
     }
   }
 
