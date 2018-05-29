@@ -13,8 +13,7 @@ import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
-import { assetsInfo, assetInfo, portfolio, noTransactions } from './constants';
-
+import { assetsInfo, assetInfo, portfolio, noTransactions, headerLoading, header, explorePage } from './constants';
 
 import getWeb3Async from '../util/web3';
 
@@ -23,7 +22,6 @@ import ExploreAssetsPage from '../components/pages/ExploreAssetsPage';
 import ExplorePage from '../components/pages/ExplorePage';
 import PortfolioPage from '../components/pages/PortfolioPage';
 import TransactionHistoryPage from '../components/pages/TransactionHistoryPage';
-
 
 import AppHeader from '../components/AppHeader';
 import AssetHero from '../components/AssetHero';
@@ -41,86 +39,89 @@ import configureStore from '../store/configureStore';
 
 import ComponentWithState from './ComponentWithState';
 
-
-
-const MemoryDecorator = story => (
-  <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
+const MemoryDecorator = (story, kind, isHeader = false) => (
+  <MemoryRouter initialEntries={['/']}><div className={!isHeader ? "page-wrapper" : "aaa"}>{story()}</div></MemoryRouter>
 );
-
 const Header = (
   <AppHeader
-    exchangeRate={2.13}
-    myBitBalance={215}
-    ethBalance={20}
-    address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
+    state={header}
   />
 );
 
+const store = configureStore();
+
+function Provider({
+  children, functions, withData, specificData,
+}) {
+  return (
+    <ReduxProvider store={store}>
+      <MemoryRouter initialEntries={['/']}>
+        <ComponentWithState withData={withData} children={children} functions={functions} specificData={specificData} />
+      </MemoryRouter>
+    </ReduxProvider>
+  );
+}
+
 storiesOf('Header', module)
-  .add('Normal view', () => <Provider children={<AppHeader />} />)
-  .add('Loading', () => <Provider children={<AppHeader />} />);
+  .addDecorator((story, kind) => MemoryDecorator(story, kind, true))
+  .add('Normal view', () => Header)
+  .add('Loading', () => <AppHeader state={headerLoading} />);
 
 storiesOf('Navigation Bar', module)
-  .addDecorator(MemoryDecorator)
+  .addDecorator((story, kind) => MemoryDecorator(story, kind, true))
   .add('view', () => (
-    <NavigationBar clickHandler={action('Clicked nav bar option')} />
+    <NavigationBar currentPath="/explore" clickHandler={action('Clicked nav bar option')} />
   ));
 
 storiesOf('Header & Nav Bar', module)
-  .addDecorator(MemoryDecorator)
+  .addDecorator((story, kind) => MemoryDecorator(story, kind, true))
   .add('view', () => (
     <div>
       {Header}
-      <NavigationBar clickHandler={action('Clicked nav bar option')} />
+      <NavigationBar currentPath="/explore" clickHandler={action('Clicked nav bar option')} />
     </div>
   ));
 
 storiesOf('Explore Page', module)
   .addDecorator(MemoryDecorator)
-  .add('view', () => (
-    <div className="page-wrapper">
-      <ExplorePage clickHandler={action('Clicked category')} />
-    </div>
+  .add('Normal View', () => (
+    <ExplorePage state={{loading: {assets: true}}} clickHandler={action('Clicked category')} />
+  ))
+  .add('Loading', () => (
+    <ExplorePage state={explorePage} clickHandler={action('Clicked category')} />
   ));
 
 storiesOf('Explore Assets Page', module)
   .addDecorator(MemoryDecorator)
   .add('Normal view', () => (
     <ExploreAssetsPage
-      assetsInfo={assetsInfo}
-      match={{ params: { category: 'Solar Panel' } }}
+      state={explorePage}
+      match={{ params: { category: 'uncategorized' } }}
     />
   ))
-  .add('Loading', () => <ExploreAssetsPage loading assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} />)
+  .add('Loading', () => <ExploreAssetsPage state={{...explorePage, loading: {assets: true}}} match={{ params: { category: 'Solar Panel' } }} />)
   .add('No assets', () => (
-    <ExploreAssetsPage loading={false} assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} category="Solar Panel" />
+    <ExploreAssetsPage state={{...explorePage, loading: {assets: false}}} match={{ params: { category: 'Solar Panel' } }} />
   ));
 
 storiesOf('Portfolio Page', module)
-  .add('Normal view', () => <PortfolioPage portfolioValue={portfolio.portfolioValue} revenue={portfolio.revenue} />)
-  .add('Loading', () => <PortfolioPage />);
+  .addDecorator(MemoryDecorator)
+  .add('Normal view', () => <PortfolioPage state={portfolio} />)
+  .add('Loading', () => <PortfolioPage state={{portfolio: {loaded: false}}}/>);
 
-storiesOf('Address', module).add('view', () => <Address />);
-
-storiesOf('Category', module).add('view', () => <Category />);
+storiesOf('Address', module).add('view', () => <Address userName="0x123f681646d4a755815f9cb19e1acc8565a0c2ac" />);
 
 storiesOf('Button', module).add('view', () => <Button />);
 
-storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
-
-storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
-
 storiesOf('Asset Details Page', module)
-  .addDecorator(story => (
-    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
-  ))
+  .addDecorator(MemoryDecorator)
   .add('Normal view', () => (
     <AssetDetailsPage
-      information={{ ...assetInfo }}
-      match={{ params: { category: 'Solar Panel', assetId: '123' } }}
+      state={{...explorePage, loading: {assets: true}, misc: {currentEthInUsd: 600}}}
+      match={{ params: { category: 'uncategorized', assetId: '0xc481012a7563a254e34971fa6eb679d6556726ebfafa7c0cb62d444f90b6f82c' } }}
     />
   ))
-  .add('Loading', () => <AssetDetailsPage match={{ params: { category: 'Solar Panel', assetId: '123' } }} />);
+  .add('Loading', () => <AssetDetailsPage state={{...explorePage, loading: {assets: true}, misc: {}}} match={{ params: { category: 'Solar Panel', assetId: '123' } }} />);
 
 const daysToGo = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
@@ -175,27 +176,13 @@ storiesOf('Asset Funding', module).add('view', () => (
   <AssetFundingWeb3Wrapper />
 ));
 
-
-
-const store = configureStore();
-
-function Provider({ children, functionName, withData, specificData }) {
-  return (
-    <ReduxProvider store={store}>
-      <MemoryRouter initialEntries={['/']}>
-        <ComponentWithState withData={withData} children={children} functionName={functionName} specificData={specificData} />
-      </MemoryRouter>
-    </ReduxProvider>
-  );
-};
-
 storiesOf('Transaction History', module)
-.add('Loading', (storyDetails) => (
-  <Provider withData={false} children={<TransactionHistoryPage/>} functions={["setTransactionHistoryFilters"]} />
-))
-.add('No transactions', (storyDetails) => (
-  <Provider withData children={<TransactionHistoryPage/>} functions={["setTransactionHistoryFilters"]} specificData={noTransactions} />
-))
-.add('With transactions', (api) => (
-  <Provider withData children={<TransactionHistoryPage/>} functions={["setTransactionHistoryFilters"]} />
-))
+  .add('Loading', storyDetails => (
+    <Provider withData={false} children={<TransactionHistoryPage />} functions={['setTransactionHistoryFilters']} />
+  ))
+  .add('No transactions', storyDetails => (
+    <Provider withData children={<TransactionHistoryPage />} functions={['setTransactionHistoryFilters']} specificData={noTransactions} />
+  ))
+  .add('With transactions', api => (
+    <Provider withData children={<TransactionHistoryPage />} functions={['setTransactionHistoryFilters']} />
+  ));

@@ -12,7 +12,7 @@ const AssetDetailsPage = ({
 }) => {
   const { assetId, category } = match.params;
 
-  const asset = state.assets[category][assetId];
+  const asset = state.assets.find(asset => asset.assetID === assetId);
 
   const loading = !state.misc.currentEthInUsd || !asset;
   const backButton = (

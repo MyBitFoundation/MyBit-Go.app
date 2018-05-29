@@ -18,7 +18,7 @@ const ExploreAssetsPage = ({
     return <NotFoundPage />;
   }
 
-  const loading = state.assets.length === 0;
+  const loading = state.loading.assets;
   const assetsInCategory =
     state.assets.filter(asset => asset.category === match.params.category);
 
@@ -33,7 +33,7 @@ const ExploreAssetsPage = ({
     </Link>
   );
 
-  const assets = [
+  const assets = !loading ? [
     backButton,
     assetsInCategory.map(asset => (
       <Asset
@@ -47,7 +47,7 @@ const ExploreAssetsPage = ({
         category={getPrettyCategoryName(asset.category)}
       />
     )),
-  ];
+  ] : null;
 
   const loadingElement = loading && (
     <LoadingPage
@@ -57,23 +57,24 @@ const ExploreAssetsPage = ({
     />
   );
 
-  // const noElements =
-  //   !loading && (
-  //     <div style={{ width: '100%' }}>
-  //       {backButton}
-  //       <p
-  //         className="ExploreAssetsPage__message-no-elements"
-  //       >
-  //         {`No assets found in the ${category} category.`}
-  //       </p>
-  //     </div>
-  //   );
+ const noElements =
+   (!loading && assetsInCategory.length === 0) && (
+     <div style={{ width: '100%' }}>
+       {backButton}
+       <p
+         className="ExploreAssetsPage__message-no-elements"
+       >
+         {`No assets found in the ${category} category.`}
+       </p>
+     </div>
+   );
 
 
   return (
     <div className="ExploreAssetsPage grid">
       {loadingElement}
       {assets}
+      {noElements}
     </div>
   );
 };
