@@ -33,7 +33,7 @@ const ExploreAssetsPage = ({
     </Link>
   );
 
-  const assets = !loading ? [
+  const assets = [
     backButton,
     assetsInCategory.map(asset => (
       <Asset
@@ -47,7 +47,7 @@ const ExploreAssetsPage = ({
         category={getPrettyCategoryName(asset.category)}
       />
     )),
-  ] : null;
+  ];
 
   const loadingElement = loading && (
     <LoadingPage
