@@ -10,6 +10,8 @@ import LoadingPage from './LoadingPage';
 const AssetDetailsPage = ({
   state,
   match,
+  goBack,
+  props
 }) => {
   const { assetId, category } = match.params;
 
@@ -17,10 +19,11 @@ const AssetDetailsPage = ({
 
   const loading = !state.misc.currentEthInUsd || !asset;
 
+
   const backButton = (
     <Link
-      to={`/explore/${category.toLowerCase()}`}
-      href={`/explore/${category.toLowerCase()}`}
+      to={`/explore/${category}`}
+      href={`/explore/${category}`}
     >
       <Button
         kind="secondary"

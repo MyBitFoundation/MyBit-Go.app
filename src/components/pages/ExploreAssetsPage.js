@@ -6,7 +6,6 @@ import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
-import { getPrettyCategoryName } from '../../util/helpers';
 
 const ExploreAssetsPage = ({
   state,
@@ -45,7 +44,7 @@ const ExploreAssetsPage = ({
           city="unknown"
           country="unknown"
           name="unknown"
-          category={getPrettyCategoryName(asset.category)}
+          category={asset.category}
         />
       ))}
     </div>
