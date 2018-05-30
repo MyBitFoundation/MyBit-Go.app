@@ -43,14 +43,13 @@ const Header = (
 );
 
 const Provider = ({
-  children, functions, withData, specificData,
+  children, withData, specificData,
 }) =>
   (
     <ReduxProvider store={store}>
       <MemoryRouter initialEntries={['/']}>
         <ComponentWithState
           withData={withData}
-          functions={functions}
           specificData={specificData}
         >
           {children}
@@ -175,30 +174,28 @@ storiesOf('Asset Funding', module).add('view', () => (
 
 storiesOf('Transaction History', module)
   .add('Loading', () => (
-    <Provider withData={false} functions={['setTransactionHistoryFilters']}>
+    <Provider withData={false}>
       <TransactionHistoryPage />
     </Provider>
   ))
   .add('No transactions', () => (
-    <Provider withData functions={['setTransactionHistoryFilters']} specificData={noTransactions}>
+    <Provider withData specificData={noTransactions}>
       <TransactionHistoryPage />
     </Provider>
   ))
   .add('With transactions', () => (
-    <Provider withData functions={['setTransactionHistoryFilters']} >
+    <Provider withData >
       <TransactionHistoryPage />
     </Provider>
   ));
 
 
 Provider.defaultProps = {
-  functions: undefined,
   specificData: undefined,
 };
 
 Provider.propTypes = {
   children: PropTypes.element.isRequired,
-  functions: PropTypes.arrayOf(PropTypes.string),
   withData: PropTypes.bool.isRequired,
-  specificData: PropTypes.shape({ params: PropTypes.object }),
+  specificData: PropTypes.shape(),
 };

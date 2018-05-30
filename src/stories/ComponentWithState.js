@@ -1,24 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as actions from '../actions';
+import { bindActionCreators } from 'redux';
+import * as actionCreators from '../actions';
 import { newState } from './constants';
 import '../styles/index.css';
-
-const GetDispatchFunctions = (functions, props) => {
-  const functionsToReturn = {};
-
-  functions.forEach((functionName) => {
-    switch (functionName) {
-      case 'setTransactionHistoryFilters':
-        functionsToReturn.setTransactionHistoryFilters = props.setTransactionHistoryFilters;
-        break;
-      default:
-    }
-  });
-  return functionsToReturn;
-};
-
 
 class ComponentWithState extends Component {
   constructor(props) {
@@ -32,16 +18,12 @@ class ComponentWithState extends Component {
   }
 
   render() {
-    const functionsRequiredByComponent = this.props.functions
-      ? GetDispatchFunctions(this.props.functions, this.props)
-      : {};
-
     const differentStates = JSON.stringify(this.nextState) !== JSON.stringify(this.props.state);
 
     if (!this.props.withData && differentStates) {
-      this.props.resetState();
+      this.props.actions.resetState();
     } else if (this.props.withData && differentStates) {
-      this.props.fillState(this.props.specificData ? this.props.specificData : newState);
+      this.props.actions.fillState(this.props.specificData ? this.props.specificData : newState);
     }
 
     return (
@@ -49,8 +31,8 @@ class ComponentWithState extends Component {
         {React.cloneElement(
           this.props.children,
           {
- state: this.props.state,
-            ...functionsRequiredByComponent,
+            state: this.props.state,
+            actions: this.props.actions,
           },
         )}
       </div>
@@ -60,19 +42,21 @@ class ComponentWithState extends Component {
 
 const mapStateToProps = state => ({ state });
 
-export default connect(mapStateToProps, actions)(ComponentWithState);
+const mapDispatchToProps = dispatch => ({ actions: bindActionCreators(actionCreators, dispatch) });
+
+export default connect(mapStateToProps, mapDispatchToProps)(ComponentWithState);
 
 ComponentWithState.defaultProps = {
-  functions: undefined,
   specificData: undefined,
 };
 
 ComponentWithState.propTypes = {
   children: PropTypes.element.isRequired,
-  functions: PropTypes.arrayOf(PropTypes.string),
   withData: PropTypes.bool.isRequired,
-  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  specificData: PropTypes.shape({ params: PropTypes.object }),
-  resetState: PropTypes.func.isRequired,
-  fillState: PropTypes.func.isRequired,
+  state: PropTypes.shape().isRequired,
+  actions: PropTypes.shape({
+    resetState: PropTypes.func.isRequired,
+    fillState: PropTypes.func.isRequired,
+  }).isRequired,
+  specificData: PropTypes.shape(),
 };

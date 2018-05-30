@@ -14,8 +14,9 @@ const OverflowMenuCuston = ({ url }) => (
   </OverflowMenu>
 );
 
-const TransactionHistoryPage = ({ state, setTransactionHistoryFilters }) => {
+const TransactionHistoryPage = ({ state, actions }) => {
   const loading = state.loading.transactionHistory;
+  const { setTransactionHistoryFilters } = actions;
   let transactionsToRender = [...state.transactions.history];
   const { currentPage } = state.transactions;
   const { itemsPerPage } = state.transactions;
@@ -106,8 +107,8 @@ OverflowMenuCuston.propTypes = {
 };
 
 TransactionHistoryPage.propTypes = {
-  setTransactionHistoryFilters: PropTypes.func.isRequired,
-  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  actions: PropTypes.shape().isRequired,
+  state: PropTypes.shape().isRequired,
 };
 
 
