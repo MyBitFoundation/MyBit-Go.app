@@ -73,12 +73,19 @@ Asset.defaultProps = {
 Asset.propTypes = {
   funded: PropTypes.number.isRequired,
   goal: PropTypes.number.isRequired,
-  city: PropTypes.string.isRequired,
-  country: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  city: PropTypes.string,
+  country: PropTypes.string,
+  name: PropTypes.string,
   category: PropTypes.string.isRequired,
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
+};
+
+Asset.defaultProps = {
+  city: '',
+  country: '',
+  name: '',
+  clickHandler: () => {},
 };
 
 export default Asset;
