@@ -155,15 +155,18 @@ export const fetchAssets = () => async (dispatch, getState) => {
     const assets = mergeAllLogsByAssetId(combinedLogs);
 
     const amountsRaised =
-      await Promise.all(assets.map(async asset => apiContract.methods.amountRaised(asset.assetID)
-        .call()));
-
-    const assetsPlusRaised = assets.map((asset, index) => ({
+      await Promise.all(assets.map(async asset =>
+        apiContract.methods.amountRaised(asset.assetID).call()));
+    const fundingDeadlines =
+      await Promise.all(assets.map(async asset =>
+        apiContract.methods.fundingDeadline(asset.assetID).call()));
+    const assetsPlusMoreDetails = assets.map((asset, index) => ({
       ...asset,
       amountRaisedInUSD: String(Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * getState().misc.currentEthInUsd),
+      fundingDeadline: fundingDeadlines[index],
     }));
 
-    const assetsWithCategories = assetsPlusRaised.map((asset) => {
+    const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
       if (asset.assetType) {
         return { ...asset, category: getCategoryFromAssetTypeHash(web3, asset.assetType) };
       }
