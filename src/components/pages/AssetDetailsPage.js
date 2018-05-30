@@ -10,8 +10,6 @@ import LoadingPage from './LoadingPage';
 const AssetDetailsPage = ({
   state,
   match,
-  goBack,
-  props
 }) => {
   const { assetId, category } = match.params;
 
