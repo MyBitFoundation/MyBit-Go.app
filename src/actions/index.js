@@ -57,7 +57,6 @@ export const loadMetamaskUserDetails = () => async (dispatch) => {
     const balance = await web3.eth.getBalance(accounts[0]);
     const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
     const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call();
-    console.log(myBitBalance);
     const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance };
     dispatch(loadMetamaskUserDetailsSuccess(details));
   } catch (error) {
