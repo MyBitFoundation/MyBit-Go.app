@@ -161,12 +161,10 @@ export const fetchAssets = () => async (dispatch, getState) => {
         apiContract.methods.fundingDeadline(asset.assetID).call()));
     const realAddress = web3.utils.toChecksumAddress(getState().user.userName);
     const ownershipUnits =
-      await Promise.all(assets.map(async (asset) => {
-        return apiContract.methods.ownershipUnits(
-          realAddress,
-          asset.assetID,
-        ).call();
-      }));
+      await Promise.all(assets.map(async asset => apiContract.methods.ownershipUnits(
+        realAddress,
+        asset.assetID,
+      ).call()));
 
     const assetsPlusMoreDetails = assets.map((asset, index) => ({
       ...asset,
