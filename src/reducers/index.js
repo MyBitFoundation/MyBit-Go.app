@@ -4,8 +4,7 @@ import { routerReducer } from 'react-router-redux';
 import assets from './assets';
 import errors from './errors';
 import loading from './loading';
-import misc from './misc';
-import portfolio from './portfolio';
+import misc from './misc'; // TODO: Needs to be renamed prices
 import user from './user';
 import transactions from './transactions';
 
@@ -14,7 +13,6 @@ const rootReducer = combineReducers({
   errors,
   loading,
   misc,
-  portfolio,
   router: routerReducer,
   transactions,
   user,
