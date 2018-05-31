@@ -57,7 +57,6 @@ export const loadMetamaskUserDetails = () => async (dispatch) => {
     const balance = await web3.eth.getBalance(accounts[0]);
     const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
     const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call();
-    console.log(myBitBalance);
     const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance };
     dispatch(loadMetamaskUserDetailsSuccess(details));
   } catch (error) {
@@ -155,15 +154,18 @@ export const fetchAssets = () => async (dispatch, getState) => {
     const assets = mergeAllLogsByAssetId(combinedLogs);
 
     const amountsRaised =
-      await Promise.all(assets.map(async asset => apiContract.methods.amountRaised(asset.assetID)
-        .call()));
-
-    const assetsPlusRaised = assets.map((asset, index) => ({
+      await Promise.all(assets.map(async asset =>
+        apiContract.methods.amountRaised(asset.assetID).call()));
+    const fundingDeadlines =
+      await Promise.all(assets.map(async asset =>
+        apiContract.methods.fundingDeadline(asset.assetID).call()));
+    const assetsPlusMoreDetails = assets.map((asset, index) => ({
       ...asset,
       amountRaisedInUSD: String(Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * getState().misc.currentEthInUsd),
+      fundingDeadline: fundingDeadlines[index],
     }));
 
-    const assetsWithCategories = assetsPlusRaised.map((asset) => {
+    const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
       if (asset.assetType) {
         return { ...asset, category: getCategoryFromAssetTypeHash(web3, asset.assetType) };
       }
