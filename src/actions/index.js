@@ -159,14 +159,14 @@ export const fetchAssets = () => async (dispatch, getState) => {
     const fundingDeadlines =
       await Promise.all(assets.map(async asset =>
         apiContract.methods.fundingDeadline(asset.assetID).call()));
-    console.log(getState().user.userName);
-    console.log(web3.utils.checkAddressChecksum(getState().user.userName));
+    const realAddress = web3.utils.toChecksumAddress(getState().user.userName);
     const ownershipUnits =
-      await Promise.all(assets.map(async asset =>
-        apiContract.methods.ownershipUnits(
+      await Promise.all(assets.map(async (asset) => {
+        return apiContract.methods.ownershipUnits(
+          realAddress,
           asset.assetID,
-          getState().user.userName,
-        ).call()));
+        ).call();
+      }));
 
     const assetsPlusMoreDetails = assets.map((asset, index) => ({
       ...asset,
