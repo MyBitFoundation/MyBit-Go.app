@@ -9,7 +9,6 @@ import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
 import bakgroundImage from '../images/asset-details-page-header.png';
 
-
 class AssetDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -295,9 +294,9 @@ AssetDetails.defaultProps = {
 
 AssetDetails.propTypes = {
   information: PropTypes.shape({
-    dueDate: PropTypes.number.isRequired,
-    goal: PropTypes.number.isRequired,
-    raised: PropTypes.number.isRequired,
+    dueDate: PropTypes.string.isRequired,
+    goal: PropTypes.string.isRequired,
+    raised: PropTypes.string.isRequired,
     assetName: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
     country: PropTypes.string.isRequired,
