@@ -71,8 +71,8 @@ Asset.defaultProps = {
 };
 
 Asset.propTypes = {
-  funded: PropTypes.number.isRequired,
-  goal: PropTypes.number.isRequired,
+  funded: PropTypes.string.isRequired,
+  goal: PropTypes.string.isRequired,
   city: PropTypes.string,
   country: PropTypes.string,
   name: PropTypes.string,
