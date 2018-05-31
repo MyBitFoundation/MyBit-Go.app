@@ -4,9 +4,7 @@ import { ExpandableTile, TileAboveTheFoldContent, TileBelowTheFoldContent } from
 import PieChart from '../images/chart-pie.png';
 import PortfolioValueItem from './PortfolioValueItem';
 
-const getPortfolioValueAssets = assets => assets.map(asset => asset);
-
-const TotalPortfolioValue = ({ totalPortfolioValue, assets }) => (
+const TotalPortfolioValue = ({ totalPortfolioValue, portfolioValueAssets }) => (
   <div>
     <ExpandableTile className="Portfolio__tile-expandable Portfolio__total">
       <TileAboveTheFoldContent>
@@ -19,7 +17,7 @@ const TotalPortfolioValue = ({ totalPortfolioValue, assets }) => (
         </div>
       </TileAboveTheFoldContent>
       <TileBelowTheFoldContent className="Portfolio__folded-content">
-        {getPortfolioValueAssets(assets).map(asset => (
+        {portfolioValueAssets.map(asset => (
           <PortfolioValueItem
             name={asset.name}
             ownership={asset.ownership}
@@ -33,7 +31,11 @@ const TotalPortfolioValue = ({ totalPortfolioValue, assets }) => (
 
 TotalPortfolioValue.propTypes = {
   totalPortfolioValue: PropTypes.string.isRequired,
-  assets: PropTypes.arrayOf({}).isRequired,
+  portfolioValueAssets: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    ownership: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 export default TotalPortfolioValue;

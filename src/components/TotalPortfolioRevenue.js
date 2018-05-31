@@ -4,9 +4,7 @@ import { ExpandableTile, TileAboveTheFoldContent, TileBelowTheFoldContent } from
 import BarChart from '../images/chart-bar.png';
 import PortfolioRevenueItem from './PortfolioRevenueItem';
 
-const getPortfolioRevenueAssets = assets => assets.map(asset => asset);
-
-const TotalPortfolioRevenue = ({ totalPortfolioRevenue, assets }) => (
+const TotalPortfolioRevenue = ({ totalPortfolioRevenue, portfolioRevenueAssets }) => (
   <div>
     <ExpandableTile className="Portfolio__tile-expandable Portfolio__revenue">
       <TileAboveTheFoldContent>
@@ -19,7 +17,7 @@ const TotalPortfolioRevenue = ({ totalPortfolioRevenue, assets }) => (
         </div>
       </TileAboveTheFoldContent>
       <TileBelowTheFoldContent className="Portfolio__folded-content">
-        {getPortfolioRevenueAssets(assets).map(asset => (
+        {portfolioRevenueAssets.map(asset => (
           <PortfolioRevenueItem
             assetID={asset.assetID}
             name={asset.name}
@@ -34,7 +32,12 @@ const TotalPortfolioRevenue = ({ totalPortfolioRevenue, assets }) => (
 
 TotalPortfolioRevenue.propTypes = {
   totalPortfolioRevenue: PropTypes.string.isRequired,
-  assets: PropTypes.arrayOf({}).isRequired,
+  portfolioRevenueAssets: PropTypes.arrayOf(PropTypes.shape({
+    assetID: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    monthlyRevenue: PropTypes.string.isRequired,
+    totalRevenue: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 export default TotalPortfolioRevenue;
