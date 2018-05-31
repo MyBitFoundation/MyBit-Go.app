@@ -26,7 +26,7 @@ const getPortfolioValueAssets = (assets, currentEthPrice) => assets.map(asset =>
   value: String(fromWeiToEth(asset.ownershipUnits) * currentEthPrice),
 }));
 
-const getPortfolioRevenueAssets = (assets) => assets.map(asset => ({
+const getPortfolioRevenueAssets = assets => assets.map(asset => ({
   assetID: asset.assetID,
   name: asset.assetID,
   monthlyRevenue: String(Number(asset.assetIncome) / 12), // TODO: This isn't the real calculation
