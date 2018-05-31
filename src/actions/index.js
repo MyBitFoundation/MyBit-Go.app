@@ -165,12 +165,16 @@ export const fetchAssets = () => async (dispatch, getState) => {
         realAddress,
         asset.assetID,
       ).call()));
+    const assetIncomes =
+      await Promise.all(assets.map(async asset => apiContract.methods.totalReceived(asset.assetID)
+        .call()));
 
     const assetsPlusMoreDetails = assets.map((asset, index) => ({
       ...asset,
       amountRaisedInUSD: String(Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * getState().misc.currentEthInUsd),
       fundingDeadline: fundingDeadlines[index],
       ownershipUnits: ownershipUnits[index],
+      assetIncome: assetIncomes[index],
     }));
 
     const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {

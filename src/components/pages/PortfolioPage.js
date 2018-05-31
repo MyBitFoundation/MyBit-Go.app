@@ -1,85 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ExpandableTile, TileAboveTheFoldContent, TileBelowTheFoldContent } from 'carbon-components-react';
 import '../../styles/PortfolioPage.css';
 import LoadingPage from './LoadingPage';
+import TotalPortfolioValue from '../TotalPortfolioValue';
+import TotalPortfolioRevenue from '../TotalPortfolioRevenue';
 
-import PieChart from '../../images/chart-pie.png';
-import BarChart from '../../images/chart-bar.png';
-import LineChart from '../../images/chart-line.png';
+const fromWeiToEth = weiValue => window.web3.utils.fromWei(weiValue, 'ether');
+
+const getOwnedAssets = assets => assets.filter(asset => asset.ownershipUnits > 0);
+
+const getPortfolioValue =
+  (assets, currentEthPrice) =>
+    assets.reduce((accumulator, currentValue) =>
+      accumulator + (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice), 0);
+
+const getPortfolioRevenue =
+  (assets, currentEthPrice) =>
+    assets.reduce((accumulator, currentValue) =>
+      accumulator + (Number(currentValue.assetIncome) * currentEthPrice), 0);
+
+const getPortfolioValueAssets = (assets, currentEthPrice) => assets.map(asset => ({
+  assetID: asset.assetID,
+  name: asset.assetID,
+  ownership: asset.ownershipUnits,
+  value: String(fromWeiToEth(asset.ownershipUnits) * currentEthPrice),
+}));
+
+const getPortfolioRevenueAssets = assets => assets.map(asset => ({
+  assetID: asset.assetID,
+  name: asset.assetID,
+  monthlyRevenue: String(Number(asset.assetIncome) / 12), // TODO: This isn't the real calculation
+  totalRevenue: asset.assetIncome,
+}));
 
 const PortfolioPage = ({ state }) => {
-  const loadedPortfolio = state.portfolio.loaded;
-  const { portfolioRevenue } = state.portfolio;
-  const { portfolioValue } = state.portfolio;
+  if (state.loading.portfolio) {
+    return <LoadingPage message="Loading portfolio" />;
+  }
+
+  const ownedAssets = getOwnedAssets(state.assets);
+  const totalPortfolioValue = getPortfolioValue(ownedAssets, state.misc.currentEthInUsd);
+  const totalPortfolioRevenue = getPortfolioRevenue(ownedAssets, state.misc.currentEthInUsd);
+  const portfolioValueAssets = getPortfolioValueAssets(ownedAssets);
+  const portfolioRevenueAssets = getPortfolioRevenueAssets(ownedAssets);
 
   return (
     <div>
-      {!loadedPortfolio && <LoadingPage message="Loading portfolio" />}
-      {loadedPortfolio && (
-        <div className="Portfolio">
-          <div className="Portfolio__wrapper">
-            <div>
-              <ExpandableTile className="Portfolio__tile-expandable Portfolio__total">
-                <TileAboveTheFoldContent>
-                  <div className="Portfolio__tile">
-                    <img className="Portfolio__tile-img" src={PieChart} alt="Pie chart" />
-                    <div>
-                      <p>Total Portfolio Value:</p>
-                      <b>${portfolioValue.value}</b>
-                    </div>
-                  </div>
-                </TileAboveTheFoldContent>
-                <TileBelowTheFoldContent className="Portfolio__folded-content">
-                  {portfolioValue.assets.map(asset => (
-                    <div key={asset.name + asset.ownership + asset.value} className="Portfolio__tile">
-                      <img className="Portfolio__tile-img" src={PieChart} alt="Pie chart" />
-                      <div>
-                        <p>{asset.name}</p>
-                        <p>Ownership: <b>{asset.ownership}%</b></p>
-                        <p>Value: <b>${asset.value}</b></p>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="Portfolio__tile" />
-                </TileBelowTheFoldContent>
-              </ExpandableTile>
-            </div>
-            <div>
-              <ExpandableTile className="Portfolio__tile-expandable Portfolio__revenue">
-                <TileAboveTheFoldContent>
-                  <div className="Portfolio__tile">
-                    <img className="Portfolio__tile-img" src={BarChart} alt="Bar chart" />
-                    <div>
-                      <p>Total Asset Revenue:</p>
-                      <b>${portfolioRevenue.value}</b>
-                    </div>
-                  </div>
-                </TileAboveTheFoldContent>
-                <TileBelowTheFoldContent className="Portfolio__folded-content">
-                  {portfolioRevenue.assets.map(asset => (
-                    <div key={asset.name + asset.totalRevenue + asset.value} className="Portfolio__tile">
-                      <img className="Portfolio__tile-img" src={LineChart} alt="Line chart" />
-                      <div>
-                        <p>{asset.name}</p>
-                        <p>Ownership: <b>${asset.totalRevenue}</b></p>
-                        <p>Value: <b>${asset.monthlyRevenue}</b></p>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="Portfolio__tile" />
-                </TileBelowTheFoldContent>
-              </ExpandableTile>
-            </div>
-          </div>
+      <div className="Portfolio">
+        <div className="Portfolio__wrapper">
+          <TotalPortfolioValue
+            totalPortfolioValue={String(totalPortfolioValue)}
+            portfolioValueAssets={portfolioValueAssets}
+          />
+          <TotalPortfolioRevenue
+            totalPortfolioRevenue={String(totalPortfolioRevenue)}
+            portfolioRevenueAssets={portfolioRevenueAssets}
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
 PortfolioPage.propTypes = {
-  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  state: PropTypes.shape({}).isRequired,
 };
 
 
