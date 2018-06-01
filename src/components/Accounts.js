@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { parseEtherFromBalance } from '../util/helpers';
-import { ARTIFICIAL_DELAY_IN_MS } from '../constants';
+import { ARTIFICIAL_DELAY_IN_MS, debug } from '../constants';
 
 const renderAccountsBalanceInfo = (accounts, loadingBalance, accountsMap, loadBalance) => {
   const getAccountEthBalance =
@@ -32,9 +32,9 @@ class Accounts extends Component {
     const { web3 } = this.props;
     this.setState({ loadingAccounts: true });
     setTimeout(async () => {
-      console.log('Loading accounts...');
+      debug('Loading accounts...');
       const accounts = await web3.eth.getAccountsAsync();
-      console.log('Accounts loaded.');
+      debug('Accounts loaded.');
       this.setState({ loadingAccounts: false, accounts });
     }, ARTIFICIAL_DELAY_IN_MS);
   }
@@ -47,7 +47,7 @@ class Accounts extends Component {
         await web3.eth.getBalanceAsync(account),
       );
       const { accountsMap } = this.state;
-      console.log('Balance for account', account, balance);
+      debug('Balance for account', account, balance);
       this.setState({
         loadingBalance: false,
         accountsMap: Object.assign(accountsMap, { [account]: balance }),
