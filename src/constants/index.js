@@ -8,4 +8,4 @@ export const ETHEREUM_TICKER_COINMARKETCAP = 1027;
 export const ETHERSCAN_API_KEY = '';
 export const ETHERSCAN_TX_BY_ADDR_ENDPOINT =
   (apiKey, address) =>
-    `http://api.etherscan.io/api?module=account&action=txlist&address=${address}&sort=asc&apikey=${apiKey}`;
+    `http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=${address}&sort=asc&apikey=${apiKey}`;
