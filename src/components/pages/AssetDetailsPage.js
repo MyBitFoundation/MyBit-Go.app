@@ -1,31 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Loading } from 'carbon-components-react';
-import { Link } from 'react-router-dom';
+import { Loading } from 'carbon-components-react';
 import AssetDetails from '../AssetDetails';
-import { debug } from '../../constants';
+import CategoryBackButton from '../CategoryBackButton';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
-
-// TODO: Generalize and extract this component
-const BackButton = ({ category }) => (
-  <Link
-    to={`/explore/${category.toLowerCase()}`}
-    href={`/explore/${category.toLowerCase()}`}
-  >
-    <Button
-      kind="secondary"
-      className="AssetDetailsPage__back-button"
-      onClick={debug('Clicked to go back')}
-    >
-      BACK
-    </Button>
-  </Link>
-);
-
-BackButton.propTypes = {
-  category: PropTypes.string.isRequired,
-};
 
 const AssetDetailsPage = ({
   state,
@@ -66,7 +45,7 @@ const AssetDetailsPage = ({
 
   return (
     <div style={{ position: 'relative' }}>
-      <BackButton category={category} />
+      <CategoryBackButton category={category} />
       <AssetDetails
         information={assetInformation}
         currentEthInUsd={state.misc.currentEthInUsd}
