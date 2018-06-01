@@ -4,7 +4,12 @@ import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
-import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from '../constants';
+import {
+  MYBIT_TICKER_COINMARKETCAP,
+  ETHEREUM_TICKER_COINMARKETCAP,
+  ETHERSCAN_API_KEY,
+  ETHERSCAN_TX_BY_ADDR_ENDPOINT,
+} from '../constants';
 
 import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId } from '../util/helpers';
 
@@ -25,6 +30,9 @@ export const FETCH_ETHEREUM_PRICE_USD_FAILURE = 'FETCH_ETHEREUM_PRICE_USD_FAILUR
 export const LOAD_METAMASK_USER_DETAILS = 'LOAD_METAMASK_USER_DETAILS';
 export const LOAD_METAMASK_USER_DETAILS_SUCCESS = 'LOAD_METAMASK_USER_DETAILS_SUCCESS';
 export const LOAD_METAMASK_USER_DETAILS_FAILURE = 'LOAD_METAMASK_USER_DETAILS_FAILURE';
+export const FETCH_TRANSACTION_HISTORY = 'FETCH_TRANSACTION_HISTORY';
+export const FETCH_TRANSACTION_HISTORY_SUCCESS = 'FETCH_TRANSACTION_HISTORY_SUCCESS';
+export const FETCH_TRANSACTION_HISTORY_FAILURE = 'FETCH_TRANSACTION_HISTORY_FAILURE';
 
 // Synchronous action creators
 export const fetchAssetsSuccess = assets => ({ type: FETCH_ASSETS_SUCCESS, payload: { assets } });
@@ -48,8 +56,25 @@ export const loadMetamaskUserDetailsSuccess =
     details => ({ type: LOAD_METAMASK_USER_DETAILS_SUCCESS, payload: { details } });
 export const loadMetamaskUserDetailsFailure =
   error => ({ type: LOAD_METAMASK_USER_DETAILS_FAILURE, payload: { error } });
+export const fetchTransactionHistorySuccess =
+    transactionHistory =>
+      ({ type: FETCH_TRANSACTION_HISTORY_SUCCESS, payload: { transactionHistory } });
+export const fetchTransactionHistoryFailure =
+    error => ({ type: FETCH_TRANSACTION_HISTORY_FAILURE, payload: { error } });
 
 // Asynchronous action creators
+export const fetchTransactionHistory = () => async (dispatch, getState) => {
+  dispatch({ type: FETCH_TRANSACTION_HISTORY });
+  try {
+    const userAddress = getState().user.userName;
+    const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, userAddress);
+    const result = await fetch(endpoint);
+    const jsonResult = await result.json();
+    dispatch(fetchTransactionHistorySuccess(jsonResult.result));
+  } catch (error) {
+    dispatch(fetchTransactionHistoryFailure(error));
+  }
+};
 export const loadMetamaskUserDetails = () => async (dispatch) => {
   dispatch({ type: LOAD_METAMASK_USER_DETAILS });
   try {
