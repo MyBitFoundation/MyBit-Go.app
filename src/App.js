@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import './styles/App.css';
-
 import AssetDetailsPage from './components/pages/AssetDetailsPage';
 import AssetPaymentPage from './components/pages/AssetPaymentPage';
 import ExploreAssetsPage from './components/pages/ExploreAssetsPage';
@@ -11,12 +10,9 @@ import ExplorePage from './components/pages/ExplorePage';
 import NotFoundPage from './components/pages/NotFoundPage';
 import PortfolioPage from './components/pages/PortfolioPage';
 import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
-
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
-
 import * as actions from './actions';
-
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
 
 class App extends Component {
