@@ -4,6 +4,8 @@ import { Slider, ModalWrapper } from 'carbon-components-react';
 import dayjs from 'dayjs';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
+import FundingHub from '../constants/contracts/FundingHub';
+import { debug } from '../constants';
 import '../styles/AssetDetails.css';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
@@ -129,8 +131,13 @@ class AssetDetails extends React.Component {
       this.setState({ displayWarning: true });
       return false;
     }
-    // TODO: process transaction
+    // TODO: See if this is all that we want and handle the UI better
+    const fundingHubContract = new web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
     this.setState({ acceptedTos: false });
+    // TODO: Mechanism to decide how much to contribute in wei
+    fundingHubContract.methods.fund(this.props.information.assetID).send({ value: '0' })
+      .then(debug)
+      .catch(debug);
     return true;
   }
 
@@ -228,7 +235,7 @@ class AssetDetails extends React.Component {
             </b>
           </p>
           <p className="AssetDetails__left-contribution">
-            Expected anual return:
+            Expected annual return:
           </p>
           <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
             18%
@@ -294,6 +301,7 @@ AssetDetails.defaultProps = {
 
 AssetDetails.propTypes = {
   information: PropTypes.shape({
+    assetID: PropTypes.string.isRequired,
     dueDate: PropTypes.string.isRequired,
     goal: PropTypes.string.isRequired,
     raised: PropTypes.string.isRequired,

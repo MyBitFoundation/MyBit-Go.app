@@ -32,6 +32,7 @@ const AssetDetailsPage = ({
     );
   }
   const assetInformation = {
+    assetID: asset.assetID,
     dueDate: asset.fundingDeadline,
     goal: asset.amountToBeRaised,
     raised: asset.amountRaisedInUSD,
