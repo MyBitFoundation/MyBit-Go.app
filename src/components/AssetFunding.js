@@ -35,8 +35,6 @@ class AssetFunding extends Component {
           'ether',
         ),
       });
-
-      console.log('amountToBeRaised', this.state.amountToBeRaised);
     }
   }
 
