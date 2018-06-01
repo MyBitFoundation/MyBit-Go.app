@@ -129,7 +129,7 @@ class AssetDetails extends React.Component {
       this.setState({ displayWarning: true });
       return false;
     }
-    // TODO process transaction
+    // TODO: process transaction
     this.setState({ acceptedTos: false });
     return true;
   }
