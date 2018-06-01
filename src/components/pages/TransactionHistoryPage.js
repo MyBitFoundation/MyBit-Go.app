@@ -1,18 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, TableHead, TableRow, TableHeader, TableBody, TableData, PaginationV2, OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
+import { Table, TableHead, TableRow, TableHeader, TableBody, TableData, PaginationV2 } from 'carbon-components-react';
 import '../../styles/TransactionHistory.css';
 import LoadingPage from './LoadingPage';
+import OverflowMenuCustom from '../OverflowMenuCustom';
 
-const OverflowMenuCuston = ({ url }) => (
-  <OverflowMenu className="Transactions__overflowOption" floatingMenu>
-    <OverflowMenuItem
-      onClick={() => { window.open(url, '_blank'); }}
-      itemText="View on Etherscan"
-      primaryFocus
-    />
-  </OverflowMenu>
-);
 
 const TransactionHistoryPage = ({ state, setTransactionHistoryFilters }) => {
   const loadedTransactions = state.transactions.loaded;
@@ -101,9 +93,6 @@ const TransactionHistoryPage = ({ state, setTransactionHistoryFilters }) => {
   );
 };
 
-OverflowMenuCuston.propTypes = {
-  url: PropTypes.string.isRequired,
-};
 
 TransactionHistoryPage.propTypes = {
   setTransactionHistoryFilters: PropTypes.func.isRequired,
