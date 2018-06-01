@@ -44,7 +44,6 @@ const AssetDetailsPage = ({
 
   const { assetId, category } = match.params;
   const asset = state.assets.find(({ assetID }) => assetID === assetId);
-  console.log(asset);
 
   if (!asset) {
     return (

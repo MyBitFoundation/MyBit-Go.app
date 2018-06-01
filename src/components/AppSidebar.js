@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../styles/AppSidebar.css';
 import NavigationOption from './NavigationOption';
+import { debug } from '../constants';
 
 const AppSidebar = ({ clickHandler }) => {
   const menuOptions = [
@@ -20,7 +21,7 @@ const AppSidebar = ({ clickHandler }) => {
       key={menuItem.name}
       name={menuItem.name}
       clickHandler={
-        !clickHandler ? name => console.log('Clicked ', name) : clickHandler
+        !clickHandler ? name => debug('Clicked ', name) : clickHandler
       }
     />
   ));

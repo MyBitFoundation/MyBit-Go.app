@@ -1,4 +1,5 @@
 import req from 'axios';
+import { debug } from '../constants';
 
 const URLS = {
   codeForAccess: 'https://api-sandbox.uphold.com/oauth2/token',
@@ -26,7 +27,7 @@ const UpholdApi = {
       url: URLS.userDetails,
       headers: AUTH_HEADER,
     });
-    console.log('User Details', userDetails);
+    debug('User Details', userDetails);
     return userDetails;
   },
 
@@ -37,7 +38,7 @@ const UpholdApi = {
       url: URLS.userDetails,
       header: AUTH_HEADER,
     });
-    console.log('User Verified: ', userVerified);
+    debug('User Verified: ', userVerified);
     return userVerified;
   },
 
@@ -47,7 +48,7 @@ const UpholdApi = {
       url: URLS.codeForAccess,
       header: AUTH_HEADER,
     });
-    console.log('Access Token: ', accessToken);
+    debug('Access Token: ', accessToken);
     return accessToken;
   },
 
@@ -57,7 +58,7 @@ const UpholdApi = {
       url: URLS.currencyTicker,
       header: AUTH_HEADER,
     });
-    console.log('Currency result:', currencyResult);
+    debug('Currency result:', currencyResult);
     return currencyResult;
   },
 
@@ -68,7 +69,7 @@ const UpholdApi = {
       url: URLS.accounts,
       header: AUTH_HEADER,
     });
-    console.log('Account results', accounts);
+    debug('Account results', accounts);
     return accounts;
   },
 
@@ -79,7 +80,7 @@ const UpholdApi = {
       url: URLS.cards,
       header: AUTH_HEADER,
     });
-    console.log('Cards: ', cards);
+    debug('Cards: ', cards);
     return cards;
   },
 
