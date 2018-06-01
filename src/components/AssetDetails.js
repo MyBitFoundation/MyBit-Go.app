@@ -7,7 +7,7 @@ import Address from './Address';
 import '../styles/AssetDetails.css';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
-import bakgroundImage from '../images/asset-details-page-header.png';
+import backgroundImage from '../images/asset-details-page-header.png';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -265,7 +265,7 @@ class AssetDetails extends React.Component {
           <img
             alt="Asset details background"
             className="AssetDetails__right-image"
-            src={bakgroundImage}
+            src={backgroundImage}
           />
           <div className="AssetDetails__right-wrapper">
             <b className="AssetDetails__right-title-details">Asset Details</b>
