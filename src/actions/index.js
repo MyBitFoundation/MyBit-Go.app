@@ -5,6 +5,7 @@ import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
 import {
+  debug,
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
   ETHERSCAN_API_KEY,
@@ -67,10 +68,24 @@ export const fetchTransactionHistory = () => async (dispatch, getState) => {
   dispatch({ type: FETCH_TRANSACTION_HISTORY });
   try {
     const userAddress = getState().user.userName;
-    const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, userAddress);
+    const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, AssetCreation.ADDRESS);
     const result = await fetch(endpoint);
     const jsonResult = await result.json();
-    dispatch(fetchTransactionHistorySuccess(jsonResult.result));
+    if (jsonResult.status === '0') {
+      throw new Error(jsonResult.result);
+    }
+    debug(jsonResult.result);
+    // TODO: The following map needs to derive the correct information
+    const transactionHistory = jsonResult.result
+      .filter(txResult => txResult.to === userAddress || txResult.from === userAddress)
+      .map(txResult => ({
+        date: String(new Date(txResult.timestamp)) || '',
+        amount: txResult.value || '',
+        status: txResult.status || 'Complete',
+        type: txResult.type || 'ETH',
+        txId: txResult.hash || '',
+      }));
+    dispatch(fetchTransactionHistorySuccess(transactionHistory));
   } catch (error) {
     dispatch(fetchTransactionHistoryFailure(error));
   }
