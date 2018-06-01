@@ -188,16 +188,3 @@ export const fetchAssets = () => async (dispatch, getState) => {
     dispatch(fetchAssetsFailure(error));
   }
 };
-
-// TODO: as followed
-
-// LogNewFunder from FundingHub which lists the funding of particular
-// assets by event by owner (to be able to build up a user's portfolio) (also Kyle to help)
-
-// Given a user, he should be able to fund a currently listed asset, looking for Payable functions,
-// (Kyle to halp)
-
-// Total asset revenue for an owner's owned assets and a breakdown by
-// categories of the user's owned assets
-
-// Transaction History functionality needs to be built (Kyle to halp)
