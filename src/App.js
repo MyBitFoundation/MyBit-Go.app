@@ -28,7 +28,7 @@ class App extends Component {
   }
 
   render() {
-    const { state, setTransactionHistoryFilters } = this.props;
+    const { state, setTransactionHistoryFilters, fetchTransactionHistory } = this.props;
     return (
       <div>
         <AppHeader
@@ -43,7 +43,17 @@ class App extends Component {
             <Route exact path="/explore/:category" render={props => <ExploreAssetsPage state={state} {...props} />} />
             <Route exact path="/explore/:category/:assetId" render={props => <AssetDetailsPage state={state} {...props} />} />
             <Route exact path="/portfolio" render={props => <PortfolioPage state={state} {...props} />} />
-            <Route exact path="/transaction-history" render={props => <TransactionHistoryPage state={state} setTransactionHistoryFilters={setTransactionHistoryFilters} {...props} />} />
+            <Route
+              exact
+              path="/transaction-history"
+              render={props => (
+                <TransactionHistoryPage
+                  state={state}
+                  fetchTransactionHistory={fetchTransactionHistory}
+                  setTransactionHistoryFilters={setTransactionHistoryFilters}
+                  {...props}
+                />)}
+            />
             <Route path="*" component={NotFoundPage} />
           </Switch>
         </div>
@@ -54,6 +64,7 @@ class App extends Component {
 
 App.propTypes = {
   fetchPriceFromCoinmarketcap: PropTypes.func.isRequired,
+  fetchTransactionHistory: PropTypes.func.isRequired,
   setTransactionHistoryFilters: PropTypes.func.isRequired,
   state: PropTypes.shape({ params: PropTypes.object }).isRequired,
   location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
