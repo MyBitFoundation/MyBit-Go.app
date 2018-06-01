@@ -4,7 +4,13 @@ import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
-import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from '../constants';
+import {
+  debug,
+  MYBIT_TICKER_COINMARKETCAP,
+  ETHEREUM_TICKER_COINMARKETCAP,
+  ETHERSCAN_API_KEY,
+  ETHERSCAN_TX_BY_ADDR_ENDPOINT,
+} from '../constants';
 
 import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId } from '../util/helpers';
 
@@ -25,6 +31,9 @@ export const FETCH_ETHEREUM_PRICE_USD_FAILURE = 'FETCH_ETHEREUM_PRICE_USD_FAILUR
 export const LOAD_METAMASK_USER_DETAILS = 'LOAD_METAMASK_USER_DETAILS';
 export const LOAD_METAMASK_USER_DETAILS_SUCCESS = 'LOAD_METAMASK_USER_DETAILS_SUCCESS';
 export const LOAD_METAMASK_USER_DETAILS_FAILURE = 'LOAD_METAMASK_USER_DETAILS_FAILURE';
+export const FETCH_TRANSACTION_HISTORY = 'FETCH_TRANSACTION_HISTORY';
+export const FETCH_TRANSACTION_HISTORY_SUCCESS = 'FETCH_TRANSACTION_HISTORY_SUCCESS';
+export const FETCH_TRANSACTION_HISTORY_FAILURE = 'FETCH_TRANSACTION_HISTORY_FAILURE';
 
 // Synchronous action creators
 export const fetchAssetsSuccess = assets => ({ type: FETCH_ASSETS_SUCCESS, payload: { assets } });
@@ -48,8 +57,39 @@ export const loadMetamaskUserDetailsSuccess =
     details => ({ type: LOAD_METAMASK_USER_DETAILS_SUCCESS, payload: { details } });
 export const loadMetamaskUserDetailsFailure =
   error => ({ type: LOAD_METAMASK_USER_DETAILS_FAILURE, payload: { error } });
+export const fetchTransactionHistorySuccess =
+    transactionHistory =>
+      ({ type: FETCH_TRANSACTION_HISTORY_SUCCESS, payload: { transactionHistory } });
+export const fetchTransactionHistoryFailure =
+    error => ({ type: FETCH_TRANSACTION_HISTORY_FAILURE, payload: { error } });
 
 // Asynchronous action creators
+export const fetchTransactionHistory = () => async (dispatch, getState) => {
+  dispatch({ type: FETCH_TRANSACTION_HISTORY });
+  try {
+    const userAddress = getState().user.userName;
+    const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, AssetCreation.ADDRESS);
+    const result = await fetch(endpoint);
+    const jsonResult = await result.json();
+    if (jsonResult.status === '0') {
+      throw new Error(jsonResult.result);
+    }
+    debug(jsonResult.result);
+    // TODO: The following map needs to derive the correct information
+    const transactionHistory = jsonResult.result
+      .filter(txResult => txResult.to === userAddress || txResult.from === userAddress)
+      .map(txResult => ({
+        date: String(new Date(txResult.timestamp)) || '',
+        amount: txResult.value || '',
+        status: txResult.status || 'Complete',
+        type: txResult.type || 'ETH',
+        txId: txResult.hash || '',
+      }));
+    dispatch(fetchTransactionHistorySuccess(transactionHistory));
+  } catch (error) {
+    dispatch(fetchTransactionHistoryFailure(error));
+  }
+};
 export const loadMetamaskUserDetails = () => async (dispatch) => {
   dispatch({ type: LOAD_METAMASK_USER_DETAILS });
   try {
@@ -188,16 +228,3 @@ export const fetchAssets = () => async (dispatch, getState) => {
     dispatch(fetchAssetsFailure(error));
   }
 };
-
-// TODO: as followed
-
-// LogNewFunder from FundingHub which lists the funding of particular
-// assets by event by owner (to be able to build up a user's portfolio) (also Kyle to help)
-
-// Given a user, he should be able to fund a currently listed asset, looking for Payable functions,
-// (Kyle to halp)
-
-// Total asset revenue for an owner's owned assets and a breakdown by
-// categories of the user's owned assets
-
-// Transaction History functionality needs to be built (Kyle to halp)

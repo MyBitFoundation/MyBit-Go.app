@@ -3,6 +3,7 @@ import * as Actions from '../actions';
 const initialState = {
   assets: true,
   prices: true,
+  transactionHistory: true,
   user: true,
 };
 
@@ -26,6 +27,11 @@ const loading = (state = initialState, action) => {
     case Actions.LOAD_METAMASK_USER_DETAILS_SUCCESS:
     case Actions.LOAD_METAMASK_USER_DETAILS_FAILURE:
       return { ...state, user: false };
+    case Actions.FETCH_TRANSACTION_HISTORY:
+      return { ...state, transactionHistory: true };
+    case Actions.FETCH_TRANSACTION_HISTORY_SUCCESS:
+    case Actions.FETCH_TRANSACTION_HISTORY_FAILURE:
+      return { ...state, transactionHistory: false };
     default:
       return state;
   }

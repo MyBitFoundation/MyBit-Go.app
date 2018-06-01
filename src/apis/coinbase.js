@@ -1,4 +1,5 @@
 import req from 'axios';
+import { debug } from '../constants';
 
 const HEADER = {
   Authorization: '',
@@ -40,7 +41,7 @@ const CoinbaseApi = {
     const responseData = JSON.parse(response.body).data;
     for (let index = 0; index < responseData.length; index += 1) {
       if (responseData[index].allow_withdraw) {
-        console.log(`Valid Bank${responseData[index].allow_withdraw}`);
+        debug(`Valid Bank${responseData[index].allow_withdraw}`);
         return responseData[index].allow_withdraw;
       }
     }
@@ -55,7 +56,7 @@ const CoinbaseApi = {
       headers: HEADER,
     });
     const responseData = JSON.parse(response.body).data;
-    console.log(`accountID${responseData.id}`);
+    debug(`accountID${responseData.id}`);
     return responseData.id;
   },
 
@@ -69,7 +70,7 @@ const CoinbaseApi = {
     const responseData = JSON.parse(response.body).data;
     for (let index = 0; index < responseData.length; index += 1) {
       if (responseData[index].name === 'ETH Wallet') {
-        console.log(`ethwallet: ${responseData[index].id}`);
+        debug(`ethwallet: ${responseData[index].id}`);
         return responseData[index].id;
       }
     }
@@ -99,7 +100,7 @@ const CoinbaseApi = {
       body: TRANSACTIONSEND,
     });
     const responseData = JSON.parse(response.body).data;
-    console.log(`verificationTxID; ${responseData}`);
+    debug(`verificationTxID; ${responseData}`);
     return responseData;
   },
 
@@ -120,7 +121,7 @@ const CoinbaseApi = {
       HEADER,
     });
     const responseData = JSON.parse(response.body).network.hash;
-    console.log(`Transaction hash; ${responseData}`);
+    debug(`Transaction hash; ${responseData}`);
     return responseData;
   },
 
@@ -141,7 +142,7 @@ const CoinbaseApi = {
       countryCode: responseData.country.code,
       countryName: responseData.country.name,
     };
-    console.log(`User Details; ${responseDict}`);
+    debug(`User Details; ${responseDict}`);
     return responseDict;
   },
 
