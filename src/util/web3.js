@@ -1,23 +1,17 @@
-import { default as Web3 } from 'web3';
-import Promise, { promisifyAll } from 'bluebird';
+import Web3 from 'web3';
+import { debug } from '../constants';
 
-export const getWeb3Async = reload =>
-  new Promise((resolve, reject) => {
-    let web3 = window.web3;
+const getWeb3Async = () => {
+  if (window.web3) {
+    // Injected Web3 detected. Use Mist/MetaMask's provider.
+    window.web3 = new Web3(window.web3.currentProvider);
+    debug('Metamask Loaded');
+  } else {
+    // No web3 instance injected, using Local web3.
+    const provider = new Web3.providers.HttpProvider('http://localhost:8545');
+    window.web3 = new Web3(provider);
+  }
+  return window.web3;
+};
 
-    if (typeof web3 !== 'undefined') {
-      // Injected Web3 detected. Use Mist/MetaMask's provider.
-      web3 = new Web3(web3.currentProvider);
-      console.log('Metamask Loaded');
-    } else {
-      // No web3 instance injected, using Local web3.
-      const provider = new Web3.providers.HttpProvider('http://localhost:8545');
-      web3 = new Web3(provider);
-    }
-
-    // wrap callback functions with promises
-    promisifyAll(web3.eth, { suffix: 'Async' });
-    promisifyAll(web3.net, { suffix: 'Async' });
-    promisifyAll(web3.version, { suffix: 'Async' });
-    resolve(web3);
-  });
+export default getWeb3Async;

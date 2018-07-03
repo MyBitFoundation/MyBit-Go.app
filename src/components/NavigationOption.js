@@ -1,7 +1,47 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
+// TODO: Fix the JSX linting errors
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-export const NavigationOption = ({ name, clickHandler }) => (
-  <div onClick={() => clickHandler(name)} className="AppSidebar__menu-item">
-    {name}
-  </div>
-);
+const classNames = require('classnames');
+
+const NavigationOption = ({
+  name,
+  icon,
+  selectable,
+  selected,
+  url,
+}) => {
+  const optionClass = classNames({
+    AppNavigationBar__option: true,
+    'AppNavigationBar__option--is-selected': selected,
+    'AppNavigationBar__option--is-selectable': selectable,
+  });
+
+  return (
+    <Link className="col AppNavigationBar__option-col" to={url || '/'} href={url || '/'}>
+      <div className={optionClass}>
+        <img alt={name} className="AppNavigationBar__option-img" src={icon} />
+        <p className="AppNavigationBar__option-text">{name}</p>
+      </div>
+    </Link>
+  );
+};
+
+NavigationOption.propTypes = {
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  selectable: PropTypes.bool,
+  selected: PropTypes.bool,
+  url: PropTypes.string,
+};
+
+
+NavigationOption.defaultProps = {
+  selected: false,
+  selectable: false,
+  url: '',
+};
+
+export default NavigationOption;

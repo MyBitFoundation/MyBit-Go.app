@@ -58,3 +58,12 @@ typings/
 # dotenv environment variables file
 .env
 
+# css files
+*.css
+.idea
+
+# vim
+*.swp
+
+# storybook
+.out

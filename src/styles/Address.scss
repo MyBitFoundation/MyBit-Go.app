@@ -1,0 +1,34 @@
+@import "./Constants.scss";
+
+.Address{
+  height: 39px;
+
+    &__text{
+        font-size: 14px;
+        padding-left: 50px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 120px;
+        line-height: 1;
+        margin: 0px 0px;
+        position: relative;
+        top: -25px;
+    }
+
+    &--is-loading{
+        position: absolute;
+        top: 28px;
+    }
+
+    &__loading-message{
+        padding-left: 32px;
+        position: relative;
+        top: 12px;
+    }
+}
+
+.AppHeader .paper{
+    position: relative;
+    display: inherit !important;
+}

@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const Row = () => <div />;
+const Row = () => <div />;
+export default Row;

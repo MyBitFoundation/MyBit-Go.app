@@ -1,12 +1,26 @@
 import React from 'react';
-import logo from '../images/mybit-logo-white.png';
+import PropTypes from 'prop-types';
 import '../styles/AppHeader.css';
+import Logo from './Logo';
+import ExchangeRate from './ExchangeRate';
+import AccountInfo from './AccountInfo';
 
-export const AppHeader = () => {
-  return (
-    <div className="grid AppHeader">
-      <img className="AppHeader_logo" src={logo} />
-      <p className="AppHeader_connect">Connect account</p>
-    </div>
-  );
+const AppHeader = ({
+  state,
+}) => (
+  <div className="grid AppHeader">
+    <Logo className="AppHeader__logo" />
+    <ExchangeRate value={state.misc.currentMybitInUsd} />
+    <AccountInfo
+      myBitBalance={state.user.myBitBalance}
+      ethBalance={state.user.ethBalance}
+      userName={state.user.userName}
+    />
+  </div>
+);
+
+AppHeader.propTypes = {
+  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
+
+export default AppHeader;

@@ -1,0 +1,93 @@
+$imageHeight: 196px;
+
+.Asset{
+    margin-bottom: 30px;
+    padding: 0px;
+    position: relative;
+
+    &__container{
+    	width: 90%;
+		height: 298px;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+		margin: 0 auto;
+	}
+
+	&__image-holder{
+		background-size: cover;
+		background-position: center;
+		height: $imageHeight;
+    	position: relative;
+    	
+		&-gradient{
+    		position: absolute;
+    		top: 0px;
+    		height: $imageHeight;
+    		width: 100%;
+			background-image: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 66px);
+    	}
+
+    	&-location-icon{
+    		position: absolute;
+		    bottom: 18px;
+		    left: 21px;
+    	}
+
+		&-name{
+			position: absolute;
+			bottom: 42px;
+			font-size: 18px;
+			color: #ffffff;
+			left: 21px;
+		}
+
+		&-location{
+			position: absolute;
+			bottom: 17px;
+			font-size: 14px;
+			color: #ffffff;
+			padding-left: 42px;
+		}
+    }
+
+    &__details{
+
+    	padding: 5px 10px 0px 10px;
+
+		&-funded{
+			width: max-content;
+	   	 	float: left;
+	    	font-size: 14px;
+		}
+
+		&-goal{
+	    	text-align: right;
+	    	font-size: 14px;
+		}
+
+		&-progress-bar{
+			width: 100%;
+			height: 4px;
+			background-color: #d8d8d8;
+			margin-top: 5px;
+		}
+
+		&-progress-bar-fill{
+			background-image: linear-gradient(272deg, #3ecd5d, #2db84b);
+			height: 4px;
+		}
+
+		&-contribute{
+			background-image: linear-gradient(to right, #3ecd5d, #2db84b);
+		    margin-top: 15px;
+		    height: 32px;
+		    font-size: 14px;
+		    width: 126px;
+		    background-color: transparent;
+		    border: none;
+		    position: relative;
+		    left: 50%;
+		    transform: translate(-50%,0);
+		    cursor: pointer;
+		}
+    }
+}
