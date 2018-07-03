@@ -11,6 +11,8 @@ jobs:
 
       - run: yarn install
 
+      - run: yarn run build-css
+
       - run: yarn run lint
 
       - run: yarn test
