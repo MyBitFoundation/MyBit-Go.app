@@ -13,8 +13,6 @@ jobs:
 
       - run: yarn run build-css
 
-      - run: yarn run lint
-
       - run: yarn test
 
       - run: yarn build
@@ -22,17 +20,16 @@ jobs:
       - run: yarn build-storybook
 
       - deploy:
-          name: Deploy to Surge
+          name: Deploy to Now
           command: |
-            mv build/index.html build/200.html
-            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              yarn run deploy:dev
-              yarn run deploy-storybook:dev
-            elif [ "${CIRCLE_BRANCH}" == "master" ]; then
-              yarn run deploy-storybook:prod
-              yarn run deploy:prod
-            else
-              SANITIZED_BRANCH=$(tr "/" "-" <<<$CIRCLE_BRANCH)
-              yarn run deploy-storybook --domain storybook-pr-${SANITIZED_BRANCH}-mybit-dapp-ui-dev.surge.sh
-              yarn run deploy --domain pr-${SANITIZED_BRANCH}-mybit-dapp-ui-dev.surge.sh
-            fi
+            GIT_HASH=$(git rev-parse --short HEAD)
+            SANITIZED_BRANCH=$(tr "/" "-" <<<$CIRCLE_BRANCH)
+            VERY_SANITIZED_BRANCH=$(tr "." "-" <<<$SANITIZED_BRANCH)
+            echo ${GIT_HASH} > build/version
+            cp CONTRIBUTORS build/contributors
+            BUILD_URL=$(npx now --name app.mybit.io build -t $NOW_DEVELOPMENT_TOKEN --public)
+            STORYBOOK_URL=$(npx now --name storybook.mybit.io .out -t $NOW_DEVELOPMENT_TOKEN --public)
+            npx now alias ${BUILD_URL} ${GIT_HASH}-app-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
+            npx now alias ${BUILD_URL} ${VERY_SANITIZED_BRANCH}-app-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
+            npx now alias ${STORYBOOK_URL} ${GIT_HASH}-storybook-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
+            npx now alias ${STORYBOOK_URL} ${VERY_SANITIZED_BRANCH}-storybook-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN

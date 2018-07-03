@@ -24,7 +24,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-scripts": "^1.1.1",
+    "react-scripts": "2.0.0-next.3e165448",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
@@ -44,12 +44,6 @@
     "storybook": "cross-env PORT=8080 npm-run-all -p watch-css start-storybook",
     "run-storybook": "build-storybook -c .storybook -o .out",
     "build-storybook": "npm-run-all build-css run-storybook",
-    "deploy-storybook:dev": "surge .out/ --domain storybook-mybit-dapp-ui-dev.surge.sh",
-    "deploy-storybook:prod": "surge .out/ --domain storybook-mybit-dapp-ui.surge.sh",
-    "deploy-storybook": "surge .out/",
-    "deploy:dev": "surge build/ --domain mybit-dapp-ui-dev.surge.sh",
-    "deploy:prod": "surge build/ --domain mybit-dapp-ui.surge.sh",
-    "deploy": "surge build/",
     "lint": "eslint --ignore-path .gitignore .",
     "lint:fix": "eslint --ignore-path .gitignore --fix ."
   },
@@ -68,5 +62,17 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "surge": "^0.20.1",
     "ws": "3.3.2"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">0.25%",
+      "not op_mini all",
+      "ie 11"
+    ]
   }
 }

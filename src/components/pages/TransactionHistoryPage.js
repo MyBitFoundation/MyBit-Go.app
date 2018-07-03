@@ -11,7 +11,7 @@ class TransactionHistoryPage extends React.Component {
     this.props = props;
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.fetchTransactionHistory();
   }
 
