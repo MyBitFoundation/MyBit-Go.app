@@ -17,7 +17,7 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => (
       ) : (
         <span className="AccountInfo__balance-info">
           {myBitBalance} <b className="AccountInfo__balance-myb">MYB</b>
-          {ethBalance} <b>ETH</b>
+          {Number(ethBalance).toFixed(4)} <b>ETH</b>
         </span>
       )}
     </div>
