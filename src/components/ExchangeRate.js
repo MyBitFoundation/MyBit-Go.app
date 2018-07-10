@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 import { USD_MYB_SYMBOL } from '../constants';
 
-const ExchangeRate = ({ value }) => (
+const ExchangeRate = ({ mybitPrice }) => (
   <div>
-    {!value && (
+    {!mybitPrice && (
     <Loading
       className="AppHeader__exchange-rate--is-loading"
       small
@@ -13,7 +13,7 @@ const ExchangeRate = ({ value }) => (
     />
       )}
     <span className="AppHeader__exchange-rate">
-      {value && `$${value}`}
+      {mybitPrice && `$${mybitPrice}`}
       <b>{USD_MYB_SYMBOL}</b>
     </span>
   </div>
@@ -21,11 +21,11 @@ const ExchangeRate = ({ value }) => (
 
 
 ExchangeRate.defaultProps = {
-  value: undefined,
+  mybitPrice: undefined,
 };
 
 ExchangeRate.propTypes = {
-  value: PropTypes.number,
+  mybitPrice: PropTypes.number,
 };
 
 export default ExchangeRate;

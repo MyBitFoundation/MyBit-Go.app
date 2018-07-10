@@ -1,3 +1,5 @@
+/* eslint-disable  camelcase */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableData, PaginationV2 } from 'carbon-components-react';
@@ -9,6 +11,12 @@ class TransactionHistoryPage extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
+    this.state = {
+      currentPage: 0,
+      itemsPerPage: 10,
+      sortBy: 'date',
+      sortDir: 'ASC',
+    };
   }
 
   UNSAFE_componentWillMount() {
@@ -16,9 +24,9 @@ class TransactionHistoryPage extends React.Component {
   }
 
   render() {
-    const { state, setTransactionHistoryFilters } = this.props;
+    const { loading } = this.props;
 
-    if (state.loading.transactionHistory) {
+    if (loading.transactionHistory) {
       return (
         <LoadingPage
           message="Loading transactions"
@@ -26,11 +34,11 @@ class TransactionHistoryPage extends React.Component {
         />
       );
     }
-    let transactionsToRender = [...state.transactions.history];
-    const { currentPage } = state.transactions;
-    const { itemsPerPage } = state.transactions;
-    const { sortBy } = state.transactions;
-    const { sortDir } = state.transactions;
+    const { transactions } = this.props;
+    let transactionsToRender = transactions;
+    const {
+      currentPage, itemsPerPage, sortBy, sortDir,
+    } = this.state;
 
     if (sortBy === 'amount' && sortDir === 'DESC') {
       transactionsToRender = transactionsToRender.sort((a, b) => a.amount - b.amount);
@@ -59,7 +67,12 @@ class TransactionHistoryPage extends React.Component {
                   <TableHeader
                     className={sortBy === 'date' ? '' : 'Transactions__history-column-header'}
                     onClick={() => {
-                      setTransactionHistoryFilters(itemsPerPage, currentPage, 'date', sortDir === 'ASC' ? 'DESC' : 'ASC');
+                      this.setState({
+                        itemsPerPage,
+                        currentPage,
+                        sortBy: 'date',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                      });
                     }}
                     sortDir={sortBy === 'date' ? sortDir : 'ASC'}
                   >
@@ -68,7 +81,12 @@ class TransactionHistoryPage extends React.Component {
                   <TableHeader
                     className={sortBy === 'amount' ? '' : 'Transactions__history-column-header'}
                     onClick={() => {
-                      setTransactionHistoryFilters(itemsPerPage, currentPage, 'amount', sortDir === 'ASC' ? 'DESC' : 'ASC');
+                      this.setState({
+                        itemsPerPage,
+                        currentPage,
+                        sortBy: 'amount',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                      });
                     }}
                     sortDir={sortBy === 'amount' ? sortDir : 'ASC'}
                   >
@@ -99,16 +117,16 @@ class TransactionHistoryPage extends React.Component {
             <PaginationV2
               onChange={
                 (val) => {
-                  setTransactionHistoryFilters(
-                    val.pageSize,
-                    val.page - 1,
+                  this.setState({
+                    itemsPerPage: val.pageSize,
+                    currentPage: val.page - 1,
                     sortBy,
                     sortDir,
-                  );
+                  });
                 }}
               pageSizes={[10, 50, 100, 500]}
               page={currentPage + 1}
-              totalItems={state.transactions.history.length}
+              totalItems={transactions.length}
               pageSize={itemsPerPage}
             />
           </div>
@@ -120,8 +138,8 @@ class TransactionHistoryPage extends React.Component {
 
 TransactionHistoryPage.propTypes = {
   fetchTransactionHistory: PropTypes.func.isRequired,
-  setTransactionHistoryFilters: PropTypes.func.isRequired,
-  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 

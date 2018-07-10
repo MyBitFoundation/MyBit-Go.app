@@ -42,18 +42,19 @@ class ExplorePage extends Component {
   }
 
   render() {
-    const { state } = this.props;
-    if (state.loading.assets) {
+    const { loading } = this.props;
+    if (loading.assets) {
       return <div>Loading...</div>;
     }
-    return (<div className="ExplorePage grid">{renderCategories(getCategories(state.assets), this.props.clickHandler)}</div>);
+    return (<div className="ExplorePage grid">{renderCategories(getCategories(this.props.assets), this.props.clickHandler)}</div>);
   }
 }
 
 
 ExplorePage.propTypes = {
   clickHandler: PropTypes.func,
-  state: PropTypes.shape().isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
 ExplorePage.defaultProps = {

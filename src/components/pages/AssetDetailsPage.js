@@ -7,10 +7,12 @@ import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
 const AssetDetailsPage = ({
-  state,
+  loading,
+  assets,
   match,
+  prices,
 }) => {
-  if (state.loading.assets) {
+  if (loading.assets) {
     return (
       <div style={{ width: '100%', position: 'relative', top: '50px' }}>
         <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
@@ -22,7 +24,7 @@ const AssetDetailsPage = ({
   }
 
   const { assetId, category } = match.params;
-  const asset = state.assets.find(({ assetID }) => assetID === assetId);
+  const asset = assets.find(({ assetID }) => assetID === assetId);
 
   if (!asset) {
     return (
@@ -49,14 +51,16 @@ const AssetDetailsPage = ({
       <CategoryBackButton category={category} />
       <AssetDetails
         information={assetInformation}
-        currentEthInUsd={state.misc.currentEthInUsd}
+        currentEthInUsd={prices.etherPrice}
       />
     </div>
   );
 };
 
 AssetDetailsPage.propTypes = {
-  state: PropTypes.shape().isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 

@@ -5,22 +5,17 @@ import Logo from './Logo';
 import ExchangeRate from './ExchangeRate';
 import AccountInfo from './AccountInfo';
 
-const AppHeader = ({
-  state,
-}) => (
+const AppHeader = ({ user, prices }) => (
   <div className="grid AppHeader">
     <Logo className="AppHeader__logo" />
-    <ExchangeRate value={state.misc.currentMybitInUsd} />
-    <AccountInfo
-      myBitBalance={state.user.myBitBalance}
-      ethBalance={state.user.ethBalance}
-      userName={state.user.userName}
-    />
+    <ExchangeRate {...prices} />
+    <AccountInfo {...user} />
   </div>
 );
 
-AppHeader.propTypes = {
-  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
-};
-
 export default AppHeader;
+
+AppHeader.propTypes = {
+  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  user: PropTypes.shape({ params: PropTypes.object }).isRequired,
+};
