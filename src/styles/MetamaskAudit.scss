@@ -1,0 +1,39 @@
+// carbon override; it should be better way
+.bx--modal-container {
+  border-top: none;
+}
+
+.MetamaskAudit {
+    border-top: none;
+
+    &__title {
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    &__metamaskfox-image {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 40%;
+      margin-bottom: 20px;
+    }
+
+    &__metamaskinstall-button, &__metamaskfriendlyguide-link {
+      width: 70%;
+      margin-left: 15%;
+      margin-right: 15%;
+      margin-bottom: 10px;
+    }
+
+    &__metamaskmanual-button {
+      width: 70%;
+      margin-left: 15%;
+      margin-right: 15%;
+    }
+
+    &__metamaskfriendlyguide-link {
+      text-decoration: underline;
+    }
+}

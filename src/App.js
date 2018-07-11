@@ -12,10 +12,24 @@ import PortfolioPage from './components/pages/PortfolioPage';
 import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
+import MetamaskAudit from './components/MetamaskAudit';
+
 import * as actions from './actions';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
 
 class App extends Component {
+  
+  constructor(props) {
+    super(props);
+    // Check if metamask has been injected by the browser
+    if (window.web3 && window.web3.currentProvider.isMetaMask) {
+      console.log('metamask DETECTED!');
+    }
+    else {
+      console.log('metamask is NOT detected!');
+    }
+  }
+
   UNSAFE_componentWillMount() {
     this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
     this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
@@ -35,6 +49,7 @@ class App extends Component {
           state={this.props.state}
         />
         <NavigationBar currentPath={this.props.location.pathname} />
+        <MetamaskAudit />
         <div className="page-wrapper">
           <Switch>
             <Route exact path="/" component={() => <Redirect to="/explore" />} />
