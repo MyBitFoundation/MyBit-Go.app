@@ -30,12 +30,12 @@ class TransactionHistoryPage extends React.Component {
       return (
         <LoadingPage
           message="Loading transactions"
-          hasBackButton
+          hasBackButton={false}
         />
       );
     }
     const { transactions } = this.props;
-    let transactionsToRender = transactions;
+    let transactionsToRender = transactions.slice();
     const {
       currentPage, itemsPerPage, sortBy, sortDir,
     } = this.state;

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import MemoryRouter from 'react-router-dom/MemoryRouter';
@@ -8,7 +7,7 @@ import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import '../styles/index.css';
 import '../styles/NavigationBar.css';
-import { assetsInfo, assetInfo, portfolio } from './constants';
+import { assetInfo, assets, transactions } from './constants';
 
 import getWeb3Async from '../util/web3';
 
@@ -18,17 +17,10 @@ import ExplorePage from '../components/pages/ExplorePage';
 import PortfolioPage from '../components/pages/PortfolioPage';
 import TransactionHistoryPage from '../components/pages/TransactionHistoryPage';
 
-
 import AppHeader from '../components/AppHeader';
-import AssetHero from '../components/AssetHero';
 import AssetDetails from '../components/AssetDetails';
 import AssetFunding from '../components/AssetFunding';
-import Button from '../components/Button';
-import Category from '../components/Category';
 import NavigationBar from '../components/NavigationBar';
-import Row from '../components/Row';
-import SmallInfoPanel from '../components/SmallInfoPanel';
-
 import Address from '../components/Address';
 
 
@@ -38,10 +30,13 @@ const MemoryDecorator = story => (
 
 const Header = (
   <AppHeader
-    exchangeRate={2.13}
-    myBitBalance={215}
-    ethBalance={20}
-    address="0x123f681646d4a755815f9cb19e1acc8565a0c2ac"
+    prices={{ mybitPrice: 0.05 }}
+    user={
+      {
+        myBitBalance: 100,
+        ethBalance: 1000,
+        userName: '0xd12cd8a37f074e7eafae618c986ff825666198bd',
+      }}
   />
 );
 
@@ -49,26 +44,35 @@ storiesOf('Header', module)
   .add('Normal view', () => Header)
   .add('Loading', () => <AppHeader />);
 
+const Nav = (
+  <NavigationBar
+    currentPath="/explore"
+    clickHandler={action('Clicked nav bar option')}
+  />
+);
 storiesOf('Navigation Bar', module)
   .addDecorator(MemoryDecorator)
-  .add('view', () => (
-    <NavigationBar clickHandler={action('Clicked nav bar option')} />
-  ));
+  .add('view', () => Nav);
 
 storiesOf('Header & Nav Bar', module)
   .addDecorator(MemoryDecorator)
   .add('view', () => (
     <div>
       {Header}
-      <NavigationBar clickHandler={action('Clicked nav bar option')} />
+      {Nav}
     </div>
   ));
 
 storiesOf('Explore Page', module)
   .addDecorator(MemoryDecorator)
-  .add('view', () => (
+  .add('Loading', () => (
     <div className="page-wrapper">
-      <ExplorePage clickHandler={action('Clicked category')} />
+      <ExplorePage loading={{ assets: true }} clickHandler={action('Clicked category')} />
+    </div>
+  ))
+  .add('Normal', () => (
+    <div className="page-wrapper">
+      <ExplorePage loading={{ assets: false }} assets={assets} clickHandler={action('Clicked category')} />
     </div>
   ));
 
@@ -76,40 +80,53 @@ storiesOf('Explore Assets Page', module)
   .addDecorator(MemoryDecorator)
   .add('Normal view', () => (
     <ExploreAssetsPage
-      assetsInfo={assetsInfo}
-      match={{ params: { category: 'Solar Panel' } }}
+      assets={assets}
+      loading={{ assets: false }}
+      match={{ params: { category: 'uncategorized' } }}
     />
   ))
-  .add('Loading', () => <ExploreAssetsPage loading assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} />)
+  .add('Loading', () => <ExploreAssetsPage loading={{ assets: true }} assets={[]} match={{ params: { category: 'uncategorized' } }} />)
   .add('No assets', () => (
-    <ExploreAssetsPage loading={false} assetsInfo={[]} match={{ params: { category: 'Solar Panel' } }} category="Solar Panel" />
+    <ExploreAssetsPage loading={{ assets: false }} assets={[]} match={{ params: { category: 'Solar Panel' } }} category="Solar Panel" />
   ));
 
 storiesOf('Portfolio Page', module)
-  .add('Normal view', () => <PortfolioPage portfolioValue={portfolio.portfolioValue} revenue={portfolio.revenue} />)
-  .add('Loading', () => <PortfolioPage />);
+  .add('Normal view', () =>
+    (<PortfolioPage
+      loading={{ transactionHistory: false }}
+      prices={{ etherPrice: 400 }}
+      assets={assets}
+    />))
+  .add('Loading', () =>
+    (<PortfolioPage
+      loading={{ transactionHistory: true }}
+    />));
 
-storiesOf('Address', module).add('view', () => <Address />);
-
-storiesOf('Category', module).add('view', () => <Category />);
-
-storiesOf('Button', module).add('view', () => <Button />);
-
-storiesOf('Small Info Panel', module).add('view', () => <SmallInfoPanel />);
-
-storiesOf('Asset Hero', module).add('view', () => <AssetHero />);
+storiesOf('Address', module)
+  .add('Loading', () =>
+    <Address />)
+  .add('Normal', () =>
+    (<Address
+      userName="0xd12cd8a37f074e7eafae618c986ff825666198bd"
+    />));
 
 storiesOf('Asset Details Page', module)
+  .addDecorator(MemoryDecorator)
   .addDecorator(story => (
     <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
   ))
   .add('Normal view', () => (
     <AssetDetailsPage
-      information={{ ...assetInfo }}
-      match={{ params: { category: 'Solar Panel', assetId: '123' } }}
+      assets={assets}
+      match={{ params: { category: 'uncategorized', assetId: '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1' } }}
+      loading={{ assets: false }}
+      prices={{ etherPrice: 400 }}
     />
   ))
-  .add('Loading', () => <AssetDetailsPage match={{ params: { category: 'Solar Panel', assetId: '123' } }} />);
+  .add('Loading', () =>
+    (<AssetDetailsPage
+      loading={{ assets: true }}
+    />));
 
 const daysToGo = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />
@@ -164,8 +181,17 @@ storiesOf('Asset Funding', module).add('view', () => (
   <AssetFundingWeb3Wrapper />
 ));
 
-storiesOf('Transaction History', module).add('view', () => (
-  <TransactionHistoryPage />
-));
-
-storiesOf('Row', module).add('view', () => <Row />);
+storiesOf('Transaction History', module)
+  .add('Loading', () => (
+    <TransactionHistoryPage
+      fetchTransactionHistory={() => {}}
+      loading={{ transactionHistory: true }}
+    />
+  ))
+  .add('Normal', () => (
+    <TransactionHistoryPage
+      fetchTransactionHistory={() => {}}
+      loading={{ transactionHistory: false }}
+      transactions={transactions}
+    />
+  ));
