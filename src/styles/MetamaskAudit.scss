@@ -1,13 +1,27 @@
 // carbon override; it should be better way
 .bx--modal-container {
   border-top: none;
+  padding: 0;
+  min-width: 325px;
 }
+
+.bx--modal-content {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.bx--modal-close__icon {
+  fill: #2e58db;
+}
+// end of carbon override
 
 .MetamaskAudit {
     border-top: none;
 
     &__title {
       font-size: 18px;
+      font-family: 'gilroy-extrabold';
+      color: rgba(0, 0, 0, 0.75);
       font-weight: 800;
       text-align: center;
     }
@@ -16,24 +30,26 @@
       display: block;
       margin-left: auto;
       margin-right: auto;
-      width: 40%;
+      width: 54%;
       margin-bottom: 20px;
+      margin-top: 15px;
     }
 
     &__metamaskinstall-button, &__metamaskfriendlyguide-link {
-      width: 70%;
-      margin-left: 15%;
-      margin-right: 15%;
+      width: 80%;
+      margin-left: 10%;
+      margin-right: 10%;
       margin-bottom: 10px;
     }
 
     &__metamaskmanual-button {
-      width: 70%;
-      margin-left: 15%;
-      margin-right: 15%;
+      width: 80%;
+      margin-left: 10%;
+      margin-right: 10%;
     }
 
     &__metamaskfriendlyguide-link {
+      margin-top: 0.3rem;
       text-decoration: underline;
     }
 }

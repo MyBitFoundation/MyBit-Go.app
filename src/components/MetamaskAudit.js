@@ -15,15 +15,15 @@ class MetamaskAudit extends React.Component {
             To start investing, please <br/> connect your wallet.
             </p>
             <img className="MetamaskAudit__metamaskfox-image" src={MetamaskLogo} alt="Metamask" />
-            <Button className="MetamaskAudit__metamaskinstall-button">
+            <Button small className="MetamaskAudit__metamaskinstall-button">
               Install Metamask and refresh
             </Button>
             <br/>
-            <Button kind="secondary" className="MetamaskAudit__metamaskmanual-button">
+            <Button small kind="secondary" className="MetamaskAudit__metamaskmanual-button">
               What is Metamask?
             </Button>
             <br/>
-            <Button kind="ghost" className="MetamaskAudit__metamaskfriendlyguide-link">
+            <Button small kind="ghost" className="MetamaskAudit__metamaskfriendlyguide-link">
               Try our handy step-by-step guide
             </Button>
           </Modal>
