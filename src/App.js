@@ -17,17 +17,12 @@ import MetamaskAudit from './components/MetamaskAudit';
 import * as actions from './actions';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
 
+import isMetaMask from './util/isMetamask';
+
 class App extends Component {
   
   constructor(props) {
     super(props);
-    // Check if metamask has been injected by the browser
-    if (window.web3 && window.web3.currentProvider.isMetaMask) {
-      console.log('metamask DETECTED!');
-    }
-    else {
-      console.log('metamask is NOT detected!');
-    }
   }
 
   UNSAFE_componentWillMount() {
@@ -41,15 +36,24 @@ class App extends Component {
     }, timeout);
   }
 
+  renderMetamaskAudit() {
+    if(!isMetaMask()) {
+      return (
+        <MetamaskAudit />
+      );
+    }
+  }
+
   render() {
     const { state, setTransactionHistoryFilters, fetchTransactionHistory } = this.props;
+  
     return (
       <div>
         <AppHeader
           state={this.props.state}
         />
         <NavigationBar currentPath={this.props.location.pathname} />
-        <MetamaskAudit />
+        {this.renderMetamaskAudit()}
         <div className="page-wrapper">
           <Switch>
             <Route exact path="/" component={() => <Redirect to="/explore" />} />
