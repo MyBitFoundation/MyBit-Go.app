@@ -4,10 +4,6 @@ import '../styles/MetamaskAudit.css';
 import MetamaskLogo from '../images/metamask.svg';
 
 class MetamaskAudit extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
       return(
           <Modal className="MetamaskAudit" open passiveModal>

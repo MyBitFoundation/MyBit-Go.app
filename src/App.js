@@ -20,10 +20,6 @@ import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './con
 import isMetaMask from './util/isMetamask';
 
 class App extends Component {
-  
-  constructor(props) {
-    super(props);
-  }
 
   UNSAFE_componentWillMount() {
     this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
