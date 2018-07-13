@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';
 import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
+import LoadingPage from './LoadingPage';
 
 const getCategories =
     assets =>
@@ -44,7 +45,7 @@ class ExplorePage extends Component {
   render() {
     const { loading } = this.props;
     if (loading.assets) {
-      return <div>Loading...</div>;
+      return <LoadingPage message="Loading categories" />;
     }
     return (<div className="ExplorePage grid">{renderCategories(getCategories(this.props.assets), this.props.clickHandler)}</div>);
   }

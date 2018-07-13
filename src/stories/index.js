@@ -78,6 +78,9 @@ storiesOf('Explore Page', module)
 
 storiesOf('Explore Assets Page', module)
   .addDecorator(MemoryDecorator)
+  .addDecorator(story => (
+    <div style={{ padding: '0px 50px 0px 50px' }}>{story()}</div>
+  ))
   .add('Normal view', () => (
     <ExploreAssetsPage
       assets={assets}
