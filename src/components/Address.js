@@ -13,7 +13,7 @@ const Address = ({ userName, className }) => (
       </div>
       ) : (
         <div>
-          <Jazzicon diameter={39} seed={Math.random(100).toString()} />
+          <Jazzicon diameter={39} />
           <p className="Address__text">{userName}</p>
         </div>
       )}
