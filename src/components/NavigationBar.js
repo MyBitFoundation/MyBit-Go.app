@@ -27,7 +27,9 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   { name: 'List Asset', icon: listAssetIcon },
   { name: 'Staking', icon: stakingIcon },
   { name: 'Exchange', icon: exchangeIcon },
-  { name: 'Knowledge Base', icon: knowledgeBaseIcon },
+  {
+    name: 'Help', icon: knowledgeBaseIcon, selectable: true, selected: currentPath === '/help', url: '/help',
+  },
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (

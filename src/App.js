@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -10,6 +12,7 @@ import ExplorePage from './components/pages/ExplorePage';
 import NotFoundPage from './components/pages/NotFoundPage';
 import PortfolioPage from './components/pages/PortfolioPage';
 import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
+import HelpPage from './components/pages/HelpPage';
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import * as actions from './actions';
@@ -43,6 +46,7 @@ class App extends Component {
             <Route exact path="/explore/:category" render={props => <ExploreAssetsPage state={state} {...props} />} />
             <Route exact path="/explore/:category/:assetId" render={props => <AssetDetailsPage state={state} {...props} />} />
             <Route exact path="/portfolio" render={props => <PortfolioPage state={state} {...props} />} />
+            <Route exact path="/help" render={props => <HelpPage state={state} {...props} />} />
             <Route
               exact
               path="/transaction-history"

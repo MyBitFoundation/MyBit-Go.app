@@ -1,12 +1,6 @@
 @import 'include-media/dist/_include-media.scss';
 
 .NotFoundPage{
-  position: fixed;
-  top: 166px;
-  height: calc(100vh - 166px);
-  width: 100%;
-  left:0px;
-  overflow: hidden;
 
   &__wrapper{
     width: 100%;
@@ -54,35 +48,6 @@
     }
   }
 
-  &__background-circle-right{
-    background-image: linear-gradient(to top, #f2f4f7, #ffffff);
-    border-radius: 50%;
-    width: 600px;
-    position: absolute;
-    z-index: -1;
-    right: -370px;
-    height: 130%;
-    display: none;
-    @include media('>=desktop') {
-       display: block;
-    }
-  }
-
-  &__background-circle-left{
-    background-image: linear-gradient(to bottom, #f2f4f7, #ffffff);
-    border-radius: 50%;
-    width: 1200px;
-    position: absolute;
-    z-index: -1;
-    left: -650px;
-    height: 1200px;
-    bottom: -750px;
-    display: none;
-    @include media('>=desktop') {
-       display: block;
-    }
-  }
-
   &__home-btn{
     text-decoration: none;
     margin-top: 20px;
@@ -103,7 +68,6 @@
       }
     }
   }
-
 }
 
 
