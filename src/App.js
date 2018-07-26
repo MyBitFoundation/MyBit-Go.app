@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+/* eslint-disable class-methods-use-this */
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -19,7 +20,7 @@ import * as actions from './actions';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
 
 class App extends Component {
-  UNSAFE_componentWillMount() {
+  async UNSAFE_componentWillMount() {
     this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
     this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
 
@@ -30,8 +31,22 @@ class App extends Component {
     }, timeout);
   }
 
+  firstVisit() {
+    try {
+      if (localStorage.getItem('mybitUser') === null) {
+        localStorage.setItem('mybitUser', 'true');
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   render() {
     const { state, setTransactionHistoryFilters, fetchTransactionHistory } = this.props;
+    const firstVisit = this.firstVisit();
     return (
       <div>
         <AppHeader
@@ -40,17 +55,18 @@ class App extends Component {
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">
           <Switch>
-            <Route exact path="/" component={() => <Redirect to="/explore" />} />
-            <Route exact path="/asset-payment" component={AssetPaymentPage} />
-            <Route exact path="/explore" render={props => <ExplorePage state={state} {...props} />} />
-            <Route exact path="/explore/:category" render={props => <ExploreAssetsPage state={state} {...props} />} />
-            <Route exact path="/explore/:category/:assetId" render={props => <AssetDetailsPage state={state} {...props} />} />
-            <Route exact path="/portfolio" render={props => <PortfolioPage state={state} {...props} />} />
+            <Route exact path="/" render={() => (firstVisit ? <Redirect to="/help" /> : <Redirect to="/explore" />)} />
+            <Route exact path="/asset-payment" render={() => (firstVisit ? <Redirect to="/help" /> : <AssetPaymentPage />)} />
+            <Route exact path="/explore" render={props => (firstVisit ? <Redirect to="/help" /> : <ExplorePage state={state} {...props} />)} />
+            <Route exact path="/explore/:category" render={props => (firstVisit ? <Redirect to="/help" /> : <ExploreAssetsPage state={state} {...props} />)} />
+            <Route exact path="/explore/:category/:assetId" render={props => (firstVisit ? <Redirect to="/help" /> : <AssetDetailsPage state={state} {...props} />)} />
+            <Route exact path="/portfolio" render={props => (firstVisit ? <Redirect to="/help" /> : <PortfolioPage state={state} {...props} />)} />
             <Route exact path="/help" render={props => <HelpPage state={state} {...props} />} />
             <Route
               exact
               path="/transaction-history"
               render={props => (
+                firstVisit ? <Redirect to="/help" /> :
                 <TransactionHistoryPage
                   state={state}
                   fetchTransactionHistory={fetchTransactionHistory}

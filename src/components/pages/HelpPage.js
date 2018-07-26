@@ -66,6 +66,8 @@ const HelpPage = () => {
                 'HelpPage__footer-button': true,
                 [option.className]: true,
               })}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <div className="HelpPage__footer-button-image-wrapper">
                 <img className="HelpPage__footer-button-image" src={option.imageSrc} alt={option.text} />
