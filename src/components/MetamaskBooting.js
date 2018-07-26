@@ -3,7 +3,7 @@ import { Modal, Button } from 'carbon-components-react';
 import '../styles/MetamaskAudit.css';
 import MetamaskLogo from '../images/metamask.svg';
 
-class MetamaskAudit extends React.Component {
+class MetamaskBooting extends React.Component {
     render() {
       return(
           <Modal className="MetamaskAudit" open passiveModal>
@@ -28,4 +28,4 @@ class MetamaskAudit extends React.Component {
 
 }
 
-export default MetamaskAudit;
+export default MetamaskBooting;
