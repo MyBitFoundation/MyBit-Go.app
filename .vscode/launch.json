@@ -1,0 +1,11 @@
+{
+    "type": "node",
+    "request": "launch",
+    "name": "`yarn start`",
+    "cwd": "${workspaceRoot}",
+    "runtimeExecutable": "yarn",
+    "runtimeArgs": [
+      "start"
+    ],
+    "stopOnEntry": false
+  }
