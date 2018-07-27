@@ -1,5 +1,8 @@
+/* eslint-disable camelcase */
+
 import React from 'react';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableData, PaginationV2 } from 'carbon-components-react';
 import '../../styles/TransactionHistory.css';
 import LoadingPage from './LoadingPage';
@@ -22,7 +25,6 @@ class TransactionHistoryPage extends React.Component {
       return (
         <LoadingPage
           message="Loading transactions"
-          hasBackButton
         />
       );
     }
@@ -81,16 +83,16 @@ class TransactionHistoryPage extends React.Component {
               </TableHead>
               <TableBody>
                 {transactionsToRender.map((transaction, index) => (
-                  <TableRow key={transaction.date + transaction.amount} even={index % 2 !== 0}>
+                  <TableRow key={transaction.txId} even={index % 2 !== 0}>
                     <TableData>
-                      {transaction.date}
+                      {dayjs(transaction.date).format('MMMM D, YYYY, HH:mm')}
                     </TableData>
                     <TableData>
                       {transaction.amount} <b>{transaction.type}</b>
                     </TableData>
                     <TableData style={{ display: 'flex', alignItems: 'center' }}>
                       {transaction.status}
-                      <OverflowMenuCustom url={`https://etherscan.io/tx/${transaction.txId}`} />
+                      <OverflowMenuCustom url={transaction.type === 'ETH' ? `https://ropsten.etherscan.io/tx/${transaction.txId}` : `https://ropsten.etherscan.io/token/0x40fff37c1e5f48cee320bed447329a93f6d015c0?a=${transaction.txId}`} />
                     </TableData>
                   </TableRow>
                 ))}

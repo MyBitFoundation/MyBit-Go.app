@@ -1,4 +1,4 @@
-var isGlobalWeb3 = require("./isGlobalWeb3");
+const isGlobalWeb3 = require('./isGlobalWeb3');
 
 function isMetaMask() {
   if (!isGlobalWeb3()) return false;

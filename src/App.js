@@ -1,3 +1,6 @@
+/* eslint-disable camelcase */
+/* eslint-disable class-methods-use-this */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -19,11 +22,14 @@ import * as actions from './actions';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
 
 import isMetaMask from './util/isMetamask';
-import checkAccount from './util/isUserLogged.js';
+import checkAccount from './util/isUserLogged';
 
 class App extends Component {
-  state = {
-    isMetamaskUserLogged: null,
+  constructor(props) {
+    super(props);
+    this.state = {
+      isMetamaskUserLogged: null,
+    };
   }
 
   UNSAFE_componentWillMount() {
@@ -38,27 +44,26 @@ class App extends Component {
   }
 
   componentDidMount() {
-    checkAccount().then(haveAccounts => {
+    checkAccount().then((haveAccounts) => {
       if (haveAccounts.length === 0) {
-        this.setState({ isMetamaskUserLogged: false })
+        this.setState({ isMetamaskUserLogged: false });
       }
-    })
+    });
   }
 
   // if Metamask is not established, modal is displayed with directions
   renderMetamaskWarrning() {
-    if(!isMetaMask()) {
+    if (!isMetaMask()) {
       return (
         <MetamaskBooting />
       );
     }
+    return null;
   }
-
- 
 
   render() {
     const { state, setTransactionHistoryFilters, fetchTransactionHistory } = this.props;
-  
+
     return (
       <div>
         <AppHeader
@@ -66,7 +71,7 @@ class App extends Component {
         />
         <NavigationBar currentPath={this.props.location.pathname} />
         {this.renderMetamaskWarrning()}
-        {(this.state.isMetamaskUserLogged === false) ? <MetamaskLogin/> : null }
+        {(this.state.isMetamaskUserLogged === false) ? <MetamaskLogin /> : null }
         <div className="page-wrapper">
           <Switch>
             <Route exact path="/" component={() => <Redirect to="/explore" />} />
