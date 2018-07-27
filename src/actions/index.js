@@ -188,7 +188,6 @@ export const fetchAssets = () => async (dispatch, getState) => {
   try {
     const apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
     const assetCreationContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
-    debug(assetCreationContract);
     const logAssetInfoEvents =
       await assetCreationContract
         .getPastEvents('LogAssetInfo', { fromBlock: 0, toBlock: 'latest' });
