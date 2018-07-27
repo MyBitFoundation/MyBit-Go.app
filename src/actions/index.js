@@ -5,7 +5,6 @@ import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
 import {
-  debug,
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
   ETHERSCAN_API_KEY,
