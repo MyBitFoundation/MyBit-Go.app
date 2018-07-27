@@ -15,24 +15,29 @@ const getCategories =
           name: getPrettyCategoryName(category),
         }));
 
-const renderCategories = (categories, clickHandler) => categories.map(category => (
-  <Link
-    to={`/explore/${category.path}`}
-    href={`/explore/${category.path}`}
-    key={category.path}
-    className="col-3_md-4_sm-6_xs-12 ExplorePage__category"
-  >
-    <div
-      className="ExplorePage__image-container"
-      onClick={
-        clickHandler || debug(`Going to: ${category.path}`)
-      }
-      style={{ backgroundImage: `url(${category.image})` }}
-    >
-      <p className="ExplorePage__category-name">{category.name}</p>
-    </div>
-  </Link>
-));
+const renderCategories = (categories, clickHandler) => (
+  <div className="ExplorePage__container">
+    {categories.map(category => (
+        <Link
+          to={`/explore/${category.path}`}
+          href={`/explore/${category.path}`}
+          key={category.path}
+          className="ExplorePage__category"
+        >
+          <div
+            className="ExplorePage__image-container"
+            onClick={
+              clickHandler || debug(`Going to: ${category.path}`)
+            }
+            style={{ backgroundImage: `url(${category.image})` }}
+          >
+            <p className="ExplorePage__category-name">{category.name}</p>
+          </div>
+        </Link>
+      ))
+    }
+  </div>
+);
 
 
 class ExplorePage extends Component {
@@ -46,7 +51,7 @@ class ExplorePage extends Component {
     if (state.loading.assets) {
       return <div>Loading...</div>;
     }
-    return (<div className="ExplorePage grid">{renderCategories(getCategories(state.assets), this.props.clickHandler)}</div>);
+    return (<div className="ExplorePage">{renderCategories(getCategories(state.assets), this.props.clickHandler)}</div>);
   }
 }
 
