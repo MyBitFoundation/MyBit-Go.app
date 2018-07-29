@@ -1,3 +1,6 @@
+/* eslint-disable camelcase */
+/* eslint-disable class-methods-use-this */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -14,16 +17,22 @@ import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import MetamaskBooting from './components/MetamaskBooting';
 import MetamaskLogin from './components/MetamaskLogin';
+import BrowserNotSupported from './components/BrowserNotSupported';
 
 import * as actions from './actions';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
 
 import isMetaMask from './util/isMetamask';
-import checkAccount from './util/isUserLogged.js';
+import checkAccount from './util/isUserLogged';
+
+const { detect } = require('detect-browser');
 
 class App extends Component {
-  state = {
-    isMetamaskUserLogged: null,
+  constructor(props) {
+    super(props);
+    this.state = {
+      isMetamaskUserLogged: null,
+    };
   }
 
   UNSAFE_componentWillMount() {
@@ -38,27 +47,41 @@ class App extends Component {
   }
 
   componentDidMount() {
-    checkAccount().then(haveAccounts => {
+    checkAccount().then((haveAccounts) => {
       if (haveAccounts.length === 0) {
-        this.setState({ isMetamaskUserLogged: false })
+        this.setState({ isMetamaskUserLogged: false });
       }
-    })
+    });
+  }
+
+  isBrowserSupported() {
+    const browser = detect();
+    const supportedBrowsers = [
+      'chrome',
+      'opera',
+      'brave',
+      'firefox',
+    ];
+    if (supportedBrowsers.includes(browser.name)) {
+      return true;
+    }
+    return false;
   }
 
   // if Metamask is not established, modal is displayed with directions
   renderMetamaskWarrning() {
-    if(!isMetaMask()) {
-      return (
-        <MetamaskBooting />
-      );
+    if (!this.isBrowserSupported()) {
+      return <BrowserNotSupported />;
     }
+    if (!isMetaMask()) {
+      return <MetamaskBooting />;
+    }
+    return null;
   }
-
- 
 
   render() {
     const { state, setTransactionHistoryFilters, fetchTransactionHistory } = this.props;
-  
+
     return (
       <div>
         <AppHeader
@@ -66,7 +89,7 @@ class App extends Component {
         />
         <NavigationBar currentPath={this.props.location.pathname} />
         {this.renderMetamaskWarrning()}
-        {(this.state.isMetamaskUserLogged === false) ? <MetamaskLogin/> : null }
+        {(this.state.isMetamaskUserLogged === false) ? <MetamaskLogin /> : null }
         <div className="page-wrapper">
           <Switch>
             <Route exact path="/" component={() => <Redirect to="/explore" />} />

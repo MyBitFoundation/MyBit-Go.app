@@ -1,97 +1,23 @@
-// carbon override; it should be better way
-.bx--modal-container {
+@import '../styles/MetamaskModals.scss';
+
+.MetamaskLogin {
     border-top: none;
-    padding: 0;
-    min-width: 325px;
-  }
-  
-  .bx--modal-content {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-  }
-  
-  .bx--modal-close {
-    top: 0.4rem;
-    right: 0.6rem;
-  }
-  
-  .bx--modal-close__icon {
-    fill: #2e58db;
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  
-  
-  // BUTTONS
-  .bx--btn--primary {
-    background-color: #2e58db;
-    font-family: 'Roboto';
-  
-    &:hover {
-      background-color: #2e58db;
+
+    &__title {
+      @extend %metamask__title;
     }
-    &:active {
-      border: #2e58db;
+
+    &__metamaskfox-image {
+      @extend %metamask__image;
     }
-    &:visited {
-      border: #2e58db;
-      background-color: #2e58db;
+
+    &__metamasklogin-button, &__metamaskfriendlyguide-link {
+      width: 86%;
+      margin-left: 7%;
+      margin-right: 7%;
     }
-  }
-  
-  .bx--btn--secondary {
-    border-color: #2e58db;
-    color: #2e58db;
-    font-family: 'Roboto';
-  
-    &:hover {
-      background-color: #2e58db;
+
+    &__metamaskfriendlyguide-link {
+      text-decoration: underline;
     }
-  }
-  
-  .bx--btn--ghost {
-    color: #2e58db;
-    font-family: 'Roboto';
-    font-weight: 200;
-  
-    &:hover {
-      background-color: #2e58db;
-      border: none;
-    }
-  }
-  // end of BUTTONS
-  
-  
-  // end of carbon override
-  
-  .MetamaskLogin {
-      border-top: none;
-  
-      &__title {
-        font-size: 1.1rem;
-        font-family: 'gilroy-extrabold';
-        color: rgba(0, 0, 0, 0.75);
-        font-weight: 700;
-        text-align: center;
-        line-height: 1.5rem;
-      }
-  
-      &__metamaskfox-image {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 54%;
-        margin-bottom: 20px;
-        margin-top: 15px;
-      }
-  
-      &__metamasklogin-button, &__metamaskfriendlyguide-link {
-        width: 86%;
-        margin-left: 7%;
-        margin-right: 7%;
-      }
-  
-      &__metamaskfriendlyguide-link {
-        text-decoration: underline;
-      }
-  }
+}
