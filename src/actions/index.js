@@ -81,14 +81,13 @@ export const fetchTransactionHistory = () => async (dispatch, getState) => {
       throw new Error(jsonResult.result);
     }
 
-
     const ethTransactionHistory = jsonResult.result
       .filter(txResult =>
         txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
       .map((txResult) => {
         const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
         return {
-          date: txResult.timestamp,
+          date: txResult.timeStamp * 1000,
           amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
           status: txResult.confirmations > 0 ? 'Complete' : 'Pending',
           type: 'ETH',
