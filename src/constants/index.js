@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 export const ARTIFICIAL_DELAY_IN_MS = 3000;
 export const USD_MYB_SYMBOL = 'USD/MYB';
 export const noop = () => {};
@@ -9,4 +11,6 @@ export const ETHERSCAN_API_KEY = '';
 export const ETHERSCAN_TX_BY_ADDR_ENDPOINT =
   (apiKey, address) =>
     `http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=${address}&sort=asc&apikey=${apiKey}`;
-
+export const METAMASK_FIREFOX = 'https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/';
+export const METAMASK_CHROME = 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
+export const METAMASK_OPERA = 'http://addons.opera.com/extensions/details/metamask/';
