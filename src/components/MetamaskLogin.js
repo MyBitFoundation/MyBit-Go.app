@@ -34,7 +34,7 @@ class MetamaskLogin extends React.Component {
     return (
       <Modal className="MetamaskLogin" open={this.state.isOpen} passiveModal>
         <p className="MetamaskLogin__title">
-              To start investing, please <br /> unlock your wallet.
+              To start investing, please <br /> login to Metamask.
         </p>
         <img className="MetamaskLogin__metamaskfox-image" src={MetamaskLogo} alt="Metamask" />
         <a href="https://www.youtube.com/watch?time_continue=25&v=6Gf_kRE4MJU" target="_blank" rel="noopener noreferrer">
