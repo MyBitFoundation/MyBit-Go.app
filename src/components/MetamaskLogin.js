@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-
 import React from 'react';
 import { Modal, Button } from 'carbon-components-react';
 import '../styles/MetamaskLogin.css';
@@ -36,17 +34,16 @@ class MetamaskLogin extends React.Component {
     return (
       <Modal className="MetamaskLogin" open={this.state.isOpen} passiveModal>
         <p className="MetamaskLogin__title">
-              To start investing, please <br /> login within the wallet.
+              To start investing, please <br /> login to Metamask.
         </p>
         <img className="MetamaskLogin__metamaskfox-image" src={MetamaskLogo} alt="Metamask" />
-        <Button small className="MetamaskLogin__metamasklogin-button">
-              Login within Metamask
-        </Button>
+        <a href="https://www.youtube.com/watch?time_continue=25&v=6Gf_kRE4MJU" target="_blank" rel="noopener noreferrer">
+          <Button small className="MetamaskLogin__metamasklogin-button">
+                Click here to see how
+          </Button>
+        </a>
         <br />
         <br />
-        <Button small kind="ghost" className="MetamaskLogin__metamaskfriendlyguide-link">
-             I'll do this later
-        </Button>
       </Modal>
     );
   }
