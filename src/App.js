@@ -40,7 +40,6 @@ class App extends Component {
         localStorage.setItem('mybitUser', 'true');
         return true;
       }
-
       return false;
     } catch (e) {
       return false;
@@ -50,13 +49,16 @@ class App extends Component {
   render() {
     const { state, setTransactionHistoryFilters, fetchTransactionHistory } = this.props;
     const firstVisit = this.isFirstVisit();
+
     return (
       <div>
         <AppHeader
           state={this.props.state}
         />
         <NavigationBar currentPath={this.props.location.pathname} />
-        <MetamaskChecker />
+        <MetamaskChecker
+          shouldDisplay={this.props.location.pathname !== "/help"}
+        />
         <div className="page-wrapper">
           <Switch>
             <Route exact path="/" render={() => (firstVisit ? <Redirect to="/help" /> : <Redirect to="/explore" />)} />
