@@ -81,6 +81,7 @@ export const fetchTransactionHistory = () => async (dispatch, getState) => {
       throw new Error(jsonResult.result);
     }
 
+
     const ethTransactionHistory = jsonResult.result
       .filter(txResult =>
         txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
@@ -121,7 +122,7 @@ export const fetchTransactionHistory = () => async (dispatch, getState) => {
     dispatch(fetchTransactionHistoryFailure(error));
   }
 };
-export const loadMetamaskUserDetails = () => async (dispatch) => {
+export const loadMetamaskUserDetails = cb => async (dispatch) => {
   dispatch({ type: LOAD_METAMASK_USER_DETAILS });
   try {
     const accounts = await web3.eth.getAccounts();
@@ -129,8 +130,10 @@ export const loadMetamaskUserDetails = () => async (dispatch) => {
     const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
     const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call() / 100000000;
     const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance };
+    cb(true);
     dispatch(loadMetamaskUserDetailsSuccess(details));
   } catch (error) {
+    cb(false);
     dispatch(loadMetamaskUserDetailsFailure(error));
   }
 };

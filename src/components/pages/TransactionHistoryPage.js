@@ -15,6 +15,14 @@ class TransactionHistoryPage extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
+    this.getTransactions();
+  }
+
+  getTransactions() {
+    if (this.props.state.user.userName === '') {
+      setTimeout(() => this.getTransactions(), 100);
+      return;
+    }
     this.props.fetchTransactionHistory();
   }
 
@@ -123,7 +131,7 @@ class TransactionHistoryPage extends React.Component {
 TransactionHistoryPage.propTypes = {
   fetchTransactionHistory: PropTypes.func.isRequired,
   setTransactionHistoryFilters: PropTypes.func.isRequired,
-  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  state: PropTypes.shape({ user: PropTypes.object }).isRequired,
 };
 
 
