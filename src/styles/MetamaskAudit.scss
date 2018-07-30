@@ -15,18 +15,7 @@
       width: 86%;
       margin-left: 7%;
       margin-right: 7%;
-      background-color: #2e58db;
-      align-items: center;
-      justify-content: center;
-      /* flex-shrink: 0; */
-      font-size: .875rem;
-      font-weight: 600;
-      height: 2.5rem;
-      padding: 0 1rem;
-      text-decoration: none;
-      line-height: 16px;
-      display: flex;
-      color: white;
+      margin-bottom: 10px;
     }
 
     &__metamaskmanual-button {
@@ -37,12 +26,5 @@
       & a{
         text-decoration: none;
       }
-    }
-
-    &__metamaskfriendlyguide-link {
-      margin-top: 20px;
-      display: block;
-      text-align: center;
-      color: black;
     }
 }
