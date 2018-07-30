@@ -85,12 +85,17 @@ class MetamaskChecker extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.renderMetamaskWarrning()}
-        {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null }
-      </div>
-    );
+    if(!this.props.shouldDisplay){
+      return null;
+    }
+    else{
+      return (
+        <div>
+          {this.renderMetamaskWarrning()}
+          {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null }
+        </div>
+      );
+    }
   }
 }
 
