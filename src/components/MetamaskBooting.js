@@ -39,4 +39,3 @@ MetamaskBooting.propTypes = {
 
 
 export default MetamaskBooting;
-
