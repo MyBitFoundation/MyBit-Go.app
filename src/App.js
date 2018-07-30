@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+/* eslint-disable no-use-before-define */
 /* eslint-disable class-methods-use-this */
 
 import React, { Component } from 'react';
@@ -16,6 +17,8 @@ import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
 import HelpPage from './components/pages/HelpPage';
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
+import MetamaskChecker from './components/MetamaskChecker';
+
 import * as actions from './actions';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
 
@@ -31,7 +34,7 @@ class App extends Component {
     }, timeout);
   }
 
-  firstVisit() {
+  isFirstVisit() {
     try {
       if (localStorage.getItem('mybitUser') === null) {
         localStorage.setItem('mybitUser', 'true');
@@ -46,13 +49,14 @@ class App extends Component {
 
   render() {
     const { state, setTransactionHistoryFilters, fetchTransactionHistory } = this.props;
-    const firstVisit = this.firstVisit();
+    const firstVisit = this.isFirstVisit();
     return (
       <div>
         <AppHeader
           state={this.props.state}
         />
         <NavigationBar currentPath={this.props.location.pathname} />
+        <MetamaskChecker />
         <div className="page-wrapper">
           <Switch>
             <Route exact path="/" render={() => (firstVisit ? <Redirect to="/help" /> : <Redirect to="/explore" />)} />
