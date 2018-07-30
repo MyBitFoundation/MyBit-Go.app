@@ -14,10 +14,20 @@ import PortfolioPage from './components/pages/PortfolioPage';
 import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
+import MetamaskBooting from './components/MetamaskBooting';
+import MetamaskLogin from './components/MetamaskLogin';
+
 import * as actions from './actions';
 import { MYBIT_TICKER_COINMARKETCAP, ETHEREUM_TICKER_COINMARKETCAP } from './constants';
 
+import isMetaMask from './util/isMetamask';
+import checkAccount from './util/isUserLogged.js';
+
 class App extends Component {
+  state = {
+    isMetamaskUserLogged: null,
+  }
+
   UNSAFE_componentWillMount() {
     this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
     this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
@@ -29,14 +39,36 @@ class App extends Component {
     }, timeout);
   }
 
+  componentDidMount() {
+    checkAccount().then(haveAccounts => {
+      if (haveAccounts.length === 0) {
+        this.setState({ isMetamaskUserLogged: false })
+      }
+    })
+  }
+
+  // if Metamask is not established, modal is displayed with directions
+  renderMetamaskWarrning() {
+    if(!isMetaMask()) {
+      return (
+        <MetamaskBooting />
+      );
+    }
+  }
+
+ 
+
   render() {
     const { state, setTransactionHistoryFilters, fetchTransactionHistory } = this.props;
+  
     return (
       <div>
         <AppHeader
           state={this.props.state}
         />
         <NavigationBar currentPath={this.props.location.pathname} />
+        {this.renderMetamaskWarrning()}
+        {(this.state.isMetamaskUserLogged === false) ? <MetamaskLogin/> : null }
         <div className="page-wrapper">
           <Switch>
             <Route exact path="/" component={() => <Redirect to="/explore" />} />
