@@ -12,7 +12,7 @@ import './styles/index.css';
 import App from './App';
 import rootReducer from './reducers';
 import registerServiceWorker from './registerServiceWorker';
-import { fetchAssets, loadMetamaskUserDetails } from './actions';
+import { fetchAssets } from './actions';
 
 // Redux Configuration
 const middleware = [];
@@ -45,7 +45,6 @@ const store = createStore(rootReducer, initialState, enhancer);
 const history = createHistory();
 
 store.dispatch(fetchAssets());
-store.dispatch(loadMetamaskUserDetails());
 
 ReactDOM.render(
   <Provider store={store}>

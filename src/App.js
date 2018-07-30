@@ -32,6 +32,19 @@ class App extends Component {
       this.props.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP);
       this.props.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP);
     }, timeout);
+    this.getUserDetails();
+  }
+
+  getUserDetails() {
+    //this can fail if the user is not logged in to metamask
+    //in which case  we want to keep trying to get the details
+    //until the user logs in
+    //TODO Improve
+    this.props.loadMetamaskUserDetails((success) => {
+      if (!success) {
+        setTimeout(() => this.getUserDetails(), 100);
+      }
+    });
   }
 
   isFirstVisit() {
@@ -92,6 +105,7 @@ App.propTypes = {
   fetchPriceFromCoinmarketcap: PropTypes.func.isRequired,
   fetchTransactionHistory: PropTypes.func.isRequired,
   setTransactionHistoryFilters: PropTypes.func.isRequired,
+  loadMetamaskUserDetails: PropTypes.func.isRequired,
   state: PropTypes.shape({ params: PropTypes.object }).isRequired,
   location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
 };
