@@ -22,11 +22,16 @@
 
     &:hover {
       background-color: #2e58db;
+      border: #2e58db;
     }
     &:active {
       border: #2e58db;
     }
     &:visited {
+      border: #2e58db;
+      background-color: #2e58db;
+    }
+    &:focus {
       border: #2e58db;
       background-color: #2e58db;
     }
