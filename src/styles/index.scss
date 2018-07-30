@@ -19,7 +19,7 @@
 @font-face {
     font-family: 'Gilroy';
     src: url('../fonts/Gilroy-Extrabold.otf') format('opentype');
-    font-weight: 900;
+    font-weight: bold;
 }
 
 body {
@@ -36,6 +36,10 @@ html, body {
 
 html {
   box-sizing: border-box; }
+
+p{
+  letter-spacing: normal !important;
+}
 
 .grid{
   margin-left: 0px !important;
