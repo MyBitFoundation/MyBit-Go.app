@@ -5,7 +5,6 @@ import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
 import {
-  debug,
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
   ETHERSCAN_API_KEY,
@@ -68,38 +67,72 @@ export const fetchTransactionHistory = () => async (dispatch, getState) => {
   dispatch({ type: FETCH_TRANSACTION_HISTORY });
   try {
     const userAddress = getState().user.userName;
-    const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, AssetCreation.ADDRESS);
+
+    /*
+    *  results from etherscan come in lower case
+    *  its cheaper to create a var to hold the address in lower case,
+    *  than it is to keep converting it for every iteration
+    */
+    const userAddressLowerCase = userAddress.toLowerCase();
+    const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, userAddress);
     const result = await fetch(endpoint);
     const jsonResult = await result.json();
     if (jsonResult.status === '0') {
       throw new Error(jsonResult.result);
     }
-    debug(jsonResult.result);
-    // TODO: The following map needs to derive the correct information
-    const transactionHistory = jsonResult.result
-      .filter(txResult => txResult.to === userAddress || txResult.from === userAddress)
-      .map(txResult => ({
-        date: String(new Date(txResult.timestamp)) || '',
-        amount: txResult.value || '',
-        status: txResult.status || 'Complete',
-        type: txResult.type || 'ETH',
-        txId: txResult.hash || '',
+
+    const ethTransactionHistory = jsonResult.result
+      .filter(txResult =>
+        txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
+      .map((txResult) => {
+        const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
+        return {
+          date: txResult.timeStamp * 1000,
+          amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
+          status: txResult.confirmations > 0 ? 'Complete' : 'Pending',
+          type: 'ETH',
+          txId: txResult.hash,
+        };
+      });
+
+    // Pull MYB transactions from event log
+    const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
+    const logTransactions =
+      await myBitTokenContract
+        .getPastEvents('Transfer', { fromBlock: 0, toBlock: 'latest' });
+
+    const mybTransactionHistory = await Promise.all(logTransactions
+      .filter(txResult =>
+        txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
+      .map(async (txResult) => {
+        const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
+        const multiplier = txResult.returnValues.from === userAddress ? -1 : 1;
+        return {
+          amount: (txResult.returnValues.value / 100000000) * multiplier,
+          type: 'MYB',
+          txId: txResult.transactionHash,
+          status: 'Complete',
+          date: blockInfo.timestamp * 1000,
+        };
       }));
-    dispatch(fetchTransactionHistorySuccess(transactionHistory));
+
+    dispatch(fetchTransactionHistorySuccess(ethTransactionHistory.concat(mybTransactionHistory)));
   } catch (error) {
     dispatch(fetchTransactionHistoryFailure(error));
   }
 };
-export const loadMetamaskUserDetails = () => async (dispatch) => {
+export const loadMetamaskUserDetails = cb => async (dispatch) => {
   dispatch({ type: LOAD_METAMASK_USER_DETAILS });
   try {
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
     const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
-    const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call();
+    const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call() / 100000000;
     const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance };
+    cb(true);
     dispatch(loadMetamaskUserDetailsSuccess(details));
   } catch (error) {
+    cb(false);
     dispatch(loadMetamaskUserDetailsFailure(error));
   }
 };
@@ -156,7 +189,6 @@ export const fetchAssets = () => async (dispatch, getState) => {
   try {
     const apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
     const assetCreationContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
-
     const logAssetInfoEvents =
       await assetCreationContract
         .getPastEvents('LogAssetInfo', { fromBlock: 0, toBlock: 'latest' });

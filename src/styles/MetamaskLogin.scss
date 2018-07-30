@@ -1,0 +1,23 @@
+@import '../styles/MetamaskModals.scss';
+
+.MetamaskLogin {
+    border-top: none;
+
+    &__title {
+      @extend %metamask__title;
+    }
+
+    &__metamaskfox-image {
+      @extend %metamask__image;
+    }
+
+    &__metamasklogin-button, &__metamaskfriendlyguide-link {
+      width: 86%;
+      margin-left: 7%;
+      margin-right: 7%;
+    }
+
+    &__metamaskfriendlyguide-link {
+      text-decoration: underline;
+    }
+}
