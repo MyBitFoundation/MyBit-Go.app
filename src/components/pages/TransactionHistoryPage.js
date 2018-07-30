@@ -19,6 +19,8 @@ class TransactionHistoryPage extends React.Component {
   }
 
   getTransactions() {
+    //we need to make sure we have the address/username of the user
+    //before pulling the transactions
     if (this.props.state.user.userName === '') {
       setTimeout(() => this.getTransactions(), 100);
       return;

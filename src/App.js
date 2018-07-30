@@ -33,6 +33,9 @@ class App extends Component {
   }
 
   getUserDetails() {
+    //this can fail if the user is not logged in to metamask
+    //in which case  we want to keep trying to get the details
+    //until the user logs in
     this.props.loadMetamaskUserDetails((success) => {
       if (!success) {
         setTimeout(() => this.getUserDetails(), 100);
