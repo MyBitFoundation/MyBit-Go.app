@@ -1,4 +1,4 @@
-const solarPanel1 = require('../images/Solar-Panel.png');
+const solarPanel1 = require('../images/category-solar-energy.png');
 const solarPanel2 = require('../images/Solar-Panel-2.png');
 const bitcoinAtm = require('../images/bitcoin-atm.png');
 
