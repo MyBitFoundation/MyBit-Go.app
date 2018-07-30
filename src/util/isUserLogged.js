@@ -1,10 +1,6 @@
 
 async function checkAccount() {
-  let accounts = await window.web3.eth.getAccounts().then(
-    accounts => {
-      return accounts;
-    }
-  )
+  const accounts = await window.web3.eth.getAccounts().then(accs => accs);
   return accounts;
 }
 
