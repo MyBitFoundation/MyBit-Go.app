@@ -3,6 +3,14 @@
 .Address{
   height: 39px;
 
+    &__loader{
+      display: flex;
+      position: relative;
+      justify-content: center;
+      align-items: center;
+      width: max-content;
+    }
+
     &__text{
         font-size: 14px;
         padding-left: 50px;
@@ -14,17 +22,6 @@
         margin: 0px 0px;
         position: relative;
         top: -25px;
-    }
-
-    &--is-loading{
-        position: absolute;
-        top: 28px;
-    }
-
-    &__loading-message{
-        padding-left: 32px;
-        position: relative;
-        top: 12px;
     }
 }
 
