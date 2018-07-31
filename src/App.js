@@ -1,4 +1,6 @@
-import React from 'react';
+/* eslint-disable class-methods-use-this */
+
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import './styles/App.css';
@@ -7,30 +9,48 @@ import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
 
-const App = ({ location }) => (
-  <div>
-    <BlockchainInfoContext.Consumer>
-      {({ user, prices }) => <AppHeader user={user} prices={prices} /> }
-    </BlockchainInfoContext.Consumer>
-    <NavigationBar currentPath={location.pathname} />
-    <div className="page-wrapper">
-      <Switch>
-        {routes.map(({ path, exact, component: C }) => (
-          <Route
-            key={path}
-            path={path}
-            exact={exact}
-            render={props => (
-              <C
-                {...props}
+class App extends Component {
+  isFirstVisit() {
+    try {
+      if (localStorage.getItem('mybitUser') === null) {
+        localStorage.setItem('mybitUser', 'true');
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  render() {
+    const firstVisit = this.isFirstVisit();
+    return (
+      <div>
+        <BlockchainInfoContext.Consumer>
+          {({ user, prices }) => <AppHeader user={user} prices={prices} /> }
+        </BlockchainInfoContext.Consumer>
+        <NavigationBar currentPath={this.props.location.pathname} />
+        <div className="page-wrapper">
+          <Switch>
+            {routes.map(({ path, exact, component: C }) => (
+              <Route
+                key={path}
+                path={path}
+                exact={exact}
+                render={props => (
+                  <C
+                    isFirstVisit={firstVisit}
+                    {...props}
+                  />
+                )}
               />
-            )}
-          />
-        ))}
-      </Switch>
-    </div>
-  </div>
-);
+            ))}
+          </Switch>
+        </div>
+      </div>
+    );
+  }
+}
 
 App.propTypes = {
   location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
