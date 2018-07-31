@@ -55,6 +55,28 @@ class TransactionHistoryPage extends React.Component {
     } else if (sortBy === 'date' && sortDir === 'ASC') {
       transactionsToRender =
         transactionsToRender.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (sortBy === 'status' && sortDir === 'DESC') {
+      transactionsToRender =
+        transactionsToRender.sort((a, b) => {
+          if (a.status > b.status) {
+            return -1;
+          }
+          if (a.status < b.status) {
+            return 1;
+          }
+          return 0;
+        });
+    } else if (sortBy === 'status' && sortDir === 'ASC') {
+      transactionsToRender =
+        transactionsToRender.sort((a, b) => {
+          if (a.status < b.status) {
+            return -1;
+          }
+          if (a.status > b.status) {
+            return 1;
+          }
+          return 0;
+        });
     }
 
     const startIndex = currentPage * itemsPerPage;
@@ -87,7 +109,13 @@ class TransactionHistoryPage extends React.Component {
                   >
                     Amount
                   </TableHeader>
-                  <TableHeader>
+                  <TableHeader
+                    className={sortBy === 'status' ? '' : 'Transactions__history-column-header'}
+                    onClick={() => {
+                      setTransactionHistoryFilters(itemsPerPage, currentPage, 'status', sortDir === 'ASC' ? 'DESC' : 'ASC');
+                    }}
+                    sortDir={sortBy === 'status' ? sortDir : 'ASC'}
+                  >
                     Status
                   </TableHeader>
                 </TableRow>
