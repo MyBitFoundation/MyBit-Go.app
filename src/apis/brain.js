@@ -92,7 +92,7 @@ export const loadMetamaskUserDetails = async () => new Promise(async (resolve, r
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
     const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
-    const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call();
+    const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call() / 100000000;
     const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance };
     resolve(details);
   } catch (error) {
