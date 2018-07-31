@@ -26,23 +26,61 @@ export const fetchPriceFromCoinmarketcap = async ticker => new Promise(async (re
 export const fetchTransactionHistory = async user => new Promise(async (resolve, reject) => {
   try {
     const userAddress = user.userName;
-    const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, AssetCreation.ADDRESS);
+    /*
+    *  results from etherscan come in lower case
+    *  its cheaper to create a var to hold the address in lower case,
+    *  than it is to keep converting it for every iteration
+    */
+    const userAddressLowerCase = userAddress.toLowerCase();
+    const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, userAddress);
     const result = await fetch(endpoint);
     const jsonResult = await result.json();
     if (jsonResult.status === '0') {
       throw new Error(jsonResult.result);
     }
-    // TODO: The following map needs to derive the correct information
-    const transactionHistory = jsonResult.result
-      .filter(txResult => txResult.to === userAddress || txResult.from === userAddress)
-      .map(txResult => ({
-        date: String(new Date(txResult.timestamp)) || '',
-        amount: txResult.value || '',
-        status: txResult.status || 'Complete',
-        type: txResult.type || 'ETH',
-        txId: txResult.hash || '',
+
+    const ethTransactionHistory = jsonResult.result
+      .filter(txResult =>
+        txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
+      .map((txResult) => {
+        const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
+        let status = 'Complete';
+        if (txResult.isError === '1') {
+          status = 'Fail';
+        } else if (txResult.confirmations === 0) {
+          status = 'Pending';
+        }
+        return {
+          date: txResult.timeStamp * 1000,
+          amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
+          status,
+          type: 'ETH',
+          txId: txResult.hash,
+        };
+      });
+
+    // Pull MYB transactions from event log
+    const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
+    const logTransactions =
+      await myBitTokenContract
+        .getPastEvents('Transfer', { fromBlock: 0, toBlock: 'latest' });
+
+    const mybTransactionHistory = await Promise.all(logTransactions
+      .filter(txResult =>
+        txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
+      .map(async (txResult) => {
+        const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
+        const multiplier = txResult.returnValues.from === userAddress ? -1 : 1;
+        return {
+          amount: (txResult.returnValues.value / 100000000) * multiplier,
+          type: 'MYB',
+          txId: txResult.transactionHash,
+          status: 'Complete',
+          date: blockInfo.timestamp * 1000,
+        };
       }));
-    resolve(transactionHistory);
+
+    resolve(ethTransactionHistory.concat(mybTransactionHistory));
   } catch (error) {
     reject(error);
   }

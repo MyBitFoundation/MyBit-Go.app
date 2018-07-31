@@ -2,6 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableData, PaginationV2 } from 'carbon-components-react';
 import '../../styles/TransactionHistory.css';
 import LoadingPage from './LoadingPage';
@@ -50,6 +51,28 @@ class TransactionHistoryPage extends React.Component {
     } else if (sortBy === 'date' && sortDir === 'ASC') {
       transactionsToRender =
         transactionsToRender.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (sortBy === 'status' && sortDir === 'DESC') {
+      transactionsToRender =
+        transactionsToRender.sort((a, b) => {
+          if (a.status > b.status) {
+            return -1;
+          }
+          if (a.status < b.status) {
+            return 1;
+          }
+          return 0;
+        });
+    } else if (sortBy === 'status' && sortDir === 'ASC') {
+      transactionsToRender =
+        transactionsToRender.sort((a, b) => {
+          if (a.status < b.status) {
+            return -1;
+          }
+          if (a.status > b.status) {
+            return 1;
+          }
+          return 0;
+        });
     }
 
     const startIndex = currentPage * itemsPerPage;
@@ -92,16 +115,27 @@ class TransactionHistoryPage extends React.Component {
                   >
                     Amount
                   </TableHeader>
-                  <TableHeader>
+                  <TableHeader
+                    className={sortBy === 'status' ? '' : 'Transactions__history-column-header'}
+                    onClick={() => {
+                      this.setState({
+                        itemsPerPage,
+                        currentPage,
+                        sortBy: 'status',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                      });
+                    }}
+                    sortDir={sortBy === 'status' ? sortDir : 'ASC'}
+                  >
                     Status
                   </TableHeader>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {transactionsToRender.map((transaction, index) => (
-                  <TableRow key={transaction.date + transaction.amount} even={index % 2 !== 0}>
+                  <TableRow key={transaction.date} even={index % 2 !== 0}>
                     <TableData>
-                      {transaction.date}
+                      {dayjs(transaction.date).format('MMMM D, YYYY, HH:mm')}
                     </TableData>
                     <TableData>
                       {transaction.amount} <b>{transaction.type}</b>
