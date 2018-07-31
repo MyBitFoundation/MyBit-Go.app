@@ -70,7 +70,7 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 200);
       return;
     }
-    await Brain.fetchAssets(this.state.user, this.state.prices.ether).then((response) => {
+    await Brain.fetchAssets(this.state.user, this.state.prices.etherPrice).then((response) => {
       this.setState({ assets: response, loading: { ...this.state.loading, assets: false } });
     }).catch((err) => {
       debug(err);

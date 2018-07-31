@@ -36,14 +36,14 @@ const AssetDetailsPage = ({
   const assetInformation = {
     assetID: asset.assetID,
     dueDate: asset.fundingDeadline,
-    goal: asset.amountToBeRaised,
+    goal: asset.amountToBeRaisedInUSD,
     raised: asset.amountRaisedInUSD,
-    assetName: '',
-    city: '',
-    country: '',
-    details: '',
-    description: '',
-    address: '',
+    assetName: asset.name,
+    city: asset.city,
+    country: asset.country,
+    details: 'Best fridge in Zug.',
+    description: 'Only two shelves don\'t freeze your shit. Out of 5. Invest. ty.',
+    address: asset.assetManager,
   };
 
   return (

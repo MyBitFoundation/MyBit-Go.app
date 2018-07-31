@@ -4,7 +4,7 @@ import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
-import { getCategoryFromAssetTypeHash, mergeAllLogsByAssetId } from '../util/helpers';
+import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
   ETHERSCAN_API_KEY,
   ETHERSCAN_TX_BY_ADDR_ENDPOINT,
@@ -105,53 +105,42 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
     const apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
     const assetCreationContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
 
-    const logAssetInfoEvents =
-      await assetCreationContract
-        .getPastEvents('LogAssetInfo', { fromBlock: 0, toBlock: 'latest' });
-
     const logAssetFundingStartedEvents =
       await assetCreationContract
         .getPastEvents('LogAssetFundingStarted', { fromBlock: 0, toBlock: 'latest' });
 
-    const logAssetInfo = logAssetInfoEvents
-      .map(({ returnValues }) => returnValues)
-      .map(object => ({
-        assetID: object._assetID,
-        installerID: object._installerID,
-        amountToBeRaised: object._amountToBeRaised,
-      }));
-
-    const logAssetFundingStarted = logAssetFundingStartedEvents
+    const assets = logAssetFundingStartedEvents
       .map(({ returnValues }) => returnValues)
       .map(object => ({
         assetID: object._assetID,
         assetType: object._assetType,
-        creator: object._creator,
+        ipfsHash: object._ipfsHash,
       }));
 
-    const combinedLogs =
-      logAssetInfo
-        // .concat(logAssetFundingSuccess)
-        .concat(logAssetFundingStarted)
-        .sort((a, b) => {
-          if (a.assetID < b.assetID) { return -1; }
-          if (a.assetID > b.assetID) { return 1; }
-          return 0;
-        });
 
-    const assets = mergeAllLogsByAssetId(combinedLogs);
+    // TODO Remove
+    // const assetID = '0x0903212121a0073f661f7cadf9079433fc0fe5b3418482a1bdb4631d52833f9f';
+    const assetManagers =
+      await Promise.all(assets.map(async asset =>
+        apiContract.methods.assetManager(asset.assetID).call()));
+
+    /* const amountsToBeRaised =
+      await Promise.all(assets.map(async asset =>
+        apiContract.methods.amountToBeRaised(asset.assetID).call())); */
 
     const amountsRaised =
       await Promise.all(assets.map(async asset =>
         apiContract.methods.amountRaised(asset.assetID).call()));
-    const fundingDeadlines =
+
+    /* const fundingDeadlines =
       await Promise.all(assets.map(async asset =>
-        apiContract.methods.fundingDeadline(asset.assetID).call()));
+        apiContract.methods.fundingDeadline(asset.assetID).call())); */
+
     const realAddress = web3.utils.toChecksumAddress(user.userName);
     const ownershipUnits =
       await Promise.all(assets.map(async asset => apiContract.methods.ownershipUnits(
-        realAddress,
         asset.assetID,
+        realAddress,
       ).call()));
     const assetIncomes =
       await Promise.all(assets.map(async asset => apiContract.methods.totalReceived(asset.assetID)
@@ -160,9 +149,14 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
     const assetsPlusMoreDetails = assets.map((asset, index) => ({
       ...asset,
       amountRaisedInUSD: String(Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * currentEthInUsd),
-      fundingDeadline: fundingDeadlines[index],
-      ownershipUnits: ownershipUnits[index],
-      assetIncome: assetIncomes[index],
+      amountToBeRaisedInUSD: String(Number(50) * currentEthInUsd), // TODO
+      fundingDeadline: 1564613920000, // TODO
+      ownershipUnits: ownershipUnits[index], // TODO
+      assetIncome: assetIncomes[index], // TODO
+      assetManager: assetManagers[index],
+      city: 'Zug', // TODO
+      country: 'Switzerland', // TODO
+      name: 'Ian\'s Fridge', // TODO
     }));
 
     const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {

@@ -41,10 +41,10 @@ const ExploreAssetsPage = ({
         id={asset.assetID}
         key={asset.assetID}
         funded={asset.amountRaisedInUSD}
-        goal={asset.amountToBeRaised}
-        city="unknown"
-        country="unknown"
-        name="unknown"
+        goal={asset.amountToBeRaisedInUSD}
+        city={asset.city}
+        country={asset.country}
+        name={asset.name}
         category={getPrettyCategoryName(asset.category)}
       />
     )),
