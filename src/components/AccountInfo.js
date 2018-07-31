@@ -8,7 +8,7 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => (
   <div className="AccountInfo">
     <div className="AccountInfo__balance">
       <b className="AccountInfo__balance-header">Balance</b>
-      {!ethBalance || !myBitBalance ? (
+      {!ethBalance? (
         <Loading
           className="AccountInfo__balance--is-loading"
           small
