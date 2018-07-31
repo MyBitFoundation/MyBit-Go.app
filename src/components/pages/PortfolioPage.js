@@ -33,14 +33,14 @@ const getPortfolioRevenueAssets = assets => assets.map(asset => ({
   totalRevenue: asset.assetIncome,
 }));
 
-const PortfolioPage = ({ state }) => {
-  if (state.loading.portfolio) {
+const PortfolioPage = ({ loading, assets, prices }) => {
+  if (loading.transactionHistory || !prices.etherPrice) {
     return <LoadingPage message="Loading portfolio" />;
   }
-
-  const ownedAssets = getOwnedAssets(state.assets);
-  const totalPortfolioValue = getPortfolioValue(ownedAssets, state.misc.currentEthInUsd);
-  const totalPortfolioRevenue = getPortfolioRevenue(ownedAssets, state.misc.currentEthInUsd);
+  const { currentEthInUsd } = prices;
+  const ownedAssets = getOwnedAssets(assets);
+  const totalPortfolioValue = getPortfolioValue(ownedAssets, currentEthInUsd);
+  const totalPortfolioRevenue = getPortfolioRevenue(ownedAssets, currentEthInUsd);
   const portfolioValueAssets = getPortfolioValueAssets(ownedAssets);
   const portfolioRevenueAssets = getPortfolioRevenueAssets(ownedAssets);
 
@@ -63,7 +63,9 @@ const PortfolioPage = ({ state }) => {
 };
 
 PortfolioPage.propTypes = {
-  state: PropTypes.shape({}).isRequired,
+  loading: PropTypes.shape({}).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  prices: PropTypes.shape({}).isRequired,
 };
 
 
