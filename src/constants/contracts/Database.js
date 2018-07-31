@@ -1,4 +1,4 @@
-export const ADDRESS = '0x5ef04587FF75d4563E3088C465f4De1D8dCffCB0';
+export const ADDRESS = '0x88638d553238ff817900daD9DA6a9B1B2884ba5D';
 export const ABI = [
   {
     constant: true,
@@ -410,6 +410,23 @@ export const ABI = [
       },
     ],
     name: 'LogInitialized',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: '_contractManager',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        name: '_initiator',
+        type: 'address',
+      },
+    ],
+    name: 'LogContractManager',
     type: 'event',
   },
 ];

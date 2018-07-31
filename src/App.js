@@ -36,10 +36,10 @@ class App extends Component {
   }
 
   getUserDetails() {
-    //this can fail if the user is not logged in to metamask
-    //in which case  we want to keep trying to get the details
-    //until the user logs in
-    //TODO Improve
+    // this can fail if the user is not logged in to metamask
+    // in which case  we want to keep trying to get the details
+    // until the user logs in
+    // TODO Improve
     this.props.loadMetamaskUserDetails((success) => {
       if (!success) {
         setTimeout(() => this.getUserDetails(), 100);
@@ -70,7 +70,7 @@ class App extends Component {
         />
         <NavigationBar currentPath={this.props.location.pathname} />
         <MetamaskChecker
-          shouldDisplay={this.props.location.pathname !== "/help"}
+          shouldDisplay={this.props.location.pathname !== '/help'}
         />
         <div className="page-wrapper">
           <Switch>

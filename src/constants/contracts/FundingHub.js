@@ -1,4 +1,4 @@
-export const ADDRESS = '0xace8Edd5295d1D144b902438B26A03f55FB1c50D';
+export const ADDRESS = '0x2a83ae88eb012a8bb3871915b86c3b080493ff4b';
 export const ABI = [
   {
     constant: false,
@@ -129,18 +129,13 @@ export const ABI = [
     inputs: [
       {
         indexed: true,
-        name: '_funder',
-        type: 'address',
-      },
-      {
-        indexed: true,
         name: '_assetID',
         type: 'bytes32',
       },
       {
         indexed: true,
-        name: '_timestamp',
-        type: 'uint256',
+        name: '_funder',
+        type: 'address',
       },
     ],
     name: 'LogNewFunder',
@@ -151,17 +146,17 @@ export const ABI = [
     inputs: [
       {
         indexed: true,
+        name: '_assetID',
+        type: 'bytes32',
+      },
+      {
+        indexed: true,
         name: '_sender',
         type: 'address',
       },
       {
-        indexed: true,
+        indexed: false,
         name: '_amount',
-        type: 'uint256',
-      },
-      {
-        indexed: true,
-        name: '_timestamp',
         type: 'uint256',
       },
     ],
@@ -177,13 +172,8 @@ export const ABI = [
         type: 'bytes32',
       },
       {
-        indexed: true,
+        indexed: false,
         name: '_amountRaised',
-        type: 'uint256',
-      },
-      {
-        indexed: true,
-        name: '_timestamp',
         type: 'uint256',
       },
     ],
@@ -199,13 +189,13 @@ export const ABI = [
         type: 'bytes32',
       },
       {
-        indexed: true,
+        indexed: false,
         name: '_currentEthPrice',
         type: 'uint256',
       },
       {
-        indexed: true,
-        name: '_timestamp',
+        indexed: false,
+        name: '_amountRaised',
         type: 'uint256',
       },
     ],
@@ -217,17 +207,17 @@ export const ABI = [
     inputs: [
       {
         indexed: true,
+        name: '_assetID',
+        type: 'bytes32',
+      },
+      {
+        indexed: true,
         name: '_funder',
         type: 'address',
       },
       {
-        indexed: true,
+        indexed: false,
         name: '_amount',
-        type: 'uint256',
-      },
-      {
-        indexed: true,
-        name: '_timestamp',
         type: 'uint256',
       },
     ],
@@ -243,13 +233,8 @@ export const ABI = [
         type: 'bytes32',
       },
       {
-        indexed: true,
+        indexed: false,
         name: '_amount',
-        type: 'uint256',
-      },
-      {
-        indexed: true,
-        name: '_blockNumber',
         type: 'uint256',
       },
     ],
@@ -276,28 +261,6 @@ export const ABI = [
       },
     ],
     name: 'LogDestruction',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        name: '_value1',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        name: '_value2',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        name: '_value3',
-        type: 'uint256',
-      },
-    ],
-    name: 'fundingLimitModifier',
     type: 'event',
   },
 ];

@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import MetamaskBooting from './MetamaskBooting';
 import MetamaskLogin from './MetamaskLogin';
 import BrowserNotSupported from './BrowserNotSupported';
@@ -85,18 +86,21 @@ class MetamaskChecker extends Component {
   }
 
   render() {
-    if(!this.props.shouldDisplay){
+    if (!this.props.shouldDisplay) {
       return null;
     }
-    else{
-      return (
-        <div>
-          {this.renderMetamaskWarrning()}
-          {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null }
-        </div>
-      );
-    }
+
+    return (
+      <div>
+        {this.renderMetamaskWarrning()}
+        {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null }
+      </div>
+    );
   }
 }
+
+MetamaskChecker.propTypes = {
+  shouldDisplay: PropTypes.bool.isRequired,
+};
 
 export default MetamaskChecker;
