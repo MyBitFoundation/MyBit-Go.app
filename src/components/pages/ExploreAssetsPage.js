@@ -9,7 +9,8 @@ import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
 
 const ExploreAssetsPage = ({
-  state,
+  loading,
+  assets,
   match,
 }) => {
   const { category } = match.params;
@@ -18,9 +19,9 @@ const ExploreAssetsPage = ({
     return <NotFoundPage />;
   }
 
-  const loading = state.loading.assets;
+  const loadingAssets = loading.assets;
   const assetsInCategory =
-    state.assets.filter(asset => asset.category === match.params.category);
+    assets.filter(asset => asset.category === match.params.category);
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
@@ -33,23 +34,23 @@ const ExploreAssetsPage = ({
     </Link>
   );
 
-  const assets = [
+  const assetsToRender = [
     backButton,
     assetsInCategory.map(asset => (
       <Asset
         id={asset.assetID}
         key={asset.assetID}
         funded={asset.amountRaisedInUSD}
-        goal={asset.amountToBeRaised}
-        city="unknown"
-        country="unknown"
-        name="unknown"
+        goal={asset.amountToBeRaisedInUSD}
+        city={asset.city}
+        country={asset.country}
+        name={asset.name}
         category={getPrettyCategoryName(asset.category)}
       />
     )),
   ];
 
-  const loadingElement = loading && (
+  const loadingElement = loadingAssets && (
     <LoadingPage
       message="Loading assets"
       hasBackButton
@@ -70,12 +71,12 @@ const ExploreAssetsPage = ({
   //   );
 
   let renderedOutput = null;
-  if (loading) {
+  if (loadingAssets) {
     renderedOutput = loadingElement;
-  } else if (assets[1].length === 0) {
+  } else if (assetsToRender[1].length === 0) {
     renderedOutput = <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />;
   } else {
-    renderedOutput = assets;
+    renderedOutput = assetsToRender;
   }
 
   return (
@@ -86,7 +87,8 @@ const ExploreAssetsPage = ({
 };
 
 ExploreAssetsPage.propTypes = {
-  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
