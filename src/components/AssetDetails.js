@@ -37,17 +37,6 @@ class AssetDetails extends React.Component {
 
   componentDidMount() {
     this.setDateDetails();
-
-    /*const fundingHubContract = new window.web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
-    // TODO: Mechanism to decide how much to contribute in wei
-    const weiAmount = this.web3.utils.toWei('0.1', 'ether');
-    fundingHubContract.methods.fund('0x4c8f18581c0167eb90a761b4a304e009b924f03b619a0c0e8ea3adfce20aee64')
-      .send({ from: '0x11cF613d319DC923f3248175e0271588F1B26991', value: weiAmount })
-      .then(debug)
-      .catch(debug);
-    return true;*/
-
-
   }
 
   setDateDetails() {
@@ -150,7 +139,6 @@ class AssetDetails extends React.Component {
     this.setState({ acceptedTos: false });
     // TODO: Mechanism to decide how much to contribute in wei
     const weiAmount = window.web3.toWei('0.001', 'ether');
-    console.log(weiAmount)
     fundingHubContract.methods.fund(this.props.information.assetID).send({ value: weiAmount })
       .then(debug)
       .catch(debug);

@@ -1,4 +1,4 @@
-export const ADDRESS = '0x40FfF37c1E5F48CeE320BeD447329A93F6d015C0';
+export const ADDRESS = '0x3f271d8245d37B977Bd8098f219b50ec7A0F5e03';
 export const ABI = [
   {
     constant: true,
@@ -11,6 +11,7 @@ export const ABI = [
       },
     ],
     payable: false,
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -21,7 +22,7 @@ export const ABI = [
         type: 'address',
       },
       {
-        name: '_value',
+        name: '_amount',
         type: 'uint256',
       },
     ],
@@ -33,6 +34,7 @@ export const ABI = [
       },
     ],
     payable: false,
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -41,11 +43,12 @@ export const ABI = [
     name: 'totalSupply',
     outputs: [
       {
-        name: '',
+        name: 'tokenSupply',
         type: 'uint256',
       },
     ],
     payable: false,
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -60,7 +63,7 @@ export const ABI = [
         type: 'address',
       },
       {
-        name: '_value',
+        name: '_amount',
         type: 'uint256',
       },
     ],
@@ -72,6 +75,7 @@ export const ABI = [
       },
     ],
     payable: false,
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -85,67 +89,68 @@ export const ABI = [
       },
     ],
     payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'standard',
-    outputs: [
-      {
-        name: '',
-        type: 'string',
-      },
-    ],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'balanceOf',
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    payable: false,
+    stateMutability: 'view',
     type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
-        name: 'target',
-        type: 'address',
-      },
-      {
-        name: 'mintedAmount',
+        name: '_amount',
         type: 'uint256',
       },
     ],
-    name: 'mintToken',
-    outputs: [],
+    name: 'burn',
+    outputs: [
+      {
+        name: 'success',
+        type: 'bool',
+      },
+    ],
     payable: false,
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     constant: true,
-    inputs: [],
-    name: 'owner',
-    outputs: [
+    inputs: [
       {
-        name: '',
+        name: '_tokenHolder',
         type: 'address',
       },
     ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        name: 'balance',
+        type: 'uint256',
+      },
+    ],
     payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        name: '_from',
+        type: 'address',
+      },
+      {
+        name: '_amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'burnFrom',
+    outputs: [
+      {
+        name: 'success',
+        type: 'bool',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -159,19 +164,7 @@ export const ABI = [
       },
     ],
     payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'newOwner',
-        type: 'address',
-      },
-    ],
-    name: 'changeOwner',
-    outputs: [],
-    payable: false,
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -182,13 +175,19 @@ export const ABI = [
         type: 'address',
       },
       {
-        name: '_value',
+        name: '_amount',
         type: 'uint256',
       },
     ],
     name: 'transfer',
-    outputs: [],
+    outputs: [
+      {
+        name: 'success',
+        type: 'bool',
+      },
+    ],
     payable: false,
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -199,11 +198,11 @@ export const ABI = [
         type: 'address',
       },
       {
-        name: '_value',
+        name: '_amount',
         type: 'uint256',
       },
       {
-        name: '_extraData',
+        name: '_data',
         type: 'bytes',
       },
     ],
@@ -215,54 +214,76 @@ export const ABI = [
       },
     ],
     payable: false,
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
-        name: '',
+        name: '_tokenHolder',
         type: 'address',
       },
       {
-        name: '',
+        name: '_spender',
         type: 'address',
       },
     ],
     name: 'allowance',
     outputs: [
       {
-        name: '',
+        name: 'remaining',
         type: 'uint256',
       },
     ],
     payable: false,
+    stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
       {
-        name: 'initialSupply',
+        name: '_initialAmount',
         type: 'uint256',
       },
       {
-        name: 'tokenName',
+        name: '_tokenName',
         type: 'string',
       },
       {
-        name: 'decimalUnits',
+        name: '_decimalUnits',
         type: 'uint8',
       },
       {
-        name: 'tokenSymbol',
+        name: '_tokenSymbol',
         type: 'string',
       },
     ],
+    payable: false,
+    stateMutability: 'nonpayable',
     type: 'constructor',
   },
   {
-    payable: false,
+    payable: true,
+    stateMutability: 'payable',
     type: 'fallback',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: '_burner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        name: '_amountBurned',
+        type: 'uint256',
+      },
+    ],
+    name: 'LogBurn',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -279,11 +300,33 @@ export const ABI = [
       },
       {
         indexed: false,
-        name: 'value',
+        name: 'tokens',
         type: 'uint256',
       },
     ],
     name: 'Transfer',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        name: 'tokenOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        name: 'spender',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        name: 'tokens',
+        type: 'uint256',
+      },
+    ],
+    name: 'Approval',
     type: 'event',
   },
 ];

@@ -87,16 +87,15 @@ export const fetchTransactionHistory = () => async (dispatch, getState) => {
       .map((txResult) => {
         const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
         let status = 'Complete';
-        if(txResult.isError === "1"){
+        if (txResult.isError === '1') {
           status = 'Fail';
-        }
-        else if(txResult.confirmations === 0){
+        } else if (txResult.confirmations === 0) {
           status = 'Pending';
         }
         return {
           date: txResult.timeStamp * 1000,
           amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
-          status: status,
+          status,
           type: 'ETH',
           txId: txResult.hash,
         };
