@@ -59,7 +59,7 @@ class ExplorePage extends Component {
 ExplorePage.propTypes = {
   clickHandler: PropTypes.func,
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 ExplorePage.defaultProps = {

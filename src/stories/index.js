@@ -42,7 +42,11 @@ const Header = (
 
 storiesOf('Header', module)
   .add('Normal view', () => Header)
-  .add('Loading', () => <AppHeader />);
+  .add('Loading', () =>
+    (<AppHeader
+      prices={{}}
+      user={{}}
+    />));
 
 const Nav = (
   <NavigationBar

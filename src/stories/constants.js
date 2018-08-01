@@ -1,45 +1,3 @@
-<<<<<<< HEAD
-const solarPanel1 = require('../images/category-solar-energy.png');
-const solarPanel2 = require('../images/Solar-Panel-2.png');
-const bitcoinAtm = require('../images/bitcoin-atm.png');
-
-export const assetsInfo =
-[{
-  image: solarPanel1,
-  path: '/crypto-currency-atm',
-  funded: '1000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Solar Powered Bench',
-}, {
-  image: solarPanel2,
-  path: '/solar-energy',
-  funded: '2000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Solar Powered Bench',
-}, {
-  image: bitcoinAtm,
-  path: '/crypto-currency-atm',
-  funded: '3000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Bitcoin ATM',
-}, {
-  image: bitcoinAtm,
-  path: '/solar-energy',
-  funded: '4000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Bitcoin ATM',
-}];
-
-=======
->>>>>>> b2420800bf77db430454102d3aa2b17f4f7de32d
 export const assetInfo = {
   assetName: 'Bitcoin ATM',
   city: 'Zug',
@@ -73,27 +31,37 @@ export const portfolio =
 };
 
 export const assets = [{
-  amountRaisedInUSD: 'NaN',
-  amountToBeRaised: '200',
-  assetID: '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1',
-  assetIncome: '0',
+  amountRaisedInUSD: '100',
+  amountToBeRaisedInUSD: '200',
+  assetID: '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed2',
   assetType: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
   category: 'uncategorized',
   creator: '0x00854dcc5872fB3cCc1bBcFda849F4dCdF53172F',
-  fundingDeadline: '1524512082',
+  fundingDeadline: 1524512082,
   installerID: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
-  ownershipUnits: '0',
+  ownershipUnits: '30400000000000000000',
+  investors: 2,
+  name: 'Ian\'s Fridge',
+  city: 'Zug',
+  country: 'Switzerland',
+  assetManager: '0xBB64ac045539bC0e9FFfd04399347a8459e8282A',
+  assetIncome: '304000000000000000',
 }, {
-  amountRaisedInUSD: 'NaN',
-  amountToBeRaised: '200',
+  amountRaisedInUSD: '100',
+  amountToBeRaisedInUSD: '200',
   assetID: '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1',
-  assetIncome: '0',
   assetType: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
   category: 'coffeemachine',
   creator: '0x00854dcc5872fB3cCc1bBcFda849F4dCdF53172F',
-  fundingDeadline: '1524512082',
+  fundingDeadline: 1524512082,
   installerID: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
-  ownershipUnits: '0',
+  ownershipUnits: '30400000000000000000',
+  investors: 2,
+  name: 'Ian\'s Fridge',
+  city: 'Zug',
+  country: 'Switzerland',
+  assetManager: '0xBB64ac045539bC0e9FFfd04399347a8459e8282A',
+  assetIncome: '304000000000000000',
 }];
 
 export const transactions = [{

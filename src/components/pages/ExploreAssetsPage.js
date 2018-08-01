@@ -36,18 +36,20 @@ const ExploreAssetsPage = ({
 
   const assetsToRender = [
     backButton,
-    assetsInCategory.map(asset => (
-      <Asset
-        id={asset.assetID}
-        key={asset.assetID}
-        funded={asset.amountRaisedInUSD}
-        goal={asset.amountToBeRaisedInUSD}
-        city={asset.city}
-        country={asset.country}
-        name={asset.name}
-        category={getPrettyCategoryName(asset.category)}
-      />
-    )),
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {assetsInCategory.map(asset => (
+        <Asset
+          key={asset.assetID}
+          id={asset.assetID}
+          funded={asset.amountRaisedInUSD}
+          goal={asset.amountToBeRaisedInUSD}
+          city={asset.city}
+          country={asset.country}
+          name={asset.name}
+          category={getPrettyCategoryName(asset.category)}
+        />
+    ))}
+    </div>,
   ];
 
   const loadingElement = loadingAssets && (
@@ -73,14 +75,14 @@ const ExploreAssetsPage = ({
   let renderedOutput = null;
   if (loadingAssets) {
     renderedOutput = loadingElement;
-  } else if (assetsToRender[1].length === 0) {
+  } else if (assetsInCategory.length === 0) {
     renderedOutput = <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />;
   } else {
     renderedOutput = assetsToRender;
   }
 
   return (
-    <div className="ExploreAssetsPage grid">
+    <div className="ExploreAssetsPage">
       {renderedOutput}
     </div>
   );
@@ -88,7 +90,7 @@ const ExploreAssetsPage = ({
 
 ExploreAssetsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 

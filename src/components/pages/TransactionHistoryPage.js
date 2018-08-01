@@ -128,7 +128,7 @@ class TransactionHistoryPage extends React.Component {
               </TableHead>
               <TableBody>
                 {transactionsToRender.map((transaction, index) => (
-                  <TableRow key={transaction.date} even={index % 2 !== 0}>
+                  <TableRow key={transaction.txId} even={index % 2 !== 0}>
                     <TableData>
                       {dayjs(transaction.date).format('MMMM D, YYYY, HH:mm')}
                     </TableData>
@@ -166,7 +166,6 @@ class TransactionHistoryPage extends React.Component {
 }
 
 TransactionHistoryPage.propTypes = {
-  fetchTransactionHistory: PropTypes.func.isRequired,
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
 };

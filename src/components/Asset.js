@@ -19,7 +19,7 @@ const Asset = ({
 }) => {
   const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
-    <div className="col-3_md-4_sm-6_xs-12 Asset">
+    <div className="Asset">
       <div className="Asset__container">
         <div
           className="Asset__image-holder"

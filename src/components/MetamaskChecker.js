@@ -70,7 +70,7 @@ class MetamaskChecker extends Component {
   }
 
   // if Metamask is not established, modal is displayed with directions
-  renderMetamaskWarrning() {
+  renderMetamaskWarning() {
     if (!this.isBrowserSupported()) {
       return <BrowserNotSupported />;
     }
@@ -92,7 +92,7 @@ class MetamaskChecker extends Component {
 
     return (
       <div>
-        {this.renderMetamaskWarrning()}
+        {this.renderMetamaskWarning()}
         {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null }
       </div>
     );

@@ -3,6 +3,7 @@
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
+import * as FundingHub from '../constants/contracts/FundingHub';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
 import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
@@ -100,6 +101,48 @@ export const loadMetamaskUserDetails = async () => new Promise(async (resolve, r
   }
 });
 
+const getNumberOfInvestors = async assetID => new Promise(async (resolve, reject) => {
+  try {
+    const fundingHubContract = new web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
+    const assetFundersLog =
+      await fundingHubContract
+        .getPastEvents('LogNewFunder', { fromBlock: 0, toBlock: 'latest' });
+
+    const investorsForThisAsset = assetFundersLog.filter(txResult =>
+      txResult.returnValues._assetID === assetID);
+
+    resolve(investorsForThisAsset.length);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+export const createAsset = async params => new Promise(async (resolve, reject) => {
+  try {
+    const assetCreationContract = new web3.eth.Contract(AssetCreation.ABI, AssetCreation.ADDRESS);
+
+    const installerId = web3.utils.sha3(params.installerId);
+    const assetType = web3.utils.sha3(params.assetType);
+    const ipfsHash = web3.utils.sha3(params.ipfsHash);
+
+    const assetCreationResponse = await assetCreationContract.methods.newAsset(
+      params.amountToBeRaisedInUSD,
+      params.managerPercentage,
+      params.amountToEscrow,
+      installerId,
+      assetType,
+      params.blockAtCreation,
+      ipfsHash,
+    )
+      .send({ from: params.userAddress });
+
+    resolve(assetCreationResponse);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+// The stuff thats commented out will be updated once kyle deploys the new contracts
 export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (resolve, reject) => {
   try {
     const apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
@@ -116,7 +159,6 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
         assetType: object._assetType,
         ipfsHash: object._ipfsHash,
       }));
-
 
     // TODO Remove
     // const assetID = '0x0903212121a0073f661f7cadf9079433fc0fe5b3418482a1bdb4631d52833f9f';
@@ -146,17 +188,21 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
       await Promise.all(assets.map(async asset => apiContract.methods.totalReceived(asset.assetID)
         .call()));
 
-    const assetsPlusMoreDetails = assets.map((asset, index) => ({
-      ...asset,
-      amountRaisedInUSD: String(Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * currentEthInUsd),
-      amountToBeRaisedInUSD: String(Number(50) * currentEthInUsd), // TODO
-      fundingDeadline: 1564613920000, // TODO
-      ownershipUnits: ownershipUnits[index], // TODO
-      assetIncome: assetIncomes[index], // TODO
-      assetManager: assetManagers[index],
-      city: 'Zug', // TODO
-      country: 'Switzerland', // TODO
-      name: 'Ian\'s Fridge', // TODO
+    const assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
+      const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
+      return {
+        ...asset,
+        amountRaisedInUSD: String(Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * currentEthInUsd),
+        amountToBeRaisedInUSD: String(Number(50) * currentEthInUsd), // TODO
+        fundingDeadline: 1564613920000, // TODO
+        ownershipUnits: ownershipUnits[index], // TODO
+        assetIncome: assetIncomes[index], // TODO
+        assetManager: assetManagers[index],
+        city: 'Zug', // TODO
+        country: 'Switzerland', // TODO
+        name: 'Ian\'s Fridge', // TODO
+        numberOfInvestors,
+      };
     }));
 
     const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {

@@ -29,6 +29,7 @@ class BlockchainInfo extends React.Component {
       prices: {},
       fetchAssets: this.fetchAssets,
       fetchTransactionHistory: this.fetchTransactionHistory,
+      user: {},
     };
   }
 

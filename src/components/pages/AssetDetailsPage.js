@@ -44,6 +44,7 @@ const AssetDetailsPage = ({
     details: 'Best fridge in Zug.',
     description: 'Only two shelves don\'t freeze your shit. Out of 5. Invest. ty.',
     address: asset.assetManager,
+    numberOfInvestors: asset.numberOfInvestors,
   };
 
   return (
@@ -59,7 +60,7 @@ const AssetDetailsPage = ({
 
 AssetDetailsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
   prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };

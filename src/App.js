@@ -8,6 +8,7 @@ import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
+import MetamaskChecker from './components/MetamaskChecker';
 
 class App extends Component {
   isFirstVisit() {
@@ -26,6 +27,9 @@ class App extends Component {
     const firstVisit = this.isFirstVisit();
     return (
       <div>
+        <MetamaskChecker
+          shouldDisplay={this.props.location.pathname !== '/help'}
+        />
         <BlockchainInfoContext.Consumer>
           {({ user, prices }) => <AppHeader user={user} prices={prices} /> }
         </BlockchainInfoContext.Consumer>
