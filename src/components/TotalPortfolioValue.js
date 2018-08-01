@@ -19,6 +19,8 @@ const TotalPortfolioValue = ({ totalPortfolioValue, portfolioValueAssets }) => (
       <TileBelowTheFoldContent className="Portfolio__folded-content">
         {portfolioValueAssets.map(asset => (
           <PortfolioValueItem
+            key={asset.assetID}
+            assetID={asset.assetID}
             name={asset.name}
             ownership={asset.ownership}
             value={asset.value}

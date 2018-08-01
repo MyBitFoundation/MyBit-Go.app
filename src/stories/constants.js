@@ -1,42 +1,3 @@
-const solarPanel1 = require('../images/category-solar-energy.png');
-const solarPanel2 = require('../images/Solar-Panel-2.png');
-const bitcoinAtm = require('../images/bitcoin-atm.png');
-
-export const assetsInfo =
-[{
-  image: solarPanel1,
-  path: '/crypto-currency-atm',
-  funded: '1000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Solar Powered Bench',
-}, {
-  image: solarPanel2,
-  path: '/solar-energy',
-  funded: '2000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Solar Powered Bench',
-}, {
-  image: bitcoinAtm,
-  path: '/crypto-currency-atm',
-  funded: '3000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Bitcoin ATM',
-}, {
-  image: bitcoinAtm,
-  path: '/solar-energy',
-  funded: '4000',
-  goal: '4000',
-  city: 'Lisbon',
-  country: 'Portugal',
-  name: 'Bitcoin ATM',
-}];
-
 export const assetInfo = {
   assetName: 'Bitcoin ATM',
   city: 'Zug',
@@ -68,3 +29,159 @@ export const portfolio =
     assets: [{ name: 'Bitcoin ATM', totalRevenue: '$1330', monthlyRevenue: '$120' }, { name: 'Bitcoin ATM', totalRevenue: '$1880', monthlyRevenue: '$120' }],
   },
 };
+
+export const assets = [{
+  amountRaisedInUSD: '100',
+  amountToBeRaisedInUSD: '200',
+  assetID: '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed2',
+  assetType: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
+  category: 'uncategorized',
+  creator: '0x00854dcc5872fB3cCc1bBcFda849F4dCdF53172F',
+  fundingDeadline: 1524512082,
+  installerID: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
+  ownershipUnits: '30400000000000000000',
+  investors: 2,
+  name: 'Ian\'s Fridge',
+  city: 'Zug',
+  country: 'Switzerland',
+  assetManager: '0xBB64ac045539bC0e9FFfd04399347a8459e8282A',
+  assetIncome: '304000000000000000',
+}, {
+  amountRaisedInUSD: '100',
+  amountToBeRaisedInUSD: '200',
+  assetID: '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1',
+  assetType: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
+  category: 'coffeemachine',
+  creator: '0x00854dcc5872fB3cCc1bBcFda849F4dCdF53172F',
+  fundingDeadline: 1524512082,
+  installerID: '0xfed2f47c142e37b43fa1c3aae37cd7fce40d0dd5c9b26045f85d78ea05225f55',
+  ownershipUnits: '30400000000000000000',
+  investors: 2,
+  name: 'Ian\'s Fridge',
+  city: 'Zug',
+  country: 'Switzerland',
+  assetManager: '0xBB64ac045539bC0e9FFfd04399347a8459e8282A',
+  assetIncome: '304000000000000000',
+}];
+
+export const transactions = [{
+  date: '2018-07-13',
+  amount: 100,
+  type: 'Sent',
+  status: 'Pending',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-07-12',
+  amount: 50,
+  type: 'Sent',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-07-13',
+  amount: 50,
+  type: 'Sent',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-05-01',
+  amount: 12.3213,
+  type: 'Received',
+  status: 'Pending',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-05-03',
+  amount: 23.12,
+  type: 'Received',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-05-08',
+  amount: 61.12,
+  type: 'Received',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-03-22',
+  amount: 1.0238,
+  type: 'Sent',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2017-08-10',
+  amount: 100020,
+  type: 'Received',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2017-08-18',
+  amount: 433.1231,
+  type: 'Sent',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2017-08-18',
+  amount: 1.911,
+  type: 'received',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-07-13',
+  amount: 10310,
+  type: 'Sent',
+  status: 'Pending',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-07-12',
+  amount: 5031,
+  type: 'Sent',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-07-13',
+  amount: 42240,
+  type: 'Sent',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-05-01',
+  amount: 11.3213,
+  type: 'Received',
+  status: 'Pending',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-05-03',
+  amount: 20.12,
+  type: 'Received',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-05-08',
+  amount: 69.12,
+  type: 'Received',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2018-03-22',
+  amount: 19.0238,
+  type: 'Sent',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2017-08-10',
+  amount: 130020,
+  type: 'Received',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2017-08-18',
+  amount: 133.1231,
+  type: 'Sent',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}, {
+  date: '2017-08-18',
+  amount: 4.911,
+  type: 'received',
+  status: 'Confirmed',
+  txId: '0xd577346a96dc22cbcce7b3de533588dc33208a25b8aa38730829585d395fa09a',
+}];

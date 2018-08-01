@@ -202,7 +202,7 @@ class AssetDetails extends React.Component {
               <p className="AssetDetails__left-funding-title">
                 Number of investors so far
               </p>
-              <b className="AssetDetails__left-funding-value">5</b>
+              <b className="AssetDetails__left-funding-value">{this.props.information.numberOfInvestors}</b>
             </div>
           </div>
           <p className="AssetDetails__left-calculate-title">
@@ -306,7 +306,7 @@ AssetDetails.defaultProps = {
 AssetDetails.propTypes = {
   information: PropTypes.shape({
     assetID: PropTypes.string.isRequired,
-    dueDate: PropTypes.string.isRequired,
+    dueDate: PropTypes.number.isRequired,
     goal: PropTypes.string.isRequired,
     raised: PropTypes.string.isRequired,
     assetName: PropTypes.string.isRequired,
@@ -315,6 +315,7 @@ AssetDetails.propTypes = {
     details: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
+    numberOfInvestors: PropTypes.number.isRequired,
   }).isRequired,
   currentEthInUsd: PropTypes.number,
 };

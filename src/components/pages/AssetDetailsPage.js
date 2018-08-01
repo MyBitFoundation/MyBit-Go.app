@@ -7,10 +7,12 @@ import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
 const AssetDetailsPage = ({
-  state,
+  loading,
+  assets,
   match,
+  prices,
 }) => {
-  if (state.loading.assets) {
+  if (loading.assets) {
     return (
       <div style={{ width: '100%', position: 'relative', top: '50px' }}>
         <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
@@ -22,7 +24,7 @@ const AssetDetailsPage = ({
   }
 
   const { assetId, category } = match.params;
-  const asset = state.assets.find(({ assetID }) => assetID === assetId);
+  const asset = assets.find(({ assetID }) => assetID === assetId);
 
   if (!asset) {
     return (
@@ -34,14 +36,15 @@ const AssetDetailsPage = ({
   const assetInformation = {
     assetID: asset.assetID,
     dueDate: asset.fundingDeadline,
-    goal: asset.amountToBeRaised,
+    goal: asset.amountToBeRaisedInUSD,
     raised: asset.amountRaisedInUSD,
-    assetName: '',
-    city: '',
-    country: '',
-    details: '',
-    description: '',
-    address: '',
+    assetName: asset.name,
+    city: asset.city,
+    country: asset.country,
+    details: 'Best fridge in Zug.',
+    description: 'Only two shelves don\'t freeze your shit. Out of 5. Invest. ty.',
+    address: asset.assetManager,
+    numberOfInvestors: asset.numberOfInvestors,
   };
 
   return (
@@ -49,14 +52,16 @@ const AssetDetailsPage = ({
       <CategoryBackButton category={category} />
       <AssetDetails
         information={assetInformation}
-        currentEthInUsd={state.misc.currentEthInUsd}
+        currentEthInUsd={prices.etherPrice}
       />
     </div>
   );
 };
 
 AssetDetailsPage.propTypes = {
-  state: PropTypes.shape().isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 

@@ -40,7 +40,6 @@ const renderCategories = (categories, clickHandler) => (
   </div>
 );
 
-
 class ExplorePage extends Component {
   constructor(props) {
     super(props);
@@ -48,18 +47,19 @@ class ExplorePage extends Component {
   }
 
   render() {
-    const { state } = this.props;
-    if (state.loading.assets) {
+    const { loading } = this.props;
+    if (loading.assets) {
       return <LoadingPage message="Loading categories" />;
     }
-    return (<div className="ExplorePage">{renderCategories(getCategories(state.assets), this.props.clickHandler)}</div>);
+    return (<div className="ExplorePage">{renderCategories(getCategories(this.props.assets), this.props.clickHandler)}</div>);
   }
 }
 
 
 ExplorePage.propTypes = {
   clickHandler: PropTypes.func,
-  state: PropTypes.shape().isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 ExplorePage.defaultProps = {

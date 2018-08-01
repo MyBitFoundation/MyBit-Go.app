@@ -4,6 +4,7 @@ $imageHeight: 196px;
     margin-bottom: 30px;
     padding: 0px;
     position: relative;
+    width: 312px;
 
     &__container{
     	width: 90%;
@@ -17,7 +18,7 @@ $imageHeight: 196px;
 		background-position: center;
 		height: $imageHeight;
     	position: relative;
-    	
+
 		&-gradient{
     		position: absolute;
     		top: 0px;

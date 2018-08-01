@@ -19,8 +19,8 @@ const PortfolioRevenueItem = ({
 PortfolioRevenueItem.propTypes = {
   assetID: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  monthlyRevenue: PropTypes.string.isRequired,
-  totalRevenue: PropTypes.string.isRequired,
+  monthlyRevenue: PropTypes.number.isRequired,
+  totalRevenue: PropTypes.number.isRequired,
 };
 
 
