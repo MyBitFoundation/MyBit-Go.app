@@ -36,7 +36,7 @@ export const fetchTransactionHistory = async user => new Promise(async (resolve,
     const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, userAddress);
     const result = await fetch(endpoint);
     const jsonResult = await result.json();
-    if (jsonResult.status === '1') {
+    if (!jsonResult.message || (jsonResult.message && jsonResult.message !== "No transactions found" && jsonResult.message !== "OK")) {
       throw new Error(jsonResult.result);
     }
 
