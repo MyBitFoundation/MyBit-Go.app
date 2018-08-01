@@ -53,7 +53,7 @@ class BlockchainInfo extends React.Component {
       });
     }).catch((err) => {
       debug(err);
-      setTimeout(this.fetchTransactionHistory, 200);
+      setTimeout(this.fetchTransactionHistory, 10000);
     });
   }
 
@@ -62,20 +62,20 @@ class BlockchainInfo extends React.Component {
       this.setState({ user: response, loading: { ...this.state.loading, user: false } });
     }).catch((err) => {
       debug(err);
-      setTimeout(this.loadMetamaskUserDetails, 200);
+      setTimeout(this.loadMetamaskUserDetails, 10000);
     });
   }
 
   async fetchAssets() {
     if (!this.state.prices.etherPrice) {
-      setTimeout(this.fetchAssets, 200);
+      setTimeout(this.fetchAssets, 10000);
       return;
     }
     await Brain.fetchAssets(this.state.user, this.state.prices.etherPrice).then((response) => {
       this.setState({ assets: response, loading: { ...this.state.loading, assets: false } });
     }).catch((err) => {
       debug(err);
-      setTimeout(this.fetchAssets, 200);
+      setTimeout(this.fetchAssets, 10000);
     });
   }
 
@@ -112,7 +112,7 @@ class BlockchainInfo extends React.Component {
       error = true;
     });
     if (error) {
-      setTimeout(this.loadPrices, 200);
+      setTimeout(this.loadPrices, 10000);
     }
   }
 
