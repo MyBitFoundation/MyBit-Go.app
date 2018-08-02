@@ -10,7 +10,6 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
   let myBitBalanceToRender;
   if (myBitBalance !== 0 || myBitBalance !== 'undefined') {
     const myBitBalanceString = myBitBalance.toString();
-    console.log('myBitBalanceString', myBitBalanceString);
     myBitBalanceToRender = Web3.utils.fromWei(myBitBalanceString, 'ether');
   }
   return (
