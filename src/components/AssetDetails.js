@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Slider, ModalWrapper } from 'carbon-components-react';
 import dayjs from 'dayjs';
-import Web3 from 'web3';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
 import * as FundingHub from '../constants/contracts/FundingHub';
@@ -10,6 +9,9 @@ import { debug } from '../constants';
 import '../styles/AssetDetails.css';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
+import getWeb3Async from '../util/web3';
+
+const web3 = getWeb3Async();
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -30,6 +32,7 @@ class AssetDetails extends React.Component {
     this.setAcceptedTos = this.setAcceptedTos.bind(this);
     this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
+    this.etherValueSelected = 0;
   }
 
   componentDidMount() {
@@ -131,10 +134,13 @@ class AssetDetails extends React.Component {
       this.setState({ displayWarning: true });
       return false;
     }
-    const fundingHubContract = new Web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
+    const fundingHubContract = new web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
     this.setState({ acceptedTos: false });
-    const weiAmount = Web3.utils.toWei('0.5', 'ether');
-    fundingHubContract.methods.fund('0x1935c946aa27ed139ed7518a06b639cae47be52d556a99baf7075db6bb460153').send({ value: weiAmount, from: '0x11cF613d319DC923f3248175e0271588F1B26991' })
+    const weiAmount = web3.utils.toWei(this.etherValueSelected.toString(), 'ether');
+    fundingHubContract.methods.fund(this.props.information.assetID)
+      .send({
+        value: weiAmount, from: this.props.user.userName,
+      })
       .then(debug)
       .catch(debug);
 
@@ -145,7 +151,7 @@ class AssetDetails extends React.Component {
     const maxInvestment = this.state.daysToGo < 0 ? 0 :
       this.props.information.goal - this.props.information.raised;
     const ownership = (this.state.currentSelectedAmount * 100) / this.props.information.goal;
-    const etherValue = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
+    this.etherValueSelected = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
       .toFixed(2));
     let minInvestment = this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
 
@@ -229,7 +235,7 @@ class AssetDetails extends React.Component {
           </b>
           <div className="AssetDetails__left-separator" />
           <b className="AssetDetails__left-contribution-value">
-            {etherValue} ETH
+            {this.etherValueSelected} ETH
           </b>
           <p className="AssetDetails__left-ownership">
             Ownership:{' '}
@@ -263,7 +269,7 @@ class AssetDetails extends React.Component {
           >
             <ConfirmationPopup
               amountUsd={this.state.currentSelectedAmount}
-              amountEth={etherValue}
+              amountEth={this.etherValueSelected}
               ownership={ownership}
               setAcceptedTos={this.setAcceptedTos}
               displayWarning={this.state.displayWarning}
@@ -318,6 +324,9 @@ AssetDetails.propTypes = {
     imageSrc: PropTypes.string.isRequired,
   }).isRequired,
   currentEthInUsd: PropTypes.number,
+  user: PropTypes.shape({
+    userName: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default AssetDetails;

@@ -11,6 +11,7 @@ const AssetDetailsPage = ({
   assets,
   match,
   prices,
+  user,
 }) => {
   if (loading.assets) {
     return (
@@ -54,6 +55,7 @@ const AssetDetailsPage = ({
       <AssetDetails
         information={assetInformation}
         currentEthInUsd={prices.etherPrice}
+        user={user}
       />
     </div>
   );
@@ -64,6 +66,7 @@ AssetDetailsPage.propTypes = {
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
   prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  user: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
 export default AssetDetailsPage;
