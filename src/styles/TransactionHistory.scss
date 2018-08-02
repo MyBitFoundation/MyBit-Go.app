@@ -10,11 +10,12 @@
 
   &__history{
     margin-top: 50px;
+    width: 100%;
   }
 
   &__history-table{
     border: none;
-    max-width: 560px;
+    width: 100%;
     font-family: 'Roboto';
     margin-top: 10px;
     overflow: hidden;
