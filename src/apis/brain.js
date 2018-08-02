@@ -96,7 +96,7 @@ export const loadMetamaskUserDetails = async () => new Promise(async (resolve, r
     const balance = await web3.eth.getBalance(accounts[0]);
     const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
     const myBitBalance = await myBitTokenContract.methods
-      .balanceOf(accounts[0]).call() / 1000000000000000000;
+      .balanceOf(accounts[0]).call();
     const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance };
     resolve(details);
   } catch (error) {
@@ -162,11 +162,10 @@ const checkTransactionConfirmation = async (transactionHash, resolve, reject) =>
   }
 };
 
-export const withdrawFromFaucet = async (user) => new Promise(async (resolve, reject) => {
+export const withdrawFromFaucet = async user => new Promise(async (resolve, reject) => {
   try {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>withdrawFromFaucet')
     const TokenFaucetContract = new web3.eth.Contract(TokenFaucet.ABI, TokenFaucet.ADDRESS);
-    const withdrawResponse = await TokenFaucetContract.methods.register('42000000000000000000', 'ripplesucks').send({ from: user.userName });
+    const withdrawResponse = await TokenFaucetContract.methods.register('42000000000000000000000', 'ripplesucks').send({ from: user.userName });
     const { transactionHash } = withdrawResponse;
     checkTransactionConfirmation(transactionHash, resolve, reject);
   } catch (err) {
