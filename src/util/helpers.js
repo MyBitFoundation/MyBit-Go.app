@@ -61,32 +61,59 @@ export const mergeAndSumFundingEvents = (fundingEvents) => {
 
 export const getCategoryFromAssetTypeHash = (web3, assetTypeHash) => {
   switch (assetTypeHash) {
-    case web3.utils.sha3('coffeemachine'):
-      return 'coffeemachine';
     case web3.utils.sha3('bitcoinatm'):
       return 'bitcoinatm';
+    case web3.utils.sha3('cryptomining'):
+      return 'cryptomining';
+    case web3.utils.sha3('realestatestorage'):
+      return 'realestatestorage';
+    case web3.utils.sha3('realestatecoworking'):
+      return 'realestatecoworking';
+    case web3.utils.sha3('chargingstation'):
+      return 'chargingstation';
+    case web3.utils.sha3('dronedelivery'):
+      return 'dronedelivery';
+    case web3.utils.sha3('autonomousvehicles'):
+      return 'autonomousvehicles';
+    case web3.utils.sha3('solarenergy'):
+      return 'solarenergy';
+    case web3.utils.sha3('windenergy'):
+      return 'windenergy';
+    case web3.utils.sha3('masternodes'):
+      return 'masternodes';
+    case web3.utils.sha3('vendingmachines'):
+      return 'vendingmachines';
     default:
-      return 'uncategorized';
-  }
-};
-
-export const getAssetIDFromHash = (web3, assetIDHash) => {
-  switch (assetIDHash) {
-    case web3.utils.sha3('officecoffeemachine'):
-      return 'officecoffeemachine';
-    default:
-      return '';
+      return 'other';
   }
 };
 
 export const getPrettyCategoryName = (category) => {
   switch (category) {
-    case 'coffeemachine':
-      return 'Coffee Machines';
-    case 'uncategorized':
-      return 'Uncategorized';
+    case 'bitcoinatm':
+      return 'Bitcoin ATM';
+    case 'cryptomining':
+      return 'Crypto Mining'
+    case 'realestatestorage':
+      return 'Real Estate (Storage)'
+    case 'realestatecoworking':
+      return 'Real Estate (Co-working)'
+    case 'chargingstation':
+      return 'Charging Station'
+    case 'dronedelivery':
+      return 'Drone Delivery'
+    case 'autonomousvehicles':
+      return 'Autonomous Vehicles'
+    case 'solarenergy':
+      return 'Solar Energy'
+    case 'windenergy':
+      return 'Wind Energy'
+    case 'masternodes':
+      return 'Masternodes'
+    case 'Vending Machines':
+      return 'vendingmachines';
     default:
-      return 'Unknown';
+      return 'Other';
   }
 };
 
