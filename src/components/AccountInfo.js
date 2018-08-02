@@ -10,7 +10,8 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
   let myBitBalanceToRender;
   if (myBitBalance !== 0 || myBitBalance !== 'undefined') {
     const myBitBalanceBN = Web3.utils.toBN(myBitBalance);
-    myBitBalanceToRender = Web3.utils.fromWei(myBitBalanceBN, 'ether');
+    console.log(myBitBalanceBN);
+    myBitBalanceToRender = Web3.utils.fromWei(Web3.utils.toBN(myBitBalance), 'ether');
   }
   return (
     <div className="AccountInfo">
