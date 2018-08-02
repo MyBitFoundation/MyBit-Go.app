@@ -15,6 +15,7 @@ class BlockchainInfo extends React.Component {
     this.loadMetamaskUserDetails = this.loadMetamaskUserDetails.bind(this);
     this.loadPrices = this.loadPrices.bind(this);
     this.fetchAssets = this.fetchAssets.bind(this);
+    this.getMYB = this.getMYB.bind(this);
 
     this.state = {
       loading: {
@@ -29,6 +30,7 @@ class BlockchainInfo extends React.Component {
       prices: {},
       fetchAssets: this.fetchAssets,
       fetchTransactionHistory: this.fetchTransactionHistory,
+      fetchMyBit: this.getMYB,
       user: {},
     };
   }
@@ -78,6 +80,12 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 10000);
     });
   }
+
+  async getMYB() {
+    await Brain.withdrawFromFaucet(this.state.user).then((response) => {
+      console.log(response);
+    })
+  } 
 
   async loadPrices() {
     let error = false;

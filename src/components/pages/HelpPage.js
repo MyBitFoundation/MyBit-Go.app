@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from 'carbon-components-react';
+import PropTypes from 'prop-types';
+
 import '../../styles/HelpPage.css';
 import CirclesBackgroundWrapper from '../CirclesBackgroundWrapper';
 
@@ -10,7 +13,7 @@ const portfolioIcon = require('../../images/chart-area.png');
 const metamaskIcon = require('../../images/metamask.png');
 const bugIcon = require('../../images/medium-bug.png');
 
-const HelpPage = () => {
+const HelpPage = ({fetchMyBit}) => {
   const navOptions = [{
     imageSrc: exploreIcon,
     url: '/explore',
@@ -40,11 +43,22 @@ const HelpPage = () => {
     className: 'HelpPage__footer-button--is-bug',
   }];
 
+  const handleGetMYB = (e) => {
+    fetchMyBit();
+  }
+
   return (
     <CirclesBackgroundWrapper>
       <div className="HelpPage">
         <h1 className="HelpPage__title">Welcome to the MyBit Alpha.</h1>
         <p className="HelpPage__desc">Here are some helpful tips to get you started. Remember to connect to the Ethereum Ropsten testnet via Metamask. If you need to come back to this page click the help button in the top right.</p>
+
+
+        
+        <Button small kind="primary" className="" onClick={handleGetMYB}>
+          Send me the cash
+        </Button>
+
         <div className="HelpPage__navigation">
           {navOptions.map(option => (
             <Link className="HelpPage__navigation-item" key={option.url} to={option.url} href={option.url}>
@@ -80,5 +94,14 @@ const HelpPage = () => {
     </CirclesBackgroundWrapper>
   );
 };
+
+HelpPage.propTypes = {
+  fetchMyBit: PropTypes.func,
+};
+
+HelpPage.defaultProps = {
+  fetchMyBit: '',
+};
+
 
 export default HelpPage;
