@@ -41,10 +41,11 @@ const AssetDetailsPage = ({
     assetName: asset.name,
     city: asset.city,
     country: asset.country,
-    details: 'Best fridge in Zug.',
-    description: 'Only two shelves don\'t freeze your shit. Out of 5. Invest. ty.',
+    details: asset.details,
+    description: asset.description,
     address: asset.assetManager,
     numberOfInvestors: asset.numberOfInvestors,
+    imageSrc: asset.imageSrc,
   };
 
   return (

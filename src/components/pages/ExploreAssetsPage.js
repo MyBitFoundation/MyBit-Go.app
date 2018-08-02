@@ -47,6 +47,7 @@ const ExploreAssetsPage = ({
           country={asset.country}
           name={asset.name}
           category={getPrettyCategoryName(asset.category)}
+          backgroundImage={asset.imageSrc}
         />
     ))}
     </div>,

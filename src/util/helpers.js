@@ -93,23 +93,23 @@ export const getPrettyCategoryName = (category) => {
     case 'bitcoinatm':
       return 'Bitcoin ATM';
     case 'cryptomining':
-      return 'Crypto Mining'
+      return 'Crypto Mining';
     case 'realestatestorage':
-      return 'Real Estate (Storage)'
+      return 'Real Estate (Storage)';
     case 'realestatecoworking':
-      return 'Real Estate (Co-working)'
+      return 'Real Estate (Co-working)';
     case 'chargingstation':
-      return 'Charging Station'
+      return 'Charging Station';
     case 'dronedelivery':
-      return 'Drone Delivery'
+      return 'Drone Delivery';
     case 'autonomousvehicles':
-      return 'Autonomous Vehicles'
+      return 'Autonomous Vehicles';
     case 'solarenergy':
-      return 'Solar Energy'
+      return 'Solar Energy';
     case 'windenergy':
-      return 'Wind Energy'
+      return 'Wind Energy';
     case 'masternodes':
-      return 'Masternodes'
+      return 'Masternodes';
     case 'Vending Machines':
       return 'vendingmachines';
     default:

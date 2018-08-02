@@ -10,7 +10,6 @@ import { debug } from '../constants';
 import '../styles/AssetDetails.css';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
-import backgroundImage from '../images/asset-details-page-header.png';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -192,7 +191,10 @@ class AssetDetails extends React.Component {
             <div className="AssetDetails__left-funds-goal">
               <p className="AssetDetails__left-funding-title">Funding goal</p>
               <b className="AssetDetails__left-funding-value">
-                {this.props.information.goal.toLocaleString()} USD
+                {Number(this.props.information.goal).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
               </b>
             </div>
             <div className="AssetDetails__left-funds-investors">
@@ -273,7 +275,7 @@ class AssetDetails extends React.Component {
           <img
             alt="Asset details background"
             className="AssetDetails__right-image"
-            src={backgroundImage}
+            src={this.props.information.imageSrc}
           />
           <div className="AssetDetails__right-wrapper">
             <b className="AssetDetails__right-title-details">Asset Details</b>
@@ -313,6 +315,7 @@ AssetDetails.propTypes = {
     description: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     numberOfInvestors: PropTypes.number.isRequired,
+    imageSrc: PropTypes.string.isRequired,
   }).isRequired,
   currentEthInUsd: PropTypes.number,
 };
