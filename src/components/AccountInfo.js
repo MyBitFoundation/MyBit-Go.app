@@ -1,14 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
+import Web3 from 'web3';
+
 import Address from './Address';
 import '../styles/AccountInfo.css';
 
-const AccountInfo = ({ myBitBalance, ethBalance, userName }) => (
-  <div className="AccountInfo">
+const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
+
+  if(myBitBalance !== 0 || myBitBalance !== 'undefined') {
+    let myBitBalanceBN = Web3.utils.toBN(myBitBalance);
+    myBitBalance = Web3.utils.fromWei(myBitBalanceBN, 'ether');
+  }
+  return(
+    <div className="AccountInfo">
     <div className="AccountInfo__balance">
       <b className="AccountInfo__balance-header">Balance</b>
-      {!ethBalance ? (
+      {!ethBalance || !myBitBalance ? (
         <Loading
           className="AccountInfo__balance--is-loading"
           small
@@ -23,7 +31,8 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => (
     </div>
     <Address className="AccountInfo__address" userName={userName} />
   </div>
-);
+  )
+}
 
 AccountInfo.defaultProps = {
   myBitBalance: '',
