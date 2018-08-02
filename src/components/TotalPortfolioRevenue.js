@@ -19,6 +19,7 @@ const TotalPortfolioRevenue = ({ totalPortfolioRevenue, portfolioRevenueAssets }
       <TileBelowTheFoldContent className="Portfolio__folded-content">
         {portfolioRevenueAssets.map(asset => (
           <PortfolioRevenueItem
+            key={asset.assetID}
             assetID={asset.assetID}
             name={asset.name}
             monthlyRevenue={asset.monthlyRevenue}

@@ -30,13 +30,14 @@ const LoadingPage = ({ hasBackButton, path = '/explore', message }) => {
 };
 
 LoadingPage.propTypes = {
-  hasBackButton: PropTypes.bool.isRequired,
+  hasBackButton: PropTypes.bool,
   path: PropTypes.string,
   message: PropTypes.string.isRequired,
 };
 
 LoadingPage.defaultProps = {
   path: '',
+  hasBackButton: false,
 };
 
 export default LoadingPage;

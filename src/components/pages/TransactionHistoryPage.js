@@ -12,38 +12,29 @@ class TransactionHistoryPage extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
-  }
-
-  UNSAFE_componentWillMount() {
-    this.getTransactions();
-  }
-
-  getTransactions() {
-    //we need to make sure we have the address/username of the user
-    //before pulling the transactions
-    //TODO Improve
-    if (this.props.state.user.userName === '') {
-      setTimeout(() => this.getTransactions(), 100);
-      return;
-    }
-    this.props.fetchTransactionHistory();
+    this.state = {
+      currentPage: 0,
+      itemsPerPage: 10,
+      sortBy: 'date',
+      sortDir: 'ASC',
+    };
   }
 
   render() {
-    const { state, setTransactionHistoryFilters } = this.props;
+    const { loading } = this.props;
 
-    if (state.loading.transactionHistory) {
+    if (loading.transactionHistory) {
       return (
         <LoadingPage
           message="Loading transactions"
         />
       );
     }
-    let transactionsToRender = [...state.transactions.history];
-    const { currentPage } = state.transactions;
-    const { itemsPerPage } = state.transactions;
-    const { sortBy } = state.transactions;
-    const { sortDir } = state.transactions;
+    const { transactions } = this.props;
+    let transactionsToRender = transactions.slice();
+    const {
+      currentPage, itemsPerPage, sortBy, sortDir,
+    } = this.state;
 
     if (sortBy === 'amount' && sortDir === 'DESC') {
       transactionsToRender = transactionsToRender.sort((a, b) => a.amount - b.amount);
@@ -81,7 +72,7 @@ class TransactionHistoryPage extends React.Component {
 
     const startIndex = currentPage * itemsPerPage;
     const endIndex = (currentPage + 1) * itemsPerPage;
-    transactionsToRender = transactionsToRender.splice(startIndex, endIndex);
+    transactionsToRender = transactionsToRender.slice(startIndex, endIndex);
 
     return (
       <div>
@@ -94,7 +85,12 @@ class TransactionHistoryPage extends React.Component {
                   <TableHeader
                     className={sortBy === 'date' ? '' : 'Transactions__history-column-header'}
                     onClick={() => {
-                      setTransactionHistoryFilters(itemsPerPage, currentPage, 'date', sortDir === 'ASC' ? 'DESC' : 'ASC');
+                      this.setState({
+                        itemsPerPage,
+                        currentPage,
+                        sortBy: 'date',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                      });
                     }}
                     sortDir={sortBy === 'date' ? sortDir : 'ASC'}
                   >
@@ -103,7 +99,12 @@ class TransactionHistoryPage extends React.Component {
                   <TableHeader
                     className={sortBy === 'amount' ? '' : 'Transactions__history-column-header'}
                     onClick={() => {
-                      setTransactionHistoryFilters(itemsPerPage, currentPage, 'amount', sortDir === 'ASC' ? 'DESC' : 'ASC');
+                      this.setState({
+                        itemsPerPage,
+                        currentPage,
+                        sortBy: 'amount',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                      });
                     }}
                     sortDir={sortBy === 'amount' ? sortDir : 'ASC'}
                   >
@@ -112,7 +113,12 @@ class TransactionHistoryPage extends React.Component {
                   <TableHeader
                     className={sortBy === 'status' ? '' : 'Transactions__history-column-header'}
                     onClick={() => {
-                      setTransactionHistoryFilters(itemsPerPage, currentPage, 'status', sortDir === 'ASC' ? 'DESC' : 'ASC');
+                      this.setState({
+                        itemsPerPage,
+                        currentPage,
+                        sortBy: 'status',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                      });
                     }}
                     sortDir={sortBy === 'status' ? sortDir : 'ASC'}
                   >
@@ -140,16 +146,16 @@ class TransactionHistoryPage extends React.Component {
             <PaginationV2
               onChange={
                 (val) => {
-                  setTransactionHistoryFilters(
-                    val.pageSize,
-                    val.page - 1,
+                  this.setState({
+                    itemsPerPage: val.pageSize,
+                    currentPage: val.page - 1,
                     sortBy,
                     sortDir,
-                  );
+                  });
                 }}
               pageSizes={[10, 50, 100, 500]}
               page={currentPage + 1}
-              totalItems={state.transactions.history.length}
+              totalItems={transactions.length}
               pageSize={itemsPerPage}
             />
           </div>
@@ -160,9 +166,8 @@ class TransactionHistoryPage extends React.Component {
 }
 
 TransactionHistoryPage.propTypes = {
-  fetchTransactionHistory: PropTypes.func.isRequired,
-  setTransactionHistoryFilters: PropTypes.func.isRequired,
-  state: PropTypes.shape({ user: PropTypes.object }).isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 

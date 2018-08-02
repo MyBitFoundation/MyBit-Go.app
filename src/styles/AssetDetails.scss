@@ -1,9 +1,16 @@
+@import 'include-media/dist/_include-media.scss';
+
 .AssetDetails{
   padding-top: 25px;
 
   &__left{
     padding-left: 0px;
     padding-right: 50px;
+
+    @include media('<desktop') {
+      padding-right: 0px;
+    }
+
 
     &-name{
       font-size: 34px;

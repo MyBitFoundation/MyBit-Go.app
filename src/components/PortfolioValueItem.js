@@ -19,8 +19,8 @@ const PortfolioValueItem = ({
 PortfolioValueItem.propTypes = {
   assetID: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  ownership: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  ownership: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
 };
 
 export default PortfolioValueItem;
