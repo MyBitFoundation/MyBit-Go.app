@@ -1,14 +1,17 @@
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable no-unused-vars */
 
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
+import * as TokenFaucet from '../constants/contracts/TokenFaucet';
 import * as FundingHub from '../constants/contracts/FundingHub';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
 import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
   ETHERSCAN_API_KEY,
   ETHERSCAN_TX_BY_ADDR_ENDPOINT,
+  ETHERSCAN_TX,
 } from '../constants';
 
 const web3 = getWeb3Async();
@@ -36,7 +39,7 @@ export const fetchTransactionHistory = async user => new Promise(async (resolve,
     const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(ETHERSCAN_API_KEY, userAddress);
     const result = await fetch(endpoint);
     const jsonResult = await result.json();
-    if (!jsonResult.message || (jsonResult.message && jsonResult.message !== "No transactions found" && jsonResult.message !== "OK")) {
+    if (!jsonResult.message || (jsonResult.message && jsonResult.message !== 'No transactions found' && jsonResult.message !== 'OK')) {
       throw new Error(jsonResult.result);
     }
 
@@ -87,13 +90,13 @@ export const fetchTransactionHistory = async user => new Promise(async (resolve,
   }
 });
 
-
 export const loadMetamaskUserDetails = async () => new Promise(async (resolve, reject) => {
   try {
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
     const myBitTokenContract = new web3.eth.Contract(MyBitToken.ABI, MyBitToken.ADDRESS);
-    const myBitBalance = await myBitTokenContract.methods.balanceOf(accounts[0]).call() / 100000000;
+    const myBitBalance = await myBitTokenContract.methods
+      .balanceOf(accounts[0]).call() / 1000000000000000000;
     const details = { userName: accounts[0], ethBalance: web3.utils.fromWei(balance, 'ether'), myBitBalance };
     resolve(details);
   } catch (error) {
@@ -142,6 +145,34 @@ export const createAsset = async params => new Promise(async (resolve, reject) =
   }
 });
 
+const checkTransactionConfirmation = async (transactionHash, resolve, reject) => {
+  try {
+    const endpoint = ETHERSCAN_TX(ETHERSCAN_API_KEY, transactionHash);
+    const result = await fetch(endpoint);
+    const jsronResult = await result.json();
+    if (jsronResult.status === '1') {
+      resolve(true);
+    } else if (jsronResult.status === '0') {
+      resolve(false);
+    } else {
+      setTimeout(() => checkTransactionConfirmation(transactionHash, resolve, reject), 1000);
+    }
+  } catch (err) {
+    reject(err);
+  }
+};
+
+const withdrawFromFaucet = async () => new Promise(async (resolve, reject) => {
+  try {
+    const TokenFaucetContract = new web3.eth.Contract(TokenFaucet.ABI, TokenFaucet.ADDRESS);
+    const withdrawResponse = await TokenFaucetContract.methods.withdraw('100000000000000000000', 'ripplesucks').send({ from: '0x11cF613d319DC923f3248175e0271588F1B26991' });
+    const { transactionHash } = withdrawResponse;
+    checkTransactionConfirmation(transactionHash, resolve, reject);
+  } catch (err) {
+    reject(err);
+  }
+});
+
 // The stuff thats commented out will be updated once kyle deploys the new contracts
 export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (resolve, reject) => {
   try {
@@ -159,6 +190,14 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
         assetType: object._assetType,
         ipfsHash: object._ipfsHash,
       }));
+
+    // const withdraw = await withdrawFromFaucet(web3.utils.toChecksumAddress(user.userName));
+    /* const assetCreationResponse = await assetCreationContract.methods.
+      newAsset(300000, 15, 15000, web3.utils.sha3("ATMInstallersAG"),
+      web3.utils.sha3("bitcoinatms"), 190, web3.utils.sha3("123asfd4")
+    ).send({ from: "0x11cF613d319DC923f3248175e0271588F1B26991" });
+
+    console.log(assetCreationResponse); */
 
     // TODO Remove
     // const assetID = '0x0903212121a0073f661f7cadf9079433fc0fe5b3418482a1bdb4631d52833f9f';
