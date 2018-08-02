@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Slider, ModalWrapper } from 'carbon-components-react';
 import dayjs from 'dayjs';
+import Web3 from 'web3';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
 import * as FundingHub from '../constants/contracts/FundingHub';
@@ -10,8 +11,6 @@ import '../styles/AssetDetails.css';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
 import backgroundImage from '../images/asset-details-page-header.png';
-import getWeb3Async from '../util/web3';
-
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -32,7 +31,6 @@ class AssetDetails extends React.Component {
     this.setAcceptedTos = this.setAcceptedTos.bind(this);
     this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
-    this.web3 = getWeb3Async();
   }
 
   componentDidMount() {
@@ -134,14 +132,13 @@ class AssetDetails extends React.Component {
       this.setState({ displayWarning: true });
       return false;
     }
-    // TODO: See if this is all that we want and handle the UI better
-    const fundingHubContract = new window.web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
+    const fundingHubContract = new Web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
     this.setState({ acceptedTos: false });
-    // TODO: Mechanism to decide how much to contribute in wei
-    const weiAmount = window.web3.toWei('0.001', 'ether');
-    fundingHubContract.methods.fund(this.props.information.assetID).send({ value: weiAmount })
+    const weiAmount = Web3.utils.toWei('0.5', 'ether');
+    fundingHubContract.methods.fund('0x1935c946aa27ed139ed7518a06b639cae47be52d556a99baf7075db6bb460153').send({ value: weiAmount, from: '0x11cF613d319DC923f3248175e0271588F1B26991' })
       .then(debug)
       .catch(debug);
+
     return true;
   }
 

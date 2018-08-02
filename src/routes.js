@@ -92,12 +92,12 @@ const routes = [
     path: '/help',
     exact: true,
     component: () => (
-    <BlockchainInfoContext.Consumer>
-      {({fetchMyBit}) => (
-        <HelpPage fetchMyBit={fetchMyBit}/>
+      <BlockchainInfoContext.Consumer>
+        {({ fetchMyBit }) => (
+          <HelpPage fetchMyBit={fetchMyBit} />
       )}
-    </BlockchainInfoContext.Consumer>)
-    
+      </BlockchainInfoContext.Consumer>),
+
   }, {
     path: '*',
     exact: false,

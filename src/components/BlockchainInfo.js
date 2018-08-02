@@ -47,6 +47,10 @@ class BlockchainInfo extends React.Component {
     setInterval(this.loadPrices, 30 * 1000);
   }
 
+  getMYB() {
+    return Brain.withdrawFromFaucet(this.state.user);
+  }
+
   async fetchTransactionHistory() {
     await Brain.fetchTransactionHistory(this.state.user).then((response) => {
       this.setState({
@@ -80,12 +84,6 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 10000);
     });
   }
-
-  async getMYB() {
-    await Brain.withdrawFromFaucet(this.state.user).then((response) => {
-      console.log(response);
-    })
-  } 
 
   async loadPrices() {
     let error = false;
