@@ -29,6 +29,7 @@ class BlockchainInfo extends React.Component {
       prices: {},
       fetchAssets: this.fetchAssets,
       fetchTransactionHistory: this.fetchTransactionHistory,
+      fetchMyBit: this.getMYB,
       user: {},
     };
   }
@@ -78,6 +79,12 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 10000);
     });
   }
+
+  async getMYB() {
+    await Brain.withdrawFromFaucet().then((response) => {
+      console.log(response);
+    })
+  } 
 
   async loadPrices() {
     let error = false;

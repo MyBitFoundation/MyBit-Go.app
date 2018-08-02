@@ -91,7 +91,13 @@ const routes = [
   {
     path: '/help',
     exact: true,
-    component: () => <HelpPage />,
+    component: () => (
+    <BlockchainInfoContext.Consumer>
+      {({fetchMyBit}) => (
+        <HelpPage fetchMyBit={fetchMyBit}/>
+      )}
+    </BlockchainInfoContext.Consumer>)
+    
   }, {
     path: '*',
     exact: false,
