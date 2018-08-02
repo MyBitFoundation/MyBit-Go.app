@@ -162,11 +162,11 @@ const checkTransactionConfirmation = async (transactionHash, resolve, reject) =>
   }
 };
 
-export const withdrawFromFaucet = async () => new Promise(async (resolve, reject) => {
+export const withdrawFromFaucet = async (user) => new Promise(async (resolve, reject) => {
   try {
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>withdrawFromFaucet')
     const TokenFaucetContract = new web3.eth.Contract(TokenFaucet.ABI, TokenFaucet.ADDRESS);
-    const withdrawResponse = await TokenFaucetContract.methods.register('42', 'ripplesucks').send({ from: '0x11cF613d319DC923f3248175e0271588F1B26991' });
+    const withdrawResponse = await TokenFaucetContract.methods.register('42000000000000000000', 'ripplesucks').send({ from: user.userName });
     const { transactionHash } = withdrawResponse;
     checkTransactionConfirmation(transactionHash, resolve, reject);
   } catch (err) {

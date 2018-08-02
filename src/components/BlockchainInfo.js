@@ -15,6 +15,7 @@ class BlockchainInfo extends React.Component {
     this.loadMetamaskUserDetails = this.loadMetamaskUserDetails.bind(this);
     this.loadPrices = this.loadPrices.bind(this);
     this.fetchAssets = this.fetchAssets.bind(this);
+    this.getMYB = this.getMYB.bind(this);
 
     this.state = {
       loading: {
@@ -81,7 +82,7 @@ class BlockchainInfo extends React.Component {
   }
 
   async getMYB() {
-    await Brain.withdrawFromFaucet().then((response) => {
+    await Brain.withdrawFromFaucet(this.state.user).then((response) => {
       console.log(response);
     })
   } 
