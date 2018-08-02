@@ -88,23 +88,32 @@ export const getCategoryFromAssetTypeHash = (web3, assetTypeHash) => {
   }
 };
 
-export const getAssetIDFromHash = (web3, assetIDHash) => {
-  switch (assetIDHash) {
-    case web3.utils.sha3('officecoffeemachine'):
-      return 'officecoffeemachine';
-    default:
-      return '';
-  }
-};
-
 export const getPrettyCategoryName = (category) => {
   switch (category) {
-    case 'coffeemachine':
-      return 'Coffee Machines';
-    case 'uncategorized':
-      return 'Uncategorized';
+    case 'bitcoinatm':
+      return 'Bitcoin ATM';
+    case 'cryptomining':
+      return 'Crypto Mining'
+    case 'realestatestorage':
+      return 'Real Estate (Storage)'
+    case 'realestatecoworking':
+      return 'Real Estate (Co-working)'
+    case 'chargingstation':
+      return 'Charging Station'
+    case 'dronedelivery':
+      return 'Drone Delivery'
+    case 'autonomousvehicles':
+      return 'Autonomous Vehicles'
+    case 'solarenergy':
+      return 'Solar Energy'
+    case 'windenergy':
+      return 'Wind Energy'
+    case 'masternodes':
+      return 'Masternodes'
+    case 'Vending Machines':
+      return 'vendingmachines';
     default:
-      return 'Unknown';
+      return 'Other';
   }
 };
 
