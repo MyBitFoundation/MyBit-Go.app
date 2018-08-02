@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
 import { debug } from '../constants';
-import bitcoinAtm from '../images/bitcoin-atm.png';
 
 const Asset = ({
   clickHandler,
@@ -16,6 +15,7 @@ const Asset = ({
   name,
   category,
   id,
+  backgroundImage,
 }) => {
   const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
@@ -23,7 +23,7 @@ const Asset = ({
       <div className="Asset__container">
         <div
           className="Asset__image-holder"
-          style={{ backgroundImage: `url(${bitcoinAtm})` }}
+          style={{ backgroundImage: `url(${backgroundImage})` }}
         >
           <div className="Asset__image-holder-gradient" />
           <img
@@ -41,7 +41,13 @@ const Asset = ({
             Funded: <b>${Math.round(funded)}</b>
           </p>
           <p className="Asset__details-goal">
-            Goal: <b>${goal}</b>
+            Goal:
+            <b>{
+              Number(goal).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </b>
           </p>
           <div className="Asset__details-progress-bar">
             <div
@@ -79,6 +85,7 @@ Asset.propTypes = {
   category: PropTypes.string.isRequired,
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
+  backgroundImage: PropTypes.string.isRequired,
 };
 
 Asset.defaultProps = {

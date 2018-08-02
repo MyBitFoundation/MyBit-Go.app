@@ -15,6 +15,7 @@ import {
 } from '../constants';
 
 const web3 = getWeb3Async();
+const IPFS_URL = 'https://ipfs.io/ipfs/QmP1EYGpj6QtUdJqqfRFKVhRBFMm2sGEY43nSkYuWC6cbq/';
 
 export const fetchPriceFromCoinmarketcap = async ticker => new Promise(async (resolve, reject) => {
   try {
@@ -205,17 +206,17 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
       await Promise.all(assets.map(async asset =>
         apiContract.methods.assetManager(asset.assetID).call()));
 
-    /* const amountsToBeRaised =
+    const amountsToBeRaised =
       await Promise.all(assets.map(async asset =>
-        apiContract.methods.amountToBeRaised(asset.assetID).call())); */
+        apiContract.methods.amountToBeRaised(asset.assetID).call()));
 
     const amountsRaised =
       await Promise.all(assets.map(async asset =>
         apiContract.methods.amountRaised(asset.assetID).call()));
 
-    /* const fundingDeadlines =
+    const fundingDeadlines =
       await Promise.all(assets.map(async asset =>
-        apiContract.methods.fundingDeadline(asset.assetID).call())); */
+        apiContract.methods.fundingDeadline(asset.assetID).call()));
 
     const realAddress = web3.utils.toChecksumAddress(user.userName);
     const ownershipUnits =
@@ -223,26 +224,36 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
         asset.assetID,
         realAddress,
       ).call()));
+
     const assetIncomes =
       await Promise.all(assets.map(async asset => apiContract.methods.totalReceived(asset.assetID)
         .call()));
 
-    const assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
+    let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
       const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
+      const ipfsInfo = await fetch(`${IPFS_URL + asset.assetID}/data.json`);
+      const jsonResponse = await ipfsInfo.json();
       return {
         ...asset,
         amountRaisedInUSD: String(Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * currentEthInUsd),
-        amountToBeRaisedInUSD: String(Number(50) * currentEthInUsd), // TODO
-        fundingDeadline: 1564613920000, // TODO
-        ownershipUnits: ownershipUnits[index], // TODO
-        assetIncome: assetIncomes[index], // TODO
+        amountToBeRaisedInUSD: amountsToBeRaised[index],
+        fundingDeadline: Number(fundingDeadlines[index]) * 1000,
+        ownershipUnits: ownershipUnits[index],
+        assetIncome: assetIncomes[index],
         assetManager: assetManagers[index],
-        city: 'Zug', // TODO
-        country: 'Switzerland', // TODO
-        name: 'Ian\'s Fridge', // TODO
+        city: jsonResponse.city,
+        country: jsonResponse.country,
+        name: jsonResponse.name,
         numberOfInvestors,
+        description: jsonResponse.description,
+        details: jsonResponse.details,
+        imageSrc: `${IPFS_URL + asset.assetID}/thumb.jpg`,
       };
     }));
+
+    // filter for v0.1
+    assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
+      asset.amountToBeRaisedInUSD > 0);
 
     const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
       if (asset.assetType) {
