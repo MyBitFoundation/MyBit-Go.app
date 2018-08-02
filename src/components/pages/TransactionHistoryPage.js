@@ -72,7 +72,7 @@ class TransactionHistoryPage extends React.Component {
 
     const startIndex = currentPage * itemsPerPage;
     const endIndex = (currentPage + 1) * itemsPerPage;
-    transactionsToRender = transactionsToRender.splice(startIndex, endIndex);
+    transactionsToRender = transactionsToRender.slice(startIndex, endIndex);
 
     return (
       <div>
