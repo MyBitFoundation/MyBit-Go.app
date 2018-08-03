@@ -11,6 +11,15 @@
       padding-right: 0px;
     }
 
+    &-contribute-btn{
+      width: 100%;
+      margin-top: 30px;
+      background-color: #2db84b !important;
+
+      &:focus, &:hover, &:active{
+        background-color: #2db84b  !important;
+      }
+    }
 
     &-name{
       font-size: 34px;
@@ -186,11 +195,6 @@
     }
   }
 
-  .bx--btn--primary:nth-child(1){
-    width: 100%;
-    margin-top: 30px;
-  }
-
   .bx--slider__range-label{
     display: none;
   }
@@ -221,6 +225,14 @@
       outline: none;
       box-shadow: none;
     }
+  }
+
+  .bx--modal-header{
+    display: none;
+  }
+
+  .bx--modal-content{
+    margin: 0px 0px;
   }
 
   .bx--slider__filled-track{
