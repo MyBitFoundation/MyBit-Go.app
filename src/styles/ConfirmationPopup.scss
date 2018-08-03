@@ -34,6 +34,10 @@
     font-size: 15px;
     font-weight: 700;
     color: black;
+
+    &--is-inactive{
+      color: #d9d9d9;
+    }
   }
 
   &__description-amount-right{
@@ -42,6 +46,10 @@
     font-size: 14px;
     font-weight: bold;
     color: black;
+
+    &--is-inactive{
+      color: #d9d9d9;
+    }
   }
 
   &__line{
