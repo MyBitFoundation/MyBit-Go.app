@@ -54,7 +54,7 @@ const routes = [
     exact: true,
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets, prices }) =>
+        {({ loading, assets, prices, user }) =>
           isFirstVisit ? (
             <Redirect to="/help" />
           ) : (
@@ -63,6 +63,7 @@ const routes = [
               loading={loading}
               assets={assets}
               match={match}
+              user={user}
             />
           )
         }

@@ -230,6 +230,29 @@ export const withdrawFromFaucet = async user =>
     }
   });
 
+export const fundAsset = async (user, assetId, amount) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const fundingHubContract = new web3.eth.Contract(
+        FundingHub.ABI,
+        FundingHub.ADDRESS
+      );
+      const weiAmount = web3.utils.toWei(amount.toString(), 'ether');
+
+      const fundingResponse = await fundingHubContract.methods
+        .fund(assetId)
+        .send({
+          value: weiAmount,
+          from: user.userName
+        });
+
+      const { transactionHash } = fundingResponse;
+      checkTransactionConfirmation(transactionHash, resolve, reject);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
 // The stuff thats commented out will be updated once kyle deploys the new contracts
 export const fetchAssets = async (user, currentEthInUsd) =>
   new Promise(async (resolve, reject) => {
