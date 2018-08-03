@@ -7,25 +7,42 @@ import MetamaskLogo from '../images/metamask.svg';
 const MetamaskBooting = ({ isBraveBrowser, extensionUrl }) => (
   <Modal className="MetamaskAudit" open passiveModal>
     <p className="MetamaskAudit__title">
-      {isBraveBrowser ?
-        <p>To start investing, please <br /> install Metamask.</p> :
-        <p>To start investing, please <br /> connect your wallet.</p>
-      }
+      {isBraveBrowser ? (
+        <p>
+          To start investing, please <br /> install Metamask.
+        </p>
+      ) : (
+        <p>
+          To start investing, please <br /> connect your wallet.
+        </p>
+      )}
     </p>
-    <img className="MetamaskAudit__metamaskfox-image" src={MetamaskLogo} alt="Metamask" />
-    {!isBraveBrowser &&
+    <img
+      className="MetamaskAudit__metamaskfox-image"
+      src={MetamaskLogo}
+      alt="Metamask"
+    />
+    {!isBraveBrowser && (
       <div>
         <a href={extensionUrl} target="_blank" rel="noopener noreferrer">
-          <Button small kind="primary" className="MetamaskAudit__metamaskinstall-button">
-              Install Metamask and Refresh
+          <Button
+            small
+            kind="primary"
+            className="MetamaskAudit__metamaskinstall-button"
+          >
+            Install Metamask and Refresh
           </Button>
         </a>
         <br />
       </div>
-    }
+    )}
     <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">
-      <Button small kind="secondary" className="MetamaskAudit__metamaskmanual-button">
-          What is Metamask?
+      <Button
+        small
+        kind="secondary"
+        className="MetamaskAudit__metamaskmanual-button"
+      >
+        What is Metamask?
       </Button>
     </a>
     <br />
@@ -34,8 +51,7 @@ const MetamaskBooting = ({ isBraveBrowser, extensionUrl }) => (
 
 MetamaskBooting.propTypes = {
   isBraveBrowser: PropTypes.bool.isRequired,
-  extensionUrl: PropTypes.string.isRequired,
+  extensionUrl: PropTypes.string.isRequired
 };
-
 
 export default MetamaskBooting;

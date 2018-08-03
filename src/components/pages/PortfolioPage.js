@@ -10,31 +10,40 @@ const web3 = getWeb3Async();
 
 const fromWeiToEth = weiValue => web3.utils.fromWei(weiValue, 'ether');
 
-const getOwnedAssets = assets => assets.filter(asset => asset.ownershipUnits > 0);
+const getOwnedAssets = assets =>
+  assets.filter(asset => asset.ownershipUnits > 0);
 
-const getPortfolioValue =
-  (assets, currentEthPrice) =>
-    assets.reduce((accumulator, currentValue) =>
-      accumulator + (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice), 0);
+const getPortfolioValue = (assets, currentEthPrice) =>
+  assets.reduce(
+    (accumulator, currentValue) =>
+      accumulator +
+      fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice,
+    0
+  );
 
-const getPortfolioRevenue =
-  (assets, currentEthPrice) =>
-    assets.reduce((accumulator, currentValue) =>
-      accumulator + (fromWeiToEth(currentValue.assetIncome, 'ether') * currentEthPrice), 0);
+const getPortfolioRevenue = (assets, currentEthPrice) =>
+  assets.reduce(
+    (accumulator, currentValue) =>
+      accumulator +
+      fromWeiToEth(currentValue.assetIncome, 'ether') * currentEthPrice,
+    0
+  );
 
-const getPortfolioValueAssets = assets => assets.map(asset => ({
-  assetID: asset.assetID,
-  name: asset.name,
-  ownership: 100,
-  value: 100,
-}));
+const getPortfolioValueAssets = assets =>
+  assets.map(asset => ({
+    assetID: asset.assetID,
+    name: asset.name,
+    ownership: 100,
+    value: 100
+  }));
 
-const getPortfolioRevenueAssets = assets => assets.map(asset => ({
-  assetID: asset.assetID,
-  name: asset.name,
-  monthlyRevenue: 100, // TODO: This isn't the real calculation
-  totalRevenue: 100,
-}));
+const getPortfolioRevenueAssets = assets =>
+  assets.map(asset => ({
+    assetID: asset.assetID,
+    name: asset.name,
+    monthlyRevenue: 100, // TODO: This isn't the real calculation
+    totalRevenue: 100
+  }));
 
 const PortfolioPage = ({ loading, assets, prices }) => {
   if (loading.transactionHistory || !prices.etherPrice) {
@@ -68,8 +77,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
 PortfolioPage.propTypes = {
   loading: PropTypes.shape({}).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  prices: PropTypes.shape({}).isRequired,
+  prices: PropTypes.shape({}).isRequired
 };
-
 
 export default PortfolioPage;

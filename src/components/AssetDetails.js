@@ -21,7 +21,7 @@ class AssetDetails extends React.Component {
       timeToGo: '',
       endingAt: '',
       acceptedTos: false,
-      displayWarning: false,
+      displayWarning: false
     };
     this.setDateDetails = this.setDateDetails.bind(this);
     this.endDateLocal = dayjs(this.props.information.dueDate);
@@ -45,7 +45,7 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
-        endingAt: '',
+        endingAt: ''
       });
       this.clearInterval();
       return;
@@ -55,7 +55,9 @@ class AssetDetails extends React.Component {
       this.setState({
         daysToGo: -1,
         timeToGo: 'Funding period has ended',
-        endingAt: `Funding period has ended on ${dayjs(this.endDateLocal).format('dddd, MMMM D')}`,
+        endingAt: `Funding period has ended on ${dayjs(
+          this.endDateLocal
+        ).format('dddd, MMMM D')}`
       });
       this.clearInterval();
       return;
@@ -79,7 +81,9 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `Ending in ${calculateRemainingTime.hour()}h ${calculateRemainingTime.minute()}m ${calculateRemainingTime.second()}s`,
         daysToGo: 0,
-        endingAt: `Funding period ends ${day} at ${dayjs(this.endDateLocal).format('H:mm:ss')}`,
+        endingAt: `Funding period ends ${day} at ${dayjs(
+          this.endDateLocal
+        ).format('H:mm:ss')}`
       });
 
       if (!this.setDateInterval || this.runningMinInterval) {
@@ -94,7 +98,9 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go`,
         daysToGo: days,
-        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format('dddd, MMMM D')} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`,
+        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format(
+          'dddd, MMMM D'
+        )} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`
       });
       if (!this.setDateInterval) {
         this.setDateInterval = setInterval(() => {
@@ -131,10 +137,20 @@ class AssetDetails extends React.Component {
       this.setState({ displayWarning: true });
       return false;
     }
-    const fundingHubContract = new Web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
+    const fundingHubContract = new Web3.eth.Contract(
+      FundingHub.ABI,
+      FundingHub.ADDRESS
+    );
     this.setState({ acceptedTos: false });
     const weiAmount = Web3.utils.toWei('0.5', 'ether');
-    fundingHubContract.methods.fund('0x1935c946aa27ed139ed7518a06b639cae47be52d556a99baf7075db6bb460153').send({ value: weiAmount, from: '0x11cF613d319DC923f3248175e0271588F1B26991' })
+    fundingHubContract.methods
+      .fund(
+        '0x1935c946aa27ed139ed7518a06b639cae47be52d556a99baf7075db6bb460153'
+      )
+      .send({
+        value: weiAmount,
+        from: '0x11cF613d319DC923f3248175e0271588F1B26991'
+      })
       .then(debug)
       .catch(debug);
 
@@ -142,12 +158,17 @@ class AssetDetails extends React.Component {
   }
 
   render() {
-    const maxInvestment = this.state.daysToGo < 0 ? 0 :
-      this.props.information.goal - this.props.information.raised;
-    const ownership = (this.state.currentSelectedAmount * 100) / this.props.information.goal;
-    const etherValue = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
-      .toFixed(2));
-    let minInvestment = this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
+    const maxInvestment =
+      this.state.daysToGo < 0
+        ? 0
+        : this.props.information.goal - this.props.information.raised;
+    const ownership =
+      (this.state.currentSelectedAmount * 100) / this.props.information.goal;
+    const etherValue = Number(
+      (this.state.currentSelectedAmount / this.props.currentEthInUsd).toFixed(2)
+    );
+    let minInvestment =
+      this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
 
     if (maxInvestment <= 100 && maxInvestment > 0 && this.state.daysToGo > 0) {
       minInvestment = 1;
@@ -192,16 +213,18 @@ class AssetDetails extends React.Component {
               <p className="AssetDetails__left-funding-title">Funding goal</p>
               <b className="AssetDetails__left-funding-value">
                 {Number(this.props.information.goal).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              })}
+                  style: 'currency',
+                  currency: 'USD'
+                })}
               </b>
             </div>
             <div className="AssetDetails__left-funds-investors">
               <p className="AssetDetails__left-funding-title">
                 Number of investors so far
               </p>
-              <b className="AssetDetails__left-funding-value">{this.props.information.numberOfInvestors}</b>
+              <b className="AssetDetails__left-funding-value">
+                {this.props.information.numberOfInvestors}
+              </b>
             </div>
           </div>
           <p className="AssetDetails__left-calculate-title">
@@ -212,7 +235,9 @@ class AssetDetails extends React.Component {
             value={this.state.currentSelectedAmount}
             min={minInvestment}
             max={maxInvestment}
-            onChange={arg => this.setState({ currentSelectedAmount: arg.value })}
+            onChange={arg =>
+              this.setState({ currentSelectedAmount: arg.value })
+            }
             hideTextInput
             disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           />
@@ -299,7 +324,7 @@ class AssetDetails extends React.Component {
 }
 
 AssetDetails.defaultProps = {
-  currentEthInUsd: undefined,
+  currentEthInUsd: undefined
 };
 
 AssetDetails.propTypes = {
@@ -315,9 +340,9 @@ AssetDetails.propTypes = {
     description: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     numberOfInvestors: PropTypes.number.isRequired,
-    imageSrc: PropTypes.string.isRequired,
+    imageSrc: PropTypes.string.isRequired
   }).isRequired,
-  currentEthInUsd: PropTypes.number,
+  currentEthInUsd: PropTypes.number
 };
 
 export default AssetDetails;

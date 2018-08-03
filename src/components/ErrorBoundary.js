@@ -13,7 +13,9 @@ class ErrorBoundary extends React.Component {
     this.state({ hasError: true });
   }
 
-  render() { return null; }
+  render() {
+    return null;
+  }
 }
 
 export default ErrorBoundary;

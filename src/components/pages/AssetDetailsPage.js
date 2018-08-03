@@ -6,18 +6,13 @@ import CategoryBackButton from '../CategoryBackButton';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
-const AssetDetailsPage = ({
-  loading,
-  assets,
-  match,
-  prices,
-}) => {
+const AssetDetailsPage = ({ loading, assets, match, prices }) => {
   if (loading.assets) {
     return (
       <div style={{ width: '100%', position: 'relative', top: '50px' }}>
         <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
         <p className="AssetDetailsPage-loading-message">
-        Loading asset information
+          Loading asset information
         </p>
       </div>
     );
@@ -28,9 +23,7 @@ const AssetDetailsPage = ({
 
   if (!asset) {
     return (
-      <NotFoundPage
-        message="The desired asset could not be found. Assets previously listed may no longer exist."
-      />
+      <NotFoundPage message="The desired asset could not be found. Assets previously listed may no longer exist." />
     );
   }
   const assetInformation = {
@@ -45,7 +38,7 @@ const AssetDetailsPage = ({
     description: asset.description,
     address: asset.assetManager,
     numberOfInvestors: asset.numberOfInvestors,
-    imageSrc: asset.imageSrc,
+    imageSrc: asset.imageSrc
   };
 
   return (
@@ -63,7 +56,7 @@ AssetDetailsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
   prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired
 };
 
 export default AssetDetailsPage;

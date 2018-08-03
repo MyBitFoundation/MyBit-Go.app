@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -7,14 +6,12 @@ import { debug } from '../../constants';
 import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
 import LoadingPage from './LoadingPage';
 
-const getCategories =
-    assets =>
-      [...new Set(assets.map(asset => asset.category))]
-        .map(category => ({
-          image: getImageForCategory(category),
-          path: category,
-          name: getPrettyCategoryName(category),
-        }));
+const getCategories = assets =>
+  [...new Set(assets.map(asset => asset.category))].map(category => ({
+    image: getImageForCategory(category),
+    path: category,
+    name: getPrettyCategoryName(category)
+  }));
 
 const renderCategories = (categories, clickHandler) => (
   <div className="ExplorePage__container">
@@ -27,16 +24,13 @@ const renderCategories = (categories, clickHandler) => (
       >
         <div
           className="ExplorePage__image-container"
-          onClick={
-              clickHandler || debug(`Going to: ${category.path}`)
-            }
+          onClick={clickHandler || debug(`Going to: ${category.path}`)}
           style={{ backgroundImage: `url(${category.image})` }}
         >
           <p className="ExplorePage__category-name">{category.name}</p>
         </div>
       </Link>
-      ))
-    }
+    ))}
   </div>
 );
 
@@ -51,20 +45,25 @@ class ExplorePage extends Component {
     if (loading.assets) {
       return <LoadingPage message="Loading categories" />;
     }
-    return (<div className="ExplorePage">{renderCategories(getCategories(this.props.assets), this.props.clickHandler)}</div>);
+    return (
+      <div className="ExplorePage">
+        {renderCategories(
+          getCategories(this.props.assets),
+          this.props.clickHandler
+        )}
+      </div>
+    );
   }
 }
-
 
 ExplorePage.propTypes = {
   clickHandler: PropTypes.func,
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 ExplorePage.defaultProps = {
-  clickHandler: () => {},
+  clickHandler: () => {}
 };
-
 
 export default ExplorePage;

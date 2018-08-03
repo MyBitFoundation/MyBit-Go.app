@@ -8,11 +8,7 @@ import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
 
-const ExploreAssetsPage = ({
-  loading,
-  assets,
-  match,
-}) => {
+const ExploreAssetsPage = ({ loading, assets, match }) => {
   const { category } = match.params;
 
   if (!category) {
@@ -20,16 +16,14 @@ const ExploreAssetsPage = ({
   }
 
   const loadingAssets = loading.assets;
-  const assetsInCategory =
-    assets.filter(asset => asset.category === match.params.category);
+  const assetsInCategory = assets.filter(
+    asset => asset.category === match.params.category
+  );
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
-      <Button
-        kind="secondary"
-        className="ExploreAssetsPage__back-button"
-      >
-      BACK
+      <Button kind="secondary" className="ExploreAssetsPage__back-button">
+        BACK
       </Button>
     </Link>
   );
@@ -49,16 +43,12 @@ const ExploreAssetsPage = ({
           category={getPrettyCategoryName(asset.category)}
           backgroundImage={asset.imageSrc}
         />
-    ))}
-    </div>,
+      ))}
+    </div>
   ];
 
   const loadingElement = loadingAssets && (
-    <LoadingPage
-      message="Loading assets"
-      hasBackButton
-      path="/explore"
-    />
+    <LoadingPage message="Loading assets" hasBackButton path="/explore" />
   );
 
   // const noElements =
@@ -77,22 +67,20 @@ const ExploreAssetsPage = ({
   if (loadingAssets) {
     renderedOutput = loadingElement;
   } else if (assetsInCategory.length === 0) {
-    renderedOutput = <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />;
+    renderedOutput = (
+      <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />
+    );
   } else {
     renderedOutput = assetsToRender;
   }
 
-  return (
-    <div className="ExploreAssetsPage">
-      {renderedOutput}
-    </div>
-  );
+  return <div className="ExploreAssetsPage">{renderedOutput}</div>;
 };
 
 ExploreAssetsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired
 };
 
 export default ExploreAssetsPage;

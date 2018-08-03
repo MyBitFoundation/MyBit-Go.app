@@ -9,7 +9,7 @@ const ConfirmationPopup = ({
   ownership,
   setAcceptedTos,
   displayWarning,
-  getAcceptedTos,
+  getAcceptedTos
 }) => (
   <div className="ConfirmationPopup">
     <p className="ConfirmationPopup__title">Confirm Purchase</p>
@@ -56,7 +56,8 @@ const ConfirmationPopup = ({
           toggled={getAcceptedTos()}
         />
         <p className="ConfirmationPopup__tos-text">
-          I read and agree to the <a href="https://mybit.io">terms and conditions</a>
+          I read and agree to the{' '}
+          <a href="https://mybit.io">terms and conditions</a>
         </p>
       </div>
       <p
@@ -75,8 +76,7 @@ ConfirmationPopup.propTypes = {
   ownership: PropTypes.number.isRequired,
   setAcceptedTos: PropTypes.func.isRequired,
   displayWarning: PropTypes.bool.isRequired,
-  getAcceptedTos: PropTypes.func.isRequired,
+  getAcceptedTos: PropTypes.func.isRequired
 };
-
 
 export default ConfirmationPopup;

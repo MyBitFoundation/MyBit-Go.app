@@ -22,12 +22,13 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
             small
             withOverlay={false}
           />
-      ) : (
-        <span className="AccountInfo__balance-info">
-          {myBitBalanceToRender} <b className="AccountInfo__balance-myb">MYB</b>
-          {Number(ethBalance).toFixed(4)} <b>ETH</b>
-        </span>
-      )}
+        ) : (
+          <span className="AccountInfo__balance-info">
+            {myBitBalanceToRender}{' '}
+            <b className="AccountInfo__balance-myb">MYB</b>
+            {Number(ethBalance).toFixed(4)} <b>ETH</b>
+          </span>
+        )}
       </div>
       <Address className="AccountInfo__address" userName={userName} />
     </div>
@@ -37,13 +38,13 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
 AccountInfo.defaultProps = {
   myBitBalance: '',
   ethBalance: '',
-  userName: '',
+  userName: ''
 };
 
 AccountInfo.propTypes = {
   myBitBalance: PropTypes.string,
   ethBalance: PropTypes.string,
-  userName: PropTypes.string,
+  userName: PropTypes.string
 };
 
 export default AccountInfo;
