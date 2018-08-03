@@ -133,9 +133,13 @@ class AssetDetails extends React.Component {
     const maxInvestment =
       this.state.daysToGo < 0
         ? 0
-        : this.props.information.goal - this.props.information.raised;
-    const ownership =
-      (this.state.currentSelectedAmount * 100) / this.props.information.goal;
+        : (this.props.information.goal - this.props.information.raised).toFixed(
+            2
+          );
+    const ownership = (
+      (this.state.currentSelectedAmount * 100) /
+      this.props.information.goal
+    ).toFixed(2);
     this.etherValueSelected = Number(
       (this.state.currentSelectedAmount / this.props.currentEthInUsd).toFixed(2)
     );

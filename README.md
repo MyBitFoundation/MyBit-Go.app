@@ -19,9 +19,9 @@
 
 🎨 The Front End that supports the MyBit Platform™
 
-MyBit offers a fast, secure and cost-effective investing experience. All powered by Ethereum.
+MyBit offers a fast, secure and cost-effective investing experience. Powered by Ethereum.
 
-The MyBit Decentralized Application (DApp) enables anyone to invest directly in  assets.
+The MyBit Decentralized Application (DApp) enables anyone to invest directly in revenue generating assets.
 <br/>
 
 ### Versions
@@ -31,6 +31,8 @@ Note, this is an Alpha version which may not be well tested. Features in this ve
 - The Assets Funding Hub Contract Interface via web3
 - ETH and MYB Account data view
 - The Assets Portfolio and Revenue Contract Explorer
+- [IPFS](https://github.com/ipfs) (A peer-to-peer hypermedia protocol) testflight
+
 <br/><br/>
 
 ### Installing the dependencies with [yarn](https://yarnpkg.com/en/docs/usage)

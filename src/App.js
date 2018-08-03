@@ -33,7 +33,6 @@ class App extends Component {
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">
-          x§
           <Switch>
             {routes.map(({ path, exact, component: C }) => (
               <Route
