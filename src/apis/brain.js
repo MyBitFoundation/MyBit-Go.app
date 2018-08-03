@@ -209,16 +209,6 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
         ipfsHash: object._ipfsHash,
       }));
 
-    // const withdraw = await withdrawFromFaucet(web3.utils.toChecksumAddress(user.userName));
-    /* const assetCreationResponse = await assetCreationContract.methods.
-      newAsset(300000, 15, 15000, web3.utils.sha3("ATMInstallersAG"),
-      web3.utils.sha3("bitcoinatms"), 190, web3.utils.sha3("123asfd4")
-    ).send({ from: "0x11cF613d319DC923f3248175e0271588F1B26991" });
-
-    console.log(assetCreationResponse); */
-
-    // TODO Remove
-    // const assetID = '0x0903212121a0073f661f7cadf9079433fc0fe5b3418482a1bdb4631d52833f9f';
     const assetManagers =
       await Promise.all(assets.map(async asset =>
         apiContract.methods.assetManager(asset.assetID).call()));
