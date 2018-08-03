@@ -10,7 +10,7 @@ class ConfirmationPopup extends React.Component {
       isLoading: false,
       transactionStatus: '',
       acceptedTos: false,
-      displayWarning: false,
+      displayWarning: false
     };
   }
 
@@ -36,7 +36,10 @@ class ConfirmationPopup extends React.Component {
     }
     this.setState({ isLoading: true, transactionStatus: '' });
     try {
-      const result = await this.props.fundAsset(this.props.assetId, this.props.amountEth);
+      const result = await this.props.fundAsset(
+        this.props.assetId,
+        this.props.amountEth
+      );
       if (result) {
         this.setState({ isLoading: false, transactionStatus: 1 });
       } else {
@@ -48,7 +51,8 @@ class ConfirmationPopup extends React.Component {
   }
 
   render() {
-    const shouldShowConfirmAndCancel = !this.state.isLoading && this.state.transactionStatus === '';
+    const shouldShowConfirmAndCancel =
+      !this.state.isLoading && this.state.transactionStatus === '';
     return (
       <Modal open={this.props.isPopupOpen()} passiveModal>
         <div className="ConfirmationPopup">
@@ -71,9 +75,13 @@ class ConfirmationPopup extends React.Component {
               style={{ lineHeight: '1', paddingTop: '15px' }}
             >
               Expected annual return:{' '}
-              <span className="ConfirmationPopup__description-amount ConfirmationPopup__description-amount--is-inactive">18%</span>
+              <span className="ConfirmationPopup__description-amount ConfirmationPopup__description-amount--is-inactive">
+                18%
+              </span>
             </p>
-            <p className="ConfirmationPopup__description-amount-right ConfirmationPopup__description-amount-right--is-inactive">$18,000</p>
+            <p className="ConfirmationPopup__description-amount-right ConfirmationPopup__description-amount-right--is-inactive">
+              $18,000
+            </p>
             <p className="ConfirmationPopup__description-amount-right">
               {this.props.amountEth} <b>ETH</b>
             </p>
@@ -97,51 +105,80 @@ class ConfirmationPopup extends React.Component {
                 disabled={this.state.isLoading}
               />
               <p className="ConfirmationPopup__tos-text">
-                I read and agree to the <a href="https://mybit.io">terms and conditions</a>
+                I read and agree to the{' '}
+                <a href="https://mybit.io">terms and conditions</a>
               </p>
             </div>
             <p
               className="ConfirmationPopup__tos-message-error"
-              style={{ visibility: this.state.displayWarning ? 'visible' : 'hidden' }}
+              style={{
+                visibility: this.state.displayWarning ? 'visible' : 'hidden'
+              }}
             >
               *Please accept our T&C before continuing
             </p>
-            {shouldShowConfirmAndCancel &&
+            {shouldShowConfirmAndCancel && (
               <div>
-                <Button onClick={() => this.handleConfirmClicked()}className="ConfirmationPopup__confirm-btn" kind="primary">
-                    CONFIRM
+                <Button
+                  onClick={() => this.handleConfirmClicked()}
+                  className="ConfirmationPopup__confirm-btn"
+                  kind="primary"
+                >
+                  CONFIRM
                 </Button>
-                <Button onClick={() => this.props.handlePopupState(false)} className="ConfirmationPopup__cancel-btn" kind="secondary">
-                    CANCEL
+                <Button
+                  onClick={() => this.props.handlePopupState(false)}
+                  className="ConfirmationPopup__cancel-btn"
+                  kind="secondary"
+                >
+                  CANCEL
                 </Button>
               </div>
-            }
-            {this.state.isLoading &&
-            <div>
-              <Loading
-                small
-                withOverlay={false}
-                style={{ margin: '0 auto' }}
-              />
-              <p style={{ textAlign: 'center' }}>Accept the transaction in metamask and wait for a brief moment.</p>
-            </div>
-          }
-            {this.state.transactionStatus === 1 &&
-            <div>
-              <p className="ConfirmationPopup__status-text">Sent successfuly!</p>
-              <Button onClick={() => this.props.handlePopupState(false)} className="ConfirmationPopup__cancel-btn" kind="secondary">
+            )}
+            {this.state.isLoading && (
+              <div>
+                <Loading
+                  small
+                  withOverlay={false}
+                  style={{ margin: '0 auto' }}
+                />
+                <p style={{ textAlign: 'center' }}>
+                  Accept the transaction in metamask and wait for a brief
+                  moment.
+                </p>
+              </div>
+            )}
+            {this.state.transactionStatus === 1 && (
+              <div>
+                <p className="ConfirmationPopup__status-text">
+                  Sent successfuly!
+                </p>
+                <Button
+                  onClick={() => this.props.handlePopupState(false)}
+                  className="ConfirmationPopup__cancel-btn"
+                  kind="secondary"
+                >
                   GO BACK
-              </Button>
-            </div>
-          }
-            {this.state.transactionStatus === 0 &&
-            <div>
-              <p className="ConfirmationPopup__status-text" style={{ color: 'red' }}>Transaction failed.</p>
-              <Button onClick={() => this.tryAgain()} className="ConfirmationPopup__cancel-btn" kind="secondary">
+                </Button>
+              </div>
+            )}
+            {this.state.transactionStatus === 0 && (
+              <div>
+                <p
+                  className="ConfirmationPopup__status-text"
+                  style={{ color: 'red' }}
+                >
+                  Transaction failed.
+                </p>
+                <Button
+                  onClick={() => this.tryAgain()}
+                  className="ConfirmationPopup__cancel-btn"
+                  kind="secondary"
+                >
                   TRY AGAIN
-              </Button>
-            </div>
-          }
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </Modal>
@@ -156,8 +193,7 @@ ConfirmationPopup.propTypes = {
   handlePopupState: PropTypes.func.isRequired,
   fundAsset: PropTypes.func.isRequired,
   assetId: PropTypes.string.isRequired,
-  isPopupOpen: PropTypes.func.isRequired,
+  isPopupOpen: PropTypes.func.isRequired
 };
-
 
 export default ConfirmationPopup;

@@ -1,9 +1,15 @@
-/* eslint-disable camelcase */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
-import { Table, TableHead, TableRow, TableHeader, TableBody, TableData, PaginationV2 } from 'carbon-components-react';
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableHeader,
+  TableBody,
+  TableData,
+  PaginationV2
+} from 'carbon-components-react';
 import '../../styles/TransactionHistory.css';
 import LoadingPage from './LoadingPage';
 import OverflowMenuCustom from '../OverflowMenuCustom';
@@ -16,7 +22,7 @@ class TransactionHistoryPage extends React.Component {
       currentPage: 0,
       itemsPerPage: 10,
       sortBy: 'date',
-      sortDir: 'ASC',
+      sortDir: 'ASC'
     };
   }
 
@@ -24,50 +30,48 @@ class TransactionHistoryPage extends React.Component {
     const { loading } = this.props;
 
     if (loading.transactionHistory) {
-      return (
-        <LoadingPage
-          message="Loading transactions"
-        />
-      );
+      return <LoadingPage message="Loading transactions" />;
     }
     const { transactions } = this.props;
     let transactionsToRender = transactions.slice();
-    const {
-      currentPage, itemsPerPage, sortBy, sortDir,
-    } = this.state;
+    const { currentPage, itemsPerPage, sortBy, sortDir } = this.state;
 
     if (sortBy === 'amount' && sortDir === 'DESC') {
-      transactionsToRender = transactionsToRender.sort((a, b) => a.amount - b.amount);
+      transactionsToRender = transactionsToRender.sort(
+        (a, b) => a.amount - b.amount
+      );
     } else if (sortBy === 'amount' && sortDir === 'ASC') {
-      transactionsToRender = transactionsToRender.sort((a, b) => b.amount - a.amount);
+      transactionsToRender = transactionsToRender.sort(
+        (a, b) => b.amount - a.amount
+      );
     } else if (sortBy === 'date' && sortDir === 'DESC') {
-      transactionsToRender =
-        transactionsToRender.sort((a, b) => new Date(a.date) - new Date(b.date));
+      transactionsToRender = transactionsToRender.sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
     } else if (sortBy === 'date' && sortDir === 'ASC') {
-      transactionsToRender =
-        transactionsToRender.sort((a, b) => new Date(b.date) - new Date(a.date));
+      transactionsToRender = transactionsToRender.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
     } else if (sortBy === 'status' && sortDir === 'DESC') {
-      transactionsToRender =
-        transactionsToRender.sort((a, b) => {
-          if (a.status > b.status) {
-            return -1;
-          }
-          if (a.status < b.status) {
-            return 1;
-          }
-          return 0;
-        });
+      transactionsToRender = transactionsToRender.sort((a, b) => {
+        if (a.status > b.status) {
+          return -1;
+        }
+        if (a.status < b.status) {
+          return 1;
+        }
+        return 0;
+      });
     } else if (sortBy === 'status' && sortDir === 'ASC') {
-      transactionsToRender =
-        transactionsToRender.sort((a, b) => {
-          if (a.status < b.status) {
-            return -1;
-          }
-          if (a.status > b.status) {
-            return 1;
-          }
-          return 0;
-        });
+      transactionsToRender = transactionsToRender.sort((a, b) => {
+        if (a.status < b.status) {
+          return -1;
+        }
+        if (a.status > b.status) {
+          return 1;
+        }
+        return 0;
+      });
     }
 
     const startIndex = currentPage * itemsPerPage;
@@ -83,13 +87,17 @@ class TransactionHistoryPage extends React.Component {
               <TableHead className="Transactions__history-table-header">
                 <TableRow header>
                   <TableHeader
-                    className={sortBy === 'date' ? '' : 'Transactions__history-column-header'}
+                    className={
+                      sortBy === 'date'
+                        ? ''
+                        : 'Transactions__history-column-header'
+                    }
                     onClick={() => {
                       this.setState({
                         itemsPerPage,
                         currentPage,
                         sortBy: 'date',
-                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC'
                       });
                     }}
                     sortDir={sortBy === 'date' ? sortDir : 'ASC'}
@@ -97,13 +105,17 @@ class TransactionHistoryPage extends React.Component {
                     Date
                   </TableHeader>
                   <TableHeader
-                    className={sortBy === 'amount' ? '' : 'Transactions__history-column-header'}
+                    className={
+                      sortBy === 'amount'
+                        ? ''
+                        : 'Transactions__history-column-header'
+                    }
                     onClick={() => {
                       this.setState({
                         itemsPerPage,
                         currentPage,
                         sortBy: 'amount',
-                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC'
                       });
                     }}
                     sortDir={sortBy === 'amount' ? sortDir : 'ASC'}
@@ -111,13 +123,17 @@ class TransactionHistoryPage extends React.Component {
                     Amount
                   </TableHeader>
                   <TableHeader
-                    className={sortBy === 'status' ? '' : 'Transactions__history-column-header'}
+                    className={
+                      sortBy === 'status'
+                        ? ''
+                        : 'Transactions__history-column-header'
+                    }
                     onClick={() => {
                       this.setState({
                         itemsPerPage,
                         currentPage,
                         sortBy: 'status',
-                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC'
                       });
                     }}
                     sortDir={sortBy === 'status' ? sortDir : 'ASC'}
@@ -135,24 +151,35 @@ class TransactionHistoryPage extends React.Component {
                     <TableData>
                       {transaction.amount} <b>{transaction.type}</b>
                     </TableData>
-                    <TableData style={{ display: 'flex', alignItems: 'center' }}>
+                    <TableData
+                      style={{ display: 'flex', alignItems: 'center' }}
+                    >
                       {transaction.status}
-                      <OverflowMenuCustom url={transaction.type === 'ETH' ? `https://ropsten.etherscan.io/tx/${transaction.txId}` : `https://ropsten.etherscan.io/token/0x40fff37c1e5f48cee320bed447329a93f6d015c0?a=${transaction.txId}`} />
+                      <OverflowMenuCustom
+                        url={
+                          transaction.type === 'ETH'
+                            ? `https://ropsten.etherscan.io/tx/${
+                                transaction.txId
+                              }`
+                            : `https://ropsten.etherscan.io/token/0x40fff37c1e5f48cee320bed447329a93f6d015c0?a=${
+                                transaction.txId
+                              }`
+                        }
+                      />
                     </TableData>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
             <PaginationV2
-              onChange={
-                (val) => {
-                  this.setState({
-                    itemsPerPage: val.pageSize,
-                    currentPage: val.page - 1,
-                    sortBy,
-                    sortDir,
-                  });
-                }}
+              onChange={val => {
+                this.setState({
+                  itemsPerPage: val.pageSize,
+                  currentPage: val.page - 1,
+                  sortBy,
+                  sortDir
+                });
+              }}
               pageSizes={[10, 50, 100, 500]}
               page={currentPage + 1}
               totalItems={transactions.length}
@@ -167,8 +194,7 @@ class TransactionHistoryPage extends React.Component {
 
 TransactionHistoryPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired
 };
-
 
 export default TransactionHistoryPage;

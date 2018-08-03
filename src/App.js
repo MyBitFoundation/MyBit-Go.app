@@ -1,5 +1,3 @@
-/* eslint-disable class-methods-use-this */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
@@ -31,7 +29,7 @@ class App extends Component {
           shouldDisplay={this.props.location.pathname !== '/help'}
         />
         <BlockchainInfoContext.Consumer>
-          {({ user, prices }) => <AppHeader user={user} prices={prices} /> }
+          {({ user, prices }) => <AppHeader user={user} prices={prices} />}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">
@@ -41,12 +39,7 @@ class App extends Component {
                 key={path}
                 path={path}
                 exact={exact}
-                render={props => (
-                  <C
-                    isFirstVisit={firstVisit}
-                    {...props}
-                  />
-                )}
+                render={props => <C isFirstVisit={firstVisit} {...props} />}
               />
             ))}
           </Switch>
@@ -57,7 +50,8 @@ class App extends Component {
 }
 
 App.propTypes = {
-  location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
+  location: PropTypes.shape({ pathname: PropTypes.string.isRequired })
+    .isRequired
 };
 
 export default withRouter(App);

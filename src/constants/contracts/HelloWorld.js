@@ -6,19 +6,19 @@ export const ASSET_ABI_INTERFACE = [
     inputs: [
       {
         name: '_newString',
-        type: 'string',
-      },
+        type: 'string'
+      }
     ],
     name: 'helloModify',
     outputs: [
       {
         name: '',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: false,
@@ -27,12 +27,12 @@ export const ASSET_ABI_INTERFACE = [
     outputs: [
       {
         name: '',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     anonymous: false,
@@ -40,21 +40,21 @@ export const ASSET_ABI_INTERFACE = [
       {
         indexed: true,
         name: '_from',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: true,
         name: '_oldCounter',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         indexed: true,
         name: '_newCounter',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'LogCounterIncreased',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -62,27 +62,27 @@ export const ASSET_ABI_INTERFACE = [
       {
         indexed: true,
         name: '_from',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: true,
         name: '_helloModified',
-        type: 'string',
-      },
+        type: 'string'
+      }
     ],
     name: 'LogHelloModified',
-    type: 'event',
+    type: 'event'
   },
   {
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'fallback',
+    type: 'fallback'
   },
   {
     inputs: [],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'constructor',
+    type: 'constructor'
   },
   {
     constant: true,
@@ -91,12 +91,12 @@ export const ASSET_ABI_INTERFACE = [
     outputs: [
       {
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: true,
@@ -105,12 +105,12 @@ export const ASSET_ABI_INTERFACE = [
     outputs: [
       {
         name: '',
-        type: 'string',
-      },
+        type: 'string'
+      }
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: true,
@@ -119,11 +119,11 @@ export const ASSET_ABI_INTERFACE = [
     outputs: [
       {
         name: '',
-        type: 'string',
-      },
+        type: 'string'
+      }
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
-  },
+    type: 'function'
+  }
 ];

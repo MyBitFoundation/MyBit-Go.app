@@ -11,34 +11,54 @@ const web3 = getWeb3Async();
 
 const fromWeiToEth = weiValue => web3.utils.fromWei(weiValue, 'ether');
 
-const getOwnedAssets = assets => assets.filter(asset => asset.ownershipUnits > 0);
+const getOwnedAssets = assets =>
+  assets.filter(asset => asset.ownershipUnits > 0);
 
-const getPortfolioValue =
-  (assets, currentEthPrice) =>
-    assets.reduce((accumulator, currentValue) =>
-      accumulator + (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice), 0);
+const getPortfolioValue = (assets, currentEthPrice) =>
+  assets.reduce(
+    (accumulator, currentValue) =>
+      accumulator +
+      fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice,
+    0
+  );
 
-const getPortfolioRevenue =
-  (assets, currentEthPrice) =>
-    assets.reduce((accumulator, currentValue) =>
-      accumulator + (((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) / currentValue.amountToBeRaisedInUSD) * getAssetRevenueTmp(currentValue.assetID)), 0);
+const getPortfolioRevenue = (assets, currentEthPrice) =>
+  assets.reduce(
+    (accumulator, currentValue) =>
+      accumulator +
+      ((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
+        currentValue.amountToBeRaisedInUSD) *
+        getAssetRevenueTmp(currentValue.assetID),
+    0
+  );
 
-const getPortfolioValueAssets = (assets, currentEthPrice) => assets.map(asset => ({
-  assetID: asset.assetID,
-  name: asset.name,
-  ownership: (((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) / asset.amountToBeRaisedInUSD) * 100).toFixed(2),
-  value: (fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice).toFixed(2),
-}));
-
-const getPortfolioRevenueAssets = (assets, currentEthPrice) => assets.map((asset) => {
-  const totalRevenue = ((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) / asset.amountToBeRaisedInUSD) * getAssetRevenueTmp(asset.assetID);
-  return {
+const getPortfolioValueAssets = (assets, currentEthPrice) =>
+  assets.map(asset => ({
     assetID: asset.assetID,
     name: asset.name,
-    monthlyRevenue: (totalRevenue / 12).toFixed(2),
-    totalRevenue: totalRevenue.toFixed(2),
-  };
-});
+    ownership: (
+      ((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) /
+        asset.amountToBeRaisedInUSD) *
+      100
+    ).toFixed(2),
+    value: (
+      fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice
+    ).toFixed(2)
+  }));
+
+const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
+  assets.map(asset => {
+    const totalRevenue =
+      ((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) /
+        asset.amountToBeRaisedInUSD) *
+      getAssetRevenueTmp(asset.assetID);
+    return {
+      assetID: asset.assetID,
+      name: asset.name,
+      monthlyRevenue: (totalRevenue / 12).toFixed(2),
+      totalRevenue: totalRevenue.toFixed(2)
+    };
+  });
 
 const PortfolioPage = ({ loading, assets, prices }) => {
   if (loading.transactionHistory || !prices.etherPrice) {
@@ -46,10 +66,19 @@ const PortfolioPage = ({ loading, assets, prices }) => {
   }
   const { etherPrice } = prices;
   const ownedAssets = getOwnedAssets(assets);
-  const totalPortfolioValue = getPortfolioValue(ownedAssets, etherPrice).toFixed(2);
-  const totalPortfolioRevenue = getPortfolioRevenue(ownedAssets, etherPrice).toFixed(2);
+  const totalPortfolioValue = getPortfolioValue(
+    ownedAssets,
+    etherPrice
+  ).toFixed(2);
+  const totalPortfolioRevenue = getPortfolioRevenue(
+    ownedAssets,
+    etherPrice
+  ).toFixed(2);
   const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, etherPrice);
-  const portfolioRevenueAssets = getPortfolioRevenueAssets(ownedAssets, etherPrice);
+  const portfolioRevenueAssets = getPortfolioRevenueAssets(
+    ownedAssets,
+    etherPrice
+  );
 
   return (
     <div>
@@ -72,8 +101,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
 PortfolioPage.propTypes = {
   loading: PropTypes.shape({}).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  prices: PropTypes.shape({}).isRequired,
+  prices: PropTypes.shape({}).isRequired
 };
-
 
 export default PortfolioPage;
