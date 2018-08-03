@@ -4,20 +4,30 @@ import { Button } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
 import { debug } from '../constants';
 
-const CategoryBackButton = ({ category }) => (
-  <Link
-    to={`/explore/${category.toLowerCase()}`}
-    href={`/explore/${category.toLowerCase()}`}
-  >
-    <Button
-      kind="secondary"
-      className="AssetDetailsPage__back-button"
-      onClick={debug('Clicked to go back')}
+const CategoryBackButton = ({ category }) => {
+  let tempCategoryFix;
+  if (category === 'Real Estate (Storage)') {
+    tempCategoryFix = 'realestatestorage';
+  } else if (category === 'Real Estate (Co-working)') {
+    tempCategoryFix = 'realestatecoworking';
+  } else {
+    tempCategoryFix = category.replace(/ /g, '').toLowerCase();
+  }
+  return (
+    <Link
+      to={`/explore/${tempCategoryFix}`}
+      href={`/explore/${tempCategoryFix}`}
     >
-      BACK
-    </Button>
-  </Link>
-);
+      <Button
+        kind="secondary"
+        className="AssetDetailsPage__back-button"
+        onClick={debug('Clicked to go back')}
+      >
+        BACK
+      </Button>
+    </Link>
+  );
+};
 
 CategoryBackButton.propTypes = {
   category: PropTypes.string.isRequired,
