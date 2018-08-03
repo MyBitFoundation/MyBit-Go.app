@@ -252,7 +252,7 @@ export const fetchAssets = async (user, currentEthInUsd) => new Promise(async (r
       const jsonResponse = await ipfsInfo.json();
       return {
         ...asset,
-        amountRaisedInUSD: String(Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * currentEthInUsd),
+        amountRaisedInUSD: (Number(web3.utils.fromWei(amountsRaised[index], 'ether')) * currentEthInUsd).toFixed(2),
         amountToBeRaisedInUSD: amountsToBeRaised[index],
         fundingDeadline: Number(fundingDeadlines[index]) * 1000,
         ownershipUnits: ownershipUnits[index],
