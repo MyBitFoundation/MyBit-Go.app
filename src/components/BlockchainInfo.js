@@ -16,6 +16,7 @@ class BlockchainInfo extends React.Component {
     this.loadPrices = this.loadPrices.bind(this);
     this.fetchAssets = this.fetchAssets.bind(this);
     this.getMYB = this.getMYB.bind(this);
+    this.fundAsset = this.fundAsset.bind(this);
 
     this.state = {
       loading: {
@@ -31,6 +32,7 @@ class BlockchainInfo extends React.Component {
       fetchAssets: this.fetchAssets,
       fetchTransactionHistory: this.fetchTransactionHistory,
       fetchMyBit: this.getMYB,
+      fundAsset: this.fundAsset,
       user: {},
     };
   }
@@ -49,6 +51,10 @@ class BlockchainInfo extends React.Component {
 
   getMYB() {
     return Brain.withdrawFromFaucet(this.state.user);
+  }
+
+  fundAsset(assetId, amount) {
+    return Brain.fundAsset(this.state.user, assetId, amount);
   }
 
   async fetchTransactionHistory() {

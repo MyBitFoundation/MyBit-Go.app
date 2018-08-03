@@ -1,8 +1,12 @@
 .ConfirmationPopup{
-  height: 403px;
+  height: 513px;
   width: 348px;
   background-color: #ffffff;
   font-family: 'Roboto';
+
+  &__status-text{
+    text-align: center;
+  }
 
   &__title{
     font-size: 18px;
@@ -68,52 +72,20 @@
     color: red;
     text-align: center;
   }
-}
 
-#ConfirmationPopup__container .bx--modal-container{
-  height: 520px;
-  width: 348px;
-  padding: 0px 0px;
-  border-top: none;
-  min-width: auto;
-  min-height: auto;
-}
+  &__confirm-btn, &__cancel-btn{
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+  }
 
-#ConfirmationPopup__container .bx--modal-header{
-  display: none;
-}
+  &__confirm-btn{
+      background-color: #2db84b !important;
 
-#ConfirmationPopup__container .bx--modal-content{
-  margin-bottom: 0px;
-}
-
-#ConfirmationPopup__container .bx--modal-footer{
-  margin: 0px 0px;
-  padding: 0px 0px;
-  background-color: white;
-}
-
-#ConfirmationPopup__container .bx--modal__buttons-container{
-  position: relative;
+      &:focus, &:hover, &:active{
+        background-color: #2db84b  !important;
+      }
+  }
 }
 
 
-#ConfirmationPopup__container .bx--btn--secondary{
-  width: 100%;
-  position: absolute;
-  top: 50px;
-  left: 0px;
-}
-
-#ConfirmationPopup__container .bx--btn--primary{
-  width: 100%;
-  position: absolute;
-  margin: 0px 0px;
-  left: 0px;
-}
-
-
-#ConfirmationPopup__container .bx--modal-footer{
-  padding: 0px 20px;
-  padding-top: 10px;
-}

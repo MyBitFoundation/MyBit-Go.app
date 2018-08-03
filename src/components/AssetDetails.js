@@ -1,17 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider, ModalWrapper } from 'carbon-components-react';
+import { Slider, Button } from 'carbon-components-react';
 import dayjs from 'dayjs';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
-import * as FundingHub from '../constants/contracts/FundingHub';
-import { debug } from '../constants';
 import '../styles/AssetDetails.css';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
-import getWeb3Async from '../util/web3';
-
-const web3 = getWeb3Async();
+import BlockchainInfoContext from './BlockchainInfoContext';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -22,14 +18,11 @@ class AssetDetails extends React.Component {
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
-      acceptedTos: false,
-      displayWarning: false,
+      isPopupOpen: false,
     };
     this.setDateDetails = this.setDateDetails.bind(this);
     this.endDateLocal = dayjs(this.props.information.dueDate);
     this.clearInterval = this.clearInterval.bind(this);
-    this.handleConfirmClicked = this.handleConfirmClicked.bind(this);
-    this.setAcceptedTos = this.setAcceptedTos.bind(this);
     this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
     this.etherValueSelected = 0;
@@ -108,15 +101,16 @@ class AssetDetails extends React.Component {
     }
   }
 
-  setAcceptedTos(acceptedTos) {
-    this.setState({ acceptedTos });
-    if (acceptedTos && this.state.displayWarning) {
-      this.setState({ displayWarning: false });
-    }
-  }
-
   getAcceptedTos() {
     return this.state.acceptedTos;
+  }
+
+  handlePopupState(value) {
+    this.setState({ isPopupOpen: value });
+  }
+
+  isPopupOpen() {
+    return this.state.isPopupOpen;
   }
 
   clearInterval() {
@@ -127,24 +121,6 @@ class AssetDetails extends React.Component {
 
   componenWillUnmount() {
     this.clearInterval();
-  }
-
-  handleConfirmClicked() {
-    if (!this.state.acceptedTos) {
-      this.setState({ displayWarning: true });
-      return false;
-    }
-    const fundingHubContract = new web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
-    this.setState({ acceptedTos: false });
-    const weiAmount = web3.utils.toWei(this.etherValueSelected.toString(), 'ether');
-    fundingHubContract.methods.fund(this.props.information.assetID)
-      .send({
-        value: weiAmount, from: this.props.user.userName,
-      })
-      .then(debug)
-      .catch(debug);
-
-    return true;
   }
 
   render() {
@@ -161,6 +137,23 @@ class AssetDetails extends React.Component {
 
     return (
       <div className="AssetDetails grid">
+        {this.state.isPopupOpen &&
+          <BlockchainInfoContext.Consumer>
+            {
+            ({ fundAsset }) => (
+              <ConfirmationPopup
+                amountUsd={this.state.currentSelectedAmount}
+                amountEth={this.etherValueSelected}
+                ownership={ownership}
+                isPopupOpen={() => this.isPopupOpen()}
+                handlePopupState={val => this.handlePopupState(val)}
+                assetId={this.props.information.assetID}
+                fundAsset={fundAsset}
+              />
+            )
+          }
+          </BlockchainInfoContext.Consumer>
+          }
         <div className="AssetDetails__left col_lg-6 col_md-12">
           <b className="AssetDetails__left-name">
             {this.props.information.assetName}
@@ -257,25 +250,14 @@ class AssetDetails extends React.Component {
           <b className="AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
             1.87 ETH
           </b>
-          <ModalWrapper
-            id="ConfirmationPopup__container"
-            buttonTriggerText="Contribute"
-            shouldCloseAfterSubmit
-            modalBeforeContent={false}
-            primaryButtonText="Confirm"
-            secondaryButtonText="Cancel"
-            handleSubmit={this.handleConfirmClicked}
+          <Button
+            className="AssetDetails__left-contribute-btn"
+            kind="primary"
+            onClick={() => this.handlePopupState(true)}
             disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           >
-            <ConfirmationPopup
-              amountUsd={this.state.currentSelectedAmount}
-              amountEth={this.etherValueSelected}
-              ownership={ownership}
-              setAcceptedTos={this.setAcceptedTos}
-              displayWarning={this.state.displayWarning}
-              getAcceptedTos={this.getAcceptedTos}
-            />
-          </ModalWrapper>
+            Contribute
+          </Button>
         </div>
         <div className="AssetDetails__right col_lg-6 col_md-12">
           <img
@@ -324,9 +306,6 @@ AssetDetails.propTypes = {
     imageSrc: PropTypes.string.isRequired,
   }).isRequired,
   currentEthInUsd: PropTypes.number,
-  user: PropTypes.shape({
-    userName: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default AssetDetails;
