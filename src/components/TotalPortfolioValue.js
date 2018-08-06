@@ -18,7 +18,7 @@ const TotalPortfolioValue = ({ totalPortfolioValue, portfolioValueAssets }) => (
       </TileAboveTheFoldContent>
       <TileBelowTheFoldContent className="Portfolio__folded-content">
         {
-          totalPortfolioValue == '0.00' && (
+          totalPortfolioValue === '0.00' && (
             <p className="Portfolio__empty">
               You don’t have any<br/>
               investments right now.

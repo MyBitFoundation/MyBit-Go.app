@@ -18,7 +18,7 @@ const TotalPortfolioRevenue = ({ totalPortfolioRevenue, portfolioRevenueAssets }
       </TileAboveTheFoldContent>
       <TileBelowTheFoldContent className="Portfolio__folded-content">
       {
-        totalPortfolioRevenue == '0.00' && (
+        totalPortfolioRevenue === '0.00' && (
             <p className="Portfolio__empty">
               You don’t have any<br/>
               investments right now.
