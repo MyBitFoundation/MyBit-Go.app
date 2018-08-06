@@ -2,11 +2,16 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Web3 from 'web3';
+
 import MetamaskBooting from './MetamaskBooting';
 import MetamaskLogin from './MetamaskLogin';
+import MetamaskNetwork from './MetamaskNetwork';
 import BrowserNotSupported from './BrowserNotSupported';
 import isMetaMask from '../util/isMetamask';
 import checkAccount from '../util/isUserLogged';
+import checkForNetworks from '../util/checkForNetworks';
+
 import {
   METAMASK_FIREFOX,
   METAMASK_CHROME,
@@ -19,12 +24,22 @@ class MetamaskChecker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isMetamaskUserLogged: null
+      isMetamaskUserLogged: null,
+      isMainNet: false
     };
     this.isBraveBrowser = false;
     this.extensionUrl = '';
+
+    checkForNetworks().then((data) => {
+      console.log('isMainNetwoek')
+      console.log(data)
+      if(data === 'main') {
+        this.setState({ isMainNet: true });
+      }
+    })
   }
 
+ 
   componentDidMount() {
     checkAccount().then(haveAccounts => {
       if (haveAccounts.length === 0) {
@@ -89,6 +104,12 @@ class MetamaskChecker extends Component {
           isBraveBrowser={this.isBraveBrowser}
         />
       );
+    }
+
+    if(this.state.isMainNet === true) {
+      return (
+        <MetamaskNetwork />
+      )
     }
     return null;
   }
