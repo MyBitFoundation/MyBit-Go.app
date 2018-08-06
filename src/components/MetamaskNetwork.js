@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Modal, Button } from 'carbon-components-react';
+import { Modal } from 'carbon-components-react';
 import '../styles/MetamaskAudit.css';
 import MetamaskLogo from '../images/metamask.svg';
 
@@ -23,7 +22,5 @@ const MetamaskNetwork = () => (
   </Modal>
 );
 
-MetamaskNetwork.propTypes = {
-};
 
 export default MetamaskNetwork;

@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Web3 from 'web3';
 
 import MetamaskBooting from './MetamaskBooting';
 import MetamaskLogin from './MetamaskLogin';
