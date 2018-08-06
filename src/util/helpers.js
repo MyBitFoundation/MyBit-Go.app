@@ -123,7 +123,7 @@ export const getPrettyCategoryName = category => {
     case 'realestatestorage':
       return 'Real Estate (Storage)';
     case 'realestatecoworking':
-      return 'Real Estate (Co-working)';
+      return 'Real Estate (Co-Working)';
     case 'chargingstation':
       return 'Charging Station';
     case 'dronedelivery':

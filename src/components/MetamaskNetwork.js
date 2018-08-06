@@ -7,8 +7,8 @@ import MetamaskLogo from '../images/metamask.svg';
 const MetamaskNetwork = () => (
   <Modal className="MetamaskAudit" open passiveModal>
     <p className="MetamaskAudit__title">
-        MyBit Go DAPP is in alpha test release.<br/>
-        Please rearrange to Ropsten Test Network
+        The MyBit platform is still in testing,<br/>
+        please use the Ropsten test network.
     </p>
     <img
       className="MetamaskAudit__metamaskfox-image"
@@ -17,13 +17,7 @@ const MetamaskNetwork = () => (
     />
     
     <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">
-      <Button
-        small
-        kind="secondary"
-        className="MetamaskAudit__metamaskmanual-button"
-      >
-        What d fck is Ropsten Network?
-      </Button>
+
     </a>
     <br />
   </Modal>

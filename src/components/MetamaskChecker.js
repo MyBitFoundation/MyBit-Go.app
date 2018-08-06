@@ -25,16 +25,16 @@ class MetamaskChecker extends Component {
     super(props);
     this.state = {
       isMetamaskUserLogged: null,
-      isMainNet: false
+      isRopstenNetwork: false
     };
     this.isBraveBrowser = false;
     this.extensionUrl = '';
 
     checkForNetworks().then((data) => {
-      console.log('isMainNetwoek')
+      console.log('isRopstenNetworkwoek')
       console.log(data)
-      if(data === 'main') {
-        this.setState({ isMainNet: true });
+      if(data === 'ropsten') {
+        this.setState({ isRopstenNetwork: true });
       }
     })
   }
@@ -106,7 +106,7 @@ class MetamaskChecker extends Component {
       );
     }
 
-    if(this.state.isMainNet === true) {
+    if(this.state.isRopstenNetwork !== true) {
       return (
         <MetamaskNetwork />
       )
