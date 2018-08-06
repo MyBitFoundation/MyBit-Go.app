@@ -17,6 +17,14 @@ const TotalPortfolioRevenue = ({ totalPortfolioRevenue, portfolioRevenueAssets }
         </div>
       </TileAboveTheFoldContent>
       <TileBelowTheFoldContent className="Portfolio__folded-content">
+      {
+        totalPortfolioRevenue == '0.00' && (
+            <p className="Portfolio__empty">
+              You don’t have any<br/>
+              investments right now.
+            </p>
+          )
+        }
         {portfolioRevenueAssets.map(asset => (
           <PortfolioRevenueItem
             key={asset.assetID}
