@@ -15,7 +15,7 @@ const Asset = ({
   name,
   category,
   id,
-  backgroundImage,
+  backgroundImage
 }) => {
   const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
@@ -42,10 +42,10 @@ const Asset = ({
           </p>
           <p className="Asset__details-goal">
             Goal:
-            <b>{
-              Number(goal).toLocaleString('en-US', {
+            <b>
+              {Number(goal).toLocaleString('en-US', {
                 style: 'currency',
-                currency: 'USD',
+                currency: 'USD'
               })}
             </b>
           </p>
@@ -60,7 +60,10 @@ const Asset = ({
             href={`/explore/${category}/${id}`}
           >
             <Button
-              onClick={clickHandler || (() => debug(`Clicked to contribute, asset id: ${id}`))}
+              onClick={
+                clickHandler ||
+                (() => debug(`Clicked to contribute, asset id: ${id}`))
+              }
               className="Asset__details-contribute"
             >
               CONTRIBUTE
@@ -73,7 +76,7 @@ const Asset = ({
 };
 
 Asset.defaultProps = {
-  clickHandler: undefined,
+  clickHandler: undefined
 };
 
 Asset.propTypes = {
@@ -85,14 +88,14 @@ Asset.propTypes = {
   category: PropTypes.string.isRequired,
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string.isRequired,
+  backgroundImage: PropTypes.string.isRequired
 };
 
 Asset.defaultProps = {
   city: '',
   country: '',
   name: '',
-  clickHandler: () => {},
+  clickHandler: () => {}
 };
 
 export default Asset;

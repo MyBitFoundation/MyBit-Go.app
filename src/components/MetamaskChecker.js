@@ -7,7 +7,11 @@ import MetamaskLogin from './MetamaskLogin';
 import BrowserNotSupported from './BrowserNotSupported';
 import isMetaMask from '../util/isMetamask';
 import checkAccount from '../util/isUserLogged';
-import { METAMASK_FIREFOX, METAMASK_CHROME, METAMASK_OPERA } from '../constants';
+import {
+  METAMASK_FIREFOX,
+  METAMASK_CHROME,
+  METAMASK_OPERA
+} from '../constants';
 
 const { detect } = require('detect-browser');
 
@@ -15,14 +19,14 @@ class MetamaskChecker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isMetamaskUserLogged: null,
+      isMetamaskUserLogged: null
     };
     this.isBraveBrowser = false;
     this.extensionUrl = '';
   }
 
   componentDidMount() {
-    checkAccount().then((haveAccounts) => {
+    checkAccount().then(haveAccounts => {
       if (haveAccounts.length === 0) {
         this.setState({ isMetamaskUserLogged: false });
       }
@@ -30,10 +34,14 @@ class MetamaskChecker extends Component {
   }
 
   isBraveBrowserBeingUsed() {
-  // initial assertions
-    if (!window.google_onload_fired &&
-       navigator.userAgent &&
-      !navigator.userAgent.includes('Chrome')) { return false; }
+    // initial assertions
+    if (
+      !window.google_onload_fired &&
+      navigator.userAgent &&
+      !navigator.userAgent.includes('Chrome')
+    ) {
+      return false;
+    }
 
     // set up test
     const test = document.createElement('iframe');
@@ -41,7 +49,7 @@ class MetamaskChecker extends Component {
     document.body.appendChild(test);
 
     // empty frames only have this attribute set in Brave Shield
-    const isBrave = (test.contentWindow.google_onload_fired === true);
+    const isBrave = test.contentWindow.google_onload_fired === true;
 
     // teardown test
     test.parentNode.removeChild(test);
@@ -93,14 +101,14 @@ class MetamaskChecker extends Component {
     return (
       <div>
         {this.renderMetamaskWarning()}
-        {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null }
+        {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null}
       </div>
     );
   }
 }
 
 MetamaskChecker.propTypes = {
-  shouldDisplay: PropTypes.bool.isRequired,
+  shouldDisplay: PropTypes.bool.isRequired
 };
 
 export default MetamaskChecker;

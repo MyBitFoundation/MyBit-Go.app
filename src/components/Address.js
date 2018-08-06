@@ -11,22 +11,22 @@ const Address = ({ userName, className }) => (
         <Loading small withOverlay={false} />
         <span>Loading account</span>
       </div>
-      ) : (
-        <div>
-          <Jazzicon diameter={39} />
-          <p className="Address__text">{userName}</p>
-        </div>
-      )}
+    ) : (
+      <div>
+        <Jazzicon diameter={39} />
+        <p className="Address__text">{userName}</p>
+      </div>
+    )}
   </div>
 );
 
 Address.defaultProps = {
-  userName: undefined,
+  userName: undefined
 };
 
 Address.propTypes = {
   userName: PropTypes.string,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired
 };
 
 export default Address;

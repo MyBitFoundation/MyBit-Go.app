@@ -162,7 +162,10 @@
     background-color: rgba(231, 232, 235, 0.63);
 
     &-image{
-      width: 100%;
+      background: linear-gradient(to left, #24F281, #0083FF);
+      
+      min-width: 100%;
+      min-height: 500px;
     }
 
     &-wrapper{

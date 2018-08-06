@@ -15,99 +15,112 @@ const routes = [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/explore" />,
-  }, {
+    component: () => <Redirect to="/explore" />
+  },
+  {
     path: '/explore',
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets }) => (
-          isFirstVisit ? <Redirect to="/help" /> :
-          <ExplorePage
-            loading={loading}
-            assets={assets}
-          />
-        )}
+        {({ loading, assets }) =>
+          isFirstVisit ? (
+            <Redirect to="/help" />
+          ) : (
+            <ExplorePage loading={loading} assets={assets} />
+          )
+        }
       </BlockchainInfoContext.Consumer>
-    ),
-  }, {
+    )
+  },
+  {
     path: '/explore/:category',
     exact: true,
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets }) => (
-          isFirstVisit ? <Redirect to="/help" /> :
-          <ExploreAssetsPage
-            loading={loading}
-            assets={assets}
-            match={match}
-          />
-        )}
-      </BlockchainInfoContext.Consumer>),
-  }, {
+        {({ loading, assets }) =>
+          isFirstVisit ? (
+            <Redirect to="/help" />
+          ) : (
+            <ExploreAssetsPage
+              loading={loading}
+              assets={assets}
+              match={match}
+            />
+          )
+        }
+      </BlockchainInfoContext.Consumer>
+    )
+  },
+  {
     path: '/explore/:category/:assetId',
     exact: true,
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({
- loading, assets, prices, user,
-}) => (
-          isFirstVisit ? <Redirect to="/help" /> :
-          <AssetDetailsPage
-            prices={prices}
-            loading={loading}
-            assets={assets}
-            match={match}
-            user={user}
-          />
-        )}
-      </BlockchainInfoContext.Consumer>),
-  }, {
+        {({ loading, assets, prices, user }) =>
+          isFirstVisit ? (
+            <Redirect to="/help" />
+          ) : (
+            <AssetDetailsPage
+              prices={prices}
+              loading={loading}
+              assets={assets}
+              match={match}
+              user={user}
+            />
+          )
+        }
+      </BlockchainInfoContext.Consumer>
+    )
+  },
+  {
     path: '/portfolio',
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, prices, assets }) => (
-          isFirstVisit ? <Redirect to="/help" /> :
-          <PortfolioPage
-            loading={loading}
-            prices={prices}
-            assets={assets}
-          />
-        )}
-      </BlockchainInfoContext.Consumer>),
-  }, {
+        {({ loading, prices, assets }) =>
+          isFirstVisit ? (
+            <Redirect to="/help" />
+          ) : (
+            <PortfolioPage loading={loading} prices={prices} assets={assets} />
+          )
+        }
+      </BlockchainInfoContext.Consumer>
+    )
+  },
+  {
     path: '/transaction-history',
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, fetchTransactionHistory, transactions }) => (
-          isFirstVisit ? <Redirect to="/help" /> :
-          <TransactionHistoryPage
-            loading={loading}
-            fetchTransactionHistory={fetchTransactionHistory}
-            transactions={transactions}
-          />
-        )}
-      </BlockchainInfoContext.Consumer>),
+        {({ loading, fetchTransactionHistory, transactions }) =>
+          isFirstVisit ? (
+            <Redirect to="/help" />
+          ) : (
+            <TransactionHistoryPage
+              loading={loading}
+              fetchTransactionHistory={fetchTransactionHistory}
+              transactions={transactions}
+            />
+          )
+        }
+      </BlockchainInfoContext.Consumer>
+    )
   },
   {
     path: '/help',
     exact: true,
     component: () => (
       <BlockchainInfoContext.Consumer>
-        {({ fetchMyBit }) => (
-          <HelpPage fetchMyBit={fetchMyBit} />
-      )}
-      </BlockchainInfoContext.Consumer>),
-
-  }, {
+        {({ fetchMyBit }) => <HelpPage fetchMyBit={fetchMyBit} />}
+      </BlockchainInfoContext.Consumer>
+    )
+  },
+  {
     path: '*',
     exact: false,
-    component: ({ isFirstVisit }) => (
+    component: ({ isFirstVisit }) =>
       isFirstVisit ? <Redirect to="/help" /> : <NotFoundPage />
-    ),
-  },
+  }
 ];
 
 export default routes;
