@@ -1,6 +1,14 @@
 import cryptocurrencyAtmCategoryImage from '../images/category-cryptocurrency-atm.png';
 import solarEnergyCategoryImage from '../images/category-solar-energy.png';
 
+import autonomousvehiclesImage from '../images/categories/autonomousvehicles.png';
+import cryptominingImage from '../images/categories/cryptomining.png';
+import dronedeliveryImage from '../images/categories/dronedelivery.png';
+import solarenergyImage from '../images/categories/solarenergy.png';
+import windenergyImage from '../images/categories/windenergy.png';
+import otherImage from '../images/categories/other.png';
+import realestatecoworkingImage from '../images/categories/realestatecoworking.png'
+
 export const parseEtherFromBalance = (web3, balance) => web3.fromWei(parseInt(balance, 10), 'ether');
 
 export const mergeAllLogsByAssetId = (logs) => {
@@ -119,12 +127,24 @@ export const getPrettyCategoryName = (category) => {
 
 export const getImageForCategory = (category) => {
   switch (category) {
-    case 'coffeemachine':
+    case 'bitcoinatm':
       return cryptocurrencyAtmCategoryImage;
     case 'uncategorized':
       return solarEnergyCategoryImage;
+    case 'autonomousvehicles':
+      return autonomousvehiclesImage;
+    case 'cryptomining':
+      return cryptominingImage;
+    case 'dronedelivery':
+      return dronedeliveryImage;
+    case 'solarenergy':
+      return solarenergyImage;
+    case 'windenergy':
+      return windenergyImage;
+    case 'realestatecoworking':
+      return realestatecoworkingImage;
     default:
-      return cryptocurrencyAtmCategoryImage;
+      return otherImage;
   }
 };
 
