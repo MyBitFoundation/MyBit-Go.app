@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ExpandableTile, TileAboveTheFoldContent, TileBelowTheFoldContent } from 'carbon-components-react';
+import {
+  ExpandableTile,
+  TileAboveTheFoldContent,
+  TileBelowTheFoldContent
+} from 'carbon-components-react';
 import PieChart from '../images/chart-pie.png';
 import PortfolioValueItem from './PortfolioValueItem';
 
@@ -17,14 +21,12 @@ const TotalPortfolioValue = ({ totalPortfolioValue, portfolioValueAssets }) => (
         </div>
       </TileAboveTheFoldContent>
       <TileBelowTheFoldContent className="Portfolio__folded-content">
-        {
-          totalPortfolioValue === '0.00' && (
-            <p className="Portfolio__empty">
-              You don’t have any<br/>
-              investments right now.
-            </p>
-          )
-        }
+        {totalPortfolioValue === '0.00' && (
+          <p className="Portfolio__empty">
+            You don’t have any<br />
+            investments right now.
+          </p>
+        )}
         {portfolioValueAssets.map(asset => (
           <PortfolioValueItem
             key={asset.assetID}
@@ -32,7 +34,8 @@ const TotalPortfolioValue = ({ totalPortfolioValue, portfolioValueAssets }) => (
             name={asset.name}
             ownership={asset.ownership}
             value={asset.value}
-          />))}
+          />
+        ))}
         <div className="Portfolio__tile" />
       </TileBelowTheFoldContent>
     </ExpandableTile>
@@ -41,11 +44,13 @@ const TotalPortfolioValue = ({ totalPortfolioValue, portfolioValueAssets }) => (
 
 TotalPortfolioValue.propTypes = {
   totalPortfolioValue: PropTypes.string.isRequired,
-  portfolioValueAssets: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    ownership: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
-  })).isRequired,
+  portfolioValueAssets: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      ownership: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired
+    })
+  ).isRequired
 };
 
 export default TotalPortfolioValue;

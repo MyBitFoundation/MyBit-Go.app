@@ -1,10 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ExpandableTile, TileAboveTheFoldContent, TileBelowTheFoldContent } from 'carbon-components-react';
+import {
+  ExpandableTile,
+  TileAboveTheFoldContent,
+  TileBelowTheFoldContent
+} from 'carbon-components-react';
 import BarChart from '../images/chart-bar.png';
 import PortfolioRevenueItem from './PortfolioRevenueItem';
 
-const TotalPortfolioRevenue = ({ totalPortfolioRevenue, portfolioRevenueAssets }) => (
+const TotalPortfolioRevenue = ({
+  totalPortfolioRevenue,
+  portfolioRevenueAssets
+}) => (
   <div>
     <ExpandableTile className="Portfolio__tile-expandable Portfolio__revenue">
       <TileAboveTheFoldContent>
@@ -17,14 +24,12 @@ const TotalPortfolioRevenue = ({ totalPortfolioRevenue, portfolioRevenueAssets }
         </div>
       </TileAboveTheFoldContent>
       <TileBelowTheFoldContent className="Portfolio__folded-content">
-      {
-        totalPortfolioRevenue === '0.00' && (
-            <p className="Portfolio__empty">
-              You don’t have any<br/>
-              investments right now.
-            </p>
-          )
-        }
+        {totalPortfolioRevenue === '0.00' && (
+          <p className="Portfolio__empty">
+            You don’t have any<br />
+            investments right now.
+          </p>
+        )}
         {portfolioRevenueAssets.map(asset => (
           <PortfolioRevenueItem
             key={asset.assetID}
@@ -32,7 +37,8 @@ const TotalPortfolioRevenue = ({ totalPortfolioRevenue, portfolioRevenueAssets }
             name={asset.name}
             monthlyRevenue={asset.monthlyRevenue}
             totalRevenue={asset.totalRevenue}
-          />))}
+          />
+        ))}
         <div className="Portfolio__tile" />
       </TileBelowTheFoldContent>
     </ExpandableTile>
@@ -41,12 +47,14 @@ const TotalPortfolioRevenue = ({ totalPortfolioRevenue, portfolioRevenueAssets }
 
 TotalPortfolioRevenue.propTypes = {
   totalPortfolioRevenue: PropTypes.string.isRequired,
-  portfolioRevenueAssets: PropTypes.arrayOf(PropTypes.shape({
-    assetID: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    monthlyRevenue: PropTypes.string.isRequired,
-    totalRevenue: PropTypes.string.isRequired,
-  })).isRequired,
+  portfolioRevenueAssets: PropTypes.arrayOf(
+    PropTypes.shape({
+      assetID: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      monthlyRevenue: PropTypes.string.isRequired,
+      totalRevenue: PropTypes.string.isRequired
+    })
+  ).isRequired
 };
 
 export default TotalPortfolioRevenue;

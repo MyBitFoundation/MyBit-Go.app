@@ -23,7 +23,6 @@ import AssetFunding from '../components/AssetFunding';
 import NavigationBar from '../components/NavigationBar';
 import Address from '../components/Address';
 
-
 const MemoryDecorator = story => (
   <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
 );
@@ -31,22 +30,17 @@ const MemoryDecorator = story => (
 const Header = (
   <AppHeader
     prices={{ mybitPrice: 0.05 }}
-    user={
-      {
-        myBitBalance: 100,
-        ethBalance: 1000,
-        userName: '0xd12cd8a37f074e7eafae618c986ff825666198bd',
-      }}
+    user={{
+      myBitBalance: 100,
+      ethBalance: 1000,
+      userName: '0xd12cd8a37f074e7eafae618c986ff825666198bd'
+    }}
   />
 );
 
 storiesOf('Header', module)
   .add('Normal view', () => Header)
-  .add('Loading', () =>
-    (<AppHeader
-      prices={{}}
-      user={{}}
-    />));
+  .add('Loading', () => <AppHeader prices={{}} user={{}} />);
 
 const Nav = (
   <NavigationBar
@@ -71,12 +65,19 @@ storiesOf('Explore Page', module)
   .addDecorator(MemoryDecorator)
   .add('Loading', () => (
     <div className="page-wrapper">
-      <ExplorePage loading={{ assets: true }} clickHandler={action('Clicked category')} />
+      <ExplorePage
+        loading={{ assets: true }}
+        clickHandler={action('Clicked category')}
+      />
     </div>
   ))
   .add('Normal', () => (
     <div className="page-wrapper">
-      <ExplorePage loading={{ assets: false }} assets={assets} clickHandler={action('Clicked category')} />
+      <ExplorePage
+        loading={{ assets: false }}
+        assets={assets}
+        clickHandler={action('Clicked category')}
+      />
     </div>
   ));
 
@@ -92,30 +93,39 @@ storiesOf('Explore Assets Page', module)
       match={{ params: { category: 'uncategorized' } }}
     />
   ))
-  .add('Loading', () => <ExploreAssetsPage loading={{ assets: true }} assets={[]} match={{ params: { category: 'uncategorized' } }} />)
+  .add('Loading', () => (
+    <ExploreAssetsPage
+      loading={{ assets: true }}
+      assets={[]}
+      match={{ params: { category: 'uncategorized' } }}
+    />
+  ))
   .add('No assets', () => (
-    <ExploreAssetsPage loading={{ assets: false }} assets={[]} match={{ params: { category: 'Solar Panel' } }} category="Solar Panel" />
+    <ExploreAssetsPage
+      loading={{ assets: false }}
+      assets={[]}
+      match={{ params: { category: 'Solar Panel' } }}
+      category="Solar Panel"
+    />
   ));
 
 storiesOf('Portfolio Page', module)
-  .add('Normal view', () =>
-    (<PortfolioPage
+  .add('Normal view', () => (
+    <PortfolioPage
       loading={{ transactionHistory: false }}
       prices={{ etherPrice: 400 }}
       assets={assets}
-    />))
-  .add('Loading', () =>
-    (<PortfolioPage
-      loading={{ transactionHistory: true }}
-    />));
+    />
+  ))
+  .add('Loading', () => (
+    <PortfolioPage loading={{ transactionHistory: true }} />
+  ));
 
 storiesOf('Address', module)
-  .add('Loading', () =>
-    <Address />)
-  .add('Normal', () =>
-    (<Address
-      userName="0xd12cd8a37f074e7eafae618c986ff825666198bd"
-    />));
+  .add('Loading', () => <Address />)
+  .add('Normal', () => (
+    <Address userName="0xd12cd8a37f074e7eafae618c986ff825666198bd" />
+  ));
 
 storiesOf('Asset Details Page', module)
   .addDecorator(MemoryDecorator)
@@ -125,15 +135,18 @@ storiesOf('Asset Details Page', module)
   .add('Normal view', () => (
     <AssetDetailsPage
       assets={assets}
-      match={{ params: { category: 'uncategorized', assetId: '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1' } }}
+      match={{
+        params: {
+          category: 'uncategorized',
+          assetId:
+            '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1'
+        }
+      }}
       loading={{ assets: false }}
       prices={{ etherPrice: 400 }}
     />
   ))
-  .add('Loading', () =>
-    (<AssetDetailsPage
-      loading={{ assets: true }}
-    />));
+  .add('Loading', () => <AssetDetailsPage loading={{ assets: true }} />);
 
 const daysToGo = (
   <AssetDetails information={{ ...assetInfo }} currentEthInUsd={700} />

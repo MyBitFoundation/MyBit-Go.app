@@ -14,6 +14,6 @@ ReactDOM.render(
       <App />
     </BrowserRouter>
   </BlockchainInfo>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );
 registerServiceWorker();

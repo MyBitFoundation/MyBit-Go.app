@@ -42,7 +42,8 @@
     "run-storybook": "build-storybook -c .storybook -o .out",
     "build-storybook": "npm-run-all build-css run-storybook",
     "lint": "eslint --ignore-path .gitignore .",
-    "lint:fix": "eslint --ignore-path .gitignore --fix ."
+    "lint:fix": "eslint --ignore-path .gitignore --fix .",
+    "format-code": "prettier --single-quote --write 'src/**/*.js'"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
