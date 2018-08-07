@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'carbon-components-react';
-import { Link } from 'react-router-dom';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
 import { debug } from '../constants';
@@ -19,7 +18,6 @@ const Asset = ({
 }) => {
   const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
-    <Link to={`/explore/${category}/${id}`} href={`/explore/${category}/${id}`}>
       <div className="Asset">
         <div className="Asset__container">
           <div
@@ -69,7 +67,6 @@ const Asset = ({
           </div>
         </div>
       </div>
-    </Link>
   );
 };
 
