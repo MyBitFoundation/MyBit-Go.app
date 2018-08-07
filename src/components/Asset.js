@@ -19,6 +19,10 @@ const Asset = ({
 }) => {
   const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
+    <Link
+            to={`/explore/${category}/${id}`}
+            href={`/explore/${category}/${id}`}
+          >
     <div className="Asset">
       <div className="Asset__container">
         <div
@@ -55,10 +59,7 @@ const Asset = ({
               style={{ width: barWidth }}
             />
           </div>
-          <Link
-            to={`/explore/${category}/${id}`}
-            href={`/explore/${category}/${id}`}
-          >
+          
             <Button
               onClick={
                 clickHandler ||
@@ -66,12 +67,13 @@ const Asset = ({
               }
               className="Asset__details-contribute"
             >
-              CONTRIBUTE
+              Contribute
             </Button>
-          </Link>
+
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

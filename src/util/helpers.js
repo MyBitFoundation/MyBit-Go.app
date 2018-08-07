@@ -1,13 +1,14 @@
-import cryptocurrencyAtmCategoryImage from '../images/category-cryptocurrency-atm.png';
+import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpeg';
 import solarEnergyCategoryImage from '../images/category-solar-energy.png';
 
 import autonomousvehiclesImage from '../images/categories/autonomousvehicles.png';
-import cryptominingImage from '../images/categories/cryptomining.png';
+import cryptominingImage from '../images/categories/Cryptomining.jpeg';
 import dronedeliveryImage from '../images/categories/dronedelivery.png';
-import solarenergyImage from '../images/categories/solarenergy.png';
+import solarenergyImage from '../images/categories/Solar1.jpeg';
 import windenergyImage from '../images/categories/windenergy.png';
 import otherImage from '../images/categories/other.png';
 import realestatecoworkingImage from '../images/categories/realestatecoworking.png';
+import masternodeImage from '../images/categories/Masternode.jpeg';
 
 export const parseEtherFromBalance = (web3, balance) =>
   web3.fromWei(parseInt(balance, 10), 'ether');
@@ -121,9 +122,9 @@ export const getPrettyCategoryName = category => {
     case 'cryptomining':
       return 'Crypto Mining';
     case 'realestatestorage':
-      return 'Real Estate (Storage)';
+      return 'Real Estate Storage';
     case 'realestatecoworking':
-      return 'Real Estate (Co-working)';
+      return 'Real Estate Coworking';
     case 'chargingstation':
       return 'Charging Station';
     case 'dronedelivery':
@@ -161,6 +162,8 @@ export const getImageForCategory = category => {
       return windenergyImage;
     case 'realestatecoworking':
       return realestatecoworkingImage;
+    case 'masternodes':
+      return masternodeImage;
     default:
       return otherImage;
   }
