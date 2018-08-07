@@ -16,7 +16,7 @@ import {
 
 const web3 = getWeb3Async();
 const IPFS_URL =
-  'https://ipfs.io/ipfs/QmP1EYGpj6QtUdJqqfRFKVhRBFMm2sGEY43nSkYuWC6cbq/';
+  'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
 
 export const fetchPriceFromCoinmarketcap = async ticker =>
   new Promise(async (resolve, reject) => {
@@ -319,8 +319,17 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       let assetsPlusMoreDetails = await Promise.all(
         assets.map(async (asset, index) => {
           const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
-          const ipfsInfo = await fetch(`${IPFS_URL + asset.assetID}/data.json`);
-          const jsonResponse = await ipfsInfo.json();
+          let jsonResponse = {};
+          try{
+            const ipfsInfo = await fetch(`${IPFS_URL + asset.assetID}/data.json`);
+            jsonResponse = await ipfsInfo.json();
+          }catch(err){
+            jsonResponse.city = 'Zurich';
+            jsonResponse.country = 'Switzerland';
+            jsonResponse.description = 'Coming soon';
+            jsonResponse.details = 'Coming soon';
+            jsonResponse.name = '007';
+          }
           return {
             ...asset,
             amountRaisedInUSD: (
