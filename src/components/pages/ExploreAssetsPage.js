@@ -23,7 +23,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
       <Button kind="secondary" className="ExploreAssetsPage__back-button">
-        BACK
+        Back
       </Button>
     </Link>
   );

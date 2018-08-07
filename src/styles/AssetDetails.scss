@@ -1,7 +1,7 @@
 @import 'include-media/dist/_include-media.scss';
 
 .AssetDetails{
-  padding-top: 25px;
+  padding-top: 40px;
 
   &__left{
     padding-left: 0px;
@@ -14,10 +14,8 @@
     &-contribute-btn{
       width: 100%;
       margin-top: 30px;
-      background-color: #2db84b !important;
 
       &:focus, &:hover, &:active{
-        background-color: #2db84b  !important;
       }
     }
 

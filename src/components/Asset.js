@@ -67,7 +67,7 @@ const Asset = ({
               }
               className="Asset__details-contribute"
             >
-              CONTRIBUTE
+              Contribute
             </Button>
 
         </div>

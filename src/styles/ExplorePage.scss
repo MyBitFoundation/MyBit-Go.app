@@ -40,7 +40,17 @@
 		background-position: center;
 		cursor: pointer;
     display: flex;
-    align-items: center;
+		align-items: center;
+		background-color: linear-gradient(#24f281,#0083ff) 1;
+		border: 6px solid white;
+	}
+
+	&__image-container:hover {
+		border-style: solid;
+    border-width: 6px;
+    border-image: linear-gradient(#24f281,#0083ff) 1;
+		cursor: pointer;
+
 	}
 }
 
