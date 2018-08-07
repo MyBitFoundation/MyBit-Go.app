@@ -20,21 +20,21 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
       icon: exploreIcon,
       selectable: true,
       selected: currentPath.indexOf('/explore') !== -1,
-      url: '/'
+      url: '/',
     },
     {
       name: 'Portfolio',
       icon: portfolioIcon,
       selectable: true,
       selected: currentPath === '/portfolio',
-      url: '/portfolio'
+      url: '/portfolio',
     },
     {
       name: 'Transactions',
       icon: transactionsIcon,
       selectable: true,
       selected: currentPath === '/transaction-history',
-      url: '/transaction-history'
+      url: '/transaction-history',
     },
     { name: 'Saved', icon: savedIcon },
     { name: 'List Asset', icon: listAssetIcon },
@@ -45,8 +45,8 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
       icon: knowledgeBaseIcon,
       selectable: true,
       selected: currentPath === '/help',
-      url: '/help'
-    }
+      url: '/help',
+    },
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
@@ -68,11 +68,11 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
 
 NavigationBar.propTypes = {
   clickHandler: PropTypes.func,
-  currentPath: PropTypes.string.isRequired
+  currentPath: PropTypes.string.isRequired,
 };
 
 NavigationBar.defaultProps = {
-  clickHandler: debug
+  clickHandler: debug,
 };
 
 export default NavigationBar;

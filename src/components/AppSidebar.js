@@ -13,7 +13,7 @@ const AppSidebar = ({ clickHandler }) => {
     { name: 'Staking' },
     { name: 'Exchange Asset' },
     { name: 'Transaction History' },
-    { name: 'FAQ & Tutorials' }
+    { name: 'FAQ & Tutorials' },
   ];
 
   const sidebarMenu = menuOptions.map(menuItem => (
@@ -30,11 +30,11 @@ const AppSidebar = ({ clickHandler }) => {
 };
 
 AppSidebar.propTypes = {
-  clickHandler: PropTypes.func
+  clickHandler: PropTypes.func,
 };
 
 AppSidebar.defaultProps = {
-  clickHandler: undefined
+  clickHandler: undefined,
 };
 
 export default AppSidebar;

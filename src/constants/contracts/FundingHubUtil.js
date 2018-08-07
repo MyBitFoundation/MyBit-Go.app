@@ -18,7 +18,7 @@ export default class FundingHubUtil {
 
     this.LogNewFunder = this.instance.LogNewFunder(
       { _assetID: assetID },
-      { fromBlock: 0, toBlock: 'latest' }
+      { fromBlock: 0, toBlock: 'latest' },
     );
     this.setEventListeners();
   }
@@ -51,10 +51,10 @@ export default class FundingHubUtil {
           await iT.fundAsync(_assetID, {
             from: w3.eth.coinbase,
             value: ethValue,
-            gas: parseInt(result, 10)
+            gas: parseInt(result, 10),
           });
         }
-      }
+      },
     );
   }
 
@@ -68,10 +68,10 @@ export default class FundingHubUtil {
         if (!error) {
           await iT.payoutAsync(_assetID, {
             from: w3.eth.coinbase,
-            gas: parseInt(result, 10)
+            gas: parseInt(result, 10),
           });
         }
-      }
+      },
     );
   }
 
@@ -85,10 +85,10 @@ export default class FundingHubUtil {
         if (!error) {
           await iT.initiateRefundAsync(_assetID, {
             from: w3.eth.coinbase,
-            gas: parseInt(result, 10)
+            gas: parseInt(result, 10),
           });
         }
-      }
+      },
     );
   }
 
@@ -102,10 +102,10 @@ export default class FundingHubUtil {
         if (!error) {
           await iT.refundAsync(_assetID, {
             from: w3.eth.coinbase,
-            gas: parseInt(result, 10)
+            gas: parseInt(result, 10),
           });
         }
-      }
+      },
     );
   }
 }

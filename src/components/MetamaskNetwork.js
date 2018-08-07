@@ -6,7 +6,7 @@ import MetamaskLogo from '../images/metamask.svg';
 const MetamaskNetwork = () => (
   <Modal className="MetamaskAudit" open passiveModal>
     <p className="MetamaskAudit__title">
-        The MyBit platform is still in testing,<br/>
+        The MyBit platform is still in testing,<br />
         please use the Ropsten test network.
     </p>
     <img
@@ -14,10 +14,6 @@ const MetamaskNetwork = () => (
       src={MetamaskLogo}
       alt="Metamask"
     />
-    
-    <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">
-
-    </a>
     <br />
   </Modal>
 );

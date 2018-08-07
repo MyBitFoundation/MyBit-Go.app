@@ -15,7 +15,7 @@ const OverflowMenuCustom = ({ url }) => (
 );
 
 OverflowMenuCustom.propTypes = {
-  url: PropTypes.string.isRequired
+  url: PropTypes.string.isRequired,
 };
 
 export default OverflowMenuCustom;

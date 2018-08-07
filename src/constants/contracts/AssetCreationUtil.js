@@ -13,7 +13,7 @@ export default class AssetCreationUtil {
     /* Create Listeners */
     this.LogAssetInfo = instance.LogAssetInfo(
       { _assetID: assetID },
-      { fromBlock: 0, toBlock: 'latest' }
+      { fromBlock: 0, toBlock: 'latest' },
     );
     this.setEventListeners();
   }

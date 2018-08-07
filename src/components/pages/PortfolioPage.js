@@ -18,18 +18,18 @@ const getPortfolioValue = (assets, currentEthPrice) =>
   assets.reduce(
     (accumulator, currentValue) =>
       accumulator +
-      fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice,
-    0
+      (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice),
+    0,
   );
 
 const getPortfolioRevenue = (assets, currentEthPrice) =>
   assets.reduce(
     (accumulator, currentValue) =>
       accumulator +
-      ((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
+      (((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
         currentValue.amountToBeRaisedInUSD) *
-        getAssetRevenueTmp(currentValue.assetID),
-    0
+        getAssetRevenueTmp(currentValue.assetID)),
+    0,
   );
 
 const getPortfolioValueAssets = (assets, currentEthPrice) =>
@@ -43,11 +43,11 @@ const getPortfolioValueAssets = (assets, currentEthPrice) =>
     ).toFixed(2),
     value: (
       fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice
-    ).toFixed(2)
+    ).toFixed(2),
   }));
 
 const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
-  assets.map(asset => {
+  assets.map((asset) => {
     const totalRevenue =
       ((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) /
         asset.amountToBeRaisedInUSD) *
@@ -56,7 +56,7 @@ const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
       assetID: asset.assetID,
       name: asset.name,
       monthlyRevenue: (totalRevenue / 12).toFixed(2),
-      totalRevenue: totalRevenue.toFixed(2)
+      totalRevenue: totalRevenue.toFixed(2),
     };
   });
 
@@ -68,16 +68,16 @@ const PortfolioPage = ({ loading, assets, prices }) => {
   const ownedAssets = getOwnedAssets(assets);
   const totalPortfolioValue = getPortfolioValue(
     ownedAssets,
-    etherPrice
+    etherPrice,
   ).toFixed(2);
   const totalPortfolioRevenue = getPortfolioRevenue(
     ownedAssets,
-    etherPrice
+    etherPrice,
   ).toFixed(2);
   const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, etherPrice);
   const portfolioRevenueAssets = getPortfolioRevenueAssets(
     ownedAssets,
-    etherPrice
+    etherPrice,
   );
 
   return (
@@ -101,7 +101,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
 PortfolioPage.propTypes = {
   loading: PropTypes.shape({}).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  prices: PropTypes.shape({}).isRequired
+  prices: PropTypes.shape({}).isRequired,
 };
 
 export default PortfolioPage;
