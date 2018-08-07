@@ -6,13 +6,11 @@ import { Link } from 'react-router-dom';
 
 const classNames = require('classnames');
 
-const NavigationOption = ({
-  name, icon, selectable, selected, url,
-}) => {
+const NavigationOption = ({ name, icon, selectable, selected, url }) => {
   const optionClass = classNames({
     AppNavigationBar__option: true,
     'AppNavigationBar__option--is-selected': selected,
-    'AppNavigationBar__option--is-selectable': selectable,
+    'AppNavigationBar__option--is-selectable': selectable
   });
 
   return (
@@ -34,13 +32,13 @@ NavigationOption.propTypes = {
   icon: PropTypes.string.isRequired,
   selectable: PropTypes.bool,
   selected: PropTypes.bool,
-  url: PropTypes.string,
+  url: PropTypes.string
 };
 
 NavigationOption.defaultProps = {
   selected: false,
   selectable: false,
-  url: '',
+  url: ''
 };
 
 export default NavigationOption;

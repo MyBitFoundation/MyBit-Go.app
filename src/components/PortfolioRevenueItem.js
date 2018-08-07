@@ -7,7 +7,7 @@ const PortfolioRevenueItem = ({
   assetID,
   name,
   totalRevenue,
-  monthlyRevenue,
+  monthlyRevenue
 }) => (
   <div key={assetID} className="Portfolio__tile">
     <img className="Portfolio__tile-img" src={LineChart} alt="Line chart" />
@@ -27,7 +27,7 @@ PortfolioRevenueItem.propTypes = {
   assetID: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   monthlyRevenue: PropTypes.number.isRequired,
-  totalRevenue: PropTypes.number.isRequired,
+  totalRevenue: PropTypes.number.isRequired
 };
 
 export default PortfolioRevenueItem;

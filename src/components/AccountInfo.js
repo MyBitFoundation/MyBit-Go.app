@@ -10,7 +10,10 @@ const IS_DAPP_VERSION_ONE = true;
 
 const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
   let myBitBalanceToRender = '0';
-  if (!IS_DAPP_VERSION_ONE && (myBitBalance !== 0 || myBitBalance !== 'undefined')) {
+  if (
+    !IS_DAPP_VERSION_ONE &&
+    (myBitBalance !== 0 || myBitBalance !== 'undefined')
+  ) {
     const myBitBalanceString = myBitBalance.toString();
     myBitBalanceToRender = Web3.utils.fromWei(myBitBalanceString, 'ether');
   }
@@ -40,13 +43,13 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
 AccountInfo.defaultProps = {
   myBitBalance: '',
   ethBalance: '',
-  userName: '',
+  userName: ''
 };
 
 AccountInfo.propTypes = {
   myBitBalance: PropTypes.string,
   ethBalance: PropTypes.string,
-  userName: PropTypes.string,
+  userName: PropTypes.string
 };
 
 export default AccountInfo;

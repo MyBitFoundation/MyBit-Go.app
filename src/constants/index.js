@@ -20,7 +20,7 @@ export const METAMASK_CHROME =
 export const METAMASK_OPERA =
   'https://addons.opera.com/extensions/details/metamask/';
 
-export const getAssetRevenueTmp = (assetId) => {
+export const getAssetRevenueTmp = assetId => {
   switch (assetId) {
     case '0x0903212121a0073f661f7cadf9079433fc0fe5b3418482a1bdb4631d52833f9f':
       return 120000;

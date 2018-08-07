@@ -15,14 +15,11 @@ const Asset = ({
   name,
   category,
   id,
-  backgroundImage,
+  backgroundImage
 }) => {
   const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
-    <Link
-      to={`/explore/${category}/${id}`}
-      href={`/explore/${category}/${id}`}
-    >
+    <Link to={`/explore/${category}/${id}`} href={`/explore/${category}/${id}`}>
       <div className="Asset">
         <div className="Asset__container">
           <div
@@ -42,15 +39,15 @@ const Asset = ({
           </div>
           <div className="Asset__details">
             <p className="Asset__details-funded">
-            Funded: <b>${Math.round(funded)}</b>
+              Funded: <b>${Math.round(funded)}</b>
             </p>
             <p className="Asset__details-goal">
-            Goal:
+              Goal:
               <b>
                 {Number(goal).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              })}
+                  style: 'currency',
+                  currency: 'USD'
+                })}
               </b>
             </p>
             <div className="Asset__details-progress-bar">
@@ -69,7 +66,6 @@ const Asset = ({
             >
               Contribute
             </Button>
-
           </div>
         </div>
       </div>
@@ -78,7 +74,7 @@ const Asset = ({
 };
 
 Asset.defaultProps = {
-  clickHandler: undefined,
+  clickHandler: undefined
 };
 
 Asset.propTypes = {
@@ -90,14 +86,14 @@ Asset.propTypes = {
   category: PropTypes.string.isRequired,
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string.isRequired,
+  backgroundImage: PropTypes.string.isRequired
 };
 
 Asset.defaultProps = {
   city: '',
   country: '',
   name: '',
-  clickHandler: () => {},
+  clickHandler: () => {}
 };
 
 export default Asset;

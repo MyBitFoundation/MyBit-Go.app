@@ -2,13 +2,13 @@ import req from 'axios';
 import { debug } from '../constants';
 
 const HEADER = {
-  Authorization: '',
+  Authorization: ''
 };
 
 const TRANSACTIONHEADER = {
   'Content-Type': 'application/json',
   Authorization: '',
-  'CB-2FA-Token': '', // 2FA AUTH
+  'CB-2FA-Token': '' // 2FA AUTH
 };
 
 const TRANSACTIONSEND = {
@@ -16,7 +16,7 @@ const TRANSACTIONSEND = {
   to: '',
   amount: '0.001',
   currency: 'ETH',
-  description: '',
+  description: ''
 };
 
 const URLS = {
@@ -25,7 +25,7 @@ const URLS = {
   valid_bank: 'https://api.coinbase.com/v2/payment-methods',
   accounts_for_Transaction: 'https://api.coinbase.com/v2/accounts/',
   transaction: '/transactions',
-  revoke_access: 'https://api.coinbase.com/oauth/revoke',
+  revoke_access: 'https://api.coinbase.com/oauth/revoke'
 };
 
 const CoinbaseApi = {
@@ -36,7 +36,7 @@ const CoinbaseApi = {
     const response = await req.request({
       method: 'get',
       url: URLS.valid_bank,
-      headers: HEADER,
+      headers: HEADER
     });
     const responseData = JSON.parse(response.body).data;
     for (let index = 0; index < responseData.length; index += 1) {
@@ -53,7 +53,7 @@ const CoinbaseApi = {
     const response = await req.request({
       method: 'get',
       url: URLS.user,
-      headers: HEADER,
+      headers: HEADER
     });
     const responseData = JSON.parse(response.body).data;
     debug(`accountID${responseData.id}`);
@@ -65,7 +65,7 @@ const CoinbaseApi = {
     const response = await req.request({
       method: 'get',
       url: URLS.accounts_for_Transaction,
-      headers: HEADER,
+      headers: HEADER
     });
     const responseData = JSON.parse(response.body).data;
     for (let index = 0; index < responseData.length; index += 1) {
@@ -81,7 +81,7 @@ const CoinbaseApi = {
     _accessToken,
     _ethWalletId,
     _amountToSend,
-    _addressToSend,
+    _addressToSend
     // _verification,
   ) {
     TRANSACTIONHEADER.Authorization = `Bearer ${_accessToken}`;
@@ -94,7 +94,7 @@ const CoinbaseApi = {
       method: 'POST',
       url: URLS.accounts_for_Transaction + _ethWalletId + URLS.transaction,
       headers: TRANSACTIONHEADER,
-      body: TRANSACTIONSEND,
+      body: TRANSACTIONSEND
     });
     const responseData = JSON.parse(response.body).data;
     debug(`verificationTxID; ${responseData}`);
@@ -104,7 +104,7 @@ const CoinbaseApi = {
   async transactionHashAfterPosted(
     _accessToken,
     _ethWalletId,
-    _verificationTxID,
+    _verificationTxID
   ) {
     HEADER.Authorization = `Bearer ${_accessToken}`;
     const response = await req.request({
@@ -112,7 +112,7 @@ const CoinbaseApi = {
       url: `${URLS.accounts_for_Transaction +
         _ethWalletId +
         URLS.transaction}/${_verificationTxID}`,
-      HEADER,
+      HEADER
     });
     const responseData = JSON.parse(response.body).network.hash;
     debug(`Transaction hash; ${responseData}`);
@@ -124,7 +124,7 @@ const CoinbaseApi = {
     const response = await req.request({
       method: 'get',
       url: URLS.user,
-      HEADER,
+      HEADER
     });
     const responseData = JSON.parse(response.body).data;
     const responseDict = {
@@ -134,7 +134,7 @@ const CoinbaseApi = {
       timeZone: responseData.time_zone,
       nativeCurrency: responseData.native_currency,
       countryCode: responseData.country.code,
-      countryName: responseData.country.name,
+      countryName: responseData.country.name
     };
     debug(`User Details; ${responseDict}`);
     return responseDict;
@@ -146,10 +146,10 @@ const CoinbaseApi = {
       method: 'POST',
       url: URLS.revoke_access,
       HEADER,
-      data: `token=${_accessToken}`,
+      data: `token=${_accessToken}`
     });
     return response;
-  },
+  }
 };
 
 export default CoinbaseApi;

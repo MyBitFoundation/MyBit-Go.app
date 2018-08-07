@@ -14,7 +14,7 @@ import checkForNetworks from '../util/checkForNetworks';
 import {
   METAMASK_FIREFOX,
   METAMASK_CHROME,
-  METAMASK_OPERA,
+  METAMASK_OPERA
 } from '../constants';
 
 const { detect } = require('detect-browser');
@@ -24,21 +24,20 @@ class MetamaskChecker extends Component {
     super(props);
     this.state = {
       isMetamaskUserLogged: null,
-      isRopstenNetwork: false,
+      isRopstenNetwork: false
     };
     this.isBraveBrowser = false;
     this.extensionUrl = '';
 
-    checkForNetworks().then((data) => {
+    checkForNetworks().then(data => {
       if (data === 'ropsten') {
         this.setState({ isRopstenNetwork: true });
       }
     });
   }
 
-
   componentDidMount() {
-    checkAccount().then((haveAccounts) => {
+    checkAccount().then(haveAccounts => {
       if (haveAccounts.length === 0) {
         this.setState({ isMetamaskUserLogged: false });
       }
@@ -104,9 +103,7 @@ class MetamaskChecker extends Component {
     }
 
     if (this.state.isRopstenNetwork !== true) {
-      return (
-        <MetamaskNetwork />
-      );
+      return <MetamaskNetwork />;
     }
     return null;
   }
@@ -126,7 +123,7 @@ class MetamaskChecker extends Component {
 }
 
 MetamaskChecker.propTypes = {
-  shouldDisplay: PropTypes.bool.isRequired,
+  shouldDisplay: PropTypes.bool.isRequired
 };
 
 export default MetamaskChecker;
