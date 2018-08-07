@@ -16,7 +16,7 @@ import {
 
 const web3 = getWeb3Async();
 const IPFS_URL =
-  'https://ipfs.io/ipfs/QmP1EYGpj6QtUdJqqfRFKVhRBFMm2sGEY43SkYuWC6cbq/';
+  'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
 
 export const fetchPriceFromCoinmarketcap = async ticker =>
   new Promise(async (resolve, reject) => {
