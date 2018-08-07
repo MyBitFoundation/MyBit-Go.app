@@ -122,9 +122,9 @@ export const getPrettyCategoryName = category => {
     case 'cryptomining':
       return 'Crypto Mining';
     case 'realestatestorage':
-      return 'Real Estate Storage';
+      return 'Real Estate (Storage)';
     case 'realestatecoworking':
-      return 'Real Estate Coworking';
+      return 'Real Estate (Co-Working)';
     case 'chargingstation':
       return 'Charging Station';
     case 'dronedelivery':
@@ -137,8 +137,8 @@ export const getPrettyCategoryName = category => {
       return 'Wind Energy';
     case 'masternodes':
       return 'Masternodes';
-    case 'Vending Machines':
-      return 'vendingmachines';
+    case 'vendingmachines':
+      return 'Vending Machines';
     default:
       return 'Other';
   }
