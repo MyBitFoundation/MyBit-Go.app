@@ -106,7 +106,7 @@ class ConfirmationPopup extends React.Component {
               />
               <p className="ConfirmationPopup__tos-text">
                 I read and agree to the{' '}
-                <a href="https://mybit.io">terms and conditions</a>
+                <a href="https://docs.google.com/document/d/1LUArMnGpnvpe5fI4-QI_lvkJTb5Xf6me0XU1zznCqmk/edit?usp=sharing" target="_blank" rel="noopener noreferrer">terms and conditions</a>
               </p>
             </div>
             <p
