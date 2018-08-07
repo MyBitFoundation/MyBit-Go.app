@@ -3,17 +3,17 @@
 	margin: 0px;
   max-width: 1370px;
  	margin: 0 auto;
- 	padding-top: 50px;
+ 	padding-top: 60px;
 
   &__container{
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
   }
 
 	&__category
 	{
-	    margin: 0px 15px 30px 15px;
+			margin: 0px 10px 20px 15px;
 	    padding: 0px;
 	    height: 310px;
       text-decoration: none;

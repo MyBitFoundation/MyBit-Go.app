@@ -3,7 +3,7 @@ import autonomousvehiclesImage from '../images/categories/autonomousvehicles.png
 import cryptominingImage from '../images/categories/Cryptomining.jpeg';
 import dronedeliveryImage from '../images/categories/dronedelivery.png';
 import solarenergyImage from '../images/categories/Solar1.jpeg';
-import windenergyImage from '../images/categories/windenergy.png';
+// import windenergyImage from '../images/categories/windenergy.png';
 import otherImage from '../images/categories/other.png';
 import realestatecoworkingImage from '../images/categories/Co-working.png';
 import realestatestorageImage from '../images/categories/Storage.jpeg'
@@ -107,7 +107,7 @@ export const getCategoryFromAssetTypeHash = (web3, assetTypeHash) => {
     case web3.utils.sha3('solarenergy'):
       return 'solarenergy';
     case web3.utils.sha3('windenergy'):
-      return 'windenergy';
+      return 'other';
     case web3.utils.sha3('masternodes'):
       return 'masternodes';
     case web3.utils.sha3('vendingmachines'):
@@ -135,8 +135,8 @@ export const getPrettyCategoryName = category => {
       return 'Autonomous Vehicles';
     case 'solarenergy':
       return 'Energy';
-    case 'windenergy':
-      return 'Energy';
+    // case 'windenergy':
+    //   return 'Energy';
     case 'masternodes':
       return 'Masternodes';
     case 'vendingmachines':
@@ -160,8 +160,8 @@ export const getImageForCategory = category => {
       return solarenergyImage;
     case 'realestatestorage':
       return realestatestorageImage;
-    case 'windenergy':
-      return windenergyImage;
+    // case 'windenergy':
+    //   return windenergyImage;
     case 'realestatecoworking':
       return realestatecoworkingImage;
     case 'masternodes':
