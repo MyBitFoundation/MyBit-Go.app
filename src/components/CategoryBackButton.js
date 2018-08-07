@@ -8,7 +8,7 @@ const CategoryBackButton = ({ category }) => {
   let tempCategoryFix;
   if (category === 'Real Estate (Storage)') {
     tempCategoryFix = 'realestatestorage';
-  } else if (category === 'Real Estate (Co-working)') {
+  } else if (category === 'Real Estate (Co-Working)') {
     tempCategoryFix = 'realestatecoworking';
   } else {
     tempCategoryFix = category.replace(/ /g, '').toLowerCase();
