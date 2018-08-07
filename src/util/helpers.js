@@ -132,9 +132,9 @@ export const getPrettyCategoryName = category => {
     case 'autonomousvehicles':
       return 'Autonomous Vehicles';
     case 'solarenergy':
-      return 'Solar Energy';
+      return 'Energy';
     case 'windenergy':
-      return 'Wind Energy';
+      return 'Energy';
     case 'masternodes':
       return 'Masternodes';
     case 'vendingmachines':
