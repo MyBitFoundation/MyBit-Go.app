@@ -70,7 +70,7 @@ class HelpPage extends React.Component {
       },
       {
         imageSrc: bugIcon,
-        url: '',
+        url: 'https://github.com/MyBitFoundation/MyBitDapp-FrontEnd/issues',
         text: 'Found a bug? Click here.',
         className: 'HelpPage__footer-button--is-bug'
       }

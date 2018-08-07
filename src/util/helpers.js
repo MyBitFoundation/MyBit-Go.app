@@ -1,14 +1,16 @@
 import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpeg';
-import solarEnergyCategoryImage from '../images/category-solar-energy.png';
-
 import autonomousvehiclesImage from '../images/categories/autonomousvehicles.png';
 import cryptominingImage from '../images/categories/Cryptomining.jpeg';
 import dronedeliveryImage from '../images/categories/dronedelivery.png';
 import solarenergyImage from '../images/categories/Solar1.jpeg';
 import windenergyImage from '../images/categories/windenergy.png';
 import otherImage from '../images/categories/other.png';
-import realestatecoworkingImage from '../images/categories/realestatecoworking.png';
+import realestatecoworkingImage from '../images/categories/Co-working.png';
+import realestatestorageImage from '../images/categories/Storage.jpeg'
 import masternodeImage from '../images/categories/Masternode.jpeg';
+import chargeStationImage from '../images/categories/ChargeStation.png';
+import vendingMachineImage from '../images/categories/VendingMachine.jpeg';
+
 
 export const parseEtherFromBalance = (web3, balance) =>
   web3.fromWei(parseInt(balance, 10), 'ether');
@@ -122,9 +124,9 @@ export const getPrettyCategoryName = category => {
     case 'cryptomining':
       return 'Crypto Mining';
     case 'realestatestorage':
-      return 'Real Estate Storage';
+      return 'Real Estate (Storage)';
     case 'realestatecoworking':
-      return 'Real Estate Coworking';
+      return 'Real Estate (Co-Working)';
     case 'chargingstation':
       return 'Charging Station';
     case 'dronedelivery':
@@ -132,13 +134,13 @@ export const getPrettyCategoryName = category => {
     case 'autonomousvehicles':
       return 'Autonomous Vehicles';
     case 'solarenergy':
-      return 'Solar Energy';
+      return 'Energy';
     case 'windenergy':
-      return 'Wind Energy';
+      return 'Energy';
     case 'masternodes':
       return 'Masternodes';
-    case 'Vending Machines':
-      return 'vendingmachines';
+    case 'vendingmachines':
+      return 'Vending Machines';
     default:
       return 'Other';
   }
@@ -148,8 +150,6 @@ export const getImageForCategory = category => {
   switch (category) {
     case 'bitcoinatm':
       return cryptocurrencyAtmCategoryImage;
-    case 'uncategorized':
-      return solarEnergyCategoryImage;
     case 'autonomousvehicles':
       return autonomousvehiclesImage;
     case 'cryptomining':
@@ -158,12 +158,18 @@ export const getImageForCategory = category => {
       return dronedeliveryImage;
     case 'solarenergy':
       return solarenergyImage;
+    case 'realestatestorage':
+      return realestatestorageImage;
     case 'windenergy':
       return windenergyImage;
     case 'realestatecoworking':
       return realestatecoworkingImage;
     case 'masternodes':
       return masternodeImage;
+    case 'chargingstation':
+      return chargeStationImage;
+    case 'vendingmachines':
+      return vendingMachineImage;
     default:
       return otherImage;
   }
