@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'carbon-components-react';
+import { Link } from 'react-router-dom';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
 import { debug } from '../constants';
@@ -55,15 +56,17 @@ const Asset = ({
               />
             </div>
 
-            <Button
-              onClick={
-                clickHandler ||
-                (() => debug(`Clicked to contribute, asset id: ${id}`))
-              }
-              className="Asset__details-contribute"
-            >
-              Contribute
-            </Button>
+            <Link to={`/explore/${category}/${id}`} href={`/explore/${category}/${id}`}>
+              <Button
+                onClick={
+                  clickHandler ||
+                  (() => debug(`Clicked to contribute, asset id: ${id}`))
+                }
+                className="Asset__details-contribute"
+              >
+                Contribute
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
