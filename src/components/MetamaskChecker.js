@@ -29,16 +29,13 @@ class MetamaskChecker extends Component {
     this.isBraveBrowser = false;
     this.extensionUrl = '';
 
-    checkForNetworks().then((data) => {
-      console.log('isRopstenNetworkwoek')
-      console.log(data)
-      if(data === 'ropsten') {
+    checkForNetworks().then(data => {
+      if (data === 'ropsten') {
         this.setState({ isRopstenNetwork: true });
       }
-    })
+    });
   }
 
- 
   componentDidMount() {
     checkAccount().then(haveAccounts => {
       if (haveAccounts.length === 0) {
@@ -105,10 +102,8 @@ class MetamaskChecker extends Component {
       );
     }
 
-    if(this.state.isRopstenNetwork !== true) {
-      return (
-        <MetamaskNetwork />
-      )
+    if (this.state.isRopstenNetwork !== true) {
+      return <MetamaskNetwork />;
     }
     return null;
   }

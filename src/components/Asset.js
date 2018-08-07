@@ -19,47 +19,44 @@ const Asset = ({
 }) => {
   const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
   return (
-    <Link
-            to={`/explore/${category}/${id}`}
-            href={`/explore/${category}/${id}`}
+    <Link to={`/explore/${category}/${id}`} href={`/explore/${category}/${id}`}>
+      <div className="Asset">
+        <div className="Asset__container">
+          <div
+            className="Asset__image-holder"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
           >
-    <div className="Asset">
-      <div className="Asset__container">
-        <div
-          className="Asset__image-holder"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-        >
-          <div className="Asset__image-holder-gradient" />
-          <img
-            alt="Location icon"
-            className="Asset__image-holder-location-icon"
-            src={locationIcon}
-          />
-          <b className="Asset__image-holder-name">{name}</b>
-          <p className="Asset__image-holder-location">
-            {city}, <span>{country}</span>
-          </p>
-        </div>
-        <div className="Asset__details">
-          <p className="Asset__details-funded">
-            Funded: <b>${Math.round(funded)}</b>
-          </p>
-          <p className="Asset__details-goal">
-            Goal:
-            <b>
-              {Number(goal).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD'
-              })}
-            </b>
-          </p>
-          <div className="Asset__details-progress-bar">
-            <div
-              className="Asset__details-progress-bar-fill"
-              style={{ width: barWidth }}
+            <div className="Asset__image-holder-gradient" />
+            <img
+              alt="Location icon"
+              className="Asset__image-holder-location-icon"
+              src={locationIcon}
             />
+            <b className="Asset__image-holder-name">{name}</b>
+            <p className="Asset__image-holder-location">
+              {city}, <span>{country}</span>
+            </p>
           </div>
-          
+          <div className="Asset__details">
+            <p className="Asset__details-funded">
+              Funded: <b>${Math.round(funded)}</b>
+            </p>
+            <p className="Asset__details-goal">
+              Goal:
+              <b>
+                {Number(goal).toLocaleString('en-US', {
+                  style: 'currency',
+                  currency: 'USD'
+                })}
+              </b>
+            </p>
+            <div className="Asset__details-progress-bar">
+              <div
+                className="Asset__details-progress-bar-fill"
+                style={{ width: barWidth }}
+              />
+            </div>
+
             <Button
               onClick={
                 clickHandler ||
@@ -69,10 +66,9 @@ const Asset = ({
             >
               Contribute
             </Button>
-
+          </div>
         </div>
       </div>
-    </div>
     </Link>
   );
 };
