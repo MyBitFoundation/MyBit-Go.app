@@ -1,5 +1,13 @@
 {
-  "rewrites": [
-    { "source": "/*", "destination": "/index.html" }
-  ]
+  "name": "app.mybit.io",
+  "type": "static",
+  "files": [
+    "build"
+  ],
+  "static": {
+    "public": "build",
+    "rewrites": [
+      { "source": "/*", "destination": "/index.html" }
+    ]
+  }
 }
