@@ -7,11 +7,8 @@ import '../../styles/LoadingPage.css';
 const LoadingPage = ({ hasBackButton, path = '/explore', message }) => {
   const backButton = hasBackButton && (
     <Link to={path} href={path}>
-      <Button
-        kind="secondary"
-        className="LoadingPage__back-button"
-      >
-          BACK
+      <Button kind="secondary" className="LoadingPage__back-button">
+        BACK
       </Button>
     </Link>
   );
@@ -20,9 +17,7 @@ const LoadingPage = ({ hasBackButton, path = '/explore', message }) => {
     <div className="LoadingPage">
       {backButton}
       <div className="LoadingPage__wrapper">
-        <Loading
-          withOverlay={false}
-        />
+        <Loading withOverlay={false} />
         <p className="LoadingPage__message">{message}</p>
       </div>
     </div>
@@ -30,13 +25,14 @@ const LoadingPage = ({ hasBackButton, path = '/explore', message }) => {
 };
 
 LoadingPage.propTypes = {
-  hasBackButton: PropTypes.bool.isRequired,
+  hasBackButton: PropTypes.bool,
   path: PropTypes.string,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired
 };
 
 LoadingPage.defaultProps = {
   path: '',
+  hasBackButton: false
 };
 
 export default LoadingPage;

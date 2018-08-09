@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider, ModalWrapper } from 'carbon-components-react';
+import { Slider, Button } from 'carbon-components-react';
 import dayjs from 'dayjs';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
-import * as FundingHub from '../constants/contracts/FundingHub';
-import { debug } from '../constants';
 import '../styles/AssetDetails.css';
 import locationIcon from '../images/location.png';
 import calendarIcon from '../images/calendar.png';
-import backgroundImage from '../images/asset-details-page-header.png';
+import BlockchainInfoContext from './BlockchainInfoContext';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -20,16 +18,14 @@ class AssetDetails extends React.Component {
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
-      acceptedTos: false,
-      displayWarning: false,
+      isPopupOpen: false
     };
     this.setDateDetails = this.setDateDetails.bind(this);
     this.endDateLocal = dayjs(this.props.information.dueDate);
     this.clearInterval = this.clearInterval.bind(this);
-    this.handleConfirmClicked = this.handleConfirmClicked.bind(this);
-    this.setAcceptedTos = this.setAcceptedTos.bind(this);
     this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
+    this.etherValueSelected = 0;
   }
 
   componentDidMount() {
@@ -45,7 +41,7 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
-        endingAt: '',
+        endingAt: ''
       });
       this.clearInterval();
       return;
@@ -55,7 +51,9 @@ class AssetDetails extends React.Component {
       this.setState({
         daysToGo: -1,
         timeToGo: 'Funding period has ended',
-        endingAt: `Funding period has ended on ${dayjs(this.endDateLocal).format('dddd, MMMM D')}`,
+        endingAt: `Funding period has ended on ${dayjs(
+          this.endDateLocal
+        ).format('dddd, MMMM D')}`
       });
       this.clearInterval();
       return;
@@ -79,7 +77,9 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `Ending in ${calculateRemainingTime.hour()}h ${calculateRemainingTime.minute()}m ${calculateRemainingTime.second()}s`,
         daysToGo: 0,
-        endingAt: `Funding period ends ${day} at ${dayjs(this.endDateLocal).format('H:mm:ss')}`,
+        endingAt: `Funding period ends ${day} at ${dayjs(
+          this.endDateLocal
+        ).format('H:mm:ss')}`
       });
 
       if (!this.setDateInterval || this.runningMinInterval) {
@@ -94,7 +94,9 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go`,
         daysToGo: days,
-        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format('dddd, MMMM D')} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`,
+        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format(
+          'dddd, MMMM D'
+        )} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`
       });
       if (!this.setDateInterval) {
         this.setDateInterval = setInterval(() => {
@@ -105,15 +107,16 @@ class AssetDetails extends React.Component {
     }
   }
 
-  setAcceptedTos(acceptedTos) {
-    this.setState({ acceptedTos });
-    if (acceptedTos && this.state.displayWarning) {
-      this.setState({ displayWarning: false });
-    }
-  }
-
   getAcceptedTos() {
     return this.state.acceptedTos;
+  }
+
+  handlePopupState(value) {
+    this.setState({ isPopupOpen: value });
+  }
+
+  isPopupOpen() {
+    return this.state.isPopupOpen;
   }
 
   clearInterval() {
@@ -126,28 +129,22 @@ class AssetDetails extends React.Component {
     this.clearInterval();
   }
 
-  handleConfirmClicked() {
-    if (!this.state.acceptedTos) {
-      this.setState({ displayWarning: true });
-      return false;
-    }
-    // TODO: See if this is all that we want and handle the UI better
-    const fundingHubContract = new window.web3.eth.Contract(FundingHub.ABI, FundingHub.ADDRESS);
-    this.setState({ acceptedTos: false });
-    // TODO: Mechanism to decide how much to contribute in wei
-    fundingHubContract.methods.fund(this.props.information.assetID).send({ value: '0' })
-      .then(debug)
-      .catch(debug);
-    return true;
-  }
-
   render() {
-    const maxInvestment = this.state.daysToGo < 0 ? 0 :
-      this.props.information.goal - this.props.information.raised;
-    const ownership = (this.state.currentSelectedAmount * 100) / this.props.information.goal;
-    const etherValue = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
-      .toFixed(2));
-    let minInvestment = this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
+    const maxInvestment =
+      this.state.daysToGo < 0
+        ? 0
+        : (this.props.information.goal - this.props.information.raised).toFixed(
+            2
+          );
+    const ownership = (
+      (this.state.currentSelectedAmount * 100) /
+      this.props.information.goal
+    ).toFixed(2);
+    this.etherValueSelected = Number(
+      (this.state.currentSelectedAmount / this.props.currentEthInUsd).toFixed(2)
+    );
+    let minInvestment =
+      this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
 
     if (maxInvestment <= 100 && maxInvestment > 0 && this.state.daysToGo > 0) {
       minInvestment = 1;
@@ -155,6 +152,21 @@ class AssetDetails extends React.Component {
 
     return (
       <div className="AssetDetails grid">
+        {this.state.isPopupOpen && (
+          <BlockchainInfoContext.Consumer>
+            {({ fundAsset }) => (
+              <ConfirmationPopup
+                amountUsd={this.state.currentSelectedAmount}
+                amountEth={this.etherValueSelected}
+                ownership={ownership}
+                isPopupOpen={() => this.isPopupOpen()}
+                handlePopupState={val => this.handlePopupState(val)}
+                assetId={this.props.information.assetID}
+                fundAsset={fundAsset}
+              />
+            )}
+          </BlockchainInfoContext.Consumer>
+        )}
         <div className="AssetDetails__left col_lg-6 col_md-12">
           <b className="AssetDetails__left-name">
             {this.props.information.assetName}
@@ -191,14 +203,19 @@ class AssetDetails extends React.Component {
             <div className="AssetDetails__left-funds-goal">
               <p className="AssetDetails__left-funding-title">Funding goal</p>
               <b className="AssetDetails__left-funding-value">
-                {this.props.information.goal.toLocaleString()} USD
+                {Number(this.props.information.goal).toLocaleString('en-US', {
+                  style: 'currency',
+                  currency: 'USD'
+                })}
               </b>
             </div>
             <div className="AssetDetails__left-funds-investors">
               <p className="AssetDetails__left-funding-title">
                 Number of investors so far
               </p>
-              <b className="AssetDetails__left-funding-value">5</b>
+              <b className="AssetDetails__left-funding-value">
+                {this.props.information.numberOfInvestors}
+              </b>
             </div>
           </div>
           <p className="AssetDetails__left-calculate-title">
@@ -209,7 +226,9 @@ class AssetDetails extends React.Component {
             value={this.state.currentSelectedAmount}
             min={minInvestment}
             max={maxInvestment}
-            onChange={arg => this.setState({ currentSelectedAmount: arg.value })}
+            onChange={arg =>
+              this.setState({ currentSelectedAmount: arg.value })
+            }
             hideTextInput
             disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           />
@@ -226,7 +245,7 @@ class AssetDetails extends React.Component {
           </b>
           <div className="AssetDetails__left-separator" />
           <b className="AssetDetails__left-contribution-value">
-            {etherValue} ETH
+            {this.etherValueSelected} ETH
           </b>
           <p className="AssetDetails__left-ownership">
             Ownership:{' '}
@@ -248,31 +267,20 @@ class AssetDetails extends React.Component {
           <b className="AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
             1.87 ETH
           </b>
-          <ModalWrapper
-            id="ConfirmationPopup__container"
-            buttonTriggerText="Contribute"
-            shouldCloseAfterSubmit
-            modalBeforeContent={false}
-            primaryButtonText="Confirm"
-            secondaryButtonText="Cancel"
-            handleSubmit={this.handleConfirmClicked}
+          <Button
+            className="AssetDetails__left-contribute-btn"
+            kind="primary"
+            onClick={() => this.handlePopupState(true)}
             disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           >
-            <ConfirmationPopup
-              amountUsd={this.state.currentSelectedAmount}
-              amountEth={etherValue}
-              ownership={ownership}
-              setAcceptedTos={this.setAcceptedTos}
-              displayWarning={this.state.displayWarning}
-              getAcceptedTos={this.getAcceptedTos}
-            />
-          </ModalWrapper>
+            Contribute
+          </Button>
         </div>
         <div className="AssetDetails__right col_lg-6 col_md-12">
           <img
             alt="Asset details background"
             className="AssetDetails__right-image"
-            src={backgroundImage}
+            src={this.props.information.imageSrc}
           />
           <div className="AssetDetails__right-wrapper">
             <b className="AssetDetails__right-title-details">Asset Details</b>
@@ -296,13 +304,13 @@ class AssetDetails extends React.Component {
 }
 
 AssetDetails.defaultProps = {
-  currentEthInUsd: undefined,
+  currentEthInUsd: undefined
 };
 
 AssetDetails.propTypes = {
   information: PropTypes.shape({
     assetID: PropTypes.string.isRequired,
-    dueDate: PropTypes.string.isRequired,
+    dueDate: PropTypes.number.isRequired,
     goal: PropTypes.string.isRequired,
     raised: PropTypes.string.isRequired,
     assetName: PropTypes.string.isRequired,
@@ -311,8 +319,10 @@ AssetDetails.propTypes = {
     details: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
+    numberOfInvestors: PropTypes.number.isRequired,
+    imageSrc: PropTypes.string.isRequired
   }).isRequired,
-  currentEthInUsd: PropTypes.number,
+  currentEthInUsd: PropTypes.number
 };
 
 export default AssetDetails;

@@ -7,26 +7,26 @@ import '../styles/Address.css';
 const Address = ({ userName, className }) => (
   <div className={className}>
     {!userName ? (
-      <div>
-        <Loading className="Address--is-loading" small withOverlay={false} />
-        <span className="Address__loading-message">Loading account</span>
+      <div className="Address__loader">
+        <Loading small withOverlay={false} />
+        <span>Loading account</span>
       </div>
-      ) : (
-        <div>
-          <Jazzicon diameter={39} />
-          <p className="Address__text">{userName}</p>
-        </div>
-      )}
+    ) : (
+      <div>
+        <Jazzicon diameter={39} />
+        <p className="Address__text">{userName}</p>
+      </div>
+    )}
   </div>
 );
 
 Address.defaultProps = {
-  userName: undefined,
+  userName: undefined
 };
 
 Address.propTypes = {
   userName: PropTypes.string,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired
 };
 
 export default Address;

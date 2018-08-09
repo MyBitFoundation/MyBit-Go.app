@@ -6,42 +6,39 @@ import CategoryBackButton from '../CategoryBackButton';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
-const AssetDetailsPage = ({
-  state,
-  match,
-}) => {
-  if (state.loading.assets) {
+const AssetDetailsPage = ({ loading, assets, match, prices, user }) => {
+  if (loading.assets) {
     return (
       <div style={{ width: '100%', position: 'relative', top: '50px' }}>
         <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
         <p className="AssetDetailsPage-loading-message">
-        Loading asset information
+          Loading asset information
         </p>
       </div>
     );
   }
 
   const { assetId, category } = match.params;
-  const asset = state.assets.find(({ assetID }) => assetID === assetId);
+  const asset = assets.find(({ assetID }) => assetID === assetId);
 
   if (!asset) {
     return (
-      <NotFoundPage
-        message="The desired asset could not be found. Assets previously listed may no longer exist."
-      />
+      <NotFoundPage message="The desired asset could not be found. Assets previously listed may no longer exist." />
     );
   }
   const assetInformation = {
     assetID: asset.assetID,
     dueDate: asset.fundingDeadline,
-    goal: asset.amountToBeRaised,
+    goal: asset.amountToBeRaisedInUSD,
     raised: asset.amountRaisedInUSD,
-    assetName: '',
-    city: '',
-    country: '',
-    details: '',
-    description: '',
-    address: '',
+    assetName: asset.name,
+    city: asset.city,
+    country: asset.country,
+    details: asset.details,
+    description: asset.description,
+    address: asset.assetManager,
+    numberOfInvestors: asset.numberOfInvestors,
+    imageSrc: asset.imageSrc
   };
 
   return (
@@ -49,15 +46,19 @@ const AssetDetailsPage = ({
       <CategoryBackButton category={category} />
       <AssetDetails
         information={assetInformation}
-        currentEthInUsd={state.misc.currentEthInUsd}
+        currentEthInUsd={prices.etherPrice}
+        user={user}
       />
     </div>
   );
 };
 
 AssetDetailsPage.propTypes = {
-  state: PropTypes.shape().isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  user: PropTypes.shape({ params: PropTypes.object }).isRequired
 };
 
 export default AssetDetailsPage;

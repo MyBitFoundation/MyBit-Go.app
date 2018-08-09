@@ -5,13 +5,15 @@
   "dependencies": {
     "@storybook/addon-actions": "^3.4.5",
     "@storybook/react": "^3.4.5",
+    "antd": "^3.7.0",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "carbon-components": "^8.22.6",
     "carbon-components-react": "^5.51.5",
-    "carbon-icons": "^6.3.2",
+    "carbon-icons": "^7.0.7",
     "classnames": "^2.2.5",
     "dayjs": "^1.6.3",
+    "detect-browser": "^3.0.0",
     "gridlex": "^2.7.1",
     "history": "^4.7.2",
     "include-media": "^1.4.9",
@@ -21,13 +23,8 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-jazzicon": "^0.1.0",
-    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "2.0.0-next.3e165448",
-    "redux": "^4.0.0",
-    "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0",
     "web3": "^1.0.0-beta.34"
   },
   "scripts": {
@@ -45,7 +42,8 @@
     "run-storybook": "build-storybook -c .storybook -o .out",
     "build-storybook": "npm-run-all build-css run-storybook",
     "lint": "eslint --ignore-path .gitignore .",
-    "lint:fix": "eslint --ignore-path .gitignore --fix ."
+    "lint:fix": "eslint --ignore-path .gitignore --fix .",
+    "format-code": "prettier --single-quote --write 'src/**/*.js'"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

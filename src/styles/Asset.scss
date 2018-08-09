@@ -4,6 +4,7 @@ $imageHeight: 196px;
     margin-bottom: 30px;
     padding: 0px;
     position: relative;
+    width: 325px;
 
     &__container{
     	width: 90%;
@@ -17,13 +18,13 @@ $imageHeight: 196px;
 		background-position: center;
 		height: $imageHeight;
     	position: relative;
-    	
+
 		&-gradient{
     		position: absolute;
     		top: 0px;
     		height: $imageHeight;
-    		width: 100%;
-			background-image: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 66px);
+			width: 100%;
+			background-image: linear-gradient(to left, #0b3f9c, #0083FF) !important;
     	}
 
     	&-location-icon{
@@ -77,7 +78,6 @@ $imageHeight: 196px;
 		}
 
 		&-contribute{
-			background-image: linear-gradient(to right, #3ecd5d, #2db84b);
 		    margin-top: 15px;
 		    height: 32px;
 		    font-size: 14px;

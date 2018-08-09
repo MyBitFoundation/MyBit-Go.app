@@ -1,9 +1,23 @@
+@import 'include-media/dist/_include-media.scss';
+
 .AssetDetails{
-  padding-top: 25px;
+  padding-top: 40px;
 
   &__left{
     padding-left: 0px;
     padding-right: 50px;
+
+    @include media('<desktop') {
+      padding-right: 0px;
+    }
+
+    &-contribute-btn{
+      width: 100%;
+      margin-top: 30px;
+
+      &:focus, &:hover, &:active{
+      }
+    }
 
     &-name{
       font-size: 34px;
@@ -146,7 +160,11 @@
     background-color: rgba(231, 232, 235, 0.63);
 
     &-image{
-      width: 100%;
+      background: linear-gradient(to left, #24F281, #0083FF);
+      
+      min-width: 100%;
+      max-width: 100%;
+      min-height: 500px;
     }
 
     &-wrapper{
@@ -179,11 +197,6 @@
     }
   }
 
-  .bx--btn--primary:nth-child(1){
-    width: 100%;
-    margin-top: 30px;
-  }
-
   .bx--slider__range-label{
     display: none;
   }
@@ -214,6 +227,14 @@
       outline: none;
       box-shadow: none;
     }
+  }
+
+  .bx--modal-header{
+    display: none;
+  }
+
+  .bx--modal-content{
+    margin: 0px 0px;
   }
 
   .bx--slider__filled-track{

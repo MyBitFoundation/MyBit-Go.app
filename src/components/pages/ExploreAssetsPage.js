@@ -8,53 +8,47 @@ import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
 
-const ExploreAssetsPage = ({
-  state,
-  match,
-}) => {
+const ExploreAssetsPage = ({ loading, assets, match }) => {
   const { category } = match.params;
 
   if (!category) {
     return <NotFoundPage />;
   }
 
-  const loading = state.loading.assets;
-  const assetsInCategory =
-    state.assets.filter(asset => asset.category === match.params.category);
+  const loadingAssets = loading.assets;
+  const assetsInCategory = assets.filter(
+    asset => asset.category === match.params.category
+  );
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
-      <Button
-        kind="secondary"
-        className="ExploreAssetsPage__back-button"
-      >
-      BACK
+      <Button kind="secondary" className="ExploreAssetsPage__back-button">
+        Back
       </Button>
     </Link>
   );
 
-  const assets = [
+  const assetsToRender = [
     backButton,
-    assetsInCategory.map(asset => (
-      <Asset
-        id={asset.assetID}
-        key={asset.assetID}
-        funded={asset.amountRaisedInUSD}
-        goal={asset.amountToBeRaised}
-        city="unknown"
-        country="unknown"
-        name="unknown"
-        category={getPrettyCategoryName(asset.category)}
-      />
-    )),
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {assetsInCategory.map(asset => (
+        <Asset
+          key={asset.assetID}
+          id={asset.assetID}
+          funded={asset.amountRaisedInUSD}
+          goal={asset.amountToBeRaisedInUSD}
+          city={asset.city}
+          country={asset.country}
+          name={asset.name}
+          category={getPrettyCategoryName(asset.category)}
+          backgroundImage={asset.imageSrc}
+        />
+      ))}
+    </div>
   ];
 
-  const loadingElement = loading && (
-    <LoadingPage
-      message="Loading assets"
-      hasBackButton
-      path="/explore"
-    />
+  const loadingElement = loadingAssets && (
+    <LoadingPage message="Loading assets" hasBackButton path="/explore" />
   );
 
   // const noElements =
@@ -70,24 +64,23 @@ const ExploreAssetsPage = ({
   //   );
 
   let renderedOutput = null;
-  if (loading) {
+  if (loadingAssets) {
     renderedOutput = loadingElement;
-  } else if (assets[1].length === 0) {
-    renderedOutput = <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />;
+  } else if (assetsInCategory.length === 0) {
+    renderedOutput = (
+      <NotFoundPage message="The desired category could not be found. Assets previously listed under this category may no longer exist." />
+    );
   } else {
-    renderedOutput = assets;
+    renderedOutput = assetsToRender;
   }
 
-  return (
-    <div className="ExploreAssetsPage grid">
-      {renderedOutput}
-    </div>
-  );
+  return <div className="ExploreAssetsPage">{renderedOutput}</div>;
 };
 
 ExploreAssetsPage.propTypes = {
-  state: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired
 };
 
 export default ExploreAssetsPage;

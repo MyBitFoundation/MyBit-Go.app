@@ -25,6 +25,18 @@
     }
   }
 
+  &__empty {
+    color: #575757;
+    background-color: #f5f7fa;
+    text-align: right;
+    font-size: 16px;
+    //Warrning! Hacks! moving from carbon
+    line-height: 22px !important;
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
+    padding-right: 31px !important;
+  }
+
   & .bx--tile-content__below-the-fold .Portfolio__tile:nth-child(odd){
     background-color: #f5f7fa;
   }

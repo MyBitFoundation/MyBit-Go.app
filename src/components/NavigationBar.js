@@ -14,20 +14,39 @@ const exchangeIcon = require('../images/exchange-alt.png');
 const knowledgeBaseIcon = require('../images/question.png');
 
 const NavigationBar = ({ clickHandler, currentPath }) => {
-  const menuOptions = [{
-    name: 'Explore', icon: exploreIcon, selectable: true, selected: currentPath.indexOf('/explore') !== -1, url: '/',
-  },
-  {
-    name: 'Portfolio', icon: portfolioIcon, selectable: true, selected: currentPath === '/portfolio', url: '/portfolio',
-  },
-  {
-    name: 'Transactions', icon: transactionsIcon, selectable: true, selected: currentPath === '/transaction-history', url: '/transaction-history',
-  },
-  { name: 'Saved', icon: savedIcon },
-  { name: 'List Asset', icon: listAssetIcon },
-  { name: 'Staking', icon: stakingIcon },
-  { name: 'Exchange', icon: exchangeIcon },
-  { name: 'Knowledge Base', icon: knowledgeBaseIcon },
+  const menuOptions = [
+    {
+      name: 'Explore',
+      icon: exploreIcon,
+      selectable: true,
+      selected: currentPath.indexOf('/explore') !== -1,
+      url: '/'
+    },
+    {
+      name: 'Portfolio',
+      icon: portfolioIcon,
+      selectable: true,
+      selected: currentPath === '/portfolio',
+      url: '/portfolio'
+    },
+    {
+      name: 'Transactions',
+      icon: transactionsIcon,
+      selectable: true,
+      selected: currentPath === '/transaction-history',
+      url: '/transaction-history'
+    },
+    { name: 'Saved', icon: savedIcon },
+    { name: 'List Asset', icon: listAssetIcon },
+    { name: 'Staking', icon: stakingIcon },
+    { name: 'Exchange', icon: exchangeIcon },
+    {
+      name: 'Help',
+      icon: knowledgeBaseIcon,
+      selectable: true,
+      selected: currentPath === '/help',
+      url: '/help'
+    }
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
@@ -49,12 +68,11 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
 
 NavigationBar.propTypes = {
   clickHandler: PropTypes.func,
-  currentPath: PropTypes.string.isRequired,
+  currentPath: PropTypes.string.isRequired
 };
 
 NavigationBar.defaultProps = {
-  clickHandler: debug,
+  clickHandler: debug
 };
-
 
 export default NavigationBar;

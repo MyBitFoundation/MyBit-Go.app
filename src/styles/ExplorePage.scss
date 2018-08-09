@@ -1,36 +1,58 @@
 .ExplorePage{
 	width: 100%;
 	margin: 0px;
-  	max-width: 1370px;
+  max-width: 1370px;
  	margin: 0 auto;
- 	padding-top: 50px;
+ 	padding-top: 60px;
+
+  &__container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+  }
 
 	&__category
 	{
-	    margin: 0px 0px 30px 0px;
+			margin: 0px 10px 20px 15px;
 	    padding: 0px;
 	    height: 310px;
       text-decoration: none;
+      width: 310px;
 
 	    &-name{
-	    	width: 100%;
+				width: 98%;
+				margin: 0 auto;
 	    	text-align: center;
-	    	font-size: 27px;
-  			font-weight: 800;
+				font-size: 36px;
+				line-height: 42px;
+	      font-family: 'Gilroy';
+        font-weight: 900;
   			color: #ffffff;
   			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-  			top: 65%;
   			position: relative;
   			padding: 0px 10px;
 	    }
 	}
+
 	&__image-container{
-		width: 90%;
+		width: 100%;
 		margin: 0 auto;
 		height: 310px;
 		background-size: cover;
 		background-position: center;
 		cursor: pointer;
+    display: flex;
+		align-items: center;
+		background-color: linear-gradient(#24f281,#0083ff) 1;
+		border: 6px solid white;
+	}
+
+	&__image-container:hover {
+		border-style: solid;
+    border-width: 6px;
+    border-image: linear-gradient(#24f281,#0083ff) 1;
+		cursor: pointer;
+
 	}
 }
 
