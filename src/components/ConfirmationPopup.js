@@ -10,7 +10,7 @@ class ConfirmationPopup extends React.Component {
       isLoading: false,
       transactionStatus: '',
       acceptedTos: false,
-      displayWarning: false
+      displayWarning: false,
     };
   }
 
@@ -38,7 +38,7 @@ class ConfirmationPopup extends React.Component {
     try {
       const result = await this.props.fundAsset(
         this.props.assetId,
-        this.props.amountEth
+        this.props.amountEth,
       );
       if (result) {
         this.setState({ isLoading: false, transactionStatus: 1 });
@@ -106,13 +106,19 @@ class ConfirmationPopup extends React.Component {
               />
               <p className="ConfirmationPopup__tos-text">
                 I read and agree to the{' '}
-                <a href="https://docs.google.com/document/d/1LUArMnGpnvpe5fI4-QI_lvkJTb5Xf6me0XU1zznCqmk/edit?usp=sharing" target="_blank" rel="noopener noreferrer">terms and conditions</a>
+                <a
+                  href="https://docs.google.com/document/d/1LUArMnGpnvpe5fI4-QI_lvkJTb5Xf6me0XU1zznCqmk/edit?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  terms and conditions
+                </a>
               </p>
             </div>
             <p
               className="ConfirmationPopup__tos-message-error"
               style={{
-                visibility: this.state.displayWarning ? 'visible' : 'hidden'
+                visibility: this.state.displayWarning ? 'visible' : 'hidden',
               }}
             >
               *Please accept our T&C before continuing
@@ -193,7 +199,7 @@ ConfirmationPopup.propTypes = {
   handlePopupState: PropTypes.func.isRequired,
   fundAsset: PropTypes.func.isRequired,
   assetId: PropTypes.string.isRequired,
-  isPopupOpen: PropTypes.func.isRequired
+  isPopupOpen: PropTypes.func.isRequired,
 };
 
 export default ConfirmationPopup;

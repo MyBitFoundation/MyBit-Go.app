@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import {
   ExpandableTile,
   TileAboveTheFoldContent,
-  TileBelowTheFoldContent
+  TileBelowTheFoldContent,
 } from 'carbon-components-react';
 import BarChart from '../images/chart-bar.png';
 import PortfolioRevenueItem from './PortfolioRevenueItem';
 
 const TotalPortfolioRevenue = ({
   totalPortfolioRevenue,
-  portfolioRevenueAssets
+  portfolioRevenueAssets,
 }) => (
   <div>
     <ExpandableTile className="Portfolio__tile-expandable Portfolio__revenue">
@@ -24,7 +24,7 @@ const TotalPortfolioRevenue = ({
         </div>
       </TileAboveTheFoldContent>
       <TileBelowTheFoldContent className="Portfolio__folded-content">
-        {totalPortfolioRevenue === '0.00' && (
+        {portfolioRevenueAssets.length === 0 && (
           <p className="Portfolio__empty">
             You don’t have any<br />
             investments right now.
@@ -47,14 +47,12 @@ const TotalPortfolioRevenue = ({
 
 TotalPortfolioRevenue.propTypes = {
   totalPortfolioRevenue: PropTypes.string.isRequired,
-  portfolioRevenueAssets: PropTypes.arrayOf(
-    PropTypes.shape({
-      assetID: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      monthlyRevenue: PropTypes.string.isRequired,
-      totalRevenue: PropTypes.string.isRequired
-    })
-  ).isRequired
+  portfolioRevenueAssets: PropTypes.arrayOf(PropTypes.shape({
+    assetID: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    monthlyRevenue: PropTypes.string.isRequired,
+    totalRevenue: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 export default TotalPortfolioRevenue;
