@@ -1,13 +1,6 @@
 {
   "name": "app.mybit.io",
-  "type": "static",
-  "files": [
-    "build"
-  ],
-  "static": {
-    "public": "build",
-    "rewrites": [
-      { "source": "/*", "destination": "/index.html" }
-    ]
+  "env": {
+    "MYBIT_GO_ADMIN_PASSWORD": "@mybit-go-admin-password"
   }
 }
