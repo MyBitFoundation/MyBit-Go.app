@@ -6,16 +6,15 @@ import solarenergyImage from '../images/categories/Solar1.jpeg';
 // import windenergyImage from '../images/categories/windenergy.png';
 import otherImage from '../images/categories/other.png';
 import realestatecoworkingImage from '../images/categories/Co-working.png';
-import realestatestorageImage from '../images/categories/Storage.jpeg'
+import realestatestorageImage from '../images/categories/Storage.jpeg';
 import masternodeImage from '../images/categories/Masternode.jpeg';
 import chargeStationImage from '../images/categories/ChargeStation.png';
 import vendingMachineImage from '../images/categories/VendingMachine.jpeg';
 
-
 export const parseEtherFromBalance = (web3, balance) =>
   web3.fromWei(parseInt(balance, 10), 'ether');
 
-export const mergeAllLogsByAssetId = logs => {
+export const mergeAllLogsByAssetId = (logs) => {
   const assets = [];
   logs.forEach((logEntry, index, array) => {
     if (index === 0) {
@@ -30,7 +29,7 @@ export const mergeAllLogsByAssetId = logs => {
         assets[duplicateIndex] = {
           ...logEntry,
           ...array[index - 1],
-          ...assets[duplicateIndex]
+          ...assets[duplicateIndex],
         };
       } else {
         assets.push({ ...logEntry, ...array[index - 1] });
@@ -42,14 +41,12 @@ export const mergeAllLogsByAssetId = logs => {
   return assets;
 };
 
-export const mergeAndSumFundingEvents = fundingEvents => {
+export const mergeAndSumFundingEvents = (fundingEvents) => {
   const assets = [];
-  const fundingEventsWithNumbers = fundingEvents.map(
-    ({ assetID, currentEthPrice }) => ({
-      assetID,
-      currentEthPrice: Number(currentEthPrice)
-    })
-  );
+  const fundingEventsWithNumbers = fundingEvents.map(({ assetID, currentEthPrice }) => ({
+    assetID,
+    currentEthPrice: Number(currentEthPrice),
+  }));
   fundingEventsWithNumbers.forEach((logEntry, index, array) => {
     if (index === 0) {
       assets.push({ ...logEntry });
@@ -65,26 +62,24 @@ export const mergeAndSumFundingEvents = fundingEvents => {
           ...array[index - 1],
           ...assets[duplicateIndex],
           currentEthPrice:
-            assets[duplicateIndex].currentEthPrice + logEntry.currentEthPrice
+            assets[duplicateIndex].currentEthPrice + logEntry.currentEthPrice,
         };
       } else {
         assets.push({
           ...logEntry,
           ...array[index - 1],
           currentEthPrice:
-            array[index - 1].currentEthPrice + logEntry.currentEthPrice
+            array[index - 1].currentEthPrice + logEntry.currentEthPrice,
         });
       }
     } else {
       assets.push({ ...logEntry });
     }
   });
-  const totalAmountRaisedAssets = assets.map(
-    ({ assetID, currentEthPrice }) => ({
-      assetID,
-      totalAmountRaised: String(currentEthPrice)
-    })
-  );
+  const totalAmountRaisedAssets = assets.map(({ assetID, currentEthPrice }) => ({
+    assetID,
+    totalAmountRaised: String(currentEthPrice),
+  }));
   return totalAmountRaisedAssets;
 };
 
@@ -117,7 +112,7 @@ export const getCategoryFromAssetTypeHash = (web3, assetTypeHash) => {
   }
 };
 
-export const getPrettyCategoryName = category => {
+export const getPrettyCategoryName = (category) => {
   switch (category) {
     case 'bitcoinatm':
       return 'Bitcoin ATM';
@@ -146,7 +141,7 @@ export const getPrettyCategoryName = category => {
   }
 };
 
-export const getImageForCategory = category => {
+export const getImageForCategory = (category) => {
   switch (category) {
     case 'bitcoinatm':
       return cryptocurrencyAtmCategoryImage;

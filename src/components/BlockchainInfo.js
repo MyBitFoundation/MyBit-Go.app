@@ -8,7 +8,7 @@ import * as Brain from '../apis/brain';
 import {
   debug,
   MYBIT_TICKER_COINMARKETCAP,
-  ETHEREUM_TICKER_COINMARKETCAP
+  ETHEREUM_TICKER_COINMARKETCAP,
 } from '../constants';
 
 class BlockchainInfo extends React.Component {
@@ -28,7 +28,7 @@ class BlockchainInfo extends React.Component {
         priceMybit: true,
         priceEther: true,
         user: true,
-        transactionHistory: true
+        transactionHistory: true,
       },
       transactions: [],
       assets: [],
@@ -37,7 +37,7 @@ class BlockchainInfo extends React.Component {
       fetchTransactionHistory: this.fetchTransactionHistory,
       fetchMyBit: this.getMYB,
       fundAsset: this.fundAsset,
-      user: {}
+      user: {},
     };
   }
 
@@ -63,13 +63,13 @@ class BlockchainInfo extends React.Component {
 
   async fetchTransactionHistory() {
     await Brain.fetchTransactionHistory(this.state.user)
-      .then(response => {
+      .then((response) => {
         this.setState({
           transactions: response,
-          loading: { ...this.state.loading, transactionHistory: false }
+          loading: { ...this.state.loading, transactionHistory: false },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         debug(err);
         setTimeout(this.fetchTransactionHistory, 10000);
       });
@@ -77,13 +77,13 @@ class BlockchainInfo extends React.Component {
 
   async loadMetamaskUserDetails() {
     await Brain.loadMetamaskUserDetails()
-      .then(response => {
+      .then((response) => {
         this.setState({
           user: response,
-          loading: { ...this.state.loading, user: false }
+          loading: { ...this.state.loading, user: false },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         debug(err);
         setTimeout(this.loadMetamaskUserDetails, 10000);
       });
@@ -95,13 +95,13 @@ class BlockchainInfo extends React.Component {
       return;
     }
     await Brain.fetchAssets(this.state.user, this.state.prices.etherPrice)
-      .then(response => {
+      .then((response) => {
         this.setState({
           assets: response,
-          loading: { ...this.state.loading, assets: false }
+          loading: { ...this.state.loading, assets: false },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         debug(err);
         setTimeout(this.fetchAssets, 10000);
       });
@@ -110,36 +110,36 @@ class BlockchainInfo extends React.Component {
   async loadPrices() {
     let error = false;
     await Brain.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP)
-      .then(price => {
+      .then((price) => {
         this.setState({
           prices: {
             ...this.state.prices,
-            mybitPrice: price
+            mybitPrice: price,
           },
           loading: {
             ...this.state.loading,
-            priceMybit: false
-          }
+            priceMybit: false,
+          },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         debug(err);
         error = true;
       });
     await Brain.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP)
-      .then(price => {
+      .then((price) => {
         this.setState({
           prices: {
             ...this.state.prices,
-            etherPrice: price
+            etherPrice: price,
           },
           loading: {
             ...this.state.loading,
-            priceEther: false
-          }
+            priceEther: false,
+          },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         debug(err);
         error = true;
       });
@@ -160,5 +160,5 @@ class BlockchainInfo extends React.Component {
 export default BlockchainInfo;
 
 BlockchainInfo.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };

@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableBody,
   TableData,
-  PaginationV2
+  PaginationV2,
 } from 'carbon-components-react';
 import '../../styles/TransactionHistory.css';
 import LoadingPage from './LoadingPage';
@@ -24,7 +24,7 @@ class TransactionHistoryPage extends React.Component {
       currentPage: 0,
       itemsPerPage: 10,
       sortBy: 'date',
-      sortDir: 'ASC'
+      sortDir: 'ASC',
     };
   }
 
@@ -36,24 +36,20 @@ class TransactionHistoryPage extends React.Component {
     }
     const { transactions } = this.props;
     let transactionsToRender = transactions.slice();
-    const { currentPage, itemsPerPage, sortBy, sortDir } = this.state;
+    const {
+      currentPage, itemsPerPage, sortBy, sortDir,
+    } = this.state;
 
     if (sortBy === 'amount' && sortDir === 'DESC') {
-      transactionsToRender = transactionsToRender.sort(
-        (a, b) => a.amount - b.amount
-      );
+      transactionsToRender = transactionsToRender.sort((a, b) => a.amount - b.amount);
     } else if (sortBy === 'amount' && sortDir === 'ASC') {
-      transactionsToRender = transactionsToRender.sort(
-        (a, b) => b.amount - a.amount
-      );
+      transactionsToRender = transactionsToRender.sort((a, b) => b.amount - a.amount);
     } else if (sortBy === 'date' && sortDir === 'DESC') {
-      transactionsToRender = transactionsToRender.sort(
-        (a, b) => new Date(a.date) - new Date(b.date)
-      );
+      transactionsToRender = transactionsToRender
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
     } else if (sortBy === 'date' && sortDir === 'ASC') {
-      transactionsToRender = transactionsToRender.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      );
+      transactionsToRender = transactionsToRender
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
     } else if (sortBy === 'status' && sortDir === 'DESC') {
       transactionsToRender = transactionsToRender.sort((a, b) => {
         if (a.status > b.status) {
@@ -99,7 +95,7 @@ class TransactionHistoryPage extends React.Component {
                         itemsPerPage,
                         currentPage,
                         sortBy: 'date',
-                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC'
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
                       });
                     }}
                     sortDir={sortBy === 'date' ? sortDir : 'ASC'}
@@ -117,7 +113,7 @@ class TransactionHistoryPage extends React.Component {
                         itemsPerPage,
                         currentPage,
                         sortBy: 'amount',
-                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC'
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
                       });
                     }}
                     sortDir={sortBy === 'amount' ? sortDir : 'ASC'}
@@ -135,7 +131,7 @@ class TransactionHistoryPage extends React.Component {
                         itemsPerPage,
                         currentPage,
                         sortBy: 'status',
-                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC'
+                        sortDir: sortDir === 'ASC' ? 'DESC' : 'ASC',
                       });
                     }}
                     sortDir={sortBy === 'status' ? sortDir : 'ASC'}
@@ -174,12 +170,12 @@ class TransactionHistoryPage extends React.Component {
               </TableBody>
             </Table>
             <PaginationV2
-              onChange={val => {
+              onChange={(val) => {
                 this.setState({
                   itemsPerPage: val.pageSize,
                   currentPage: val.page - 1,
                   sortBy,
-                  sortDir
+                  sortDir,
                 });
               }}
               pageSizes={[10, 50, 100, 500]}
@@ -196,7 +192,7 @@ class TransactionHistoryPage extends React.Component {
 
 TransactionHistoryPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  transactions: PropTypes.arrayOf(PropTypes.object).isRequired
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default TransactionHistoryPage;

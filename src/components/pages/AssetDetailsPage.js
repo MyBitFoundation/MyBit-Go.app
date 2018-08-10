@@ -6,7 +6,9 @@ import CategoryBackButton from '../CategoryBackButton';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
-const AssetDetailsPage = ({ loading, assets, match, prices, user }) => {
+const AssetDetailsPage = ({
+  loading, assets, match, prices, user,
+}) => {
   if (loading.assets) {
     return (
       <div style={{ width: '100%', position: 'relative', top: '50px' }}>
@@ -38,7 +40,7 @@ const AssetDetailsPage = ({ loading, assets, match, prices, user }) => {
     description: asset.description,
     address: asset.assetManager,
     numberOfInvestors: asset.numberOfInvestors,
-    imageSrc: asset.imageSrc
+    imageSrc: asset.imageSrc,
   };
 
   return (
@@ -58,7 +60,7 @@ AssetDetailsPage.propTypes = {
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
   prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  user: PropTypes.shape({ params: PropTypes.object }).isRequired
+  user: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
 export default AssetDetailsPage;

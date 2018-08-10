@@ -20,11 +20,12 @@ $imageHeight: 196px;
     	position: relative;
 
 		&-gradient{
-    		position: absolute;
-    		top: 0px;
-    		height: $imageHeight;
+    	position: relative;
+    	top: 0px;
+    	height: $imageHeight;
 			width: 100%;
 			background-image: linear-gradient(to left, #0b3f9c, #0083FF) !important;
+      z-index: -1;
     	}
 
     	&-location-icon{

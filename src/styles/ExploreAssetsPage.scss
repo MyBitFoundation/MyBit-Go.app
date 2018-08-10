@@ -28,5 +28,22 @@
 	    padding-top: 70px;
 	}
 
+  & .bx--btn--primary:disabled{
+      background-color: #125ac4;
+
+      &:hover{
+        background-color: #125ac4;
+      }
+
+      &:active{
+        background-color: #125ac4;
+      }
+
+      &:focus{
+        border: 2px solid #125ac4;
+        outline: none;
+        background-color: #125ac4;
+      }
+  }
 }
 
