@@ -51,7 +51,7 @@ const MetamaskBooting = ({ isBraveBrowser, extensionUrl }) => (
 
 MetamaskBooting.propTypes = {
   isBraveBrowser: PropTypes.bool.isRequired,
-  extensionUrl: PropTypes.string.isRequired
+  extensionUrl: PropTypes.string.isRequired,
 };
 
 export default MetamaskBooting;

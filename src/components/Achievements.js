@@ -18,12 +18,10 @@ const Achievements = props => (
 );
 
 Achievements.propTypes = {
-  achievements: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired
-    })
-  ).isRequired
+  achievements: PropTypes.arrayOf(PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 export default Achievements;

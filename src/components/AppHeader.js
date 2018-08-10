@@ -17,5 +17,5 @@ export default AppHeader;
 
 AppHeader.propTypes = {
   prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  user: PropTypes.shape({ params: PropTypes.object }).isRequired
+  user: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };

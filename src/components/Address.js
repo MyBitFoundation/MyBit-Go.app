@@ -21,12 +21,12 @@ const Address = ({ userName, className }) => (
 );
 
 Address.defaultProps = {
-  userName: undefined
+  userName: undefined,
 };
 
 Address.propTypes = {
   userName: PropTypes.string,
-  className: PropTypes.string.isRequired
+  className: PropTypes.string.isRequired,
 };
 
 export default Address;

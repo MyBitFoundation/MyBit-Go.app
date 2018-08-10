@@ -5,76 +5,76 @@ export const ABI = [
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'amountRaised',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'assetManager',
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_name',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     name: 'contractAddress',
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_functionAuthorizationHash',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'isFunctionAuthorized',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -83,31 +83,31 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_user',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'isOwner',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -116,111 +116,111 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
+        type: 'bytes32',
       },
       {
         name: '_user',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'ownershipUnits',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'managerPercentage',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'lockedForAsset',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_contractAddress',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'isPaused',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'totalPaidToFunders',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -229,31 +229,31 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_manager',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'depositedMYB',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -262,31 +262,31 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'stakingExpiration',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -295,100 +295,100 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_contractAddress',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_signer',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_functionName',
-        type: 'string'
+        type: 'string',
       },
       {
         name: '_agreedParameter',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'getFunctionAuthorizationHash',
     outputs: [
       {
         name: '',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'pure',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_contractAddress',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'contractExists',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'escrowedForAsset',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_manager',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'escrowedMYB',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -397,12 +397,12 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -411,92 +411,92 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'fundingDeadline',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_user',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'userAccess',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
+        type: 'bytes32',
       },
       {
         name: '_funder',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'totalPaidToFunder',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'totalReceived',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -505,12 +505,12 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -519,130 +519,130 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'assetStaker',
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_manager',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'managerIncome',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
+        type: 'bytes32',
       },
       {
         name: '_user',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'getAmountOwed',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'stakerIncomeShare',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_accessLevelDesired',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'accessTokenFee',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'fundingStage',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -651,84 +651,84 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'assetIncome',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'escrowExpiration',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'amountToBeRaised',
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     inputs: [
       {
         name: '_database',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'constructor'
+    type: 'constructor',
   },
   {
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'fallback'
-  }
+    type: 'fallback',
+  },
 ];
