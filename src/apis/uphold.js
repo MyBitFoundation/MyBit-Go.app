@@ -7,7 +7,7 @@ const URLS = {
   account: 'https://api-sandbox.uphold.com/v0/me/accounts',
   cards: 'https://api-sandbox.uphold.com/v0/me/cards',
   transaction: '/transactions',
-  userDetails: 'https://api-sandbox.uphold.com/v0/me'
+  userDetails: 'https://api-sandbox.uphold.com/v0/me',
 };
 
 /* const POST_HEADER = {
@@ -16,7 +16,7 @@ const URLS = {
 
 // The Bearer code will be stored in bigchainDB
 let AUTH_HEADER = {
-  Authorization: ''
+  Authorization: '',
 };
 
 const UpholdApi = {
@@ -25,7 +25,7 @@ const UpholdApi = {
     const userDetails = await req.request({
       method: 'get',
       url: URLS.userDetails,
-      headers: AUTH_HEADER
+      headers: AUTH_HEADER,
     });
     debug('User Details', userDetails);
     return userDetails;
@@ -36,7 +36,7 @@ const UpholdApi = {
     const userVerified = await req.request({
       method: 'get',
       url: URLS.userDetails,
-      header: AUTH_HEADER
+      header: AUTH_HEADER,
     });
     debug('User Verified: ', userVerified);
     return userVerified;
@@ -46,7 +46,7 @@ const UpholdApi = {
     const accessToken = await req.request({
       method: 'get',
       url: URLS.codeForAccess,
-      header: AUTH_HEADER
+      header: AUTH_HEADER,
     });
     debug('Access Token: ', accessToken);
     return accessToken;
@@ -56,7 +56,7 @@ const UpholdApi = {
     const currencyResult = await req.request({
       method: 'get',
       url: URLS.currencyTicker,
-      header: AUTH_HEADER
+      header: AUTH_HEADER,
     });
     debug('Currency result:', currencyResult);
     return currencyResult;
@@ -67,7 +67,7 @@ const UpholdApi = {
     const accounts = await req.request({
       method: 'get',
       url: URLS.accounts,
-      header: AUTH_HEADER
+      header: AUTH_HEADER,
     });
     debug('Account results', accounts);
     return accounts;
@@ -78,7 +78,7 @@ const UpholdApi = {
     const cards = await req.request({
       method: 'get',
       url: URLS.cards,
-      header: AUTH_HEADER
+      header: AUTH_HEADER,
     });
     debug('Cards: ', cards);
     return cards;
@@ -90,10 +90,10 @@ const UpholdApi = {
     const results = await req.request({
       method: 'get',
       url: URLS.cards,
-      header: AUTH_HEADER
+      header: AUTH_HEADER,
     });
     const resultJson = JSON.parse(results);
-    resultJson.forEach(card => {
+    resultJson.forEach((card) => {
       if (card.label === _cardLabel) {
         ethAddr = card.address.ethereum;
       }
@@ -107,10 +107,10 @@ const UpholdApi = {
     const results = await req.request({
       method: 'get',
       url: URLS.cards,
-      header: AUTH_HEADER
+      header: AUTH_HEADER,
     });
     const resultJson = JSON.parse(results);
-    resultJson.forEach(card => {
+    resultJson.forEach((card) => {
       if (card.label === _cardLabel) {
         cardId = card.id;
       }
@@ -123,21 +123,21 @@ const UpholdApi = {
     const results = await req.request({
       method: 'get',
       url: URLS.cards,
-      header: AUTH_HEADER
+      header: AUTH_HEADER,
     });
     const resultJson = JSON.parse(results);
-    resultJson.forEach(async card => {
+    resultJson.forEach(async (card) => {
       if (card.label === _cardLabel) {
         const transactions = await req.request({
           method: 'get',
           url: URLS.cards,
-          header: AUTH_HEADER
+          header: AUTH_HEADER,
         });
         return JSON.parse(transactions);
       }
       return {}; // TODO: Is this an appropriate return?
     });
-  }
+  },
 };
 
 export default UpholdApi;

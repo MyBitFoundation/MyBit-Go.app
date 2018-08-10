@@ -19,8 +19,10 @@ export const METAMASK_CHROME =
   'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
 export const METAMASK_OPERA =
   'https://addons.opera.com/extensions/details/metamask/';
+export const ETHERSCAN_BALANCE = address =>
+  `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`;
 
-export const getAssetRevenueTmp = assetId => {
+export const getAssetRevenueTmp = (assetId) => {
   switch (assetId) {
     case '0x0903212121a0073f661f7cadf9079433fc0fe5b3418482a1bdb4631d52833f9f':
       return 120000;
@@ -61,5 +63,27 @@ export const getAssetRevenueTmp = assetId => {
 
     default:
       return 500000;
+  }
+};
+
+export const getAddressForAsset = (assetId) => {
+  switch (assetId) {
+    case '0x116dc7388854d37e952a811c1fa2e03369809eef84b7a49ce9ce9536b5f2c66b':
+      return '0x6fE3f2D9F1CA8d5F662a64C55FDd4Cfbb6028bfC';
+
+    case '0x5125edb815829e8eb1f1944ffb6a4df0365e0340afa018195ba00b5631616657':
+      return '0xfaAE47eb152D17f65E69e4cf18c426d74765B03f';
+
+    case '0x77577554da83a746eca3b1ba093942c07535ca946a3561b49f48394c965d641c':
+      return '0x63A003f54D9D5aB7bc347969B401BA4405D1B7F4';
+
+    case '0x8aa3395398fa2d443fe536246271f41fe5064be02223015e79bec113821ab48b':
+      return '0xFb14b64C529818057A968ecD961C97BfDcc35CB1';
+
+    case '0xf6e31cc03282ca18d3914af15a364b846a4327b40807f9930034d4380c333c8f':
+      return '0x5ac72a55c7Abf1ff8f6F9EBd95bf7d7119478704';
+
+    default:
+      return null;
   }
 };

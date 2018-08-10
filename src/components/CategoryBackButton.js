@@ -10,6 +10,8 @@ const CategoryBackButton = ({ category }) => {
     tempCategoryFix = 'realestatestorage';
   } else if (category === 'Real Estate (Co-Working)') {
     tempCategoryFix = 'realestatecoworking';
+  } else if (category === 'Energy') {
+    tempCategoryFix = 'solarenergy';
   } else {
     tempCategoryFix = category.replace(/ /g, '').toLowerCase();
   }
@@ -30,7 +32,7 @@ const CategoryBackButton = ({ category }) => {
 };
 
 CategoryBackButton.propTypes = {
-  category: PropTypes.string.isRequired
+  category: PropTypes.string.isRequired,
 };
 
 export default CategoryBackButton;

@@ -29,11 +29,11 @@ const NotFoundPage = ({ message }) => (
 );
 
 NotFoundPage.propTypes = {
-  message: PropTypes.string
+  message: PropTypes.string,
 };
 
 NotFoundPage.defaultProps = {
-  message: ''
+  message: '',
 };
 
 export default NotFoundPage;
