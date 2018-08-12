@@ -218,7 +218,7 @@ export const withdrawFromFaucet = async user =>
         TokenFaucet.ADDRESS,
       );
       const withdrawResponse = await TokenFaucetContract.methods
-        .register('42000000000000000000000', 'ripplesucks')
+        .withdraw('ripplesucks')
         .send({ from: user.userName });
       const { transactionHash } = withdrawResponse;
       checkTransactionConfirmation(transactionHash, resolve, reject);

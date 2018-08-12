@@ -1,9 +1,37 @@
-export const ADDRESS = '0x66652784Bd48b69D9f20c9046b67150351023707';
+export const ADDRESS = '0x8742272c58f6fe0c2943eba9399c04cbd5342ab2';
 export const ABI = [
   {
     constant: true,
     inputs: [],
-    name: 'tokensInFaucet',
+    name: 'balanceWEI',
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        name: '_pass',
+        type: 'string',
+      },
+    ],
+    name: 'withdraw',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'basicIncomeMYB',
     outputs: [
       {
         name: '',
@@ -40,7 +68,7 @@ export const ABI = [
         type: 'uint256',
       },
       {
-        name: '_token',
+        name: '_mybToken',
         type: 'address',
       },
       {
@@ -49,24 +77,6 @@ export const ABI = [
       },
     ],
     name: 'receiveApproval',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: '_amount',
-        type: 'uint256',
-      },
-      {
-        name: '_pass',
-        type: 'string',
-      },
-    ],
-    name: 'register',
     outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
@@ -92,35 +102,54 @@ export const ABI = [
     type: 'function',
   },
   {
-    constant: false,
-    inputs: [
+    constant: true,
+    inputs: [],
+    name: 'basicIncomeWEI',
+    outputs: [
       {
-        name: '_amount',
+        name: '',
         type: 'uint256',
       },
     ],
-    name: 'deposit',
-    outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'mybToken',
+    outputs: [
+      {
+        name: '',
+        type: 'address',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
     type: 'function',
   },
   {
     constant: false,
-    inputs: [
+    inputs: [],
+    name: 'depositWEI',
+    outputs: [],
+    payable: true,
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'mybTokensInFaucet',
+    outputs: [
       {
-        name: '_amount',
+        name: '',
         type: 'uint256',
       },
-      {
-        name: '_pass',
-        type: 'string',
-      },
     ],
-    name: 'withdraw',
-    outputs: [],
     payable: false,
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -138,27 +167,13 @@ export const ABI = [
     type: 'function',
   },
   {
-    constant: true,
-    inputs: [],
-    name: 'token',
-    outputs: [
-      {
-        name: '',
-        type: 'address',
-      },
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [
       {
         name: '_database',
         type: 'address',
       },
       {
-        name: '_tokenAddress',
+        name: '_mybTokenAddress',
         type: 'address',
       },
       {
@@ -180,16 +195,16 @@ export const ABI = [
       },
       {
         indexed: false,
-        name: '_amount',
+        name: '_amountMYB',
         type: 'uint256',
       },
       {
         indexed: false,
-        name: '_blockNumber',
+        name: '_amountWEI',
         type: 'uint256',
       },
     ],
-    name: 'TokenWithdraw',
+    name: 'LogWithdraw',
     type: 'event',
   },
   {
@@ -207,11 +222,57 @@ export const ABI = [
       },
       {
         indexed: false,
-        name: '_blockNumber',
+        name: '_data',
+        type: 'bytes',
+      },
+    ],
+    name: 'LogMYBDeposited',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        name: '_depositer',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        name: '_amountWEI',
         type: 'uint256',
       },
     ],
-    name: 'TokenDeposit',
+    name: 'LogEthDeposited',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        name: '_withdrawer',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        name: '_amountWEI',
+        type: 'uint256',
+      },
+    ],
+    name: 'LogEthWithdraw',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        name: '_user',
+        type: 'address',
+      },
+    ],
+    name: 'LogNewUser',
     type: 'event',
   },
 ];
