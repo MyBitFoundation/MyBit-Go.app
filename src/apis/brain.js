@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
-
+import dayjs from 'dayjs';
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
@@ -15,6 +15,7 @@ import {
   ETHERSCAN_TX,
   ETHERSCAN_BALANCE,
   getAddressForAsset,
+  isAssetIdEnabled,
 } from '../constants';
 
 const web3 = getWeb3Async();
@@ -156,7 +157,7 @@ const getNumberOfInvestors = async assetID =>
     }
   });
 
-export const createAsset = async params =>
+const createAsset = async params =>
   new Promise(async (resolve, reject) => {
     try {
       const assetCreationContract = new web3.eth.Contract(
@@ -250,28 +251,51 @@ export const fundAsset = async (user, assetId, amount) =>
     }
   });
 
-// The stuff thats commented out will be updated once kyle deploys the new contracts
 export const fetchAssets = async (user, currentEthInUsd) =>
   new Promise(async (resolve, reject) => {
     try {
-      const apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
-      const assetCreationContract = new web3.eth.Contract(
+      // pull asssets from newest contract
+      let apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
+      let assetCreationContract = new web3.eth.Contract(
         AssetCreation.ABI,
         AssetCreation.ADDRESS,
       );
 
-      const logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
+      let logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
         { fromBlock: 0, toBlock: 'latest' },
       );
 
-      const assets = logAssetFundingStartedEvents
+      let assets = logAssetFundingStartedEvents
         .map(({ returnValues }) => returnValues)
         .map(object => ({
           assetID: object._assetID,
           assetType: object._assetType,
           ipfsHash: object._ipfsHash,
         }));
+
+      // pull assets from older contract
+
+      apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
+      assetCreationContract = new web3.eth.Contract(
+        AssetCreation.ABI,
+        AssetCreation.OLD_ADDRESS,
+      );
+
+      logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
+        'LogAssetFundingStarted',
+        { fromBlock: 0, toBlock: 'latest' },
+      );
+
+      const assetsOlderContract = logAssetFundingStartedEvents
+        .map(({ returnValues }) => returnValues)
+        .map(object => ({
+          assetID: object._assetID,
+          assetType: object._assetType,
+          ipfsHash: object._ipfsHash,
+        }));
+
+      assets = assets.concat(assetsOlderContract);
 
       const assetManagers = await Promise.all(assets.map(async asset =>
         apiContract.methods.assetManager(asset.assetID).call()));
@@ -292,34 +316,30 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       const assetIncomes = await Promise.all(assets.map(async asset =>
         apiContract.methods.totalReceived(asset.assetID).call()));
 
+      const fundingStages = await Promise.all(assets.map(async asset =>
+        apiContract.methods.fundingStage(asset.assetID).call()));
+
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
         const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
-        const addressForAsset = getAddressForAsset(asset.assetID);
-        let assetIncome = -1;
-        if (addressForAsset) {
-          try {
-            const endpoint = ETHERSCAN_BALANCE(addressForAsset);
-            const result = await fetch(endpoint);
-            const jsonResult = await result.json();
-            assetIncome = (
-              Number(web3.utils
-                .fromWei(jsonResult.result, 'ether')) * currentEthInUsd
-            ).toFixed(2);
-          } catch (err) {
-            debug(err);
-          }
+
+        // asset details are hardcoded for now
+        let assetIdDetails = isAssetIdEnabled(asset.assetID);
+        if (!assetIdDetails) {
+          assetIdDetails = {};
+          assetIdDetails.city = 'Zurich';
+          assetIdDetails.country = 'Switzerland';
+          assetIdDetails.description = 'Coming soon';
+          assetIdDetails.details = 'Coming soon';
+          assetIdDetails.name = 'Coming soon';
         }
-        let jsonResponse = {};
-        try {
-          const ipfsInfo = await fetch(`${IPFS_URL + asset.assetID}/data.json`);
-          jsonResponse = await ipfsInfo.json();
-        } catch (err) {
-          jsonResponse.city = 'Zurich';
-          jsonResponse.country = 'Switzerland';
-          jsonResponse.description = 'Coming soon';
-          jsonResponse.details = 'Coming soon';
-          jsonResponse.name = 'Coming soon';
+
+        // determine whether asset has expired
+        let pastDate = false;
+        const dueDate = dayjs(Number(fundingDeadlines[index]) * 1000);
+        if (dayjs(new Date()) > dueDate) {
+          pastDate = true;
         }
+
         return {
           ...asset,
           amountRaisedInUSD: (
@@ -327,17 +347,22 @@ export const fetchAssets = async (user, currentEthInUsd) =>
               currentEthInUsd
           ).toFixed(2),
           amountToBeRaisedInUSD: amountsToBeRaised[index],
-          fundingDeadline: Number(fundingDeadlines[index]) * 1000,
+          fundingDeadline: dueDate,
           ownershipUnits: ownershipUnits[index],
-          assetIncome,
+          assetIncome: (
+            Number(web3.utils.fromWei(assetIncomes[index], 'ether')) *
+              currentEthInUsd
+          ).toFixed(2),
           assetManager: assetManagers[index],
-          city: jsonResponse.city,
-          country: jsonResponse.country,
-          name: jsonResponse.name,
+          city: assetIdDetails.city,
+          country: assetIdDetails.country,
+          name: assetIdDetails.name,
           numberOfInvestors,
-          description: jsonResponse.description,
-          details: jsonResponse.details,
-          imageSrc: `${IPFS_URL + asset.assetID}/thumb.jpg`,
+          description: assetIdDetails.description,
+          details: assetIdDetails.details,
+          imageSrc: assetIdDetails.imgSrc,
+          fundingStage: fundingStages[index],
+          pastDate,
         };
       }));
 

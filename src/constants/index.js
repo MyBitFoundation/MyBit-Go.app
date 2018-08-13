@@ -1,4 +1,10 @@
 /* eslint-disable no-console */
+import Bitcoin from '../images/categories/Bitcoinatm.jpeg';
+import CoWorking from '../images/categories/Co-working.png';
+import CryptoMining from '../images/categories/Cryptomining.jpeg';
+import Storage from '../images/categories/Storage.jpeg';
+import Energy from '../images/categories/Solar1.jpeg';
+
 
 export const ARTIFICIAL_DELAY_IN_MS = 3000;
 export const USD_MYB_SYMBOL = 'USD/MYB';
@@ -22,68 +28,49 @@ export const METAMASK_OPERA =
 export const ETHERSCAN_BALANCE = address =>
   `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`;
 
-export const getAssetRevenueTmp = (assetId) => {
-  switch (assetId) {
-    case '0x0903212121a0073f661f7cadf9079433fc0fe5b3418482a1bdb4631d52833f9f':
-      return 120000;
-    case '0x8aa3395398fa2d443fe536246271f41fe5064be02223015e79bec113821ab48b':
-      return 31000;
-    case '0x530c9733c3af8fc4a5813ee6e567ffa77986fe5e90421a99e86de35624a79481':
-      return 14200;
-    case '0x4a3286e836279d44527e8a7ded68b0d43fe8f186c2a3cbefe01de1c61ce293c9':
-      return 28300;
-    case '0xd3d05db10b53dbd58a9346448a293a9890b37b5bf28bef7411b8507d5fed0296':
-      return 87000;
-    case '0x887a04020d5dbb2d88714fe417c7088e1ce6e49b106073479784df1221e53298':
-      return 69000;
-    case '0x69ca2cabb1a0bbe06a0315a4faa6a4aa3d71519aaf3e35f43ff6ffe7c765b045':
-      return 910000;
-    case '0xf6e31cc03282ca18d3914af15a364b846a4327b40807f9930034d4380c333c8f':
-      return 100000;
-    case '0x77577554da83a746eca3b1ba093942c07535ca946a3561b49f48394c965d641c':
-      return 33000;
-    case '0x5125edb815829e8eb1f1944ffb6a4df0365e0340afa018195ba00b5631616657':
-      return 67000;
-    case '0x116dc7388854d37e952a811c1fa2e03369809eef84b7a49ce9ce9536b5f2c66b':
-      return 83400;
-    case '0x1491c5bb3e63712e701c9d8d2ce6d23509b4eb20a477e68e0f7346caed8b6189':
-      return 99000;
-    case '0xa09908974f8445894d39cb24c10fda31c4e13ecf2b22ee445c69854e2411e13a':
-      return 121000;
-    case '0x58d6ce3276b2453b8fa7bdb62970e0e3a166b4ecceecebf13d71f5161de79c0c':
-      return 4120000;
-    case '0x49848c1051233c57e21fd2b2531fdb1d393d586d44e5278a7fe4db0bc6a30b58':
-      return 680000;
-    case '0xd377f0f0d0e79208189158dee8582df6d39618168a767fb663664e04e1926119':
-      return 1238200;
-    case '0x11c0e5430f15c4ae8e1b2d7c0633808e592c1e5aea0c54dc2930f4fcc1d3be38':
-      return 93120;
-    case '0xb3bbab4c1c942f40db198dad5b36810f2d62880053b9ccf4639cb7f0a16796b5':
-      return 981000;
+export const isAssetIdEnabled = (assetId) => {
+  const enabledAssetIds = {
+    '0x116dc7388854d37e952a811c1fa2e03369809eef84b7a49ce9ce9536b5f2c66b': {
+      name: 'Co-Working at Trust Square',
+      city: 'Zurich',
+      country: 'Switzerland',
+      description: 'This space is a great fit for a entrepreneurs, start-up teams, and freelancers. It is in an amazing location a few blocks from the lake in Zurich. With access to many major businesses and shops within walking distance it is great not only for working, but also for networking and expanding your professional relationships.',
+      details: 'Air conditioning Fiber Internet 24/7 Access Security Reception 98% building occupancy rate (high-demand) Specific Location: Located across from Swiss National Bank Rent Term: Annual contract, paid quarterly',
+      imgSrc: CoWorking,
+    },
+    '0x5125edb815829e8eb1f1944ffb6a4df0365e0340afa018195ba00b5631616657': {
+      name: 'Climate Controlled Garage',
+      city: 'Prague',
+      country: 'Czech Republic',
+      description: 'This space is a great fit for a range of assets from artwork to household furniture. It can be accessed remotely from an external door 24/7 and offers dedicated lock boxes inside for an additional cost to customers. It is important to note that security cameras are not active at this location.',
+      details: 'Fully climate controlled space Enforced by Slock.it 40m Squared Suitable for low to mid value items Option for dedicated lock boxes 50x50x70cm Specific Location: Hidden for user protection Rent Term: Per square meter, monthly contract.',
+      imgSrc: Storage,
+    },
+    '0x77577554da83a746eca3b1ba093942c07535ca946a3561b49f48394c965d641c': {
+      name: 'Ethereum Asic',
+      city: 'Amsterdam',
+      country: 'Netherlands',
+      description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
+      details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
+      imgSrc: CryptoMining,
+    },
+    '0x8aa3395398fa2d443fe536246271f41fe5064be02223015e79bec113821ab48b': {
+      name: 'Bitcoin ATM',
+      city: 'Zug',
+      country: 'Switzerland',
+      description: 'Manufactured by General Bytes in Prague, Czech Republic. Model: BATMThreeXXL Supports Bitcoin and Ethereum purchases and sales. Average fee per transaction is 5.5%. Specific Location: Berlin Ostbahnhof',
+      details: 'The BATMThreeXXL model is our ultimate configuration. It features a bill-acceptor with a cashbox that holds 2200 banknotes, a bill-dispenser with a capacity of 1000 banknotes (2x500) and an additional internal keypad lock on an internal safe. A keypad locked internal safe is usually a requirement for automatic collection by an armoured money transport service.',
+      imgSrc: Bitcoin,
+    },
+    '0xf6e31cc03282ca18d3914af15a364b846a4327b40807f9930034d4380c333c8f': {
+      name: 'Smart Bench',
+      city: 'Dubai',
+      country: 'UAE',
+      description: 'Manufactured by Arabco Smart Technology in Dubai, UAE Model: Steora Monetisation: Wi-Fi hotspot subscriptions and advertisements Specific Location: Dubai Mall',
+      details: 'Steora is the most ingenious smart bench ever designed. Its beautiful and timeless design hides multiple functionalities. With its perfect size and shape, Steora street bench easily adds allure to any outdoor location. Strong, powder-coated steel construction is completely weather-resistant and vandal-resistant. It offers wireless device charging, super fast internet connection, and data capturing.',
+      imgSrc: Energy,
+    },
+  };
 
-    default:
-      return 500000;
-  }
-};
-
-export const getAddressForAsset = (assetId) => {
-  switch (assetId) {
-    case '0x116dc7388854d37e952a811c1fa2e03369809eef84b7a49ce9ce9536b5f2c66b':
-      return '0x6fE3f2D9F1CA8d5F662a64C55FDd4Cfbb6028bfC';
-
-    case '0x5125edb815829e8eb1f1944ffb6a4df0365e0340afa018195ba00b5631616657':
-      return '0xfaAE47eb152D17f65E69e4cf18c426d74765B03f';
-
-    case '0x77577554da83a746eca3b1ba093942c07535ca946a3561b49f48394c965d641c':
-      return '0x63A003f54D9D5aB7bc347969B401BA4405D1B7F4';
-
-    case '0x8aa3395398fa2d443fe536246271f41fe5064be02223015e79bec113821ab48b':
-      return '0xFb14b64C529818057A968ecD961C97BfDcc35CB1';
-
-    case '0xf6e31cc03282ca18d3914af15a364b846a4327b40807f9930034d4380c333c8f':
-      return '0x5ac72a55c7Abf1ff8f6F9EBd95bf7d7119478704';
-
-    default:
-      return null;
-  }
+  return enabledAssetIds[assetId];
 };

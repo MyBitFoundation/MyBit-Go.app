@@ -4,7 +4,7 @@ import { Button } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
-import { debug, getAddressForAsset } from '../constants';
+import { debug, isAssetIdEnabled } from '../constants';
 
 const Asset = ({
   clickHandler,
@@ -16,8 +16,19 @@ const Asset = ({
   category,
   id,
   backgroundImage,
+  fundingStage,
+  pastDate,
 }) => {
-  const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
+  const assetFunded = fundingStage === '3' || fundingStage === '4';
+  const barWidth = assetFunded ? '100%' : `${Math.ceil((funded / goal) * 100)}%`;
+  const goalFormatted = Number(goal)
+    .toLocaleString(
+      'en-US',
+      {
+        style: 'currency',
+        currency: 'USD',
+      },
+    );
   return (
     <div className="Asset">
       <div className="Asset__container">
@@ -38,15 +49,12 @@ const Asset = ({
         </div>
         <div className="Asset__details">
           <p className="Asset__details-funded">
-            Funded: <b>${Math.round(funded)}</b>
+            Funded: <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
           </p>
           <p className="Asset__details-goal">
             Goal:
             <b>
-              {Number(goal).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              })}
+              {goalFormatted}
             </b>
           </p>
           <div className="Asset__details-progress-bar">
@@ -66,9 +74,9 @@ const Asset = ({
                 (() => debug(`Clicked to contribute, asset id: ${id}`))
               }
               className="Asset__details-contribute"
-              disabled={getAddressForAsset(id) == null}
+              disabled={isAssetIdEnabled(id) === undefined}
             >
-              Contribute
+              {assetFunded || pastDate ? 'View Asset' : 'Contribute'}
             </Button>
           </Link>
         </div>
@@ -91,6 +99,8 @@ Asset.propTypes = {
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
   backgroundImage: PropTypes.string.isRequired,
+  fundingStage: PropTypes.string.isRequired,
+  pastDate: PropTypes.bool.isRequired,
 };
 
 Asset.defaultProps = {

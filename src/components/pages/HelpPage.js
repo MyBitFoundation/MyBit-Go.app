@@ -1,6 +1,11 @@
+// we will remove these once the help page includes the faucet
+/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable no-useless-constructor */
+/* eslint-disable react/no-unused-prop-types */
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Loading } from 'carbon-components-react';
+import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 
 import '../../styles/HelpPage.css';
@@ -16,13 +21,13 @@ const bugIcon = require('../../images/medium-bug.png');
 class HelpPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+    /* this.state = {
       sendingMyb: false,
       transactionStatus: '',
-    };
+    }; */
   }
 
-  async handleGetMYB() {
+  /* async handleGetMYB() {
     this.setState({ sendingMyb: true, transactionStatus: '' });
     try {
       const result = await this.props.fetchMyBit();
@@ -34,7 +39,7 @@ class HelpPage extends React.Component {
     } catch (err) {
       this.setState({ sendingMyb: false });
     }
-  }
+  } */
 
   render() {
     const navOptions = [
@@ -86,10 +91,23 @@ class HelpPage extends React.Component {
             back to this page click the help button in the top right.
           </p>
           <p className="HelpPage__faucet-text">
-            Don’t forget to get your faucet MYB here.
+            Don’t forget to get your faucet ETH here.
           </p>
 
-          {!this.state.sendingMyb && (
+          <a
+            href="https://faucet.metamask.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              small
+              kind="primary"
+            >
+                Request faucet balance
+            </Button>
+          </a>
+
+          {/* {!this.state.sendingMyb && (
             <Button
               small
               kind="primary"
@@ -114,7 +132,7 @@ class HelpPage extends React.Component {
                 Accept the transaction in metamask and wait for a brief moment.
               </p>
             </div>
-          )}
+          )} */}
           <div className="HelpPage__navigation">
             {navOptions.map(option => (
               <Link

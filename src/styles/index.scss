@@ -57,55 +57,16 @@ b{
 }
 
 .bx--btn--primary{
-  background-color: #2DB84B;
+  border: none !important;
 
-  &:hover{
-    background-color: #3ECD5D;
-  }
-
-  &:active{
-    background-color: #3ECD5D;
-  }
-
-  &:focus{
-    border: 2px solid #2DB84B;
-    outline: none;
-    background-color: #2DB84B;
+  &:hover,
+  &:active,
+  &:focus
+  {
+    border: transparent !important;
+    outline: none !important;
   }
 }
-
-
-.bx--btn--primary:disabled{
-  background-color: #2DB84B;
-
-  &:hover{
-    background-color: #2DB84B;
-  }
-
-  &:active{
-    background-color: #2DB84B;
-  }
-
-  &:focus{
-    border: 2px solid #2DB84B;
-    outline: none;
-    background-color: #2DB84B;
-  }
-}
-
-.bx--btn--secondary{
-
-  &:hover{
-    background-color: #125ac4;
-  }
-
-  &:focus{
-    border: 2px solid #125ac4;
-    outline: none;
-    background-color: #125ac4;
-  }
-}
-
 
 // Carbon Theme Variables
 $edited: true;
