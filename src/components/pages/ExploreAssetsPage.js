@@ -40,6 +40,8 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
           name={asset.name}
           category={getPrettyCategoryName(asset.category)}
           backgroundImage={asset.imageSrc}
+          fundingStage={asset.fundingStage}
+          pastDate={asset.pastDate}
         />
       ))}
     </div>,

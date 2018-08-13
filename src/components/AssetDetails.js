@@ -12,16 +12,17 @@ import BlockchainInfoContext from './BlockchainInfoContext';
 class AssetDetails extends React.Component {
   constructor(props) {
     super(props);
+    this.assetFunded = this.props.information.fundingStage === '3' || this.props.information.fundingStage === '4';
     const { goal, raised } = this.props.information;
     this.state = {
-      currentSelectedAmount: Math.floor((goal - raised) / 2),
+      currentSelectedAmount: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
       isPopupOpen: false,
     };
     this.setDateDetails = this.setDateDetails.bind(this);
-    this.endDateLocal = dayjs(this.props.information.dueDate);
+    this.endDateLocal = this.props.information.dueDate;
     this.clearInterval = this.clearInterval.bind(this);
     this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
@@ -37,7 +38,7 @@ class AssetDetails extends React.Component {
       this.props.information.goal - this.props.information.raised;
 
     // funding goal has been reached
-    if (maxInvestment === 0) {
+    if (maxInvestment === 0 || this.assetFunded) {
       this.setState({
         timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
@@ -47,7 +48,7 @@ class AssetDetails extends React.Component {
       return;
     }
     // funding period has reached end date
-    if (dayjs(new Date()) > this.endDateLocal) {
+    if (this.props.information.pastDate) {
       this.setState({
         daysToGo: -1,
         timeToGo: 'Funding period has ended',
@@ -125,7 +126,7 @@ class AssetDetails extends React.Component {
 
   render() {
     const maxInvestment =
-      this.state.daysToGo < 0
+      this.assetFunded || this.state.daysToGo < 0
         ? 0
         : (this.props.information.goal - this.props.information.raised).toFixed(2);
     const ownership = (
@@ -140,6 +141,12 @@ class AssetDetails extends React.Component {
     if (maxInvestment <= 100 && maxInvestment > 0 && this.state.daysToGo > 0) {
       minInvestment = 1;
     }
+
+    const goal = Number(this.props.information.goal)
+      .toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      });
 
     return (
       <div className="AssetDetails grid">
@@ -188,16 +195,13 @@ class AssetDetails extends React.Component {
                 className="AssetDetails__left-funding-value"
                 style={{ color: '#2db84b' }}
               >
-                {this.props.information.raised.toLocaleString()} USD
+                {this.assetFunded ? goal : this.props.information.raised.toLocaleString()} USD
               </b>
             </div>
             <div className="AssetDetails__left-funds-goal">
               <p className="AssetDetails__left-funding-title">Funding goal</p>
               <b className="AssetDetails__left-funding-value">
-                {Number(this.props.information.goal).toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                })}
+                {goal}
               </b>
             </div>
             <div className="AssetDetails__left-funds-investors">
@@ -312,6 +316,8 @@ AssetDetails.propTypes = {
     address: PropTypes.string.isRequired,
     numberOfInvestors: PropTypes.number.isRequired,
     imageSrc: PropTypes.string.isRequired,
+    fundingStage: PropTypes.string.isRequired,
+    pastDate: PropTypes.bool.isRequired,
   }).isRequired,
   currentEthInUsd: PropTypes.number,
 };
