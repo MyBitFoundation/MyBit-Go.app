@@ -41,6 +41,8 @@ const AssetDetailsPage = ({
     address: asset.assetManager,
     numberOfInvestors: asset.numberOfInvestors,
     imageSrc: asset.imageSrc,
+    fundingStage: asset.fundingStage,
+    pastDate: asset.pastDate,
   };
 
   return (
