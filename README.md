@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://mybit.io/">
-    <img alt="MyBit Logo" src="https://ipfs.io/ipfs/QmcYSWqCJEDTjnWsYAJt2ZeuSCDc9KEX7qLuH9HEcwbsBN/" width="150">
+    <img alt="MyBit Logo" src="./src/images/MyBit-logo.svg" width="150">
   </a>
 </p>
 
@@ -67,14 +67,14 @@ and it will run the development server on your local machine, and give you a URL
 ### Powered with
 <br/>
 <p>
-<img src="https://ipfs.io/ipfs/QmSmAZrXvr3NcJchLuxywGtYsB72pvMpk5oNg7YgiUQvMm/" width="30%">
+<img src="./src/images/ethereum-logo.png" width="30%">
 </p>
 </p>
 
 <br/><br/><br/>
 <p align="center">
     <a href="https://www.youtube.com/watch?v=SGFGfpKn1dg">
-        <img src="https://ipfs.io/ipfs/QmRJejnmt9nrKnyRhjAj3b58dYPHYEqVz7e3JmnRCtLEcj/"/width="70%">
+        <img src="./src/images/rocket.png" width="70%">
     </a>
 </a>
 <br/>
