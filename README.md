@@ -74,7 +74,7 @@ and it will run the development server on your local machine, and give you a URL
 <br/><br/><br/>
 <p align="center">
     <a href="https://www.youtube.com/watch?v=SGFGfpKn1dg">
-        <img src="./src/images/rocket.png"/width="70%">
+        <img src="./src/images/rocket.png" width="70%">
     </a>
 </a>
 <br/>
