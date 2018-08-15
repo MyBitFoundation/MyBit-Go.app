@@ -7,13 +7,7 @@
 
 # MyBitDapp-FrontEnd
 
-<p style="display=inline;">
-    <a href="https://circleci.com/gh/MyBitFoundation/MyBit-Go">
-        <img alt="CircleCI Status" 
-            src="https://circleci.com/gh/yarnpkg/yarn.svg?style=shield&circle-token=5f0a78473b0f440afb218bf2b82323cc6b3cb43f" />
-    </a>
-
-</p>
+[![CircleCI](https://circleci.com/gh/MyBitFoundation/MyBit-Go.svg?style=svg)](https://circleci.com/gh/MyBitFoundation/MyBit-Go)
 
 <br/>
 
