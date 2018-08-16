@@ -20,6 +20,7 @@ Currently, MyBit Go performs at the Ethereum Ropsten Network. Practicing Metamas
 Account information is displayed at the top bar in the app. 
 To get started among investments ETH from [Faucet service](https://faucet.metamask.io/) for the Ropsten is practiced. 
 After requested Ropsten ETH will be displayed in Metamask.
+Notice that Metamask requires time to retrieve new balance information form the blockchain.
 
 #### Explore Categories
 The app groups all the assets into categories. 
@@ -32,9 +33,11 @@ The Asset Detail holds the Smart Contract data visualization. The data shows par
 The data are stored using Ethereum blockchain. The MyBit Smart Contracts are letting direct investments. Following an asset is selected, clicking on Contribute will trigger transaction and the investment will be preserved forever.
 
 #### Portfolio and Investments
-
+Activity on MyBit Go platform is designated in Portfolio section. Total Portfolio Value and particular Asset value is presented. 
 
 #### Transaction list
+List of all investment transactions are arranged synchronously from the Ethereum Blockchain.
+Notice that Metamask requires time to retrieve the data form the blockchain.
 
 ## Continuous integration
 Using Circle CI, the full test suite will be run against every pull request and has to pass before it can be merged. Every commit on a branch will be tested as well.
