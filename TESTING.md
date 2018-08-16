@@ -2,12 +2,13 @@
 > "Quality is not an act, it is a habit.”
 >— Aristotle
 
-## User Flows
+## User Guide
 
-#### Introduction
-MyBit Go app is in its' concept and implementation decentralized.  
+#### What is MyBit Go?
+MyBit Go enables anyone to invest directly in IoT assets.
+The app is in its' concept and implementation decentralized.  
 The app is designed to avoid any single point of failure.  The data are stored using blockchain, providing trustless interaction.
-The app enables anyone to invest directly in IoT assets.
+
 
 #### Requirements
 [Metamask](https://metamask.io/) web3 plugin is required for blockchain interplay as browser extension.
@@ -36,7 +37,8 @@ The data are stored using Ethereum blockchain. The MyBit Smart Contracts are let
 Activity on MyBit Go platform is designated in Portfolio section. Total Portfolio Value and particular Asset value is presented. 
 
 #### Transaction list
-List of all investment transactions are arranged synchronously from the Ethereum Blockchain.
+List of all investment transactions are arranged into feed from the Ethereum Blockchain.
+These lists display all the transactions on the platform.
 Notice that Metamask requires time to retrieve the data form the blockchain.
 
 ## Continuous integration
