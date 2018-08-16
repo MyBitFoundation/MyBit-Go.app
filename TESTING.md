@@ -16,15 +16,23 @@ MyBit Go don't require a middleman to function or to manage a user's data.
 #### Blockchain Networks
 Currently, MyBit Go performs at the Ethereum Ropsten Network. Practicing Metamask proper network needs to be selected. Main Network will be supported after the testing phase. The app will show warning popup if the wrong network is selected.
 
-#### Account Information Bar
+#### Account Data and Ether Faucet
+Account information is displayed at the top bar in the app. 
+To get started among investments ETH from [Faucet service](https://faucet.metamask.io/) for the Ropsten is practiced. 
+After requested Ropsten ETH will be displayed in Metamask.
 
 #### Explore Categories
+The app groups all the assets into categories. 
+
 
 #### Explore the Asset Details
+The Asset Detail holds the Smart Contract data visualization. The data shows particular asset specifications, description and enables investments via Smart Contract communication. 
 
 #### Invest Directly
+The data are stored using Ethereum blockchain. The MyBit Smart Contracts are letting direct investments. Following an asset is selected, clicking on Contribute will trigger transaction and the investment will be preserved forever.
 
 #### Portfolio and Investments
+
 
 #### Transaction list
 
