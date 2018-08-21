@@ -59,8 +59,7 @@ and it will run the development server on your local machine, and give you a URL
 
 ### User Documentation
 MyBit Go follows user-centered design and documentation.
-MyBit User Interface is rather intuitive and easy going then long documentation.
-For User Flow docs find [this page](./TESTING.md).
+For User Flow docs check [this page](./TESTING.md).
 
 ### Powered with
 <br/>
