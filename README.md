@@ -57,6 +57,9 @@ npm run storybook
 ```
 and it will run the development server on your local machine, and give you a URL to browse through the stories.
 
+### User Documentation
+MyBit Go follows user-centered design and documentation.
+For User Flow docs check [this page](./TESTING.md).
 
 ### Powered with
 <br/>
