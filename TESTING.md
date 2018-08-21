@@ -3,6 +3,7 @@
 > "Quality is not an act, it is a habit.”
 >— Aristotle
 
+
 #### What is MyBit Go?
 MyBit Go enables anyone to invest directly in IoT assets.
 The app is in its' concept and implementation decentralized.  
