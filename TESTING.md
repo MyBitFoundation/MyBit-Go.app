@@ -1,13 +1,15 @@
 # User Guide  :book:
+
 > "Quality is not an act, it is a habit.”
 >— Aristotle
 
 #### Table of Contents  
+
 [What is MyBit Go](#what) 
 [MyBit Go Requirements](#requirements)
 [How to install Metamask?](#howto-metamask)
 [How to create a new wallet in MetaMask?](#howto-wallet)
-[MyBit Go Metamask Warning Popup](#warning-popup)
+[MyBit Go Metamask Warning Popup](#warning-popup) 
 [Blockchain Networks](#blockchain-networks)
 [How to select Ropsten network?](#ropsten-network)
 [Account Data and Ether Faucet](#faucet)
@@ -110,3 +112,5 @@ Using Circle CI, the full test suite will be run against every pull request and 
 <a name="security-testing"/>
 ## Security testing
 Using an automated tool, the list of dependencies of the project is being checked against a database of known vulnerabilities as part of every CI build. If any of the dependencies contains a known vulnerability, the build will fail.
+
+<img src="./src/images/bg-1.png" width="100%">
