@@ -48,7 +48,7 @@ class HelpPage extends React.Component {
         url: '/explore',
         title: 'Explore',
         desc:
-          'Here you can explore the different assets currently listed for sale on the platform. Simply select a catagory then select an asset to see more information.',
+          'Here you can explore the different assets currently listed for sale on the platform. Simply select a category then select an asset to see more information.',
       },
       {
         imageSrc: portfolioIcon,
