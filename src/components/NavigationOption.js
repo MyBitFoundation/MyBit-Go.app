@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Menu, Icon } from 'antd';
+import 'antd/lib/menu/style/css';
 
 const classNames = require('classnames');
 
@@ -17,15 +18,15 @@ const NavigationOption = ({
   });
 
   return (
-    <Link
-      className="col AppNavigationBar__option-col"
-      to={url || '/'}
-      href={url || '/'}
-    >
-    <Menu.Item key="mail">
-     <Icon type="mail" />{name}
-    </Menu.Item>
-    </Link>
+    // <Link
+    //   className="col AppNavigationBar__option-col"
+    //   to={url || '/'}
+    //   href={url || '/'}
+    // >
+      <Menu.Item key={name}>
+        <Icon type={icon} />{name}
+      </Menu.Item>
+    // </Link>
   );
 };
 
