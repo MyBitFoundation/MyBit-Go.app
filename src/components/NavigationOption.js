@@ -3,6 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Menu, Icon } from 'antd';
 
 const classNames = require('classnames');
 
@@ -21,10 +22,9 @@ const NavigationOption = ({
       to={url || '/'}
       href={url || '/'}
     >
-      <div className={optionClass}>
-        <img alt={name} className="AppNavigationBar__option-img" src={icon} />
-        <p className="AppNavigationBar__option-text">{name}</p>
-      </div>
+    <Menu.Item key="mail">
+     <Icon type="mail" />{name}
+    </Menu.Item>
     </Link>
   );
 };

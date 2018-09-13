@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Menu, Icon } from 'antd';
+
 import '../styles/NavigationBar.css';
 import NavigationOption from './NavigationOption';
 import { debug } from '../constants';
@@ -62,7 +64,11 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   ));
 
   return (
-    <div className="AppNavigationBar grid-noGutter-center">{navBarOptions}</div>
+    <Menu
+      mode="horizontal"
+    >
+    {navBarOptions}
+    </Menu>
   );
 };
 
