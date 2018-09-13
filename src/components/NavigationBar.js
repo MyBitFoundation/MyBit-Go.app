@@ -58,22 +58,11 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    // <NavigationOption
-    //   url={menuItem.url}
-    //   key={menuItem.name}
-    //   name={menuItem.name}
-    //   icon={menuItem.icon}
-    //   selectable={menuItem.selectable}
-    //   selected={menuItem.selected}
-    //   clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
-    // />
-    
       <Menu.Item key={menuItem.key}>
         <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
           <Icon type={menuItem.icon}/>{menuItem.name}
         </Link>
       </Menu.Item>
-    
   ));
 
   return (
