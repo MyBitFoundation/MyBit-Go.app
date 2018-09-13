@@ -69,9 +69,11 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
     // />
     
       <Menu.Item key={menuItem.key}>
-        <Icon type={menuItem.icon}/>{menuItem.name}
+        <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
+          <Icon type={menuItem.icon}/>{menuItem.name}
+        </Link>
       </Menu.Item>
-   
+    
   ));
 
   return (
