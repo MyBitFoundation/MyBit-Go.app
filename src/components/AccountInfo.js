@@ -35,7 +35,6 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
           </span>
         )}
       </div>
-      <Address className="AccountInfo__address" userName={userName} />
     </div>
   );
 };

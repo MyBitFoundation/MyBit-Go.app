@@ -1,12 +1,11 @@
 @import "./Constants.scss";
 
 .AccountInfo{
-    position: absolute;
-    right: 60px;
     height: $headerHeight;
 
     &__balance{
-	    text-align: right;
+        text-align: left;
+        font-family: 'Roboto';
 	    height: $headerHeight;
 	    float: left;
 	    position: relative;
@@ -14,7 +13,7 @@
     }
 
     &__balance-header{
-        font-size: 18px;
+        font-size: 14px;
         padding-top: 25px;
         position: relative;
         top: 2px;

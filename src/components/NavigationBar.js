@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Icon } from 'antd';
+import { Menu, Icon, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 
 import '../styles/NavigationBar.css';
@@ -58,11 +58,15 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
+    
       <Menu.Item key={menuItem.key}>
-        <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
-          <Icon type={menuItem.icon}/>{menuItem.name}
-        </Link>
-      </Menu.Item>
+        {/* <Tooltip placement="topRight" title="kul"> */}
+          <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
+            <Icon type={menuItem.icon}/>{menuItem.name}
+          </Link>
+        {/* </Tooltip> */}
+        </Menu.Item>
+    
   ));
 
   return (

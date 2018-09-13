@@ -13,12 +13,12 @@
     }
 
     &__exchange-rate{
-        line-height: $headerHeight;
+        // line-height: $headerHeight;
         font-size: 14px;
     }
 
     &__exchange-rate--is-loading{
-        float: left;
+        // float: left;
         top: 27px;
         position: relative;
     }
