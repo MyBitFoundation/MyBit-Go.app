@@ -7,16 +7,17 @@
     color: white;
     overflow: hidden;
 
+    &__Logo-contaner {
+      display: inline-block;
+    }
+
     &__logo {
-        padding: 0 25px;
-        margin: auto 0;
-        height: 73px;
-        display: inline-block;
+    
     }
 
     &__exchange-rate{
-        // line-height: $headerHeight;
-        font-size: 14px;
+      height: $headerHeight;
+      font-size: 14px;
     }
 
     &__exchange-rate--is-loading{
@@ -25,7 +26,8 @@
         position: relative;
     }
     &__tokenprice-label {
-        line-height: 22px;
+        margin: 0;
+
     }
     &__rate-container {
         display: inline-block;

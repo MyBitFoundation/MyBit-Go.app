@@ -20,7 +20,7 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
   return (
     <div className="AccountInfo">
       <div className="AccountInfo__balance">
-        <b className="AccountInfo__balance-header">ACCOUNT BALANCE</b>
+        <p className="AccountInfo__balance-header">ACCOUNT BALANCE</p>
         {!ethBalance || !myBitBalanceToRender ? (
           <Loading
             className="AccountInfo__balance--is-loading"
