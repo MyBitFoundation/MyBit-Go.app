@@ -19,7 +19,6 @@ const AppHeader = ({ user, prices }) => (
       </Col>
       <Col span={7}>
         <h3>BANCOR GOES HERE</h3>
-        <h3>csdcdscdsc</h3>
       </Col>
       <Col span={8}>
         <Address {...user}/>

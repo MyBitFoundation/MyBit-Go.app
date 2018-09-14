@@ -9,15 +9,21 @@
 
     &__Logo-contaner {
       display: inline-block;
+      padding-right: 65px;
     }
 
     &__logo {
-    
+      padding-top: 10px;
+      padding-left: 20px;
     }
 
     &__exchange-rate{
       height: $headerHeight;
       font-size: 14px;
+      padding-right: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     &__exchange-rate--is-loading{
@@ -27,6 +33,7 @@
     }
     &__tokenprice-label {
         margin: 0;
+        font-size: 14px;
 
     }
     &__rate-container {

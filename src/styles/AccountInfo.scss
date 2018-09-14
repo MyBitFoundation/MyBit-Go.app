@@ -1,17 +1,20 @@
 @import "./Constants.scss";
 
 .AccountInfo{
-  height: $headerHeight;
   display: inline-block;
+  
 
   &__balance{
     text-align: left;
     font-family: 'Roboto';
-    height: $headerHeight;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   &__balance-header{
     font-size: 14px;
+    margin: 0;
   }
 
   &__balance--is-loading{
