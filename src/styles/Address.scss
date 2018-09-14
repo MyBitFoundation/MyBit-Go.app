@@ -1,7 +1,9 @@
 @import "./Constants.scss";
 
 .Address{
-  height: 39px;
+  float: right;
+  padding-right: 20px;
+  display: inline-block;
 
     &__loader{
       display: flex;
@@ -22,6 +24,13 @@
         margin: 0px 0px;
         position: relative;
         top: -25px;
+    }
+
+    &__jazz-n-hex {
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 }
 
