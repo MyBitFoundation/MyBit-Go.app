@@ -2,14 +2,15 @@
 
 .AccountInfo{
     height: $headerHeight;
+    display: inline-block;
 
     &__balance{
         text-align: left;
         font-family: 'Roboto';
 	    height: $headerHeight;
-	    float: left;
-	    position: relative;
-	    margin-right: 20px;
+	    // float: left;
+	    // position: relative;
+	    // margin-right: 20px;
     }
 
     &__balance-header{

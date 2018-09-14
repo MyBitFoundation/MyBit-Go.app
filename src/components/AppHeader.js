@@ -12,11 +12,14 @@ import Address from './Address';
 const AppHeader = ({ user, prices }) => (
   <div className="AppHeader">
     <Row>
-      <Col span={8}>
+      <Col span={9}>
         <Logo className="AppHeader__logo" />
-      </Col>
-      <Col span={8}>
         <ExchangeRate {...prices} />
+        <AccountInfo {...user} />
+      </Col>
+      <Col span={7}>
+        <h3>BANCOR GOES HERE</h3>
+        <h3>csdcdscdsc</h3>
       </Col>
       <Col span={8}>
         <Address {...user}/>

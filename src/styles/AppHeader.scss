@@ -5,11 +5,13 @@
     background-image: linear-gradient(64deg, #001358, #125ac4);
     margin: 0px 0px;
     color: white;
+    overflow: hidden;
 
     &__logo {
         padding: 0 25px;
         margin: auto 0;
         height: 73px;
+        display: inline-block;
     }
 
     &__exchange-rate{
@@ -24,5 +26,8 @@
     }
     &__tokenprice-label {
         line-height: 22px;
+    }
+    &__rate-container {
+        display: inline-block;
     }
 }
