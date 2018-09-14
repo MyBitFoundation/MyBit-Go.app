@@ -1,8 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Menu, Icon, Tooltip } from 'antd';
+import { Link } from 'react-router-dom';
+
 import '../styles/NavigationBar.css';
 import NavigationOption from './NavigationOption';
 import { debug } from '../constants';
+
+import 'antd/lib/menu/style';
+
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
 
 const exploreIcon = require('../images/search.png');
 const portfolioIcon = require('../images/chart-area.png');
@@ -17,32 +25,32 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   const menuOptions = [
     {
       name: 'Explore',
-      icon: exploreIcon,
+      icon: 'search',
       selectable: true,
       selected: currentPath.indexOf('/explore') !== -1,
       url: '/',
     },
     {
       name: 'Portfolio',
-      icon: portfolioIcon,
+      icon: 'area-chart',
       selectable: true,
       selected: currentPath === '/portfolio',
       url: '/portfolio',
     },
     {
       name: 'Transactions',
-      icon: transactionsIcon,
+      icon: 'eye',
       selectable: true,
       selected: currentPath === '/transaction-history',
       url: '/transaction-history',
     },
-    { name: 'Saved', icon: savedIcon },
-    { name: 'List Asset', icon: listAssetIcon },
-    { name: 'Staking', icon: stakingIcon },
-    { name: 'Exchange', icon: exchangeIcon },
+    { name: 'Saved', icon: 'save' },
+    { name: 'List Asset', icon: 'plus' },
+    { name: 'Staking', icon: 'robot' },
+    { name: 'Exchange', icon: 'interation' },
     {
-      name: 'Help',
-      icon: knowledgeBaseIcon,
+      name: 'Knowledge Base',
+      icon: 'question',
       selectable: true,
       selected: currentPath === '/help',
       url: '/help',
@@ -50,19 +58,25 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    <NavigationOption
-      url={menuItem.url}
-      key={menuItem.name}
-      name={menuItem.name}
-      icon={menuItem.icon}
-      selectable={menuItem.selectable}
-      selected={menuItem.selected}
-      clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
-    />
+    
+      <Menu.Item key={menuItem.key}>
+        {/* <Tooltip placement="topRight" title="kul"> */}
+          <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
+            <Icon type={menuItem.icon}/>{menuItem.name}
+          </Link>
+        {/* </Tooltip> */}
+        </Menu.Item>
+    
   ));
 
   return (
-    <div className="AppNavigationBar grid-noGutter-center">{navBarOptions}</div>
+    <div>
+    <Menu
+      mode="horizontal"
+    > 
+    {navBarOptions}
+    </Menu>
+    </div>
   );
 };
 

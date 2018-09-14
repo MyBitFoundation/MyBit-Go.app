@@ -4,7 +4,7 @@ import { Loading } from 'carbon-components-react';
 import { USD_MYB_SYMBOL } from '../constants';
 
 const ExchangeRate = ({ mybitPrice }) => (
-  <div>
+  <div className="AppHeader__rate-container">
     {!mybitPrice && (
       <Loading
         className="AppHeader__exchange-rate--is-loading"
@@ -12,10 +12,11 @@ const ExchangeRate = ({ mybitPrice }) => (
         withOverlay={false}
       />
     )}
-    <span className="AppHeader__exchange-rate">
+
+    <div className="AppHeader__exchange-rate">
+      <p className="AppHeader__tokenprice-label">MYB TOKEN PRICE</p>
       {mybitPrice && `$${mybitPrice}`}
-      <b>{USD_MYB_SYMBOL}</b>
-    </span>
+    </div>
   </div>
 );
 
