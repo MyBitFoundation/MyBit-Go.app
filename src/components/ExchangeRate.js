@@ -13,7 +13,7 @@ const ExchangeRate = ({ mybitPrice }) => (
       />
     )}
     <span className="AppHeader__exchange-rate">
-      {mybitPrice && `$${mybitPrice}`}
+      {mybitPrice && `$${mybitPrice}`}{' '}
       <b>{USD_MYB_SYMBOL}</b>
     </span>
   </div>
