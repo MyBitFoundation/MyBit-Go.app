@@ -52,7 +52,7 @@ const Asset = ({
             Funded: <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
           </p>
           <p className="Asset__details-goal">
-            Goal:
+            Goal:{' '}
             <b>
               {goalFormatted}
             </b>
