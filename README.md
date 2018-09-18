@@ -1,19 +1,13 @@
 <p align="center">
   <a href="https://mybit.io/">
-    <img alt="MyBit Logo" src="https://ipfs.io/ipfs/QmcYSWqCJEDTjnWsYAJt2ZeuSCDc9KEX7qLuH9HEcwbsBN/" width="150">
+    <img alt="MyBit Logo" src="./src/images/MyBit-logo.svg" width="150">
   </a>
 </p>
 
 
 # MyBitDapp-FrontEnd
 
-<p style="display=inline;">
-    <a href="https://circleci.com/gh/MyBitFoundation/MyBitDapp-FrontEnd">
-        <img alt="CircleCI Status" 
-            src="https://circleci.com/gh/yarnpkg/yarn.svg?style=shield&circle-token=5f0a78473b0f440afb218bf2b82323cc6b3cb43f" />
-    </a>
-
-</p>
+[![CircleCI](https://circleci.com/gh/MyBitFoundation/MyBit-Go.svg?style=svg)](https://circleci.com/gh/MyBitFoundation/MyBit-Go)
 
 <br/>
 
@@ -63,18 +57,21 @@ npm run storybook
 ```
 and it will run the development server on your local machine, and give you a URL to browse through the stories.
 
+### User Documentation
+MyBit Go follows user-centered design and documentation.
+For User Flow docs check [this page](./TESTING.md).
 
 ### Powered with
 <br/>
 <p>
-<img src="https://ipfs.io/ipfs/QmSmAZrXvr3NcJchLuxywGtYsB72pvMpk5oNg7YgiUQvMm/" width="30%">
+<img src="./src/images/ethereum-logo.png" width="30%">
 </p>
 </p>
 
 <br/><br/><br/>
 <p align="center">
     <a href="https://www.youtube.com/watch?v=SGFGfpKn1dg">
-        <img src="https://ipfs.io/ipfs/QmRJejnmt9nrKnyRhjAj3b58dYPHYEqVz7e3JmnRCtLEcj/"/width="70%">
+        <img src="./src/images/rocket.png" width="70%">
     </a>
 </a>
 <br/>
