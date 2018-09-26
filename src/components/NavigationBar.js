@@ -58,22 +58,20 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    
-      <Menu.Item key={menuItem.key}>
-        {/* <Tooltip placement="topRight" title="kul"> */}
-          <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
-            <Icon type={menuItem.icon}/>{menuItem.name}
-          </Link>
-        {/* </Tooltip> */}
-        </Menu.Item>
-    
+
+      <Menu.Item key={menuItem.name}>
+        <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
+          <Icon type={menuItem.icon}/>{menuItem.name}
+        </Link>
+      </Menu.Item>
+
   ));
 
   return (
     <div>
     <Menu
       mode="horizontal"
-    > 
+    >
     {navBarOptions}
     </Menu>
     </div>
