@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 import Web3 from 'web3';
 
-import Address from './Address';
 import '../styles/AccountInfo.css';
 
 const IS_DAPP_VERSION_ONE = true;
 
-const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
+const AccountInfo = ({ myBitBalance, ethBalance }) => {
   let myBitBalanceToRender = '0';
   if (
     !IS_DAPP_VERSION_ONE &&
@@ -42,13 +41,11 @@ const AccountInfo = ({ myBitBalance, ethBalance, userName }) => {
 AccountInfo.defaultProps = {
   myBitBalance: '',
   ethBalance: '',
-  userName: '',
 };
 
 AccountInfo.propTypes = {
   myBitBalance: PropTypes.string,
   ethBalance: PropTypes.string,
-  userName: PropTypes.string,
 };
 
 export default AccountInfo;
