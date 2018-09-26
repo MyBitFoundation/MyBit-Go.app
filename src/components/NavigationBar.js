@@ -1,17 +1,14 @@
-/* eslint-disable */
+/* eslint-disable import/no-webpack-loader-syntax */
+/* eslint-disable import/no-unresolved */
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Icon, Tooltip } from 'antd';
+import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
-import '../styles/NavigationBar.css';
-import { debug } from '../constants';
-
 import 'antd/lib/menu/style';
-
-import Button from 'antd/lib/button';
 import 'antd/lib/button/style';
+import '../styles/NavigationBar.css';
 
 const exploreIcon = require('-!svg-react-loader!../images/search.svg');
 const portfolioIcon = require('-!svg-react-loader!../images/chart-area.svg');
@@ -21,7 +18,7 @@ const exchangeIcon = require('-!svg-react-loader!../images/mydax.svg');
 const knowledgeBaseIcon = require('-!svg-react-loader!../images/question.svg');
 const watchIcon = require('-!svg-react-loader!../images/watch.svg');
 
-const NavigationBar = ({ clickHandler, currentPath }) => {
+const NavigationBar = ({ currentPath }) => {
   const menuOptions = [
     {
       name: 'Explore',
@@ -43,7 +40,7 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
       url: '/transaction-history',
     }, {
       name: 'WatchList',
-      icon: watchIcon
+      icon: watchIcon,
     }, {
       name: 'List Asset',
       icon: listAssetIcon,
@@ -64,7 +61,8 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   const navBarOptions = menuOptions.map(menuItem => (
     <Menu.Item key={menuItem.name} disabled={menuItem.disabled}>
       <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
-        <Icon component={menuItem.icon}/>{menuItem.name}
+        <Icon component={menuItem.icon} />
+        {menuItem.name}
       </Link>
     </Menu.Item>
   ));
@@ -80,12 +78,8 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
 };
 
 NavigationBar.propTypes = {
-  clickHandler: PropTypes.func,
   currentPath: PropTypes.string.isRequired,
 };
 
-NavigationBar.defaultProps = {
-  clickHandler: debug,
-};
 
 export default NavigationBar;
