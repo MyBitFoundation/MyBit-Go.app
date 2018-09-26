@@ -10,13 +10,13 @@ import 'antd/lib/menu/style';
 import 'antd/lib/button/style';
 import '../styles/NavigationBar.css';
 
-const exploreIcon = require('-!svg-react-loader!../images/search.svg');
-const portfolioIcon = require('-!svg-react-loader!../images/chart-area.svg');
-const transactionsIcon = require('-!svg-react-loader!../images/history.svg');
-const listAssetIcon = require('-!svg-react-loader!../images/plus.svg');
-const exchangeIcon = require('-!svg-react-loader!../images/mydax.svg');
-const knowledgeBaseIcon = require('-!svg-react-loader!../images/question.svg');
-const watchIcon = require('-!svg-react-loader!../images/watch.svg');
+const exploreIcon = require('../images/search.svg');
+const portfolioIcon = require('../images/chart-area.svg');
+const transactionsIcon = require('../images/history.svg');
+const listAssetIcon = require('../images/plus.svg');
+const exchangeIcon = require('../images/mydax.svg');
+const knowledgeBaseIcon = require('../images/question.svg');
+const watchIcon = require('../images/watch.svg');
 
 const NavigationBar = ({ currentPath }) => {
   const menuOptions = [
