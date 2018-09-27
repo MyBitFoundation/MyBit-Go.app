@@ -59,7 +59,7 @@ const NavigationBar = ({ currentPath }) => {
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    <Menu.Item key={menuItem.name} disabled={menuItem.disabled}>
+    <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected && 'ant-menu-item-selected'}>
       <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
         <Icon component={menuItem.icon} />
         {menuItem.name}
