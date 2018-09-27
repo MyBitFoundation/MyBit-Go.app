@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button } from 'carbon-components-react';
+import { Button } from 'antd';
 import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
@@ -21,7 +21,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
-      <Button kind="secondary" className="ExploreAssetsPage__back-button">
+      <Button className="ExploreAssetsPage__back-button">
         Back
       </Button>
     </Link>
@@ -29,7 +29,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
 
   const assetsToRender = [
     backButton,
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div>
       {assetsInCategory.map(asset => (
         <Asset
           key={asset.assetID}

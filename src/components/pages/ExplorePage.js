@@ -2,11 +2,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Row, Col } from 'antd';
+
 import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';
 import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
 import LoadingPage from './LoadingPage';
-import { Row, Col } from 'antd';
+
 
 const getCategories = assets =>
   [...new Set(assets.map(asset => asset.category))].map(category => ({
@@ -16,8 +18,9 @@ const getCategories = assets =>
   }));
 
 const renderCategories = (categories, clickHandler) => (
-  <Col className="ExplorePage__container">
+  <div>
     {categories.map(category => (
+      <Col  span={6} className="ExplorePage__container">
       <Link
         to={`/explore/${category.path}`}
         href={`/explore/${category.path}`}
@@ -32,8 +35,9 @@ const renderCategories = (categories, clickHandler) => (
           <p className="ExplorePage__category-name">{category.name}</p>
         </div>
       </Link>
+      </Col>
     ))}
-  </Col>
+  </div>
 );
 
 class ExplorePage extends Component {
@@ -48,11 +52,11 @@ class ExplorePage extends Component {
       return <LoadingPage message="Loading categories" />;
     }
     return (
-      <Row span={6} className="ExplorePage">
-        {renderCategories(
-          getCategories(this.props.assets),
-          this.props.clickHandler,
-        )}
+      <Row className="ExplorePage">
+          {renderCategories(
+            getCategories(this.props.assets),
+            this.props.clickHandler,
+          )}
       </Row>
     );
   }

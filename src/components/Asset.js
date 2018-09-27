@@ -33,7 +33,6 @@ const Asset = ({
       },
     );
   return (
-    // <Row className="Asset">
       <Col span={6} className="Asset">
         <div className="gutter-box Asset__image-holder" style={{ backgroundImage: `url(${backgroundImage})` }}>
           <div className="Asset__image-holder-gradient" />
@@ -80,7 +79,6 @@ const Asset = ({
           </Link>
         </div>
       </Col>
-    // </Row>
   );
 };
 
