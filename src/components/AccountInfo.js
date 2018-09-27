@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 import Web3 from 'web3';
 
-import Address from './Address';
+// import Address from './Address';
 import '../styles/AccountInfo.css';
 
 const IS_DAPP_VERSION_ONE = true;
