@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
+
+import { Progress, Col } from 'antd';
+
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
 import { debug, isAssetIdEnabled } from '../constants';
-
-import { Row, Col } from 'antd';
 
 const Asset = ({
   clickHandler,
@@ -22,7 +23,7 @@ const Asset = ({
   pastDate,
 }) => {
   const assetFunded = fundingStage === '3' || fundingStage === '4';
-  const barWidth = assetFunded ? '100%' : `${Math.ceil((funded / goal) * 100)}%`;
+  const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
   const goalFormatted = Number(goal)
     .toLocaleString(
       'en-US',
@@ -57,9 +58,8 @@ const Asset = ({
             </b>
           </p>
           <div className="Asset__details-progress-bar">
-            <div
-              className="Asset__details-progress-bar-fill"
-              style={{ width: barWidth }}
+            <Progress
+              percent={barWidth}
             />
           </div>
 
