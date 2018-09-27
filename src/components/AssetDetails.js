@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider, Button } from 'carbon-components-react';
+import { Slider,  } from 'carbon-components-react';
+import { Button } from 'antd';
 import dayjs from 'dayjs';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
@@ -165,8 +166,8 @@ class AssetDetails extends React.Component {
             )}
           </BlockchainInfoContext.Consumer>
         )}
-        <div className="AssetDetails__left col_lg-6 col_md-12">
-          <b className="AssetDetails__left-name">
+        <div className="AssetDetails__right col_lg-6 col_md-12">
+        <b className="AssetDetails__left-name">
             {this.props.information.assetName}
           </b>
           <img
@@ -177,6 +178,29 @@ class AssetDetails extends React.Component {
           <p className="AssetDetails__left-location">
             {this.props.information.city}, {this.props.information.country}
           </p>
+          <img
+            alt="Asset details background"
+            className="AssetDetails__right-image"
+            src={this.props.information.imageSrc}
+          />
+          <div className="AssetDetails__right-wrapper">
+            <b className="AssetDetails__right-title-details">Asset Details</b>
+            <p className="AssetDetails__right-content-details">
+              {this.props.information.details}
+            </p>
+            <b className="AssetDetails__right-title-details">Description</b>
+            <p className="AssetDetails__right-content-details">
+              {this.props.information.description}
+            </p>
+            <b className="AssetDetails__right-title-details">Asset manager</b>
+            <Address
+              userName={this.props.information.address}
+              className="AssetDetails__right-address"
+            />
+          </div>
+        </div>
+        <div className="AssetDetails__left col_lg-6 col_md-12">
+          
           <div className="AssetDetails__left-days-to-go-wrapper">
             <img
               alt="Location icon"
@@ -263,36 +287,15 @@ class AssetDetails extends React.Component {
             1.87 ETH
           </b>
           <Button
+            type="primary"
             className="AssetDetails__left-contribute-btn"
-            kind="primary"
             onClick={() => this.handlePopupState(true)}
             disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           >
             Contribute
           </Button>
         </div>
-        <div className="AssetDetails__right col_lg-6 col_md-12">
-          <img
-            alt="Asset details background"
-            className="AssetDetails__right-image"
-            src={this.props.information.imageSrc}
-          />
-          <div className="AssetDetails__right-wrapper">
-            <b className="AssetDetails__right-title-details">Asset Details</b>
-            <p className="AssetDetails__right-content-details">
-              {this.props.information.details}
-            </p>
-            <b className="AssetDetails__right-title-details">Description</b>
-            <p className="AssetDetails__right-content-details">
-              {this.props.information.description}
-            </p>
-            <b className="AssetDetails__right-title-details">Asset manager</b>
-            <Address
-              userName={this.props.information.address}
-              className="AssetDetails__right-address"
-            />
-          </div>
-        </div>
+        
       </div>
     );
   }

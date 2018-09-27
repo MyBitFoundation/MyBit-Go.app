@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 import AssetDetails from '../AssetDetails';
-import CategoryBackButton from '../CategoryBackButton';
+import { Button } from 'antd';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
@@ -47,7 +47,7 @@ const AssetDetailsPage = ({
 
   return (
     <div style={{ position: 'relative' }}>
-      <CategoryBackButton category={category} />
+      <Button>Back</Button>
       <AssetDetails
         information={assetInformation}
         currentEthInUsd={prices.etherPrice}
