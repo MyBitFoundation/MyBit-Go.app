@@ -6,6 +6,7 @@ import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';
 import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
 import LoadingPage from './LoadingPage';
+import { Row, Col } from 'antd';
 
 const getCategories = assets =>
   [...new Set(assets.map(asset => asset.category))].map(category => ({
@@ -15,7 +16,7 @@ const getCategories = assets =>
   }));
 
 const renderCategories = (categories, clickHandler) => (
-  <div className="ExplorePage__container">
+  <Col className="ExplorePage__container">
     {categories.map(category => (
       <Link
         to={`/explore/${category.path}`}
@@ -32,7 +33,7 @@ const renderCategories = (categories, clickHandler) => (
         </div>
       </Link>
     ))}
-  </div>
+  </Col>
 );
 
 class ExplorePage extends Component {
@@ -47,12 +48,12 @@ class ExplorePage extends Component {
       return <LoadingPage message="Loading categories" />;
     }
     return (
-      <div className="ExplorePage">
+      <Row span={6} className="ExplorePage">
         {renderCategories(
           getCategories(this.props.assets),
           this.props.clickHandler,
         )}
-      </div>
+      </Row>
     );
   }
 }
