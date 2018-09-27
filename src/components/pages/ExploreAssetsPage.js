@@ -7,6 +7,7 @@ import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
+import { Row, Col } from 'antd';
 
 const ExploreAssetsPage = ({ loading, assets, match }) => {
   const { category } = match.params;
@@ -74,7 +75,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
     renderedOutput = assetsToRender;
   }
 
-  return <div className="ExploreAssetsPage">{renderedOutput}</div>;
+  return <Row className="ExploreAssetsPage">{renderedOutput}</Row>;
 };
 
 ExploreAssetsPage.propTypes = {

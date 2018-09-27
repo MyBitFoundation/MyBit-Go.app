@@ -6,6 +6,8 @@ import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
 import { debug, isAssetIdEnabled } from '../constants';
 
+import { Row, Col } from 'antd';
+
 const Asset = ({
   clickHandler,
   funded,
@@ -30,12 +32,9 @@ const Asset = ({
       },
     );
   return (
-    <div className="Asset">
-      <div className="Asset__container">
-        <div
-          className="Asset__image-holder"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-        >
+    // <Row className="Asset">
+      <Col span={6} className="Asset__container">
+        <div className="Asset__image-holder" style={{ backgroundImage: `url(${backgroundImage})` }}>
           <div className="Asset__image-holder-gradient" />
           <img
             alt="Location icon"
@@ -80,8 +79,8 @@ const Asset = ({
             </Button>
           </Link>
         </div>
-      </div>
-    </div>
+      </Col>
+    // </Row>
   );
 };
 
