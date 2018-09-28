@@ -2,18 +2,17 @@
 // TODO: Fix the JSX linting errors
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Menu, Icon } from 'antd';
 import 'antd/lib/menu/style/css';
 
 const classNames = require('classnames');
 
 const NavigationOption = ({ name, icon, selectable, selected, url }) => {
-  const optionClass = classNames({
-    AppNavigationBar__option: true,
-    'AppNavigationBar__option--is-selected': selected,
-    'AppNavigationBar__option--is-selectable': selectable
-  });
+  // const optionClass = classNames({
+  //   AppNavigationBar__option: true,
+  //   'AppNavigationBar__option--is-selected': selected,
+  //   'AppNavigationBar__option--is-selectable': selectable
+  // });
 
   return (
     // <Link

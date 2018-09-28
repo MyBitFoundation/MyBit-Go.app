@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
-import { USD_MYB_SYMBOL } from '../constants';
 
 const ExchangeRate = ({ mybitPrice }) => (
   <div className="AppHeader__rate-container">

@@ -7,7 +7,7 @@ import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
-import { Row, Col } from 'antd';
+import { Row } from 'antd';
 
 const ExploreAssetsPage = ({ loading, assets, match }) => {
   const { category } = match.params;

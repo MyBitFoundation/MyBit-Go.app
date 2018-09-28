@@ -1,25 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Icon, Tooltip } from 'antd';
+import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
 import '../styles/NavigationBar.css';
-import NavigationOption from './NavigationOption';
+// import NavigationOption from './NavigationOption';
 import { debug } from '../constants';
 
 import 'antd/lib/menu/style';
 
-import Button from 'antd/lib/button';
+// import Button from 'antd/lib/button';
 import 'antd/lib/button/style';
 
-const exploreIcon = require('../images/search.png');
-const portfolioIcon = require('../images/chart-area.png');
-const transactionsIcon = require('../images/history.png');
-const savedIcon = require('../images/star.png');
-const listAssetIcon = require('../images/plus.png');
-const stakingIcon = require('../images/cubes.png');
-const exchangeIcon = require('../images/exchange-alt.png');
-const knowledgeBaseIcon = require('../images/question.png');
+// const exploreIcon = require('../images/search.png');
+// const portfolioIcon = require('../images/chart-area.png');
+// const transactionsIcon = require('../images/history.png');
+// const savedIcon = require('../images/star.png');
+// const listAssetIcon = require('../images/plus.png');
+// const stakingIcon = require('../images/cubes.png');
+// const exchangeIcon = require('../images/exchange-alt.png');
+// const knowledgeBaseIcon = require('../images/question.png');
 
 const NavigationBar = ({ clickHandler, currentPath }) => {
   const menuOptions = [
