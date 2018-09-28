@@ -48,8 +48,7 @@
     "build-storybook": "npm-run-all build-css run-storybook",
     "lint": "eslint --ignore-path .gitignore .",
     "now-start": "node server.js",
-    "lint:fix": "eslint --ignore-path .gitignore --fix .",
-    "format-code": "prettier --single-quote --write 'src/**/*.js'"
+    "lint:fix": "eslint --ignore-path .gitignore --fix ."
   },
   "devDependencies": {
     "babel-core": "^7.0.0-bridge",
