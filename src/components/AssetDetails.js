@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider, Button } from 'carbon-components-react';
+import { Slider } from 'carbon-components-react';
+import { Button } from 'antd';
 import dayjs from 'dayjs';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
@@ -12,14 +13,18 @@ import BlockchainInfoContext from './BlockchainInfoContext';
 class AssetDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.assetFunded = this.props.information.fundingStage === '3' || this.props.information.fundingStage === '4';
+    this.assetFunded =
+      this.props.information.fundingStage === '3' ||
+      this.props.information.fundingStage === '4';
     const { goal, raised } = this.props.information;
     this.state = {
-      currentSelectedAmount: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
+      currentSelectedAmount: this.assetFunded
+        ? 0
+        : Math.floor((goal - raised) / 2),
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
-      isPopupOpen: false,
+      isPopupOpen: false
     };
     this.setDateDetails = this.setDateDetails.bind(this);
     this.endDateLocal = this.props.information.dueDate;
@@ -42,7 +47,7 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
-        endingAt: '',
+        endingAt: ''
       });
       this.clearInterval();
       return;
@@ -52,7 +57,9 @@ class AssetDetails extends React.Component {
       this.setState({
         daysToGo: -1,
         timeToGo: 'Funding period has ended',
-        endingAt: `Funding period has ended on ${dayjs(this.endDateLocal).format('dddd, MMMM D')}`,
+        endingAt: `Funding period has ended on ${dayjs(
+          this.endDateLocal
+        ).format('dddd, MMMM D')}`
       });
       this.clearInterval();
       return;
@@ -76,7 +83,9 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `Ending in ${calculateRemainingTime.hour()}h ${calculateRemainingTime.minute()}m ${calculateRemainingTime.second()}s`,
         daysToGo: 0,
-        endingAt: `Funding period ends ${day} at ${dayjs(this.endDateLocal).format('H:mm:ss')}`,
+        endingAt: `Funding period ends ${day} at ${dayjs(
+          this.endDateLocal
+        ).format('H:mm:ss')}`
       });
 
       if (!this.setDateInterval || this.runningMinInterval) {
@@ -91,7 +100,9 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go`,
         daysToGo: days,
-        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format('dddd, MMMM D')} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`,
+        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format(
+          'dddd, MMMM D'
+        )} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`
       });
       if (!this.setDateInterval) {
         this.setDateInterval = setInterval(() => {
@@ -128,13 +139,16 @@ class AssetDetails extends React.Component {
     const maxInvestment =
       this.assetFunded || this.state.daysToGo < 0
         ? 0
-        : (this.props.information.goal - this.props.information.raised).toFixed(2);
+        : (this.props.information.goal - this.props.information.raised).toFixed(
+            2
+          );
     const ownership = (
       (this.state.currentSelectedAmount * 100) /
       this.props.information.goal
     ).toFixed(2);
-    this.etherValueSelected = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
-      .toFixed(2));
+    this.etherValueSelected = Number(
+      (this.state.currentSelectedAmount / this.props.currentEthInUsd).toFixed(2)
+    );
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
 
@@ -142,11 +156,10 @@ class AssetDetails extends React.Component {
       minInvestment = 1;
     }
 
-    const goal = Number(this.props.information.goal)
-      .toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      });
+    const goal = Number(this.props.information.goal).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    });
 
     return (
       <div className="AssetDetails grid">
@@ -165,7 +178,7 @@ class AssetDetails extends React.Component {
             )}
           </BlockchainInfoContext.Consumer>
         )}
-        <div className="AssetDetails__left col_lg-6 col_md-12">
+        <div className="AssetDetails__right col_lg-6 col_md-12">
           <b className="AssetDetails__left-name">
             {this.props.information.assetName}
           </b>
@@ -177,32 +190,53 @@ class AssetDetails extends React.Component {
           <p className="AssetDetails__left-location">
             {this.props.information.city}, {this.props.information.country}
           </p>
+          <img
+            alt="Asset details background"
+            className="AssetDetails__right-image"
+            src={this.props.information.imageSrc}
+          />
+          <div className="AssetDetails__right-wrapper">
+            <b className="AssetDetails__right-title-details">Asset Details</b>
+            <p className="AssetDetails__right-content-details">
+              {this.props.information.details}
+            </p>
+            <b className="AssetDetails__right-title-details">Description</b>
+            <p className="AssetDetails__right-content-details">
+              {this.props.information.description}
+            </p>
+            <b className="AssetDetails__right-title-details">Asset manager</b>
+            <Address
+              userName={this.props.information.address}
+              className="AssetDetails__right-address"
+            />
+          </div>
+        </div>
+        <div className="AssetDetails__left col_lg-6 col_md-12">
           <div className="AssetDetails__left-days-to-go-wrapper">
             <img
               alt="Location icon"
               className="AssetDetails__left-image-holder-calendar-icon"
               src={calendarIcon}
             />
-            <p className="AssetDetails__left-days-to-go">
+            {/* <p className="AssetDetails__left-days-to-go">
               {this.state.timeToGo}
-            </p>
+            </p> */}
+            <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
           </div>
-          <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
+
           <div className="AssetDetails__left-funding-wrapper">
             <div className="AssetDetails__left-funds-raised">
               <p className="AssetDetails__left-funding-title">Funds raised</p>
-              <b
-                className="AssetDetails__left-funding-value"
-                style={{ color: '#2db84b' }}
-              >
-                {this.assetFunded ? goal : this.props.information.raised.toLocaleString()} USD
+              <b className="AssetDetails__left-funding-value">
+                {this.assetFunded
+                  ? goal
+                  : this.props.information.raised.toLocaleString()}{' '}
+                USD
               </b>
             </div>
             <div className="AssetDetails__left-funds-goal">
               <p className="AssetDetails__left-funding-title">Funding goal</p>
-              <b className="AssetDetails__left-funding-value">
-                {goal}
-              </b>
+              <b className="AssetDetails__left-funding-value">{goal}</b>
             </div>
             <div className="AssetDetails__left-funds-investors">
               <p className="AssetDetails__left-funding-title">
@@ -235,63 +269,41 @@ class AssetDetails extends React.Component {
             Max. <b>{maxInvestment} USD</b>
           </p>
           <p className="AssetDetails__left-contribution">Your contribution:</p>
-          <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-            {this.state.currentSelectedAmount.toLocaleString()} USD
-          </b>
+          <p className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
+            ${this.state.currentSelectedAmount.toLocaleString()}
+          </p>
           <div className="AssetDetails__left-separator" />
-          <b className="AssetDetails__left-contribution-value">
+          <p className="AssetDetails__left-contribution-value">
             {this.etherValueSelected} ETH
-          </b>
+          </p>
           <p className="AssetDetails__left-ownership">
             Ownership:{' '}
-            <b className="AssetDetails__left-contribution-value">
+            <p className="AssetDetails__left-contribution-value">
               {ownership}%
-            </b>
+            </p>
           </p>
-          <p className="AssetDetails__left-contribution">
+          {/* <p className="AssetDetails__left-contribution">
             Expected annual return:
           </p>
           <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
             18%
-          </b>
-          <div className="AssetDetails__left-separator" />
+          </b> */}
+          {/* <div className="AssetDetails__left-separator" />
           <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
             990 USD
           </b>
           <div className="AssetDetails__left-separator" />
           <b className="AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
             1.87 ETH
-          </b>
+          </b> */}
           <Button
+            type="primary"
             className="AssetDetails__left-contribute-btn"
-            kind="primary"
             onClick={() => this.handlePopupState(true)}
             disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           >
             Contribute
           </Button>
-        </div>
-        <div className="AssetDetails__right col_lg-6 col_md-12">
-          <img
-            alt="Asset details background"
-            className="AssetDetails__right-image"
-            src={this.props.information.imageSrc}
-          />
-          <div className="AssetDetails__right-wrapper">
-            <b className="AssetDetails__right-title-details">Asset Details</b>
-            <p className="AssetDetails__right-content-details">
-              {this.props.information.details}
-            </p>
-            <b className="AssetDetails__right-title-details">Description</b>
-            <p className="AssetDetails__right-content-details">
-              {this.props.information.description}
-            </p>
-            <b className="AssetDetails__right-title-details">Asset manager</b>
-            <Address
-              userName={this.props.information.address}
-              className="AssetDetails__right-address"
-            />
-          </div>
         </div>
       </div>
     );
@@ -299,7 +311,7 @@ class AssetDetails extends React.Component {
 }
 
 AssetDetails.defaultProps = {
-  currentEthInUsd: undefined,
+  currentEthInUsd: undefined
 };
 
 AssetDetails.propTypes = {
@@ -317,9 +329,9 @@ AssetDetails.propTypes = {
     numberOfInvestors: PropTypes.number.isRequired,
     imageSrc: PropTypes.string.isRequired,
     fundingStage: PropTypes.string.isRequired,
-    pastDate: PropTypes.bool.isRequired,
+    pastDate: PropTypes.bool.isRequired
   }).isRequired,
-  currentEthInUsd: PropTypes.number,
+  currentEthInUsd: PropTypes.number
 };
 
 export default AssetDetails;

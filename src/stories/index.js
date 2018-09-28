@@ -33,7 +33,7 @@ const Header = (
     user={{
       myBitBalance: 100,
       ethBalance: 1000,
-      userName: '0xd12cd8a37f074e7eafae618c986ff825666198bd',
+      userName: '0xd12cd8a37f074e7eafae618c986ff825666198bd'
     }}
   />
 );
@@ -139,8 +139,8 @@ storiesOf('Asset Details Page', module)
         params: {
           category: 'uncategorized',
           assetId:
-            '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1',
-        },
+            '0x32bcdca6197cf6bb2b3ec3045ad1e7ca72bafd52f147616f7621205127914ed1'
+        }
       }}
       loading={{ assets: false }}
       prices={{ etherPrice: 400 }}

@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button } from 'carbon-components-react';
+import { Button } from 'antd';
 import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
+import { Row } from 'antd';
 
 const ExploreAssetsPage = ({ loading, assets, match }) => {
   const { category } = match.params;
@@ -16,19 +17,19 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
   }
 
   const loadingAssets = loading.assets;
-  const assetsInCategory = assets.filter(asset => asset.category === match.params.category);
+  const assetsInCategory = assets.filter(
+    asset => asset.category === match.params.category
+  );
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
-      <Button kind="secondary" className="ExploreAssetsPage__back-button">
-        Back
-      </Button>
+      <Button className="ExploreAssetsPage__back-button">Back</Button>
     </Link>
   );
 
   const assetsToRender = [
     backButton,
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div>
       {assetsInCategory.map(asset => (
         <Asset
           key={asset.assetID}
@@ -44,7 +45,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
           pastDate={asset.pastDate}
         />
       ))}
-    </div>,
+    </div>
   ];
 
   const loadingElement = loadingAssets && (
@@ -74,13 +75,13 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
     renderedOutput = assetsToRender;
   }
 
-  return <div className="ExploreAssetsPage">{renderedOutput}</div>;
+  return <Row className="ExploreAssetsPage">{renderedOutput}</Row>;
 };
 
 ExploreAssetsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired
 };
 
 export default ExploreAssetsPage;

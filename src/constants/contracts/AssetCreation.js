@@ -6,88 +6,88 @@ export const ABI = [
     inputs: [
       {
         name: '_myBitFoundationPercentage',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         name: '_installerPercentage',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         name: '_functionSigner',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'changeFundingPercentages',
     outputs: [
       {
         name: '',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: false,
     inputs: [
       {
         name: '_amountToBeRaised',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         name: '_managerPercentage',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         name: '_amountToEscrow',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         name: '_installerID',
-        type: 'bytes32',
+        type: 'bytes32'
       },
       {
         name: '_assetType',
-        type: 'bytes32',
+        type: 'bytes32'
       },
       {
         name: '_blockAtCreation',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         name: '_ipfsHash',
-        type: 'bytes32',
-      },
+        type: 'bytes32'
+      }
     ],
     name: 'newAsset',
     outputs: [
       {
         name: '',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: false,
     inputs: [
       {
         name: '_functionInitiator',
-        type: 'address',
+        type: 'address'
       },
       {
         name: '_holdingAddress',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'destroy',
     outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: true,
@@ -96,31 +96,31 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: false,
     inputs: [
       {
         name: '_newTimeGivenForFunding',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'changeFundingTime',
     outputs: [
       {
         name: '',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: true,
@@ -129,46 +129,46 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     constant: false,
     inputs: [
       {
         name: '_assetID',
-        type: 'bytes32',
+        type: 'bytes32'
       },
       {
         name: '_functionSigner',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'removeAsset',
     outputs: [
       {
         name: '',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         name: '_database',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'constructor',
+    type: 'constructor'
   },
   {
     anonymous: false,
@@ -176,26 +176,26 @@ export const ABI = [
       {
         indexed: true,
         name: '_assetID',
-        type: 'bytes32',
+        type: 'bytes32'
       },
       {
         indexed: true,
         name: '_installerID',
-        type: 'bytes32',
+        type: 'bytes32'
       },
       {
         indexed: true,
         name: '_assetType',
-        type: 'bytes32',
+        type: 'bytes32'
       },
       {
         indexed: false,
         name: '_ipfsHash',
-        type: 'bytes32',
-      },
+        type: 'bytes32'
+      }
     ],
     name: 'LogAssetFundingStarted',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -203,21 +203,21 @@ export const ABI = [
       {
         indexed: false,
         name: '_from',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: false,
         name: '_assetID',
-        type: 'bytes32',
+        type: 'bytes32'
       },
       {
         indexed: false,
         name: '_amountOf',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'LogLockAssetEscrow',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -225,16 +225,16 @@ export const ABI = [
       {
         indexed: true,
         name: '_assetID',
-        type: 'bytes32',
+        type: 'bytes32'
       },
       {
         indexed: false,
         name: '_remover',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'LogAssetRemoved',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -242,16 +242,16 @@ export const ABI = [
       {
         indexed: false,
         name: '_sender',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: false,
         name: '_newTimeForFunding',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'LogFundingTimeChanged',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -259,16 +259,16 @@ export const ABI = [
       {
         indexed: false,
         name: '_myBitFoundationPercentage',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         indexed: false,
         name: '_installerPercentage',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'LogFundingPercentageChanged',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -276,20 +276,20 @@ export const ABI = [
       {
         indexed: true,
         name: '_locationSent',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: true,
         name: '_amountSent',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         indexed: true,
         name: '_caller',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'LogDestruction',
-    type: 'event',
-  },
+    type: 'event'
+  }
 ];

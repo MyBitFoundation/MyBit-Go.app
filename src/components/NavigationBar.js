@@ -1,6 +1,3 @@
-/* eslint-disable import/no-webpack-loader-syntax */
-/* eslint-disable import/no-unresolved */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Icon } from 'antd';

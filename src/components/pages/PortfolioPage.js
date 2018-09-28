@@ -12,33 +12,34 @@ const web3 = getWeb3Async();
 const fromWeiToEth = weiValue => web3.utils.fromWei(weiValue, 'ether');
 
 const getOwnedAssets = assets =>
-  assets.filter(asset =>
-    asset.ownershipUnits > 0 && isAssetIdEnabled(asset.assetID));
+  assets.filter(
+    asset => asset.ownershipUnits > 0 && isAssetIdEnabled(asset.assetID)
+  );
 
 const getPortfolioValue = (assets, currentEthPrice) =>
   assets.reduce(
     (accumulator, currentValue) =>
       accumulator +
-      (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice),
-    0,
+      fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice,
+    0
   );
 
 const getPortfolioRevenue = (assets, currentEthPrice) =>
   assets.reduce(
     (accumulator, currentValue) =>
       accumulator +
-      (((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
+      ((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
         currentValue.amountToBeRaisedInUSD) *
-        currentValue.assetIncome),
-    0,
+        currentValue.assetIncome,
+    0
   );
 
 const getPortfolioValueAssets = (assets, currentEthPrice) =>
-  assets.map((asset) => {
+  assets.map(asset => {
     let ownership = (
       ((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) /
-          asset.amountToBeRaisedInUSD) *
-        100
+        asset.amountToBeRaisedInUSD) *
+      100
     ).toFixed(2);
     if (Number(ownership) > 100) {
       ownership = 100;
@@ -49,12 +50,12 @@ const getPortfolioValueAssets = (assets, currentEthPrice) =>
       ownership,
       value: (
         fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice
-      ).toFixed(2),
+      ).toFixed(2)
     };
   });
 
 const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
-  assets.map((asset) => {
+  assets.map(asset => {
     const totalRevenue =
       ((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) /
         asset.amountToBeRaisedInUSD) *
@@ -63,7 +64,7 @@ const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
       assetID: asset.assetID,
       name: asset.name,
       monthlyRevenue: (totalRevenue / 12).toFixed(2),
-      totalRevenue: totalRevenue.toFixed(2),
+      totalRevenue: totalRevenue.toFixed(2)
     };
   });
 
@@ -75,16 +76,16 @@ const PortfolioPage = ({ loading, assets, prices }) => {
   const ownedAssets = getOwnedAssets(assets);
   const totalPortfolioValue = getPortfolioValue(
     ownedAssets,
-    etherPrice,
+    etherPrice
   ).toFixed(2);
   const totalPortfolioRevenue = getPortfolioRevenue(
     ownedAssets,
-    etherPrice,
+    etherPrice
   ).toFixed(2);
   const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, etherPrice);
   const portfolioRevenueAssets = getPortfolioRevenueAssets(
     ownedAssets,
-    etherPrice,
+    etherPrice
   );
 
   return (
@@ -108,7 +109,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
 PortfolioPage.propTypes = {
   loading: PropTypes.shape({}).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  prices: PropTypes.shape({}).isRequired,
+  prices: PropTypes.shape({}).isRequired
 };
 
 export default PortfolioPage;

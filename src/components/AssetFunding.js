@@ -13,7 +13,7 @@ class AssetFunding extends Component {
     this.state = {
       // hashFunctionsInstance: null,
       // databaseInstance: null,
-      amountToBeRaised: null,
+      amountToBeRaised: null
       // assetID: null,
     };
   }
@@ -31,9 +31,11 @@ class AssetFunding extends Component {
         // hashFunctionsInstance,
         // databaseInstance,
         amountToBeRaised: web3.fromWei(
-          await databaseInstance.uintStored(await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)),
-          'ether',
-        ),
+          await databaseInstance.uintStored(
+            await hashFunctionsInstance.stringBytes('amountToBeRaised', assetID)
+          ),
+          'ether'
+        )
       });
     }
   }
