@@ -15,9 +15,7 @@ jobs:
 
       - run: yarn test
 
-      - run: yarn build
-
-      - run: yarn build-storybook
+      - run: DEBUG=babel yarn build
 
       - deploy:
           name: Deploy to Now
