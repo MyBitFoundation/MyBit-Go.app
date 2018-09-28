@@ -8,13 +8,11 @@ import 'antd/lib/menu/style/css';
 
 const classNames = require('classnames');
 
-const NavigationOption = ({
-  name, icon, selectable, selected, url,
-}) => {
+const NavigationOption = ({ name, icon, selectable, selected, url }) => {
   const optionClass = classNames({
     AppNavigationBar__option: true,
     'AppNavigationBar__option--is-selected': selected,
-    'AppNavigationBar__option--is-selectable': selectable,
+    'AppNavigationBar__option--is-selectable': selectable
   });
 
   return (
@@ -23,9 +21,10 @@ const NavigationOption = ({
     //   to={url || '/'}
     //   href={url || '/'}
     // >
-      <Menu.Item key={name}>
-        <Icon type={icon} />{name}
-      </Menu.Item>
+    <Menu.Item key={name}>
+      <Icon type={icon} />
+      {name}
+    </Menu.Item>
     // </Link>
   );
 };
@@ -35,13 +34,13 @@ NavigationOption.propTypes = {
   icon: PropTypes.string.isRequired,
   selectable: PropTypes.bool,
   selected: PropTypes.bool,
-  url: PropTypes.string,
+  url: PropTypes.string
 };
 
 NavigationOption.defaultProps = {
   selected: false,
   selectable: false,
-  url: '',
+  url: ''
 };
 
 export default NavigationOption;

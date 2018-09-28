@@ -28,21 +28,21 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
       icon: 'search',
       selectable: true,
       selected: currentPath.indexOf('/explore') !== -1,
-      url: '/',
+      url: '/'
     },
     {
       name: 'Portfolio',
       icon: 'area-chart',
       selectable: true,
       selected: currentPath === '/portfolio',
-      url: '/portfolio',
+      url: '/portfolio'
     },
     {
       name: 'Transactions',
       icon: 'eye',
       selectable: true,
       selected: currentPath === '/transaction-history',
-      url: '/transaction-history',
+      url: '/transaction-history'
     },
     { name: 'Saved', icon: 'save' },
     { name: 'List Asset', icon: 'plus' },
@@ -53,40 +53,35 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
       icon: 'question',
       selectable: true,
       selected: currentPath === '/help',
-      url: '/help',
-    },
+      url: '/help'
+    }
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    
-      <Menu.Item key={menuItem.key}>
-        {/* <Tooltip placement="topRight" title="kul"> */}
-          <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
-            <Icon type={menuItem.icon}/>{menuItem.name}
-          </Link>
-        {/* </Tooltip> */}
-        </Menu.Item>
-    
+    <Menu.Item key={menuItem.key}>
+      {/* <Tooltip placement="topRight" title="kul"> */}
+      <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
+        <Icon type={menuItem.icon} />
+        {menuItem.name}
+      </Link>
+      {/* </Tooltip> */}
+    </Menu.Item>
   ));
 
   return (
     <div>
-    <Menu
-      mode="horizontal"
-    > 
-    {navBarOptions}
-    </Menu>
+      <Menu mode="horizontal">{navBarOptions}</Menu>
     </div>
   );
 };
 
 NavigationBar.propTypes = {
   clickHandler: PropTypes.func,
-  currentPath: PropTypes.string.isRequired,
+  currentPath: PropTypes.string.isRequired
 };
 
 NavigationBar.defaultProps = {
-  clickHandler: debug,
+  clickHandler: debug
 };
 
 export default NavigationBar;

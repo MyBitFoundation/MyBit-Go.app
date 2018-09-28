@@ -8,14 +8,14 @@ class MetamaskLogin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: true,
+      isOpen: true
     };
   }
 
   componentDidMount() {
     const checkInterval = 1000;
     this.interval = setInterval(() => {
-      checkAccount().then((haveAccounts) => {
+      checkAccount().then(haveAccounts => {
         if (haveAccounts.length === 0) {
           this.setState({ isOpen: true });
         }

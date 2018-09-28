@@ -32,7 +32,7 @@ const CategoryBackButton = ({ category }) => {
 };
 
 CategoryBackButton.propTypes = {
-  category: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired
 };
 
 export default CategoryBackButton;

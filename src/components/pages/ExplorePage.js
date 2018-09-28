@@ -9,32 +9,31 @@ import { debug } from '../../constants';
 import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
 import LoadingPage from './LoadingPage';
 
-
 const getCategories = assets =>
   [...new Set(assets.map(asset => asset.category))].map(category => ({
     image: getImageForCategory(category),
     path: category,
-    name: getPrettyCategoryName(category),
+    name: getPrettyCategoryName(category)
   }));
 
 const renderCategories = (categories, clickHandler) => (
   <div>
     {categories.map(category => (
-      <Col  span={6} className="ExplorePage__container">
-      <Link
-        to={`/explore/${category.path}`}
-        href={`/explore/${category.path}`}
-        key={category.path}
-        className="ExplorePage__category"
-      >
-        <div
-          className="ExplorePage__image-container"
-          onClick={clickHandler || debug(`Going to: ${category.path}`)}
-          style={{ backgroundImage: `url(${category.image})` }}
+      <Col span={6} className="ExplorePage__container">
+        <Link
+          to={`/explore/${category.path}`}
+          href={`/explore/${category.path}`}
+          key={category.path}
+          className="ExplorePage__category"
         >
-          <p className="ExplorePage__category-name">{category.name}</p>
-        </div>
-      </Link>
+          <div
+            className="ExplorePage__image-container"
+            onClick={clickHandler || debug(`Going to: ${category.path}`)}
+            style={{ backgroundImage: `url(${category.image})` }}
+          >
+            <p className="ExplorePage__category-name">{category.name}</p>
+          </div>
+        </Link>
       </Col>
     ))}
   </div>
@@ -53,10 +52,10 @@ class ExplorePage extends Component {
     }
     return (
       <Row className="ExplorePage">
-          {renderCategories(
-            getCategories(this.props.assets),
-            this.props.clickHandler,
-          )}
+        {renderCategories(
+          getCategories(this.props.assets),
+          this.props.clickHandler
+        )}
       </Row>
     );
   }
@@ -65,11 +64,11 @@ class ExplorePage extends Component {
 ExplorePage.propTypes = {
   clickHandler: PropTypes.func,
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 ExplorePage.defaultProps = {
-  clickHandler: () => {},
+  clickHandler: () => {}
 };
 
 export default ExplorePage;
