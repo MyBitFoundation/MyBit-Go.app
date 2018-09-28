@@ -18,7 +18,7 @@ const AssetDetailsPage = ({ loading, assets, match, prices, user }) => {
     );
   }
 
-  const { assetId, category } = match.params;
+  const { assetId } = match.params;
   const asset = assets.find(({ assetID }) => assetID === assetId);
 
   if (!asset) {
