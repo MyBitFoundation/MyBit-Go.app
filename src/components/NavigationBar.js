@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
+import Menu from 'antd/lib/menu';
+import Icon from 'antd/lib/icon';
 
 import 'antd/lib/menu/style/index.css';
 import '../styles/NavigationBar.css';

@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Button } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
 
-import { Progress, Col } from 'antd';
+import Progress from 'antd/lib/progress';
+import Col from 'antd/lib/col';
+import 'antd/lib/col/style';
+import 'antd/lib/progress/style';
 
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.svg';
