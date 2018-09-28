@@ -4,7 +4,7 @@ import { Loading } from 'carbon-components-react';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
 
-const Address = ({ userName, className }) => (
+const Address = ({ userName }) => (
   <div className="Address">
     {!userName ? (
       <div className="Address__loader">
@@ -21,12 +21,11 @@ const Address = ({ userName, className }) => (
 );
 
 Address.defaultProps = {
-  userName: undefined
+  userName: undefined,
 };
 
 Address.propTypes = {
   userName: PropTypes.string,
-  className: PropTypes.string.isRequired
 };
 
 export default Address;

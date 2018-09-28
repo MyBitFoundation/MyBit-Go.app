@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button } from 'antd';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
 import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
-import { Row } from 'antd';
+import Row from 'antd/lib/row';
+import 'antd/lib/row/style';
 
 const ExploreAssetsPage = ({ loading, assets, match }) => {
   const { category } = match.params;

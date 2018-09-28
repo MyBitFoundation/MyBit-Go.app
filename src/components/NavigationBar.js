@@ -1,87 +1,82 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
+import Menu from 'antd/lib/menu';
+import Icon from 'antd/lib/icon';
 
+import 'antd/lib/menu/style/index.css';
 import '../styles/NavigationBar.css';
-// import NavigationOption from './NavigationOption';
-import { debug } from '../constants';
 
-import 'antd/lib/menu/style';
+const exploreIcon = require('../images/search.svg');
+const portfolioIcon = require('../images/chart-area.svg');
+const transactionsIcon = require('../images/history.svg');
+const listAssetIcon = require('../images/plus.svg');
+const exchangeIcon = require('../images/mydax.svg');
+const knowledgeBaseIcon = require('../images/question.svg');
+const watchIcon = require('../images/watch.svg');
 
-// import Button from 'antd/lib/button';
-import 'antd/lib/button/style';
-
-// const exploreIcon = require('../images/search.png');
-// const portfolioIcon = require('../images/chart-area.png');
-// const transactionsIcon = require('../images/history.png');
-// const savedIcon = require('../images/star.png');
-// const listAssetIcon = require('../images/plus.png');
-// const stakingIcon = require('../images/cubes.png');
-// const exchangeIcon = require('../images/exchange-alt.png');
-// const knowledgeBaseIcon = require('../images/question.png');
-
-const NavigationBar = ({ clickHandler, currentPath }) => {
+const NavigationBar = ({ currentPath }) => {
   const menuOptions = [
     {
       name: 'Explore',
-      icon: 'search',
+      icon: exploreIcon,
       selectable: true,
       selected: currentPath.indexOf('/explore') !== -1,
-      url: '/'
-    },
-    {
+      url: '/',
+    }, {
       name: 'Portfolio',
-      icon: 'area-chart',
+      icon: portfolioIcon,
       selectable: true,
       selected: currentPath === '/portfolio',
-      url: '/portfolio'
-    },
-    {
+      url: '/portfolio',
+    }, {
       name: 'Transactions',
-      icon: 'eye',
+      icon: transactionsIcon,
       selectable: true,
       selected: currentPath === '/transaction-history',
-      url: '/transaction-history'
-    },
-    { name: 'Saved', icon: 'save' },
-    { name: 'List Asset', icon: 'plus' },
-    { name: 'Staking', icon: 'robot' },
-    { name: 'Exchange', icon: 'interation' },
-    {
+      url: '/transaction-history',
+    }, {
+      name: 'WatchList',
+      icon: watchIcon,
+    }, {
+      name: 'List Asset',
+      icon: listAssetIcon,
+      disabled: true,
+    }, {
+      name: 'MYDAX',
+      icon: exchangeIcon,
+      disabled: true,
+    }, {
       name: 'Knowledge Base',
-      icon: 'question',
+      icon: knowledgeBaseIcon,
       selectable: true,
       selected: currentPath === '/help',
-      url: '/help'
-    }
+      url: '/help',
+    },
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    <Menu.Item key={menuItem.key}>
-      {/* <Tooltip placement="topRight" title="kul"> */}
+    <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected && 'ant-menu-item-selected'}>
       <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
-        <Icon type={menuItem.icon} />
+        <Icon component={menuItem.icon} />
         {menuItem.name}
       </Link>
-      {/* </Tooltip> */}
     </Menu.Item>
   ));
 
   return (
-    <div>
-      <Menu mode="horizontal">{navBarOptions}</Menu>
-    </div>
+    <Menu
+      mode="horizontal"
+      className="AppNavigationBar"
+    >
+      {navBarOptions}
+    </Menu>
   );
 };
 
 NavigationBar.propTypes = {
-  clickHandler: PropTypes.func,
-  currentPath: PropTypes.string.isRequired
+  currentPath: PropTypes.string.isRequired,
 };
 
-NavigationBar.defaultProps = {
-  clickHandler: debug
-};
 
 export default NavigationBar;

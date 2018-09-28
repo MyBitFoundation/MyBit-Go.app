@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Slider } from 'carbon-components-react';
-import { Button } from 'antd';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
 import dayjs from 'dayjs';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';

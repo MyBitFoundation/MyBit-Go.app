@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 import AssetDetails from '../AssetDetails';
-import { Button } from 'antd';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
