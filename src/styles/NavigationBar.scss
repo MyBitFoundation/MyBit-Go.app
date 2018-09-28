@@ -1,6 +1,10 @@
 .AppNavigationBar{
   text-align: center;
 
+  a{
+    text-decoration: none;
+  }
+
   .ant-menu-item-selected svg g{
     fill: #1890ff;
   }

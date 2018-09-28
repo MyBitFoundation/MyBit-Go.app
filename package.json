@@ -39,7 +39,7 @@
     "start": "cross-env NODE_ENV=development npm-run-all -p watch-css start-js",
     "build-js": "react-app-rewired build",
     "build": "npm-run-all build-css build-js",
-    "run-test": "react-app-rewired test --env=jsdom",
+    "run-test": "react-scripts test --env=jsdom",
     "test": "npm-run-all build-css run-test",
     "eject": "react-scripts eject",
     "start-storybook": "cross-env start-storybook -p $PORT -c .storybook",
@@ -52,7 +52,7 @@
     "format-code": "prettier --single-quote --write 'src/**/*.js'"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "^7.0.0-bridge",
     "babel-plugin-inline-react-svg": "^0.5.4",
     "babel-runtime": "^6.26.0",
     "compression-webpack-plugin": "^1.1.11",
