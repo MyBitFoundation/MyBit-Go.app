@@ -1,7 +1,7 @@
 @import "./Constants.scss";
 
 .Address{
-  float: right;
+  float: left;
   padding-right: 20px;
   display: inline-block;
 
@@ -19,11 +19,12 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        width: 120px;
+        // width: 120px;
         line-height: 1;
         margin: 0px 0px;
         position: relative;
         top: -25px;
+        color: #1890ff;
     }
 
     &__jazz-n-hex {

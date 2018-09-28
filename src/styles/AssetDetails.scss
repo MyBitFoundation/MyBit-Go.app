@@ -4,8 +4,9 @@
   padding-top: 40px;
 
   &__left{
-    padding-left: 0px;
     padding-right: 50px;
+    padding-left: 60px;
+    padding-top: 140px;
 
     @include media('<desktop') {
       padding-right: 0px;
@@ -34,7 +35,9 @@
 
     &-image-holder-calendar-icon{
       position: relative;
-      top: 3px;
+    top: 0px;
+    display: inline;
+    margin-right: 11px;
     }
 
     &-location{
@@ -61,6 +64,7 @@
       font-size: 14px;
       color: #383838;
       padding-top: 6px;
+      display: inline;
     }
 
     &-funding-wrapper{
@@ -72,7 +76,7 @@
     }
 
     &-funds-raised{
-      border-right: 1px solid #575757;
+      border-right: 1px solid #d0d0d0;
       padding-left: 0px;
       text-align: left;
       padding-right: 20px;
@@ -80,19 +84,21 @@
     }
 
     &-funds-goal{
-      border-right: 1px solid #575757;
+      border-right: 1px solid #d0d0d0;
       padding: 0px 20px;
       height: 57px;
     }
 
     &-funds-investors{
       padding: 0px 20px;
+      text-align: left;
     }
 
     &-funding-title{
       font-size: 14px;
       font-weight: 500;
       color: #383838;
+      text-align: left;
     }
 
     &-funding-value{
@@ -156,8 +162,9 @@
   }
 
   &__right{
-    padding: 0px 0px;
-    background-color: rgba(231, 232, 235, 0.63);
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 
     &-image{
       background: linear-gradient(to left, #24F281, #0083FF);

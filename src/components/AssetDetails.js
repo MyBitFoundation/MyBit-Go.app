@@ -207,17 +207,17 @@ class AssetDetails extends React.Component {
               className="AssetDetails__left-image-holder-calendar-icon"
               src={calendarIcon}
             />
-            <p className="AssetDetails__left-days-to-go">
+            {/* <p className="AssetDetails__left-days-to-go">
               {this.state.timeToGo}
-            </p>
+            </p> */}
+            <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
           </div>
-          <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
+          
           <div className="AssetDetails__left-funding-wrapper">
             <div className="AssetDetails__left-funds-raised">
               <p className="AssetDetails__left-funding-title">Funds raised</p>
               <b
                 className="AssetDetails__left-funding-value"
-                style={{ color: '#2db84b' }}
               >
                 {this.assetFunded ? goal : this.props.information.raised.toLocaleString()} USD
               </b>
@@ -260,7 +260,7 @@ class AssetDetails extends React.Component {
           </p>
           <p className="AssetDetails__left-contribution">Your contribution:</p>
           <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-            {this.state.currentSelectedAmount.toLocaleString()} USD
+            ${this.state.currentSelectedAmount.toLocaleString()}
           </b>
           <div className="AssetDetails__left-separator" />
           <b className="AssetDetails__left-contribution-value">
