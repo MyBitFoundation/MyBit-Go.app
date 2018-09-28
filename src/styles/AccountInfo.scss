@@ -2,7 +2,8 @@
 
 .AccountInfo{
   display: inline-block;
-  
+  height: 100%;
+  display: flex;
 
   &__balance{
     text-align: left;
@@ -18,9 +19,7 @@
   }
 
   &__balance--is-loading{
-    top: 42px;
-    position: absolute;
-    right: 15px;
+    margin: 0 auto;
   }
 
   &__balance-info{

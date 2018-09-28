@@ -2,7 +2,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Row, Col } from 'antd';
+import Row from 'antd/lib/row';
+import 'antd/lib/row/style';
+import Col from 'antd/lib/col';
+import 'antd/lib/col/style';
 
 import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';

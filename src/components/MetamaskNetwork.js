@@ -9,10 +9,8 @@ const MetamaskNetwork = () => (
       The MyBit platform is still in testing,<br />
       please use the Ropsten test network.
     </p>
-    <img
+    <MetamaskLogo
       className="MetamaskAudit__metamaskfox-image"
-      src={MetamaskLogo}
-      alt="Metamask"
     />
     <br />
   </Modal>
