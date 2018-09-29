@@ -23,7 +23,6 @@ class AssetDetails extends React.Component {
         ? 0
         : Math.floor((goal - raised) / 2),
       daysToGo: 0,
-      timeToGo: '',
       endingAt: '',
       isPopupOpen: false,
     };
@@ -46,7 +45,6 @@ class AssetDetails extends React.Component {
     // funding goal has been reached
     if (maxInvestment === 0 || this.assetFunded) {
       this.setState({
-        timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
         endingAt: '',
       });
@@ -57,17 +55,12 @@ class AssetDetails extends React.Component {
     if (this.props.information.pastDate) {
       this.setState({
         daysToGo: -1,
-        timeToGo: 'Funding period has ended',
         endingAt: `Funding period has ended on ${dayjs(this.endDateLocal).format('dddd, MMMM D')}`,
       });
       this.clearInterval();
       return;
     }
     const days = this.endDateLocal.diff(dayjs(), 'days');
-    const seconds = this.endDateLocal.diff(dayjs(), 'seconds');
-    const calculateRemainingTime = dayjs()
-      .startOf('day')
-      .add(seconds, 'seconds');
 
     // less than 1 day until funding period ends
     if (days === 0) {
@@ -80,7 +73,6 @@ class AssetDetails extends React.Component {
       if (secondsToEndDate > secondsToMidnight) day = 'tomorrow';
 
       this.setState({
-        timeToGo: `Ending in ${calculateRemainingTime.hour()}h ${calculateRemainingTime.minute()}m ${calculateRemainingTime.second()}s`,
         daysToGo: 0,
         endingAt: `Funding period ends ${day} at ${dayjs(this.endDateLocal).format('H:mm:ss')}`,
       });
@@ -93,9 +85,8 @@ class AssetDetails extends React.Component {
       }
     } else {
       // 1 or more days until funding period ends
-      const dayString = days === 1 ? 'day' : 'days';
+
       this.setState({
-        timeToGo: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go`,
         daysToGo: days,
         endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format('dddd, MMMM D')} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`,
       });
@@ -142,7 +133,7 @@ class AssetDetails extends React.Component {
     this.etherValueSelected = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd).toFixed(2));
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
-
+      
     if (maxInvestment <= 100 && maxInvestment > 0 && this.state.daysToGo > 0) {
       minInvestment = 1;
     }
