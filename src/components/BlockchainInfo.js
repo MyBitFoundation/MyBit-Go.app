@@ -110,16 +110,16 @@ class BlockchainInfo extends React.Component {
   async loadPrices() {
     let error = false;
     await Brain.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP)
-      .then((price) => {
+      .then(priceInfo => {
         this.setState({
           prices: {
             ...this.state.prices,
-            mybitPrice: price,
+            ...priceInfo,
           },
           loading: {
             ...this.state.loading,
             priceMybit: false,
-          },
+          }
         });
       })
       .catch((err) => {

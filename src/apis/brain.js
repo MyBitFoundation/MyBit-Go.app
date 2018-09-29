@@ -27,8 +27,11 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
     try {
       const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
       const jsonResponse = await response.json();
-      const { price } = jsonResponse.data.quotes.USD;
-      resolve(Math.round(price * 100) / 100);
+      const { price, percent_change_1h } = jsonResponse.data.quotes.USD;
+      resolve({
+        mybitPrice: price.toFixed(4),
+        mybitPriceChange: percent_change_1h,
+      });
     } catch (error) {
       reject(error);
     }
@@ -61,8 +64,7 @@ export const fetchTransactionHistory = async user =>
 
       const ethTransactionHistory = jsonResult.result
         .filter(txResult =>
-          txResult.to === userAddressLowerCase ||
-            txResult.from === userAddressLowerCase)
+          txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
         .map((txResult) => {
           const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
           let status = 'Complete';
@@ -92,12 +94,11 @@ export const fetchTransactionHistory = async user =>
 
       const mybTransactionHistory = await Promise.all(logTransactions
         .filter(txResult =>
-          txResult.returnValues.to === userAddress ||
-              txResult.returnValues.from === userAddress)
+          txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
         .map(async (txResult) => {
           const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
           const multiplier =
-              txResult.returnValues.from === userAddress ? -1 : 1;
+            txResult.returnValues.from === userAddress ? -1 : 1;
           return {
             amount: (txResult.returnValues.value / 100000000) * multiplier,
             type: 'MYB',
@@ -105,7 +106,8 @@ export const fetchTransactionHistory = async user =>
             status: 'Complete',
             date: blockInfo.timestamp * 1000,
           };
-        }));
+        })
+      );
 
       resolve(ethTransactionHistory.concat(mybTransactionHistory));
     } catch (error) {
@@ -352,19 +354,20 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           assetIncome: (
             Number(web3.utils.fromWei(assetIncomes[index], 'ether')) *
               currentEthInUsd
-          ).toFixed(2),
-          assetManager: assetManagers[index],
-          city: assetIdDetails.city,
-          country: assetIdDetails.country,
-          name: assetIdDetails.name,
-          numberOfInvestors,
-          description: assetIdDetails.description,
-          details: assetIdDetails.details,
-          imageSrc: assetIdDetails.imgSrc,
-          fundingStage: fundingStages[index],
-          pastDate,
-        };
-      }));
+            ).toFixed(2),
+            assetManager: assetManagers[index],
+            city: assetIdDetails.city,
+            country: assetIdDetails.country,
+            name: assetIdDetails.name,
+            numberOfInvestors,
+            description: assetIdDetails.description,
+            details: assetIdDetails.details,
+            imageSrc: assetIdDetails.imgSrc,
+            fundingStage: fundingStages[index],
+            pastDate,
+          };
+        })
+      );
 
       // filter for v0.1
       assetsPlusMoreDetails = assetsPlusMoreDetails
