@@ -106,8 +106,7 @@ export const fetchTransactionHistory = async user =>
             status: 'Complete',
             date: blockInfo.timestamp * 1000,
           };
-        })
-      );
+        }));
 
       resolve(ethTransactionHistory.concat(mybTransactionHistory));
     } catch (error) {
@@ -354,20 +353,19 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           assetIncome: (
             Number(web3.utils.fromWei(assetIncomes[index], 'ether')) *
               currentEthInUsd
-            ).toFixed(2),
-            assetManager: assetManagers[index],
-            city: assetIdDetails.city,
-            country: assetIdDetails.country,
-            name: assetIdDetails.name,
-            numberOfInvestors,
-            description: assetIdDetails.description,
-            details: assetIdDetails.details,
-            imageSrc: assetIdDetails.imgSrc,
-            fundingStage: fundingStages[index],
-            pastDate,
-          };
-        })
-      );
+          ).toFixed(2),
+          assetManager: assetManagers[index],
+          city: assetIdDetails.city,
+          country: assetIdDetails.country,
+          name: assetIdDetails.name,
+          numberOfInvestors,
+          description: assetIdDetails.description,
+          details: assetIdDetails.details,
+          imageSrc: assetIdDetails.imgSrc,
+          fundingStage: fundingStages[index],
+          pastDate,
+        };
+      }));
 
       // filter for v0.1
       assetsPlusMoreDetails = assetsPlusMoreDetails
