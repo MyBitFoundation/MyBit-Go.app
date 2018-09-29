@@ -66,6 +66,23 @@ b{
   }
 }
 
+.ant-menu-submenu-popup{
+  z-index: 3 !important;
+
+  a{
+    text-decoration: none !important;
+  }
+
+  .ant-menu-item-selected svg g{
+    fill: #1890ff;
+  }
+
+  .ant-menu-item-active svg g{
+    fill: #1890ff;
+  }
+
+}
+
 // Carbon Theme Variables
 $edited: true;
 $brand-01: #125ac4;

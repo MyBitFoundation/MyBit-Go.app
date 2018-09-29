@@ -10,7 +10,7 @@
     font-family: 'Roboto';
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    margin-top: 25px;
   }
 
   &__balance-header{
@@ -24,6 +24,16 @@
 
   &__balance-info{
     font-size: 14px;
+    display: flex;
+    align-items: center;
+
+    & svg:nth-child(3){
+      margin-left: 5px;
+    }
+
+    & span{
+      margin: 0px 5px;
+    }
   }
 
   &__balance-myb{

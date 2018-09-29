@@ -15,7 +15,7 @@ import {
   ETHERSCAN_TX,
   ETHERSCAN_BALANCE,
   getAddressForAsset,
-  isAssetIdEnabled
+  isAssetIdEnabled,
 } from '../constants';
 
 const web3 = getWeb3Async();
@@ -25,12 +25,13 @@ const IPFS_URL =
 export const fetchPriceFromCoinmarketcap = async ticker =>
   new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(
-        `https://api.coinmarketcap.com/v2/ticker/${ticker}/`
-      );
+      const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
       const jsonResponse = await response.json();
-      const { price } = jsonResponse.data.quotes.USD;
-      resolve(Math.round(price * 100) / 100);
+      const { price, percent_change_1h } = jsonResponse.data.quotes.USD;
+      resolve({
+        mybitPrice: price.toFixed(4),
+        mybitPriceChange: percent_change_1h,
+      });
     } catch (error) {
       reject(error);
     }
@@ -48,7 +49,7 @@ export const fetchTransactionHistory = async user =>
       const userAddressLowerCase = userAddress.toLowerCase();
       const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(
         ETHERSCAN_API_KEY,
-        userAddress
+        userAddress,
       );
       const result = await fetch(endpoint);
       const jsonResult = await result.json();
@@ -62,12 +63,9 @@ export const fetchTransactionHistory = async user =>
       }
 
       const ethTransactionHistory = jsonResult.result
-        .filter(
-          txResult =>
-            txResult.to === userAddressLowerCase ||
-            txResult.from === userAddressLowerCase
-        )
-        .map(txResult => {
+        .filter(txResult =>
+          txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
+        .map((txResult) => {
           const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
           let status = 'Complete';
           if (txResult.isError === '1') {
@@ -80,39 +78,35 @@ export const fetchTransactionHistory = async user =>
             amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
             status,
             type: 'ETH',
-            txId: txResult.hash
+            txId: txResult.hash,
           };
         });
 
       // Pull MYB transactions from event log
       const myBitTokenContract = new web3.eth.Contract(
         MyBitToken.ABI,
-        MyBitToken.ADDRESS
+        MyBitToken.ADDRESS,
       );
       const logTransactions = await myBitTokenContract.getPastEvents(
         'Transfer',
-        { fromBlock: 0, toBlock: 'latest' }
+        { fromBlock: 0, toBlock: 'latest' },
       );
 
-      const mybTransactionHistory = await Promise.all(
-        logTransactions
-          .filter(
-            txResult =>
-              txResult.returnValues.to === userAddress ||
-              txResult.returnValues.from === userAddress
-          )
-          .map(async txResult => {
-            const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
-            const multiplier =
-              txResult.returnValues.from === userAddress ? -1 : 1;
-            return {
-              amount: (txResult.returnValues.value / 100000000) * multiplier,
-              type: 'MYB',
-              txId: txResult.transactionHash,
-              status: 'Complete',
-              date: blockInfo.timestamp * 1000
-            };
-          })
+      const mybTransactionHistory = await Promise.all(logTransactions
+        .filter(txResult =>
+          txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
+        .map(async (txResult) => {
+          const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
+          const multiplier =
+            txResult.returnValues.from === userAddress ? -1 : 1;
+          return {
+            amount: (txResult.returnValues.value / 100000000) * multiplier,
+            type: 'MYB',
+            txId: txResult.transactionHash,
+            status: 'Complete',
+            date: blockInfo.timestamp * 1000,
+          };
+        })
       );
 
       resolve(ethTransactionHistory.concat(mybTransactionHistory));
@@ -128,7 +122,7 @@ export const loadMetamaskUserDetails = async () =>
       const balance = await web3.eth.getBalance(accounts[0]);
       const myBitTokenContract = new web3.eth.Contract(
         MyBitToken.ABI,
-        MyBitToken.ADDRESS
+        MyBitToken.ADDRESS,
       );
       const myBitBalance = await myBitTokenContract.methods
         .balanceOf(accounts[0])
@@ -136,7 +130,7 @@ export const loadMetamaskUserDetails = async () =>
       const details = {
         userName: accounts[0],
         ethBalance: web3.utils.fromWei(balance, 'ether'),
-        myBitBalance
+        myBitBalance,
       };
       resolve(details);
     } catch (error) {
@@ -149,11 +143,11 @@ const getNumberOfInvestors = async assetID =>
     try {
       const fundingHubContract = new web3.eth.Contract(
         FundingHub.ABI,
-        FundingHub.ADDRESS
+        FundingHub.ADDRESS,
       );
       const assetFundersLog = await fundingHubContract.getPastEvents(
         'LogNewFunder',
-        { fromBlock: 0, toBlock: 'latest' }
+        { fromBlock: 0, toBlock: 'latest' },
       );
 
       const investorsForThisAsset = assetFundersLog.filter(
@@ -171,7 +165,7 @@ const createAsset = async params =>
     try {
       const assetCreationContract = new web3.eth.Contract(
         AssetCreation.ABI,
-        AssetCreation.ADDRESS
+        AssetCreation.ADDRESS,
       );
 
       const installerId = web3.utils.sha3(params.installerId);
@@ -186,7 +180,7 @@ const createAsset = async params =>
           installerId,
           assetType,
           params.blockAtCreation,
-          ipfsHash
+          ipfsHash,
         )
         .send({ from: params.userAddress });
 
@@ -199,7 +193,7 @@ const createAsset = async params =>
 const checkTransactionConfirmation = async (
   transactionHash,
   resolve,
-  reject
+  reject,
 ) => {
   try {
     const endpoint = ETHERSCAN_TX(ETHERSCAN_API_KEY, transactionHash);
@@ -225,7 +219,7 @@ export const withdrawFromFaucet = async user =>
     try {
       const TokenFaucetContract = new web3.eth.Contract(
         TokenFaucet.ABI,
-        TokenFaucet.ADDRESS
+        TokenFaucet.ADDRESS,
       );
       const withdrawResponse = await TokenFaucetContract.methods
         .withdraw('ripplesucks')
@@ -242,7 +236,7 @@ export const fundAsset = async (user, assetId, amount) =>
     try {
       const fundingHubContract = new web3.eth.Contract(
         FundingHub.ABI,
-        FundingHub.ADDRESS
+        FundingHub.ADDRESS,
       );
       const weiAmount = web3.utils.toWei(amount.toString(), 'ether');
 
@@ -250,7 +244,7 @@ export const fundAsset = async (user, assetId, amount) =>
         .fund(assetId)
         .send({
           value: weiAmount,
-          from: user.userName
+          from: user.userName,
         });
 
       const { transactionHash } = fundingResponse;
@@ -267,12 +261,12 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       let apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
       let assetCreationContract = new web3.eth.Contract(
         AssetCreation.ABI,
-        AssetCreation.ADDRESS
+        AssetCreation.ADDRESS,
       );
 
       let logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
-        { fromBlock: 0, toBlock: 'latest' }
+        { fromBlock: 0, toBlock: 'latest' },
       );
 
       let assets = logAssetFundingStartedEvents
@@ -280,7 +274,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         .map(object => ({
           assetID: object._assetID,
           assetType: object._assetType,
-          ipfsHash: object._ipfsHash
+          ipfsHash: object._ipfsHash,
         }));
 
       // pull assets from older contract
@@ -288,12 +282,12 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
       assetCreationContract = new web3.eth.Contract(
         AssetCreation.ABI,
-        AssetCreation.OLD_ADDRESS
+        AssetCreation.OLD_ADDRESS,
       );
 
       logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
-        { fromBlock: 0, toBlock: 'latest' }
+        { fromBlock: 0, toBlock: 'latest' },
       );
 
       const assetsOlderContract = logAssetFundingStartedEvents
@@ -301,7 +295,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         .map(object => ({
           assetID: object._assetID,
           assetType: object._assetType,
-          ipfsHash: object._ipfsHash
+          ipfsHash: object._ipfsHash,
         }));
 
       assets = assets.concat(assetsOlderContract);
@@ -393,7 +387,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
             details: assetIdDetails.details,
             imageSrc: assetIdDetails.imgSrc,
             fundingStage: fundingStages[index],
-            pastDate
+            pastDate,
           };
         })
       );
@@ -407,7 +401,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         if (asset.assetType) {
           return {
             ...asset,
-            category: getCategoryFromAssetTypeHash(web3, asset.assetType)
+            category: getCategoryFromAssetTypeHash(web3, asset.assetType),
           };
         }
         return { ...asset };

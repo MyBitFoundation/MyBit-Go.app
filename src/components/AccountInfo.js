@@ -4,6 +4,8 @@ import { Loading } from 'carbon-components-react';
 import Web3 from 'web3';
 
 import '../styles/AccountInfo.css';
+import EthIcon from '../images/eth-icon-small.svg';
+import MybitIcon from '../images/mybit-small.svg';
 
 const IS_DAPP_VERSION_ONE = true;
 
@@ -28,9 +30,8 @@ const AccountInfo = ({ myBitBalance, ethBalance }) => {
           />
         ) : (
           <span className="AccountInfo__balance-info">
-            {myBitBalanceToRender}{' '}
-            <b className="AccountInfo__balance-myb">MYB</b>
-            {Number(ethBalance).toFixed(4)} <b>ETH</b>
+            <MybitIcon /><span><b>{myBitBalanceToRender}</b> MYB</span>{' '}
+            <EthIcon /><span><b>{Number(ethBalance).toFixed(4)}</b> ETH</span>
           </span>
         )}
       </div>

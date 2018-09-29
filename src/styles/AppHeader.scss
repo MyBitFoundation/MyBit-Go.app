@@ -6,13 +6,17 @@
     margin: 0px 0px;
     color: white;
     overflow: hidden;
+    display: flex;
     position: relative;
+    justify-content: space-between;
+    flex-wrap: wrap;
 
     &__logo-and-info{
       display: flex;
       align-items: center;
       float: left;
       height: 100%;
+      flex-wrap: wrap;
     }
 
     &__Logo-contaner {
@@ -35,7 +39,15 @@
       padding-right: 30px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      margin-top: 25px;
+
+      b{
+        margin-top: 4px;
+
+        span{
+          color: #24f281;
+        }
+      }
     }
 
     &__exchange-rate--is-loading{
