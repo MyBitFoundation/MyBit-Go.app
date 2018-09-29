@@ -10,7 +10,7 @@ class ConfirmationPopup extends React.Component {
       isLoading: false,
       transactionStatus: '',
       acceptedTos: false,
-      displayWarning: false
+      displayWarning: false,
     };
   }
 
@@ -38,7 +38,7 @@ class ConfirmationPopup extends React.Component {
     try {
       const result = await this.props.fundAsset(
         this.props.assetId,
-        this.props.amountEth
+        this.props.amountEth,
       );
       if (result) {
         this.setState({ isLoading: false, transactionStatus: 1 });
@@ -118,7 +118,7 @@ class ConfirmationPopup extends React.Component {
             <p
               className="ConfirmationPopup__tos-message-error"
               style={{
-                visibility: this.state.displayWarning ? 'visible' : 'hidden'
+                visibility: this.state.displayWarning ? 'visible' : 'hidden',
               }}
             >
               *Please accept our T&C before continuing
@@ -199,7 +199,7 @@ ConfirmationPopup.propTypes = {
   handlePopupState: PropTypes.func.isRequired,
   fundAsset: PropTypes.func.isRequired,
   assetId: PropTypes.string.isRequired,
-  isPopupOpen: PropTypes.func.isRequired
+  isPopupOpen: PropTypes.func.isRequired,
 };
 
 export default ConfirmationPopup;

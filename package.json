@@ -46,7 +46,7 @@
     "storybook": "cross-env PORT=8080 npm-run-all -p watch-css start-storybook",
     "run-storybook": "build-storybook -c .storybook -o .out",
     "build-storybook": "npm-run-all build-css run-storybook",
-    "lint": "eslint --ignore-path .gitignore .",
+    "lint": "eslint --ignore-path .gitignore . --fix",
     "now-start": "node server.js",
     "lint:fix": "eslint --ignore-path .gitignore --fix ."
   },
