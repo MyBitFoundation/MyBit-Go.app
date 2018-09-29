@@ -148,7 +148,8 @@ const getNumberOfInvestors = async assetID =>
         { fromBlock: 0, toBlock: 'latest' },
       );
 
-      const investorsForThisAsset = assetFundersLog.filter(txResult => txResult.returnValues._assetID === assetID);
+      const investorsForThisAsset = assetFundersLog
+        .filter(txResult => txResult.returnValues._assetID === assetID);
 
       resolve(investorsForThisAsset.length);
     } catch (err) {
@@ -366,7 +367,8 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       }));
 
       // filter for v0.1
-      assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset => asset.amountToBeRaisedInUSD > 0);
+      assetsPlusMoreDetails = assetsPlusMoreDetails
+        .filter(asset => asset.amountToBeRaisedInUSD > 0);
 
       const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
         if (asset.assetType) {

@@ -41,13 +41,17 @@ class TransactionHistoryPage extends React.Component {
     } = this.state;
 
     if (sortBy === 'amount' && sortDir === 'DESC') {
-      transactionsToRender = transactionsToRender.sort((a, b) => a.amount - b.amount);
+      transactionsToRender = transactionsToRender
+        .sort((a, b) => a.amount - b.amount);
     } else if (sortBy === 'amount' && sortDir === 'ASC') {
-      transactionsToRender = transactionsToRender.sort((a, b) => b.amount - a.amount);
+      transactionsToRender = transactionsToRender
+        .sort((a, b) => b.amount - a.amount);
     } else if (sortBy === 'date' && sortDir === 'DESC') {
-      transactionsToRender = transactionsToRender.sort((a, b) => new Date(a.date) - new Date(b.date));
+      transactionsToRender = transactionsToRender
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
     } else if (sortBy === 'date' && sortDir === 'ASC') {
-      transactionsToRender = transactionsToRender.sort((a, b) => new Date(b.date) - new Date(a.date));
+      transactionsToRender = transactionsToRender
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
     } else if (sortBy === 'status' && sortDir === 'DESC') {
       transactionsToRender = transactionsToRender.sort((a, b) => {
         if (a.status > b.status) {
