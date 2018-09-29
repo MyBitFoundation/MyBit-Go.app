@@ -7,26 +7,26 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_pass',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     name: 'withdraw',
     outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -35,12 +35,12 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -49,57 +49,57 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_from',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_amount',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_mybToken',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_data',
-        type: 'bytes'
-      }
+        type: 'bytes',
+      },
     ],
     name: 'receiveApproval',
     outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_newPass',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     name: 'changePass',
     outputs: [
       {
         name: '',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -108,12 +108,12 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -122,12 +122,12 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
@@ -136,7 +136,7 @@ export const ABI = [
     outputs: [],
     payable: true,
     stateMutability: 'payable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -145,12 +145,12 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -159,31 +159,31 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     inputs: [
       {
         name: '_database',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_mybTokenAddress',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_accessPass',
-        type: 'bytes32'
-      }
+        type: 'bytes32',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'constructor'
+    type: 'constructor',
   },
   {
     anonymous: false,
@@ -191,21 +191,21 @@ export const ABI = [
       {
         indexed: false,
         name: '_sender',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: false,
         name: '_amountMYB',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: false,
         name: '_amountWEI',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogWithdraw',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -213,21 +213,21 @@ export const ABI = [
       {
         indexed: false,
         name: '_depositer',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: false,
         name: '_amount',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         indexed: false,
         name: '_data',
-        type: 'bytes'
-      }
+        type: 'bytes',
+      },
     ],
     name: 'LogMYBDeposited',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -235,16 +235,16 @@ export const ABI = [
       {
         indexed: false,
         name: '_depositer',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: false,
         name: '_amountWEI',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogEthDeposited',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -252,16 +252,16 @@ export const ABI = [
       {
         indexed: false,
         name: '_withdrawer',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: false,
         name: '_amountWEI',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogEthWithdraw',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -269,10 +269,10 @@ export const ABI = [
       {
         indexed: false,
         name: '_user',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'LogNewUser',
-    type: 'event'
-  }
+    type: 'event',
+  },
 ];

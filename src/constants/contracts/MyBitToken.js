@@ -7,35 +7,35 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_spender',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_amount',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'approve',
     outputs: [
       {
         name: 'success',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -44,39 +44,39 @@ export const ABI = [
     outputs: [
       {
         name: 'tokenSupply',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_from',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_to',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_amount',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'transferFrom',
     outputs: [
       {
         name: 'success',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -85,73 +85,73 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'uint8'
-      }
+        type: 'uint8',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_amount',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'burn',
     outputs: [
       {
         name: 'success',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_tokenHolder',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'balanceOf',
     outputs: [
       {
         name: 'balance',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_from',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_amount',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'burnFrom',
     outputs: [
       {
         name: 'success',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -160,113 +160,113 @@ export const ABI = [
     outputs: [
       {
         name: '',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_to',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_amount',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'transfer',
     outputs: [
       {
         name: 'success',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
         name: '_spender',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_amount',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_data',
-        type: 'bytes'
-      }
+        type: 'bytes',
+      },
     ],
     name: 'approveAndCall',
     outputs: [
       {
         name: 'success',
-        type: 'bool'
-      }
+        type: 'bool',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_tokenHolder',
-        type: 'address'
+        type: 'address',
       },
       {
         name: '_spender',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'allowance',
     outputs: [
       {
         name: 'remaining',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     inputs: [
       {
         name: '_initialAmount',
-        type: 'uint256'
+        type: 'uint256',
       },
       {
         name: '_tokenName',
-        type: 'string'
+        type: 'string',
       },
       {
         name: '_decimalUnits',
-        type: 'uint8'
+        type: 'uint8',
       },
       {
         name: '_tokenSymbol',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     payable: false,
     stateMutability: 'nonpayable',
-    type: 'constructor'
+    type: 'constructor',
   },
   {
     payable: true,
     stateMutability: 'payable',
-    type: 'fallback'
+    type: 'fallback',
   },
   {
     anonymous: false,
@@ -274,16 +274,16 @@ export const ABI = [
       {
         indexed: true,
         name: '_burner',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: true,
         name: '_amountBurned',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'LogBurn',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -291,21 +291,21 @@ export const ABI = [
       {
         indexed: true,
         name: 'from',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: true,
         name: 'to',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: false,
         name: 'tokens',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'Transfer',
-    type: 'event'
+    type: 'event',
   },
   {
     anonymous: false,
@@ -313,20 +313,20 @@ export const ABI = [
       {
         indexed: true,
         name: 'tokenOwner',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: true,
         name: 'spender',
-        type: 'address'
+        type: 'address',
       },
       {
         indexed: false,
         name: 'tokens',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     name: 'Approval',
-    type: 'event'
-  }
+    type: 'event',
+  },
 ];

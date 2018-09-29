@@ -16,7 +16,7 @@ const getCategories = assets =>
   [...new Set(assets.map(asset => asset.category))].map(category => ({
     image: getImageForCategory(category),
     path: category,
-    name: getPrettyCategoryName(category)
+    name: getPrettyCategoryName(category),
   }));
 
 const renderCategories = (categories, clickHandler) => (
@@ -57,7 +57,7 @@ class ExplorePage extends Component {
       <Row className="ExplorePage">
         {renderCategories(
           getCategories(this.props.assets),
-          this.props.clickHandler
+          this.props.clickHandler,
         )}
       </Row>
     );
@@ -67,11 +67,11 @@ class ExplorePage extends Component {
 ExplorePage.propTypes = {
   clickHandler: PropTypes.func,
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.arrayOf(PropTypes.object).isRequired
+  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 ExplorePage.defaultProps = {
-  clickHandler: () => {}
+  clickHandler: () => {},
 };
 
 export default ExplorePage;

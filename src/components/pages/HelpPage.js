@@ -48,22 +48,22 @@ class HelpPage extends React.Component {
         url: '/explore',
         title: 'Explore',
         desc:
-          'Here you can explore the different assets currently listed for sale on the platform. Simply select a category then select an asset to see more information.'
+          'Here you can explore the different assets currently listed for sale on the platform. Simply select a category then select an asset to see more information.',
       },
       {
         imageSrc: portfolioIcon,
         url: '/portfolio',
         title: 'Portfolio',
         desc:
-          'Once you’ve invested in a device it goes into your portfolio tab. From here you can check its performance, ownership and more detailed information.'
+          'Once you’ve invested in a device it goes into your portfolio tab. From here you can check its performance, ownership and more detailed information.',
       },
       {
         imageSrc: transactionsIcon,
         url: '/transaction-history',
         title: 'Transactions',
         desc:
-          'From here you can see a complete list of all your transactions; from investments you’ve made to revenue you’ve generated; from a particular device.'
-      }
+          'From here you can see a complete list of all your transactions; from investments you’ve made to revenue you’ve generated; from a particular device.',
+      },
     ];
 
     const buttons = [
@@ -71,14 +71,14 @@ class HelpPage extends React.Component {
         imageSrc: metamaskIcon,
         url: 'https://www.youtube.com/watch?time_continue=25&v=6Gf_kRE4MJU',
         text: 'Need help setting up Metamask? Click here.',
-        className: 'HelpPage__footer-button--is-metamask'
+        className: 'HelpPage__footer-button--is-metamask',
       },
       {
         imageSrc: bugIcon,
         url: 'https://github.com/MyBitFoundation/MyBitDapp-FrontEnd/issues',
         text: 'Found a bug? Click here.',
-        className: 'HelpPage__footer-button--is-bug'
-      }
+        className: 'HelpPage__footer-button--is-bug',
+      },
     ];
 
     return (
@@ -162,7 +162,7 @@ class HelpPage extends React.Component {
                 href={option.url}
                 className={classNames({
                   'HelpPage__footer-button': true,
-                  [option.className]: true
+                  [option.className]: true,
                 })}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -185,11 +185,11 @@ class HelpPage extends React.Component {
 }
 
 HelpPage.propTypes = {
-  fetchMyBit: PropTypes.func
+  fetchMyBit: PropTypes.func,
 };
 
 HelpPage.defaultProps = {
-  fetchMyBit: ''
+  fetchMyBit: '',
 };
 
 export default HelpPage;

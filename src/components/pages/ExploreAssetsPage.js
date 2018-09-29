@@ -19,9 +19,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
   }
 
   const loadingAssets = loading.assets;
-  const assetsInCategory = assets.filter(
-    asset => asset.category === match.params.category
-  );
+  const assetsInCategory = assets.filter(asset => asset.category === match.params.category);
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
@@ -47,7 +45,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
           pastDate={asset.pastDate}
         />
       ))}
-    </div>
+    </div>,
   ];
 
   const loadingElement = loadingAssets && (
@@ -83,7 +81,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
 ExploreAssetsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  match: PropTypes.shape({ params: PropTypes.object }).isRequired
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
 export default ExploreAssetsPage;

@@ -23,13 +23,13 @@ const Asset = ({
   id,
   backgroundImage,
   fundingStage,
-  pastDate
+  pastDate,
 }) => {
   const assetFunded = fundingStage === '3' || fundingStage === '4';
   const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
   const goalFormatted = Number(goal).toLocaleString('en-US', {
     style: 'currency',
-    currency: 'USD'
+    currency: 'USD',
   });
   return (
     <Col span={6} className="Asset">
@@ -82,7 +82,7 @@ const Asset = ({
 };
 
 Asset.defaultProps = {
-  clickHandler: undefined
+  clickHandler: undefined,
 };
 
 Asset.propTypes = {
@@ -96,14 +96,14 @@ Asset.propTypes = {
   id: PropTypes.string.isRequired,
   backgroundImage: PropTypes.string.isRequired,
   fundingStage: PropTypes.string.isRequired,
-  pastDate: PropTypes.bool.isRequired
+  pastDate: PropTypes.bool.isRequired,
 };
 
 Asset.defaultProps = {
   city: '',
   country: '',
   name: '',
-  clickHandler: () => {}
+  clickHandler: () => {},
 };
 
 export default Asset;

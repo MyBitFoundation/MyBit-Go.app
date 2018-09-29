@@ -49,7 +49,6 @@
     "lint": "eslint .",
     "now-start": "node server.js",
     "lint:fix": "eslint --fix .",
-    "format-code": "prettier --single-quote --write 'src/**/*.js'"
   },
   "devDependencies": {
     "babel-core": "^7.0.0-bridge",

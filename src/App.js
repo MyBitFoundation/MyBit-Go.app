@@ -54,7 +54,7 @@ class App extends Component {
 
 App.propTypes = {
   location: PropTypes.shape({ pathname: PropTypes.string.isRequired })
-    .isRequired
+    .isRequired,
 };
 
 export default withRouter(App);

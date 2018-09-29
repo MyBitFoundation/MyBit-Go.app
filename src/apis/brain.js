@@ -150,9 +150,7 @@ const getNumberOfInvestors = async assetID =>
         { fromBlock: 0, toBlock: 'latest' },
       );
 
-      const investorsForThisAsset = assetFundersLog.filter(
-        txResult => txResult.returnValues._assetID === assetID
-      );
+      const investorsForThisAsset = assetFundersLog.filter(txResult => txResult.returnValues._assetID === assetID);
 
       resolve(investorsForThisAsset.length);
     } catch (err) {
@@ -206,7 +204,7 @@ const checkTransactionConfirmation = async (
     } else {
       setTimeout(
         () => checkTransactionConfirmation(transactionHash, resolve, reject),
-        1000
+        1000,
       );
     }
   } catch (err) {
@@ -300,82 +298,60 @@ export const fetchAssets = async (user, currentEthInUsd) =>
 
       assets = assets.concat(assetsOlderContract);
 
-      const assetManagers = await Promise.all(
-        assets.map(async asset =>
-          apiContract.methods.assetManager(asset.assetID).call()
-        )
-      );
+      const assetManagers = await Promise.all(assets.map(async asset =>
+        apiContract.methods.assetManager(asset.assetID).call()));
 
-      const amountsToBeRaised = await Promise.all(
-        assets.map(async asset =>
-          apiContract.methods.amountToBeRaised(asset.assetID).call()
-        )
-      );
+      const amountsToBeRaised = await Promise.all(assets.map(async asset =>
+        apiContract.methods.amountToBeRaised(asset.assetID).call()));
 
-      const amountsRaised = await Promise.all(
-        assets.map(async asset =>
-          apiContract.methods.amountRaised(asset.assetID).call()
-        )
-      );
+      const amountsRaised = await Promise.all(assets.map(async asset =>
+        apiContract.methods.amountRaised(asset.assetID).call()));
 
-      const fundingDeadlines = await Promise.all(
-        assets.map(async asset =>
-          apiContract.methods.fundingDeadline(asset.assetID).call()
-        )
-      );
+      const fundingDeadlines = await Promise.all(assets.map(async asset =>
+        apiContract.methods.fundingDeadline(asset.assetID).call()));
 
       const realAddress = web3.utils.toChecksumAddress(user.userName);
-      const ownershipUnits = await Promise.all(
-        assets.map(async asset =>
-          apiContract.methods.ownershipUnits(asset.assetID, realAddress).call()
-        )
-      );
+      const ownershipUnits = await Promise.all(assets.map(async asset =>
+        apiContract.methods.ownershipUnits(asset.assetID, realAddress).call()));
 
-      const assetIncomes = await Promise.all(
-        assets.map(async asset =>
-          apiContract.methods.totalReceived(asset.assetID).call()
-        )
-      );
+      const assetIncomes = await Promise.all(assets.map(async asset =>
+        apiContract.methods.totalReceived(asset.assetID).call()));
 
-      const fundingStages = await Promise.all(
-        assets.map(async asset =>
-          apiContract.methods.fundingStage(asset.assetID).call()
-        )
-      );
+      const fundingStages = await Promise.all(assets.map(async asset =>
+        apiContract.methods.fundingStage(asset.assetID).call()));
 
-      let assetsPlusMoreDetails = await Promise.all(
-        assets.map(async (asset, index) => {
-          const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
+      let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
+        const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
 
-          // asset details are hardcoded for now
-          let assetIdDetails = isAssetIdEnabled(asset.assetID);
-          if (!assetIdDetails) {
-            assetIdDetails = {};
-            assetIdDetails.city = 'Zurich';
-            assetIdDetails.country = 'Switzerland';
-            assetIdDetails.description = 'Coming soon';
-            assetIdDetails.details = 'Coming soon';
-            assetIdDetails.name = 'Coming soon';
-          }
+        // asset details are hardcoded for now
+        let assetIdDetails = isAssetIdEnabled(asset.assetID);
+        if (!assetIdDetails) {
+          assetIdDetails = {};
+          assetIdDetails.city = 'Zurich';
+          assetIdDetails.country = 'Switzerland';
+          assetIdDetails.description = 'Coming soon';
+          assetIdDetails.details = 'Coming soon';
+          assetIdDetails.name = 'Coming soon';
+        }
 
-          // determine whether asset has expired
-          let pastDate = false;
-          const dueDate = dayjs(Number(fundingDeadlines[index]) * 1000);
-          if (dayjs(new Date()) > dueDate) {
-            pastDate = true;
-          }
+        // determine whether asset has expired
+        let pastDate = false;
+        const dueDate = dayjs(Number(fundingDeadlines[index]) * 1000);
+        if (dayjs(new Date()) > dueDate) {
+          pastDate = true;
+        }
 
-          return {
-            ...asset,
-            amountRaisedInUSD: (
-              Number(web3.utils.fromWei(amountsRaised[index], 'ether')) *
+        return {
+          ...asset,
+          amountRaisedInUSD: (
+            Number(web3.utils.fromWei(amountsRaised[index], 'ether')) *
               currentEthInUsd
-            ).toFixed(2),
-            amountToBeRaisedInUSD: amountsToBeRaised[index],
-            fundingDeadline: dueDate,
-            ownershipUnits: ownershipUnits[index],
-            assetIncome: (
-              Number(web3.utils.fromWei(assetIncomes[index], 'ether')) *
+          ).toFixed(2),
+          amountToBeRaisedInUSD: amountsToBeRaised[index],
+          fundingDeadline: dueDate,
+          ownershipUnits: ownershipUnits[index],
+          assetIncome: (
+            Number(web3.utils.fromWei(assetIncomes[index], 'ether')) *
               currentEthInUsd
             ).toFixed(2),
             assetManager: assetManagers[index],
@@ -393,11 +369,9 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       );
 
       // filter for v0.1
-      assetsPlusMoreDetails = assetsPlusMoreDetails.filter(
-        asset => asset.amountToBeRaisedInUSD > 0
-      );
+      assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset => asset.amountToBeRaisedInUSD > 0);
 
-      const assetsWithCategories = assetsPlusMoreDetails.map(asset => {
+      const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
         if (asset.assetType) {
           return {
             ...asset,
