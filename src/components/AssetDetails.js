@@ -130,11 +130,11 @@ class AssetDetails extends React.Component {
       (this.state.currentSelectedAmount * 100) /
       this.props.information.goal
     ).toFixed(2);
-    this.etherValueSelected = Number((this.state.currentSelectedAmount / 
+    this.etherValueSelected = Number((this.state.currentSelectedAmount /
       this.props.currentEthInUsd).toFixed(2));
     let minInvestment =
     this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
-      
+
     if (maxInvestment <= 100 && maxInvestment > 0 && this.state.daysToGo > 0) {
       minInvestment = 1;
     }
