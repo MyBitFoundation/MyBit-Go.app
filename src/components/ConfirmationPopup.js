@@ -70,21 +70,6 @@ class ConfirmationPopup extends React.Component {
                 {this.props.ownership}%
               </span>
             </p>
-            <p
-              className="ConfirmationPopup__description"
-              style={{ lineHeight: '1', paddingTop: '15px' }}
-            >
-              Expected annual return:{' '}
-              <span className="ConfirmationPopup__description-amount ConfirmationPopup__description-amount--is-inactive">
-                18%
-              </span>
-            </p>
-            <p className="ConfirmationPopup__description-amount-right ConfirmationPopup__description-amount-right--is-inactive">
-              $18,000
-            </p>
-            <p className="ConfirmationPopup__description-amount-right ConfirmationPopup__description-amount-right--is-inactive">
-              {this.props.amountEth} <b>ETH</b>
-            </p>
             <div className="ConfirmationPopup__line" />
             <p className="ConfirmationPopup__description ConfirmationPopup__description-cost">
               Total asset cost:{' '}
