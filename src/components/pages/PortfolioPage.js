@@ -25,7 +25,7 @@ const getPortfolioValue = (assets, currentEthPrice) =>
 const getPortfolioRevenue = (assets, currentEthPrice) =>
   assets.reduce(
     (accumulator, currentValue) =>
-      accumulator +
+      (accumulator) +
       ((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
         (currentValue.amountToBeRaisedInUSD)) *
         currentValue.assetIncome,

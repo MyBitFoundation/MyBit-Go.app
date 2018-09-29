@@ -130,9 +130,10 @@ class AssetDetails extends React.Component {
       (this.state.currentSelectedAmount * 100) /
       this.props.information.goal
     ).toFixed(2);
-    this.etherValueSelected = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd).toFixed(2));
+    this.etherValueSelected = Number((this.state.currentSelectedAmount / 
+      this.props.currentEthInUsd).toFixed(2));
     let minInvestment =
-      this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
+    this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
       
     if (maxInvestment <= 100 && maxInvestment > 0 && this.state.daysToGo > 0) {
       minInvestment = 1;
@@ -264,20 +265,6 @@ class AssetDetails extends React.Component {
               {ownership}%
             </p>
           </p>
-          {/* <p className="AssetDetails__left-contribution">
-            Expected annual return:
-          </p>
-          <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
-            18%
-          </b> */}
-          {/* <div className="AssetDetails__left-separator" />
-          <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
-            990 USD
-          </b>
-          <div className="AssetDetails__left-separator" />
-          <b className="AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
-            1.87 ETH
-          </b> */}
           <Button
             type="primary"
             className="AssetDetails__left-contribute-btn"
