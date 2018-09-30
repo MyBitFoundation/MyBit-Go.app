@@ -13,6 +13,9 @@ import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 
 class App extends Component {
   isFirstVisit() {
+    if(this.props.location.pathname === '/'){
+      return false;
+    }
     try {
       if (localStorage.getItem('mybitUser') === null) {
         localStorage.setItem('mybitUser', 'true');
