@@ -31,8 +31,8 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
       const jsonResponse = await response.json();
       const { price, percent_change_24h } = jsonResponse.data.quotes.USD;
       resolve({
-        mybitPrice: price.toFixed(4),
-        mybitPriceChange: percent_change_24h,
+        price: price.toFixed(4),
+        priceChangePercentage: percent_change_24h,
       });
     } catch (error) {
       reject(error);
@@ -352,14 +352,14 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         return {
           ...asset,
           amountRaisedInUSD: (
-            Number(web3.utils.fromWei(amountsRaised[index], 'ether')) *
+            Number(web3.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
               currentEthInUsd
           ).toFixed(2),
           amountToBeRaisedInUSD: amountsToBeRaised[index],
           fundingDeadline: dueDate,
           ownershipUnits: ownershipUnits[index],
           assetIncome: (
-            Number(web3.utils.fromWei(assetIncomes[index], 'ether')) *
+            Number(web3.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
               currentEthInUsd
           ).toFixed(2),
           assetManager: assetManagers[index],
