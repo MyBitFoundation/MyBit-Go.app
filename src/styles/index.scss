@@ -1,3 +1,5 @@
+@import '~antd/dist/antd.css';
+
 @font-face {
     font-family: 'Roboto';
     src: url('../fonts/Roboto-Medium.ttf') format('truetype');
@@ -43,10 +45,6 @@ p{
   letter-spacing: normal !important;
 }
 
-.grid{
-  margin-left: 0px !important;
-  margin-right: 0px !important;
-}
 
 b{
   font-weight: bold;
@@ -66,6 +64,23 @@ b{
     border: transparent !important;
     outline: none !important;
   }
+}
+
+.ant-menu-submenu-popup{
+  z-index: 3 !important;
+
+  a{
+    text-decoration: none !important;
+  }
+
+  .ant-menu-item-selected svg g{
+    fill: #1890ff;
+  }
+
+  .ant-menu-item-active svg g{
+    fill: #1890ff;
+  }
+
 }
 
 // Carbon Theme Variables

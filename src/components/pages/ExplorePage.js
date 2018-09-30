@@ -2,6 +2,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Row from 'antd/lib/row';
+import 'antd/lib/row/style';
+import Col from 'antd/lib/col';
+import 'antd/lib/col/style';
+
 import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';
 import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
@@ -15,22 +20,24 @@ const getCategories = assets =>
   }));
 
 const renderCategories = (categories, clickHandler) => (
-  <div className="ExplorePage__container">
+  <div>
     {categories.map(category => (
-      <Link
-        to={`/explore/${category.path}`}
-        href={`/explore/${category.path}`}
-        key={category.path}
-        className="ExplorePage__category"
-      >
-        <div
-          className="ExplorePage__image-container"
-          onClick={clickHandler || debug(`Going to: ${category.path}`)}
-          style={{ backgroundImage: `url(${category.image})` }}
+      <Col span={6} className="ExplorePage__container">
+        <Link
+          to={`/explore/${category.path}`}
+          href={`/explore/${category.path}`}
+          key={category.path}
+          className="ExplorePage__category"
         >
-          <p className="ExplorePage__category-name">{category.name}</p>
-        </div>
-      </Link>
+          <div
+            className="ExplorePage__image-container"
+            onClick={clickHandler || debug(`Going to: ${category.path}`)}
+            style={{ backgroundImage: `url(${category.image})` }}
+          >
+            <p className="ExplorePage__category-name">{category.name}</p>
+          </div>
+        </Link>
+      </Col>
     ))}
   </div>
 );
@@ -47,12 +54,12 @@ class ExplorePage extends Component {
       return <LoadingPage message="Loading categories" />;
     }
     return (
-      <div className="ExplorePage">
+      <Row className="ExplorePage">
         {renderCategories(
           getCategories(this.props.assets),
           this.props.clickHandler,
         )}
-      </div>
+      </Row>
     );
   }
 }

@@ -9,6 +9,7 @@ import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
 import MetamaskChecker from './components/MetamaskChecker';
+import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 
 class App extends Component {
   isFirstVisit() {
@@ -26,7 +27,7 @@ class App extends Component {
   render() {
     const firstVisit = this.isFirstVisit();
     return (
-      <div>
+      <CirclesBackgroundWrapper>
         <MetamaskChecker
           shouldDisplay={this.props.location.pathname !== '/help'}
         />
@@ -46,7 +47,7 @@ class App extends Component {
             ))}
           </Switch>
         </div>
-      </div>
+      </CirclesBackgroundWrapper>
     );
   }
 }

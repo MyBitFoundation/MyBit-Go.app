@@ -17,10 +17,8 @@ const MetamaskBooting = ({ isBraveBrowser, extensionUrl }) => (
         </p>
       )}
     </p>
-    <img
+    <MetamaskLogo
       className="MetamaskAudit__metamaskfox-image"
-      src={MetamaskLogo}
-      alt="Metamask"
     />
     {!isBraveBrowser && (
       <div>

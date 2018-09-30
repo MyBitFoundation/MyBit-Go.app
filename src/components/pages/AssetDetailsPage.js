@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
+
 import AssetDetails from '../AssetDetails';
-import CategoryBackButton from '../CategoryBackButton';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
@@ -20,7 +22,7 @@ const AssetDetailsPage = ({
     );
   }
 
-  const { assetId, category } = match.params;
+  const { assetId } = match.params;
   const asset = assets.find(({ assetID }) => assetID === assetId);
 
   if (!asset) {
@@ -47,7 +49,7 @@ const AssetDetailsPage = ({
 
   return (
     <div style={{ position: 'relative' }}>
-      <CategoryBackButton category={category} />
+      <Button>Back</Button>
       <AssetDetails
         information={assetInformation}
         currentEthInUsd={prices.etherPrice}

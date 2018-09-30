@@ -12,8 +12,7 @@ const web3 = getWeb3Async();
 const fromWeiToEth = weiValue => web3.utils.fromWei(weiValue, 'ether');
 
 const getOwnedAssets = assets =>
-  assets.filter(asset =>
-    asset.ownershipUnits > 0 && isAssetIdEnabled(asset.assetID));
+  assets.filter(asset => asset.ownershipUnits > 0 && isAssetIdEnabled(asset.assetID));
 
 const getPortfolioValue = (assets, currentEthPrice) =>
   assets.reduce(
@@ -26,10 +25,10 @@ const getPortfolioValue = (assets, currentEthPrice) =>
 const getPortfolioRevenue = (assets, currentEthPrice) =>
   assets.reduce(
     (accumulator, currentValue) =>
-      accumulator +
-      (((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
-        currentValue.amountToBeRaisedInUSD) *
-        currentValue.assetIncome),
+      (accumulator) +
+      ((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
+        (currentValue.amountToBeRaisedInUSD)) *
+        currentValue.assetIncome,
     0,
   );
 
@@ -37,8 +36,8 @@ const getPortfolioValueAssets = (assets, currentEthPrice) =>
   assets.map((asset) => {
     let ownership = (
       ((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) /
-          asset.amountToBeRaisedInUSD) *
-        100
+        asset.amountToBeRaisedInUSD) *
+      100
     ).toFixed(2);
     if (Number(ownership) > 100) {
       ownership = 100;

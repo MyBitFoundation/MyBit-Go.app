@@ -1,5 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
+
 import dayjs from 'dayjs';
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
@@ -27,8 +29,11 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
     try {
       const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
       const jsonResponse = await response.json();
-      const { price } = jsonResponse.data.quotes.USD;
-      resolve(Math.round(price * 100) / 100);
+      const { price, percent_change_1h } = jsonResponse.data.quotes.USD;
+      resolve({
+        mybitPrice: price.toFixed(4),
+        mybitPriceChange: percent_change_1h,
+      });
     } catch (error) {
       reject(error);
     }
@@ -61,22 +66,22 @@ export const fetchTransactionHistory = async user =>
 
       const ethTransactionHistory = jsonResult.result
         .filter(txResult =>
-          txResult.to === userAddressLowerCase ||
-            txResult.from === userAddressLowerCase)
-        .map((txResult) => {
+          txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
+        .map((txResult, index) => {
           const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
-          let status = 'Complete';
+          let status = 'Confirmed';
           if (txResult.isError === '1') {
-            status = 'Fail';
+            status = 'Error';
           } else if (txResult.confirmations === 0) {
             status = 'Pending';
           }
           return {
-            date: txResult.timeStamp * 1000,
             amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
-            status,
             type: 'ETH',
             txId: txResult.hash,
+            status,
+            date: txResult.timeStamp * 1000,
+            key: `${txResult.hash} ${index}`,
           };
         });
 
@@ -92,22 +97,26 @@ export const fetchTransactionHistory = async user =>
 
       const mybTransactionHistory = await Promise.all(logTransactions
         .filter(txResult =>
-          txResult.returnValues.to === userAddress ||
-              txResult.returnValues.from === userAddress)
-        .map(async (txResult) => {
+          txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
+        .map(async (txResult, index) => {
           const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
           const multiplier =
-              txResult.returnValues.from === userAddress ? -1 : 1;
+            txResult.returnValues.from === userAddress ? -1 : 1;
+
           return {
-            amount: (txResult.returnValues.value / 100000000) * multiplier,
+            amount: web3.utils.fromWei(txResult.returnValues[2], 'ether') * multiplier,
             type: 'MYB',
             txId: txResult.transactionHash,
-            status: 'Complete',
+            status: 'Confirmed',
             date: blockInfo.timestamp * 1000,
+            key: `${txResult.transactionHash} ${index}`,
           };
         }));
 
-      resolve(ethTransactionHistory.concat(mybTransactionHistory));
+      const mixedEthAndMybitTransactions =
+        ethTransactionHistory.concat(mybTransactionHistory);
+
+      resolve(mixedEthAndMybitTransactions);
     } catch (error) {
       reject(error);
     }

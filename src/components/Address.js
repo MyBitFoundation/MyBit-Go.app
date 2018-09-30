@@ -4,15 +4,15 @@ import { Loading } from 'carbon-components-react';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
 
-const Address = ({ userName, className }) => (
-  <div className={className}>
+const Address = ({ userName }) => (
+  <div className="Address">
     {!userName ? (
       <div className="Address__loader">
         <Loading small withOverlay={false} />
         <span>Loading account</span>
       </div>
     ) : (
-      <div>
+      <div className="Address__jazz-n-hex">
         <Jazzicon diameter={39} />
         <p className="Address__text">{userName}</p>
       </div>
@@ -26,7 +26,6 @@ Address.defaultProps = {
 
 Address.propTypes = {
   userName: PropTypes.string,
-  className: PropTypes.string.isRequired,
 };
 
 export default Address;

@@ -99,11 +99,8 @@ class HelpPage extends React.Component {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button
-              small
-              kind="primary"
-            >
-                Request faucet balance
+            <Button small kind="primary">
+              Request faucet balance
             </Button>
           </a>
 
