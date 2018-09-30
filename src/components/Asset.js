@@ -9,7 +9,7 @@ import 'antd/lib/col/style';
 import 'antd/lib/progress/style';
 
 import '../styles/Asset.css';
-import locationIcon from '../images/Location-icon.svg';
+import locationIcon from '../images/Location-icon.png';
 import { debug, isAssetIdEnabled } from '../constants';
 
 const Asset = ({

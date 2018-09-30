@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button } from 'carbon-components-react';
+// import { Modal, Button } from 'carbon-components-react'; 
+import { Modal, Button } from 'antd';
+
 import '../styles/MetamaskAudit.css';
 import MetamaskLogo from '../images/metamask.svg';
 
