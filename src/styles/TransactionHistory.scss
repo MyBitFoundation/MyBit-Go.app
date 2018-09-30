@@ -1,51 +1,31 @@
+@mixin statusIcon {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    display: inline-block;
+    transform: translate(0%, -50%);
+    margin-right: 5px;
+}
+
 .Transactions{
+  margin-top: 50px;
 
-  display: flex;
-
-  &__table-name{
-    font-size: 18px;
-    color: #152935;
-    padding-left: 20px;
+  &__status--is-confirmed{
+    @include statusIcon;
+    background-color: #52c41a;
   }
 
-  &__history{
-    margin-top: 50px;
-    width: 100%;
+  &__status--is-pending{
+    @include statusIcon;
+    background-color: rgba(0, 0, 0, 0.25);
   }
 
-  &__history-table{
-    border: none;
-    width: 100%;
-    font-family: 'Roboto';
-    margin-top: 10px;
-    overflow: hidden;
+  &__status--is-error{
+    @include statusIcon;
+    background-color: #f5222d;
   }
 
-  &__history-table-header{
-    background-color: #f5f7fa
-  }
-
-  &__overflowOption{
-    margin-left: 20px;
-    transform: rotate(90deg);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  &__history-column-header .bx--table-sort__svg{
-    opacity: 0.3;
-  }
-
-  & .bx--table-row:hover{
-
-    & .Transactions__overflowOption {
-      opacity: 1;
-      transition: opacity 0.1s;
-    }
-  }
-
-  & .bx--table-sort__svg{
-    position: relative;
-    left: 10px;
+  table a:focus{
+    text-decoration: none;
   }
 }
