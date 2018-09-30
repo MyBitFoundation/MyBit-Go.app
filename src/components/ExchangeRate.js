@@ -20,10 +20,12 @@ const ExchangeRate = ({ mybitPrice, mybitPriceChange }) => (
 
 ExchangeRate.defaultProps = {
   mybitPrice: undefined,
+  mybitPriceChange: undefined,
 };
 
 ExchangeRate.propTypes = {
-  mybitPrice: PropTypes.number,
+  mybitPrice: PropTypes.string,
+  mybitPriceChange: PropTypes.number,
 };
 
 export default ExchangeRate;

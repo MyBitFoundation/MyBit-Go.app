@@ -1,5 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
+
 import dayjs from 'dayjs';
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
