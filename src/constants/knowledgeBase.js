@@ -30,7 +30,7 @@ const sectionGettingStarted = [{
   question: 'What is the ropsten test network?',
   answer: 'It’s made for testing Ethereum applications for free so real Ether is not consumed or at risk before an app is published to the mainnet.',
 }, {
-  question: 'What is testnet Ether',
+  question: 'What is testnet Ether?',
   answer: 'It functions just like regular Ether but has no value because it is specifically designed to be used for testing purposes on Ethereum’s testnet.',
 }];
 
