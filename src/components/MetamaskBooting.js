@@ -1,15 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-// import { Modal, Button } from 'carbon-components-react'; 
 import { Modal, Button } from 'antd';
+import PropTypes from 'prop-types';
 
 import '../styles/MetamaskAudit.css';
 import MetamaskLogo from '../images/metamask.svg';
 
 const MetamaskBooting = ({ isBraveBrowser, extensionUrl }) => {
   const visible = true;
+  const closable = false;
   return (
-    <Modal className="MetamaskAudit" visible={visible}>
+    <Modal className="MetamaskAudit" visible={visible} closable={closable} footer={null}>
       <p className="MetamaskAudit__title">
         {isBraveBrowser ? (
           <p>
