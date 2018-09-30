@@ -22,7 +22,7 @@ const getCategories = assets =>
 const renderCategories = (categories, clickHandler) => (
   <div>
     {categories.map(category => (
-      <Col span={6} className="ExplorePage__container">
+      <Col xs={24} sm={24} md={12} lg={8} xl={6} className="ExplorePage__container">
         <Link
           to={`/explore/${category.path}`}
           href={`/explore/${category.path}`}
