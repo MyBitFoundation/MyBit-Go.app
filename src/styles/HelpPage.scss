@@ -29,6 +29,7 @@
 
     a{
       margin: 0px 10px;
+      width: max-content;
 
       @include media('<tablet') {
          margin: 10px 0px;
