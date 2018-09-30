@@ -27,10 +27,10 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
     try {
       const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
       const jsonResponse = await response.json();
-      const { price, percent_change_1h } = jsonResponse.data.quotes.USD;
+      const { price, percent_change_24h } = jsonResponse.data.quotes.USD;
       resolve({
         mybitPrice: price.toFixed(4),
-        mybitPriceChange: percent_change_1h,
+        mybitPriceChange: percent_change_24h,
       });
     } catch (error) {
       reject(error);
