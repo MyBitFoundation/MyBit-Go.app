@@ -67,23 +67,24 @@ const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
   });
 
 const PortfolioPage = ({ loading, assets, prices }) => {
-  if (loading.transactionHistory || !prices.etherPrice) {
+  if (loading.transactionHistory || !prices.ether) {
     return <LoadingPage message="Loading portfolio" />;
   }
-  const { etherPrice } = prices;
+
+  const { ether } = prices;
   const ownedAssets = getOwnedAssets(assets);
   const totalPortfolioValue = getPortfolioValue(
     ownedAssets,
-    etherPrice,
+    ether.price,
   ).toFixed(2);
   const totalPortfolioRevenue = getPortfolioRevenue(
     ownedAssets,
-    etherPrice,
+    ether.price,
   ).toFixed(2);
-  const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, etherPrice);
+  const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, ether.price);
   const portfolioRevenueAssets = getPortfolioRevenueAssets(
     ownedAssets,
-    etherPrice,
+    ether.price,
   );
 
   return (

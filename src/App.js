@@ -13,8 +13,8 @@ import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 
 class App extends Component {
   isFirstVisit() {
-    //let the explore component handle this
-    if(this.props.location.pathname === '/'){
+    // let the explore component handle this
+    if (this.props.location.pathname === '/') {
       return false;
     }
     try {
@@ -36,7 +36,7 @@ class App extends Component {
           shouldDisplay={this.props.location.pathname !== '/help'}
         />
         <BlockchainInfoContext.Consumer>
-          {({ user, prices }) => <AppHeader user={user} prices={prices} />}
+          {({ user, prices }) => <AppHeader user={user} prices={prices.mybit} />}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">
