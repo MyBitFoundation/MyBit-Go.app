@@ -13,6 +13,7 @@ import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 
 class App extends Component {
   isFirstVisit() {
+    //let the explore component handle this
     if(this.props.location.pathname === '/'){
       return false;
     }
