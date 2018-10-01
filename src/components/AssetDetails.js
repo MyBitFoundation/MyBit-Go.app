@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider, Button } from 'carbon-components-react';
+import { Slider, Button } from 'antd';
 import dayjs from 'dayjs';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
@@ -218,7 +218,7 @@ class AssetDetails extends React.Component {
                 className="AssetDetails__left-funding-value"
                 style={{ color: '#2db84b' }}
               >
-                {this.assetFunded ? goal : this.props.information.raised.toLocaleString()} USD
+                {this.assetFunded ? goal : this.props.information.raised} USD
               </b>
             </div>
             <div className="AssetDetails__left-funds-goal">
@@ -241,13 +241,12 @@ class AssetDetails extends React.Component {
           </p>
           <Slider
             id="slider"
-            value={this.state.currentSelectedAmount}
+            defaultValue={this.state.currentSelectedAmount}
             min={minInvestment}
             max={maxInvestment}
             onChange={arg =>
               this.setState({ currentSelectedAmount: arg.value })
             }
-            hideTextInput
             disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           />
           {/* 100USD minimum as per connor's indication */}
@@ -259,7 +258,7 @@ class AssetDetails extends React.Component {
           </p>
           <p className="AssetDetails__left-contribution">Your contribution:</p>
           <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-            {this.state.currentSelectedAmount.toLocaleString()} USD
+            {this.state.currentSelectedAmount} USD
           </b>
           <div className="AssetDetails__left-separator" />
           <b className="AssetDetails__left-contribution-value">

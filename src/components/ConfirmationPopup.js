@@ -99,9 +99,9 @@ class ConfirmationPopup extends React.Component {
           <p className="ConfirmationPopup__description">
             Your contribution:{' '}
             <span style={{ fontWeight: '400' }} className="ConfirmationPopup__description-amount">
-              ${this.props.amountUsd.toLocaleString()}
+              ${this.props.amountUsd}
               <span style={{ marginLeft: '10px', fontWeight: '500' }}>
-                {this.props.amountEth.toLocaleString()} ETH
+                {this.props.amountEth} ETH
               </span>
             </span>
           </p>
@@ -114,7 +114,7 @@ class ConfirmationPopup extends React.Component {
           <p className="ConfirmationPopup__description ConfirmationPopup__description-cost">
             Total asset costs:{' '}
             <span className="ConfirmationPopup__description-amount">
-              ${this.props.amountUsd.toLocaleString()}
+              ${this.props.amountUsd}
             </span>
           </p>
           <div className="ConfirmationPopup__tos-wrapper">
