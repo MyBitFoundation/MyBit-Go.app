@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import 'carbon-components/css/carbon-components.min.css';
 import 'gridlex/dist/gridlex.min.css';
 import './styles/index.css';
 import App from './App';

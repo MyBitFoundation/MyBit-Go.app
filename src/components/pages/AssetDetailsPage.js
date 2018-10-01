@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from 'carbon-components-react';
+import { Spin } from 'antd';
 import Button from 'antd/lib/button';
 import 'antd/lib/button/style';
 
@@ -13,9 +13,12 @@ const AssetDetailsPage = ({
 }) => {
   if (loading.assets) {
     return (
-      <div style={{ width: '100%', position: 'relative', top: '50px' }}>
-        <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
-        <p className="AssetDetailsPage-loading-message">
+      <div style={{
+ width: '100%', position: 'relative', top: '50px', left: '45%',
+}}
+      >
+        <Spin />
+        <p>
           Loading asset information
         </p>
       </div>

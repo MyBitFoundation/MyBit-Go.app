@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from 'carbon-components-react';
+import { Spin } from 'antd';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
 
@@ -8,7 +8,7 @@ const Address = ({ userName }) => (
   <div className="Address">
     {!userName ? (
       <div className="Address__loader">
-        <Loading small withOverlay={false} />
+        <Spin />
         <span>Loading account</span>
       </div>
     ) : (

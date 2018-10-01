@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from 'carbon-components-react';
+import { Spin } from 'antd';
 
 const ExchangeRate = ({ price, priceChangePercentage }) => (
   <div className="AppHeader__rate-container">
@@ -8,10 +8,8 @@ const ExchangeRate = ({ price, priceChangePercentage }) => (
       <p className="AppHeader__tokenprice-label">MYB TOKEN PRICE</p>
       {price ? <b>{`$${price}`} <span className={priceChangePercentage < 0 && 'AppHeader__tokenprice-label--is-red'}>({priceChangePercentage > 0 ? `+ ${priceChangePercentage}` : priceChangePercentage}%)</span></b>
       :
-      <Loading
+      <Spin
         className="AppHeader__exchange-rate--is-loading"
-        small
-        withOverlay={false}
       />
       }
     </div>

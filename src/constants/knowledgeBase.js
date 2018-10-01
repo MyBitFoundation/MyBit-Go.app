@@ -17,7 +17,7 @@ const sectionAbout = [{
   answer: 'Nothing compares. Other Blockchains may have increased speed or lower fees, but they do so by sacrificing security. Since MyBit Go is a financial technology platform, security is of the utmost concern.',
 }, {
   question: 'What is MYB?',
-  answer: 'MYB stands for MyBit Token. The MyBit Token is used to power dApps built on top of MyBit infrastructure.',
+  answer: 'MYB stands for MyBit Token, which powers dApps running on the MyBit Network.',
 }];
 
 const sectionGettingStarted = [{
