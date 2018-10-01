@@ -54,9 +54,12 @@
       margin: 0 auto;
     }
     &__tokenprice-label {
-        margin: 0;
-        font-size: 14px;
+      margin: 0;
+      font-size: 14px;
 
+      &--is-red{
+        color: red !important;
+      }
     }
     &__rate-container {
         display: inline-block;
