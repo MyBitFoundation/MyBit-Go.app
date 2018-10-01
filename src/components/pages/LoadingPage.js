@@ -14,7 +14,7 @@ const LoadingPage = ({ hasBackButton, path = '/explore', message }) => {
     </Link>
   );
 
-const loadingIcon = <Icon type="loading" style={{ fontSize: 64 }} spin />;
+  const loadingIcon = <Icon type="loading" style={{ fontSize: 64 }} spin />;
 
   return (
     <div className="LoadingPage">
