@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Spin } from 'antd';
 import Button from 'antd/lib/button';
@@ -9,7 +10,7 @@ import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
 const AssetDetailsPage = ({
-  loading, assets, match, ether, user,
+  loading, assets, match, ether, user, history
 }) => {
   if (loading.assets) {
     return (
@@ -51,9 +52,12 @@ const AssetDetailsPage = ({
   };
 
   return (
-    <div>
-
-      <Button>Back</Button>
+    <div style={{paddingTop: '50px'}}>
+      <Button
+        onClick={history.goBack}
+      >
+        Back
+      </Button>
       <AssetDetails
         information={assetInformation}
         currentEthInUsd={ether.price}
@@ -69,6 +73,7 @@ AssetDetailsPage.propTypes = {
   ether: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
-};
+  history: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  };
 
-export default AssetDetailsPage;
+export default withRouter(AssetDetailsPage);
