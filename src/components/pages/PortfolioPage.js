@@ -106,7 +106,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
         <div className="Portfolio__cards">
           <div className="Portfolio__card">
             <img className="Portfolio__card-img" src={PieChart} alt="Pie chart" />
-            <span>Total Portfolio Value:
+            <span>Total Portfolio Value: {' '}
               <b>
                 ${Number(totalPortfolioValue).toLocaleString()}
               </b>
