@@ -11,7 +11,7 @@ const AccountInfo = ({ myBitBalance, ethBalance }) => (
     <div className="AccountInfo__balance">
       <p className="AccountInfo__balance-header">ACCOUNT BALANCE</p>
       {!ethBalance || !myBitBalance ? (
-        <Spin />
+        <Spin className="AccountInfo__loader" />
       ) : (
         <span className="AccountInfo__balance-info">
           <MybitIcon />
