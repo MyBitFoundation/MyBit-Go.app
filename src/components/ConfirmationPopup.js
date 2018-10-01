@@ -28,7 +28,7 @@ class ConfirmationPopup extends React.Component {
     if (value === true && this.state.alertType) {
       this.setState({
         alertType: undefined,
-        alertMessage: undefined
+        alertMessage: undefined,
       });
     }
   }
