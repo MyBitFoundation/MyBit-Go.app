@@ -1,21 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
+import { Spin, Icon } from 'antd';
 
 import '../styles/AccountInfo.css';
 import EthIcon from '../images/eth-icon-small.svg';
 import MybitIcon from '../images/mybit-small.svg';
 
-const AccountInfo = ({ myBitBalance, ethBalance }) => (
+const AccountInfo = ({ myBitBalance, ethBalance }) => {
+  return (
   <div className="AccountInfo">
     <div className="AccountInfo__balance">
       <p className="AccountInfo__balance-header">ACCOUNT BALANCE</p>
       {!ethBalance || !myBitBalance ? (
-        <Loading
-          className="AccountInfo__balance--is-loading"
-          small
-          withOverlay={false}
-        />
+        <Spin />
       ) : (
         <span className="AccountInfo__balance-info">
           <MybitIcon />
@@ -37,6 +35,7 @@ const AccountInfo = ({ myBitBalance, ethBalance }) => (
     </div>
   </div>
 );
+      }
 
 AccountInfo.defaultProps = {
   myBitBalance: '',
