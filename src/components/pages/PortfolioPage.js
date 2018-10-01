@@ -91,8 +91,14 @@ const PortfolioPage = ({ loading, assets, prices }) => {
     ether.price,
   );
 
-  const totalValueEth = (totalPortfolioValue / ether.price).toFixed(4);
-  const totalRevenuePercentage = ((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2);
+  const totalValueEth =
+    parseFloat((totalPortfolioValue / ether.price)
+      .toFixed(4));
+
+  const totalRevenuePercentage =
+    (totalPortfolioValue > 0 && totalPortfolioRevenue > 0)
+      ? ((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2)
+      : 0;
 
   return (
     <div>
@@ -100,13 +106,17 @@ const PortfolioPage = ({ loading, assets, prices }) => {
         <div className="Portfolio__cards">
           <div className="Portfolio__card">
             <img className="Portfolio__card-img" src={PieChart} alt="Pie chart" />
-            <span>Total Portfolio Value: <b>${totalPortfolioValue}</b></span>
+            <span>Total Portfolio Value:
+              <b>
+                ${Number(totalPortfolioValue).toLocaleString()}
+              </b>
+            </span>
             <div className="Portfolio__card-separator" />
             <b>ETH {totalValueEth}</b>
           </div>
           <div className="Portfolio__card">
             <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
-            <span>Total Revenue: <b>${totalPortfolioRevenue}</b></span>
+            <span>Total Revenue: <b>${Number(totalPortfolioRevenue).toLocaleString()}</b></span>
             <div className="Portfolio__card-separator" />
             <b className="Portfolio__card-value--is-green">%{totalRevenuePercentage}</b>
           </div>
@@ -114,6 +124,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
         <Row className="Portfolio__assets">
           {ownedAssets.map((asset, index) => (
             <AssetPortfolio
+              key={asset.assetID}
               name={asset.name}
               backgroundImage={asset.imageSrc}
               unrealizedProfit={portfolioRevenueAssets[index].totalRevenue}

@@ -59,13 +59,13 @@ const AssetPortfolio = ({
             <span
               className={unrealizedProfit && 'AssetPortfolio__details--value-green'}
             >
-              {fundingStage === '1' ? <span>Funding in progress</span> : `$${unrealizedProfit}`}
+              {fundingStage === '1' ? <span>Funding in progress</span> : `$${Number(unrealizedProfit).toLocaleString()}`}
             </span>
           </div>
           <div className="AssetPortfolio__details-section">
             <span>Your ownership:</span>
             <div>
-              <span>${ownershipUsd}</span>
+              <span>${Number(ownershipUsd).toLocaleString()}</span>
               <Divider
                 type="vertical"
               />
