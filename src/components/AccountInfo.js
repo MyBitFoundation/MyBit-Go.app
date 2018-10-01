@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from 'carbon-components-react';
-import { Spin, Icon } from 'antd';
+import { Spin } from 'antd';
 
 import '../styles/AccountInfo.css';
 import EthIcon from '../images/eth-icon-small.svg';
