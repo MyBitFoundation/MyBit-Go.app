@@ -12,8 +12,8 @@ import BlockchainInfoContext from './BlockchainInfoContext';
 class AssetDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.assetFunded = this.props.information.fundingStage === '3' || this.props.information.fundingStage === '4';
     const { goal, raised } = this.props.information;
+    this.assetFunded = raised === goal;
     this.state = {
       currentSelectedAmount: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
       daysToGo: 0,
