@@ -13,7 +13,10 @@ const AssetDetailsPage = ({
 }) => {
   if (loading.assets) {
     return (
-      <div style={{ width: '100%', position: 'relative', top: '50px', left: '45%'}}>
+      <div style={{
+ width: '100%', position: 'relative', top: '50px', left: '45%',
+}}
+      >
         <Spin />
         <p>
           Loading asset information
