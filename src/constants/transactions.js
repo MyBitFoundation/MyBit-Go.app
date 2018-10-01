@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 
 const GetColumns = (sortedInfo, filteredInfo, getStatusImage) => [{
-  title: 'Coin',
+  title: 'Token',
   dataIndex: 'type',
   key: 'type',
   filters: [
