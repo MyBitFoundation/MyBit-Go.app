@@ -6,8 +6,7 @@ import '../styles/AccountInfo.css';
 import EthIcon from '../images/eth-icon-small.svg';
 import MybitIcon from '../images/mybit-small.svg';
 
-const AccountInfo = ({ myBitBalance, ethBalance }) => {
-  return (
+const AccountInfo = ({ myBitBalance, ethBalance }) => (
   <div className="AccountInfo">
     <div className="AccountInfo__balance">
       <p className="AccountInfo__balance-header">ACCOUNT BALANCE</p>
@@ -34,7 +33,6 @@ const AccountInfo = ({ myBitBalance, ethBalance }) => {
     </div>
   </div>
 );
-      }
 
 AccountInfo.defaultProps = {
   myBitBalance: '',
