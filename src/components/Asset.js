@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'carbon-components-react';
+import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 
 import Progress from 'antd/lib/progress';
@@ -66,6 +66,7 @@ const Asset = ({
           href={`/explore/${category}/${id}`}
         >
           <Button
+            type="primary"
             onClick={
               clickHandler ||
               (() => debug(`Clicked to contribute, asset id: ${id}`))
