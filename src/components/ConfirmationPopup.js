@@ -18,7 +18,6 @@ class ConfirmationPopup extends React.Component {
       isLoading: false,
       transactionStatus: '',
       acceptedTos: false,
-      displayWarning: false,
       alertType: '',
       alertMessage: '',
     };
@@ -26,8 +25,11 @@ class ConfirmationPopup extends React.Component {
 
   setAcceptedTos(value) {
     this.setState({ acceptedTos: value });
-    if (value === true && this.state.displayWarning) {
-      this.setState({ displayWarning: false });
+    if (value === true && this.state.alertType) {
+      this.setState({
+        alertType: undefined,
+        alertMessage: undefined
+      });
     }
   }
 
@@ -95,7 +97,7 @@ class ConfirmationPopup extends React.Component {
       >
         <div>
           <p className="ConfirmationPopup__description">
-            Your Contribution:{' '}
+            Your contribution:{' '}
             <span style={{ fontWeight: '400' }} className="ConfirmationPopup__description-amount">
               ${this.props.amountUsd.toLocaleString()}
               <span style={{ marginLeft: '10px', fontWeight: '500' }}>
