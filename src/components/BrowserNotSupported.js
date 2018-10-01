@@ -4,7 +4,7 @@ import '../styles/BrowserNotSupported.css';
 import MetamaskLogo from '../images/metamask.svg';
 
 const BrowserNotSupported = () => (
-  <Modal className="BrowserNotSupported" visible={true} closable={null} footer={null}>
+  <Modal className="BrowserNotSupported" visible closable={null} footer={null}>
     <p className="BrowserNotSupported__title">
       Download Metamask <br /> to get started.
     </p>

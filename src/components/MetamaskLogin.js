@@ -32,7 +32,6 @@ class MetamaskLogin extends React.Component {
   }
 
   render() {
-
     return (
       <Modal className="MetamaskLogin" visible={this.state.isOpen} closable={null} footer={null}>
         <p className="MetamaskLogin__title">

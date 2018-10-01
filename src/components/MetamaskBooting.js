@@ -50,8 +50,7 @@ const MetamaskBooting = ({ isBraveBrowser, extensionUrl }) => {
       <br />
     </Modal>
   );
-}
-
+};
 
 
 MetamaskBooting.propTypes = {
