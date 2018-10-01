@@ -48,7 +48,8 @@ const AssetDetailsPage = ({
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div>
+
       <Button>Back</Button>
       <AssetDetails
         information={assetInformation}
