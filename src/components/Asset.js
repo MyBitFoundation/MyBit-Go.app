@@ -2,14 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'carbon-components-react';
 import { Link } from 'react-router-dom';
-
-import Progress from 'antd/lib/progress';
-import Col from 'antd/lib/col';
-import 'antd/lib/col/style';
-import 'antd/lib/progress/style';
-
 import '../styles/Asset.css';
-import locationIcon from '../images/Location-icon.png';
+import locationIcon from '../images/Location-icon.svg';
 import { debug, isAssetIdEnabled } from '../constants';
 
 const Asset = ({
@@ -26,58 +20,68 @@ const Asset = ({
   pastDate,
 }) => {
   const assetFunded = fundingStage === '3' || fundingStage === '4';
-  const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
-  const goalFormatted = Number(goal).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
+  const barWidth = assetFunded ? '100%' : `${Math.ceil((funded / goal) * 100)}%`;
+  const goalFormatted = Number(goal)
+    .toLocaleString(
+      'en-US',
+      {
+        style: 'currency',
+        currency: 'USD',
+      },
+    );
   return (
-    <Col span={6} className="Asset">
-      <div
-        className="gutter-box Asset__image-holder"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
-        <div className="Asset__image-holder-gradient" />
-        <img
-          alt="Location icon"
-          className="Asset__image-holder-location-icon"
-          src={locationIcon}
-        />
-        <b className="Asset__image-holder-name">{name}</b>
-        <p className="Asset__image-holder-location">
-          {city}, <span>{country}</span>
-        </p>
-      </div>
-      <div className="Asset__details">
-        <p className="Asset__details-funded">
-          Funded:{' '}
-          <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
-        </p>
-        <p className="Asset__details-goal">
-          Goal:
-          <b>{goalFormatted}</b>
-        </p>
-        <div className="Asset__details-progress-bar">
-          <Progress percent={barWidth} />
-        </div>
-
-        <Link
-          to={`/explore/${category}/${id}`}
-          href={`/explore/${category}/${id}`}
+    <div className="Asset">
+      <div className="Asset__container">
+        <div
+          className="Asset__image-holder"
+          style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-          <Button
-            onClick={
-              clickHandler ||
-              (() => debug(`Clicked to contribute, asset id: ${id}`))
-            }
-            className="Asset__details-contribute"
-            disabled={isAssetIdEnabled(id) === undefined}
+          <div className="Asset__image-holder-gradient" />
+          <img
+            alt="Location icon"
+            className="Asset__image-holder-location-icon"
+            src={locationIcon}
+          />
+          <b className="Asset__image-holder-name">{name}</b>
+          <p className="Asset__image-holder-location">
+            {city}, <span>{country}</span>
+          </p>
+        </div>
+        <div className="Asset__details">
+          <p className="Asset__details-funded">
+            Funded: <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
+          </p>
+          <p className="Asset__details-goal">
+            Goal:
+            <b>
+              {goalFormatted}
+            </b>
+          </p>
+          <div className="Asset__details-progress-bar">
+            <div
+              className="Asset__details-progress-bar-fill"
+              style={{ width: barWidth }}
+            />
+          </div>
+
+          <Link
+            to={`/explore/${category}/${id}`}
+            href={`/explore/${category}/${id}`}
           >
-            {assetFunded || pastDate ? 'View Asset' : 'Contribute'}
-          </Button>
-        </Link>
+            <Button
+              onClick={
+                clickHandler ||
+                (() => debug(`Clicked to contribute, asset id: ${id}`))
+              }
+              className="Asset__details-contribute"
+              disabled={isAssetIdEnabled(id) === undefined}
+            >
+              {assetFunded || pastDate ? 'View Asset' : 'Contribute'}
+            </Button>
+          </Link>
+        </div>
       </div>
-    </Col>
+    </div>
   );
 };
 

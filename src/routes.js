@@ -10,27 +10,21 @@ import PortfolioPage from './components/pages/PortfolioPage';
 import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
 import HelpPage from './components/pages/HelpPage';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
-import LandingPage from './components/pages/LandingPage';
-
-const redirectToOnFirstVisit = '/landing';
 
 const routes = [
   {
     path: '/',
     exact: true,
     component: () => <Redirect to="/explore" />,
-  }, {
-    path: '/landing',
-    exact: true,
-    component: () => <LandingPage />,
-  }, {
+  },
+  {
     path: '/explore',
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
         {({ loading, assets }) =>
           (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
+            <Redirect to="/help" />
           ) : (
             <ExplorePage loading={loading} assets={assets} />
           ))
@@ -45,7 +39,7 @@ const routes = [
       <BlockchainInfoContext.Consumer>
         {({ loading, assets }) =>
           (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
+            <Redirect to="/help" />
           ) : (
             <ExploreAssetsPage
               loading={loading}
@@ -66,10 +60,10 @@ const routes = [
  loading, assets, prices, user,
 }) =>
           (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
+            <Redirect to="/help" />
           ) : (
             <AssetDetailsPage
-              ether={prices.ether}
+              prices={prices}
               loading={loading}
               assets={assets}
               match={match}
@@ -87,7 +81,7 @@ const routes = [
       <BlockchainInfoContext.Consumer>
         {({ loading, prices, assets }) =>
           (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
+            <Redirect to="/help" />
           ) : (
             <PortfolioPage loading={loading} prices={prices} assets={assets} />
           ))
@@ -102,7 +96,7 @@ const routes = [
       <BlockchainInfoContext.Consumer>
         {({ loading, fetchTransactionHistory, transactions }) =>
           (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
+            <Redirect to="/help" />
           ) : (
             <TransactionHistoryPage
               loading={loading}
@@ -127,7 +121,7 @@ const routes = [
     path: '*',
     exact: false,
     component: ({ isFirstVisit }) =>
-      (isFirstVisit ? <Redirect to={redirectToOnFirstVisit} /> : <NotFoundPage />),
+      (isFirstVisit ? <Redirect to="/help" /> : <NotFoundPage />),
   },
 ];
 

@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import LogoSvg from '../images/my-bit-go.svg';
+import logo from '../images/mybit-logo-white.svg';
 
 const Logo = ({ className }) => (
-  <div className="AppHeader__Logo-contaner">
-    <LogoSvg className={className} />
-  </div>
+  <img alt="MyBit Logo" className={className} src={logo} />
 );
 
 Logo.propTypes = {

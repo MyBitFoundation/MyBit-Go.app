@@ -5,6 +5,7 @@ import CryptoMining from '../images/categories/Cryptomining.jpeg';
 import Storage from '../images/categories/Storage.jpeg';
 import Energy from '../images/categories/Solar1.jpeg';
 
+
 export const ARTIFICIAL_DELAY_IN_MS = 3000;
 export const USD_MYB_SYMBOL = 'USD/MYB';
 export const noop = () => {};
@@ -29,7 +30,7 @@ export const ETHERSCAN_BALANCE = address =>
 
 export const isAssetIdEnabled = (assetId) => {
   const enabledAssetIds = {
-    // first wave of assets
+    //first wave of assets
     '0x116dc7388854d37e952a811c1fa2e03369809eef84b7a49ce9ce9536b5f2c66b': {
       name: 'Co-Working at Trust Square',
       city: 'Zurich',
@@ -71,7 +72,7 @@ export const isAssetIdEnabled = (assetId) => {
       imgSrc: Energy,
     },
 
-    // second wave of assets
+    //second wave of assets
     '0x22d490637f59e4177d7325da206ffec7c1a9dd5c411b2bf4014d08059fbe2127': {
       name: 'Bitcoin ATM',
       city: 'Zug',
@@ -111,7 +112,7 @@ export const isAssetIdEnabled = (assetId) => {
       description: 'This space is a great fit for a entrepreneurs, start-up teams, and freelancers. It is in an amazing location a few blocks from the lake in Zurich. With access to many major businesses and shops within walking distance it is great not only for working, but also for networking and expanding your professional relationships.',
       details: 'Air conditioning Fiber Internet 24/7 Access Security Reception 98% building occupancy rate (high-demand) Specific Location: Located across from Swiss National Bank Rent Term: Annual contract, paid quarterly',
       imgSrc: CoWorking,
-    },
+    }
   };
 
   return enabledAssetIds[assetId];

@@ -13,7 +13,7 @@ const CirclesBackgroundWrapper = ({ children }) => (
 );
 
 CirclesBackgroundWrapper.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element).isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default CirclesBackgroundWrapper;

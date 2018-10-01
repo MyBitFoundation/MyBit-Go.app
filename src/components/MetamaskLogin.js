@@ -1,6 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
-
+import { Modal, Button } from 'carbon-components-react';
 import '../styles/MetamaskLogin.css';
 import MetamaskLogo from '../images/metamask.svg';
 import checkAccount from '../util/isUserLogged';
@@ -33,12 +32,14 @@ class MetamaskLogin extends React.Component {
 
   render() {
     return (
-      <Modal className="MetamaskLogin" visible={this.state.isOpen} closable={null} footer={null}>
+      <Modal className="MetamaskLogin" open={this.state.isOpen} passiveModal>
         <p className="MetamaskLogin__title">
           To start investing, please <br /> login to Metamask.
         </p>
-        <MetamaskLogo
+        <img
           className="MetamaskLogin__metamaskfox-image"
+          src={MetamaskLogo}
+          alt="Metamask"
         />
         <a
           href="https://www.youtube.com/watch?time_continue=25&v=6Gf_kRE4MJU"

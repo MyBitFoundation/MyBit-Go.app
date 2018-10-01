@@ -1,7 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
-/* eslint-disable camelcase */
-
 import dayjs from 'dayjs';
 import getWeb3Async from '../util/web3';
 import * as API from '../constants/contracts/API';
@@ -29,11 +27,8 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
     try {
       const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
       const jsonResponse = await response.json();
-      const { price, percent_change_24h } = jsonResponse.data.quotes.USD;
-      resolve({
-        price: price.toFixed(4),
-        priceChangePercentage: percent_change_24h,
-      });
+      const { price } = jsonResponse.data.quotes.USD;
+      resolve(Math.round(price * 100) / 100);
     } catch (error) {
       reject(error);
     }
@@ -66,22 +61,22 @@ export const fetchTransactionHistory = async user =>
 
       const ethTransactionHistory = jsonResult.result
         .filter(txResult =>
-          txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
-        .map((txResult, index) => {
+          txResult.to === userAddressLowerCase ||
+            txResult.from === userAddressLowerCase)
+        .map((txResult) => {
           const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
-          let status = 'Confirmed';
+          let status = 'Complete';
           if (txResult.isError === '1') {
-            status = 'Error';
+            status = 'Fail';
           } else if (txResult.confirmations === 0) {
             status = 'Pending';
           }
           return {
+            date: txResult.timeStamp * 1000,
             amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
+            status,
             type: 'ETH',
             txId: txResult.hash,
-            status,
-            date: txResult.timeStamp * 1000,
-            key: `${txResult.hash} ${index}`,
           };
         });
 
@@ -97,26 +92,22 @@ export const fetchTransactionHistory = async user =>
 
       const mybTransactionHistory = await Promise.all(logTransactions
         .filter(txResult =>
-          txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
-        .map(async (txResult, index) => {
+          txResult.returnValues.to === userAddress ||
+              txResult.returnValues.from === userAddress)
+        .map(async (txResult) => {
           const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
           const multiplier =
-            txResult.returnValues.from === userAddress ? -1 : 1;
-
+              txResult.returnValues.from === userAddress ? -1 : 1;
           return {
-            amount: web3.utils.fromWei(txResult.returnValues[2], 'ether') * multiplier,
+            amount: (txResult.returnValues.value / 100000000) * multiplier,
             type: 'MYB',
             txId: txResult.transactionHash,
-            status: 'Confirmed',
+            status: 'Complete',
             date: blockInfo.timestamp * 1000,
-            key: `${txResult.transactionHash} ${index}`,
           };
         }));
 
-      const mixedEthAndMybitTransactions =
-        ethTransactionHistory.concat(mybTransactionHistory);
-
-      resolve(mixedEthAndMybitTransactions);
+      resolve(ethTransactionHistory.concat(mybTransactionHistory));
     } catch (error) {
       reject(error);
     }
@@ -134,11 +125,10 @@ export const loadMetamaskUserDetails = async () =>
       const myBitBalance = await myBitTokenContract.methods
         .balanceOf(accounts[0])
         .call();
-
       const details = {
         userName: accounts[0],
         ethBalance: web3.utils.fromWei(balance, 'ether'),
-        myBitBalance: web3.utils.fromWei(myBitBalance, 'ether'),
+        myBitBalance,
       };
       resolve(details);
     } catch (error) {
@@ -353,14 +343,14 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         return {
           ...asset,
           amountRaisedInUSD: (
-            Number(web3.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
+            Number(web3.utils.fromWei(amountsRaised[index], 'ether')) *
               currentEthInUsd
           ).toFixed(2),
           amountToBeRaisedInUSD: amountsToBeRaised[index],
           fundingDeadline: dueDate,
           ownershipUnits: ownershipUnits[index],
           assetIncome: (
-            Number(web3.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
+            Number(web3.utils.fromWei(assetIncomes[index], 'ether')) *
               currentEthInUsd
           ).toFixed(2),
           assetManager: assetManagers[index],

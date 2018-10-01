@@ -2,11 +2,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Row from 'antd/lib/row';
-import 'antd/lib/row/style';
-import Col from 'antd/lib/col';
-import 'antd/lib/col/style';
-
 import '../../styles/ExplorePage.css';
 import { debug } from '../../constants';
 import { getPrettyCategoryName, getImageForCategory } from '../../util/helpers';
@@ -20,24 +15,22 @@ const getCategories = assets =>
   }));
 
 const renderCategories = (categories, clickHandler) => (
-  <div>
+  <div className="ExplorePage__container">
     {categories.map(category => (
-      <Col xs={24} sm={24} md={12} lg={8} xl={6} className="ExplorePage__container">
-        <Link
-          to={`/explore/${category.path}`}
-          href={`/explore/${category.path}`}
-          key={category.path}
-          className="ExplorePage__category"
+      <Link
+        to={`/explore/${category.path}`}
+        href={`/explore/${category.path}`}
+        key={category.path}
+        className="ExplorePage__category"
+      >
+        <div
+          className="ExplorePage__image-container"
+          onClick={clickHandler || debug(`Going to: ${category.path}`)}
+          style={{ backgroundImage: `url(${category.image})` }}
         >
-          <div
-            className="ExplorePage__image-container"
-            onClick={clickHandler || debug(`Going to: ${category.path}`)}
-            style={{ backgroundImage: `url(${category.image})` }}
-          >
-            <p className="ExplorePage__category-name">{category.name}</p>
-          </div>
-        </Link>
-      </Col>
+          <p className="ExplorePage__category-name">{category.name}</p>
+        </div>
+      </Link>
     ))}
   </div>
 );
@@ -54,12 +47,12 @@ class ExplorePage extends Component {
       return <LoadingPage message="Loading categories" />;
     }
     return (
-      <Row className="ExplorePage">
+      <div className="ExplorePage">
         {renderCategories(
           getCategories(this.props.assets),
           this.props.clickHandler,
         )}
-      </Row>
+      </div>
     );
   }
 }

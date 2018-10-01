@@ -8,6 +8,7 @@ export const assetInfo = {
   investors: 5,
   minInvestment: 950,
   maxInvestment: 9990,
+  expectedReturn: 18,
   details:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi turpis metus, pretium eget venenatis quis, fringilla in mauris. Phasellus sit amet massa tellus. Proin eros augue, lobortis eget ex sit amet, accumsan tristique lorem.',
   description:

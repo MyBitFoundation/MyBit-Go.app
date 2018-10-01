@@ -1,10 +1,10 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
+import { Modal, Button } from 'carbon-components-react';
 import '../styles/BrowserNotSupported.css';
 import MetamaskLogo from '../images/metamask.svg';
 
 const BrowserNotSupported = () => (
-  <Modal className="BrowserNotSupported" visible closable={null} footer={null}>
+  <Modal className="BrowserNotSupported" open passiveModal>
     <p className="BrowserNotSupported__title">
       Download Metamask <br /> to get started.
     </p>

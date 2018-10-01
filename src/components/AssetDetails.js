@@ -248,6 +248,20 @@ class AssetDetails extends React.Component {
               {ownership}%
             </b>
           </p>
+          <p className="AssetDetails__left-contribution">
+            Expected annual return:
+          </p>
+          <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
+            18%
+          </b>
+          <div className="AssetDetails__left-separator" />
+          <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
+            990 USD
+          </b>
+          <div className="AssetDetails__left-separator" />
+          <b className="AssetDetails__left-contribution-value AssetDetails__left-contribution-inactive">
+            1.87 ETH
+          </b>
           <Button
             className="AssetDetails__left-contribute-btn"
             kind="primary"

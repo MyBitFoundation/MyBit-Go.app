@@ -15,7 +15,9 @@ jobs:
 
       - run: yarn test
 
-      - run: DEBUG=babel yarn build
+      - run: yarn build
+
+      - run: yarn build-storybook
 
       - deploy:
           name: Deploy to Now
@@ -26,5 +28,8 @@ jobs:
             echo ${GIT_HASH} > build/version
             cp CONTRIBUTORS build/contributors
             BUILD_URL=$(npx now --name app.mybit.io build -t $NOW_DEVELOPMENT_TOKEN --public)
+            STORYBOOK_URL=$(npx now --name storybook.mybit.io .out -t $NOW_DEVELOPMENT_TOKEN --public)
             npx now alias ${BUILD_URL} ${GIT_HASH}-app-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
             npx now alias ${BUILD_URL} ${VERY_SANITIZED_BRANCH}-app-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
+            npx now alias ${STORYBOOK_URL} ${GIT_HASH}-storybook-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
+            npx now alias ${STORYBOOK_URL} ${VERY_SANITIZED_BRANCH}-storybook-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
