@@ -1,3 +1,5 @@
+import React from 'react';
+
 import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpeg';
 import autonomousvehiclesImage from '../images/categories/autonomousvehicles.png';
 import cryptominingImage from '../images/categories/Cryptomining.jpeg';
@@ -121,7 +123,12 @@ export const getPrettyCategoryName = (category) => {
     case 'realestatestorage':
       return 'Real Estate (Storage)';
     case 'realestatecoworking':
-      return 'Real Estate (Co-Working)';
+      return (
+        <React.Fragment>
+          <span style={{ display: 'block' }}>Real Estate</span>
+          <span style={{ fontSize: '35px' }}>(Co-Working)</span>
+        </React.Fragment>
+      );
     case 'chargingstation':
       return 'Charging Station';
     case 'dronedelivery':

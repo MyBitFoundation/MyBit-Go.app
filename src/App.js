@@ -36,7 +36,7 @@ class App extends Component {
           shouldDisplay={this.props.location.pathname !== '/help'}
         />
         <BlockchainInfoContext.Consumer>
-          {({ user, prices }) => <AppHeader user={user} prices={prices} />}
+          {({ user, prices }) => <AppHeader user={user} prices={prices.mybit} />}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">

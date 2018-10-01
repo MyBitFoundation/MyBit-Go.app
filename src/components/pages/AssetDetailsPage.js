@@ -9,7 +9,7 @@ import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
 const AssetDetailsPage = ({
-  loading, assets, match, prices, user,
+  loading, assets, match, ether, user,
 }) => {
   if (loading.assets) {
     return (
@@ -52,7 +52,7 @@ const AssetDetailsPage = ({
       <Button>Back</Button>
       <AssetDetails
         information={assetInformation}
-        currentEthInUsd={prices.etherPrice}
+        currentEthInUsd={ether.price}
         user={user}
       />
     </div>
@@ -62,7 +62,7 @@ const AssetDetailsPage = ({
 AssetDetailsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  ether: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };

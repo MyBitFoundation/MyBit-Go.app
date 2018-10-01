@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Row from 'antd/lib/col';
+import 'antd/lib/row/style';
 import '../../styles/PortfolioPage.css';
 import LoadingPage from './LoadingPage';
-import TotalPortfolioValue from '../TotalPortfolioValue';
-import TotalPortfolioRevenue from '../TotalPortfolioRevenue';
 import getWeb3Async from '../../util/web3';
 import { isAssetIdEnabled } from '../../constants';
+import PieChart from '../../images/chart-pie.png';
+import LineChart from '../../images/chart-line.png';
+import AssetPortfolio from '../AssetPortfolio';
 
 const web3 = getWeb3Async();
 
@@ -67,38 +70,74 @@ const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
   });
 
 const PortfolioPage = ({ loading, assets, prices }) => {
-  if (loading.transactionHistory || !prices.etherPrice) {
+  if (loading.assets || !prices.ether) {
     return <LoadingPage message="Loading portfolio" />;
   }
-  const { etherPrice } = prices;
+
+  const { ether } = prices;
   const ownedAssets = getOwnedAssets(assets);
   const totalPortfolioValue = getPortfolioValue(
     ownedAssets,
-    etherPrice,
+    ether.price,
   ).toFixed(2);
   const totalPortfolioRevenue = getPortfolioRevenue(
     ownedAssets,
-    etherPrice,
+    ether.price,
   ).toFixed(2);
-  const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, etherPrice);
+
+  const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, ether.price);
   const portfolioRevenueAssets = getPortfolioRevenueAssets(
     ownedAssets,
-    etherPrice,
+    ether.price,
   );
+
+  const totalValueEth =
+    parseFloat((totalPortfolioValue / ether.price)
+      .toFixed(4));
+
+  const totalRevenuePercentage =
+    (totalPortfolioValue > 0 && totalPortfolioRevenue > 0)
+      ? ((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2)
+      : 0;
 
   return (
     <div>
       <div className="Portfolio">
-        <div className="Portfolio__wrapper">
-          <TotalPortfolioValue
-            totalPortfolioValue={String(totalPortfolioValue)}
-            portfolioValueAssets={portfolioValueAssets}
-          />
-          <TotalPortfolioRevenue
-            totalPortfolioRevenue={String(totalPortfolioRevenue)}
-            portfolioRevenueAssets={portfolioRevenueAssets}
-          />
+        <div className="Portfolio__cards">
+          <div className="Portfolio__card">
+            <img className="Portfolio__card-img" src={PieChart} alt="Pie chart" />
+            <span>Total Portfolio Value: {' '}
+              <b>
+                ${Number(totalPortfolioValue).toLocaleString()}
+              </b>
+            </span>
+            <div className="Portfolio__card-separator" />
+            <b>ETH {totalValueEth}</b>
+          </div>
+          <div className="Portfolio__card">
+            <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
+            <span>Total Revenue: <b>${Number(totalPortfolioRevenue).toLocaleString()}</b></span>
+            <div className="Portfolio__card-separator" />
+            <b className="Portfolio__card-value--is-green">%{totalRevenuePercentage}</b>
+          </div>
         </div>
+        <Row className="Portfolio__assets">
+          {ownedAssets.map((asset, index) => (
+            <AssetPortfolio
+              key={asset.assetID}
+              name={asset.name}
+              backgroundImage={asset.imageSrc}
+              unrealizedProfit={portfolioRevenueAssets[index].totalRevenue}
+              ownershipUsd={portfolioValueAssets[index].value}
+              ownershipPercentage={portfolioValueAssets[index].ownership}
+              funding={asset.amountRaisedInUSD}
+              fundingTotal={asset.amountToBeRaisedInUSD}
+              fundingStage={asset.fundingStage}
+              assetID={asset.assetID}
+              category={asset.category}
+            />
+          ))}
+        </Row>
       </div>
     </div>
   );

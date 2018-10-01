@@ -69,7 +69,7 @@ const routes = [
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
             <AssetDetailsPage
-              prices={prices}
+              ether={prices.ether}
               loading={loading}
               assets={assets}
               match={match}

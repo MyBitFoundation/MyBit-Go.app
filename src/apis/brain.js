@@ -31,8 +31,8 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
       const jsonResponse = await response.json();
       const { price, percent_change_24h } = jsonResponse.data.quotes.USD;
       resolve({
-        mybitPrice: price.toFixed(4),
-        mybitPriceChange: percent_change_24h,
+        price: price.toFixed(4),
+        priceChangePercentage: percent_change_24h,
       });
     } catch (error) {
       reject(error);
@@ -67,20 +67,21 @@ export const fetchTransactionHistory = async user =>
       const ethTransactionHistory = jsonResult.result
         .filter(txResult =>
           txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
-        .map((txResult) => {
+        .map((txResult, index) => {
           const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
-          let status = 'Complete';
+          let status = 'Confirmed';
           if (txResult.isError === '1') {
-            status = 'Fail';
+            status = 'Error';
           } else if (txResult.confirmations === 0) {
             status = 'Pending';
           }
           return {
-            date: txResult.timeStamp * 1000,
             amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
-            status,
             type: 'ETH',
             txId: txResult.hash,
+            status,
+            date: txResult.timeStamp * 1000,
+            key: `${txResult.hash} ${index}`,
           };
         });
 
@@ -97,20 +98,25 @@ export const fetchTransactionHistory = async user =>
       const mybTransactionHistory = await Promise.all(logTransactions
         .filter(txResult =>
           txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
-        .map(async (txResult) => {
+        .map(async (txResult, index) => {
           const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
           const multiplier =
             txResult.returnValues.from === userAddress ? -1 : 1;
+
           return {
-            amount: (txResult.returnValues.value / 100000000) * multiplier,
+            amount: web3.utils.fromWei(txResult.returnValues[2], 'ether') * multiplier,
             type: 'MYB',
             txId: txResult.transactionHash,
-            status: 'Complete',
+            status: 'Confirmed',
             date: blockInfo.timestamp * 1000,
+            key: `${txResult.transactionHash} ${index}`,
           };
         }));
 
-      resolve(ethTransactionHistory.concat(mybTransactionHistory));
+      const mixedEthAndMybitTransactions =
+        ethTransactionHistory.concat(mybTransactionHistory);
+
+      resolve(mixedEthAndMybitTransactions);
     } catch (error) {
       reject(error);
     }
@@ -128,10 +134,11 @@ export const loadMetamaskUserDetails = async () =>
       const myBitBalance = await myBitTokenContract.methods
         .balanceOf(accounts[0])
         .call();
+
       const details = {
         userName: accounts[0],
         ethBalance: web3.utils.fromWei(balance, 'ether'),
-        myBitBalance,
+        myBitBalance: web3.utils.fromWei(myBitBalance, 'ether'),
       };
       resolve(details);
     } catch (error) {
@@ -346,14 +353,14 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         return {
           ...asset,
           amountRaisedInUSD: (
-            Number(web3.utils.fromWei(amountsRaised[index], 'ether')) *
+            Number(web3.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
               currentEthInUsd
           ).toFixed(2),
           amountToBeRaisedInUSD: amountsToBeRaised[index],
           fundingDeadline: dueDate,
           ownershipUnits: ownershipUnits[index],
           assetIncome: (
-            Number(web3.utils.fromWei(assetIncomes[index], 'ether')) *
+            Number(web3.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
               currentEthInUsd
           ).toFixed(2),
           assetManager: assetManagers[index],

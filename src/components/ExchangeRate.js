@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
 
-const ExchangeRate = ({ mybitPrice, mybitPriceChange }) => (
+const ExchangeRate = ({ price, priceChangePercentage }) => (
   <div className="AppHeader__rate-container">
     <div className="AppHeader__exchange-rate">
       <p className="AppHeader__tokenprice-label">MYB TOKEN PRICE</p>
-      {mybitPrice ? <b>{`$${mybitPrice}`} <span>({mybitPriceChange > 0 ? `+ ${mybitPriceChange}` : mybitPriceChange}%)</span></b>
+      {price ? <b>{`$${price}`} <span className={priceChangePercentage < 0 && 'AppHeader__tokenprice-label--is-red'}>({priceChangePercentage > 0 ? `+ ${priceChangePercentage}` : priceChangePercentage}%)</span></b>
       :
       <Loading
         className="AppHeader__exchange-rate--is-loading"
@@ -19,13 +19,13 @@ const ExchangeRate = ({ mybitPrice, mybitPriceChange }) => (
 );
 
 ExchangeRate.defaultProps = {
-  mybitPrice: undefined,
-  mybitPriceChange: undefined,
+  price: undefined,
+  priceChangePercentage: undefined,
 };
 
 ExchangeRate.propTypes = {
-  mybitPrice: PropTypes.string,
-  mybitPriceChange: PropTypes.number,
+  price: PropTypes.string,
+  priceChangePercentage: PropTypes.number,
 };
 
 export default ExchangeRate;

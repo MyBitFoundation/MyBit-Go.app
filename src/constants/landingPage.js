@@ -16,14 +16,10 @@ export const TableRows = [{
   traditional: '3+ Days',
 }, {
   name: 'Fees',
-  mybit: <Wrong />,
-  traditional: <Check />,
-}, {
-  name: 'Liquid',
   mybit: '1%',
   traditional: '20%',
 }, {
-  name: 'Solid',
+  name: 'Liquid',
   mybit: <Check />,
   traditional: <Wrong />,
 }];
