@@ -90,11 +90,11 @@ class BlockchainInfo extends React.Component {
   }
 
   async fetchAssets() {
-    if (!this.state.prices.ether) {
+    if (!this.state.prices.etherPrice) {
       setTimeout(this.fetchAssets, 10000);
       return;
     }
-    await Brain.fetchAssets(this.state.user, this.state.prices.ether.price)
+    await Brain.fetchAssets(this.state.user, this.state.prices.etherPrice)
       .then((response) => {
         this.setState({
           assets: response,
@@ -110,14 +110,11 @@ class BlockchainInfo extends React.Component {
   async loadPrices() {
     let error = false;
     await Brain.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP)
-      .then((priceInfo) => {
+      .then((price) => {
         this.setState({
           prices: {
             ...this.state.prices,
-            mybit: {
-              price: priceInfo.price,
-              priceChangePercentage: priceInfo.priceChangePercentage,
-            },
+            mybitPrice: price,
           },
           loading: {
             ...this.state.loading,
@@ -130,14 +127,11 @@ class BlockchainInfo extends React.Component {
         error = true;
       });
     await Brain.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP)
-      .then((priceInfo) => {
+      .then((price) => {
         this.setState({
           prices: {
             ...this.state.prices,
-            ether: {
-              price: priceInfo.price,
-              priceChangePercentage: priceInfo.priceChangePercentage,
-            },
+            etherPrice: price,
           },
           loading: {
             ...this.state.loading,

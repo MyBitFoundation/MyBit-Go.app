@@ -1,5 +1,0 @@
-src/constants/contracts/*.js
-build/*
-src/stories/*
-src/apis/uphold.js
-src/apis/coinbase.js

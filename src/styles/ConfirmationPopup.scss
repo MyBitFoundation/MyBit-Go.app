@@ -4,26 +4,36 @@
   background-color: #ffffff;
   font-family: 'Roboto';
 
-  .ant-modal-title{
-    color: rgba(0, 0, 0, 0.65);
-  }
-
   &__status-text{
     text-align: center;
   }
 
+  &__title{
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 50px;
+    border-bottom: 2px solid #dfe3e6;
+  }
+
+  &__wrapper{
+    padding: 0px 20px;
+    padding-top: 20px;
+    position: relative;
+  }
+
   &__description{
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.65);
-    margin-bottom: 0px;
+    font-size: 18px;
+    color: #5a6872;
+    padding-top: 10px;
   }
 
   &__description-amount{
     position: absolute;
     right: 20px;
     font-size: 15px;
-    font-weight: 500;
-    color: rgba(0, 0, 0, 0.65);
+    font-weight: 700;
+    color: black;
 
     &--is-inactive{
       color: #d9d9d9;
@@ -42,33 +52,47 @@
     }
   }
 
+  &__line{
+    padding-top: 40px;
+    border-bottom: 1px solid #dfe3e6;
+  }
+
   &__description-cost{
+    color: black;
     padding-top: 20px;
     line-height: 1;
   }
 
   &__tos-wrapper{
     display: flex;
-    margin-top: 40px;
+    padding: 0px 40px;
+    padding-top: 13px;
   }
 
   &__tos-text{
     font-size: 14px;
-    margin-left: 10px;
-    display: inline-block;
+    width: 165px;
+    text-align: center;
   }
 
   &__tos-message-error{
     font-size: 14px;
     color: red;
-    margin-left: 25px;
+    text-align: center;
   }
 
-  &__alert-wrapper{
-    position: absolute;
+  &__confirm-btn, &__cancel-btn{
+    display: block;
     width: 100%;
-    left: 0px;
-    bottom: -45px;
+    margin-top: 10px;
+  }
+
+  &__confirm-btn{
+      background-color: #2db84b !important;
+
+      &:focus, &:hover, &:active{
+        background-color: #2db84b  !important;
+      }
   }
 }
 

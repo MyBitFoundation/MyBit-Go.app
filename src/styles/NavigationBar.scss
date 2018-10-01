@@ -1,15 +1,40 @@
 .AppNavigationBar{
-  text-align: center;
+	height: 74px;
+	background-color: #f9f9f9;
+	box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.1);
 
-  a{
+    &__option-img{
+    	height: 25px;
+	    margin-top: 18px;
+    }
+
+    &__option-text{
+    	font-weight: bold;
+    	font-size: 14px;
+    	line-height: 1;
+    	margin-top: 5px;
+    }
+
+	&__option-col{
+		max-width: 120px;
+    text-align: center;
     text-decoration: none;
-  }
+	}
 
-  .ant-menu-item-selected svg g{
-    fill: #1890ff;
-  }
+    &__option{
+    	height: 100%;
+	    width: max-content;
+	    margin: 0 auto;
+	    padding: 0px 4px;
+	    color: #d9d9d9;
+    }
 
-  .ant-menu-item-active svg g{
-    fill: #1890ff;
-  }
+	&__option--is-selected{
+		border-bottom: 3px solid #125ac4;
+	}
+
+	&__option--is-selectable{
+		cursor: pointer;
+		color: #125ac4;
+	}
 }

@@ -9,14 +9,9 @@ import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
 import MetamaskChecker from './components/MetamaskChecker';
-import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 
 class App extends Component {
   isFirstVisit() {
-    // let the explore component handle this
-    if (this.props.location.pathname === '/') {
-      return false;
-    }
     try {
       if (localStorage.getItem('mybitUser') === null) {
         localStorage.setItem('mybitUser', 'true');
@@ -31,12 +26,12 @@ class App extends Component {
   render() {
     const firstVisit = this.isFirstVisit();
     return (
-      <CirclesBackgroundWrapper>
+      <div>
         <MetamaskChecker
           shouldDisplay={this.props.location.pathname !== '/help'}
         />
         <BlockchainInfoContext.Consumer>
-          {({ user, prices }) => <AppHeader user={user} prices={prices.mybit} />}
+          {({ user, prices }) => <AppHeader user={user} prices={prices} />}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">
@@ -51,7 +46,7 @@ class App extends Component {
             ))}
           </Switch>
         </div>
-      </CirclesBackgroundWrapper>
+      </div>
     );
   }
 }

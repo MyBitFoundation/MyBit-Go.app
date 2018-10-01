@@ -1,36 +1,28 @@
+@import "./Constants.scss";
+
 .Address{
-  height: 100%;
-  margin-right: 20px;
-  margin-left: 20px;
+  height: 39px;
 
-  &__loader{
-    display: flex;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    width: max-content;
-    height: 100%;
-  }
-
-  &__text{
-      font-size: 14px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      width: 75px;
-      line-height: 1;
-      margin: 0px 0px;
+    &__loader{
+      display: flex;
       position: relative;
-      margin-left: 15px;
-  }
+      justify-content: center;
+      align-items: center;
+      width: max-content;
+    }
 
-  &__jazz-n-hex {
-    height: 90px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
+    &__text{
+        font-size: 14px;
+        padding-left: 50px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 120px;
+        line-height: 1;
+        margin: 0px 0px;
+        position: relative;
+        top: -25px;
+    }
 }
 
 .AppHeader .paper{
