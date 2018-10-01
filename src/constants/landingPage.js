@@ -25,7 +25,7 @@ export const TableRows = [{
 }];
 
 export const HowDoesItWork = [
-  <p>First make sure you have <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">metamask</a> (on ropsten) and testnet Ether</p>,
+  <p>First make sure you have <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">metamask</a> (on ropsten) and <a href="https://faucet.metamask.io/" target="_blank" rel="noopener noreferrer">testnet Ether</a></p>,
   <p>Once you find an asset, choose amount, and click contribute</p>,
   <p>After confirming the transactions via metamask you now own part of an asset!</p>,
   <p>Once funding is finished, Sit back and watch the revenue come in automatically!</p>,
