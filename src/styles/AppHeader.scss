@@ -2,24 +2,68 @@
 
 .AppHeader {
     height: $headerHeight;
-    background-image: linear-gradient(to right, #0b3f9c, #2e58db);;
+    background-image: linear-gradient(64deg, #001358, #125ac4);
     margin: 0px 0px;
     color: white;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    &__logo-and-info{
+      display: flex;
+      align-items: center;
+      float: left;
+      height: 100%;
+      flex-wrap: wrap;
+    }
+
+    &__Logo-contaner {
+      display: inline-block;
+      padding-right: 65px;
+
+      & svg{
+        height: 100%;
+        width: 100%;
+      }
+    }
 
     &__logo {
-        padding: 0 25px;
-        margin: auto 0;
-        height: 73px;
+      padding-top: 10px;
+      padding-left: 20px;
     }
 
     &__exchange-rate{
-        line-height: $headerHeight;
-        font-size: 14px;
+      font-size: 14px;
+      padding-right: 30px;
+      display: flex;
+      flex-direction: column;
+      margin-top: 25px;
+
+      b{
+        margin-top: 4px;
+
+        span{
+          color: #24f281;
+        }
+      }
     }
 
     &__exchange-rate--is-loading{
-        float: left;
-        top: 27px;
-        position: relative;
+      margin: 0 auto;
+    }
+    &__tokenprice-label {
+      margin: 0;
+      font-size: 14px;
+
+      &--is-red{
+        color: red !important;
+      }
+    }
+    &__rate-container {
+        display: inline-block;
+        height: 100%;
+        display: flex;
     }
 }

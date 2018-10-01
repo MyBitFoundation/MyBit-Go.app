@@ -1,0 +1,214 @@
+@import 'include-media/dist/_include-media.scss';
+
+.LandingPage{
+
+  padding: 0px 50px;
+
+  h1{
+    font-size: 30px;
+    font-weight: bold;
+    color: #4a4a4a;
+  }
+
+  @include media('<tablet') {
+    padding: 0px 0px;
+  }
+
+  &__wrapper{
+    max-width: 1040px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 80px;
+
+    @include media('<450px') {
+      margin-top: 0px;
+      box-shadow: none;
+    }
+
+  }
+
+  &__pageOne{
+    padding-top: 50px;
+    position: relative;
+
+    &-subTitle{
+      font-size: 18px;
+      color: #4a4a4a;
+      margin-bottom: 40px;
+
+      @include media('<tablet') {
+        padding: 0px 10px;
+        width: 340px;
+        margin: 0 auto;
+        margin-bottom: 40px;
+      }
+
+      @include media('<400px') {
+        width: 100%;
+        padding: 0px 0px;
+        margin: none;
+      }
+    }
+
+    & table{
+      margin: 0 auto;
+
+      th{
+        font-weight: 500;
+        font-size: 18px;
+        padding: 5px 35px;
+        text-align: center;
+        border: 1px solid #1890ff;
+
+        @include media('<tablet') {
+          padding: 5px 12px;
+          font-size: 16px;
+        }
+
+      }
+
+      th:nth-child(1){
+        border: none;
+      }
+
+      tr{
+        text-align: center;
+      }
+
+      svg{
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+      }
+
+      td{
+        font-size: 16px;
+        font-weight: 500;
+        color: #4a4a4a;
+        border: 1px solid #1890ff;
+        padding: 4px 15px;
+        position: relative;
+
+        @include media('<450px') {
+          padding: 4px 8px;
+        }
+
+      }
+      td:nth-child(1){
+        font-size: 14px;
+      }
+    }
+
+    &-seeAgain{
+      font-size: 16px;
+      margin-top: 70px;
+      color: rgba(0, 0, 0, 0.65);
+    }
+
+    &-skip-btn{
+      margin-bottom: 40px;
+    }
+
+    &-next-btn{
+      position: absolute;
+      transition: translate 0s, left 0s;
+      left: 100%;
+      transform: translate(-160%,0%);
+
+      @include media('<450px') {
+        position: relative;
+        transform: none;
+        margin: 0 auto;
+        margin-top: -20px;
+        position: relative;
+        display: block;
+        left: 0%;
+      }
+    }
+  }
+
+  &__pageTwo{
+    padding-top: 50px;
+    padding-bottom: 20px;
+
+    &-subTitle{
+      font-size: 18px;
+      color: #4a4a4a;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    &-guide{
+
+      padding: 0px 20px;
+
+      @include media('<450px') {
+        padding: 0px 0px;
+      }
+
+      p{
+        display: inline;
+        font-size: 20px;
+        color: #4a4a4a;
+      }
+
+      span{
+        font-weight: bold;
+        color: #1890ff;
+        margin-right: 5px;
+        font-size: 20px;
+        margin-bottom: 20px;
+        display: block;
+      }
+    }
+
+    &-getStarted{
+      font-size: 25px;
+      color: rgba(0, 0, 0, 0.65);
+      margin-top: 80px;
+    }
+
+    &-buttons{
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+
+
+      @include media('<tablet') {
+        flex-direction: column-reverse;
+        align-items: center;
+      }
+
+
+      a button{
+        width: 144px;
+      }
+
+      & a{
+        margin: 0px 10px;
+
+        @include media('<tablet') {
+          margin-bottom: 10px;
+        }
+      }
+
+      &-is-back{
+        position: absolute;
+        left: 40px;
+        transition: left 0s;
+
+        @include media('<tablet') {
+          width: 144px;
+          position: relative;
+          left: 0px;
+        }
+      }
+    }
+  }
+}

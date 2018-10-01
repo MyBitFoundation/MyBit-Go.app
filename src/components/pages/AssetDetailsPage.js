@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from 'carbon-components-react';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
+
 import AssetDetails from '../AssetDetails';
-import CategoryBackButton from '../CategoryBackButton';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
 const AssetDetailsPage = ({
-  loading, assets, match, prices, user,
+  loading, assets, match, ether, user,
 }) => {
   if (loading.assets) {
     return (
@@ -20,7 +22,7 @@ const AssetDetailsPage = ({
     );
   }
 
-  const { assetId, category } = match.params;
+  const { assetId } = match.params;
   const asset = assets.find(({ assetID }) => assetID === assetId);
 
   if (!asset) {
@@ -47,10 +49,10 @@ const AssetDetailsPage = ({
 
   return (
     <div style={{ position: 'relative' }}>
-      <CategoryBackButton category={category} />
+      <Button>Back</Button>
       <AssetDetails
         information={assetInformation}
-        currentEthInUsd={prices.etherPrice}
+        currentEthInUsd={ether.price}
         user={user}
       />
     </div>
@@ -60,7 +62,7 @@ const AssetDetailsPage = ({
 AssetDetailsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  ether: PropTypes.shape({ params: PropTypes.object }).isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };

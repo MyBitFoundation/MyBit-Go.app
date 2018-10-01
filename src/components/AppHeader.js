@@ -1,15 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import '../styles/AppHeader.css';
 import Logo from './Logo';
 import ExchangeRate from './ExchangeRate';
 import AccountInfo from './AccountInfo';
+import Address from './Address';
 
 const AppHeader = ({ user, prices }) => (
-  <div className="grid AppHeader">
-    <Logo className="AppHeader__logo" />
-    <ExchangeRate {...prices} />
-    <AccountInfo {...user} />
+  <div className="AppHeader">
+    <div className="AppHeader__logo-and-info">
+      <Logo className="AppHeader__logo" />
+      <ExchangeRate {...prices} />
+      <AccountInfo {...user} />
+    </div>
+    <Address {...user} />
   </div>
 );
 

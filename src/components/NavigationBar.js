@@ -1,19 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import Menu from 'antd/lib/menu';
+import Icon from 'antd/lib/icon';
+
+import 'antd/lib/menu/style/index.css';
 import '../styles/NavigationBar.css';
-import NavigationOption from './NavigationOption';
-import { debug } from '../constants';
 
-const exploreIcon = require('../images/search.png');
-const portfolioIcon = require('../images/chart-area.png');
-const transactionsIcon = require('../images/history.png');
-const savedIcon = require('../images/star.png');
-const listAssetIcon = require('../images/plus.png');
-const stakingIcon = require('../images/cubes.png');
-const exchangeIcon = require('../images/exchange-alt.png');
-const knowledgeBaseIcon = require('../images/question.png');
+const exploreIcon = require('../images/search.svg');
+const portfolioIcon = require('../images/chart-area.svg');
+const transactionsIcon = require('../images/history.svg');
+const listAssetIcon = require('../images/plus.svg');
+const exchangeIcon = require('../images/mydax.svg');
+const knowledgeBaseIcon = require('../images/question.svg');
+const watchIcon = require('../images/watchList.svg');
 
-const NavigationBar = ({ clickHandler, currentPath }) => {
+const NavigationBar = ({ currentPath }) => {
   const menuOptions = [
     {
       name: 'Explore',
@@ -21,27 +23,32 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
       selectable: true,
       selected: currentPath.indexOf('/explore') !== -1,
       url: '/',
-    },
-    {
+    }, {
       name: 'Portfolio',
       icon: portfolioIcon,
       selectable: true,
       selected: currentPath === '/portfolio',
       url: '/portfolio',
-    },
-    {
+    }, {
       name: 'Transactions',
       icon: transactionsIcon,
       selectable: true,
       selected: currentPath === '/transaction-history',
       url: '/transaction-history',
-    },
-    { name: 'Saved', icon: savedIcon },
-    { name: 'List Asset', icon: listAssetIcon },
-    { name: 'Staking', icon: stakingIcon },
-    { name: 'Exchange', icon: exchangeIcon },
-    {
-      name: 'Help',
+    }, {
+      name: 'WatchList',
+      icon: watchIcon,
+      disabled: true,
+    }, {
+      name: 'List Asset',
+      icon: listAssetIcon,
+      disabled: true,
+    }, {
+      name: 'MYDAX',
+      icon: exchangeIcon,
+      disabled: true,
+    }, {
+      name: 'Knowledge Base',
       icon: knowledgeBaseIcon,
       selectable: true,
       selected: currentPath === '/help',
@@ -50,29 +57,27 @@ const NavigationBar = ({ clickHandler, currentPath }) => {
   ];
 
   const navBarOptions = menuOptions.map(menuItem => (
-    <NavigationOption
-      url={menuItem.url}
-      key={menuItem.name}
-      name={menuItem.name}
-      icon={menuItem.icon}
-      selectable={menuItem.selectable}
-      selected={menuItem.selected}
-      clickHandler={!clickHandler ? debug(menuItem.name) : clickHandler}
-    />
+    <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected && 'ant-menu-item-selected'}>
+      <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
+        <Icon component={menuItem.icon} />
+        {menuItem.name}
+      </Link>
+    </Menu.Item>
   ));
 
   return (
-    <div className="AppNavigationBar grid-noGutter-center">{navBarOptions}</div>
+    <Menu
+      mode="horizontal"
+      className="AppNavigationBar"
+    >
+      {navBarOptions}
+    </Menu>
   );
 };
 
 NavigationBar.propTypes = {
-  clickHandler: PropTypes.func,
   currentPath: PropTypes.string.isRequired,
 };
 
-NavigationBar.defaultProps = {
-  clickHandler: debug,
-};
 
 export default NavigationBar;

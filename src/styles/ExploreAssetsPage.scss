@@ -4,7 +4,7 @@
 	max-width: 1400px;
  	margin: 0 auto;
  	position: relative;
- 	padding-top: 30px;
+ 	// padding-top: 30px;
 
  	&--is-loading{
  		margin: 0 auto;
@@ -16,10 +16,9 @@
  	}
 
 	&__back-button{
-		margin-bottom: 30px;
-		margin-left: 16.5px;
-		padding-left: 45px;
-		padding-right: 45px;
+		margin: 6px;
+    margin-left: 15px;
+    margin-top: 21px;
 	}
 
 	&__message-no-elements{
