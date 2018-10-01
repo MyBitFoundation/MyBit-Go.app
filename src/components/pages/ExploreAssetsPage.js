@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button } from 'carbon-components-react';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
+import Row from 'antd/lib/row';
+import 'antd/lib/row/style';
+
 import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
+
 
 const ExploreAssetsPage = ({ loading, assets, match }) => {
   const { category } = match.params;
@@ -20,15 +25,13 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
-      <Button kind="secondary" className="ExploreAssetsPage__back-button">
-        Back
-      </Button>
+      <Button className="ExploreAssetsPage__back-button">Back</Button>
     </Link>
   );
 
   const assetsToRender = [
     backButton,
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div>
       {assetsInCategory.map(asset => (
         <Asset
           key={asset.assetID}
@@ -74,7 +77,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
     renderedOutput = assetsToRender;
   }
 
-  return <div className="ExploreAssetsPage">{renderedOutput}</div>;
+  return <Row className="ExploreAssetsPage">{renderedOutput}</Row>;
 };
 
 ExploreAssetsPage.propTypes = {
