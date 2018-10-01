@@ -134,10 +134,11 @@ export const loadMetamaskUserDetails = async () =>
       const myBitBalance = await myBitTokenContract.methods
         .balanceOf(accounts[0])
         .call();
+
       const details = {
         userName: accounts[0],
         ethBalance: web3.utils.fromWei(balance, 'ether'),
-        myBitBalance,
+        myBitBalance: web3.utils.fromWei(myBitBalance, 'ether'),
       };
       resolve(details);
     } catch (error) {
