@@ -25,7 +25,7 @@ const CategoryBackButton = ({ category }) => {
         className="AssetDetailsPage__back-button"
         onClick={debug('Clicked to go back')}
       >
-        Back
+        BACK
       </Button>
     </Link>
   );

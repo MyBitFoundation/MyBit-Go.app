@@ -1,23 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading, Button } from 'carbon-components-react';
+import { Spin, Icon, Button } from 'antd';
+// import MybitIcon from '../../images/mybit-small.svg';
 import { Link } from 'react-router-dom';
 import '../../styles/LoadingPage.css';
 
 const LoadingPage = ({ hasBackButton, path = '/explore', message }) => {
   const backButton = hasBackButton && (
     <Link to={path} href={path}>
-      <Button kind="secondary" className="LoadingPage__back-button">
-        BACK
+      <Button type="secondary" className="LoadingPage__back-button">
+        Back
       </Button>
     </Link>
   );
+
+const loadingIcon = <Icon type="loading" style={{ fontSize: 64 }} spin />;
 
   return (
     <div className="LoadingPage">
       {backButton}
       <div className="LoadingPage__wrapper">
-        <Loading withOverlay={false} />
+        <Spin indicator={loadingIcon} />
         <p className="LoadingPage__message">{message}</p>
       </div>
     </div>
