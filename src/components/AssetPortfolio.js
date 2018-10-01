@@ -69,7 +69,7 @@ const AssetPortfolio = ({
               <Divider
                 type="vertical"
               />
-              <span>${ownershipPercentage}</span>
+              <span>%{ownershipPercentage}</span>
             </div>
           </div>
           <div className="AssetPortfolio__details-section">
