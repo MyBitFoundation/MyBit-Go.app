@@ -1,25 +1,23 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
 import Button from 'antd/lib/button';
 import 'antd/lib/button/style';
 
 import AssetDetails from '../AssetDetails';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
+import LoadingPage from './LoadingPage';
 
 const AssetDetailsPage = ({
-  loading, assets, match, ether, user, history
+  loading, assets, match, ether, user, history,
 }) => {
   if (loading.assets) {
     return (
-      <div className="LoadingPage__asset-information-loader">
-        <Spin />
-        <p>
-          Loading asset information
-        </p>
-      </div>
+      <LoadingPage
+        message="Loading asset information"
+        hasBackButton
+      />
     );
   }
 
@@ -49,7 +47,7 @@ const AssetDetailsPage = ({
   };
 
   return (
-    <div style={{paddingTop: '50px'}}>
+    <div style={{ paddingTop: '50px' }}>
       <Button
         onClick={history.goBack}
       >
@@ -71,6 +69,6 @@ AssetDetailsPage.propTypes = {
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   history: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  };
+};
 
 export default withRouter(AssetDetailsPage);

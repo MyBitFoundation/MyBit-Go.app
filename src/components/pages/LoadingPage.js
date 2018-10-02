@@ -1,27 +1,37 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Spin, Icon } from 'antd';
-// import MybitIcon from '../../images/mybit-small.svg';
+import { Spin } from 'antd';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
 import '../../styles/LoadingPage.css';
 
-const LoadingPage = ({ message }) => {
-  const loadingIcon = <Icon type="loading" style={{ fontSize: 42 }} spin />;
-
-  return (
-    <div className="LoadingPage">
-      <div className="LoadingPage__wrapper">
-        <Spin className="LoadingPage__spin" indicator={loadingIcon} />
-        <p className="LoadingPage__message">{message}</p>
-      </div>
+const LoadingPage = ({ message, hasBackButton, history }) => (
+  <div className="LoadingPage">
+    {hasBackButton && (
+      <Button
+        type="secondary"
+        onClick={history.goBack}
+        className="LoadingPage__back-button"
+      >
+        Back
+      </Button>
+    )}
+    <div className="LoadingPage__wrapper">
+      <Spin size="large" />
+      <p className="LoadingPage__message">{message}</p>
     </div>
-  );
-};
+  </div>
+);
 
 LoadingPage.propTypes = {
   message: PropTypes.string.isRequired,
+  hasBackButton: PropTypes.bool,
+  history: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
 LoadingPage.defaultProps = {
+  hasBackButton: false,
 };
 
-export default LoadingPage;
+export default withRouter(LoadingPage);

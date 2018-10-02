@@ -10,13 +10,12 @@
     font-family: 'Roboto';
     display: flex;
     flex-direction: column;
-    margin-top: 25px;
+    margin-top: 26px;
   }
 
   &__balance-header{
     font-size: 14px;
     margin: 0;
-
   }
 
   &__balance--is-loading{
@@ -49,6 +48,7 @@
 
   &__loader {
     margin-right: 5px;
+    margin-top: 5px;
   }
 
 }
