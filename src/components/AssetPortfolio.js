@@ -73,11 +73,12 @@ const AssetPortfolio = ({
             </div>
           </div>
           <div className="AssetPortfolio__details-section">
-            <span>Funding:
+            <div>
+              <p>Funding:</p>
               <span>
                 ${Number(funding).toLocaleString()}/${Number(fundingTotal).toLocaleString()}
               </span>
-            </span>
+            </div>
             {button}
           </div>
         </div>
