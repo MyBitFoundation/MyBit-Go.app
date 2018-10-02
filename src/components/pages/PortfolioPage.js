@@ -15,7 +15,10 @@ const web3 = getWeb3Async();
 const fromWeiToEth = weiValue => web3.utils.fromWei(weiValue, 'ether');
 
 const getOwnedAssets = assets =>
-  assets.filter(asset => asset.ownershipUnits > 0 && isAssetIdEnabled(asset.assetID));
+  assets
+    .filter(asset => asset.ownershipUnits > 0
+      && isAssetIdEnabled(asset.assetID)
+      && !(asset.pastDate && asset.amountToBeRaisedInUSD !== asset.amountRaisedInUSD));
 
 const getPortfolioValue = (assets, currentEthPrice) =>
   assets.reduce(
