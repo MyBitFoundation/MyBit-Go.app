@@ -350,12 +350,24 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           pastDate = true;
         }
 
-        return {
-          ...asset,
-          amountRaisedInUSD: (
+        const amountToBeRaisedInUSD = amountsToBeRaised[index];
+        const fundingStage = fundingStages[index];
+        let amountRaisedInUSD = 0;
+
+        // this fixes the issue of price fluctuations
+        // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
+        if (fundingStage === '3' || fundingStage === '4') {
+          amountRaisedInUSD = amountToBeRaisedInUSD;
+        } else {
+          amountRaisedInUSD = (
             Number(web3.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
               currentEthInUsd
-          ).toFixed(2),
+          ).toFixed(2);
+        }
+
+        return {
+          ...asset,
+          amountRaisedInUSD,
           amountToBeRaisedInUSD: amountsToBeRaised[index],
           fundingDeadline: dueDate,
           ownershipUnits: ownershipUnits[index],
