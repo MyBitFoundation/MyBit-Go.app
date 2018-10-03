@@ -13,7 +13,7 @@ const AppHeader = ({ user, prices }) => (
     <div className="AppHeader__logo-and-info">
       <Logo className="AppHeader__logo" />
       <ExchangeRate {...prices} />
-      <Bancor />
+      {/* <Bancor /> */}
       <AccountInfo {...user} />
     </div>
     <Address {...user} />

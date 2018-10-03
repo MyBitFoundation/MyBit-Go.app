@@ -57,7 +57,7 @@ class NumericInput extends React.Component {
     const { value, placeHolderText, beforeNumber, label } = this.props;
     const title = value ? (
       <span className="numeric-input-title">
-        {value !== '-' ? `${beforeNumber}${formatNumber(value)}` : '-'}
+        {value !== '-' ? value : '-'}
       </span>
     ) : placeHolderText;
     return (
