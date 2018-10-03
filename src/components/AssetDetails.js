@@ -242,21 +242,28 @@ class AssetDetails extends React.Component {
             Calculate your investment
           </p>
           <NumericInput
-            style={{ width: '40%' }}
+            style={{ width: '28%' }}
             placeHolderText="Amount in ETH"
             value={this.etherValueSelected}
+            label="ETH"
             onChange={number => this.setState({
               currentSelectedAmountUsd: (number * currentEthInUsd).toFixed(2).toString(),
             })}
-            beforeNumber="ETH "
           />
-          <span className="AssetDetails__left-calculate-separator">&times;</span>
+          <span className="AssetDetails__left-calculate-separator">=</span>
           <NumericInput
-            style={{ width: '40%' }}
+            style={{ width: '28%' }}
             placeHolderText="Amount in USD"
             value={this.state.currentSelectedAmountUsd}
             onChange={number => this.setState({ currentSelectedAmountUsd: number.toString() })}
-            beforeNumber="$"
+            label="$"
+          />
+          <span className="AssetDetails__left-calculate-separator">=</span>
+          <NumericInput
+            style={{ width: '28%' }}
+            placeHolderText="Amount %"
+            value={ownership}
+            label="%"
           />
           <Slider
             id="slider"

@@ -54,7 +54,7 @@ class NumericInput extends React.Component {
   }
 
   render() {
-    const { value, placeHolderText, beforeNumber } = this.props;
+    const { value, placeHolderText, beforeNumber, label } = this.props;
     const title = value ? (
       <span className="numeric-input-title">
         {value !== '-' ? `${beforeNumber}${formatNumber(value)}` : '-'}
@@ -73,6 +73,7 @@ class NumericInput extends React.Component {
           onBlur={this.onBlur}
           placeholder={placeHolderText}
           maxLength="25"
+          addonAfter={label}
         />
       </Tooltip>
     );
@@ -82,6 +83,7 @@ class NumericInput extends React.Component {
 NumericInput.propTypes = {
   onBlur: PropTypes.func.isRequired,
   beforeNumber: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   placeHolderText: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
