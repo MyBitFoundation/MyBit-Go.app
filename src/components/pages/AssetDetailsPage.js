@@ -10,7 +10,7 @@ import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 
 const AssetDetailsPage = ({
-  loading, assets, match, ether, user, history
+  loading, assets, match, ether, user, history,
 }) => {
   if (loading.assets) {
     return (
@@ -49,7 +49,7 @@ const AssetDetailsPage = ({
   };
 
   return (
-    <div style={{paddingTop: '50px'}}>
+    <div style={{ paddingTop: '50px' }}>
       <Button
         onClick={history.goBack}
       >
@@ -71,6 +71,6 @@ AssetDetailsPage.propTypes = {
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   history: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  };
+};
 
 export default withRouter(AssetDetailsPage);
