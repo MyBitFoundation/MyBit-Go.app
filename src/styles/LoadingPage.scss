@@ -3,13 +3,8 @@
 
   &__back-button{
     top: 11px;
-    height: 32px;
-    width: 112px;
-    border: solid 2px #125ac4;
-    font-weight: bold;
-    font-family: 'Roboto';
-    color: #125ac4;
     margin-top: 10px;
+    margin-left: 15px;
   }
 
   &__wrapper{
@@ -23,12 +18,9 @@
   &__message{
     text-align: center;
     font-size: 26px;
+    margin-top: 10px;
   }
 
-  &__spin{
-    margin: 0 auto;
-    text-align: center;
-  }
   &__asset-information-loader {
     text-align: center;
     margin-top: 150px;
