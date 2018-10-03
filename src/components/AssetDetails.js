@@ -250,7 +250,7 @@ class AssetDetails extends React.Component {
             })}
             beforeNumber="ETH "
           />
-          <span className="AssetDetails__left-calculate-separator">&times;</span>
+          <span className="AssetDetails__left-calculate-separator">=</span>
           <NumericInput
             style={{ width: '40%' }}
             placeHolderText="Amount in USD"
