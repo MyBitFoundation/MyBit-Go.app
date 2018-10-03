@@ -51,7 +51,10 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
   ];
 
   const loadingElement = loadingAssets && (
-    <LoadingPage message="Loading assets" hasBackButton path="/explore" />
+    <LoadingPage
+      message="Loading assets"
+      hasBackButton
+    />
   );
 
   // const noElements =

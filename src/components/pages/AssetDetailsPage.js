@@ -1,25 +1,23 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
 import Button from 'antd/lib/button';
 import 'antd/lib/button/style';
 
 import AssetDetails from '../AssetDetails';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
+import LoadingPage from './LoadingPage';
 
 const AssetDetailsPage = ({
   loading, assets, match, ether, user, history,
 }) => {
   if (loading.assets) {
     return (
-      <div className="LoadingPage__asset-information-loader">
-        <Spin />
-        <p>
-          Loading asset information
-        </p>
-      </div>
+      <LoadingPage
+        message="Loading asset information"
+        hasBackButton
+      />
     );
   }
 
