@@ -45,7 +45,7 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
-        endingAt: '',
+        endingAt: 'Funding goal has been reached',
       });
       this.clearInterval();
       return;
