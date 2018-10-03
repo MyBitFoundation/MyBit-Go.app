@@ -245,7 +245,7 @@ class AssetDetails extends React.Component {
             style={{ width: '28%' }}
             placeHolderText="Amount in ETH"
             value={this.etherValueSelected}
-            beforeNumber="ETH"
+            label="ETH"
             onChange={number => this.setState({
               currentSelectedAmountUsd: (number * currentEthInUsd).toFixed(2).toString(),
             })}
@@ -256,14 +256,14 @@ class AssetDetails extends React.Component {
             placeHolderText="Amount in USD"
             value={this.state.currentSelectedAmountUsd}
             onChange={number => this.setState({ currentSelectedAmountUsd: number.toString() })}
-            beforeNumber="$"
+            label="$"
           />
           <span className="AssetDetails__left-calculate-separator">=</span>
           <NumericInput
             style={{ width: '28%' }}
             placeHolderText="Amount %"
             value={ownership}
-            beforeNumber="$"
+            label="%"
           />
           <Slider
             id="slider"
