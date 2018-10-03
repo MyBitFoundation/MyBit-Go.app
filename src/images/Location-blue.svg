@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="20px" viewBox="0 0 14 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Location</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0.0001 13.9997 0.0001 13.9997 20 0 20"></polygon>
+    </defs>
+    <g id="Location" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page-1">
+            <path d="M6.9997,0.0001 C3.1347,0.0001 -0.0003,3.1341 -0.0003,7.0001 C-0.0003,12.2501 6.9997,20.0001 6.9997,20.0001 C6.9997,20.0001 13.9997,12.2501 13.9997,7.0001 C13.9997,3.1341 10.8657,0.0001 6.9997,0.0001 M6.9997,9.5001 C5.6187,9.5001 4.4997,8.3811 4.4997,7.0001 C4.4997,5.6191 5.6187,4.5001 6.9997,4.5001 C8.3807,4.5001 9.4997,5.6191 9.4997,7.0001 C9.4997,8.3811 8.3807,9.5001 6.9997,9.5001" id="Fill-1" fill="#1890FF"></path>
+        </g>
+    </g>
+</svg>

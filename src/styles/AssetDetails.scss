@@ -4,41 +4,52 @@
   padding-top: 40px;
 
   &__left{
-    padding-right: 50px;
     padding-left: 60px;
-    padding-top: 140px;
 
     @include media('<desktop') {
-      padding-right: 0px;
+      padding: 0px 0px;
+      margin-top: 40px;
     }
 
     &-contribute-btn{
       width: 100%;
       margin-top: 30px;
       height: 40px;
+      margin-bottom: 20px;
 
       &:focus, &:hover, &:active{
       }
     }
 
+    &-calculate-separator{
+      margin: 0px 10px;
+      color: #1890ff;
+      font-size: 20px;
+      font-weight: 200;
+    }
+
+    &-input-eth{
+      width: 45%;
+      display: inline-block;
+    }
+
     &-name{
       font-size: 34px;
       display: block;
-      color: #383838;
+      color: rgba(0, 0, 0, 0.65);
       padding-bottom: 10px;
     }
 
     &-image-holder-location-icon{
-      height: 20px;
       position: relative;
       top: 3px;
     }
 
     &-image-holder-calendar-icon{
       position: relative;
-    top: 0px;
-    display: inline;
-    margin-right: 11px;
+      top: 6px;
+      display: inline;
+      margin-right: 11px;
     }
 
     &-location{
@@ -50,7 +61,6 @@
 
     &-days-to-go-wrapper{
       display: block;
-      padding-top: 40px;
     }
 
     &-days-to-go{
@@ -58,14 +68,13 @@
       font-size: 20px;
       font-weight: 700;
       display: inline-block;
-      padding-left: 18px;
     }
 
     &-due-date{
       font-size: 14px;
       color: #383838;
       padding-top: 6px;
-      display: inline;
+      display: inline-block;
     }
 
     &-funding-wrapper{
@@ -105,7 +114,7 @@
 
     &-funding-value{
       font-size: 18px;
-      color: black;
+      color: rgba(0, 0, 0, 0.65);
       position: relative;
       top: 6px;
     }
@@ -114,7 +123,6 @@
       font-weight: 700;
       margin-top: 50px;
       font-size: 20px;
-      margin-bottom: 50px;
     }
 
     &-slider-min{
@@ -133,6 +141,7 @@
       padding-top: 20px;
       display: inline-block;
       padding-right: 10px;
+      color: #383838;
     }
 
     &-separator{
@@ -145,7 +154,7 @@
     }
 
     &-contribution-value{
-      color: black;
+      color: rgba(0, 0, 0, 0.65);
       display: inline;
     }
 
@@ -158,6 +167,12 @@
       font-size: 18px;
       padding-top: 0px;
       padding-right: 10px;
+      display: inline-block;
+      color: #383838;
+
+      &-value{
+        color: #125ac4;
+      }
     }
 
     &-contribution-inactive{
@@ -172,89 +187,50 @@
 
     &-image{
       background: linear-gradient(to left, #24F281, #0083FF);
-      
-      min-width: 100%;
-      max-width: 100%;
-      min-height: 500px;
-    }
-
-    &-wrapper{
-      padding: 0px 22px;
+      height: 266px;
+      background-position: bottom;
+      border-radius: 4px;
+      background-size: cover;
     }
 
     &-title-details{
       font-size: 20px;
-      color: #383838;
+      color: rgba(0, 0, 0, 0.65);
       display: block;
       margin-top: 30px;
     }
 
     &-content-details{
       font-size: 14px;
-      color: #383838;
+      color: rgba(0, 0, 0, 0.65);
       margin-top: 20px;
     }
 
     &-address{
-      margin-top: 20px;
       margin-bottom: 40px;
-
-      & p{
-        top: -28px;
-        width: max-content;
-        color: #125ac4;
-        cursor: pointer;
-      }
+      width: max-content;
+      margin-left: 0px;
     }
   }
 
-  .bx--slider__range-label{
-    display: none;
-  }
-
-  .bx--slider{
+  .ant-slider{
     margin: 0px 0px;
+    padding: 0px 0px;
+    margin-top: 30px;
   }
 
-  .bx--slider-container{
-    max-width: 100%;
+  .ant-slider-track{
+    background-color: #1890ff;
   }
 
-  .bx--form-item{
-    margin: 0px 0px;
+  .ant-slider-handle{
+    border: solid 2px #1890ff;
   }
 
-  .bx--slider__track{
-    background-color: rgba(31, 77, 193, 0.1);
+  .ant-slider-handle:focus{
+    box-shadow: none;
   }
 
-  .bx--slider__thumb{
-    background-color: #2db84b;
-
-    &:active{
-      background-color: #2db84b;
-    }
-    &:focus{
-      outline: none;
-      box-shadow: none;
-    }
-  }
-
-  .bx--modal-header{
-    display: none;
-  }
-
-  .bx--modal-content{
-    margin: 0px 0px;
-  }
-
-  .bx--slider__filled-track{
-    background-image: linear-gradient(268deg, #3ecd5d, #2db84b);
-  }
-
-  .bx--slider--disabled .bx--slider__thumb:active{
-    background-color: #2db84b;
-  }
 }
 
 
