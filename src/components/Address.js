@@ -4,8 +4,8 @@ import { Spin } from 'antd';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
 
-const Address = ({ userName }) => (
-  <div className="Address">
+const Address = ({ userName, className }) => (
+  <div className={`Address ${className}`}>
     {!userName ? (
       <div className="Address__loader">
         <Spin />
@@ -22,10 +22,12 @@ const Address = ({ userName }) => (
 
 Address.defaultProps = {
   userName: undefined,
+  className: '',
 };
 
 Address.propTypes = {
   userName: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default Address;
