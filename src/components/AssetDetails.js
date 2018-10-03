@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-state */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Slider, Button } from 'antd';
@@ -5,9 +7,10 @@ import dayjs from 'dayjs';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
 import '../styles/AssetDetails.css';
-import locationIcon from '../images/location.png';
-import calendarIcon from '../images/calendar.png';
+import LocationIcon from '../images/Location-blue.svg';
+import CalendarIcon from '../images/calendar.svg';
 import BlockchainInfoContext from './BlockchainInfoContext';
+import NumericInput from './NumericInput';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -15,7 +18,7 @@ class AssetDetails extends React.Component {
     const { goal, raised } = this.props.information;
     this.assetFunded = raised === goal;
     this.state = {
-      currentSelectedAmount: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
+      currentSelectedAmountUsd: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
@@ -91,7 +94,7 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go`,
         daysToGo: days,
-        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format('dddd, MMMM D')} at ${dayjs(this.props.information.dueDate).format('H:mm:ss')}`,
+        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format('dddd, MMMM D')}`,
       });
       if (!this.setDateInterval) {
         this.setDateInterval = setInterval(() => {
@@ -125,16 +128,23 @@ class AssetDetails extends React.Component {
   }
 
   render() {
+    const { currentSelectedAmountUsd } = this.state;
+    const { currentEthInUsd } = this.props;
+
     const maxInvestment =
       this.assetFunded || this.state.daysToGo < 0
         ? 0
         : (this.props.information.goal - this.props.information.raised).toFixed(2);
+
     const ownership = (
-      (this.state.currentSelectedAmount * 100) /
+      (currentSelectedAmountUsd * 100) /
       this.props.information.goal
     ).toFixed(2);
-    this.etherValueSelected = Number((this.state.currentSelectedAmount / this.props.currentEthInUsd)
-      .toFixed(2));
+
+
+    this.etherValueSelected = Number(currentSelectedAmountUsd / currentEthInUsd).toFixed(2);
+
+
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
 
@@ -154,7 +164,7 @@ class AssetDetails extends React.Component {
           <BlockchainInfoContext.Consumer>
             {({ fundAsset }) => (
               <ConfirmationPopup
-                amountUsd={this.state.currentSelectedAmount}
+                amountUsd={currentSelectedAmountUsd}
                 amountEth={this.etherValueSelected}
                 ownership={ownership}
                 isPopupOpen={() => this.isPopupOpen()}
@@ -170,18 +180,16 @@ class AssetDetails extends React.Component {
           <b className="AssetDetails__left-name">
             {this.props.information.assetName}
           </b>
-          <img
-            alt="Location icon"
+          <LocationIcon
             className="AssetDetails__left-image-holder-location-icon"
-            src={locationIcon}
           />
           <p className="AssetDetails__left-location">
             {this.props.information.city}, {this.props.information.country}
           </p>
-          <img
+          <div
             alt="Asset details background"
             className="AssetDetails__right-image"
-            src={this.props.information.imageSrc}
+            style={{ backgroundImage: `url(${this.props.information.imageSrc})` }}
           />
           <div className="AssetDetails__right-wrapper">
             <b className="AssetDetails__right-title-details">Asset Details</b>
@@ -201,22 +209,16 @@ class AssetDetails extends React.Component {
         </div>
         <div className="AssetDetails__left col_lg-6 col_md-12">
           <div className="AssetDetails__left-days-to-go-wrapper">
-            <img
-              alt="Location icon"
+            <CalendarIcon
               className="AssetDetails__left-image-holder-calendar-icon"
-              src={calendarIcon}
             />
-            <p className="AssetDetails__left-days-to-go">
-              {this.state.timeToGo}
-            </p>
+            <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
           </div>
-          <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
           <div className="AssetDetails__left-funding-wrapper">
             <div className="AssetDetails__left-funds-raised">
               <p className="AssetDetails__left-funding-title">Funds raised</p>
               <b
                 className="AssetDetails__left-funding-value"
-                style={{ color: '#2db84b' }}
               >
                 {this.assetFunded ? goal : this.props.information.raised} USD
               </b>
@@ -239,14 +241,33 @@ class AssetDetails extends React.Component {
           <p className="AssetDetails__left-calculate-title">
             Calculate your investment
           </p>
+          <NumericInput
+            style={{ width: '40%' }}
+            placeHolderText="Amount in ETH"
+            value={this.etherValueSelected}
+            onChange={number => this.setState({
+              currentSelectedAmountUsd: (number * currentEthInUsd).toFixed(2).toString(),
+            })}
+            beforeNumber="ETH "
+          />
+          <span className="AssetDetails__left-calculate-separator">&times;</span>
+          <NumericInput
+            style={{ width: '40%' }}
+            placeHolderText="Amount in USD"
+            value={this.state.currentSelectedAmountUsd}
+            onChange={number => this.setState({ currentSelectedAmountUsd: number.toString() })}
+            beforeNumber="$"
+          />
           <Slider
             id="slider"
-            defaultValue={this.state.currentSelectedAmount}
+            defaultValue={
+              Number(currentSelectedAmountUsd) >= minInvestment
+              ? Number(currentSelectedAmountUsd)
+              : minInvestment
+            }
             min={minInvestment}
             max={maxInvestment}
-            onChange={arg =>
-              this.setState({ currentSelectedAmount: arg.value })
-            }
+            onChange={value => this.setState({ currentSelectedAmountUsd: value.toString() })}
             disabled={this.state.daysToGo < 0 || maxInvestment === 0}
           />
           {/* 100USD minimum as per connor's indication */}
@@ -258,23 +279,27 @@ class AssetDetails extends React.Component {
           </p>
           <p className="AssetDetails__left-contribution">Your contribution:</p>
           <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-            {this.state.currentSelectedAmount} USD
+            {currentSelectedAmountUsd} USD
           </b>
           <div className="AssetDetails__left-separator" />
           <b className="AssetDetails__left-contribution-value">
             {this.etherValueSelected} ETH
           </b>
-          <p className="AssetDetails__left-ownership">
-            Ownership:{' '}
-            <b className="AssetDetails__left-contribution-value">
+          <div>
+            <p className="AssetDetails__left-ownership">Your ownership:</p>
+            <b className="AssetDetails__left-ownership-value">
               {ownership}%
             </b>
-          </p>
+          </div>
           <Button
             className="AssetDetails__left-contribute-btn"
-            kind="primary"
+            type="primary"
             onClick={() => this.handlePopupState(true)}
-            disabled={this.state.daysToGo < 0 || maxInvestment === 0}
+            disabled={
+              this.state.daysToGo < 0
+              || maxInvestment === 0
+              || currentSelectedAmountUsd < minInvestment
+            }
           >
             Contribute
           </Button>
