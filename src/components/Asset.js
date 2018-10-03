@@ -7,7 +7,8 @@ import Progress from 'antd/lib/progress';
 import Col from 'antd/lib/col';
 import 'antd/lib/col/style';
 import 'antd/lib/progress/style';
-
+import Icon from 'antd/lib/icon';
+import 'antd/lib/icon/style';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.png';
 import { debug, isAssetIdEnabled } from '../constants';
@@ -32,51 +33,59 @@ const Asset = ({
     currency: 'USD',
   });
   return (
-    <Col span={6} className="Asset">
-      <div
-        className="gutter-box Asset__image-holder"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
-        <div className="Asset__image-holder-gradient" />
-        <img
-          alt="Location icon"
-          className="Asset__image-holder-location-icon"
-          src={locationIcon}
-        />
-        <b className="Asset__image-holder-name">{name}</b>
-        <p className="Asset__image-holder-location">
-          {city}, <span>{country}</span>
-        </p>
-      </div>
-      <div className="Asset__details">
-        <p className="Asset__details-funded">
-          Funded:{' '}
-          <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
-        </p>
-        <p className="Asset__details-goal">
-          Goal:
-          <b>{goalFormatted}</b>
-        </p>
-        <div className="Asset__details-progress-bar">
-          <Progress percent={barWidth} />
-        </div>
-
-        <Link
-          to={`/explore/${category}/${id}`}
-          href={`/explore/${category}/${id}`}
+    <Col xs={24} sm={24} md={12} lg={8} xl={6} className="Asset">
+      <div className="Asset__wrapper">
+        <div
+          className="gutter-box Asset__image-holder"
+          style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-          <Button
-            type="primary"
-            onClick={
-              clickHandler ||
-              (() => debug(`Clicked to contribute, asset id: ${id}`))
-            }
-            className="Asset__details-contribute"
-            disabled={isAssetIdEnabled(id) === undefined}
+          <div className="Asset__image-holder-gradient" />
+          <img
+            alt="Location icon"
+            className="Asset__image-holder-location-icon"
+            src={locationIcon}
+          />
+          <b className="Asset__image-holder-name">{name}</b>
+          <p className="Asset__image-holder-location">
+            {city}, <span>{country}</span>
+          </p>
+        </div>
+        <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
+          <p className="Asset__details-funded">
+            Funded:{' '}
+            <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
+          </p>
+          <p className="Asset__details-goal">
+            Goal:
+            <b>{goalFormatted}</b>
+          </p>
+          <div className="Asset__details-progress-bar">
+            <Progress percent={barWidth} />
+            {barWidth === 100 && (
+              <Icon
+                type="check-circle"
+                theme="filled"
+              />
+            )}
+          </div>
+
+          <Link
+            to={`/explore/${category}/${id}`}
+            href={`/explore/${category}/${id}`}
           >
-            {assetFunded || pastDate ? 'View Asset' : 'Contribute'}
-          </Button>
-        </Link>
+            <Button
+              type="primary"
+              onClick={
+                clickHandler ||
+                (() => debug(`Clicked to contribute, asset id: ${id}`))
+              }
+              className="Asset__details-contribute"
+              disabled={isAssetIdEnabled(id) === undefined}
+            >
+              {assetFunded || pastDate ? 'View Asset' : 'Contribute'}
+            </Button>
+          </Link>
+        </div>
       </div>
     </Col>
   );
