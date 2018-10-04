@@ -24,7 +24,8 @@ class AssetDetails extends React.Component {
     const { goal, raised } = this.props.information;
     this.assetFunded = raised === goal;
     this.state = {
-      currentSelectedAmountUsd: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
+      // currentSelectedAmountUsd: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
+      currentSelectedAmountUsd: null,
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
@@ -35,7 +36,7 @@ class AssetDetails extends React.Component {
     this.clearInterval = this.clearInterval.bind(this);
     this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
-    this.etherValueSelected = 0;
+    this.etherValueSelected = null;
   }
 
   componentDidMount() {
@@ -147,7 +148,7 @@ class AssetDetails extends React.Component {
       this.props.information.goal
     ).toFixed(2);
 
-
+    // why do we do this?
     this.etherValueSelected = Number(currentSelectedAmountUsd / currentEthInUsd).toFixed(2);
 
 
@@ -214,14 +215,15 @@ class AssetDetails extends React.Component {
             </div>
           </Col>
 
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} className="AssetDetails__left">
-            <div className="AssetDetails__left-days-to-go-wrapper">
-              <CalendarIcon
-                className="AssetDetails__left-image-holder-calendar-icon"
-              />
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} className="AssetDetails__left">
+            {/* <div className="AssetDetails__left-days-to-go-wrapper"> */}
+            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+              <CalendarIcon className="AssetDetails__left-image-holder-calendar-icon"/>
               <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
-            </div>
-            <div className="AssetDetails__left-funding-wrapper">
+            </Col>
+            {/* </div> */}
+            {/* <div className="AssetDetails__left-funding-wrapper"> */}
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} className="AssetDetails__left-funding-wrapper">
               <div className="AssetDetails__left-funds-raised">
                 <p className="AssetDetails__left-funding-title">Funds raised</p>
                 <b
@@ -244,22 +246,24 @@ class AssetDetails extends React.Component {
                   {this.props.information.numberOfInvestors}
                 </b>
               </div>
-            </div>
+              </Col>
+            {/* </div> */}
             <p className="AssetDetails__left-calculate-title">
             Calculate your investment
             </p>
+            
             <NumericInput
-              style={{ width: '28%' }}
+              style={{ width: '27%' }}
               placeHolderText="Amount in ETH"
               value={this.etherValueSelected}
               label="ETH"
-              onChange={number => this.setState({
-              currentSelectedAmountUsd: (number * currentEthInUsd).toFixed(2).toString(),
-            })}
+              onChange={number => 
+                this.setState({currentSelectedAmountUsd: ((number * currentEthInUsd).toFixed(2)).toString(),
+              })}
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
             <NumericInput
-              style={{ width: '28%' }}
+              style={{ width: '27%' }}
               placeHolderText="Amount in USD"
               value={this.state.currentSelectedAmountUsd}
               onChange={number => this.setState({ currentSelectedAmountUsd: number.toString() })}
@@ -267,7 +271,7 @@ class AssetDetails extends React.Component {
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
             <NumericInput
-              style={{ width: '28%' }}
+              style={{ width: '27%' }}
               placeHolderText="Amount %"
               value={ownership}
               label="%"

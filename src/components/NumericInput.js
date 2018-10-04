@@ -22,11 +22,12 @@ class NumericInput extends React.Component {
 
   render() {
     const {
-      placeHolderText, label,
+      value, placeHolderText, label,
     } = this.props;
     return (
       <Input
         {...this.props}
+        value={value}
         onChange={this.onChange}
         placeholder={placeHolderText}
         maxLength="25"
