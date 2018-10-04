@@ -7,10 +7,6 @@ import Input from 'antd/lib/input';
 import 'antd/lib/input/style/css';
 
 class NumericInput extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   onChange(e) {
     const { value } = e.target;
     const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
