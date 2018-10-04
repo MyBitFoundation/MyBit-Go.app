@@ -220,7 +220,7 @@ class AssetDetails extends React.Component {
 
           <Col xs={24} sm={24} md={24} lg={12} xl={12} className="AssetDetails__left">
             {/* <div className="AssetDetails__left-days-to-go-wrapper"> */}
-              {/* TODO: dont panic; its commented because we are testing migration */}
+            {/* TODO: dont panic; its commented because we are testing migration */}
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
               <CalendarIcon className="AssetDetails__left-image-holder-calendar-icon" />
               <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
@@ -277,7 +277,7 @@ class AssetDetails extends React.Component {
               label="$"
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
-            
+
             <NumericInput
               style={{ width: '27%' }}
               placeHolderText="Amount %"
