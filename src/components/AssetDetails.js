@@ -165,6 +165,9 @@ class AssetDetails extends React.Component {
         currency: 'USD',
       });
 
+      // this.etherValueSelected = null;
+      // this.ownership = null;
+
     return (
       <Row>
         {this.state.isPopupOpen && (
@@ -217,13 +220,14 @@ class AssetDetails extends React.Component {
 
           <Col xs={24} sm={24} md={24} lg={12} xl={12} className="AssetDetails__left">
             {/* <div className="AssetDetails__left-days-to-go-wrapper"> */}
+              {/* TODO: dont panic; its commented because we are testing migration */}
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <CalendarIcon className="AssetDetails__left-image-holder-calendar-icon"/>
+              <CalendarIcon className="AssetDetails__left-image-holder-calendar-icon" />
               <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
             </Col>
             {/* </div> */}
             {/* <div className="AssetDetails__left-funding-wrapper"> */}
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} className="AssetDetails__left-funding-wrapper">
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} className="AssetDetails__left-funding-wrapper">
               <div className="AssetDetails__left-funds-raised">
                 <p className="AssetDetails__left-funding-title">Funds raised</p>
                 <b
@@ -246,34 +250,38 @@ class AssetDetails extends React.Component {
                   {this.props.information.numberOfInvestors}
                 </b>
               </div>
-              </Col>
+            </Col>
             {/* </div> */}
             <p className="AssetDetails__left-calculate-title">
             Calculate your investment
             </p>
-            
+
             <NumericInput
               style={{ width: '27%' }}
               placeHolderText="Amount in ETH"
-              value={this.etherValueSelected}
+              value={Number(this.etherValueSelected)}
               label="ETH"
-              onChange={number => 
-                this.setState({currentSelectedAmountUsd: ((number * currentEthInUsd).toFixed(2)).toString(),
-              })}
+              onChange={number =>
+                this.setState({
+                  currentSelectedAmountUsd:
+                  ((number * currentEthInUsd)),
+                })
+              }
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
             <NumericInput
               style={{ width: '27%' }}
               placeHolderText="Amount in USD"
               value={this.state.currentSelectedAmountUsd}
-              onChange={number => this.setState({ currentSelectedAmountUsd: number.toString() })}
+              onChange={number => this.setState({ currentSelectedAmountUsd: number })}
               label="$"
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
+            
             <NumericInput
               style={{ width: '27%' }}
               placeHolderText="Amount %"
-              value={ownership}
+              value={Number(ownership)}
               label="%"
             />
             <Slider

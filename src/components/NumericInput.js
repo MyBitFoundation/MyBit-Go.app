@@ -32,6 +32,7 @@ class NumericInput extends React.Component {
         placeholder={placeHolderText}
         maxLength="25"
         addonAfter={label}
+        type="number"
       />
     );
   }
