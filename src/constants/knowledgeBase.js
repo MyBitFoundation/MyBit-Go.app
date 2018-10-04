@@ -11,7 +11,7 @@ const sectionAbout = [{
   answer: 'Lower fees, no single point of failure risk, no counterparty risk, and real time revenue distributions.',
 }, {
   question: 'Why does it need smart contracts/Blockchain?',
-  answer: 'Smart contracts are ideal for scenarios where two (or more) people who do not know each other need to conduct a transaction bc it automatically establishes trust. Also to guarantee terms are followed such as pay x person x percent of revenue. Finally it automatically records ownership in a ledger without single point of failure risk.',
+  answer: 'Smart contracts are ideal for scenarios where two (or more) people who do not know each other need to conduct a transaction because it automatically establishes trust. Additionally, smart contracts ensure that terms are followed as defined in the contract. Lastly, it automatically records ownership in a ledger without single point of failure risk.',
 }, {
   question: 'Why Ethereum?',
   answer: 'Nothing compares. Other Blockchains may have increased speed or lower fees, but they do so by sacrificing security. Since MyBit Go is a financial technology platform, security is of the utmost concern.',
@@ -31,7 +31,7 @@ const sectionGettingStarted = [{
   answer: 'It’s made for testing Ethereum applications for free so real Ether is not consumed or at risk before an app is published to the mainnet.',
 }, {
   question: 'What is testnet Ether?',
-  answer: 'It functions just like regular Ether but has no value because it is specifically designed to be used for testing purposes on Ethereum’s testnet.',
+  answer: 'It\'s functions just like regular Ether but has no value because it is specifically designed to be used for testing purposes on Ethereum’s testnet.',
 }];
 
 const sectionInvesting = [{
