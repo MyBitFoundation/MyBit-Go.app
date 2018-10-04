@@ -141,15 +141,15 @@ class AssetDetails extends React.Component {
     const maxInvestment =
       this.assetFunded || this.state.daysToGo < 0
         ? 0
-        : (this.props.information.goal - this.props.information.raised).toFixed(2);
+        : (this.props.information.goal - this.props.information.raised).toFixed(5);
 
     const ownership = (
       (currentSelectedAmountUsd * 100) /
       this.props.information.goal
-    ).toFixed(2);
+    ).toFixed(5);
 
     // why do we do this?
-    this.etherValueSelected = Number(currentSelectedAmountUsd / currentEthInUsd).toFixed(2);
+    this.etherValueSelected = Number(currentSelectedAmountUsd / currentEthInUsd).toFixed(5);
 
 
     let minInvestment =
@@ -186,7 +186,7 @@ class AssetDetails extends React.Component {
           </BlockchainInfoContext.Consumer>
         )}
         <div>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} className="AssetDetails__right">
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} className="AssetDetails__right">
             <b className="AssetDetails__left-name">
               {this.props.information.assetName}
             </b>
