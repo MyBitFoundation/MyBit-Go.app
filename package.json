@@ -26,7 +26,7 @@
     "react-dom": "^16.3.2",
     "react-jazzicon": "^0.1.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "2.0.4",
+    "react-scripts": "2.0.0-next.3e165448",
     "web3": "1.0.0-beta.35"
   },
   "scripts": {
@@ -55,6 +55,11 @@
     "cross-env": "^5.1.5",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.8.2",
     "extract-text-webpack-plugin": "^3.0.2",
     "surge": "^0.20.1",
     "ws": "3.3.2"
