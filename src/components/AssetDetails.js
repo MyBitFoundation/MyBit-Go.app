@@ -282,12 +282,13 @@ class AssetDetails extends React.Component {
               style={{ width: '27%' }}
               placeHolderText="Amount %"
               value={Number(ownership)}
+              label="%"
               onChange={number =>
                 this.setState({
- currentSelectedAmountUsd:
-                  (this.props.information.goal / 100) * number,
-})}
-              label="%"
+                  currentSelectedAmountUsd:
+                    (this.props.information.goal / 100) * number,
+                  }
+                )}
             />
             <Slider
               id="slider"
