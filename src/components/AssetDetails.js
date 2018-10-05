@@ -148,9 +148,7 @@ class AssetDetails extends React.Component {
       this.props.information.goal
     ).toFixed(5);
 
-    // why do we do this?
     this.etherValueSelected = Number(currentSelectedAmountUsd / currentEthInUsd).toFixed(5);
-
 
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
@@ -259,12 +257,12 @@ class AssetDetails extends React.Component {
             <NumericInput
               style={{ width: '27%' }}
               placeHolderText="Amount in ETH"
-              value={Number(this.etherValueSelected)}
+              value={this.etherValueSelected}
               label="ETH"
               onChange={number =>
                 this.setState({
                   currentSelectedAmountUsd:
-                  ((number * currentEthInUsd)),
+                    Number((number * currentEthInUsd)),
                 })
               }
             />
@@ -287,8 +285,7 @@ class AssetDetails extends React.Component {
                 this.setState({
                   currentSelectedAmountUsd:
                     (this.props.information.goal / 100) * number,
-                  }
-                )}
+                  })}
             />
             <Slider
               id="slider"
@@ -299,7 +296,7 @@ class AssetDetails extends React.Component {
             }
               min={minInvestment}
               max={maxInvestment}
-              onChange={value => this.setState({ currentSelectedAmountUsd: value.toString() })}
+              onChange={value => this.setState({ currentSelectedAmountUsd: Number(value) })}
               disabled={this.state.daysToGo < 0 || maxInvestment === 0}
             />
             {/* 100USD minimum as per connor's indication */}

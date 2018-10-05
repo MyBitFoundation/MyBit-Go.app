@@ -1,4 +1,9 @@
 .AssetDetailsPage{
+  
+  &--back-btn {
+    margin-top: 21px;
+    margin-bottom: 40px;
+  }
 
   &--is-loading{
     margin: 0 auto;
