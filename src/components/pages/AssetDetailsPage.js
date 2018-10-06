@@ -47,10 +47,8 @@ const AssetDetailsPage = ({
   };
 
   return (
-    <div style={{ paddingTop: '50px' }}>
-      <Button
-        onClick={history.goBack}
-      >
+    <div>
+      <Button onClick={history.goBack} className="AssetDetailsPage--back-btn">
         Back
       </Button>
       <AssetDetails

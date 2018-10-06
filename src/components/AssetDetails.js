@@ -4,6 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Slider, Button } from 'antd';
 import dayjs from 'dayjs';
+
+import Row from 'antd/lib/row';
+import 'antd/lib/row/style';
+import Col from 'antd/lib/col';
+import 'antd/lib/col/style';
+
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
 import '../styles/AssetDetails.css';
@@ -18,7 +24,8 @@ class AssetDetails extends React.Component {
     const { goal, raised } = this.props.information;
     this.assetFunded = raised === goal;
     this.state = {
-      currentSelectedAmountUsd: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
+      // currentSelectedAmountUsd: this.assetFunded ? 0 : Math.floor((goal - raised) / 2),
+      currentSelectedAmountUsd: null,
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
@@ -29,7 +36,7 @@ class AssetDetails extends React.Component {
     this.clearInterval = this.clearInterval.bind(this);
     this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
-    this.etherValueSelected = 0;
+    this.etherValueSelected = null;
   }
 
   componentDidMount() {
@@ -134,16 +141,14 @@ class AssetDetails extends React.Component {
     const maxInvestment =
       this.assetFunded || this.state.daysToGo < 0
         ? 0
-        : (this.props.information.goal - this.props.information.raised).toFixed(2);
+        : (this.props.information.goal - this.props.information.raised).toFixed(5);
 
     const ownership = (
       (currentSelectedAmountUsd * 100) /
       this.props.information.goal
-    ).toFixed(2);
+    ).toFixed(5);
 
-
-    this.etherValueSelected = Number(currentSelectedAmountUsd / currentEthInUsd).toFixed(2);
-
+    this.etherValueSelected = Number(currentSelectedAmountUsd / currentEthInUsd).toFixed(5);
 
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
@@ -158,8 +163,11 @@ class AssetDetails extends React.Component {
         currency: 'USD',
       });
 
+      // this.etherValueSelected = null;
+      // this.ownership = null;
+
     return (
-      <div className="AssetDetails grid">
+      <Row>
         {this.state.isPopupOpen && (
           <BlockchainInfoContext.Consumer>
             {({ fundAsset }) => (
@@ -175,136 +183,158 @@ class AssetDetails extends React.Component {
             )}
           </BlockchainInfoContext.Consumer>
         )}
-
-        <div className="AssetDetails__right col_lg-6 col_md-12">
-          <b className="AssetDetails__left-name">
-            {this.props.information.assetName}
-          </b>
-          <LocationIcon
-            className="AssetDetails__left-image-holder-location-icon"
-          />
-          <p className="AssetDetails__left-location">
-            {this.props.information.city}, {this.props.information.country}
-          </p>
-          <div
-            alt="Asset details background"
-            className="AssetDetails__right-image"
-            style={{ backgroundImage: `url(${this.props.information.imageSrc})` }}
-          />
-          <div className="AssetDetails__right-wrapper">
-            <b className="AssetDetails__right-title-details">Asset Details</b>
-            <p className="AssetDetails__right-content-details">
-              {this.props.information.details}
-            </p>
-            <b className="AssetDetails__right-title-details">Description</b>
-            <p className="AssetDetails__right-content-details">
-              {this.props.information.description}
-            </p>
-            <b className="AssetDetails__right-title-details">Asset manager</b>
-            <Address
-              userName={this.props.information.address}
-              className="AssetDetails__right-address"
+        <div>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} className="AssetDetails__right">
+            <b className="AssetDetails__left-name">
+              {this.props.information.assetName}
+            </b>
+            <LocationIcon
+              className="AssetDetails__left-image-holder-location-icon"
             />
-          </div>
-        </div>
-        <div className="AssetDetails__left col_lg-6 col_md-12">
-          <div className="AssetDetails__left-days-to-go-wrapper">
-            <CalendarIcon
-              className="AssetDetails__left-image-holder-calendar-icon"
+            <p className="AssetDetails__left-location">
+              {this.props.information.city}, {this.props.information.country}
+            </p>
+            <div
+              alt="Asset details background"
+              className="AssetDetails__right-image"
+              style={{ backgroundImage: `url(${this.props.information.imageSrc})` }}
             />
-            <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
-          </div>
-          <div className="AssetDetails__left-funding-wrapper">
-            <div className="AssetDetails__left-funds-raised">
-              <p className="AssetDetails__left-funding-title">Funds raised</p>
-              <b
-                className="AssetDetails__left-funding-value"
-              >
-                {this.assetFunded ? goal : this.props.information.raised} USD
-              </b>
-            </div>
-            <div className="AssetDetails__left-funds-goal">
-              <p className="AssetDetails__left-funding-title">Funding goal</p>
-              <b className="AssetDetails__left-funding-value">
-                {goal}
-              </b>
-            </div>
-            <div className="AssetDetails__left-funds-investors">
-              <p className="AssetDetails__left-funding-title">
-                Number of investors so far
+            <div className="AssetDetails__right-wrapper">
+              <b className="AssetDetails__right-title-details">Asset Details</b>
+              <p className="AssetDetails__right-content-details">
+                {this.props.information.details}
               </p>
-              <b className="AssetDetails__left-funding-value">
-                {this.props.information.numberOfInvestors}
-              </b>
+              <b className="AssetDetails__right-title-details">Description</b>
+              <p className="AssetDetails__right-content-details">
+                {this.props.information.description}
+              </p>
+              <b className="AssetDetails__right-title-details">Asset manager</b>
+              <Address
+                userName={this.props.information.address}
+                className="AssetDetails__right-address"
+              />
             </div>
-          </div>
-          <p className="AssetDetails__left-calculate-title">
+          </Col>
+
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} className="AssetDetails__left">
+            {/* <div className="AssetDetails__left-days-to-go-wrapper"> */}
+            {/* TODO: dont panic; its commented because we are testing migration */}
+            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+              <CalendarIcon className="AssetDetails__left-image-holder-calendar-icon" />
+              <p className="AssetDetails__left-due-date">{this.state.endingAt}</p>
+            </Col>
+            {/* </div> */}
+            {/* <div className="AssetDetails__left-funding-wrapper"> */}
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} className="AssetDetails__left-funding-wrapper">
+              <div className="AssetDetails__left-funds-raised">
+                <p className="AssetDetails__left-funding-title">Funds raised</p>
+                <b
+                  className="AssetDetails__left-funding-value"
+                >
+                  {this.assetFunded ? goal : this.props.information.raised} USD
+                </b>
+              </div>
+              <div className="AssetDetails__left-funds-goal">
+                <p className="AssetDetails__left-funding-title">Funding goal</p>
+                <b className="AssetDetails__left-funding-value">
+                  {goal}
+                </b>
+              </div>
+              <div className="AssetDetails__left-funds-investors">
+                <p className="AssetDetails__left-funding-title">
+                Number of investors so far
+                </p>
+                <b className="AssetDetails__left-funding-value">
+                  {this.props.information.numberOfInvestors}
+                </b>
+              </div>
+            </Col>
+            {/* </div> */}
+            <p className="AssetDetails__left-calculate-title">
             Calculate your investment
-          </p>
-          <NumericInput
-            style={{ width: '40%' }}
-            placeHolderText="Amount in ETH"
-            value={this.etherValueSelected}
-            onChange={number => this.setState({
-              currentSelectedAmountUsd: (number * currentEthInUsd).toFixed(2).toString(),
-            })}
-            beforeNumber="ETH "
-          />
-          <span className="AssetDetails__left-calculate-separator">&times;</span>
-          <NumericInput
-            style={{ width: '40%' }}
-            placeHolderText="Amount in USD"
-            value={this.state.currentSelectedAmountUsd}
-            onChange={number => this.setState({ currentSelectedAmountUsd: number.toString() })}
-            beforeNumber="$"
-          />
-          <Slider
-            id="slider"
-            defaultValue={
+            </p>
+
+            <NumericInput
+              style={{ width: '27%' }}
+              placeHolderText="Amount in ETH"
+              value={this.etherValueSelected}
+              label="ETH"
+              onChange={number =>
+                this.setState({
+                  currentSelectedAmountUsd:
+                    Number((number * currentEthInUsd)),
+                })
+              }
+            />
+            <span className="AssetDetails__left-calculate-separator">=</span>
+            <NumericInput
+              style={{ width: '27%' }}
+              placeHolderText="Amount in USD"
+              value={this.state.currentSelectedAmountUsd}
+              onChange={number => this.setState({ currentSelectedAmountUsd: number })}
+              label="$"
+            />
+            <span className="AssetDetails__left-calculate-separator">=</span>
+
+            <NumericInput
+              style={{ width: '27%' }}
+              placeHolderText="Amount %"
+              value={Number(ownership)}
+              label="%"
+              onChange={number =>
+                this.setState({
+                  currentSelectedAmountUsd:
+                    (this.props.information.goal / 100) * number,
+                  })}
+            />
+            <Slider
+              id="slider"
+              defaultValue={
               Number(currentSelectedAmountUsd) >= minInvestment
               ? Number(currentSelectedAmountUsd)
               : minInvestment
             }
-            min={minInvestment}
-            max={maxInvestment}
-            onChange={value => this.setState({ currentSelectedAmountUsd: value.toString() })}
-            disabled={this.state.daysToGo < 0 || maxInvestment === 0}
-          />
-          {/* 100USD minimum as per connor's indication */}
-          <p className="AssetDetails__left-slider-min">
+              min={minInvestment}
+              max={maxInvestment}
+              onChange={value => this.setState({ currentSelectedAmountUsd: Number(value) })}
+              disabled={this.state.daysToGo < 0 || maxInvestment === 0}
+            />
+            {/* 100USD minimum as per connor's indication */}
+            <p className="AssetDetails__left-slider-min">
             Min. <b>{minInvestment} USD</b>
-          </p>
-          <p className="AssetDetails__left-slider-max">
+            </p>
+            <p className="AssetDetails__left-slider-max">
             Max. <b>{maxInvestment} USD</b>
-          </p>
-          <p className="AssetDetails__left-contribution">Your contribution:</p>
-          <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-            {currentSelectedAmountUsd} USD
-          </b>
-          <div className="AssetDetails__left-separator" />
-          <b className="AssetDetails__left-contribution-value">
-            {this.etherValueSelected} ETH
-          </b>
-          <div>
-            <p className="AssetDetails__left-ownership">Your ownership:</p>
-            <b className="AssetDetails__left-ownership-value">
-              {ownership}%
+            </p>
+            <p className="AssetDetails__left-contribution">Your contribution:</p>
+            <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
+              {currentSelectedAmountUsd} USD
             </b>
-          </div>
-          <Button
-            className="AssetDetails__left-contribute-btn"
-            type="primary"
-            onClick={() => this.handlePopupState(true)}
-            disabled={
+            <div className="AssetDetails__left-separator" />
+            <b className="AssetDetails__left-contribution-value">
+              {this.etherValueSelected} ETH
+            </b>
+            <div>
+              <p className="AssetDetails__left-ownership">Your ownership:</p>
+              <b className="AssetDetails__left-ownership-value">
+                {ownership}%
+              </b>
+            </div>
+            <Button
+              className="AssetDetails__left-contribute-btn"
+              type="primary"
+              onClick={() => this.handlePopupState(true)}
+              disabled={
               this.state.daysToGo < 0
               || maxInvestment === 0
               || currentSelectedAmountUsd < minInvestment
             }
-          >
+            >
             Contribute
-          </Button>
+            </Button>
+          </Col>
         </div>
-      </div>
+      </Row>
     );
   }
 }
