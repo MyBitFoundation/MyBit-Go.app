@@ -350,7 +350,7 @@ class AssetDetails extends React.Component {
             </p>
             <p className="AssetDetails__left-contribution">Your contribution:</p>
             <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-              {selectedAmountUsd ? parseFloat(selectedAmountUsd.toFixed(2)) : 0} USD
+              {selectedAmountUsd ? parseFloat(Number(selectedAmountUsd).toFixed(2)) : 0} USD
             </b>
             <div className="AssetDetails__left-separator" />
             <b className="AssetDetails__left-contribution-value">
