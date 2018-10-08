@@ -4,11 +4,15 @@
   padding-top: 40px;
 
   &__left{
-    padding-left: 60px;
+    padding-left: 40px;
 
-    @include media('<desktop') {
-      // padding: 0px 0px;
-      // margin-top: 40px;
+    @include media('<992px') {
+      padding: 0px 0px;
+      margin-top: 40px;
+    }
+
+    .ant-slider{
+      margin-right: 0px;
     }
 
     &-contribute-btn{
@@ -78,7 +82,7 @@
     }
 
     &-funding-wrapper{
-      margin-top: 30px;
+      margin-top: 20px;
       text-align: center;
       display: flex;
       flex-wrap: nowrap;
@@ -121,7 +125,7 @@
 
     &-calculate-title{
       font-weight: 700;
-      margin-top: 50px;
+      margin-top: 40px;
       font-size: 20px;
     }
 
