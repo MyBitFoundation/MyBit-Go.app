@@ -12,6 +12,8 @@ import HelpPage from './components/pages/HelpPage';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import LandingPage from './components/pages/LandingPage';
 
+import Explore from './components/pages/Explore';
+
 const redirectToOnFirstVisit = '/landing';
 
 const routes = [
@@ -51,6 +53,24 @@ const routes = [
               loading={loading}
               assets={assets}
               match={match}
+            />
+          ))
+        }
+      </BlockchainInfoContext.Consumer>
+    ),
+  },
+  {
+    path: '/explore2',
+    exact: true,
+    component: ({ isFirstVisit }) => (
+      <BlockchainInfoContext.Consumer>
+        {({ loading, assets }) =>
+          (isFirstVisit ? (
+            <Redirect to={redirectToOnFirstVisit} />
+          ) : (
+            <Explore
+              loading={loading}
+              assets={assets}
             />
           ))
         }

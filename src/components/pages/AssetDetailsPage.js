@@ -9,9 +9,7 @@ import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 
-const AssetDetailsPage = ({
-  loading, assets, match, ether, user, history,
-}) => {
+const AssetDetailsPage = ({ loading, assets, match, ether, user, history }) => {
   if (loading.assets) {
     return (
       <LoadingPage
