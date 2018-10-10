@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Button from 'antd/lib/button';
 import 'antd/lib/button/style';
 import Row from 'antd/lib/row';
+import { Switch, Icon } from 'antd';
+import 'antd/lib/switch/style';
 // import 'antd/lib/row/style';
 
 import Asset from '../Asset';
@@ -11,21 +13,28 @@ import Asset from '../Asset';
 import LoadingPage from './LoadingPage';
 
 const Explore = ({ loading, assets }) => {
-    
+
   const categories = ['Crypto', 'Real Estate', 'Energy', 'Machinery', 'Transpotation', 'Other'];
   const loadingElement = (
     <LoadingPage message="Loading assets" hasBackButton />
   );
   const filterButtons = (
-    <Row>
+    <div>
       <Button>Crypto</Button>
       <Button>Real Estate</Button>
       <Button>Energy</Button>
       <Button>Machinery</Button>
-    </Row>
+    </div>
+  );
+  const switchActive = (
+    <div>
+      <label>Funding Active</label>
+      <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />
+    </div>
   );
   const assetsToRender = [
     filterButtons,
+    switchActive,
     <div>
       {assets.map(asset => (
         <Asset
