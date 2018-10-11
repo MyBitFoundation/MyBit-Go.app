@@ -11,6 +11,7 @@ import {
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
   isAssetIdEnabled,
+  serverIp
 } from '../constants';
 import * as isMetamask from '../util/isMetamask';
 import dayjs from 'dayjs';
@@ -53,7 +54,8 @@ class BlockchainInfo extends React.Component {
         // we need the prices and the user details before getting the assets and transactions
         await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-      }else{
+      }
+      else{
         this.loadPrices();
         this.pullAssetsFromServer();
         this.setState({
@@ -68,14 +70,13 @@ class BlockchainInfo extends React.Component {
     }
 
     if(!this.state.userHasMetamask){
-      setInterval(this.pullAssetsFromServer, 5000);
+      setInterval(this.pullAssetsFromServer, 30 * 1000);
     }
     setInterval(this.loadPrices, 30 * 1000);
   }
 
   async pullAssetsFromServer(){
-    console.log(process.env)
-    const {data} = await axios('/api/assets')
+    const {data} = await axios(serverIp)
     if(!data.assetsLoaded){
       return;
     }
@@ -95,8 +96,6 @@ class BlockchainInfo extends React.Component {
         fundingDeadline: dayjs(Number(asset.fundingDeadline) * 1000)
       }
     })
-
-    console.log(assetsToReturn)
 
     this.setState({
       assets: assetsToReturn,

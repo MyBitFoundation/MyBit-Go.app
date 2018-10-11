@@ -7,9 +7,7 @@ import ExchangeRate from './ExchangeRate';
 import AccountInfo from './AccountInfo';
 import Address from './Address';
 
-const AppHeader = ({ user, prices, userHasMetamask }) => {
-  console.log(userHasMetamask)
-  return (
+const AppHeader = ({ user, prices, userHasMetamask }) =>
   <div className="AppHeader">
     <div className="AppHeader__logo-and-info">
       <Logo className="AppHeader__logo" />
@@ -31,7 +29,7 @@ const AppHeader = ({ user, prices, userHasMetamask }) => {
       />
     )}
   </div>
-)};
+
 
 export default AppHeader;
 

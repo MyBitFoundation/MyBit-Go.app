@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 module.exports = {
+  serverIp: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/assets' : '/api/assets',
   debug: process.env.NODE_ENV === 'development' ? console.log : () => {},
   MYBIT_TICKER_COINMARKETCAP: 1902,
   ETHEREUM_TICKER_COINMARKETCAP: 1027,
