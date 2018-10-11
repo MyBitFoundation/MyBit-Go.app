@@ -8,10 +8,8 @@ const BrowserNotSupported = () => (
     <p className="BrowserNotSupported__title">
       Download Metamask <br /> to get started.
     </p>
-    <img
-      className="BrowserNotSupported__metamaskfox-image"
-      src={MetamaskLogo}
-      alt="Metamask"
+    <MetamaskLogo
+      className="MetamaskAudit__metamaskfox-image"
     />
     <p className="BrowserNotSupported__download-text">
       Download the browser extension on

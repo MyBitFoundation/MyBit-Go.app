@@ -1,5 +1,6 @@
-export const ADDRESS = '0xB94BD7c5Ca000Beeff27dB7CEBb9C03749901f19';
-export const ABI = [
+module.exports = {
+  ADDRESS: '0xB94BD7c5Ca000Beeff27dB7CEBb9C03749901f19',
+  ABI: [
   {
     constant: false,
     inputs: [
@@ -263,4 +264,4 @@ export const ABI = [
     name: 'LogDestruction',
     type: 'event',
   },
-];
+]}

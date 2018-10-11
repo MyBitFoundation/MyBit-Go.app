@@ -3,13 +3,17 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import * as Brain from '../apis/brain';
 import {
   debug,
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
+  isAssetIdEnabled,
 } from '../constants';
+import * as isMetamask from '../util/isMetamask';
+import dayjs from 'dayjs';
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -21,6 +25,7 @@ class BlockchainInfo extends React.Component {
     this.fetchAssets = this.fetchAssets.bind(this);
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
+    this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
 
     this.state = {
       loading: {
@@ -38,19 +43,65 @@ class BlockchainInfo extends React.Component {
       fetchMyBit: this.getMYB,
       fundAsset: this.fundAsset,
       user: {},
+      userHasMetamask: isMetamask(),
     };
   }
 
   async UNSAFE_componentWillMount() {
     try {
-      // we need the prices and the user details before getting the assets and transactions
-      await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
-      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+      if(this.state.userHasMetamask){
+        // we need the prices and the user details before getting the assets and transactions
+        await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+      }else{
+        this.loadPrices();
+        this.pullAssetsFromServer();
+        this.setState({
+          loading: {
+            ...this.state.loading,
+            transactionHistory: false,
+          }
+        })
+      }
     } catch (err) {
       debug(err);
     }
 
+    if(!this.state.userHasMetamask){
+      setInterval(this.pullAssetsFromServer, 5000);
+    }
     setInterval(this.loadPrices, 30 * 1000);
+  }
+
+  async pullAssetsFromServer(){
+    console.log(process.env)
+    const {data} = await axios('/api/assets')
+    if(!data.assetsLoaded){
+      return;
+    }
+    const assetsToReturn = data.assets.map(asset => {
+      let details = isAssetIdEnabled(asset.assetID, true);
+      if(!details){
+        details = {};
+        details.city = 'Zurich';
+        details.country = 'Switzerland';
+        details.description = 'Coming soon';
+        details.details = 'Coming soon';
+        details.name = 'Coming soon';
+      }
+      return{
+        ...details,
+        ...asset,
+        fundingDeadline: dayjs(Number(asset.fundingDeadline) * 1000)
+      }
+    })
+
+    console.log(assetsToReturn)
+
+    this.setState({
+      assets: assetsToReturn,
+      loading: { ...this.state.loading, assets: false },
+    });
   }
 
   getMYB() {

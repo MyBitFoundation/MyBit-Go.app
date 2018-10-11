@@ -18,6 +18,7 @@ import LocationIcon from '../images/Location-blue.svg';
 import CalendarIcon from '../images/calendar.svg';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import NumericInput from './NumericInput';
+import MetamaskChecker from './MetamaskChecker';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -172,7 +173,8 @@ class AssetDetails extends React.Component {
       <Row>
         {this.state.isPopupOpen && (
           <BlockchainInfoContext.Consumer>
-            {({ fundAsset }) => (
+            {({ fundAsset, userHasMetamask }) => (
+              userHasMetamask ?
               <ConfirmationPopup
                 amountUsd={selectedAmountUsd}
                 amountEth={this.state.selectedAmountEth}
@@ -181,6 +183,11 @@ class AssetDetails extends React.Component {
                 handlePopupState={val => this.handlePopupState(val)}
                 assetId={this.props.information.assetID}
                 fundAsset={fundAsset}
+              />
+              :
+              <MetamaskChecker
+                shouldDisplay={true}
+                userHasMetamask={false}
               />
             )}
           </BlockchainInfoContext.Consumer>

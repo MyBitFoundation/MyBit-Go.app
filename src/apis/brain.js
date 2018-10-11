@@ -333,7 +333,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
 
         // asset details are hardcoded for now
-        let assetIdDetails = isAssetIdEnabled(asset.assetID);
+        let assetIdDetails = isAssetIdEnabled(asset.assetID, true);
         if (!assetIdDetails) {
           assetIdDetails = {};
           assetIdDetails.city = 'Zurich';
@@ -382,7 +382,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           numberOfInvestors,
           description: assetIdDetails.description,
           details: assetIdDetails.details,
-          imageSrc: assetIdDetails.imgSrc,
+          imageSrc: assetIdDetails.imageSrc,
           fundingStage: fundingStages[index],
           pastDate,
         };
@@ -401,6 +401,8 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         }
         return { ...asset };
       });
+
+      console.log(assetsWithCategories)
 
       resolve(assetsWithCategories);
     } catch (error) {

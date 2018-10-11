@@ -7,7 +7,6 @@ import MetamaskBooting from './MetamaskBooting';
 import MetamaskLogin from './MetamaskLogin';
 import MetamaskNetwork from './MetamaskNetwork';
 import BrowserNotSupported from './BrowserNotSupported';
-import isMetaMask from '../util/isMetamask';
 import checkAccount from '../util/isUserLogged';
 import checkForNetworks from '../util/checkForNetworks';
 
@@ -29,19 +28,23 @@ class MetamaskChecker extends Component {
     this.isBraveBrowser = false;
     this.extensionUrl = '';
 
-    checkForNetworks().then((data) => {
-      if (data === 'ropsten') {
-        this.setState({ isRopstenNetwork: true });
-      }
-    });
+    if(this.props.userHasMetamask){
+      checkForNetworks().then((data) => {
+        if (data === 'ropsten') {
+          this.setState({ isRopstenNetwork: true });
+        }
+      });
+    }
   }
 
   componentDidMount() {
-    checkAccount().then((haveAccounts) => {
-      if (haveAccounts.length === 0) {
-        this.setState({ isMetamaskUserLogged: false });
-      }
-    });
+    if(this.props.userHasMetamask){
+      checkAccount().then((haveAccounts) => {
+        if (haveAccounts.length === 0) {
+          this.setState({ isMetamaskUserLogged: false });
+        }
+      });
+    }
   }
 
   isBraveBrowserBeingUsed() {
@@ -93,7 +96,7 @@ class MetamaskChecker extends Component {
     if (!this.isBrowserSupported()) {
       return <BrowserNotSupported />;
     }
-    if (!isMetaMask()) {
+    if (!this.props.userHasMetamask) {
       return (
         <MetamaskBooting
           extensionUrl={this.extensionUrl}
@@ -116,7 +119,7 @@ class MetamaskChecker extends Component {
     return (
       <div>
         {this.renderMetamaskWarning()}
-        {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null}
+        {this.state.isMetamaskUserLogged === false && this.props.userHasMetamask ? <MetamaskLogin /> : null}
       </div>
     );
   }

@@ -8,8 +8,8 @@ import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
-import MetamaskChecker from './components/MetamaskChecker';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
+import MetamaskChecker from './components/MetamaskChecker';
 
 class App extends Component {
   isFirstVisit() {
@@ -32,11 +32,20 @@ class App extends Component {
     const firstVisit = this.isFirstVisit();
     return (
       <CirclesBackgroundWrapper>
-        <MetamaskChecker
-          shouldDisplay={this.props.location.pathname !== '/help'}
-        />
         <BlockchainInfoContext.Consumer>
-          {({ user, prices }) => <AppHeader user={user} prices={prices.mybit} />}
+          {({ user, prices, userHasMetamask }) =>
+            <React.Fragment>
+              <MetamaskChecker
+                shouldDisplay={userHasMetamask}
+                userHasMetamask={userHasMetamask}
+              />
+              <AppHeader
+                user={user}
+                prices={prices.mybit}
+                userHasMetamask={userHasMetamask}
+              />
+            </React.Fragment>
+          }
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">

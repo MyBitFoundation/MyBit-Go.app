@@ -1,6 +1,7 @@
-export const ADDRESS = '0x011d426358F1982e327648506d3FdAE01d054297';
-export const OLD_ADDRESS = '0xb00bb34e0b0e60e5a7b59908aa4a368f50686635';
-export const ABI = [
+module.exports = {
+  ADDRESS: '0x011d426358F1982e327648506d3FdAE01d054297',
+  OLD_ADDRESS: '0xb00bb34e0b0e60e5a7b59908aa4a368f50686635',
+  ABI: [
   {
     constant: false,
     inputs: [
@@ -292,4 +293,4 @@ export const ABI = [
     name: 'LogDestruction',
     type: 'event',
   },
-];
+]};

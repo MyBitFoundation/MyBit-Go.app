@@ -1,5 +1,6 @@
-export const ADDRESS = '0x139ebd700b089f51a9dd90c0403e5326b1426f3b';
-export const ABI = [
+module.exports = {
+  ADDRESS: '0x139ebd700b089f51a9dd90c0403e5326b1426f3b',
+  ABI: [
   {
     constant: true,
     inputs: [
@@ -731,4 +732,4 @@ export const ABI = [
     stateMutability: 'nonpayable',
     type: 'fallback',
   },
-];
+]}
