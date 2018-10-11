@@ -27,8 +27,8 @@ const Explore = ({ loading, assets }) => {
   // Crypto', 'Real Estate', 'Energy', 'Machinery', 'Transpotation'
   let filter = {
     fundingStage: '4', 
-    category: 'other',
-    category: 'solarenergy'
+    // category: 'other',
+    // category: 'solarenergy'
   };
 
   assets = assets.filter(function(item) {
@@ -42,28 +42,38 @@ const Explore = ({ loading, assets }) => {
   const loadingElement = (
     <LoadingPage message="Loading assets" />
   );
+
+  const FilterButton = styled(Button)`
+    margin-right: 5px;
+  `
+
   const filterButtons = (
     <div>
-      <Button>Crypto</Button>
-      {/* <ToogleButton active=""> </ToggleButton> */}
-      <Button>Real Estate</Button>
-      <Button>Energy</Button>
-      <Button>Machinery</Button>
+      <FilterButton type="primary">Crypto</FilterButton>
+      <FilterButton type="primary">Real Estate</FilterButton>
+      <FilterButton>Energy</FilterButton>
+      <FilterButton>Machinery</FilterButton>
     </div>
   );
   
-  const FilterCategoryContainer = styled.div`
-    margin-left: 20px;
+  const FilterCategoryCol = styled(Col)`
   `
-  const FilterFundingActiveContainer = styled.div`
-    float: right;
+  const FilterFundingCol = styled(Col)`
+    text-align: right;
+  `
+  const FilterRow = styled(Row)`
+    padding-top: 25px;
+    padding-bottom: 10px;
   `
 
+  const onChange = (checked) => {
+    console.log(checked)
+  }
 
   const switchActive = (
     <div>
       <label>Funding Active</label>
-      <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />
+      <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked onChange={onChange}/>
     </div>
   );
   const assetsToRender = [
@@ -100,13 +110,14 @@ const Explore = ({ loading, assets }) => {
 
   return (
     <div>
-      <FilterCategoryContainer>
+    <FilterRow>
+      <FilterCategoryCol xs={24} sm={24} md={12} lg={12} xl={12}>
         {filterButtons} 
-      </FilterCategoryContainer>
-      <FilterFundingActiveContainer>
+      </FilterCategoryCol>
+      <FilterFundingCol xs={24} sm={24} md={12} lg={12} xl={12}>
         {switchActive}
-      </FilterFundingActiveContainer>
-        
+      </FilterFundingCol>
+    </FilterRow> 
         {toRender} 
     </div> 
   )
