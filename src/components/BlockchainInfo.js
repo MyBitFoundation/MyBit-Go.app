@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import dayjs from 'dayjs';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import * as Brain from '../apis/brain';
 import {
@@ -11,10 +12,9 @@ import {
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
   isAssetIdEnabled,
-  serverIp
+  serverIp,
 } from '../constants';
 import * as isMetamask from '../util/isMetamask';
-import dayjs from 'dayjs';
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -50,39 +50,42 @@ class BlockchainInfo extends React.Component {
 
   async UNSAFE_componentWillMount() {
     try {
-      if(this.state.userHasMetamask){
+      if (this.state.userHasMetamask) {
         // we need the prices and the user details before getting the assets and transactions
         await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-      }
-      else{
+      } else {
         this.loadPrices();
         this.pullAssetsFromServer();
         this.setState({
           loading: {
             ...this.state.loading,
             transactionHistory: false,
-          }
-        })
+          },
+        });
       }
     } catch (err) {
       debug(err);
     }
 
-    if(!this.state.userHasMetamask){
+    if (!this.state.userHasMetamask) {
       setInterval(this.pullAssetsFromServer, 30 * 1000);
     }
     setInterval(this.loadPrices, 30 * 1000);
   }
 
-  async pullAssetsFromServer(){
-    const {data} = await axios(serverIp)
-    if(!data.assetsLoaded){
+  getMYB() {
+    return Brain.withdrawFromFaucet(this.state.user);
+  }
+
+  async pullAssetsFromServer() {
+    const { data } = await axios(serverIp);
+    if (!data.assetsLoaded) {
       return;
     }
-    const assetsToReturn = data.assets.map(asset => {
+    const assetsToReturn = data.assets.map((asset) => {
       let details = isAssetIdEnabled(asset.assetID, true);
-      if(!details){
+      if (!details) {
         details = {};
         details.city = 'Zurich';
         details.country = 'Switzerland';
@@ -90,21 +93,17 @@ class BlockchainInfo extends React.Component {
         details.details = 'Coming soon';
         details.name = 'Coming soon';
       }
-      return{
+      return {
         ...details,
         ...asset,
-        fundingDeadline: dayjs(Number(asset.fundingDeadline) * 1000)
-      }
-    })
+        fundingDeadline: dayjs(Number(asset.fundingDeadline) * 1000),
+      };
+    });
 
     this.setState({
       assets: assetsToReturn,
       loading: { ...this.state.loading, assets: false },
     });
-  }
-
-  getMYB() {
-    return Brain.withdrawFromFaucet(this.state.user);
   }
 
   fundAsset(assetId, amount) {

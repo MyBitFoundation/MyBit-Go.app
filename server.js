@@ -3,32 +3,32 @@ const express = require('express');
 const basicAuth = require('express-basic-auth');
 const path = require('path');
 const fetchAssets = require('./src/util/serverHelper');
+const { debug } = require('./src/constants/index');
 
 const app = express();
 
 let assets = [];
 let assetsLoaded = false;
-let currentEthInUsd = 0;
 
 const staticUserAuth = basicAuth({
   users: { admin: process.env.MYBIT_GO_ADMIN_PASSWORD },
   challenge: true,
 });
 
-if(process.env.NODE_ENV === "development"){
-  app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+if (process.env.NODE_ENV === 'development') {
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
   });
 }
 
 app.get('/api/assets', (req, res) => {
-    res.send({
-      assets,
-      assetsLoaded
-    })
-})
+  res.send({
+    assets,
+    assetsLoaded,
+  });
+});
 
 app.use(staticUserAuth);
 
@@ -40,14 +40,13 @@ app.get('/*', staticUserAuth, (req, res) => {
 
 app.listen(8080);
 
-async function pullAssets(){
-  try{
-      assets = await fetchAssets(currentEthInUsd);
-      assetsLoaded = true;
-
-    }catch(err){
-      console.log(err);
-    }
+async function pullAssets() {
+  try {
+    assets = await fetchAssets();
+    assetsLoaded = true;
+  } catch (err) {
+    debug(err);
+  }
 }
 
 pullAssets();

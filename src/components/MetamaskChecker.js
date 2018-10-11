@@ -28,7 +28,7 @@ class MetamaskChecker extends Component {
     this.isBraveBrowser = false;
     this.extensionUrl = '';
 
-    if(this.props.userHasMetamask){
+    if (this.props.userHasMetamask) {
       checkForNetworks().then((data) => {
         if (data === 'ropsten') {
           this.setState({ isRopstenNetwork: true });
@@ -38,7 +38,7 @@ class MetamaskChecker extends Component {
   }
 
   componentDidMount() {
-    if(this.props.userHasMetamask){
+    if (this.props.userHasMetamask) {
       checkAccount().then((haveAccounts) => {
         if (haveAccounts.length === 0) {
           this.setState({ isMetamaskUserLogged: false });
@@ -119,7 +119,10 @@ class MetamaskChecker extends Component {
     return (
       <div>
         {this.renderMetamaskWarning()}
-        {this.state.isMetamaskUserLogged === false && this.props.userHasMetamask ? <MetamaskLogin /> : null}
+        {this.state.isMetamaskUserLogged === false && this.props.userHasMetamask
+          ? <MetamaskLogin />
+          : null
+        }
       </div>
     );
   }
@@ -127,6 +130,7 @@ class MetamaskChecker extends Component {
 
 MetamaskChecker.propTypes = {
   shouldDisplay: PropTypes.bool.isRequired,
+  userHasMetamask: PropTypes.bool.isRequired,
 };
 
 export default MetamaskChecker;

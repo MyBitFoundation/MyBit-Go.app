@@ -402,8 +402,6 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         return { ...asset };
       });
 
-      console.log(assetsWithCategories)
-
       resolve(assetsWithCategories);
     } catch (error) {
       reject(error);

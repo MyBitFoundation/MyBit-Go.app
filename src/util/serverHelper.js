@@ -1,3 +1,6 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-await-in-loop */
+
 const axios = require('axios');
 const dayjs = require('dayjs');
 const AssetCreation = require('../constants/contracts/AssetCreation');
@@ -9,17 +12,13 @@ const Web3 = require('web3');
 const web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(`https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`));
 
-
 let currentEthInUsd = 0;
 
-
-async function fetchPriceFromCoinmarketcap(){
+async function fetchPriceFromCoinmarketcap() {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await axios(
-        `https://api.coinmarketcap.com/v2/ticker/1027/`
-      );
-      const price = response.data.data.quotes.USD.price;
+      const response = await axios('https://api.coinmarketcap.com/v2/ticker/1027/');
+      const { price } = response.data.data.quotes.USD;
       resolve(Math.round(price * 100) / 100);
     } catch (error) {
       reject(error);
@@ -27,7 +26,7 @@ async function fetchPriceFromCoinmarketcap(){
   });
 }
 
-async function getNumberOfInvestors(assetID){
+async function getNumberOfInvestors(assetID) {
   return new Promise(async (resolve, reject) => {
     try {
       const fundingHubContract = new web3.eth.Contract(
@@ -49,7 +48,7 @@ async function getNumberOfInvestors(assetID){
   });
 }
 
-function getCategoryFromAssetTypeHash(web3, assetTypeHash){
+function getCategoryFromAssetTypeHash(assetTypeHash) {
   switch (assetTypeHash) {
     case web3.utils.sha3('bitcoinatm'):
       return 'bitcoinatm';
@@ -76,12 +75,12 @@ function getCategoryFromAssetTypeHash(web3, assetTypeHash){
     default:
       return 'other';
   }
-};
+}
 
-async function fetchAssets(){
-  do {
+async function fetchAssets() {
+  do {
     currentEthInUsd = await fetchPriceFromCoinmarketcap();
-  }while (currentEthInUsd == 0);
+  } while (currentEthInUsd === 0);
 
   // pull asssets from newest contract
   let apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
@@ -194,7 +193,7 @@ async function fetchAssets(){
     if (asset.assetType) {
       return {
         ...asset,
-        category: getCategoryFromAssetTypeHash(web3, asset.assetType),
+        category: getCategoryFromAssetTypeHash(asset.assetType),
       };
     }
     return { ...asset };

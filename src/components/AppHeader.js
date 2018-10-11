@@ -7,20 +7,20 @@ import ExchangeRate from './ExchangeRate';
 import AccountInfo from './AccountInfo';
 import Address from './Address';
 
-const AppHeader = ({ user, prices, userHasMetamask }) =>
+const AppHeader = ({ user, prices, userHasMetamask }) => (
   <div className="AppHeader">
     <div className="AppHeader__logo-and-info">
       <Logo className="AppHeader__logo" />
-        <ExchangeRate
-          {...prices}
+      <ExchangeRate
+        {...prices}
+        userHasMetamask={userHasMetamask}
+      />
+      {userHasMetamask && (
+        <AccountInfo
+          {...user}
           userHasMetamask={userHasMetamask}
         />
-        {userHasMetamask && (
-          <AccountInfo
-            {...user}
-            userHasMetamask={userHasMetamask}
-          />
-        )}
+      )}
     </div>
     {userHasMetamask && (
       <Address
@@ -29,12 +29,12 @@ const AppHeader = ({ user, prices, userHasMetamask }) =>
       />
     )}
   </div>
-
-
-export default AppHeader;
+);
 
 AppHeader.propTypes = {
   prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   userHasMetamask: PropTypes.bool.isRequired,
 };
+
+export default AppHeader;

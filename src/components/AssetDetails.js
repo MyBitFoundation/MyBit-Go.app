@@ -175,20 +175,20 @@ class AssetDetails extends React.Component {
           <BlockchainInfoContext.Consumer>
             {({ fundAsset, userHasMetamask }) => (
               userHasMetamask ?
-              <ConfirmationPopup
-                amountUsd={selectedAmountUsd}
-                amountEth={this.state.selectedAmountEth}
-                ownership={this.state.selectedOwnership}
-                isPopupOpen={() => this.isPopupOpen()}
-                handlePopupState={val => this.handlePopupState(val)}
-                assetId={this.props.information.assetID}
-                fundAsset={fundAsset}
-              />
+                <ConfirmationPopup
+                  amountUsd={selectedAmountUsd}
+                  amountEth={this.state.selectedAmountEth}
+                  ownership={this.state.selectedOwnership}
+                  isPopupOpen={() => this.isPopupOpen()}
+                  handlePopupState={val => this.handlePopupState(val)}
+                  assetId={this.props.information.assetID}
+                  fundAsset={fundAsset}
+                />
               :
-              <MetamaskChecker
-                shouldDisplay={true}
-                userHasMetamask={false}
-              />
+                <MetamaskChecker
+                  shouldDisplay
+                  userHasMetamask={false}
+                />
             )}
           </BlockchainInfoContext.Consumer>
         )}

@@ -33,7 +33,7 @@ class App extends Component {
     return (
       <CirclesBackgroundWrapper>
         <BlockchainInfoContext.Consumer>
-          {({ user, prices, userHasMetamask }) =>
+          {({ user, prices, userHasMetamask }) => (
             <React.Fragment>
               <MetamaskChecker
                 shouldDisplay={userHasMetamask}
@@ -45,7 +45,7 @@ class App extends Component {
                 userHasMetamask={userHasMetamask}
               />
             </React.Fragment>
-          }
+          )}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">
