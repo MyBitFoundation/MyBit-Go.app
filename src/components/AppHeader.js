@@ -9,7 +9,7 @@ import Address from './Address';
 import Notification from './Notification';
 
 const AppHeader = ({
-  user, prices, assertsNotification, setAssertsStatusState,
+  user, prices, assertsNotification, setAssertsStatusState, notificationPlace,
 }) => (
   <div className="AppHeader">
     <div className="AppHeader__logo-and-info">
@@ -18,10 +18,13 @@ const AppHeader = ({
       <AccountInfo {...user} />
     </div>
     <Address {...user} />
-    <Notification
-      setAssertsStatusState={setAssertsStatusState}
-      assertsNotification={assertsNotification}
-    />
+    {notificationPlace === 'notification' && (
+      <Notification
+        setAssertsStatusState={setAssertsStatusState}
+        assertsNotification={assertsNotification}
+      />
+    )}
+
   </div>
 );
 
@@ -32,4 +35,5 @@ AppHeader.propTypes = {
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assertsNotification: PropTypes.shape({ params: PropTypes.object }).isRequired,
   setAssertsStatusState: PropTypes.func.isRequired,
+  notificationPlace: PropTypes.string.isRequired,
 };

@@ -92,6 +92,7 @@ class BlockchainInfo extends React.Component {
   }
 
   changeNotificationPlace(place) {
+    // place can be "confirmation" or "notification"
     this.setState({
       notificationPlace: place,
     });

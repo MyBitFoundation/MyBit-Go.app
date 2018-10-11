@@ -37,13 +37,14 @@ class App extends Component {
         />
         <BlockchainInfoContext.Consumer>
           {({
- user, prices, setAssertsStatusState, assertsNotification,
+ user, prices, setAssertsStatusState, assertsNotification, notificationPlace,
 }) =>
             (<AppHeader
               user={user}
               prices={prices.mybit}
               setAssertsStatusState={setAssertsStatusState}
               assertsNotification={assertsNotification}
+              notificationPlace={notificationPlace}
             />)}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
