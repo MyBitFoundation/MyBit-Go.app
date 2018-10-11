@@ -36,7 +36,15 @@ class App extends Component {
           shouldDisplay={this.props.location.pathname !== '/help'}
         />
         <BlockchainInfoContext.Consumer>
-          {({ user, prices }) => <AppHeader user={user} prices={prices.mybit} />}
+          {({
+ user, prices, setAssertsStatusState, assertsNotification,
+}) =>
+            (<AppHeader
+              user={user}
+              prices={prices.mybit}
+              setAssertsStatusState={setAssertsStatusState}
+              assertsNotification={assertsNotification}
+            />)}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">

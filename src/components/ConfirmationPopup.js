@@ -12,21 +12,17 @@ import '../styles/ConfirmationPopup.css';
 import AlertMessage from './AlertMessage';
 
 class ConfirmationPopup extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      transactionStatus: '',
-      acceptedTos: false,
-      alertType: '',
-      alertMessage: '',
-    };
-  }
-
   setAcceptedTos(value) {
-    this.setState({ acceptedTos: value });
-    if (value === true && this.state.alertType) {
-      this.setState({
+    const { assertsNotification, setAssertsStatusState } = this.props;
+
+    setAssertsStatusState({
+      ...assertsNotification,
+      acceptedTos: value,
+    });
+
+    if (value === true && this.props.assertsNotification.alertType) {
+      setAssertsStatusState({
+        ...assertsNotification,
         alertType: undefined,
         alertMessage: undefined,
       });
@@ -38,62 +34,44 @@ class ConfirmationPopup extends React.Component {
   }
 
   tryAgain() {
-    this.setState({ transactionStatus: '' });
+    this.props.setAssertsStatusState({
+      transactionStatus: '',
+    });
   }
 
-  async handleConfirmClicked() {
-    if (!this.state.acceptedTos) {
-      this.setState({
+  handleConfirmClicked() {
+    const { assertsNotification, setAssertsStatusState } = this.props;
+
+    if (!assertsNotification.acceptedTos) {
+      setAssertsStatusState({
         alertType: 'error',
         alertMessage: 'Please accept our T&C before continuing.',
       });
-      return;
+      return null;
     }
-    this.setState({
-      isLoading: true,
-      transactionStatus: '',
-      alertType: 'info',
-      alertMessage: 'Accept the transaction in metamask and wait for a brief moment.',
-    });
-    try {
-      const result = await this.props.fundAsset(
-        this.props.assetId,
-        this.props.amountEth,
-      );
-      if (result) {
-        this.setState({
-          isLoading: false,
-          transactionStatus: 1,
-          alertType: 'success',
-          alertMessage: 'Sent Successfuly!',
-        });
-      } else {
-        this.setState({
-          isLoading: false,
-          transactionStatus: 0,
-          alertType: 'error',
-          alertMessage: 'Transaction failed. Please try again.',
-        });
-      }
-    } catch (err) {
-      this.setState({ isLoading: false });
-    }
+
+    this.props.fundAsset(
+      this.props.assetId,
+      this.props.amountEth,
+    );
+    return null;
   }
 
   render() {
-    const shouldShowConfirmAndCancel =
-      (!this.state.isLoading && this.state.transactionStatus === '') || (this.state.transactionStatus !== '');
+    const {
+      isLoading, transactionStatus, acceptedTos, alertType, alertMessage,
+    } = this.props.assertsNotification;
 
     return (
       <Modal
         visible={this.props.isPopupOpen()}
         title="Confirm with MetaMask"
         onOk={() => this.handleConfirmClicked()}
-        onCancel={() => shouldShowConfirmAndCancel && this.props.handlePopupState(false)}
-        okText={this.state.transactionStatus === 0 ? 'Try again' : this.state.transactionStatus === 1 ? 'Send again' : 'Confirm'}
+        onCancel={() => this.props.handlePopupState(false)}
+        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Send again' : 'Confirm'}
         cancelText="Back"
-        okButtonProps={{ disabled: !shouldShowConfirmAndCancel }}
-        cancelButtonProps={{ disabled: !shouldShowConfirmAndCancel }}
+        okButtonProps={{ disabled: false }}
+        cancelButtonProps={{ disabled: false }}
       >
         <div>
           <p className="ConfirmationPopup__description">
@@ -120,8 +98,8 @@ class ConfirmationPopup extends React.Component {
           <div className="ConfirmationPopup__tos-wrapper">
             <Checkbox
               onChange={e => this.setAcceptedTos(e.target.checked)}
-              checked={this.state.acceptedTos}
-              disabled={this.state.isLoading}
+              checked={acceptedTos}
+              disabled={isLoading}
             />
             <p className="ConfirmationPopup__tos-text">
               I've read and agree to the {' '}
@@ -136,12 +114,15 @@ class ConfirmationPopup extends React.Component {
             </p>
           </div>
         </div>
-        {this.state.alertType && (
+        {alertType && (
           <div className="ConfirmationPopup__alert-wrapper">
             <AlertMessage
-              type={this.state.alertType}
-              message={this.state.alertMessage}
-              handleAlertClosed={() => this.setState({ alertType: undefined })}
+              type={alertType}
+              message={alertMessage}
+              handleAlertClosed={() => this.props.setAssertsStatusState({
+                ...this.props.assertsNotification,
+                alertType: undefined,
+              })}
               showIcon
               closable
             />
@@ -152,6 +133,13 @@ class ConfirmationPopup extends React.Component {
   }
 }
 
+ConfirmationPopup.defaultProps = {
+  assertsNotification: {
+    alertType: '',
+    alertMessage: '',
+  },
+};
+
 ConfirmationPopup.propTypes = {
   amountUsd: PropTypes.number.isRequired,
   amountEth: PropTypes.number.isRequired,
@@ -160,6 +148,14 @@ ConfirmationPopup.propTypes = {
   fundAsset: PropTypes.func.isRequired,
   assetId: PropTypes.string.isRequired,
   isPopupOpen: PropTypes.func.isRequired,
+  setAssertsStatusState: PropTypes.func.isRequired,
+  assertsNotification: PropTypes.shape({
+    isLoading: PropTypes.bool.isRequired,
+    transactionStatus: PropTypes.string,
+    acceptedTos: PropTypes.bool.isRequired,
+    alertType: PropTypes.string,
+    alertMessage: PropTypes.string,
+  }),
 };
 
 export default ConfirmationPopup;
