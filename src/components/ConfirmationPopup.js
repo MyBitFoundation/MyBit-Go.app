@@ -53,6 +53,7 @@ class ConfirmationPopup extends React.Component {
     this.props.fundAsset(
       this.props.assetId,
       this.props.amountEth,
+
     );
     return null;
   }
