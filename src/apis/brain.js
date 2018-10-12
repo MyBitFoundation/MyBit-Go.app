@@ -18,6 +18,7 @@ import {
   ETHERSCAN_BALANCE,
   getAddressForAsset,
   isAssetIdEnabled,
+  testAssertIds,
 } from '../constants';
 
 const web3 = getWeb3Async();
@@ -391,6 +392,12 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       // filter for v0.1
       assetsPlusMoreDetails = assetsPlusMoreDetails
         .filter(asset => asset.amountToBeRaisedInUSD > 0);
+
+      if (process.env.NODE_ENV !== 'development') {
+        // filter for test assets. Only for development
+        assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
+          !testAssertIds.some(item => item === asset.assetID));
+      }
 
       const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
         if (asset.assetType) {
