@@ -21,6 +21,8 @@ class BlockchainInfo extends React.Component {
     this.fetchAssets = this.fetchAssets.bind(this);
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
+    this.setAssertsStatusState = this.setAssertsStatusState.bind(this);
+    this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
 
     this.state = {
       loading: {
@@ -37,7 +39,17 @@ class BlockchainInfo extends React.Component {
       fetchTransactionHistory: this.fetchTransactionHistory,
       fetchMyBit: this.getMYB,
       fundAsset: this.fundAsset,
+      setAssertsStatusState: this.setAssertsStatusState,
+      changeNotificationPlace: this.changeNotificationPlace,
       user: {},
+      assertsNotification: {
+        isLoading: false,
+        transactionStatus: '',
+        acceptedTos: false,
+        alertType: '',
+        alertMessage: '',
+      },
+      notificationPlace: 'notification',
     };
   }
 
@@ -57,8 +69,75 @@ class BlockchainInfo extends React.Component {
     return Brain.withdrawFromFaucet(this.state.user);
   }
 
-  fundAsset(assetId, amount) {
-    return Brain.fundAsset(this.state.user, assetId, amount);
+  setAssertsStatusState(state) {
+    const { assertsNotification } = this.state;
+    if (state) {
+      this.setState({
+        assertsNotification: {
+          ...assertsNotification,
+          ...state,
+        },
+      });
+    } else {
+      this.setState({
+        assertsNotification: {
+          isLoading: false,
+          transactionStatus: '',
+          acceptedTos: false,
+          alertMessage: '',
+          alertType: undefined,
+        },
+      });
+    }
+  }
+
+  changeNotificationPlace(place) {
+    // place can be "confirmation" or "notification"
+    this.setState({
+      notificationPlace: place,
+    });
+  }
+
+  async fundAsset(assetId, amount) {
+    await this.setAssertsStatusState({
+      isLoading: true,
+      transactionStatus: '',
+      alertType: 'info',
+      alertMessage: 'Accept the transaction in metamask and wait for a brief moment.',
+    });
+
+    try {
+      const result = await Brain.fundAsset(
+        this.state.user,
+        assetId,
+        amount,
+      );
+
+      const currentAssert = this.state.assets.find(item => item.assetID === assetId);
+
+      if (result) {
+        const alertMessage = `Funded ${currentAssert.name} with ${amount} Sent Successfully!`;
+
+        this.setAssertsStatusState({
+          isLoading: false,
+          transactionStatus: 1,
+          alertType: 'success',
+          alertMessage,
+        });
+      } else {
+        const alertMessage = `Funded ${currentAssert.name} with ${amount} ETH failed. Please try again.`;
+        this.setAssertsStatusState({
+          isLoading: false,
+          transactionStatus: 0,
+          alertType: 'error',
+          alertMessage,
+        });
+      }
+    } catch (err) {
+      this.setAssertsStatusState({
+        isLoading: false,
+      });
+    }
   }
 
   async fetchTransactionHistory() {

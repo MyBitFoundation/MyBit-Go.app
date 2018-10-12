@@ -120,6 +120,16 @@ class AssetDetails extends React.Component {
 
   handlePopupState(value) {
     this.setState({ isPopupOpen: value });
+    this.props.changeNotificationPlace(value ? 'confirmation' : 'notification');
+    if (value) {
+      this.props.setAssertsStatusState(null);
+      return null;
+    }
+    this.props.setAssertsStatusState({
+      alertType: undefined,
+      alertMessage: undefined,
+    });
+    return null;
   }
 
   isPopupOpen() {
@@ -167,12 +177,11 @@ class AssetDetails extends React.Component {
       this.props.information.goal
     ).toFixed(2);
 
-
     return (
       <Row>
         {this.state.isPopupOpen && (
           <BlockchainInfoContext.Consumer>
-            {({ fundAsset }) => (
+            {({ fundAsset, assertsNotification, setAssertsStatusState }) => (
               <ConfirmationPopup
                 amountUsd={selectedAmountUsd}
                 amountEth={this.state.selectedAmountEth}
@@ -181,6 +190,9 @@ class AssetDetails extends React.Component {
                 handlePopupState={val => this.handlePopupState(val)}
                 assetId={this.props.information.assetID}
                 fundAsset={fundAsset}
+                assertsNotification={assertsNotification}
+                changeNotificationPlace={assertsNotification.changeNotificationPlace}
+                setAssertsStatusState={setAssertsStatusState}
               />
             )}
           </BlockchainInfoContext.Consumer>
@@ -403,6 +415,8 @@ AssetDetails.propTypes = {
     pastDate: PropTypes.bool.isRequired,
   }).isRequired,
   currentEthInUsd: PropTypes.number,
+  changeNotificationPlace: PropTypes.func.isRequired,
+  setAssertsStatusState: PropTypes.func.isRequired,
 };
 
 export default AssetDetails;
