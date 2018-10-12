@@ -27,8 +27,46 @@ export const METAMASK_OPERA =
 export const ETHERSCAN_BALANCE = address =>
   `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`;
 
+const testEnabledAssertIdsData = {
+  '0x8d896c37eb6f50f35ddefe472f91f51d30faff549cd251e5f8a4a90a471ab0c8': {
+    name: 'Test asset for development 1',
+    city: 'Zurich',
+    country: 'Switzerland',
+    description: 'Test description',
+    details: 'Test details',
+    imgSrc: CryptoMining,
+  },
+  '0x4b2ee232401b105c8a92fade0722e56b428f6d41ec99053ccbb82b9e7c1e1b22': {
+    name: 'Test asset for development 2',
+    city: 'Zurich',
+    country: 'Switzerland',
+    description: 'Test description',
+    details: 'Test details',
+    imgSrc: CryptoMining,
+  },
+  '0x769d3fff60149b2037323933c28ddd3284f072bd83c376b6e5f36cd61ad31316': {
+    name: 'Test asset for development 3',
+    city: 'Zurich',
+    country: 'Switzerland',
+    description: 'Test description',
+    details: 'Test details',
+    imgSrc: CryptoMining,
+  },
+  '0x171705b3ea7e2cb6df9f4efa06ee550939cee76d5b861a1e40f19122da715112': {
+    name: 'Test asset for development 4',
+    city: 'Zurich',
+    country: 'Switzerland',
+    description: 'Test description',
+    details: 'Test details',
+    imgSrc: CryptoMining,
+  },
+};
+
+export const testAssertIds = Object.keys(testEnabledAssertIdsData);
+
+
 export const isAssetIdEnabled = (assetId) => {
-  const enabledAssetIds = {
+  let enabledAssetIds = {
     // first wave of assets
     '0x116dc7388854d37e952a811c1fa2e03369809eef84b7a49ce9ce9536b5f2c66b': {
       name: 'Co-Working at Trust Square',
@@ -155,6 +193,13 @@ export const isAssetIdEnabled = (assetId) => {
       imgSrc: CoWorking,
     },
   };
+
+  if (process.env.NODE_ENV === 'development') {
+    enabledAssetIds = {
+      ...enabledAssetIds,
+      ...testEnabledAssertIdsData,
+    };
+  }
 
   return enabledAssetIds[assetId];
 };
