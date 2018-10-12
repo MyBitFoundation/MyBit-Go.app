@@ -18,7 +18,6 @@ import LocationIcon from '../images/Location-blue.svg';
 import CalendarIcon from '../images/calendar.svg';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import NumericInput from './NumericInput';
-import MetamaskChecker from './MetamaskChecker';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -173,22 +172,23 @@ class AssetDetails extends React.Component {
       <Row>
         {this.state.isPopupOpen && (
           <BlockchainInfoContext.Consumer>
-            {({ fundAsset, userHasMetamask }) => (
-              userHasMetamask ?
-                <ConfirmationPopup
-                  amountUsd={selectedAmountUsd}
-                  amountEth={this.state.selectedAmountEth}
-                  ownership={this.state.selectedOwnership}
-                  isPopupOpen={() => this.isPopupOpen()}
-                  handlePopupState={val => this.handlePopupState(val)}
-                  assetId={this.props.information.assetID}
-                  fundAsset={fundAsset}
-                />
-              :
-                <MetamaskChecker
-                  shouldDisplay
-                  userHasMetamask={false}
-                />
+            {({
+              fundAsset, userHasMetamask, userIsLoggedIn, network, extensionUrl, isBraveBrowser,
+            }) => (
+              <ConfirmationPopup
+                amountUsd={selectedAmountUsd}
+                amountEth={this.state.selectedAmountEth}
+                ownership={this.state.selectedOwnership}
+                isPopupOpen={() => this.isPopupOpen()}
+                handlePopupState={val => this.handlePopupState(val)}
+                assetId={this.props.information.assetID}
+                fundAsset={fundAsset}
+                userHasMetamask={userHasMetamask}
+                userIsLoggedIn={userIsLoggedIn}
+                network={network}
+                extensionUrl={extensionUrl}
+                isBraveBrowser={isBraveBrowser}
+              />
             )}
           </BlockchainInfoContext.Consumer>
         )}
@@ -374,10 +374,10 @@ class AssetDetails extends React.Component {
               type="primary"
               onClick={() => this.handlePopupState(true)}
               disabled={
-              this.state.daysToGo < 0
-              || maxInvestment === 0
-              || selectedAmountUsd < minInvestment
-            }
+                this.state.daysToGo < 0
+                || maxInvestment === 0
+                || selectedAmountUsd < minInvestment
+              }
             >
             Contribute
             </Button>

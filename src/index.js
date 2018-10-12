@@ -6,13 +6,17 @@ import './styles/index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import BlockchainInfo from './components/BlockchainInfo';
+import MetamaskChecker from './components/MetamaskChecker';
+
 
 ReactDOM.render(
-  <BlockchainInfo>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </BlockchainInfo>,
+  <MetamaskChecker>
+    <BlockchainInfo>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </BlockchainInfo>
+  </MetamaskChecker>,
   document.getElementById('root'),
 );
 registerServiceWorker();

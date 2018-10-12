@@ -14,7 +14,6 @@ import {
   isAssetIdEnabled,
   serverIp,
 } from '../constants';
-import * as isMetamask from '../util/isMetamask';
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -27,6 +26,7 @@ class BlockchainInfo extends React.Component {
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
     this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
+    this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
 
     this.state = {
       loading: {
@@ -44,38 +44,59 @@ class BlockchainInfo extends React.Component {
       fetchMyBit: this.getMYB,
       fundAsset: this.fundAsset,
       user: {},
-      userHasMetamask: isMetamask(),
+      userHasMetamask: this.props.isMetamaskInstalled,
+      network: this.props.network,
+      isBraveBrowser: this.props.isBraveBrowser,
+      extensionUrl: this.props.extensionUrl,
+      userIsLoggedIn: this.props.userIsLoggedIn,
     };
   }
 
-  async UNSAFE_componentWillMount() {
+  async componentDidMount() {
+    const { userHasMetamask, userIsLoggedIn } = this.state;
     try {
-      if (this.state.userHasMetamask) {
+      if (userHasMetamask && userIsLoggedIn) {
         // we need the prices and the user details before getting the assets and transactions
         await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
       } else {
         this.loadPrices();
         this.pullAssetsFromServer();
-        this.setState({
-          loading: {
-            ...this.state.loading,
-            transactionHistory: false,
-          },
-        });
       }
     } catch (err) {
       debug(err);
     }
 
-    if (!this.state.userHasMetamask) {
-      setInterval(this.pullAssetsFromServer, 30 * 1000);
+    if (!userHasMetamask || !userIsLoggedIn) {
+      this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 30 * 1000);
     }
+    if (userHasMetamask) {
+      setInterval(this.checkIfLoggedIn, 10 * 1000);
+    }
+
     setInterval(this.loadPrices, 30 * 1000);
   }
 
   getMYB() {
     return Brain.withdrawFromFaucet(this.state.user);
+  }
+
+  async checkIfLoggedIn() {
+    const isLoggedIn = await this.props.checkIfLoggedIn();
+
+    // case where user was not logged in but logged in and opposite case
+    if (!this.state.userIsLoggedIn && isLoggedIn) {
+      await this.loadMetamaskUserDetails();
+      this.fetchAssets();
+      this.fetchTransactionHistory();
+      clearInterval(this.intervalAssetsFromServer);
+    } else if (this.state.userIsLoggedIn && !isLoggedIn) {
+      this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 30 * 1000);
+    }
+
+    this.setState({
+      userIsLoggedIn: isLoggedIn,
+    });
   }
 
   async pullAssetsFromServer() {
@@ -134,7 +155,9 @@ class BlockchainInfo extends React.Component {
       })
       .catch((err) => {
         debug(err);
-        setTimeout(this.loadMetamaskUserDetails, 10000);
+        if (this.state.userIsLoggedIn) {
+          setTimeout(this.loadMetamaskUserDetails, 10000);
+        }
       });
   }
 
@@ -152,7 +175,9 @@ class BlockchainInfo extends React.Component {
       })
       .catch((err) => {
         debug(err);
-        setTimeout(this.fetchAssets, 10000);
+        if (this.state.userIsLoggedIn) {
+          setTimeout(this.fetchAssets, 10000);
+        }
       });
   }
 
@@ -212,8 +237,23 @@ class BlockchainInfo extends React.Component {
   }
 }
 
-export default BlockchainInfo;
+BlockchainInfo.defaultProps = {
+  isBraveBrowser: false,
+  checkIfLoggedIn: undefined,
+  userIsLoggedIn: false,
+  network: undefined,
+  isMetamaskInstalled: false,
+  isBraveBrowser: false,
+};
 
 BlockchainInfo.propTypes = {
   children: PropTypes.node.isRequired,
+  isMetamaskInstalled: PropTypes.bool,
+  network: PropTypes.string,
+  isBraveBrowser: PropTypes.bool,
+  extensionUrl: PropTypes.string,
+  userIsLoggedIn: PropTypes.bool,
+  checkIfLoggedIn: PropTypes.func,
 };
+
+export default BlockchainInfo;

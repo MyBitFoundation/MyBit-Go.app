@@ -9,7 +9,6 @@ import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
-import MetamaskChecker from './components/MetamaskChecker';
 
 class App extends Component {
   isFirstVisit() {
@@ -33,18 +32,14 @@ class App extends Component {
     return (
       <CirclesBackgroundWrapper>
         <BlockchainInfoContext.Consumer>
-          {({ user, prices, userHasMetamask }) => (
-            <React.Fragment>
-              <MetamaskChecker
-                shouldDisplay={userHasMetamask}
-                userHasMetamask={userHasMetamask}
-              />
-              <AppHeader
-                user={user}
-                prices={prices.mybit}
-                userHasMetamask={userHasMetamask}
-              />
-            </React.Fragment>
+          {({
+            user, prices, userHasMetamask, userIsLoggedIn,
+          }) => (
+            <AppHeader
+              user={user}
+              prices={prices.mybit}
+              usingServer={!userHasMetamask || !userIsLoggedIn}
+            />
           )}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />

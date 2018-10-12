@@ -2,13 +2,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import MetamaskBooting from './MetamaskBooting';
-import MetamaskLogin from './MetamaskLogin';
-import MetamaskNetwork from './MetamaskNetwork';
-import BrowserNotSupported from './BrowserNotSupported';
-import checkAccount from '../util/isUserLogged';
-import checkForNetworks from '../util/checkForNetworks';
+import Web3 from 'web3';
 
 import {
   METAMASK_FIREFOX,
@@ -22,29 +16,55 @@ class MetamaskChecker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isMetamaskUserLogged: null,
-      isRopstenNetwork: false,
+      isInstalled: undefined,
     };
     this.isBraveBrowser = false;
     this.extensionUrl = '';
 
-    if (this.props.userHasMetamask) {
-      checkForNetworks().then((data) => {
-        if (data === 'ropsten') {
-          this.setState({ isRopstenNetwork: true });
-        }
-      });
+    this.checkNetworks = this.checkNetworks.bind(this);
+  }
+
+  async componentDidMount() {
+    // Modern dapp browsers...
+    if (window.ethereum) {
+      const { ethereum } = window;
+      window.web3 = new Web3(ethereum);
+      await this.userHasMetamask();
+
+      try {
+        await ethereum.enable();
+      } catch (error) {
+      // User denied account access...
+      }
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+      await this.userHasMetamask();
+    } else {
+      this.isBrowserSupported();
     }
   }
 
-  componentDidMount() {
-    if (this.props.userHasMetamask) {
-      checkAccount().then((haveAccounts) => {
-        if (haveAccounts.length === 0) {
-          this.setState({ isMetamaskUserLogged: false });
-        }
-      });
+  async userHasMetamask() {
+    await this.checkNetworks();
+    this.loggedIn = await this.checkIfLoggedIn();
+    this.setState({
+      isInstalled: true,
+    });
+  }
+
+  async checkIfLoggedIn() {
+    const accounts = await window.web3.eth.getAccounts();
+    if (accounts && accounts.length === 0) {
+      return false;
+    } else if (accounts === null) {
+      return null;
     }
+
+    return true;
+  }
+
+  async checkNetworks() {
+    this.network = await window.web3.eth.net.getNetworkType();
   }
 
   isBraveBrowserBeingUsed() {
@@ -87,50 +107,30 @@ class MetamaskChecker extends Component {
         this.extensionUrl = METAMASK_FIREFOX;
         return true;
       default:
+        this.setState({
+          isInstalled: false,
+        });
         return false;
     }
   }
 
-  // if Metamask is not established, modal is displayed with directions
-  renderMetamaskWarning() {
-    if (!this.isBrowserSupported()) {
-      return <BrowserNotSupported />;
-    }
-    if (!this.props.userHasMetamask) {
-      return (
-        <MetamaskBooting
-          extensionUrl={this.extensionUrl}
-          isBraveBrowser={this.isBraveBrowser}
-        />
-      );
-    }
-
-    if (this.state.isRopstenNetwork !== true) {
-      return <MetamaskNetwork />;
-    }
-    return null;
-  }
-
   render() {
-    if (!this.props.shouldDisplay) {
+    if (this.state.isInstalled === undefined) {
       return null;
     }
-
-    return (
-      <div>
-        {this.renderMetamaskWarning()}
-        {this.state.isMetamaskUserLogged === false && this.props.userHasMetamask
-          ? <MetamaskLogin />
-          : null
-        }
-      </div>
-    );
+    return React.cloneElement(this.props.children, {
+      isMetamaskInstalled: this.state.isInstalled,
+      checkIfLoggedIn: this.checkIfLoggedIn,
+      network: this.network,
+      isBraveBrowser: this.isBraveBrowser,
+      extensionUrl: this.extensionUrl,
+      loggedIn: this.loggedIn,
+    });
   }
 }
 
 MetamaskChecker.propTypes = {
-  shouldDisplay: PropTypes.bool.isRequired,
-  userHasMetamask: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default MetamaskChecker;

@@ -2,6 +2,7 @@
 /* eslint-disable global-require */
 
 module.exports = {
+  ethereumNetwork: 'ropsten',
   serverIp: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/assets' : '/api/assets',
   debug: process.env.NODE_ENV === 'development' ? console.log : () => {},
   MYBIT_TICKER_COINMARKETCAP: 1902,

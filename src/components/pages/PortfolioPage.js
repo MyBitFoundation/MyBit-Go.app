@@ -4,15 +4,12 @@ import Row from 'antd/lib/col';
 import 'antd/lib/row/style';
 import '../../styles/PortfolioPage.css';
 import LoadingPage from './LoadingPage';
-import getWeb3Async from '../../util/web3';
 import { isAssetIdEnabled } from '../../constants';
 import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
 import AssetPortfolio from '../AssetPortfolio';
 
-const web3 = getWeb3Async();
-
-const fromWeiToEth = weiValue => web3.utils.fromWei(weiValue, 'ether');
+const fromWeiToEth = weiValue => window.web3.utils.fromWei(weiValue, 'ether');
 
 const getOwnedAssets = assets =>
   assets
