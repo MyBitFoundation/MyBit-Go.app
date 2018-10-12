@@ -4,11 +4,13 @@
     height: $headerHeight;
     background-image: linear-gradient(64deg, #001358, #125ac4);
     margin: 0px 0px;
+    padding: 0 50px;
     color: white;
     display: flex;
     position: relative;
     justify-content: space-between;
     flex-wrap: wrap;
+    overflow: hidden;
 
     &__logo-and-info{
       display: flex;
@@ -65,5 +67,13 @@
         display: inline-block;
         height: 100%;
         display: flex;
+    }
+    &__BancrorWidget-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: 305px;
+      width: 100%;
     }
 }
