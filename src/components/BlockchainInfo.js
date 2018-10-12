@@ -27,6 +27,8 @@ class BlockchainInfo extends React.Component {
     this.fundAsset = this.fundAsset.bind(this);
     this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
     this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
+    this.setAssertsStatusState = this.setAssertsStatusState.bind(this);
+    this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
 
     this.state = {
       loading: {
@@ -43,17 +45,28 @@ class BlockchainInfo extends React.Component {
       fetchTransactionHistory: this.fetchTransactionHistory,
       fetchMyBit: this.getMYB,
       fundAsset: this.fundAsset,
+      setAssertsStatusState: this.setAssertsStatusState,
+      changeNotificationPlace: this.changeNotificationPlace,
       user: {},
       userHasMetamask: this.props.isMetamaskInstalled,
       network: this.props.network,
       isBraveBrowser: this.props.isBraveBrowser,
       extensionUrl: this.props.extensionUrl,
       userIsLoggedIn: this.props.userIsLoggedIn,
+      assertsNotification: {
+        isLoading: false,
+        transactionStatus: '',
+        acceptedTos: false,
+        alertType: '',
+        alertMessage: '',
+      },
+      notificationPlace: 'notification',
     };
   }
 
   async componentDidMount() {
     const { userHasMetamask, userIsLoggedIn } = this.state;
+
     try {
       if (userHasMetamask && userIsLoggedIn) {
         // we need the prices and the user details before getting the assets and transactions
@@ -81,21 +94,32 @@ class BlockchainInfo extends React.Component {
     return Brain.withdrawFromFaucet(this.state.user);
   }
 
-  async checkIfLoggedIn() {
-    const isLoggedIn = await this.props.checkIfLoggedIn();
-
-    // case where user was not logged in but logged in and opposite case
-    if (!this.state.userIsLoggedIn && isLoggedIn) {
-      await this.loadMetamaskUserDetails();
-      this.fetchAssets();
-      this.fetchTransactionHistory();
-      clearInterval(this.intervalAssetsFromServer);
-    } else if (this.state.userIsLoggedIn && !isLoggedIn) {
-      this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 30 * 1000);
+  setAssertsStatusState(state) {
+    const { assertsNotification } = this.state;
+    if (state) {
+      this.setState({
+        assertsNotification: {
+          ...assertsNotification,
+          ...state,
+        },
+      });
+    } else {
+      this.setState({
+        assertsNotification: {
+          isLoading: false,
+          transactionStatus: '',
+          acceptedTos: false,
+          alertMessage: '',
+          alertType: undefined,
+        },
+      });
     }
+  }
 
+  changeNotificationPlace(place) {
+    // place can be "confirmation" or "notification"
     this.setState({
-      userIsLoggedIn: isLoggedIn,
+      notificationPlace: place,
     });
   }
 
@@ -127,8 +151,63 @@ class BlockchainInfo extends React.Component {
     });
   }
 
-  fundAsset(assetId, amount) {
-    return Brain.fundAsset(this.state.user, assetId, amount);
+  async checkIfLoggedIn() {
+    const isLoggedIn = await this.props.checkIfLoggedIn();
+    // case where user was not logged in but logged in and opposite case
+    if (!this.state.userIsLoggedIn && isLoggedIn) {
+      await this.loadMetamaskUserDetails();
+      this.fetchAssets();
+      this.fetchTransactionHistory();
+      clearInterval(this.intervalAssetsFromServer);
+    } else if (this.state.userIsLoggedIn && !isLoggedIn) {
+      this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 30 * 1000);
+    }
+
+    this.setState({
+      userIsLoggedIn: isLoggedIn,
+    });
+  }
+
+  async fundAsset(assetId, amount) {
+    await this.setAssertsStatusState({
+      isLoading: true,
+      transactionStatus: '',
+      alertType: 'info',
+      alertMessage: 'Accept the transaction in metamask and wait for a brief moment.',
+    });
+
+    try {
+      const result = await Brain.fundAsset(
+        this.state.user,
+        assetId,
+        amount,
+      );
+
+      const currentAssert = this.state.assets.find(item => item.assetID === assetId);
+
+      if (result) {
+        const alertMessage = `Funded ${currentAssert.name} with ${amount} Sent Successfully!`;
+
+        this.setAssertsStatusState({
+          isLoading: false,
+          transactionStatus: 1,
+          alertType: 'success',
+          alertMessage,
+        });
+      } else {
+        const alertMessage = `Funded ${currentAssert.name} with ${amount} ETH failed. Please try again.`;
+        this.setAssertsStatusState({
+          isLoading: false,
+          transactionStatus: 0,
+          alertType: 'error',
+          alertMessage,
+        });
+      }
+    } catch (err) {
+      this.setAssertsStatusState({
+        isLoading: false,
+      });
+    }
   }
 
   async fetchTransactionHistory() {
@@ -243,7 +322,7 @@ BlockchainInfo.defaultProps = {
   userIsLoggedIn: false,
   network: undefined,
   isMetamaskInstalled: false,
-  isBraveBrowser: false,
+  extensionUrl: undefined,
 };
 
 BlockchainInfo.propTypes = {

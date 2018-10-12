@@ -10,7 +10,7 @@ import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 
 const AssetDetailsPage = ({
-  loading, assets, match, ether, user, history,
+  loading, assets, match, ether, user, history, changeNotificationPlace, setAssertsStatusState,
 }) => {
   if (loading.assets) {
     return (
@@ -55,6 +55,8 @@ const AssetDetailsPage = ({
         information={assetInformation}
         currentEthInUsd={ether.price}
         user={user}
+        changeNotificationPlace={changeNotificationPlace}
+        setAssertsStatusState={setAssertsStatusState}
       />
     </div>
   );
@@ -67,6 +69,8 @@ AssetDetailsPage.propTypes = {
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   history: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  changeNotificationPlace: PropTypes.func.isRequired,
+  setAssertsStatusState: PropTypes.func.isRequired,
 };
 
 export default withRouter(AssetDetailsPage);

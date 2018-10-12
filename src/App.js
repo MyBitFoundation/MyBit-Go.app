@@ -33,12 +33,21 @@ class App extends Component {
       <CirclesBackgroundWrapper>
         <BlockchainInfoContext.Consumer>
           {({
-            user, prices, userHasMetamask, userIsLoggedIn,
+            user,
+            prices,
+            userHasMetamask,
+            userIsLoggedIn,
+            setAssertsStatusState,
+            assertsNotification,
+            notificationPlace,
           }) => (
             <AppHeader
               user={user}
               prices={prices.mybit}
               usingServer={!userHasMetamask || !userIsLoggedIn}
+              setAssertsStatusState={setAssertsStatusState}
+              assertsNotification={assertsNotification}
+              notificationPlace={notificationPlace}
             />
           )}
         </BlockchainInfoContext.Consumer>

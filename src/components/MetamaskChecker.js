@@ -17,6 +17,7 @@ class MetamaskChecker extends Component {
     super(props);
     this.state = {
       isInstalled: undefined,
+      isLoggedIn: undefined,
     };
     this.isBraveBrowser = false;
     this.extensionUrl = '';
@@ -46,9 +47,10 @@ class MetamaskChecker extends Component {
 
   async userHasMetamask() {
     await this.checkNetworks();
-    this.loggedIn = await this.checkIfLoggedIn();
+    const isLoggedIn = await this.checkIfLoggedIn();
     this.setState({
       isInstalled: true,
+      isLoggedIn,
     });
   }
 
@@ -56,8 +58,8 @@ class MetamaskChecker extends Component {
     const accounts = await window.web3.eth.getAccounts();
     if (accounts && accounts.length === 0) {
       return false;
-    } else if (accounts === null) {
-      return null;
+    } else if (!accounts) {
+      return undefined;
     }
 
     return true;
@@ -115,16 +117,17 @@ class MetamaskChecker extends Component {
   }
 
   render() {
-    if (this.state.isInstalled === undefined) {
+    if (this.state.isInstalled === undefined || this.state.isLoggedIn === undefined) {
       return null;
     }
+
     return React.cloneElement(this.props.children, {
       isMetamaskInstalled: this.state.isInstalled,
       checkIfLoggedIn: this.checkIfLoggedIn,
       network: this.network,
       isBraveBrowser: this.isBraveBrowser,
       extensionUrl: this.extensionUrl,
-      loggedIn: this.loggedIn,
+      userIsLoggedIn: this.state.isLoggedIn,
     });
   }
 }
