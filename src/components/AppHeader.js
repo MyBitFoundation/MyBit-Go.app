@@ -24,7 +24,6 @@ const AppHeader = ({
         assertsNotification={assertsNotification}
       />
     )}
-
   </div>
 );
 

@@ -177,7 +177,6 @@ class AssetDetails extends React.Component {
       this.props.information.goal
     ).toFixed(2);
 
-
     return (
       <Row>
         {this.state.isPopupOpen && (

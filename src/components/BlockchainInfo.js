@@ -49,7 +49,7 @@ class BlockchainInfo extends React.Component {
         alertType: '',
         alertMessage: '',
       },
-      notificationPlace: 'confirmation',
+      notificationPlace: 'notification',
     };
   }
 
@@ -113,19 +113,24 @@ class BlockchainInfo extends React.Component {
         amount,
       );
 
+      const currentAssert = this.state.assets.find(item => item.assetID === assetId);
+
       if (result) {
+        const alertMessage = `Funded ${currentAssert.name} with ${amount} Sent Successfully!`;
+
         this.setAssertsStatusState({
           isLoading: false,
           transactionStatus: 1,
           alertType: 'success',
-          alertMessage: 'Sent Successfuly!',
+          alertMessage,
         });
       } else {
+        const alertMessage = `Funded ${currentAssert.name} with ${amount} ETH failed. Please try again.`;
         this.setAssertsStatusState({
           isLoading: false,
           transactionStatus: 0,
           alertType: 'error',
-          alertMessage: 'Transaction failed. Please try again.',
+          alertMessage,
         });
       }
     } catch (err) {

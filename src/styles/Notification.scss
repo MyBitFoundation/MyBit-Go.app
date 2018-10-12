@@ -2,13 +2,14 @@
 
 .Notification__alert-wrapper {
   position: absolute;
-  top: 93px;
-  right: 5px;
-  max-width: 400px;
+  top: 144px;
+  right: 20px;
+  max-width: 616px;
   width: 100%;
   min-height: 45px;
-  
-  @include media('<1320px') {
-    top: 150px;
-  } 
+  z-index: 11;
+
+  @include media('<tablet') {
+    max-width: 307px;
+ }
 }
