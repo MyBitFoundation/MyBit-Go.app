@@ -181,7 +181,16 @@ class AssetDetails extends React.Component {
       <Row>
         {this.state.isPopupOpen && (
           <BlockchainInfoContext.Consumer>
-            {({ fundAsset, assertsNotification, setAssertsStatusState }) => (
+            {({
+              fundAsset,
+              userHasMetamask,
+              userIsLoggedIn,
+              network,
+              extensionUrl,
+              isBraveBrowser,
+              assertsNotification,
+              setAssertsStatusState,
+            }) => (
               <ConfirmationPopup
                 amountUsd={selectedAmountUsd}
                 amountEth={this.state.selectedAmountEth}
@@ -190,6 +199,11 @@ class AssetDetails extends React.Component {
                 handlePopupState={val => this.handlePopupState(val)}
                 assetId={this.props.information.assetID}
                 fundAsset={fundAsset}
+                userHasMetamask={userHasMetamask}
+                userIsLoggedIn={userIsLoggedIn}
+                network={network}
+                extensionUrl={extensionUrl}
+                isBraveBrowser={isBraveBrowser}
                 assertsNotification={assertsNotification}
                 changeNotificationPlace={assertsNotification.changeNotificationPlace}
                 setAssertsStatusState={setAssertsStatusState}
@@ -379,10 +393,10 @@ class AssetDetails extends React.Component {
               type="primary"
               onClick={() => this.handlePopupState(true)}
               disabled={
-              this.state.daysToGo < 0
-              || maxInvestment === 0
-              || selectedAmountUsd < minInvestment
-            }
+                this.state.daysToGo < 0
+                || maxInvestment === 0
+                || selectedAmountUsd < minInvestment
+              }
             >
             Contribute
             </Button>

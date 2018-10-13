@@ -32,6 +32,12 @@ const Asset = ({
     style: 'currency',
     currency: 'USD',
   });
+  let buttonText = 'Contribute';
+  let buttonType = 'primary';
+  if (assetFunded || pastDate) {
+    buttonText = 'View Asset';
+    buttonType = 'default';
+  }
   return (
     <Col xs={24} sm={24} md={12} lg={8} xl={6} className="Asset">
       <div className="Asset__wrapper">
@@ -56,7 +62,7 @@ const Asset = ({
             <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
           </p>
           <p className="Asset__details-goal">
-            Goal:
+            Goal:{' '}
             <b>{goalFormatted}</b>
           </p>
           <div className="Asset__details-progress-bar">
@@ -74,7 +80,7 @@ const Asset = ({
             href={`/explore/${category}/${id}`}
           >
             <Button
-              type="primary"
+              type={buttonType}
               onClick={
                 clickHandler ||
                 (() => debug(`Clicked to contribute, asset id: ${id}`))
@@ -82,7 +88,7 @@ const Asset = ({
               className="Asset__details-contribute"
               disabled={isAssetIdEnabled(id) === undefined}
             >
-              {assetFunded || pastDate ? 'View Asset' : 'Contribute'}
+              {buttonText}
             </Button>
           </Link>
         </div>

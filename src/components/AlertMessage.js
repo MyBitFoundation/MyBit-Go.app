@@ -5,21 +5,28 @@ import 'antd/lib/alert/style/css';
 import '../styles/AlertMessage.css';
 
 const AlertMessage = props => (
-  <div className="AlertMessage">
+  <div className={props.className || 'AlertMessage'}>
     <Alert
       type={props.type}
       message={props.message}
       onClose={props.handleAlertClosed}
       showIcon
-      closable
+      closable={props.closable}
     />
   </div>
 );
 
 export default AlertMessage;
 
+AlertMessage.defaultProps = {
+  className: undefined,
+  closable: true,
+};
+
 AlertMessage.propTypes = {
   type: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
   handleAlertClosed: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  closable: PropTypes.bool,
 };

@@ -3,12 +3,17 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+import dayjs from 'dayjs';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import * as Brain from '../apis/brain';
 import {
   debug,
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
+  isAssetIdEnabled,
+  serverIp,
+  ethereumNetwork,
 } from '../constants';
 
 class BlockchainInfo extends React.Component {
@@ -21,6 +26,8 @@ class BlockchainInfo extends React.Component {
     this.fetchAssets = this.fetchAssets.bind(this);
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
+    this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
+    this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
     this.setAssertsStatusState = this.setAssertsStatusState.bind(this);
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
 
@@ -42,6 +49,11 @@ class BlockchainInfo extends React.Component {
       setAssertsStatusState: this.setAssertsStatusState,
       changeNotificationPlace: this.changeNotificationPlace,
       user: {},
+      userHasMetamask: this.props.isMetamaskInstalled,
+      network: this.props.network,
+      isBraveBrowser: this.props.isBraveBrowser,
+      extensionUrl: this.props.extensionUrl,
+      userIsLoggedIn: this.props.userIsLoggedIn,
       assertsNotification: {
         isLoading: false,
         transactionStatus: '',
@@ -53,16 +65,40 @@ class BlockchainInfo extends React.Component {
     };
   }
 
-  async UNSAFE_componentWillMount() {
+  async componentDidMount() {
+    const { userHasMetamask, userIsLoggedIn, network } = this.state;
     try {
-      // we need the prices and the user details before getting the assets and transactions
-      await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
-      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+      if (userHasMetamask && userIsLoggedIn && network === ethereumNetwork) {
+        // we need the prices and the user details before getting the assets and transactions
+        await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        this.intervalFetchAssets = setInterval(this.fetchAssets, 1 * 5000);
+        this.intervalFetchTransactionHistory = setInterval(this.fetchTransactionHistory, 60 * 1000);
+        this.intervalLoadMetamaskUserDetails = setInterval(this.loadMetamaskUserDetails, 5 * 1000);
+      } else {
+        this.loadPrices();
+        this.pullAssetsFromServer();
+      }
     } catch (err) {
       debug(err);
     }
 
-    setInterval(this.loadPrices, 30 * 1000);
+    if (!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork) {
+      this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 10 * 1000);
+    }
+    if (userHasMetamask) {
+      setInterval(this.checkIfLoggedIn, 3 * 1000);
+    }
+
+    setInterval(this.loadPrices, 15 * 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalFetchAssets);
+    clearInterval(this.intervalAssetsFromServer);
+    clearInterval(this.intervalLoadMetamaskUserDetails);
+    clearInterval(this.intervalFetchTransactionHistory);
+    clearInterval(this.checkIfLoggedIn);
   }
 
   getMYB() {
@@ -95,6 +131,63 @@ class BlockchainInfo extends React.Component {
     // place can be "confirmation" or "notification"
     this.setState({
       notificationPlace: place,
+    });
+  }
+
+  async pullAssetsFromServer() {
+    const { data } = await axios(serverIp);
+    if (!data.assetsLoaded) {
+      return;
+    }
+    const assetsToReturn = data.assets.map((asset) => {
+      let details = isAssetIdEnabled(asset.assetID, true);
+      if (!details) {
+        details = {};
+        details.city = 'Zurich';
+        details.country = 'Switzerland';
+        details.description = 'Coming soon';
+        details.details = 'Coming soon';
+        details.name = 'Coming soon';
+      }
+      return {
+        ...details,
+        ...asset,
+        fundingDeadline: dayjs(Number(asset.fundingDeadline) * 1000),
+      };
+    });
+
+    this.setState({
+      assets: assetsToReturn,
+      transactions: [],
+      loading: {
+        ...this.state.loading,
+        assets: false,
+        transactionHistory: false,
+      },
+    });
+  }
+
+  async checkIfLoggedIn() {
+    const isLoggedIn = await this.props.checkIfLoggedIn();
+    // case where user was not logged in but logged in and opposite case
+    if (!this.state.userIsLoggedIn && isLoggedIn) {
+      await this.loadMetamaskUserDetails();
+      this.fetchAssets();
+      this.fetchTransactionHistory();
+      this.intervalFetchAssets = setInterval(this.fetchAssets, 5 * 1000);
+      this.intervalFetchTransactionHistory = setInterval(this.fetchTransactionHistory, 60 * 1000);
+      this.intervalLoadMetamaskUserDetails = setInterval(this.loadMetamaskUserDetails, 5 * 1000);
+      clearInterval(this.intervalAssetsFromServer);
+    } else if (this.state.userIsLoggedIn && !isLoggedIn) {
+      this.pullAssetsFromServer();
+      clearInterval(this.intervalFetchAssets);
+      clearInterval(this.intervalFetchTransactionHistory);
+      clearInterval(this.intervalLoadMetamaskUserDetails);
+      this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 10 * 1000);
+    }
+
+    this.setState({
+      userIsLoggedIn: isLoggedIn,
     });
   }
 
@@ -150,7 +243,9 @@ class BlockchainInfo extends React.Component {
       })
       .catch((err) => {
         debug(err);
-        setTimeout(this.fetchTransactionHistory, 10000);
+        if (this.state.userIsLoggedIn) {
+          setTimeout(this.fetchTransactionHistory, 5000);
+        }
       });
   }
 
@@ -164,7 +259,9 @@ class BlockchainInfo extends React.Component {
       })
       .catch((err) => {
         debug(err);
-        setTimeout(this.loadMetamaskUserDetails, 10000);
+        if (this.state.userIsLoggedIn) {
+          setTimeout(this.loadMetamaskUserDetails, 5000);
+        }
       });
   }
 
@@ -182,7 +279,9 @@ class BlockchainInfo extends React.Component {
       })
       .catch((err) => {
         debug(err);
-        setTimeout(this.fetchAssets, 10000);
+        if (this.state.userIsLoggedIn) {
+          setTimeout(this.fetchAssets, 5000);
+        }
       });
   }
 
@@ -229,7 +328,7 @@ class BlockchainInfo extends React.Component {
         error = true;
       });
     if (error) {
-      setTimeout(this.loadPrices, 10000);
+      setTimeout(this.loadPrices, 5000);
     }
   }
 
@@ -242,8 +341,23 @@ class BlockchainInfo extends React.Component {
   }
 }
 
-export default BlockchainInfo;
+BlockchainInfo.defaultProps = {
+  isBraveBrowser: false,
+  checkIfLoggedIn: undefined,
+  userIsLoggedIn: false,
+  network: undefined,
+  isMetamaskInstalled: false,
+  extensionUrl: undefined,
+};
 
 BlockchainInfo.propTypes = {
   children: PropTypes.node.isRequired,
+  isMetamaskInstalled: PropTypes.bool,
+  network: PropTypes.string,
+  isBraveBrowser: PropTypes.bool,
+  extensionUrl: PropTypes.string,
+  userIsLoggedIn: PropTypes.bool,
+  checkIfLoggedIn: PropTypes.func,
 };
+
+export default BlockchainInfo;

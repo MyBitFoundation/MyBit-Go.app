@@ -4,6 +4,14 @@
   background-color: #ffffff;
   font-family: 'Roboto';
 
+  &__metamask-alert{
+    margin-bottom: 30px;
+
+    p{
+      margin: 0px 0px;
+    }
+  }
+
   .ant-modal-title{
     color: rgba(0, 0, 0, 0.65);
   }

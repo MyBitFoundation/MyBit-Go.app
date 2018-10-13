@@ -57,18 +57,6 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
     />
   );
 
-  // const noElements =
-  //   !loading && (
-  //     <div style={{ width: '100%' }}>
-  //       {backButton}
-  //       <p
-  //         className="ExploreAssetsPage__message-no-elements"
-  //       >
-  //         {`No assets found in the ${category} category.`}
-  //       </p>
-  //     </div>
-  //   );
-
   let renderedOutput = null;
   if (loadingAssets) {
     renderedOutput = loadingElement;

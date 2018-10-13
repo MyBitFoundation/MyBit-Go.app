@@ -8,8 +8,8 @@ import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
-import MetamaskChecker from './components/MetamaskChecker';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
+import { ethereumNetwork } from './constants/index';
 
 class App extends Component {
   isFirstVisit() {
@@ -32,20 +32,26 @@ class App extends Component {
     const firstVisit = this.isFirstVisit();
     return (
       <CirclesBackgroundWrapper>
-        <MetamaskChecker
-          shouldDisplay={this.props.location.pathname !== '/help'}
-        />
         <BlockchainInfoContext.Consumer>
           {({
- user, prices, setAssertsStatusState, assertsNotification, notificationPlace,
-}) =>
-            (<AppHeader
+            user,
+            prices,
+            userHasMetamask,
+            userIsLoggedIn,
+            network,
+            setAssertsStatusState,
+            assertsNotification,
+            notificationPlace,
+          }) => (
+            <AppHeader
               user={user}
               prices={prices.mybit}
+              usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
               setAssertsStatusState={setAssertsStatusState}
               assertsNotification={assertsNotification}
               notificationPlace={notificationPlace}
-            />)}
+            />
+          )}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
         <div className="page-wrapper">
