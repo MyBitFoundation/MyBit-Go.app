@@ -165,6 +165,48 @@ const isAssetIdEnabled = (assetId, includeImage) => {
       details: 'Air conditioning Fiber Internet 24/7 Access Security Reception 98% building occupancy rate (high-demand) Specific Location: Located across from Swiss National Bank Rent Term: Annual contract, paid quarterly',
       imageSrc: includeImage && require('../images/categories/Co-working.png'),
     },
+
+    // forth wave of assets
+    '0x33a65575a2ea5f315e35a049e6b8d6e6bf49f89c361fab745fcf9eecdb23a88a': {
+      name: 'Bitcoin ATM',
+      city: 'Zug',
+      country: 'Switzerland',
+      description: 'Manufactured by General Bytes in Prague, Czech Republic. Model: BATMThreeXXL Supports Bitcoin and Ethereum purchases and sales. Average fee per transaction is 5.5%. Specific Location: Berlin Ostbahnhof',
+      details: 'The BATMThreeXXL model is our ultimate configuration. It features a bill-acceptor with a cashbox that holds 2200 banknotes, a bill-dispenser with a capacity of 1000 banknotes (2x500) and an additional internal keypad lock on an internal safe. A keypad locked internal safe is usually a requirement for automatic collection by an armoured money transport service.',
+      imageSrc: includeImage && require('../images/categories/Bitcoinatm.jpeg'),
+    },
+    '0x20460e88ce50cca9bac4c67bc9939c6d4ae7b7a86e4629f703c01fac97e3dd92': {
+      name: 'Smart Bench',
+      city: 'Dubai',
+      country: 'UAE',
+      description: 'Manufactured by Arabco Smart Technology in Dubai, UAE Model: Steora Monetisation: Wi-Fi hotspot subscriptions and advertisements Specific Location: Dubai Mall',
+      details: 'Steora is the most ingenious smart bench ever designed. Its beautiful and timeless design hides multiple functionalities. With its perfect size and shape, Steora street bench easily adds allure to any outdoor location. Strong, powder-coated steel construction is completely weather-resistant and vandal-resistant. It offers wireless device charging, super fast internet connection, and data capturing.',
+      imageSrc: includeImage && require('../images/categories/Solar1.jpeg'),
+    },
+    '0xd3dc362b8292b158a6cdc6036ab5ddff81008633ecdbf7b135d421999117b8bc': {
+      name: 'Ethereum Asic',
+      city: 'Amsterdam',
+      country: 'Netherlands',
+      description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
+      details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
+      imageSrc: includeImage && require('../images/categories/Cryptomining.jpeg'),
+    },
+    '0x6e854951a4fc99f8d9aca5fd3d3ca06bd2eff580a2da1feb5730c38d1f32e884': {
+      name: 'Climate Controlled Garage',
+      city: 'Prague',
+      country: 'Czech Republic',
+      description: 'This space is a great fit for a range of assets from artwork to household furniture. It can be accessed remotely from an external door 24/7 and offers dedicated lock boxes inside for an additional cost to customers. It is important to note that security cameras are not active at this location.',
+      details: 'Fully climate controlled space Enforced by Slock.it 40m Squared Suitable for low to mid value items Option for dedicated lock boxes 50x50x70cm Specific Location: Hidden for user protection Rent Term: Per square meter, monthly contract.',
+      imageSrc: includeImage && require('../images/categories/Storage.jpeg'),
+    },
+    '0x15050ed0e7c24fc4605e19cd21e774a2326654535e0f3ed271b45d128bde95f4': {
+      name: 'Co-Working at Trust Square',
+      city: 'Zurich',
+      country: 'Switzerland',
+      description: 'This space is a great fit for a entrepreneurs, start-up teams, and freelancers. It is in an amazing location a few blocks from the lake in Zurich. With access to many major businesses and shops within walking distance it is great not only for working, but also for networking and expanding your professional relationships.',
+      details: 'Air conditioning Fiber Internet 24/7 Access Security Reception 98% building occupancy rate (high-demand) Specific Location: Located across from Swiss National Bank Rent Term: Annual contract, paid quarterly',
+      imageSrc: includeImage && require('../images/categories/Co-working.png'),
+    },
   };
 
   if (process.env.NODE_ENV === 'development') {
