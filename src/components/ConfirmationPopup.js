@@ -65,7 +65,7 @@ class ConfirmationPopup extends React.Component {
       userHasMetamask, extensionUrl, network, userIsLoggedIn, isBraveBrowser,
     } = this.props;
 
-    if (!userHasMetamask && extensionUrl) {
+    if (!userHasMetamask && extensionUrl && !isBraveBrowser) {
       toRender = (
         <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a> to confirm contribution.
           You can download the extension via
@@ -115,7 +115,7 @@ class ConfirmationPopup extends React.Component {
     } else if (!userHasMetamask && isBraveBrowser) {
       toRender = (
         <p>
-          The Brave browser comes pre-installed with Metamask, please enable it to contribute. Click
+          The Brave browser comes pre-installed with Metamask, please enable it to contribute. Click{' '}
           <a
             href="https://brave.com/into-the-blockchain-brave-with-metamask/"
             target="_blank"
@@ -123,7 +123,7 @@ class ConfirmationPopup extends React.Component {
           >
            here
           </a>
-          to see how.
+          {' '}to see how.
         </p>
       );
     } else if (userHasMetamask && !userIsLoggedIn) {
