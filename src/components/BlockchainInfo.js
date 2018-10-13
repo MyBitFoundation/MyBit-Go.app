@@ -156,6 +156,7 @@ class BlockchainInfo extends React.Component {
 
     this.setState({
       assets: assetsToReturn,
+      transactions: [],
       loading: {
         ...this.state.loading,
         assets: false,
@@ -176,6 +177,7 @@ class BlockchainInfo extends React.Component {
       this.intervalLoadMetamaskUserDetails = setInterval(this.loadMetamaskUserDetails, 5 * 1000);
       clearInterval(this.intervalAssetsFromServer);
     } else if (this.state.userIsLoggedIn && !isLoggedIn) {
+      this.pullAssetsFromServer();
       clearInterval(this.intervalFetchAssets);
       clearInterval(this.intervalFetchTransactionHistory);
       clearInterval(this.intervalLoadMetamaskUserDetails);
