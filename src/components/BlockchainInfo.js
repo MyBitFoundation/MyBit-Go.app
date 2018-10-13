@@ -156,7 +156,11 @@ class BlockchainInfo extends React.Component {
 
     this.setState({
       assets: assetsToReturn,
-      loading: { ...this.state.loading, assets: false },
+      loading: {
+        ...this.state.loading,
+        assets: false,
+        transactionHistory: false,
+      },
     });
   }
 
