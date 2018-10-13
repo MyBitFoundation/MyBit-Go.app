@@ -21,8 +21,7 @@ class MetamaskChecker extends Component {
     };
     this.isBraveBrowser = false;
     this.extensionUrl = '';
-
-    this.checkNetworks = this.checkNetworks.bind(this);
+    this.checkNetwork = this.checkNetwork.bind(this);
   }
 
   async componentDidMount() {
@@ -46,7 +45,7 @@ class MetamaskChecker extends Component {
   }
 
   async userHasMetamask() {
-    await this.checkNetworks();
+    await this.checkNetwork();
     const isLoggedIn = await this.checkIfLoggedIn();
     this.setState({
       isInstalled: true,
@@ -64,7 +63,7 @@ class MetamaskChecker extends Component {
     return true;
   }
 
-  async checkNetworks() {
+  async checkNetwork() {
     this.network = await window.web3js.eth.net.getNetworkType();
   }
 

@@ -13,6 +13,7 @@ import {
   ETHEREUM_TICKER_COINMARKETCAP,
   isAssetIdEnabled,
   serverIp,
+  ethereumNetwork,
 } from '../constants';
 
 class BlockchainInfo extends React.Component {
@@ -65,9 +66,9 @@ class BlockchainInfo extends React.Component {
   }
 
   async componentDidMount() {
-    const { userHasMetamask, userIsLoggedIn } = this.state;
+    const { userHasMetamask, userIsLoggedIn, network } = this.state;
     try {
-      if (userHasMetamask && userIsLoggedIn) {
+      if (userHasMetamask && userIsLoggedIn && network === ethereumNetwork) {
         // we need the prices and the user details before getting the assets and transactions
         await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
@@ -82,7 +83,7 @@ class BlockchainInfo extends React.Component {
       debug(err);
     }
 
-    if (!userHasMetamask || !userIsLoggedIn) {
+    if (!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork) {
       this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 10 * 1000);
     }
     if (userHasMetamask) {
@@ -97,6 +98,7 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalLoadMetamaskUserDetails);
     clearInterval(this.intervalFetchTransactionHistory);
+    clearInterval(this.checkIfLoggedIn);
   }
 
   getMYB() {

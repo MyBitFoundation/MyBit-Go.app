@@ -9,6 +9,7 @@ import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
+import { ethereumNetwork } from './constants/index';
 
 class App extends Component {
   isFirstVisit() {
@@ -37,6 +38,7 @@ class App extends Component {
             prices,
             userHasMetamask,
             userIsLoggedIn,
+            network,
             setAssertsStatusState,
             assertsNotification,
             notificationPlace,
@@ -44,7 +46,7 @@ class App extends Component {
             <AppHeader
               user={user}
               prices={prices.mybit}
-              usingServer={!userHasMetamask || !userIsLoggedIn}
+              usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
               setAssertsStatusState={setAssertsStatusState}
               assertsNotification={assertsNotification}
               notificationPlace={notificationPlace}
