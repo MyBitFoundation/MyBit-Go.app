@@ -61,7 +61,6 @@ class MetamaskChecker extends Component {
     } else if (!accounts) {
       return undefined;
     }
-
     return true;
   }
 
@@ -101,26 +100,26 @@ class MetamaskChecker extends Component {
     switch (browser.name) {
       case 'chrome':
         this.extensionUrl = METAMASK_CHROME;
-        return true;
+        break;
       case 'opera':
         this.extensionUrl = METAMASK_OPERA;
-        return true;
+        break;
       case 'firefox':
         this.extensionUrl = METAMASK_FIREFOX;
-        return true;
+        break;
       default:
-        this.setState({
-          isInstalled: false,
-        });
-        return false;
+        break;
     }
+    this.setState({
+      isInstalled: false,
+      isLoggedIn: false,
+    });
   }
 
   render() {
     if (this.state.isInstalled === undefined || this.state.isLoggedIn === undefined) {
       return null;
     }
-
     return React.cloneElement(this.props.children, {
       isMetamaskInstalled: this.state.isInstalled,
       checkIfLoggedIn: this.checkIfLoggedIn,
