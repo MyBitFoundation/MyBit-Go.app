@@ -159,7 +159,7 @@ class ConfirmationPopup extends React.Component {
 
 
     const shouldShowConfirmAndCancel =
-      (!isLoading && transactionStatus === '' && userHasMetamask && userIsLoggedIn && network === ethereumNetwork);
+      ((!isLoading && transactionStatus === '' || transactionStatus === 1) && userHasMetamask && userIsLoggedIn && network === ethereumNetwork);
 
 
     return (
