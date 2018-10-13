@@ -11,23 +11,27 @@ import 'antd/lib/switch/style';
 import 'antd/lib/row/style';
 import 'antd/lib/col/style';
 
-import Asset from '../Asset';
+import Asset from './Asset';
 // import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
-import  AssetsFilter from '../AssetsFilter.js';
 
-const Explore = ({ loading, assets }) => {
+class AssetsFilter extends Component { 
+  constructor(props) {
+    state = {
 
-  return (
-    <div>
-      <AssetsFilter assets={assets} loading={loading} />
-    </div> 
-  )
-};
+    }
+  }
 
-Explore.propTypes = {
-  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.arrayOf(PropTypes.object).isRequired
+
+
+  render() {
+
+  }
 }
 
-export default Explore;
+ExploreFilter.PropTypes = {
+    loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
+    assets: PropTypes.arrayOf(PropTypes.object).isRequired
+  }
+
+export default AssetsFilter;
