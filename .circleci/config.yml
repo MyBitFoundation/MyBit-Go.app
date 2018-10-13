@@ -13,7 +13,7 @@ jobs:
 
       - run: yarn run build-css
 
-      - run: yarn test
+      - run: yarn run-test
 
       - run: yarn build
 
