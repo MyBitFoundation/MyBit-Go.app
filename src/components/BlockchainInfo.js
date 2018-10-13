@@ -66,7 +66,6 @@ class BlockchainInfo extends React.Component {
 
   async componentDidMount() {
     const { userHasMetamask, userIsLoggedIn } = this.state;
-
     try {
       if (userHasMetamask && userIsLoggedIn) {
         // we need the prices and the user details before getting the assets and transactions

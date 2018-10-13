@@ -29,7 +29,7 @@ class MetamaskChecker extends Component {
     // Modern dapp browsers...
     if (window.ethereum) {
       const { ethereum } = window;
-      window.web3 = new Web3(ethereum);
+      window.web3js = new Web3(ethereum);
       await this.userHasMetamask();
 
       try {
@@ -38,7 +38,7 @@ class MetamaskChecker extends Component {
       // User denied account access...
       }
     } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
+      window.web3js = new Web3(window.web3.currentProvider);
       await this.userHasMetamask();
     } else {
       this.isBrowserSupported();
@@ -55,7 +55,7 @@ class MetamaskChecker extends Component {
   }
 
   async checkIfLoggedIn() {
-    const accounts = await window.web3.eth.getAccounts();
+    const accounts = await window.web3js.eth.getAccounts();
     if (accounts && accounts.length === 0) {
       return false;
     } else if (!accounts) {
@@ -66,7 +66,7 @@ class MetamaskChecker extends Component {
   }
 
   async checkNetworks() {
-    this.network = await window.web3.eth.net.getNetworkType();
+    this.network = await window.web3js.eth.net.getNetworkType();
   }
 
   isBraveBrowserBeingUsed() {

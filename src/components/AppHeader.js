@@ -7,7 +7,7 @@ import ExchangeRate from './ExchangeRate';
 import AccountInfo from './AccountInfo';
 import Address from './Address';
 import Notification from './Notification';
-// import BancorWidgetButton from './UI/BancorWidgetButton/index';
+import BancorWidgetButton from './UI/BancorWidgetButton/index';
 
 const AppHeader = ({
   user, prices, usingServer, assertsNotification, setAssertsStatusState, notificationPlace,
@@ -25,8 +25,8 @@ const AppHeader = ({
       )}
     </div>
     <div className="AppHeader__BancrorWidget-container">
-      {/* <BancorWidgetButton operation="buy">Buy</BancorWidgetButton>
-      <BancorWidgetButton operation="sell">Sell</BancorWidgetButton> */}
+      <BancorWidgetButton operation="buy">Buy</BancorWidgetButton>
+      <BancorWidgetButton operation="sell">Sell</BancorWidgetButton>
     </div>
     {!usingServer && (
       <Address {...user} />
