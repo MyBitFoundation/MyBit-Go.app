@@ -1,15 +1,14 @@
 @import 'include-media/dist/_include-media.scss';
 
 .Notification__alert-wrapper {
-  position: absolute;
+  position: fixed;
   top: 144px;
   right: 20px;
-  max-width: 616px;
-  width: 100%;
+  min-width: 400px;
   min-height: 45px;
   z-index: 11;
 
   @include media('<tablet') {
-    max-width: 307px;
+    display: none;
  }
 }
