@@ -27,7 +27,7 @@
   &__header-text{
     font-size: 30px;
     font-weight: 800;
-    color: #125ac4;
+    color: #1890ff;
     margin-top: 20px;
     @include media('>=tablet') {
         font-size: 80px;
@@ -36,7 +36,7 @@
 
   &__message-text{
     font-size: 15px;
-    color: #125ac4;
+    color: #1890ff;
     text-align: center;
     @include media('>=tablet') {
        font-size: 30px;
