@@ -8,12 +8,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 80px;
-
-    @include media('>=tablet') {
-        top: 120px;
-    }
+    margin-top: 70px;
   }
 
   &__image{
@@ -49,24 +44,8 @@
   }
 
   &__home-btn{
-    text-decoration: none;
     margin-top: 20px;
-
-    & button{
-      height: 32px;
-      font-family: 'Roboto';
-      color: #ffffff;
-      border: 2px solid #125ac4;
-      margin-top: 10px;
-      background-color: #125ac4;
-      text-decoration: none;
-      z-index: 10;
-
-      &:hover{
-        background-color: #ffffff;
-        color: #125ac4;
-      }
-    }
+    margin-bottom: 50px;
   }
 }
 
