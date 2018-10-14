@@ -1,17 +1,17 @@
 import React from 'react';
 
-import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpeg';
-import autonomousvehiclesImage from '../images/categories/autonomousvehicles.png';
-import cryptominingImage from '../images/categories/Cryptomining.jpeg';
-import dronedeliveryImage from '../images/categories/dronedelivery.png';
-import solarenergyImage from '../images/categories/Solar1.jpeg';
+import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpg';
+import autonomousvehiclesImage from '../images/categories/autonomousvehicles.jpg';
+import cryptominingImage from '../images/categories/Cryptomining.jpg';
+import dronedeliveryImage from '../images/categories/dronedelivery.jpg';
+import solarenergyImage from '../images/categories/Solar1.jpg';
 // import windenergyImage from '../images/categories/windenergy.png';
-import otherImage from '../images/categories/other.png';
-import realestatecoworkingImage from '../images/categories/Co-working.png';
-import realestatestorageImage from '../images/categories/Storage.jpeg';
-import masternodeImage from '../images/categories/Masternode.jpeg';
-import chargeStationImage from '../images/categories/ChargeStation.png';
-import vendingMachineImage from '../images/categories/VendingMachine.jpeg';
+import otherImage from '../images/categories/other.jpg';
+import realestatecoworkingImage from '../images/categories/Co-working.jpg';
+import realestatestorageImage from '../images/categories/Storage.jpg';
+import masternodeImage from '../images/categories/Masternode.jpg';
+import chargeStationImage from '../images/categories/ChargeStation.jpg';
+import vendingMachineImage from '../images/categories/VendingMachine.jpg';
 
 export const formatMonetaryValue = (number, fractionDigits = 0) =>
   Number(number).toLocaleString('en-US', {
