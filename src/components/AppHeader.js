@@ -6,11 +6,10 @@ import Logo from './Logo';
 import ExchangeRate from './ExchangeRate';
 import AccountInfo from './AccountInfo';
 import Address from './Address';
-import Notification from './Notification';
 import BancorWidgetButton from './UI/BancorWidgetButton/index';
 
 const AppHeader = ({
-  user, prices, usingServer, assertsNotification, setAssertsStatusState, notificationPlace,
+  user, prices, usingServer,
 }) => (
   <div className="AppHeader">
     <div className="AppHeader__logo-and-info">
@@ -30,12 +29,6 @@ const AppHeader = ({
     </div>
     {!usingServer && (
       <Address {...user} />
-    )}
-    {notificationPlace === 'notification' && (
-      <Notification
-        setAssertsStatusState={setAssertsStatusState}
-        assertsNotification={assertsNotification}
-      />
     )}
   </div>
 );
