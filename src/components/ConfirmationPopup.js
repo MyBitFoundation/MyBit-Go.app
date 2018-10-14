@@ -248,7 +248,7 @@ ConfirmationPopup.propTypes = {
   fundAsset: PropTypes.func.isRequired,
   assetId: PropTypes.string.isRequired,
   isPopupOpen: PropTypes.func.isRequired,
-  userHasMetamask: PropTypes.func.isRequired,
+  userHasMetamask: PropTypes.bool.isRequired,
   extensionUrl: PropTypes.string.isRequired,
   network: PropTypes.string.isRequired,
   userIsLoggedIn: PropTypes.bool.isRequired,

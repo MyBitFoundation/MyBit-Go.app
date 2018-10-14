@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import { Slider, Button } from 'antd';
 import dayjs from 'dayjs';
 
+import InputNumber from 'antd/lib/input-number';
+import 'antd/lib/input-number/style/css';
 import Row from 'antd/lib/row';
 import 'antd/lib/row/style';
 import Col from 'antd/lib/col';
@@ -17,7 +19,7 @@ import '../styles/AssetDetails.css';
 import LocationIcon from '../images/Location-blue.svg';
 import CalendarIcon from '../images/calendar.svg';
 import BlockchainInfoContext from './BlockchainInfoContext';
-import NumericInput from './NumericInput';
+import { formatMonetaryValue } from '../util/helpers';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -25,9 +27,9 @@ class AssetDetails extends React.Component {
     const { goal, raised } = this.props.information;
     this.assetFunded = raised === goal;
     this.state = {
-      selectedAmountUsd: null,
-      selectedAmountEth: null,
-      selectedOwnership: null,
+      selectedAmountUsd: 0,
+      selectedAmountEth: 0,
+      selectedOwnership: 0,
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
@@ -149,14 +151,14 @@ class AssetDetails extends React.Component {
   render() {
     const { selectedAmountUsd } = this.state;
     const { currentEthInUsd } = this.props;
+    const { goal, raised } = this.props.information;
 
     const maxInvestment =
       this.assetFunded || this.state.daysToGo < 0
         ? 0
-        : (this.props.information.goal - this.props.information.raised).toFixed(2);
+        : (goal - raised);
 
-    this.etherValueSelected =
-      selectedAmountUsd && Number(selectedAmountUsd / currentEthInUsd).toFixed(5);
+    this.etherValueSelected = (selectedAmountUsd / currentEthInUsd).toFixed(5);
 
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
@@ -165,17 +167,10 @@ class AssetDetails extends React.Component {
       minInvestment = 1;
     }
 
-    const goal = Number(this.props.information.goal)
-      .toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      });
+    const formattedGoal = formatMonetaryValue(goal);
 
-    const maxEther = Number(maxInvestment / currentEthInUsd).toFixed(5);
-    const maxOwnership = maxInvestment && (
-      (maxInvestment * 100) /
-      this.props.information.goal
-    ).toFixed(2);
+    const maxEther = parseFloat(Number(maxInvestment / currentEthInUsd).toFixed(5));
+    const maxOwnership = (maxInvestment * 100) / goal;
 
     return (
       <Row>
@@ -259,13 +254,13 @@ class AssetDetails extends React.Component {
                 <b
                   className="AssetDetails__left-funding-value"
                 >
-                  {this.assetFunded ? goal : `$${this.props.information.raised}`}
+                  {this.assetFunded ? formattedGoal : `${formatMonetaryValue(raised)}`}
                 </b>
               </div>
               <div className="AssetDetails__left-funds-goal">
                 <p className="AssetDetails__left-funding-title">Funding goal</p>
                 <b className="AssetDetails__left-funding-value">
-                  {goal}
+                  {formattedGoal}
                 </b>
               </div>
               <div className="AssetDetails__left-funds-investors">
@@ -282,110 +277,96 @@ class AssetDetails extends React.Component {
             Calculate your investment
             </p>
 
-            <NumericInput
+            <InputNumber
               style={{ width: '28%' }}
-              placeHolderText="ETH Amount"
               value={this.state.selectedAmountEth}
-              label="ETH"
-              onChange={number => number > Number(maxEther) ?
+              onChange={number =>
                 this.setState({
-                  selectedAmountEth: maxEther,
-                })
-                : this.setState({
-                    selectedAmountUsd:
-                    number * currentEthInUsd,
+                    selectedAmountUsd: number * currentEthInUsd,
                     selectedAmountEth: number,
-                    selectedOwnership: (number * currentEthInUsd) && (
-                  (number * currentEthInUsd * 100) /
-                  this.props.information.goal
-                ).toFixed(2),
-              })
+                    selectedOwnership: (number * currentEthInUsd * 100) / goal,
+                })
               }
               min={0}
               precision={5}
+              formatter={value => `${value} ETH`}
+              parser={value => value.replace('ETH', '').trim()}
+              max={maxEther}
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
-            <NumericInput
+            <InputNumber
               style={{ width: '28%' }}
-              placeHolderText="USD Amount"
-              value={this.state.selectedAmountUsd}
-              onChange={number => number > Number(maxInvestment)
-              ? this.setState({
-                selectedAmountUsd: maxInvestment,
-              })
-              : this.setState({
-                selectedAmountUsd: number,
-                selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
-                selectedOwnership: number && (
-                  (number * 100) /
-                  this.props.information.goal
-                ).toFixed(2),
-              })}
-              label="$"
+              value={selectedAmountUsd}
+              onChange={number =>
+                this.setState({
+                  selectedAmountUsd: number,
+                  selectedAmountEth: number / currentEthInUsd,
+                  selectedOwnership: (number * 100) / goal,
+                })
+              }
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
               min={0}
+              max={maxInvestment}
               precision={2}
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
 
-            <NumericInput
+            <InputNumber
               style={{ width: '28%' }}
-              placeHolderText="% Amount"
               value={this.state.selectedOwnership}
               min={0}
-              label="%"
-              onChange={number => number > Number(maxOwnership)
-                ? this.setState({
-                    selectedOwnership: maxOwnership,
-                  })
-                : this.setState({
+              max={maxOwnership}
+              onChange={number =>
+                this.setState({
                   selectedAmountUsd:
-                    (this.props.information.goal / 100) * number,
+                    (goal / 100) * number,
                   selectedOwnership: number,
-                  selectedAmountEth: (Number(maxEther) * (number / 100)).toFixed(5),
+                  selectedAmountEth: maxEther * (number / 100),
                 })
               }
               precision={2}
+              formatter={value => `${value}%`}
+              parser={value => value.replace('%', '')}
             />
             <Slider
+              step={0.01}
               id="slider"
               defaultValue={0}
               value={
-                Number(selectedAmountUsd) >= minInvestment
-                ? Number(selectedAmountUsd)
+                selectedAmountUsd >= minInvestment
+                ? selectedAmountUsd
                 : minInvestment
               }
               min={minInvestment}
               max={maxInvestment}
               onChange={number =>
                 this.setState({
-                selectedAmountUsd: number,
-                selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
-                selectedOwnership: number && (
-                  (number * 100) /
-                  this.props.information.goal
-                ).toFixed(2),
+                  selectedAmountUsd: number,
+                  selectedAmountEth: number / currentEthInUsd,
+                  selectedOwnership: (number * 100) / goal,
                 })}
               disabled={this.state.daysToGo < 0 || maxInvestment === 0}
             />
             {/* 100USD minimum as per connor's indication */}
             <p className="AssetDetails__left-slider-min">
-            Min. <b>{minInvestment} USD</b>
+            Min. <b>{formatMonetaryValue(minInvestment)}</b>
             </p>
             <p className="AssetDetails__left-slider-max">
-            Max. <b>{maxInvestment} USD</b>
+            Max. <b>{formatMonetaryValue(maxInvestment)}</b>
             </p>
             <p className="AssetDetails__left-contribution">Your contribution:</p>
             <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-              {selectedAmountUsd ? parseFloat(Number(selectedAmountUsd).toFixed(2)) : 0} USD
+              {formatMonetaryValue(selectedAmountUsd)}
             </b>
             <div className="AssetDetails__left-separator" />
             <b className="AssetDetails__left-contribution-value">
-              {selectedAmountUsd ? parseFloat(Number(this.etherValueSelected).toFixed(5)) : 0} ETH
+              {parseFloat(Number(this.etherValueSelected).toFixed(5))} ETH
             </b>
             <div>
               <p className="AssetDetails__left-ownership">Your ownership:</p>
               <b className="AssetDetails__left-ownership-value">
-                {selectedAmountUsd ? this.state.selectedOwnership : 0}%
+                {parseFloat(Number(this.state.selectedOwnership).toFixed(2))}%
               </b>
             </div>
             <Button
@@ -414,9 +395,9 @@ AssetDetails.defaultProps = {
 AssetDetails.propTypes = {
   information: PropTypes.shape({
     assetID: PropTypes.string.isRequired,
-    dueDate: PropTypes.number.isRequired,
-    goal: PropTypes.string.isRequired,
-    raised: PropTypes.string.isRequired,
+    dueDate: PropTypes.shape({ params: PropTypes.object }).isRequired,
+    goal: PropTypes.number.isRequired,
+    raised: PropTypes.number.isRequired,
     assetName: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
     country: PropTypes.string.isRequired,

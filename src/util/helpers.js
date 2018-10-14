@@ -13,6 +13,13 @@ import masternodeImage from '../images/categories/Masternode.jpeg';
 import chargeStationImage from '../images/categories/ChargeStation.png';
 import vendingMachineImage from '../images/categories/VendingMachine.jpeg';
 
+export const formatMonetaryValue = (number, fractionDigits = 0) => 
+  Number(number).toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: fractionDigits,
+  });
+
 export const getCategoryFromAssetTypeHash = (web3, assetTypeHash) => {
   switch (assetTypeHash) {
     case web3.utils.sha3('bitcoinatm'):

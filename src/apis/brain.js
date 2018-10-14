@@ -30,7 +30,7 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
       const jsonResponse = await response.json();
       const { price, percent_change_24h } = jsonResponse.data.quotes.USD;
       resolve({
-        price: price.toFixed(4),
+        price: price,
         priceChangePercentage: percent_change_24h,
       });
     } catch (error) {
@@ -349,7 +349,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           pastDate = true;
         }
 
-        const amountToBeRaisedInUSD = amountsToBeRaised[index];
+        const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
         const fundingStage = fundingStages[index];
         let amountRaisedInUSD = 0;
 
@@ -358,22 +358,20 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         if (fundingStage === '3' || fundingStage === '4') {
           amountRaisedInUSD = amountToBeRaisedInUSD;
         } else {
-          amountRaisedInUSD = (
+          amountRaisedInUSD =
             Number(window.web3js.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
-              currentEthInUsd
-          ).toFixed(2);
+              currentEthInUsd;
         }
 
         return {
           ...asset,
           amountRaisedInUSD,
-          amountToBeRaisedInUSD: amountsToBeRaised[index],
+          amountToBeRaisedInUSD: amountToBeRaisedInUSD,
           fundingDeadline: dueDate,
           ownershipUnits: ownershipUnits[index],
-          assetIncome: (
+          assetIncome:
             Number(window.web3js.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
-              currentEthInUsd
-          ).toFixed(2),
+              currentEthInUsd,
           assetManager: assetManagers[index],
           city: assetIdDetails.city,
           country: assetIdDetails.country,
