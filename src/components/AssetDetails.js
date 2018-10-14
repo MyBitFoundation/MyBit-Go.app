@@ -6,8 +6,6 @@ import PropTypes from 'prop-types';
 import { Slider, Button } from 'antd';
 import dayjs from 'dayjs';
 
-import InputNumber from 'antd/lib/input-number';
-import 'antd/lib/input-number/style/css';
 import Row from 'antd/lib/row';
 import 'antd/lib/row/style';
 import Col from 'antd/lib/col';
@@ -19,6 +17,7 @@ import '../styles/AssetDetails.css';
 import LocationIcon from '../images/Location-blue.svg';
 import CalendarIcon from '../images/calendar.svg';
 import BlockchainInfoContext from './BlockchainInfoContext';
+import NumericInput from './NumericInput';
 import { formatMonetaryValue } from '../util/helpers';
 
 class AssetDetails extends React.Component {
@@ -27,9 +26,9 @@ class AssetDetails extends React.Component {
     const { goal, raised } = this.props.information;
     this.assetFunded = raised === goal;
     this.state = {
-      selectedAmountUsd: 0,
-      selectedAmountEth: 0,
-      selectedOwnership: 0,
+      selectedAmountUsd: null,
+      selectedAmountEth: null,
+      selectedOwnership: null,
       daysToGo: 0,
       timeToGo: '',
       endingAt: '',
@@ -139,9 +138,7 @@ class AssetDetails extends React.Component {
   }
 
   clearInterval() {
-    if (this.setDateInterval) {
-      clearInterval(this.setDateInterval);
-    }
+    clearInterval(this.setDateInterval);
   }
 
   componenWillUnmount() {
@@ -149,16 +146,24 @@ class AssetDetails extends React.Component {
   }
 
   render() {
-    const { selectedAmountUsd } = this.state;
+    const { selectedAmountUsd, selectedAmountEth } = this.state;
     const { currentEthInUsd } = this.props;
-    const { goal, raised } = this.props.information;
+    const {
+      goal,
+      raised,
+      city,
+      country,
+      assetID,
+      details,
+      description,
+      address,
+      numberOfInvestors,
+    } = this.props.information;
 
     const maxInvestment =
       this.assetFunded || this.state.daysToGo < 0
         ? 0
-        : (goal - raised);
-
-    this.etherValueSelected = (selectedAmountUsd / currentEthInUsd).toFixed(5);
+        : Number((goal - raised).toFixed(2));
 
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
@@ -167,10 +172,13 @@ class AssetDetails extends React.Component {
       minInvestment = 1;
     }
 
-    const formattedGoal = formatMonetaryValue(goal);
+    const goalFormatted = formatMonetaryValue(goal);
 
-    const maxEther = parseFloat(Number(maxInvestment / currentEthInUsd).toFixed(5));
-    const maxOwnership = (maxInvestment * 100) / goal;
+    const maxEther = Number(maxInvestment / currentEthInUsd).toFixed(5);
+    const maxOwnership = maxInvestment && (
+      (maxInvestment * 100) /
+      this.props.information.goal
+    ).toFixed(2);
 
     return (
       <Row>
@@ -187,12 +195,12 @@ class AssetDetails extends React.Component {
               setAssertsStatusState,
             }) => (
               <ConfirmationPopup
-                amountUsd={selectedAmountUsd}
+                amountUsd={formatMonetaryValue(selectedAmountUsd)}
                 amountEth={this.state.selectedAmountEth}
                 ownership={this.state.selectedOwnership}
                 isPopupOpen={() => this.isPopupOpen()}
                 handlePopupState={val => this.handlePopupState(val)}
-                assetId={this.props.information.assetID}
+                assetId={assetID}
                 fundAsset={fundAsset}
                 userHasMetamask={userHasMetamask}
                 userIsLoggedIn={userIsLoggedIn}
@@ -215,7 +223,7 @@ class AssetDetails extends React.Component {
               className="AssetDetails__left-image-holder-location-icon"
             />
             <p className="AssetDetails__left-location">
-              {this.props.information.city}, {this.props.information.country}
+              {city}, {country}
             </p>
             <div
               alt="Asset details background"
@@ -225,15 +233,15 @@ class AssetDetails extends React.Component {
             <div className="AssetDetails__right-wrapper">
               <b className="AssetDetails__right-title-details">Asset Details</b>
               <p className="AssetDetails__right-content-details">
-                {this.props.information.details}
+                {details}
               </p>
               <b className="AssetDetails__right-title-details">Description</b>
               <p className="AssetDetails__right-content-details">
-                {this.props.information.description}
+                {description}
               </p>
               <b className="AssetDetails__right-title-details">Asset manager</b>
               <Address
-                userName={this.props.information.address}
+                userName={address}
                 className="AssetDetails__right-address"
               />
             </div>
@@ -254,13 +262,13 @@ class AssetDetails extends React.Component {
                 <b
                   className="AssetDetails__left-funding-value"
                 >
-                  {this.assetFunded ? formattedGoal : `${formatMonetaryValue(raised)}`}
+                  {this.assetFunded ? goalFormatted : `${formatMonetaryValue(raised)}`}
                 </b>
               </div>
               <div className="AssetDetails__left-funds-goal">
                 <p className="AssetDetails__left-funding-title">Funding goal</p>
                 <b className="AssetDetails__left-funding-value">
-                  {formattedGoal}
+                  {goalFormatted}
                 </b>
               </div>
               <div className="AssetDetails__left-funds-investors">
@@ -268,7 +276,7 @@ class AssetDetails extends React.Component {
                 Number of investors so far
                 </p>
                 <b className="AssetDetails__left-funding-value">
-                  {this.props.information.numberOfInvestors}
+                  {numberOfInvestors}
                 </b>
               </div>
             </div>
@@ -277,96 +285,104 @@ class AssetDetails extends React.Component {
             Calculate your investment
             </p>
 
-            <InputNumber
+            <NumericInput
               style={{ width: '28%' }}
+              placeholdertext="ETH Amount"
               value={this.state.selectedAmountEth}
-              onChange={number =>
+              label="ETH"
+              onChange={number => number > Number(maxEther) ?
                 this.setState({
-                    selectedAmountUsd: number * currentEthInUsd,
-                    selectedAmountEth: number,
-                    selectedOwnership: (number * currentEthInUsd * 100) / goal,
+                  selectedAmountEth: maxEther,
                 })
+                : this.setState({
+                    selectedAmountUsd:
+                    Number((number * currentEthInUsd).toFixed(2)),
+                    selectedAmountEth: number,
+                    selectedOwnership: (number * currentEthInUsd) && (
+                  (number * currentEthInUsd * 100) /
+                  goal
+                ).toFixed(2),
+              })
               }
               min={0}
               precision={5}
-              formatter={value => `${value} ETH`}
-              parser={value => value.replace('ETH', '').trim()}
-              max={maxEther}
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
-            <InputNumber
+            <NumericInput
               style={{ width: '28%' }}
-              value={selectedAmountUsd}
-              onChange={number =>
-                this.setState({
-                  selectedAmountUsd: number,
-                  selectedAmountEth: number / currentEthInUsd,
-                  selectedOwnership: (number * 100) / goal,
-                })
-              }
-              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+              placeholdertext="USD Amount"
+              value={this.state.selectedAmountUsd}
+              onChange={number => number > Number(maxInvestment)
+              ? this.setState({
+                selectedAmountUsd: maxInvestment,
+              })
+              : this.setState({
+                selectedAmountUsd: number,
+                selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
+                selectedOwnership: number && ((number * 100) / goal).toFixed(2),
+              })}
+              label="$"
               min={0}
-              max={maxInvestment}
               precision={2}
             />
             <span className="AssetDetails__left-calculate-separator">=</span>
 
-            <InputNumber
+            <NumericInput
               style={{ width: '28%' }}
+              placeholdertext="% Amount"
               value={this.state.selectedOwnership}
               min={0}
-              max={maxOwnership}
-              onChange={number =>
-                this.setState({
-                  selectedAmountUsd:
-                    (goal / 100) * number,
+              label="%"
+              onChange={number => number > Number(maxOwnership)
+                ? this.setState({
+                    selectedOwnership: maxOwnership,
+                  })
+                : this.setState({
+                  selectedAmountUsd: (goal / 100) * number,
                   selectedOwnership: number,
-                  selectedAmountEth: maxEther * (number / 100),
+                  selectedAmountEth: (Number(maxEther) * (number / 100)).toFixed(5),
                 })
               }
               precision={2}
-              formatter={value => `${value}%`}
-              parser={value => value.replace('%', '')}
             />
             <Slider
-              step={0.01}
               id="slider"
+              step={0.01}
               defaultValue={0}
               value={
-                selectedAmountUsd >= minInvestment
-                ? selectedAmountUsd
+                Number(selectedAmountUsd) >= minInvestment
+                ? Number(selectedAmountUsd)
                 : minInvestment
               }
               min={minInvestment}
               max={maxInvestment}
               onChange={number =>
-                this.setState({
+                  this.setState({
                   selectedAmountUsd: number,
-                  selectedAmountEth: number / currentEthInUsd,
-                  selectedOwnership: (number * 100) / goal,
+                  selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
+                  selectedOwnership: number && ((number * 100) / goal).toFixed(2),
                 })}
               disabled={this.state.daysToGo < 0 || maxInvestment === 0}
             />
             {/* 100USD minimum as per connor's indication */}
             <p className="AssetDetails__left-slider-min">
-            Min. <b>{formatMonetaryValue(minInvestment)}</b>
+            Min. <b>{formatMonetaryValue(minInvestment).substring(1)} USD</b>
             </p>
             <p className="AssetDetails__left-slider-max">
-            Max. <b>{formatMonetaryValue(maxInvestment)}</b>
+            Max. <b>{formatMonetaryValue(maxInvestment).substring(1)} USD</b>
             </p>
             <p className="AssetDetails__left-contribution">Your contribution:</p>
             <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-              {formatMonetaryValue(selectedAmountUsd)}
+              {selectedAmountUsd ? formatMonetaryValue(selectedAmountUsd).substring(1) : 0} USD
             </b>
             <div className="AssetDetails__left-separator" />
             <b className="AssetDetails__left-contribution-value">
-              {parseFloat(Number(this.etherValueSelected).toFixed(5))} ETH
+              {selectedAmountUsd ? parseFloat(Number(selectedAmountEth).toFixed(5)) : 0} ETH
             </b>
             <div>
               <p className="AssetDetails__left-ownership">Your ownership:</p>
               <b className="AssetDetails__left-ownership-value">
-                {parseFloat(Number(this.state.selectedOwnership).toFixed(2))}%
+                {selectedAmountUsd ? this.state.selectedOwnership : 0}%
               </b>
             </div>
             <Button
@@ -390,6 +406,9 @@ class AssetDetails extends React.Component {
 
 AssetDetails.defaultProps = {
   currentEthInUsd: undefined,
+  information: {
+    imageSrc: '',
+  },
 };
 
 AssetDetails.propTypes = {
@@ -405,10 +424,10 @@ AssetDetails.propTypes = {
     description: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     numberOfInvestors: PropTypes.number.isRequired,
-    imageSrc: PropTypes.string.isRequired,
+    imageSrc: PropTypes.string,
     fundingStage: PropTypes.string.isRequired,
     pastDate: PropTypes.bool.isRequired,
-  }).isRequired,
+  }),
   currentEthInUsd: PropTypes.number,
   changeNotificationPlace: PropTypes.func.isRequired,
   setAssertsStatusState: PropTypes.func.isRequired,

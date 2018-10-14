@@ -30,7 +30,7 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
       const jsonResponse = await response.json();
       const { price, percent_change_24h } = jsonResponse.data.quotes.USD;
       resolve({
-        price: price,
+        price,
         priceChangePercentage: percent_change_24h,
       });
     } catch (error) {
@@ -366,7 +366,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         return {
           ...asset,
           amountRaisedInUSD,
-          amountToBeRaisedInUSD: amountToBeRaisedInUSD,
+          amountToBeRaisedInUSD,
           fundingDeadline: dueDate,
           ownershipUnits: ownershipUnits[index],
           assetIncome:

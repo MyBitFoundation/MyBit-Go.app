@@ -42,7 +42,7 @@ const AppHeader = ({
 
 AppHeader.defaultProps = {
   prices: undefined,
-}
+};
 
 AppHeader.propTypes = {
   prices: PropTypes.shape({ params: PropTypes.object }),

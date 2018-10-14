@@ -64,7 +64,7 @@ const AssetDetailsPage = ({
 
 AssetDetailsPage.defaultProps = {
   ether: undefined,
-}
+};
 
 AssetDetailsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
