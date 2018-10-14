@@ -48,6 +48,11 @@ class ExplorePage extends Component {
     this.props = props;
   }
 
+  componentDidMount() {
+    console.log('awaw ExplorePage cdm');
+    console.log(this.props);
+  }
+
   render() {
     const { loading } = this.props;
     if (loading.assets) {

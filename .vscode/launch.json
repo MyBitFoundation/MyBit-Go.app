@@ -1,11 +1,14 @@
 {
-    "type": "node",
-    "request": "launch",
-    "name": "`yarn start`",
-    "cwd": "${workspaceRoot}",
-    "runtimeExecutable": "yarn",
-    "runtimeArgs": [
-      "start"
-    ],
-    "stopOnEntry": false
-  }
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Chrome",
+      "port": 3000,
+      "webRoot": "${workspaceFolder}"
+    }
+  ]  
+}
+
+
