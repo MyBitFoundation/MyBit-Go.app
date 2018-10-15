@@ -1,5 +1,3 @@
-import React from 'react';
-
 import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpg';
 import autonomousvehiclesImage from '../images/categories/autonomousvehicles.jpg';
 import cryptominingImage from '../images/categories/Cryptomining.jpg';
