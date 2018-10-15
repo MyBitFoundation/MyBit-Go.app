@@ -35,10 +35,10 @@ const testEnabledAssertIdsData = includeImage => ({
     imgSrc: includeImage && require('../images/categories/Cryptomining.jpeg'),
   },
 });
-
-const testAssertIds = Object.keys(testEnabledAssertIdsData);
+const testAssertIds = Object.keys(testEnabledAssertIdsData(true));
 
 const isAssetIdEnabled = (assetId, includeImage) => {
+  
   let enabledAssetIds = {
     // first wave of assets
     '0x116dc7388854d37e952a811c1fa2e03369809eef84b7a49ce9ce9536b5f2c66b': {
