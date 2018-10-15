@@ -10,6 +10,7 @@ import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 import { ethereumNetwork } from './constants/index';
+import Notification from './components/Notification';
 
 class App extends Component {
   isFirstVisit() {
@@ -54,6 +55,26 @@ class App extends Component {
           )}
         </BlockchainInfoContext.Consumer>
         <NavigationBar currentPath={this.props.location.pathname} />
+
+        <div className="notification_wrapper">
+          <BlockchainInfoContext.Consumer>
+            {({
+              notificationPlace,
+              setAssertsStatusState,
+              assertsNotification,
+            }) => {
+              if (notificationPlace === 'notification') {
+                return (<Notification
+                  setAssertsStatusState={setAssertsStatusState}
+                  assertsNotification={assertsNotification}
+                />);
+              }
+              return null;
+            }}
+          </BlockchainInfoContext.Consumer>
+        </div>
+
+
         <div className="page-wrapper">
           <Switch>
             {routes.map(({ path, exact, component: C }) => (

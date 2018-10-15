@@ -65,6 +65,7 @@ class BlockchainInfo extends React.Component {
         acceptedTos: false,
         alertType: '',
         alertMessage: '',
+
       },
       notificationPlace: 'notification',
     };
@@ -205,6 +206,8 @@ class BlockchainInfo extends React.Component {
   }
 
   async fundAsset(assetId, amount) {
+    const { notificationPlace } = this.state;
+
     await this.setAssertsStatusState({
       isLoading: true,
       transactionStatus: '',
@@ -222,7 +225,9 @@ class BlockchainInfo extends React.Component {
       const currentAssert = this.state.assets.find(item => item.assetID === assetId);
 
       if (result) {
-        const alertMessage = `Funded ${currentAssert.name} with ${amount} Sent Successfully!`;
+        const alertMessage = notificationPlace === 'notification'
+          ? `Funded ${currentAssert.name} with ${amount} Sent Successfully!`
+          : 'Sent Successfuly!';
 
         this.setAssertsStatusState({
           isLoading: false,
@@ -231,7 +236,10 @@ class BlockchainInfo extends React.Component {
           alertMessage,
         });
       } else {
-        const alertMessage = `Funded ${currentAssert.name} with ${amount} ETH failed. Please try again.`;
+        const alertMessage = notificationPlace === 'notification'
+          ? `Funded ${currentAssert.name} with ${amount} ETH failed. Please try again.`
+          : 'Transaction failed. Please try again.';
+
         this.setAssertsStatusState({
           isLoading: false,
           transactionStatus: 0,

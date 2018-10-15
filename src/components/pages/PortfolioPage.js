@@ -8,6 +8,7 @@ import { isAssetIdEnabled } from '../../constants';
 import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
 import AssetPortfolio from '../AssetPortfolio';
+import { formatMonetaryValue } from '../../util/helpers';
 
 const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue, 'ether');
 
@@ -79,11 +80,11 @@ const PortfolioPage = ({ loading, assets, prices }) => {
   const totalPortfolioValue = getPortfolioValue(
     ownedAssets,
     ether.price,
-  ).toFixed(2);
+  );
   const totalPortfolioRevenue = getPortfolioRevenue(
     ownedAssets,
     ether.price,
-  ).toFixed(2);
+  );
 
   const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, ether.price);
   const portfolioRevenueAssets = getPortfolioRevenueAssets(
@@ -93,11 +94,11 @@ const PortfolioPage = ({ loading, assets, prices }) => {
 
   const totalValueEth =
     parseFloat((totalPortfolioValue / ether.price)
-      .toFixed(4));
+      .toFixed(5));
 
   const totalRevenuePercentage =
     (totalPortfolioValue > 0 && totalPortfolioRevenue > 0)
-      ? ((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2)
+      ? parseFloat(((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2))
       : 0;
 
   return (
@@ -108,7 +109,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
             <img className="Portfolio__card-img" src={PieChart} alt="Pie chart" />
             <span>Total Portfolio Value: {' '}
               <b>
-                ${Number(totalPortfolioValue).toLocaleString()}
+                {formatMonetaryValue(totalPortfolioValue)}
               </b>
             </span>
             <div className="Portfolio__card-separator" />
@@ -116,7 +117,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
           </div>
           <div className="Portfolio__card">
             <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
-            <span>Total Revenue: <b>${Number(totalPortfolioRevenue).toLocaleString()}</b></span>
+            <span>Total Revenue: <b>{formatMonetaryValue(totalPortfolioRevenue)}</b></span>
             <div className="Portfolio__card-separator" />
             <b className="Portfolio__card-value--is-green">%{totalRevenuePercentage}</b>
           </div>

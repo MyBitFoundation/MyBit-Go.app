@@ -62,10 +62,14 @@ const AssetDetailsPage = ({
   );
 };
 
+AssetDetailsPage.defaultProps = {
+  ether: undefined,
+};
+
 AssetDetailsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  ether: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  ether: PropTypes.shape({ params: PropTypes.object }),
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   history: PropTypes.shape({ params: PropTypes.object }).isRequired,

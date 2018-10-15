@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Spin } from 'antd';
+import { formatMonetaryValue } from '../util/helpers';
 
 const ExchangeRate = ({ price, priceChangePercentage }) => (
   <div className="AppHeader__rate-container">
     <div className="AppHeader__exchange-rate">
       <p className="AppHeader__tokenprice-label">MYB TOKEN PRICE</p>
-      {price ? <b>{`$${price}`} <span className={priceChangePercentage < 0 && 'AppHeader__tokenprice-label--is-red'}>({priceChangePercentage > 0 ? `+ ${priceChangePercentage}` : priceChangePercentage}%)</span></b>
+      {price ? <b>{`${formatMonetaryValue(price, 2)}`} <span className={priceChangePercentage < 0 ? 'AppHeader__tokenprice-label--is-red' : undefined}>({priceChangePercentage > 0 ? `+ ${priceChangePercentage}` : priceChangePercentage}%)</span></b>
       :
       <Spin
         className="AppHeader__exchange-rate--is-loading"
@@ -22,7 +23,7 @@ ExchangeRate.defaultProps = {
 };
 
 ExchangeRate.propTypes = {
-  price: PropTypes.string,
+  price: PropTypes.number,
   priceChangePercentage: PropTypes.number,
 };
 
