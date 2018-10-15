@@ -8,10 +8,8 @@ import '../../styles/NotFoundPage.css';
 const NotFoundPage = ({ message }) => (
   <div className="NotFoundPage">
     <div className="NotFoundPage__wrapper">
-      <img
+      <NotFound
         className="NotFoundPage__image"
-        alt="Page not found"
-        src={NotFound}
       />
       <h1 className="NotFoundPage__header-text">Page not found.</h1>
       <h2 className="NotFoundPage__message-text">
@@ -19,7 +17,7 @@ const NotFoundPage = ({ message }) => (
       </h2>
 
       <Link to="/explore" href="/explore" className="NotFoundPage__home-btn">
-        <Button type="secondary">GO TO HOME</Button>
+        <Button type="primary">GO TO HOME</Button>
       </Link>
     </div>
   </div>

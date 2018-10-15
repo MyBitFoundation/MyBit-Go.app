@@ -12,6 +12,7 @@ import 'antd/lib/icon/style';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.png';
 import { debug, isAssetIdEnabled } from '../constants';
+import { formatMonetaryValue } from '../util/helpers';
 
 const Asset = ({
   clickHandler,
@@ -28,10 +29,7 @@ const Asset = ({
 }) => {
   const assetFunded = fundingStage === '3' || fundingStage === '4';
   const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
-  const goalFormatted = Number(goal).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
+  const goalFormatted = formatMonetaryValue(goal);
   let buttonText = 'Contribute';
   let buttonType = 'primary';
   if (assetFunded || pastDate) {
@@ -59,7 +57,7 @@ const Asset = ({
         <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
           <p className="Asset__details-funded">
             Funded:{' '}
-            <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
+            <b>{assetFunded ? goalFormatted : `${formatMonetaryValue(funded)}`}</b>
           </p>
           <p className="Asset__details-goal">
             Goal:{' '}
@@ -102,15 +100,15 @@ Asset.defaultProps = {
 };
 
 Asset.propTypes = {
-  funded: PropTypes.string.isRequired,
-  goal: PropTypes.string.isRequired,
+  funded: PropTypes.number.isRequired,
+  goal: PropTypes.number.isRequired,
   city: PropTypes.string,
   country: PropTypes.string,
   name: PropTypes.string,
   category: PropTypes.string.isRequired,
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string.isRequired,
+  backgroundImage: PropTypes.string,
   fundingStage: PropTypes.string.isRequired,
   pastDate: PropTypes.bool.isRequired,
 };
@@ -120,6 +118,7 @@ Asset.defaultProps = {
   country: '',
   name: '',
   clickHandler: () => {},
+  backgroundImage: '',
 };
 
 export default Asset;

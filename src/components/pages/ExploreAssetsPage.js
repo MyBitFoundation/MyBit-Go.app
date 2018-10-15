@@ -31,7 +31,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
 
   const assetsToRender = [
     backButton,
-    <div>
+    <div key="ExploreAssetsPage__assets">
       {assetsInCategory.map(asset => (
         <Asset
           key={asset.assetID}

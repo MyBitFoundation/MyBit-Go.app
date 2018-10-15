@@ -153,7 +153,7 @@ async function fetchAssets() {
       pastDate = true;
     }
 
-    const amountToBeRaisedInUSD = amountsToBeRaised[index];
+    const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
     const fundingStage = fundingStages[index];
     let amountRaisedInUSD = 0;
 
@@ -162,10 +162,9 @@ async function fetchAssets() {
     if (fundingStage === '3' || fundingStage === '4') {
       amountRaisedInUSD = amountToBeRaisedInUSD;
     } else {
-      amountRaisedInUSD = (
+      amountRaisedInUSD =
         Number(web3.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
-          currentEthInUsd
-      ).toFixed(2);
+          currentEthInUsd;
     }
 
     return {
@@ -174,10 +173,9 @@ async function fetchAssets() {
       amountToBeRaisedInUSD: amountsToBeRaised[index],
       fundingDeadline: fundingDeadlines[index],
       ownershipUnits: 0,
-      assetIncome: (
+      assetIncome:
         Number(web3.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
-          currentEthInUsd
-      ).toFixed(2),
+          currentEthInUsd,
       assetManager: assetManagers[index],
       numberOfInvestors,
       fundingStage: fundingStages[index],

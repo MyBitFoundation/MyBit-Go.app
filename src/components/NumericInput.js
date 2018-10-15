@@ -22,14 +22,14 @@ class NumericInput extends React.Component {
 
   render() {
     const {
-      value, placeHolderText, label,
+      value, placeholdertext, label,
     } = this.props;
     return (
       <Input
         {...this.props}
         value={value}
         onChange={this.onChange}
-        placeholder={placeHolderText}
+        placeholder={placeholdertext}
         maxLength="25"
         addonAfter={label}
         type="number"
@@ -38,10 +38,17 @@ class NumericInput extends React.Component {
   }
 }
 
+NumericInput.defaultProps = {
+  value: null,
+};
+
 NumericInput.propTypes = {
   label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  placeHolderText: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  placeholdertext: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

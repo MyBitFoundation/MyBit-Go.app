@@ -33,8 +33,12 @@ const AppHeader = ({
   </div>
 );
 
+AppHeader.defaultProps = {
+  prices: undefined,
+};
+
 AppHeader.propTypes = {
-  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  prices: PropTypes.shape({ params: PropTypes.object }),
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   usingServer: PropTypes.bool.isRequired,
   assertsNotification: PropTypes.shape({ params: PropTypes.object }).isRequired,
