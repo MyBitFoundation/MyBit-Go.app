@@ -11,6 +11,8 @@ import 'antd/lib/col/style';
 import '../styles/Asset.css';
 import '../styles/AssetPortfolio.css';
 
+import { formatMonetaryValue } from '../util/helpers';
+
 const AssetPortfolio = ({
   name,
   backgroundImage,
@@ -59,13 +61,13 @@ const AssetPortfolio = ({
             <span
               className={unrealizedProfit && 'AssetPortfolio__details--value-green'}
             >
-              {fundingStage === '1' ? <span>Funding in progress</span> : `$${Number(unrealizedProfit).toLocaleString()}`}
+              {fundingStage === '1' ? <span>Funding in progress</span> : `${formatMonetaryValue(unrealizedProfit)}`}
             </span>
           </div>
           <div className="AssetPortfolio__details-section">
             <span>Your ownership:</span>
             <div>
-              <span>${Number(ownershipUsd).toLocaleString()}</span>
+              <span>{formatMonetaryValue(ownershipUsd)}</span>
               <Divider
                 type="vertical"
               />
@@ -76,7 +78,7 @@ const AssetPortfolio = ({
             <div>
               <p>Funding:</p>
               <span>
-                ${Number(funding).toLocaleString()}/${Number(fundingTotal).toLocaleString()}
+                {formatMonetaryValue(funding)}/{formatMonetaryValue(fundingTotal)}
               </span>
             </div>
             {button}
@@ -89,14 +91,18 @@ const AssetPortfolio = ({
 
 export default AssetPortfolio;
 
+AssetPortfolio.defaultProps = {
+  backgroundImage: '',
+};
+
 AssetPortfolio.propTypes = {
   name: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string.isRequired,
+  backgroundImage: PropTypes.string,
   unrealizedProfit: PropTypes.string.isRequired,
   ownershipUsd: PropTypes.string.isRequired,
   ownershipPercentage: PropTypes.string.isRequired,
-  funding: PropTypes.string.isRequired,
-  fundingTotal: PropTypes.string.isRequired,
+  funding: PropTypes.number.isRequired,
+  fundingTotal: PropTypes.number.isRequired,
   fundingStage: PropTypes.string.isRequired,
   assetID: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
