@@ -3,16 +3,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Icon, Dropdown, Checkbox, Button } from 'antd';
-import '../styles/CategoryFilter.css';
-
 import styled from 'styled-components';
+
+import '../styles/CategoryFilter.css';
 
 const mainFilters = 4;
 
 const FilterButton = styled(Button)`
-  background-color: ${props => (props.type==='primary') ? '#fff' : '#fff'}; 
-  color: ${props => (props.type==='primary') ? '#096dd9' : '#d9d9d9'}; 
-  border-color: ${props => (props.type==='primary') ? '#096dd9 ' : '#d9d9d9'};  
+  background-color: ${props => ((props.type === 'primary') ? '#fff' : '#fff')}; 
+  color: ${props => ((props.type === 'primary') ? '#096dd9' : '#d9d9d9')}; 
+  border-color: ${props => ((props.type === 'primary') ? '#096dd9 ' : '#d9d9d9')};  
 
   &:hover {
     background-color: #fff;
@@ -20,7 +20,6 @@ const FilterButton = styled(Button)`
     border-color: #d9d9d9;
   }
 `;
-
 
 
 const CategoryFilter = ({ filters, setFilterState }) => {

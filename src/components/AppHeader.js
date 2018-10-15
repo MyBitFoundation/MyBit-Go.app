@@ -41,7 +41,7 @@ const AppHeader = ({
 );
 
 AppHeader.propTypes = {
-  prices: PropTypes.shape({ params: PropTypes.object }),
+  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   usingServer: PropTypes.bool.isRequired,
   assertsNotification: PropTypes.shape({ params: PropTypes.object }).isRequired,
