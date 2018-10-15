@@ -58,12 +58,7 @@ export const getPrettyCategoryName = (category) => {
     case 'realestatestorage':
       return 'Real Estate (Storage)';
     case 'realestatecoworking':
-      return (
-        <React.Fragment>
-          <span style={{ display: 'block' }}>Real Estate</span>
-          <span style={{ fontSize: '35px' }}>(Co-Working)</span>
-        </React.Fragment>
-      );
+      return 'Real Estate (Co-Working)';
     case 'chargingstation':
       return 'Charging Station';
     case 'dronedelivery':

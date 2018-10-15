@@ -236,4 +236,9 @@ module.exports = {
     `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`,
   isAssetIdEnabled,
   testAssertIds,
+  fetchTransactionHistoryTime: 60 * 1000,
+  loadMetamaskUserDetailsTime: 5 * 1000,
+  pullAssetsFromServerTime: 30 * 1000,
+  fetchAssetsFromWeb3Time: 30 * 1000,
+  checkIfLoggedInTime: 5 * 1000,
 };

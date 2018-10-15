@@ -1,0 +1,26 @@
+@import 'include-media/dist/_include-media.scss';
+
+.CategoryFilter{
+  width: max-content;
+  margin-left: 15px;
+  font-family: 'Roboto';
+
+  &--is-desktop{
+    @include media('<=tablet') {
+        display: none;
+    }
+  }
+
+  &--is-mobile{
+    display: none;
+
+    @include media('<=tablet') {
+        display: block;
+    }
+  }
+
+  button{
+    margin-right: 5px;
+    width: 100px;
+  }
+}

@@ -14,6 +14,11 @@ import {
   isAssetIdEnabled,
   serverIp,
   ethereumNetwork,
+  fetchTransactionHistoryTime,
+  loadMetamaskUserDetailsTime,
+  pullAssetsFromServerTime,
+  fetchAssetsFromWeb3Time,
+  checkIfLoggedInTime,
 } from '../constants';
 
 class BlockchainInfo extends React.Component {
@@ -72,9 +77,12 @@ class BlockchainInfo extends React.Component {
         // we need the prices and the user details before getting the assets and transactions
         await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-        this.intervalFetchAssets = setInterval(this.fetchAssets, 1 * 5000);
-        this.intervalFetchTransactionHistory = setInterval(this.fetchTransactionHistory, 60 * 1000);
-        this.intervalLoadMetamaskUserDetails = setInterval(this.loadMetamaskUserDetails, 5 * 1000);
+        this.intervalFetchAssets =
+          setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
+        this.intervalFetchTransactionHistory =
+          setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
+        this.intervalLoadMetamaskUserDetails =
+          setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
       } else {
         this.loadPrices();
         this.pullAssetsFromServer();
@@ -84,10 +92,11 @@ class BlockchainInfo extends React.Component {
     }
 
     if (!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork) {
-      this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 10 * 1000);
+      this.intervalAssetsFromServer =
+        setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
     }
     if (userHasMetamask) {
-      setInterval(this.checkIfLoggedIn, 3 * 1000);
+      setInterval(this.checkIfLoggedIn, checkIfLoggedInTime);
     }
 
     setInterval(this.loadPrices, 15 * 1000);
@@ -174,16 +183,20 @@ class BlockchainInfo extends React.Component {
       await this.loadMetamaskUserDetails();
       this.fetchAssets();
       this.fetchTransactionHistory();
-      this.intervalFetchAssets = setInterval(this.fetchAssets, 5 * 1000);
-      this.intervalFetchTransactionHistory = setInterval(this.fetchTransactionHistory, 60 * 1000);
-      this.intervalLoadMetamaskUserDetails = setInterval(this.loadMetamaskUserDetails, 5 * 1000);
+      this.intervalFetchAssets =
+        setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
+      this.intervalFetchTransactionHistory =
+        setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
+      this.intervalLoadMetamaskUserDetails =
+        setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
       clearInterval(this.intervalAssetsFromServer);
     } else if (this.state.userIsLoggedIn && !isLoggedIn) {
       this.pullAssetsFromServer();
       clearInterval(this.intervalFetchAssets);
       clearInterval(this.intervalFetchTransactionHistory);
       clearInterval(this.intervalLoadMetamaskUserDetails);
-      this.intervalAssetsFromServer = setInterval(this.pullAssetsFromServer, 10 * 1000);
+      this.intervalAssetsFromServer =
+        setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
     }
 
     this.setState({
