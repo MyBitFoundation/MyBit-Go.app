@@ -11,7 +11,9 @@ import Icon from 'antd/lib/icon';
 import 'antd/lib/icon/style';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.png';
+import Watch from './Watch';
 import { debug, isAssetIdEnabled } from '../constants';
+import { formatMonetaryValue } from '../util/helpers';
 
 const Asset = ({
   clickHandler,
@@ -25,13 +27,11 @@ const Asset = ({
   backgroundImage,
   fundingStage,
   pastDate,
+  watchListed,
 }) => {
   const assetFunded = fundingStage === '3' || fundingStage === '4';
   const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
-  const goalFormatted = Number(goal).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
+  const goalFormatted = formatMonetaryValue(goal);
   let buttonText = 'Contribute';
   let buttonType = 'primary';
   if (assetFunded || pastDate) {
@@ -55,11 +55,14 @@ const Asset = ({
           <p className="Asset__image-holder-location">
             {city}, <span>{country}</span>
           </p>
+          <Watch
+            active={watchListed}
+          />
         </div>
         <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
           <p className="Asset__details-funded">
             Funded:{' '}
-            <b>{assetFunded ? goalFormatted : `$${Math.round(funded)}`}</b>
+            <b>{assetFunded ? goalFormatted : `${formatMonetaryValue(funded)}`}</b>
           </p>
           <p className="Asset__details-goal">
             Goal:{' '}
@@ -97,13 +100,9 @@ const Asset = ({
   );
 };
 
-Asset.defaultProps = {
-  clickHandler: undefined,
-};
-
 Asset.propTypes = {
-  funded: PropTypes.string.isRequired,
-  goal: PropTypes.string.isRequired,
+  funded: PropTypes.number.isRequired,
+  goal: PropTypes.number.isRequired,
   city: PropTypes.string,
   country: PropTypes.string,
   name: PropTypes.string,
@@ -113,13 +112,16 @@ Asset.propTypes = {
   backgroundImage: PropTypes.string.isRequired,
   fundingStage: PropTypes.string.isRequired,
   pastDate: PropTypes.bool.isRequired,
+  watchListed: PropTypes.bool,
 };
 
 Asset.defaultProps = {
+  watchListed: false,
   city: '',
   country: '',
   name: '',
   clickHandler: () => {},
+  backgroundImage: '',
 };
 
 export default Asset;
