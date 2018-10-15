@@ -90,7 +90,7 @@ const CategoryFilter = ({ filters, setFilterState }) => {
 CategoryFilter.propTypes = {
   setFilterState: PropTypes.func.isRequired,
   filters: PropTypes.shape({
-    params: PropTypes.shape({}).isRequired,
+    params: PropTypes.shape({}),
   }).isRequired,
 };
 

@@ -110,7 +110,7 @@ Asset.propTypes = {
   category: PropTypes.string.isRequired,
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string.isRequired,
+  backgroundImage: PropTypes.string,
   fundingStage: PropTypes.string.isRequired,
   pastDate: PropTypes.bool.isRequired,
 };
