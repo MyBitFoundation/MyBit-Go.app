@@ -90,6 +90,8 @@ $imageHeight: 196px;
     &-goal{
       text-align: right;
       font-size: 14px;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     &-contribute{
