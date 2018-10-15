@@ -39,7 +39,12 @@ const StyledWatch = styled.span`
 const Watch = ({ active }) => (
   <StyledWatch active={active}>
     <GlobalStyle />
-    <Tooltip placement="topRight" title={active ? 'Remove from watchlist.' : 'Add to watchlist.'} overlayClassName="Watch__tooltip" arrowPointAtCenter>
+    <Tooltip
+      placement="topRight"
+      title={active ? 'Remove from watchlist.' : 'Add to watchlist.'}
+      overlayClassName="Watch__tooltip"
+      arrowPointAtCenter
+    >
       <WatchIcon />
     </Tooltip>
   </StyledWatch>
