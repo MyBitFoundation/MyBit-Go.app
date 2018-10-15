@@ -10,14 +10,25 @@ import '../styles/CategoryFilter.css';
 const mainFilters = 4;
 
 const FilterButton = styled(Button)`
+  text-shadow: none;
   background-color: ${props => ((props.type === 'primary') ? '#fff' : '#fff')}; 
-  color: ${props => ((props.type === 'primary') ? '#096dd9' : '#d9d9d9')}; 
-  border-color: ${props => ((props.type === 'primary') ? '#096dd9 ' : '#d9d9d9')};  
+  color: ${props => ((props.type === 'primary') ? '#1890ff' : 'rgba(0, 0, 0, 0.65)')}; 
+  border-color: ${props => ((props.type === 'primary') ? '#1890ff ' : '#d9d9d9')};  
 
   &:hover {
     background-color: #fff;
-    color: #d9d9d9;
-    border-color: #d9d9d9;
+    color: #1890ff;
+    border-color: #1890ff;
+  }
+
+  &:focus-within {
+    color: none;
+    background-color: none;
+    border-color: none;
+  }
+
+  &:focus {
+    background-color: #fff;
   }
 `;
 
