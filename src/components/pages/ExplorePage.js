@@ -155,6 +155,11 @@ class ExplorePage extends Component {
             className="ExplorePage__pagination"
           />
         )}
+        {assetsFiltered.length === 0 && (
+          <p className="ExplorePage__no-results">
+            No Assets to display
+          </p>
+        )}
       </Row>
     );
   }

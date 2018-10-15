@@ -29,6 +29,12 @@
     }
   }
 
+  &__no-results{
+    font-size: 25px;
+    text-align: center;
+    margin-top: 150px;
+  }
+
   &__pagination{
     position: relative;
     position: absolute;
