@@ -28,7 +28,9 @@ const FilterButton = styled(Button)`
   }
 
   &:focus {
-    background-color: #fff;
+    background-color: ${props => ((props.type === 'primary') ? '#fff' : '#fff')}; 
+    color: ${props => ((props.type === 'primary') ? '#1890ff' : 'rgba(0, 0, 0, 0.65)')}; 
+    border-color: ${props => ((props.type === 'primary') ? '#1890ff ' : '#d9d9d9')};  
   }
 `;
 
@@ -92,7 +94,7 @@ const CategoryFilter = ({ filters, setFilterState }) => {
 
     dropdownToRender = (
       <Dropdown overlay={menu(checkBoxesToRender)}>
-        <Button style={{ marginLeft: 8 }}>
+        <Button>
           More <Icon type="down" />
         </Button>
       </Dropdown>
