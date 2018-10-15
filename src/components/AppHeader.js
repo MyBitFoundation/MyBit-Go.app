@@ -40,6 +40,10 @@ const AppHeader = ({
   </div>
 );
 
+AppHeader.defaultProps = {
+  prices: undefined,
+};
+
 AppHeader.propTypes = {
   prices: PropTypes.shape({ params: PropTypes.object }),
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,

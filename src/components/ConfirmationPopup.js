@@ -177,7 +177,7 @@ class ConfirmationPopup extends React.Component {
           <p className="ConfirmationPopup__description">
             Your contribution:{' '}
             <span style={{ fontWeight: '400' }} className="ConfirmationPopup__description-amount">
-              ${this.props.amountUsd}
+              {this.props.amountUsd}
               <span style={{ marginLeft: '10px', fontWeight: '500' }}>
                 {this.props.amountEth} ETH
               </span>
@@ -192,7 +192,7 @@ class ConfirmationPopup extends React.Component {
           <p className="ConfirmationPopup__description ConfirmationPopup__description-cost">
             Total asset costs:{' '}
             <span className="ConfirmationPopup__description-amount">
-              ${this.props.amountUsd}
+              {this.props.amountUsd}
             </span>
           </p>
           <div className="ConfirmationPopup__tos-wrapper">
@@ -241,14 +241,14 @@ ConfirmationPopup.defaultProps = {
 };
 
 ConfirmationPopup.propTypes = {
-  amountUsd: PropTypes.number.isRequired,
-  amountEth: PropTypes.number.isRequired,
+  amountUsd: PropTypes.string.isRequired,
+  amountEth: PropTypes.string.isRequired,
   ownership: PropTypes.string.isRequired,
   handlePopupState: PropTypes.func.isRequired,
   fundAsset: PropTypes.func.isRequired,
   assetId: PropTypes.string.isRequired,
   isPopupOpen: PropTypes.func.isRequired,
-  userHasMetamask: PropTypes.func.isRequired,
+  userHasMetamask: PropTypes.bool.isRequired,
   extensionUrl: PropTypes.string.isRequired,
   network: PropTypes.string.isRequired,
   userIsLoggedIn: PropTypes.bool.isRequired,

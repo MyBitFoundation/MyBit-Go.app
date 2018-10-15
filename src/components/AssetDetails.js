@@ -18,6 +18,7 @@ import LocationIcon from '../images/Location-blue.svg';
 import CalendarIcon from '../images/calendar.svg';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import NumericInput from './NumericInput';
+import { formatMonetaryValue } from '../util/helpers';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -137,9 +138,7 @@ class AssetDetails extends React.Component {
   }
 
   clearInterval() {
-    if (this.setDateInterval) {
-      clearInterval(this.setDateInterval);
-    }
+    clearInterval(this.setDateInterval);
   }
 
   componenWillUnmount() {
@@ -147,16 +146,24 @@ class AssetDetails extends React.Component {
   }
 
   render() {
-    const { selectedAmountUsd } = this.state;
+    const { selectedAmountUsd, selectedAmountEth } = this.state;
     const { currentEthInUsd } = this.props;
+    const {
+      goal,
+      raised,
+      city,
+      country,
+      assetID,
+      details,
+      description,
+      address,
+      numberOfInvestors,
+    } = this.props.information;
 
     const maxInvestment =
       this.assetFunded || this.state.daysToGo < 0
         ? 0
-        : (this.props.information.goal - this.props.information.raised).toFixed(2);
-
-    this.etherValueSelected =
-      selectedAmountUsd && Number(selectedAmountUsd / currentEthInUsd).toFixed(5);
+        : Number((goal - raised).toFixed(2));
 
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
@@ -165,11 +172,7 @@ class AssetDetails extends React.Component {
       minInvestment = 1;
     }
 
-    const goal = Number(this.props.information.goal)
-      .toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      });
+    const goalFormatted = formatMonetaryValue(goal);
 
     const maxEther = Number(maxInvestment / currentEthInUsd).toFixed(5);
     const maxOwnership = maxInvestment && (
@@ -192,12 +195,12 @@ class AssetDetails extends React.Component {
               setAssertsStatusState,
             }) => (
               <ConfirmationPopup
-                amountUsd={selectedAmountUsd}
+                amountUsd={formatMonetaryValue(selectedAmountUsd)}
                 amountEth={this.state.selectedAmountEth}
                 ownership={this.state.selectedOwnership}
                 isPopupOpen={() => this.isPopupOpen()}
                 handlePopupState={val => this.handlePopupState(val)}
-                assetId={this.props.information.assetID}
+                assetId={assetID}
                 fundAsset={fundAsset}
                 userHasMetamask={userHasMetamask}
                 userIsLoggedIn={userIsLoggedIn}
@@ -220,7 +223,7 @@ class AssetDetails extends React.Component {
               className="AssetDetails__left-image-holder-location-icon"
             />
             <p className="AssetDetails__left-location">
-              {this.props.information.city}, {this.props.information.country}
+              {city}, {country}
             </p>
             <div
               alt="Asset details background"
@@ -230,15 +233,15 @@ class AssetDetails extends React.Component {
             <div className="AssetDetails__right-wrapper">
               <b className="AssetDetails__right-title-details">Asset Details</b>
               <p className="AssetDetails__right-content-details">
-                {this.props.information.details}
+                {details}
               </p>
               <b className="AssetDetails__right-title-details">Description</b>
               <p className="AssetDetails__right-content-details">
-                {this.props.information.description}
+                {description}
               </p>
               <b className="AssetDetails__right-title-details">Asset manager</b>
               <Address
-                userName={this.props.information.address}
+                userName={address}
                 className="AssetDetails__right-address"
               />
             </div>
@@ -259,13 +262,13 @@ class AssetDetails extends React.Component {
                 <b
                   className="AssetDetails__left-funding-value"
                 >
-                  {this.assetFunded ? goal : `$${this.props.information.raised}`}
+                  {this.assetFunded ? goalFormatted : `${formatMonetaryValue(raised)}`}
                 </b>
               </div>
               <div className="AssetDetails__left-funds-goal">
                 <p className="AssetDetails__left-funding-title">Funding goal</p>
                 <b className="AssetDetails__left-funding-value">
-                  {goal}
+                  {goalFormatted}
                 </b>
               </div>
               <div className="AssetDetails__left-funds-investors">
@@ -273,7 +276,7 @@ class AssetDetails extends React.Component {
                 Number of investors so far
                 </p>
                 <b className="AssetDetails__left-funding-value">
-                  {this.props.information.numberOfInvestors}
+                  {numberOfInvestors}
                 </b>
               </div>
             </div>
@@ -284,7 +287,7 @@ class AssetDetails extends React.Component {
 
             <NumericInput
               style={{ width: '28%' }}
-              placeHolderText="ETH Amount"
+              placeholdertext="ETH Amount"
               value={this.state.selectedAmountEth}
               label="ETH"
               onChange={number => number > Number(maxEther) ?
@@ -293,11 +296,11 @@ class AssetDetails extends React.Component {
                 })
                 : this.setState({
                     selectedAmountUsd:
-                    number * currentEthInUsd,
+                    Number((number * currentEthInUsd).toFixed(2)),
                     selectedAmountEth: number,
                     selectedOwnership: (number * currentEthInUsd) && (
                   (number * currentEthInUsd * 100) /
-                  this.props.information.goal
+                  goal
                 ).toFixed(2),
               })
               }
@@ -307,7 +310,7 @@ class AssetDetails extends React.Component {
             <span className="AssetDetails__left-calculate-separator">=</span>
             <NumericInput
               style={{ width: '28%' }}
-              placeHolderText="USD Amount"
+              placeholdertext="USD Amount"
               value={this.state.selectedAmountUsd}
               onChange={number => number > Number(maxInvestment)
               ? this.setState({
@@ -316,10 +319,7 @@ class AssetDetails extends React.Component {
               : this.setState({
                 selectedAmountUsd: number,
                 selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
-                selectedOwnership: number && (
-                  (number * 100) /
-                  this.props.information.goal
-                ).toFixed(2),
+                selectedOwnership: number && ((number * 100) / goal).toFixed(2),
               })}
               label="$"
               min={0}
@@ -329,7 +329,7 @@ class AssetDetails extends React.Component {
 
             <NumericInput
               style={{ width: '28%' }}
-              placeHolderText="% Amount"
+              placeholdertext="% Amount"
               value={this.state.selectedOwnership}
               min={0}
               label="%"
@@ -338,8 +338,7 @@ class AssetDetails extends React.Component {
                     selectedOwnership: maxOwnership,
                   })
                 : this.setState({
-                  selectedAmountUsd:
-                    (this.props.information.goal / 100) * number,
+                  selectedAmountUsd: (goal / 100) * number,
                   selectedOwnership: number,
                   selectedAmountEth: (Number(maxEther) * (number / 100)).toFixed(5),
                 })
@@ -348,6 +347,7 @@ class AssetDetails extends React.Component {
             />
             <Slider
               id="slider"
+              step={0.01}
               defaultValue={0}
               value={
                 Number(selectedAmountUsd) >= minInvestment
@@ -357,30 +357,27 @@ class AssetDetails extends React.Component {
               min={minInvestment}
               max={maxInvestment}
               onChange={number =>
-                this.setState({
-                selectedAmountUsd: number,
-                selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
-                selectedOwnership: number && (
-                  (number * 100) /
-                  this.props.information.goal
-                ).toFixed(2),
+                  this.setState({
+                  selectedAmountUsd: number,
+                  selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
+                  selectedOwnership: number && ((number * 100) / goal).toFixed(2),
                 })}
               disabled={this.state.daysToGo < 0 || maxInvestment === 0}
             />
             {/* 100USD minimum as per connor's indication */}
             <p className="AssetDetails__left-slider-min">
-            Min. <b>{minInvestment} USD</b>
+            Min. <b>{formatMonetaryValue(minInvestment).substring(1)} USD</b>
             </p>
             <p className="AssetDetails__left-slider-max">
-            Max. <b>{maxInvestment} USD</b>
+            Max. <b>{formatMonetaryValue(maxInvestment).substring(1)} USD</b>
             </p>
             <p className="AssetDetails__left-contribution">Your contribution:</p>
             <b className="AssetDetails__left-contribution-bordered AssetDetails__left-contribution-value">
-              {selectedAmountUsd ? parseFloat(Number(selectedAmountUsd).toFixed(2)) : 0} USD
+              {selectedAmountUsd ? formatMonetaryValue(selectedAmountUsd).substring(1) : 0} USD
             </b>
             <div className="AssetDetails__left-separator" />
             <b className="AssetDetails__left-contribution-value">
-              {selectedAmountUsd ? parseFloat(Number(this.etherValueSelected).toFixed(5)) : 0} ETH
+              {selectedAmountUsd ? parseFloat(Number(selectedAmountEth).toFixed(5)) : 0} ETH
             </b>
             <div>
               <p className="AssetDetails__left-ownership">Your ownership:</p>
@@ -409,14 +406,17 @@ class AssetDetails extends React.Component {
 
 AssetDetails.defaultProps = {
   currentEthInUsd: undefined,
+  information: {
+    imageSrc: '',
+  },
 };
 
 AssetDetails.propTypes = {
   information: PropTypes.shape({
     assetID: PropTypes.string.isRequired,
-    dueDate: PropTypes.number.isRequired,
-    goal: PropTypes.string.isRequired,
-    raised: PropTypes.string.isRequired,
+    dueDate: PropTypes.shape({ params: PropTypes.object }).isRequired,
+    goal: PropTypes.number.isRequired,
+    raised: PropTypes.number.isRequired,
     assetName: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
     country: PropTypes.string.isRequired,
@@ -424,10 +424,10 @@ AssetDetails.propTypes = {
     description: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     numberOfInvestors: PropTypes.number.isRequired,
-    imageSrc: PropTypes.string.isRequired,
+    imageSrc: PropTypes.string,
     fundingStage: PropTypes.string.isRequired,
     pastDate: PropTypes.bool.isRequired,
-  }).isRequired,
+  }),
   currentEthInUsd: PropTypes.number,
   changeNotificationPlace: PropTypes.func.isRequired,
   setAssertsStatusState: PropTypes.func.isRequired,
