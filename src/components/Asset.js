@@ -14,6 +14,7 @@ import locationIcon from '../images/Location-icon.png';
 import Watch from './Watch';
 import { debug, isAssetIdEnabled } from '../constants';
 import { formatMonetaryValue } from '../util/helpers';
+import BlockchainInfoContext from './BlockchainInfoContext';
 
 const Asset = ({
   clickHandler,
@@ -56,11 +57,18 @@ const Asset = ({
           <p className="Asset__image-holder-location">
             {city}, <span>{country}</span>
           </p>
-          <Watch
-            active={watchListed}
-            handleClick={handleClickedAssetFavorite}
-            assetId={id}
-          />
+          <BlockchainInfoContext.Consumer>
+            {({
+              usingServer,
+            }) =>
+              !usingServer && (
+                <Watch
+                  active={watchListed}
+                  handleClick={handleClickedAssetFavorite}
+                  assetId={id}
+                />
+            )}
+          </BlockchainInfoContext.Consumer>
         </div>
         <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
           <p className="Asset__details-funded">
@@ -112,7 +120,7 @@ Asset.propTypes = {
   category: PropTypes.string.isRequired,
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string.isRequired,
+  backgroundImage: PropTypes.string,
   fundingStage: PropTypes.string.isRequired,
   pastDate: PropTypes.bool.isRequired,
   watchListed: PropTypes.bool.isRequired,

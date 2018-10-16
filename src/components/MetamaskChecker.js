@@ -121,7 +121,6 @@ class MetamaskChecker extends Component {
     }
     return React.cloneElement(this.props.children, {
       isMetamaskInstalled: this.state.isInstalled,
-      checkIfLoggedIn: this.checkIfLoggedIn,
       network: this.network,
       isBraveBrowser: this.isBraveBrowser,
       extensionUrl: this.extensionUrl,
