@@ -240,5 +240,4 @@ module.exports = {
   loadMetamaskUserDetailsTime: 5 * 1000,
   pullAssetsFromServerTime: 30 * 1000,
   fetchAssetsFromWeb3Time: 30 * 1000,
-  checkIfLoggedInTime: 5 * 1000,
 };
