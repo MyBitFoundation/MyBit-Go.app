@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable global-require */
 
-const testEnabledAssertIdsData = includeImage => ({
+const testEnabledAssetIdsData = includeImage => ({
   '0x8d896c37eb6f50f35ddefe472f91f51d30faff549cd251e5f8a4a90a471ab0c8': {
     name: 'Test asset for development 1',
     city: 'Zurich',
@@ -36,7 +36,7 @@ const testEnabledAssertIdsData = includeImage => ({
   },
 });
 
-const testAssertIds = Object.keys(testEnabledAssertIdsData);
+const testAssetIds = Object.keys(testEnabledAssetIdsData);
 
 const isAssetIdEnabled = (assetId, includeImage) => {
   let enabledAssetIds = {
@@ -212,7 +212,7 @@ const isAssetIdEnabled = (assetId, includeImage) => {
   if (process.env.NODE_ENV === 'development') {
     enabledAssetIds = {
       ...enabledAssetIds,
-      ...testEnabledAssertIdsData(includeImage),
+      ...testEnabledAssetIdsData(includeImage),
     };
   }
 
@@ -235,7 +235,7 @@ module.exports = {
   ETHERSCAN_BALANCE: address =>
     `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`,
   isAssetIdEnabled,
-  testAssertIds,
+  testAssetIds,
   fetchTransactionHistoryTime: 60 * 1000,
   loadMetamaskUserDetailsTime: 5 * 1000,
   pullAssetsFromServerTime: 30 * 1000,

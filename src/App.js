@@ -40,16 +40,16 @@ class App extends Component {
             userHasMetamask,
             userIsLoggedIn,
             network,
-            setAssertsStatusState,
-            assertsNotification,
+            setAssetsStatusState,
+            assetsNotification,
             notificationPlace,
           }) => (
             <AppHeader
               user={user}
               prices={prices.mybit}
               usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
-              setAssertsStatusState={setAssertsStatusState}
-              assertsNotification={assertsNotification}
+              setAssetsStatusState={setAssetsStatusState}
+              assetsNotification={assetsNotification}
               notificationPlace={notificationPlace}
             />
           )}
@@ -60,13 +60,13 @@ class App extends Component {
           <BlockchainInfoContext.Consumer>
             {({
               notificationPlace,
-              setAssertsStatusState,
-              assertsNotification,
+              setAssetsStatusState,
+              assetsNotification,
             }) => {
               if (notificationPlace === 'notification') {
                 return (<Notification
-                  setAssertsStatusState={setAssertsStatusState}
-                  assertsNotification={assertsNotification}
+                  setAssetsStatusState={setAssetsStatusState}
+                  assetsNotification={assetsNotification}
                 />);
               }
               return null;

@@ -34,7 +34,7 @@ class BlockchainInfo extends React.Component {
     this.fundAsset = this.fundAsset.bind(this);
     this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
     this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
-    this.setAssertsStatusState = this.setAssertsStatusState.bind(this);
+    this.setAssetsStatusState = this.setAssetsStatusState.bind(this);
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
 
@@ -53,7 +53,7 @@ class BlockchainInfo extends React.Component {
       fetchTransactionHistory: this.fetchTransactionHistory,
       fetchMyBit: this.getMYB,
       fundAsset: this.fundAsset,
-      setAssertsStatusState: this.setAssertsStatusState,
+      setAssetsStatusState: this.setAssetsStatusState,
       changeNotificationPlace: this.changeNotificationPlace,
       user: {},
       userHasMetamask: this.props.isMetamaskInstalled,
@@ -62,7 +62,7 @@ class BlockchainInfo extends React.Component {
       extensionUrl: this.props.extensionUrl,
       userIsLoggedIn: this.props.userIsLoggedIn,
       handleClickedAssetFavorite: this.handleAssetFavorited,
-      assertsNotification: {
+      assetsNotification: {
         isLoading: false,
         transactionStatus: '',
         acceptedTos: false,
@@ -117,18 +117,18 @@ class BlockchainInfo extends React.Component {
     return Brain.withdrawFromFaucet(this.state.user);
   }
 
-  setAssertsStatusState(state) {
-    const { assertsNotification } = this.state;
+  setAssetsStatusState(state) {
+    const { assetsNotification } = this.state;
     if (state) {
       this.setState({
-        assertsNotification: {
-          ...assertsNotification,
+        assetsNotification: {
+          ...assetsNotification,
           ...state,
         },
       });
     } else {
       this.setState({
-        assertsNotification: {
+        assetsNotification: {
           isLoading: false,
           transactionStatus: '',
           acceptedTos: false,
@@ -232,7 +232,7 @@ class BlockchainInfo extends React.Component {
   }
 
   async fundAsset(assetId, amount) {
-    await this.setAssertsStatusState({
+    await this.setAssetsStatusState({
       isLoading: true,
       transactionStatus: '',
       alertType: 'info',
@@ -260,12 +260,31 @@ class BlockchainInfo extends React.Component {
           ? Message
           : 'Sent Successfuly!';
 
-        this.setAssertsStatusState({
+        this.setAssetsStatusState({
           isLoading: false,
           transactionStatus: 1,
           alertType: 'success',
           alertMessage,
         });
+
+        this.setState({
+          loading: {
+            assets: true,
+          },
+        });
+
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+
+        this.setState({
+          loading: {
+            assets: false,
+          },
+        });
+
+        this.intervalFetchAssets =
+          setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
+        this.intervalFetchTransactionHistory =
+          setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
       } else {
         const { notificationPlace } = this.state;
         const Message = (
@@ -278,7 +297,7 @@ class BlockchainInfo extends React.Component {
           ? Message
           : 'Transaction failed. Please try again.';
 
-        this.setAssertsStatusState({
+        this.setAssetsStatusState({
           isLoading: false,
           transactionStatus: 0,
           alertType: 'error',
@@ -286,7 +305,7 @@ class BlockchainInfo extends React.Component {
         });
       }
     } catch (err) {
-      this.setAssertsStatusState({
+      this.setAssetsStatusState({
         isLoading: false,
       });
     }
@@ -329,6 +348,7 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 10000);
       return;
     }
+
     await Brain.fetchAssets(this.state.user, this.state.prices.ether.price)
       .then((response) => {
         this.setState({
