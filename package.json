@@ -47,7 +47,7 @@
     "build-storybook": "npm-run-all build-css run-storybook",
     "lint": "eslint --ignore-path .gitignore .",
     "now-start": "node server.js",
-    "start-dev": "NODE_ENV=development nodemon server.js",
+    "start-dev": "NODE_ENV=development nodemon --ignore ./src server.js",
     "lint:fix": "eslint --ignore-path .gitignore --fix ."
   },
   "devDependencies": {
