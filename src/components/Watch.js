@@ -37,7 +37,7 @@ const StyledWatch = styled.span`
 `;
 
 const Watch = ({ active, handleClick, assetId }) => (
-  <StyledWatch key={`watch_${assetId}`} active={active} onClick={() => handleClick(assetId)}>
+  <StyledWatch active={active} onClick={() => handleClick(assetId)}>
     <GlobalStyle />
     <Tooltip
       placement="topRight"
