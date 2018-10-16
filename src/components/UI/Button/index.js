@@ -4,13 +4,14 @@ import Button from 'antd/lib/button';
 import MyBitButtonStyle from './styledButton';
 
 const MyBitButton = ({
-  size, styling, active, children,
+  size, styling, active, children, onClick,
 }) => (
   <div>
     <MyBitButtonStyle styling={styling}>
       <Button
         className={active ? 'ant-btn--is-active' : ''}
         size={size}
+        onClick={onClick}
       >
         {children}
       </Button>
@@ -23,12 +24,14 @@ MyBitButton.propTypes = {
   active: PropTypes.bool,
   children: PropTypes.node,
   size: PropTypes.string,
+  onClick: PropTypes.func,
 };
 
 MyBitButton.defaultProps = {
   active: false,
   children: '',
   size: '',
+  onClick: undefined,
 };
 
 export default MyBitButton;
