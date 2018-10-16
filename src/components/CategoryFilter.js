@@ -3,25 +3,54 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Icon, Dropdown, Checkbox, Button } from 'antd';
+import styled from 'styled-components';
+
 import '../styles/CategoryFilter.css';
 
 const mainFilters = 4;
+
+const FilterButton = styled(Button)`
+  text-shadow: none;
+  background-color: ${props => ((props.type === 'primary') ? '#fff' : '#fff')}; 
+  color: ${props => ((props.type === 'primary') ? '#1890ff' : 'rgba(0, 0, 0, 0.65)')}; 
+  border-color: ${props => ((props.type === 'primary') ? '#1890ff ' : '#d9d9d9')};  
+
+  &:hover {
+    background-color: #fff;
+    color: #1890ff;
+    border-color: #1890ff;
+  }
+
+  &:focus-within {
+    color: none;
+    background-color: none;
+    border-color: none;
+  }
+
+  &:focus {
+    background-color: ${props => ((props.type === 'primary') ? '#fff' : '#fff')}; 
+    color: ${props => ((props.type === 'primary') ? '#1890ff' : 'rgba(0, 0, 0, 0.65)')}; 
+    border-color: ${props => ((props.type === 'primary') ? '#1890ff ' : '#d9d9d9')};  
+  }
+`;
+
 
 const CategoryFilter = ({ filters, setFilterState }) => {
   const mobileDropDownToRender = [];
   const buttonsToRender = [];
   let dropdownToRender;
+
   Object.keys(filters).forEach((key, index) => {
     if (index > mainFilters - 1) return;
     const filterState = filters[key];
     buttonsToRender.push(
-      <Button
+      <FilterButton
         key={key}
         type={filterState ? 'primary' : ''}
         onClick={() => setFilterState(key, !filterState)}
       >
         {key}
-      </Button>,
+      </FilterButton>,
     );
     mobileDropDownToRender.push(
       <Menu.Item key={key}>
@@ -65,7 +94,7 @@ const CategoryFilter = ({ filters, setFilterState }) => {
 
     dropdownToRender = (
       <Dropdown overlay={menu(checkBoxesToRender)}>
-        <Button style={{ marginLeft: 8 }}>
+        <Button>
           More <Icon type="down" />
         </Button>
       </Dropdown>

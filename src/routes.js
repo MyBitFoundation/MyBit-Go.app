@@ -11,6 +11,7 @@ import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
 import HelpPage from './components/pages/HelpPage';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import LandingPage from './components/pages/LandingPage';
+import WatchListPage from './components/pages/WatchListPage';
 
 const redirectToOnFirstVisit = '/landing';
 
@@ -28,17 +29,38 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets }) =>
+        {({ loading, assets, handleClickedAssetFavorite }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
-            <ExplorePage loading={loading} assets={assets} />
+            <ExplorePage
+              loading={loading}
+              assets={assets}
+              handleClickedAssetFavorite={handleClickedAssetFavorite}
+            />
           ))
         }
       </BlockchainInfoContext.Consumer>
     ),
-  },
-  {
+  }, {
+    path: '/watchlist',
+    exact: true,
+    component: ({ isFirstVisit }) => (
+      <BlockchainInfoContext.Consumer>
+        {({ loading, assets, handleClickedAssetFavorite }) =>
+          (isFirstVisit ? (
+            <Redirect to={redirectToOnFirstVisit} />
+          ) : (
+            <WatchListPage
+              loading={loading}
+              assets={assets}
+              handleClickedAssetFavorite={handleClickedAssetFavorite}
+            />
+          ))
+        }
+      </BlockchainInfoContext.Consumer>
+    ),
+  }, {
     path: '/explore/:category',
     exact: true,
     component: ({ match, isFirstVisit }) => (

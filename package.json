@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@storybook/addon-actions": "^3.4.5",
-    "@storybook/react": "^3.4.5",
     "antd": "^3.9.2",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
@@ -41,13 +39,9 @@
     "build": "npm-run-all build-css build-js",
     "run-test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "start-storybook": "cross-env start-storybook -p $PORT -c .storybook",
-    "storybook": "cross-env PORT=8080 npm-run-all -p watch-css start-storybook",
-    "run-storybook": "build-storybook -c .storybook -o .out",
-    "build-storybook": "npm-run-all build-css run-storybook",
     "lint": "eslint --ignore-path .gitignore .",
     "now-start": "node server.js",
-    "start-dev": "NODE_ENV=development nodemon server.js",
+    "start-dev": "NODE_ENV=development nodemon --ignore ./src server.js",
     "lint:fix": "eslint --ignore-path .gitignore --fix ."
   },
   "devDependencies": {
