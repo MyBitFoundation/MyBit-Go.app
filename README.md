@@ -38,24 +38,8 @@ yarn
 yarn start
 ```
 
-### DApp [storybook](https://github.com/storybooks/storybook)
-Storybook is a development environment for UI components. It allows you to browse a component library, view the different states of each component, and interactively develop and test components.
+### MyBit UI components
 
-##### Exporting the Storybook
-
-```sh
-npm run build-storybook
-```
-
-This will generate the required files so that the storybook can be deployed as a static application. It exports the files to a directory named ".out".
-
-##### Starting the Storybook
-
-Once that is done, you can 
-```sh
-npm run storybook
-```
-and it will run the development server on your local machine, and give you a URL to browse through the stories.
 
 ### User Documentation
 MyBit Go follows user-centered design and documentation.
