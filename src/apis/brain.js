@@ -251,10 +251,14 @@ export const fundAsset = async (user, assetId, amount) =>
         .send({
           value: weiAmount,
           from: user.userName,
-        });
-
-      const { transactionHash } = fundingResponse;
-      checkTransactionConfirmation(transactionHash, resolve, reject);
+        })
+        .on('error', (error) => {
+          debug(error);
+          resolve(false);
+        })
+        .then(receipt => {
+          resolve(receipt.status);
+        })
     } catch (err) {
       reject(err);
     }
