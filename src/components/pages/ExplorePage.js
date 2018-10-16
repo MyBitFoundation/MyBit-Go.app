@@ -109,6 +109,8 @@ class ExplorePage extends Component {
             backgroundImage={asset.imageSrc}
             fundingStage={asset.fundingStage}
             pastDate={asset.pastDate}
+            handleClickedAssetFavorite={this.props.handleClickedAssetFavorite}
+            watchListed={asset.watchListed}
           />
         ))}
       </div>
@@ -117,23 +119,25 @@ class ExplorePage extends Component {
     return (
       <Row className="ExplorePage">
         <div className="ExplorePage__filters">
-          <CategoryFilter
-            filters={this.state.filters}
-            setFilterState={(filterName, newState) => {
-              if (!newState) {
-                selectedFilters = selectedFilters.filter(flter => flter !== filterName);
-              } else {
-                selectedFilters.push(filterName);
-              }
-              this.setState({
-                filters: {
-                  ...this.state.filters,
-                  [filterName]: newState,
-                },
-                selectedFilters,
-              });
-            }}
-          />
+          <div className="ExplorePage__filters--is-categories">
+            <CategoryFilter
+              filters={this.state.filters}
+              setFilterState={(filterName, newState) => {
+                if (!newState) {
+                  selectedFilters = selectedFilters.filter(flter => flter !== filterName);
+                } else {
+                  selectedFilters.push(filterName);
+                }
+                this.setState({
+                  filters: {
+                    ...this.state.filters,
+                    [filterName]: newState,
+                  },
+                  selectedFilters,
+                });
+              }}
+            />
+          </div>
           <div className="ExplorePage__filters--is-switch">
             <span>Funding Active</span>
             <Switch
@@ -168,6 +172,7 @@ class ExplorePage extends Component {
 ExplorePage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleClickedAssetFavorite: PropTypes.func.isRequired,
 };
 
 export default ExplorePage;

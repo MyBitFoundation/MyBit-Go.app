@@ -28,6 +28,7 @@ const Asset = ({
   fundingStage,
   pastDate,
   watchListed,
+  handleClickedAssetFavorite,
 }) => {
   const assetFunded = fundingStage === '3' || fundingStage === '4';
   const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
@@ -57,6 +58,8 @@ const Asset = ({
           </p>
           <Watch
             active={watchListed}
+            handleClick={handleClickedAssetFavorite}
+            assetId={id}
           />
         </div>
         <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
@@ -112,11 +115,11 @@ Asset.propTypes = {
   backgroundImage: PropTypes.string.isRequired,
   fundingStage: PropTypes.string.isRequired,
   pastDate: PropTypes.bool.isRequired,
-  watchListed: PropTypes.bool,
+  watchListed: PropTypes.bool.isRequired,
+  handleClickedAssetFavorite: PropTypes.func.isRequired,
 };
 
 Asset.defaultProps = {
-  watchListed: false,
   city: '',
   country: '',
   name: '',
