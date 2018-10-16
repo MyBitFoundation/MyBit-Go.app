@@ -60,9 +60,7 @@ const routes = [
         }
       </BlockchainInfoContext.Consumer>
     ),
-  },
-
-  {
+  }, {
     path: '/explore/:category',
     exact: true,
     component: ({ match, isFirstVisit }) => (

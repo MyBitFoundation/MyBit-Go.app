@@ -20,19 +20,16 @@ const NavigationBar = ({ currentPath }) => {
     {
       name: 'Explore',
       icon: exploreIcon,
-      selectable: true,
       selected: currentPath.indexOf('/explore') !== -1,
       url: '/',
     }, {
       name: 'Portfolio',
       icon: portfolioIcon,
-      selectable: true,
       selected: currentPath === '/portfolio',
       url: '/portfolio',
     }, {
       name: 'Transactions',
       icon: transactionsIcon,
-      selectable: true,
       selected: currentPath === '/transaction-history',
       url: '/transaction-history',
     }, {
@@ -51,7 +48,6 @@ const NavigationBar = ({ currentPath }) => {
     }, {
       name: 'Knowledge Base',
       icon: knowledgeBaseIcon,
-      selectable: true,
       selected: currentPath === '/help',
       url: '/help',
     },
@@ -70,6 +66,7 @@ const NavigationBar = ({ currentPath }) => {
     <Menu
       mode="horizontal"
       className="AppNavigationBar"
+      key={currentPath}
     >
       {navBarOptions}
     </Menu>
