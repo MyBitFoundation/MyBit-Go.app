@@ -41,7 +41,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ignore-path .gitignore .",
     "now-start": "node server.js",
-    "start-dev": "NODE_ENV=development nodemon server.js",
+    "start-dev": "NODE_ENV=development nodemon --ignore ./src server.js",
     "lint:fix": "eslint --ignore-path .gitignore --fix ."
   },
   "devDependencies": {

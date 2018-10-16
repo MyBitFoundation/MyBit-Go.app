@@ -11,9 +11,18 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
+    position: relative;
+
+    &--is-categories{
+      position: absolute;
+    }
 
     &--is-switch{
-      margin-right: 5px;
+      position: relative;
+      left: 100%;
+      transform: translate(-100%, 0%);
+      padding-right: 10px;
+
       span{
         font-family: Roboto;
         font-size: 14px;

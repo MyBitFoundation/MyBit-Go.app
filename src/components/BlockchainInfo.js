@@ -35,6 +35,7 @@ class BlockchainInfo extends React.Component {
     this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
     this.setAssertsStatusState = this.setAssertsStatusState.bind(this);
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
+    this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
 
     this.state = {
       loading: {
@@ -59,6 +60,7 @@ class BlockchainInfo extends React.Component {
       isBraveBrowser: this.props.isBraveBrowser,
       extensionUrl: this.props.extensionUrl,
       userIsLoggedIn: this.props.userIsLoggedIn,
+      handleClickedAssetFavorite: this.handleAssetFavorited,
       assertsNotification: {
         isLoading: false,
         transactionStatus: '',
@@ -137,6 +139,26 @@ class BlockchainInfo extends React.Component {
     }
   }
 
+  handleAssetFavorited(assetId) {
+    const searchQuery = `mybit_watchlist_${assetId}`;
+    const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
+    if (alreadyFavorite) {
+      localStorage.removeItem(searchQuery);
+    } else {
+      localStorage.setItem(searchQuery, true);
+    }
+
+    const assets = this.state.assets.slice();
+    const asset = assets.filter(assetToFilter => assetToFilter.assetID === assetId)[0];
+
+    asset.watchListed = !alreadyFavorite;
+
+    this.setState({
+      assets,
+    });
+  }
+
+
   changeNotificationPlace(place) {
     // place can be "confirmation" or "notification"
     this.setState({
@@ -150,6 +172,9 @@ class BlockchainInfo extends React.Component {
       return;
     }
     const assetsToReturn = data.assets.map((asset) => {
+      const searchQuery = `mybit_watchlist_${asset.assetID}`;
+      const alreadyFavorite = window.localStorage.getItem(searchQuery) || false;
+
       let details = isAssetIdEnabled(asset.assetID, true);
       if (!details) {
         details = {};
@@ -163,6 +188,7 @@ class BlockchainInfo extends React.Component {
         ...details,
         ...asset,
         fundingDeadline: dayjs(Number(asset.fundingDeadline) * 1000),
+        watchListed: alreadyFavorite,
       };
     });
 
