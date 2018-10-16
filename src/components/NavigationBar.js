@@ -38,7 +38,8 @@ const NavigationBar = ({ currentPath }) => {
     }, {
       name: 'WatchList',
       icon: watchIcon,
-      disabled: true,
+      selected: currentPath === '/watchlist',
+      url: '/watchlist',
     }, {
       name: 'List Asset',
       icon: listAssetIcon,

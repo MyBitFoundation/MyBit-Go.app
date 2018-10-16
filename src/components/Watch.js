@@ -36,8 +36,8 @@ const StyledWatch = styled.span`
   }
 `;
 
-const Watch = ({ active }) => (
-  <StyledWatch active={active}>
+const Watch = ({ active, handleClick, assetId }) => (
+  <StyledWatch key={`watch_${assetId}`} active={active} onClick={() => handleClick(assetId)}>
     <GlobalStyle />
     <Tooltip
       placement="topRight"
@@ -52,6 +52,8 @@ const Watch = ({ active }) => (
 
 Watch.propTypes = {
   active: PropTypes.bool.isRequired,
+  handleClick: PropTypes.func.isRequired,
+  assetId: PropTypes.string.isRequired,
 };
 
 export default Watch;

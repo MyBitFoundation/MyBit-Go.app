@@ -363,6 +363,9 @@ export const fetchAssets = async (user, currentEthInUsd) =>
               currentEthInUsd;
         }
 
+        const searchQuery = `mybit_watchlist_${asset.assetID}`;
+        const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
+
         return {
           ...asset,
           amountRaisedInUSD,
@@ -382,6 +385,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           imageSrc: assetIdDetails.imageSrc,
           fundingStage: fundingStages[index],
           pastDate,
+          watchListed: alreadyFavorite,
         };
       }));
 
