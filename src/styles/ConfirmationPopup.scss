@@ -78,6 +78,15 @@
     left: 0px;
     margin-top: 80px;
   }
+  &--is-success {
+    .ant-modal-footer{
+      div {
+        button:first-of-type{
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 

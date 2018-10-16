@@ -40,7 +40,11 @@ class ConfirmationPopup extends React.Component {
     });
   }
 
-  handleConfirmClicked() {
+  handleConfirmClicked(transactionStatus) {
+    if (transactionStatus === 1) {
+      return this.handleCancel();
+    }
+
     const { assertsNotification, setAssertsStatusState } = this.props;
 
     if (!assertsNotification.acceptedTos) {
@@ -164,12 +168,14 @@ class ConfirmationPopup extends React.Component {
 
     return (
       <Modal
+        className={transactionStatus === 1 ? 'ConfirmationPopup--is-success' : ''}
         visible={this.props.isPopupOpen()}
         title="Confirm with MetaMask"
-        onOk={() => this.handleConfirmClicked()}
+        onOk={() => this.handleConfirmClicked(transactionStatus)}
         onCancel={() => this.props.handlePopupState(false)}
-        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Send again' : 'Confirm'}
-        cancelText="Back"
+        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Close' : 'Confirm'}
+        cancelText={transactionStatus === 1 ? null : 'Back'}
+
         okButtonProps={{ disabled: !shouldShowConfirmAndCancel }}
       >
         <div>
