@@ -1,10 +1,11 @@
 /* eslint-disable  react/no-unused-state */
 /* eslint-disable  camelcase */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import * as Brain from '../apis/brain';
 import {
@@ -65,7 +66,6 @@ class BlockchainInfo extends React.Component {
         acceptedTos: false,
         alertType: '',
         alertMessage: '',
-
       },
       notificationPlace: 'notification',
     };
@@ -210,22 +210,28 @@ class BlockchainInfo extends React.Component {
       isLoading: true,
       transactionStatus: '',
       alertType: 'info',
-      alertMessage: 'Accept the transaction in metamask and wait for a brief moment.',
+      alertMessage: 'After accepting the transaction in Metamask it may take several minutes to be processed by Ethereum Network. You can explore the platform while this occurs.',
     });
 
     try {
+      const currentAsset = this.state.assets.find(item => item.assetID === assetId);
+
       const result = await Brain.fundAsset(
         this.state.user,
         assetId,
         amount,
       );
 
-      const currentAssert = this.state.assets.find(item => item.assetID === assetId);
-
       if (result) {
-        const { notificationPlace } = await this.state;
+        const { notificationPlace } = this.state;
+        const Message = (
+          <Fragment>Funded {currentAsset.name} successfully with {amount}.
+            <Link to="/portfolio" href="/portfolio">Go to Portfolio.</Link>
+          </Fragment>
+        );
+
         const alertMessage = notificationPlace === 'notification'
-          ? `Funded ${currentAssert.name} with ${amount} Sent Successfully!`
+          ? Message
           : 'Sent Successfuly!';
 
         this.setAssertsStatusState({
@@ -235,9 +241,15 @@ class BlockchainInfo extends React.Component {
           alertMessage,
         });
       } else {
-        const { notificationPlace } = await this.state;
+        const { notificationPlace } = this.state;
+        const Message = (
+          <Fragment>Funded {currentAsset.name} with {amount} ETH failed.
+            <Link to="/portfolio" href="/portfolio">Please try again.</Link>
+          </Fragment>
+        );
+
         const alertMessage = notificationPlace === 'notification'
-          ? `Funded ${currentAssert.name} with ${amount} ETH failed. Please try again.`
+          ? Message
           : 'Transaction failed. Please try again.';
 
         this.setAssertsStatusState({
