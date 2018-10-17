@@ -17,10 +17,11 @@ const FilterButton = styled(Button)`
 
   &:hover {
     background-color: #fff;
-    color: #1890ff;
-    border-color: #1890ff;
+    color: #40a9ff;
+    border-color: #40a9ff;
   }
 
+  
   &:focus-within {
     color: none;
     background-color: none;

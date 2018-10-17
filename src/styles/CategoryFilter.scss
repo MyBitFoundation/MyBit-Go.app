@@ -22,5 +22,9 @@
   button{
     margin-right: 5px;
     width: 100px;
+    @include media('>1230px') {
+      width: 170px;
+    }
+    
   }
 }
