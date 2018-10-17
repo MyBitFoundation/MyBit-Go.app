@@ -47,9 +47,7 @@ export const fetchTransactionHistory = async user =>
     *  than it is to keep converting it for every iteration
     */
       const userAddressLowerCase = userAddress.toLowerCase();
-      const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(
-        userAddress,
-      );
+      const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(userAddress);
       const result = await fetch(endpoint);
       const jsonResult = await result.json();
       if (

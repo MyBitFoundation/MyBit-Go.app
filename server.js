@@ -44,6 +44,7 @@ async function pullAssets() {
     assets = await fetchAssets();
     assetsLoaded = true;
   } catch (err) {
+    /* eslint no-console: ["error", { allow: ["log", "error"] }] */
     console.log(err);
   }
 }

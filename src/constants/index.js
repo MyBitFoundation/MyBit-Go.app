@@ -22,11 +22,11 @@ export const fetchAssetsFromWeb3Time = 30 * 1000;
 export const checkIfLoggedInTime = 5 * 1000;
 
 export const ETHERSCAN_TX_BY_ADDR_ENDPOINT = address =>
-    `https://api-ropsten.etherscan.io/api?module=account&action=txlist&address=${address}&sort=asc`;
+  `https://api-ropsten.etherscan.io/api?module=account&action=txlist&address=${address}&sort=asc`;
 export const ETHERSCAN_TX = txHash =>
-    `https://api-ropsten.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${txHash}`;
+  `https://api-ropsten.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${txHash}`;
 export const ETHERSCAN_BALANCE = address =>
-    `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`;
+  `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`;
 
 export const serverIp = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/assets' : '/api/assets';
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
@@ -68,8 +68,7 @@ const testEnabledAssertIdsData = {
 
 export const testAssertIds = Object.keys(testEnabledAssertIdsData);
 
-export const isAssetIdEnabled = assetId => {
-
+export const isAssetIdEnabled = (assetId) => {
   let enabledAssetIds = {
     // first wave of assets
     '0x116dc7388854d37e952a811c1fa2e03369809eef84b7a49ce9ce9536b5f2c66b': {

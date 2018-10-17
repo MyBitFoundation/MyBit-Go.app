@@ -18,7 +18,6 @@ import {
   loadMetamaskUserDetailsTime,
   pullAssetsFromServerTime,
   fetchAssetsFromWeb3Time,
-  checkIfLoggedInTime,
 } from '../constants';
 
 class BlockchainInfo extends React.Component {
@@ -32,10 +31,11 @@ class BlockchainInfo extends React.Component {
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
     this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
-    this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
+    this.handleAddressChange = this.handleAddressChange.bind(this);
     this.setAssertsStatusState = this.setAssertsStatusState.bind(this);
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
+    this.usingServer = this.usingServer.bind(this);
 
     this.state = {
       loading: {
@@ -74,9 +74,10 @@ class BlockchainInfo extends React.Component {
   }
 
   async componentDidMount() {
-    const { userHasMetamask, userIsLoggedIn, network } = this.state;
+    const { userHasMetamask } = this.state;
     try {
-      if (userHasMetamask && userIsLoggedIn && network === ethereumNetwork) {
+      const usingServer = this.usingServer();
+      if (!usingServer) {
         // we need the prices and the user details before getting the assets and transactions
         await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
@@ -89,17 +90,16 @@ class BlockchainInfo extends React.Component {
       } else {
         await this.loadPrices();
         this.pullAssetsFromServer();
+        this.intervalAssetsFromServer =
+          setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
       }
     } catch (err) {
       debug(err);
     }
 
-    if (!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork) {
-      this.intervalAssetsFromServer =
-        setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
-    }
     if (userHasMetamask) {
-      setInterval(this.checkIfLoggedIn, checkIfLoggedInTime);
+      // event handler for when the selected account changes
+      window.web3js.currentProvider.publicConfigStore.on('update', this.handleAddressChange);
     }
 
     setInterval(this.loadPrices, 15 * 1000);
@@ -110,7 +110,6 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalLoadMetamaskUserDetails);
     clearInterval(this.intervalFetchTransactionHistory);
-    clearInterval(this.checkIfLoggedIn);
   }
 
   getMYB() {
@@ -139,6 +138,11 @@ class BlockchainInfo extends React.Component {
     }
   }
 
+  usingServer() {
+    const { userHasMetamask, userIsLoggedIn, network } = this.state;
+    return !userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork;
+  }
+
   handleAssetFavorited(assetId) {
     const searchQuery = `mybit_watchlist_${assetId}`;
     const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
@@ -158,7 +162,6 @@ class BlockchainInfo extends React.Component {
     });
   }
 
-
   changeNotificationPlace(place) {
     // place can be "confirmation" or "notification"
     this.setState({
@@ -172,8 +175,12 @@ class BlockchainInfo extends React.Component {
       return;
     }
     const assetsToReturn = data.assets.map((asset) => {
-      const searchQuery = `mybit_watchlist_${asset.assetID}`;
-      const alreadyFavorite = window.localStorage.getItem(searchQuery) || false;
+      let watchListed = false;
+
+      if (!this.usingServer()) {
+        const searchQuery = `mybit_watchlist_${asset.assetID}`;
+        watchListed = window.localStorage.getItem(searchQuery) || false;
+      }
 
       let details = isAssetIdEnabled(asset.assetID, true);
       if (!details) {
@@ -188,11 +195,12 @@ class BlockchainInfo extends React.Component {
         ...details,
         ...asset,
         fundingDeadline: dayjs(Number(asset.fundingDeadline) * 1000),
-        watchListed: alreadyFavorite,
+        watchListed,
       };
     });
 
     this.setState({
+      usingServer: true,
       assets: assetsToReturn,
       transactions: [],
       loading: {
@@ -203,10 +211,11 @@ class BlockchainInfo extends React.Component {
     });
   }
 
-  async checkIfLoggedIn() {
-    const isLoggedIn = await this.props.checkIfLoggedIn();
+  async handleAddressChange({ selectedAddress }) {
+    let shouldReloadUI = false;
     // case where user was not logged in but logged in and opposite case
-    if (!this.state.userIsLoggedIn && isLoggedIn) {
+    if (!this.state.userIsLoggedIn && selectedAddress) {
+      shouldReloadUI = true;
       await this.loadMetamaskUserDetails();
       this.fetchAssets();
       this.fetchTransactionHistory();
@@ -217,7 +226,8 @@ class BlockchainInfo extends React.Component {
       this.intervalLoadMetamaskUserDetails =
         setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
       clearInterval(this.intervalAssetsFromServer);
-    } else if (this.state.userIsLoggedIn && !isLoggedIn) {
+    } else if (this.state.userIsLoggedIn && !selectedAddress) {
+      shouldReloadUI = true;
       this.pullAssetsFromServer();
       clearInterval(this.intervalFetchAssets);
       clearInterval(this.intervalFetchTransactionHistory);
@@ -226,9 +236,17 @@ class BlockchainInfo extends React.Component {
         setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
     }
 
-    this.setState({
-      userIsLoggedIn: isLoggedIn,
-    });
+    if (shouldReloadUI) {
+      this.setState({
+        userIsLoggedIn: selectedAddress || false,
+        assets: [],
+        loading: {
+          ...this.state.loading,
+          assets: true,
+          transactionHistory: true,
+        },
+      });
+    }
   }
 
   async fundAsset(assetId, amount) {
@@ -317,6 +335,9 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 10000);
       return;
     }
+    this.setState({
+      usingServer: false,
+    });
     await Brain.fetchAssets(this.state.user, this.state.prices.ether.price)
       .then((response) => {
         this.setState({
@@ -390,7 +411,6 @@ class BlockchainInfo extends React.Component {
 
 BlockchainInfo.defaultProps = {
   isBraveBrowser: false,
-  checkIfLoggedIn: undefined,
   userIsLoggedIn: false,
   network: undefined,
   isMetamaskInstalled: false,
@@ -404,7 +424,6 @@ BlockchainInfo.propTypes = {
   isBraveBrowser: PropTypes.bool,
   extensionUrl: PropTypes.string,
   userIsLoggedIn: PropTypes.bool,
-  checkIfLoggedIn: PropTypes.func,
 };
 
 export default BlockchainInfo;
