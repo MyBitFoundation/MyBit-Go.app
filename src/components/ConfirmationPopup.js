@@ -10,7 +10,10 @@ import Checkbox from 'antd/lib/checkbox';
 import 'antd/lib/checkbox/style';
 import '../styles/ConfirmationPopup.css';
 import AlertMessage from './AlertMessage';
-import { ethereumNetwork } from '../constants/index';
+import {
+  ethereumNetwork,
+  metamaskErrors,
+} from '../constants/index';
 
 class ConfirmationPopup extends React.Component {
   setAcceptedTos(value) {
@@ -63,99 +66,14 @@ class ConfirmationPopup extends React.Component {
     return null;
   }
 
-  renderMetamaskErrors() {
-    let toRender;
-    const {
-      userHasMetamask, extensionUrl, network, userIsLoggedIn, isBraveBrowser,
-    } = this.props;
-
-    if (!userHasMetamask && extensionUrl && !isBraveBrowser) {
-      toRender = (
-        <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a> to confirm contribution.
-          You can download the extension via
-          <a href={this.props.extensionUrl} target="_blank" rel="noopener noreferrer"> this </a>link.
-        </p>
-      );
-    } else if (!userHasMetamask && !extensionUrl && !isBraveBrowser) {
-      toRender = (
-        <div>
-          <span>Your browser is not supported. Metamask supports the following browsers:
-            <a
-              href="https://www.google.com/chrome/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Chrome
-            </a>,
-            <a
-              href="https://www.mozilla.org/en-US/firefox/new/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Firefox
-            </a>,
-            <a
-              href="https://www.opera.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Opera
-            </a>{' '}
-            or
-            <a
-              href="https://brave.com/download/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Brave
-            </a>
-          </span>
-        </div>
-      );
-    } else if (!userHasMetamask && isBraveBrowser) {
-      toRender = (
-        <p>
-          The Brave browser comes pre-installed with Metamask, please enable it to contribute. Click{' '}
-          <a
-            href="https://brave.com/into-the-blockchain-brave-with-metamask/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-           here
-          </a>
-          {' '}to see how.
-        </p>
-      );
-    } else if (userHasMetamask && !userIsLoggedIn) {
-      toRender = (
-        <p>Please login in Metamask to be able to contribute.</p>
-      );
-    } else if (network !== ethereumNetwork) {
-      toRender = (
-        <p>
-          The main Ethereum network is not supported yet,
-          please change to the Ropsten network to contribute.
-        </p>
-      );
-    }
-
-    return toRender && (
-      <AlertMessage
-        className="ConfirmationPopup__metamask-alert"
-        type="error"
-        message={toRender}
-        showIcon
-        closable={false}
-      />
-    );
-  }
-
   render() {
-    const { userHasMetamask, network, userIsLoggedIn } = this.props;
+    const {
+      userHasMetamask,
+      network,
+      userIsLoggedIn,
+      extensionUrl,
+      isBraveBrowser,
+    } = this.props;
 
     const {
       isLoading, transactionStatus, acceptedTos, alertType, alertMessage,
@@ -165,6 +83,7 @@ class ConfirmationPopup extends React.Component {
     const shouldShowConfirmAndCancel =
       (((!isLoading && transactionStatus === '') || (transactionStatus === 1)) && userHasMetamask && userIsLoggedIn && network === ethereumNetwork);
 
+    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network);
 
     return (
       <Modal
@@ -179,7 +98,15 @@ class ConfirmationPopup extends React.Component {
         okButtonProps={{ disabled: !shouldShowConfirmAndCancel }}
       >
         <div>
-          {this.renderMetamaskErrors()}
+          {metamaskErrorsToRender && (
+            <AlertMessage
+              className="ConfirmationPopup__metamask-alert"
+              type="error"
+              message={metamaskErrorsToRender}
+              showIcon
+              closable={false}
+            />
+          )}
           <p className="ConfirmationPopup__description">
             Your contribution:{' '}
             <span style={{ fontWeight: '400' }} className="ConfirmationPopup__description-amount">

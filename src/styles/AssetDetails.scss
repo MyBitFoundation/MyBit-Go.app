@@ -3,6 +3,7 @@
 .AssetDetails{
   padding-top: 40px;
 
+
   &__left{
     padding-left: 40px;
 
@@ -20,6 +21,7 @@
       margin-top: 30px;
       height: 40px;
       margin-bottom: 20px;
+      font-weight: bold;
 
       &:focus, &:hover, &:active{
       }
@@ -234,7 +236,6 @@
   .ant-slider-handle:focus{
     box-shadow: none;
   }
-
 }
 
 
