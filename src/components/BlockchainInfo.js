@@ -256,7 +256,7 @@ class BlockchainInfo extends React.Component {
       isLoading: true,
       transactionStatus: '',
       alertType: 'info',
-      alertMessage: 'After accepting the transaction in Metamask it may take several minutes to be processed by Ethereum Network. You can explore the platform while this occurs.',
+      alertMessage: 'After accepting the transaction in Metamask it may take several minutes for it to be processed by the Ethereum Network. Meanwhile, you can still explore the platform.',
     });
 
     try {
@@ -267,13 +267,13 @@ class BlockchainInfo extends React.Component {
         assetId,
         amount,
       );
-      const formatedAmount = formatMonetaryValue(amount);
+      const formatedAmount = formatMonetaryValue(this.state.prices.ether.price * amount);
 
       if (result) {
         const { notificationPlace } = this.state;
         const Message = (
-          <Fragment>Funded {currentAsset.name} successfully with {formatedAmount}.
-            <NotificationLink setAssetsStatus={this.setAssetsStatusState} text=" Go to Portfolio." />
+          <Fragment>Funded {currentAsset.name} successfully with <span className="NotificationLink__amount">{formatedAmount}</span>
+            <NotificationLink to="/portfolio" setAssetsStatus={this.setAssetsStatusState} text=" Go to Portfolio" />
           </Fragment>
         );
 
@@ -296,9 +296,10 @@ class BlockchainInfo extends React.Component {
           setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
       } else {
         const { notificationPlace } = this.state;
+        const currentPathName = window.location.pathname;
         const Message = (
-          <Fragment>Funded {currentAsset.name} with {formatedAmount} ETH failed.
-            <NotificationLink setAssetsStatus={this.setAssetsStatusState} text=" Please try again." />
+          <Fragment>Failed to fund {currentAsset.name} with <span className="NotificationLink__amount">{formatedAmount}</span>
+            <NotificationLink to={currentPathName} setAssetsStatus={this.setAssetsStatusState} text=" Try again" />
           </Fragment>
         );
 
