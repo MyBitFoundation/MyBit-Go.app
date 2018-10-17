@@ -41,8 +41,8 @@ AppHeader.propTypes = {
   prices: PropTypes.shape({ params: PropTypes.object }),
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   usingServer: PropTypes.bool.isRequired,
-  assertsNotification: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  setAssertsStatusState: PropTypes.func.isRequired,
+  assetsNotification: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  setAssetsStatusState: PropTypes.func.isRequired,
   notificationPlace: PropTypes.string.isRequired,
 };
 

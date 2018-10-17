@@ -34,7 +34,7 @@ export const ETHERSCAN_BALANCE = address =>
 export const serverIp = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/assets' : '/api/assets';
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
 
-const testEnabledAssertIdsData = {
+const testEnabledAssetIdsData = {
   '0x8d896c37eb6f50f35ddefe472f91f51d30faff549cd251e5f8a4a90a471ab0c8': {
     name: 'Test asset for development 1',
     city: 'Zurich',
@@ -69,7 +69,7 @@ const testEnabledAssertIdsData = {
   },
 };
 
-export const testAssertIds = Object.keys(testEnabledAssertIdsData);
+export const testAssetIds = Object.keys(testEnabledAssetIdsData);
 
 export const isAssetIdEnabled = (assetId) => {
   let enabledAssetIds = {
@@ -245,7 +245,7 @@ export const isAssetIdEnabled = (assetId) => {
   if (process.env.NODE_ENV === 'development') {
     enabledAssetIds = {
       ...enabledAssetIds,
-      ...testEnabledAssertIdsData,
+      ...testEnabledAssetIdsData,
     };
   }
 

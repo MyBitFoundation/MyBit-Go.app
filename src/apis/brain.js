@@ -16,7 +16,7 @@ import {
   ETHERSCAN_BALANCE,
   getAddressForAsset,
   isAssetIdEnabled,
-  testAssertIds,
+  testAssetIds,
 } from '../constants';
 
 const IPFS_URL =
@@ -392,7 +392,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       if (process.env.NODE_ENV !== 'development') {
         // filter for test assets. Only for development
         assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
-          !testAssertIds.some(item => item === asset.assetID));
+          !testAssetIds.some(item => item === asset.assetID));
       }
 
       const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {

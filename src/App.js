@@ -43,8 +43,8 @@ class App extends Component {
             userHasMetamask,
             userIsLoggedIn,
             network,
-            setAssertsStatusState,
-            assertsNotification,
+            setAssetsStatusState,
+            assetsNotification,
             notificationPlace,
             isBraveBrowser,
             extensionUrl,
@@ -54,11 +54,14 @@ class App extends Component {
                 user={user}
                 prices={prices.mybit}
                 usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
-                setAssertsStatusState={setAssertsStatusState}
-                assertsNotification={assertsNotification}
+                setAssetsStatusState={setAssetsStatusState}
+                assetsNotification={assetsNotification}
                 notificationPlace={notificationPlace}
               />
-              <NavigationBar currentPath={this.props.location.pathname} />
+              <NavigationBar
+                setAssetsStatusState={setAssetsStatusState}
+                currentPath={this.props.location.pathname}
+              />
               {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
             </React.Fragment>
           )}
@@ -68,13 +71,13 @@ class App extends Component {
           <BlockchainInfoContext.Consumer>
             {({
               notificationPlace,
-              setAssertsStatusState,
-              assertsNotification,
+              setAssetsStatusState,
+              assetsNotification,
             }) => {
               if (notificationPlace === 'notification') {
                 return (<Notification
-                  setAssertsStatusState={setAssertsStatusState}
-                  assertsNotification={assertsNotification}
+                  setAssetsStatusState={setAssetsStatusState}
+                  assetsNotification={assetsNotification}
                 />);
               }
               return null;
