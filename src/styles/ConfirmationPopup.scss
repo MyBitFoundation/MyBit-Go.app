@@ -76,7 +76,16 @@
     position: absolute;
     width: 100%;
     left: 0px;
-    bottom: -45px;
+    margin-top: 80px;
+  }
+  &--is-success {
+    .ant-modal-footer{
+      div {
+        button:first-of-type{
+          display: none;
+        }
+      }
+    }
   }
 }
 

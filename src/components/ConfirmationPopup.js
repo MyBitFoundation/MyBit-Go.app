@@ -17,16 +17,16 @@ import {
 
 class ConfirmationPopup extends React.Component {
   setAcceptedTos(value) {
-    const { assertsNotification, setAssertsStatusState } = this.props;
+    const { assetsNotification, setAssetsStatusState } = this.props;
 
-    setAssertsStatusState({
-      ...assertsNotification,
+    setAssetsStatusState({
+      ...assetsNotification,
       acceptedTos: value,
     });
 
-    if (value === true && this.props.assertsNotification.alertType) {
-      setAssertsStatusState({
-        ...assertsNotification,
+    if (value === true && this.props.assetsNotification.alertType) {
+      setAssetsStatusState({
+        ...assetsNotification,
         alertType: undefined,
         alertMessage: undefined,
       });
@@ -38,16 +38,20 @@ class ConfirmationPopup extends React.Component {
   }
 
   tryAgain() {
-    this.props.setAssertsStatusState({
+    this.props.setAssetsStatusState({
       transactionStatus: '',
     });
   }
 
-  handleConfirmClicked() {
-    const { assertsNotification, setAssertsStatusState } = this.props;
+  handleConfirmClicked(transactionStatus) {
+    if (transactionStatus === 1) {
+      return this.handleCancel();
+    }
 
-    if (!assertsNotification.acceptedTos) {
-      setAssertsStatusState({
+    const { assetsNotification, setAssetsStatusState } = this.props;
+
+    if (!assetsNotification.acceptedTos) {
+      setAssetsStatusState({
         alertType: 'error',
         alertMessage: 'Please accept our T&C before continuing.',
       });
@@ -73,7 +77,7 @@ class ConfirmationPopup extends React.Component {
 
     const {
       isLoading, transactionStatus, acceptedTos, alertType, alertMessage,
-    } = this.props.assertsNotification;
+    } = this.props.assetsNotification;
 
 
     const shouldShowConfirmAndCancel =
@@ -83,12 +87,14 @@ class ConfirmationPopup extends React.Component {
 
     return (
       <Modal
+        className={transactionStatus === 1 ? 'ConfirmationPopup--is-success' : ''}
         visible={this.props.isPopupOpen()}
         title="Confirm with MetaMask"
-        onOk={() => this.handleConfirmClicked()}
+        onOk={() => this.handleConfirmClicked(transactionStatus)}
         onCancel={() => this.props.handlePopupState(false)}
-        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Send again' : 'Confirm'}
-        cancelText="Back"
+        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Close' : 'Confirm'}
+        cancelText={transactionStatus === 1 ? null : 'Back'}
+
         okButtonProps={{ disabled: !shouldShowConfirmAndCancel }}
       >
         <div>
@@ -146,8 +152,8 @@ class ConfirmationPopup extends React.Component {
             <AlertMessage
               type={alertType}
               message={alertMessage}
-              handleAlertClosed={() => this.props.setAssertsStatusState({
-                ...this.props.assertsNotification,
+              handleAlertClosed={() => this.props.setAssetsStatusState({
+                ...this.props.assetsNotification,
                 alertType: undefined,
               })}
               showIcon
@@ -161,7 +167,7 @@ class ConfirmationPopup extends React.Component {
 }
 
 ConfirmationPopup.defaultProps = {
-  assertsNotification: {
+  assetsNotification: {
     alertType: '',
     alertMessage: '',
   },
@@ -180,8 +186,8 @@ ConfirmationPopup.propTypes = {
   network: PropTypes.string.isRequired,
   userIsLoggedIn: PropTypes.bool.isRequired,
   isBraveBrowser: PropTypes.bool.isRequired,
-  setAssertsStatusState: PropTypes.func.isRequired,
-  assertsNotification: PropTypes.shape({
+  setAssetsStatusState: PropTypes.func.isRequired,
+  assetsNotification: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     transactionStatus: PropTypes.string,
     acceptedTos: PropTypes.bool.isRequired,

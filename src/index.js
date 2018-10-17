@@ -10,13 +10,13 @@ import MetamaskChecker from './components/MetamaskChecker';
 
 
 ReactDOM.render(
-  <MetamaskChecker>
-    <BlockchainInfo>
-      <BrowserRouter>
+  <BrowserRouter>
+    <MetamaskChecker>
+      <BlockchainInfo>
         <App />
-      </BrowserRouter>
-    </BlockchainInfo>
-  </MetamaskChecker>,
+      </BlockchainInfo>
+    </MetamaskChecker>
+  </BrowserRouter>,
   document.getElementById('root'),
 );
 registerServiceWorker();
