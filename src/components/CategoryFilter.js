@@ -16,12 +16,11 @@ const FilterButton = styled(Button)`
   border-color: ${props => ((props.type === 'primary') ? '#1890ff ' : '#d9d9d9')};  
 
   &:hover {
-    background-color: #1890ff;
-    color: #fff;
+    background-color: #fff;
+    color: #1890ff;
     border-color: #1890ff;
   }
 
-  
   &:focus-within {
     color: none;
     background-color: none;
