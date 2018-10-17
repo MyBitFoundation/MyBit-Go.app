@@ -3,7 +3,6 @@ const express = require('express');
 const basicAuth = require('express-basic-auth');
 const path = require('path');
 const fetchAssets = require('./src/util/serverHelper');
-const { debug } = require('./src/constants/index');
 
 const app = express();
 
@@ -45,7 +44,7 @@ async function pullAssets() {
     assets = await fetchAssets();
     assetsLoaded = true;
   } catch (err) {
-    debug(err);
+    console.log(err);
   }
 }
 

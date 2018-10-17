@@ -74,3 +74,24 @@ b{
 .anticon{
   vertical-align: 0em;
 }
+
+.MetaMaskErrors{
+  background-color: red;
+  color: white;
+  text-align: center;
+  font-family: Roboto;
+  font-weight: 600;
+  position: relative;
+  top: 0px;
+
+  & a{
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover{
+      color: white;
+      text-decoration: underline;
+    }
+  }
+}
