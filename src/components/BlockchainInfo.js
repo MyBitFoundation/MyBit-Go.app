@@ -285,19 +285,7 @@ class BlockchainInfo extends React.Component {
           alertMessage,
         });
 
-        this.setState({
-          loading: {
-            assets: true,
-          },
-        });
-
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-
-        this.setState({
-          loading: {
-            assets: false,
-          },
-        });
 
         this.intervalFetchAssets =
           setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
