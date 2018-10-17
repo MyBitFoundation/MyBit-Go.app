@@ -11,7 +11,6 @@ import * as MyBitToken from '../constants/contracts/MyBitToken';
 import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
   debug,
-  ETHERSCAN_API_KEY,
   ETHERSCAN_TX_BY_ADDR_ENDPOINT,
   ETHERSCAN_TX,
   ETHERSCAN_BALANCE,
@@ -49,7 +48,6 @@ export const fetchTransactionHistory = async user =>
     */
       const userAddressLowerCase = userAddress.toLowerCase();
       const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(
-        ETHERSCAN_API_KEY,
         userAddress,
       );
       const result = await fetch(endpoint);
@@ -202,7 +200,7 @@ const checkTransactionConfirmation = async (
   reject,
 ) => {
   try {
-    const endpoint = ETHERSCAN_TX(ETHERSCAN_API_KEY, transactionHash);
+    const endpoint = ETHERSCAN_TX(transactionHash);
     const result = await fetch(endpoint);
     const jsronResult = await result.json();
     if (jsronResult.status === '1') {

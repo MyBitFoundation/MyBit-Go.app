@@ -87,7 +87,7 @@ class BlockchainInfo extends React.Component {
         this.intervalLoadMetamaskUserDetails =
           setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
       } else {
-        this.loadPrices();
+        await this.loadPrices();
         this.pullAssetsFromServer();
       }
     } catch (err) {
