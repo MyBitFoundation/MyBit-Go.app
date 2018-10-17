@@ -58,7 +58,10 @@ class App extends Component {
                 assetsNotification={assetsNotification}
                 notificationPlace={notificationPlace}
               />
-              <NavigationBar currentPath={this.props.location.pathname} />
+              <NavigationBar
+                setAssetsStatusState={setAssetsStatusState}
+                currentPath={this.props.location.pathname}
+              />
               {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
             </React.Fragment>
           )}

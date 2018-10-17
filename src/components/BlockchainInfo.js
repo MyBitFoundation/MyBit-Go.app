@@ -5,7 +5,6 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { Link } from 'react-router-dom';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import * as Brain from '../apis/brain';
 import {
@@ -20,6 +19,9 @@ import {
   pullAssetsFromServerTime,
   fetchAssetsFromWeb3Time,
 } from '../constants';
+import { formatMonetaryValue } from '../util/helpers';
+import NotificationLink from './NotificationLink';
+
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -265,12 +267,13 @@ class BlockchainInfo extends React.Component {
         assetId,
         amount,
       );
+      const formatedAmount = formatMonetaryValue(amount);
 
       if (result) {
         const { notificationPlace } = this.state;
         const Message = (
-          <Fragment>Funded {currentAsset.name} successfully with {amount}.
-            <Link to="/portfolio" href="/portfolio">Go to Portfolio.</Link>
+          <Fragment>Funded {currentAsset.name} successfully with {formatedAmount}.
+            <NotificationLink setAssetsStatus={this.setAssetsStatusState} text=" Go to Portfolio." />
           </Fragment>
         );
 
@@ -294,8 +297,8 @@ class BlockchainInfo extends React.Component {
       } else {
         const { notificationPlace } = this.state;
         const Message = (
-          <Fragment>Funded {currentAsset.name} with {amount} ETH failed.
-            <Link to="/portfolio" href="/portfolio">Please try again.</Link>
+          <Fragment>Funded {currentAsset.name} with {formatedAmount} ETH failed.
+            <NotificationLink setAssetsStatus={this.setAssetsStatusState} text=" Please try again." />
           </Fragment>
         );
 
