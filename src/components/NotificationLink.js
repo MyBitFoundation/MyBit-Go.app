@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import '../styles/NotificationLink.css';
 
-const NotificationLink = ({ location, setAssetsStatus, text }) => {
-  if (location.pathname !== '/portfolio') {
+const NotificationLink = ({
+  location,
+  setAssetsStatus,
+  text,
+  to,
+}) => {
+  if (encodeURI(location.pathname) !== to) {
     return (
       <Link
-        to="/portfolio"
-        href="/portfolio"
+        className="NotificationLink"
+        to={to}
+        href={to}
         onClick={() => {
       setAssetsStatus({
         alertType: undefined,
@@ -24,6 +31,7 @@ NotificationLink.propTypes = {
   location: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   setAssetsStatus: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
 };
 
 export default withRouter(NotificationLink);
