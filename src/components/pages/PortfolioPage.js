@@ -113,7 +113,7 @@ const PortfolioPage = ({ loading, assets, prices }) => {
               </b>
             </span>
             <div className="Portfolio__card-separator" />
-            <b>ETH {totalValueEth}</b>
+            <b>{totalValueEth} ETH</b>
           </div>
           <div className="Portfolio__card">
             <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
