@@ -11,12 +11,23 @@ import masternodeImage from '../images/categories/Masternode.jpg';
 import chargeStationImage from '../images/categories/ChargeStation.jpg';
 import vendingMachineImage from '../images/categories/VendingMachine.jpg';
 
-export const formatMonetaryValue = (number, fractionDigits = 0) =>
-  Number(number).toLocaleString('en-US', {
+export const formatMonetaryValue = (number, fractionDigits = 0) => {
+  let value = Number(number).toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: fractionDigits,
   });
+
+  const index = value.indexOf('.');
+
+  if (index !== -1) {
+    const sliced = value.substr(index, 3);
+    value = sliced.length === 2 ? `${value}0` : value;
+  }
+
+  return value;
+};
+
 
 export const getCategoryFromAssetTypeHash = (web3, assetTypeHash) => {
   switch (assetTypeHash) {

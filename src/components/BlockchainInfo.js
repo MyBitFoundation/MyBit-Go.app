@@ -267,6 +267,7 @@ class BlockchainInfo extends React.Component {
         assetId,
         amount,
       );
+
       const formatedAmount = formatMonetaryValue(this.state.prices.ether.price * amount);
 
       if (result) {
