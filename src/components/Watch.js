@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
 
 const StyledWatch = styled.span`
   position: absolute;
-  bottom: 5px;
+  top: 15px;
   right: 16px;
   width: 22px;
   z-index: 1;
