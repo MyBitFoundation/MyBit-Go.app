@@ -11,6 +11,7 @@ import 'antd/lib/row/style';
 import Col from 'antd/lib/col';
 import 'antd/lib/col/style';
 
+import Watch from './Watch';
 import ConfirmationPopup from './ConfirmationPopup';
 import Address from './Address';
 import '../styles/AssetDetails.css';
@@ -158,6 +159,7 @@ class AssetDetails extends React.Component {
       description,
       address,
       numberOfInvestors,
+      watchListed,
     } = this.props.information;
 
     const maxInvestment =
@@ -227,9 +229,31 @@ class AssetDetails extends React.Component {
             </p>
             <div
               alt="Asset details background"
-              className="AssetDetails__right-image"
+              className="AssetDetails__right-container"
               style={{ backgroundImage: `url(${this.props.information.imageSrc})` }}
-            />
+            >
+              <BlockchainInfoContext.Consumer>
+                {({
+                  usingServer,
+                  handleClickedAssetFavorite,
+                }) =>
+                  !usingServer && (
+                    <Watch
+                      active={watchListed}
+                      handleClick={handleClickedAssetFavorite}
+                      assetId={assetID}
+                    />
+                )}
+              </BlockchainInfoContext.Consumer>
+              {/* div as unary operator that does image showing.
+              because img cant support proper image render */}
+              <div
+                alt="Asset details background"
+                className="AssetDetails__right-image"
+                style={{ backgroundImage: `url(${this.props.information.imageSrc})` }}
+              />
+            </div>
+
             <div className="AssetDetails__right-wrapper">
               <b className="AssetDetails__right-title-details">Asset Details</b>
               <p className="AssetDetails__right-content-details">
@@ -427,6 +451,7 @@ AssetDetails.propTypes = {
     imageSrc: PropTypes.string,
     fundingStage: PropTypes.string.isRequired,
     pastDate: PropTypes.bool.isRequired,
+    watchListed: PropTypes.bool.watchListed
   }),
   currentEthInUsd: PropTypes.number,
   changeNotificationPlace: PropTypes.func.isRequired,

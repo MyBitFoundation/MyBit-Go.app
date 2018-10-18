@@ -44,6 +44,7 @@ const AssetDetailsPage = ({
     imageSrc: asset.imageSrc,
     fundingStage: asset.fundingStage,
     pastDate: asset.pastDate,
+    watchListed: asset.watchListed,
   };
 
   return (
