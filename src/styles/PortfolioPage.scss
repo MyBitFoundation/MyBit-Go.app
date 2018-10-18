@@ -6,7 +6,6 @@
 
   &__cards{
     display: flex;
-    margin-left: 15px;
     margin-bottom: 5px;
 
     @include media('<tablet') {
