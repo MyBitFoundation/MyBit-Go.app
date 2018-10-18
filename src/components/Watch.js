@@ -28,7 +28,7 @@ const StyledWatch = styled.span`
   cursor: pointer;
 
   svg{
-    fill: ${props => props.active ? '#1890ff' : '#b9bdc3'};
+    fill: ${props => props.active ? '#1890ff' : '#fff'};
   }
 
   svg:hover{
