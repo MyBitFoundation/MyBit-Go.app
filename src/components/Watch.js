@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Tooltip from 'antd/lib/tooltip';
 import 'antd/lib/tooltip/style/css';
 import styled, { createGlobalStyle } from 'styled-components';
-import WatchIcon from '../images/watch.svg';
+import WatchIcon from '../images/new-watch.svg';
 
 const GlobalStyle = createGlobalStyle`
   .Watch__tooltip .ant-tooltip-inner{
