@@ -46,7 +46,7 @@ const AssetPortfolio = ({
   );
 
   return (
-    <Col xs={24} sm={24} md={12} lg={12} xl={8} style={{ padding: '20px 15px' }}>
+    <Col xs={24} sm={24} md={12} lg={12} xl={8} style={{ padding: '20px 20px' }}>
       <div className="AssetPortfolio">
         <div
           className="AssetPortfolio__image"
