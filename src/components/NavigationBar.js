@@ -15,7 +15,7 @@ const exchangeIcon = require('../images/mydax.svg');
 const knowledgeBaseIcon = require('../images/question.svg');
 const watchIcon = require('../images/watchList.svg');
 
-const NavigationBar = ({ currentPath }) => {
+const NavigationBar = ({ currentPath, setAssetsStatusState }) => {
   const menuOptions = [
     {
       name: 'Explore',
@@ -55,7 +55,15 @@ const NavigationBar = ({ currentPath }) => {
 
   const navBarOptions = menuOptions.map(menuItem => (
     <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected && 'ant-menu-item-selected'}>
-      <Link to={menuItem.url || '/'} href={menuItem.url || '/'}>
+      <Link
+        onClick={() => {
+          setAssetsStatusState({
+            alertType: undefined,
+          });
+        }}
+        to={menuItem.url || '/'}
+        href={menuItem.url || '/'}
+      >
         <Icon component={menuItem.icon} />
         {menuItem.name}
       </Link>
@@ -74,6 +82,7 @@ const NavigationBar = ({ currentPath }) => {
 };
 
 NavigationBar.propTypes = {
+  setAssetsStatusState: PropTypes.func.isRequired,
   currentPath: PropTypes.string.isRequired,
 };
 

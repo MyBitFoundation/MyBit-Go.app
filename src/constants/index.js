@@ -1,5 +1,8 @@
 /* eslint-disable no-console */
 /* eslint-disable global-require */
+/* eslint-disable function-paren-newline */
+
+import React from 'react';
 import CryptoMining from '../images/categories/Cryptomining.jpg';
 import Storage from '../images/categories/Storage.jpg';
 import Bitcoinatm from '../images/categories/Bitcoinatm.jpg';
@@ -31,7 +34,7 @@ export const ETHERSCAN_BALANCE = address =>
 export const serverIp = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/assets' : '/api/assets';
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
 
-const testEnabledAssertIdsData = {
+const testEnabledAssetIdsData = {
   '0x8d896c37eb6f50f35ddefe472f91f51d30faff549cd251e5f8a4a90a471ab0c8': {
     name: 'Test asset for development 1',
     city: 'Zurich',
@@ -66,7 +69,7 @@ const testEnabledAssertIdsData = {
   },
 };
 
-export const testAssertIds = Object.keys(testEnabledAssertIdsData);
+export const testAssetIds = Object.keys(testEnabledAssetIdsData);
 
 export const isAssetIdEnabled = (assetId) => {
   let enabledAssetIds = {
@@ -242,10 +245,95 @@ export const isAssetIdEnabled = (assetId) => {
   if (process.env.NODE_ENV === 'development') {
     enabledAssetIds = {
       ...enabledAssetIds,
-      ...testEnabledAssertIdsData,
+      ...testEnabledAssetIdsData,
     };
   }
 
   return enabledAssetIds[assetId];
+};
+
+export const metamaskErrors = (
+  className, userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network,
+) => {
+  let toRender = null;
+  if (!userHasMetamask && extensionUrl && !isBraveBrowser) {
+    toRender = (
+      <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a> to confirm contribution.
+        You can download the extension via{' '}
+        <a href={extensionUrl} target="_blank" rel="noopener noreferrer">this</a> link.
+      </p>
+    );
+  } else if (!userHasMetamask && !extensionUrl && !isBraveBrowser) {
+    toRender = (
+      <div>
+        <span>Your browser is not supported. Metamask supports the following browsers:
+          <a
+            href="https://www.google.com/chrome/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {' '}
+            Chrome
+          </a>,
+          <a
+            href="https://www.mozilla.org/en-US/firefox/new/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {' '}
+            Firefox
+          </a>,
+          <a
+            href="https://www.opera.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {' '}
+            Opera
+          </a>{' '}
+          or
+          <a
+            href="https://brave.com/download/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {' '}
+            Brave
+          </a>
+        </span>
+      </div>
+    );
+  } else if (!userHasMetamask && isBraveBrowser) {
+    toRender = (
+      <p>
+        The Brave browser comes pre-installed with Metamask, please enable it to contribute. Click{' '}
+        <a
+          href="https://brave.com/into-the-blockchain-brave-with-metamask/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+         here
+        </a>
+        {' '}to see how.
+      </p>
+    );
+  } else if (userHasMetamask && !userIsLoggedIn) {
+    toRender = (
+      <p>Please login in Metamask to be able to contribute.</p>
+    );
+  } else if (network !== ethereumNetwork) {
+    toRender = (
+      <p>
+        The main Ethereum network is not supported yet,
+        please change to the Ropsten network to contribute.
+      </p>
+    );
+  }
+
+  return toRender && (
+    <div className={className}>
+      {toRender}
+    </div>
+  );
 };
 

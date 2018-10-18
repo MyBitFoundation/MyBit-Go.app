@@ -123,10 +123,10 @@ class AssetDetails extends React.Component {
     this.setState({ isPopupOpen: value });
     this.props.changeNotificationPlace(value ? 'confirmation' : 'notification');
     if (value) {
-      this.props.setAssertsStatusState(null);
+      this.props.setAssetsStatusState(null);
       return null;
     }
-    this.props.setAssertsStatusState({
+    this.props.setAssetsStatusState({
       alertType: undefined,
       alertMessage: undefined,
     });
@@ -191,8 +191,8 @@ class AssetDetails extends React.Component {
               network,
               extensionUrl,
               isBraveBrowser,
-              assertsNotification,
-              setAssertsStatusState,
+              assetsNotification,
+              setAssetsStatusState,
             }) => (
               <ConfirmationPopup
                 amountUsd={formatMonetaryValue(selectedAmountUsd)}
@@ -207,9 +207,9 @@ class AssetDetails extends React.Component {
                 network={network}
                 extensionUrl={extensionUrl}
                 isBraveBrowser={isBraveBrowser}
-                assertsNotification={assertsNotification}
-                changeNotificationPlace={assertsNotification.changeNotificationPlace}
-                setAssertsStatusState={setAssertsStatusState}
+                assetsNotification={assetsNotification}
+                changeNotificationPlace={assetsNotification.changeNotificationPlace}
+                setAssetsStatusState={setAssetsStatusState}
               />
             )}
           </BlockchainInfoContext.Consumer>
@@ -430,7 +430,7 @@ AssetDetails.propTypes = {
   }),
   currentEthInUsd: PropTypes.number,
   changeNotificationPlace: PropTypes.func.isRequired,
-  setAssertsStatusState: PropTypes.func.isRequired,
+  setAssetsStatusState: PropTypes.func.isRequired,
 };
 
 export default AssetDetails;

@@ -6,15 +6,15 @@ import AlertMessage from './AlertMessage';
 
 class Notification extends PureComponent {
   render() {
-    const { setAssertsStatusState, assertsNotification } = this.props;
+    const { setAssetsStatusState, assetsNotification } = this.props;
 
-    if (assertsNotification.alertType) {
+    if (assetsNotification.alertType) {
       return (
         <div className="Notification__alert-wrapper">
           <AlertMessage
-            type={assertsNotification.alertType}
-            message={assertsNotification.alertMessage}
-            handleAlertClosed={() => setAssertsStatusState(null)}
+            type={assetsNotification.alertType}
+            message={assetsNotification.alertMessage}
+            handleAlertClosed={() => setAssetsStatusState(null)}
             showIcon
             closable
           />
@@ -26,8 +26,8 @@ class Notification extends PureComponent {
 }
 
 Notification.propTypes = {
-  assertsNotification: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  setAssertsStatusState: PropTypes.func.isRequired,
+  assetsNotification: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  setAssetsStatusState: PropTypes.func.isRequired,
 };
 
 export default Notification;

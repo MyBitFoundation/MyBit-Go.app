@@ -9,7 +9,10 @@ import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
-import { ethereumNetwork } from './constants/index';
+import {
+  ethereumNetwork,
+  metamaskErrors,
+} from './constants/index';
 import Notification from './components/Notification';
 
 class App extends Component {
@@ -40,33 +43,41 @@ class App extends Component {
             userHasMetamask,
             userIsLoggedIn,
             network,
-            setAssertsStatusState,
-            assertsNotification,
+            setAssetsStatusState,
+            assetsNotification,
             notificationPlace,
+            isBraveBrowser,
+            extensionUrl,
           }) => (
-            <AppHeader
-              user={user}
-              prices={prices.mybit}
-              usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
-              setAssertsStatusState={setAssertsStatusState}
-              assertsNotification={assertsNotification}
-              notificationPlace={notificationPlace}
-            />
+            <React.Fragment>
+              <AppHeader
+                user={user}
+                prices={prices.mybit}
+                usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
+                setAssetsStatusState={setAssetsStatusState}
+                assetsNotification={assetsNotification}
+                notificationPlace={notificationPlace}
+              />
+              <NavigationBar
+                setAssetsStatusState={setAssetsStatusState}
+                currentPath={this.props.location.pathname}
+              />
+              {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
+            </React.Fragment>
           )}
         </BlockchainInfoContext.Consumer>
-        <NavigationBar currentPath={this.props.location.pathname} />
 
         <div className="notification_wrapper">
           <BlockchainInfoContext.Consumer>
             {({
               notificationPlace,
-              setAssertsStatusState,
-              assertsNotification,
+              setAssetsStatusState,
+              assetsNotification,
             }) => {
               if (notificationPlace === 'notification') {
                 return (<Notification
-                  setAssertsStatusState={setAssertsStatusState}
-                  assertsNotification={assertsNotification}
+                  setAssetsStatusState={setAssetsStatusState}
+                  assetsNotification={assetsNotification}
                 />);
               }
               return null;

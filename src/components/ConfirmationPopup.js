@@ -10,20 +10,23 @@ import Checkbox from 'antd/lib/checkbox';
 import 'antd/lib/checkbox/style';
 import '../styles/ConfirmationPopup.css';
 import AlertMessage from './AlertMessage';
-import { ethereumNetwork } from '../constants/index';
+import {
+  ethereumNetwork,
+  metamaskErrors,
+} from '../constants/index';
 
 class ConfirmationPopup extends React.Component {
   setAcceptedTos(value) {
-    const { assertsNotification, setAssertsStatusState } = this.props;
+    const { assetsNotification, setAssetsStatusState } = this.props;
 
-    setAssertsStatusState({
-      ...assertsNotification,
+    setAssetsStatusState({
+      ...assetsNotification,
       acceptedTos: value,
     });
 
-    if (value === true && this.props.assertsNotification.alertType) {
-      setAssertsStatusState({
-        ...assertsNotification,
+    if (value === true && this.props.assetsNotification.alertType) {
+      setAssetsStatusState({
+        ...assetsNotification,
         alertType: undefined,
         alertMessage: undefined,
       });
@@ -35,16 +38,20 @@ class ConfirmationPopup extends React.Component {
   }
 
   tryAgain() {
-    this.props.setAssertsStatusState({
+    this.props.setAssetsStatusState({
       transactionStatus: '',
     });
   }
 
-  handleConfirmClicked() {
-    const { assertsNotification, setAssertsStatusState } = this.props;
+  handleConfirmClicked(transactionStatus) {
+    if (transactionStatus === 1) {
+      return this.handleCancel();
+    }
 
-    if (!assertsNotification.acceptedTos) {
-      setAssertsStatusState({
+    const { assetsNotification, setAssetsStatusState } = this.props;
+
+    if (!assetsNotification.acceptedTos) {
+      setAssetsStatusState({
         alertType: 'error',
         alertMessage: 'Please accept our T&C before continuing.',
       });
@@ -59,121 +66,47 @@ class ConfirmationPopup extends React.Component {
     return null;
   }
 
-  renderMetamaskErrors() {
-    let toRender;
-    const {
-      userHasMetamask, extensionUrl, network, userIsLoggedIn, isBraveBrowser,
-    } = this.props;
-
-    if (!userHasMetamask && extensionUrl && !isBraveBrowser) {
-      toRender = (
-        <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a> to confirm contribution.
-          You can download the extension via
-          <a href={this.props.extensionUrl} target="_blank" rel="noopener noreferrer"> this </a>link.
-        </p>
-      );
-    } else if (!userHasMetamask && !extensionUrl && !isBraveBrowser) {
-      toRender = (
-        <div>
-          <span>Your browser is not supported. Metamask supports the following browsers:
-            <a
-              href="https://www.google.com/chrome/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Chrome
-            </a>,
-            <a
-              href="https://www.mozilla.org/en-US/firefox/new/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Firefox
-            </a>,
-            <a
-              href="https://www.opera.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Opera
-            </a>{' '}
-            or
-            <a
-              href="https://brave.com/download/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Brave
-            </a>
-          </span>
-        </div>
-      );
-    } else if (!userHasMetamask && isBraveBrowser) {
-      toRender = (
-        <p>
-          The Brave browser comes pre-installed with Metamask, please enable it to contribute. Click{' '}
-          <a
-            href="https://brave.com/into-the-blockchain-brave-with-metamask/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-           here
-          </a>
-          {' '}to see how.
-        </p>
-      );
-    } else if (userHasMetamask && !userIsLoggedIn) {
-      toRender = (
-        <p>Please login in Metamask to be able to contribute.</p>
-      );
-    } else if (network !== ethereumNetwork) {
-      toRender = (
-        <p>
-          The main Ethereum network is not supported yet,
-          please change to the Ropsten network to contribute.
-        </p>
-      );
-    }
-
-    return toRender && (
-      <AlertMessage
-        className="ConfirmationPopup__metamask-alert"
-        type="error"
-        message={toRender}
-        showIcon
-        closable={false}
-      />
-    );
-  }
-
   render() {
-    const { userHasMetamask, network, userIsLoggedIn } = this.props;
+    const {
+      userHasMetamask,
+      network,
+      userIsLoggedIn,
+      extensionUrl,
+      isBraveBrowser,
+    } = this.props;
 
     const {
       isLoading, transactionStatus, acceptedTos, alertType, alertMessage,
-    } = this.props.assertsNotification;
+    } = this.props.assetsNotification;
 
 
     const shouldShowConfirmAndCancel =
       (((!isLoading && transactionStatus === '') || (transactionStatus === 1)) && userHasMetamask && userIsLoggedIn && network === ethereumNetwork);
 
+    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network);
 
     return (
       <Modal
+        className={transactionStatus === 1 ? 'ConfirmationPopup--is-success' : ''}
         visible={this.props.isPopupOpen()}
         title="Confirm with MetaMask"
-        onOk={() => this.handleConfirmClicked()}
+        onOk={() => this.handleConfirmClicked(transactionStatus)}
         onCancel={() => this.props.handlePopupState(false)}
-        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Send again' : 'Confirm'}
-        cancelText="Back"
+        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Close' : 'Confirm'}
+        cancelText={transactionStatus === 1 ? null : 'Back'}
+
         okButtonProps={{ disabled: !shouldShowConfirmAndCancel }}
       >
         <div>
-          {this.renderMetamaskErrors()}
+          {metamaskErrorsToRender && (
+            <AlertMessage
+              className="ConfirmationPopup__metamask-alert"
+              type="error"
+              message={metamaskErrorsToRender}
+              showIcon
+              closable={false}
+            />
+          )}
           <p className="ConfirmationPopup__description">
             Your contribution:{' '}
             <span style={{ fontWeight: '400' }} className="ConfirmationPopup__description-amount">
@@ -219,8 +152,8 @@ class ConfirmationPopup extends React.Component {
             <AlertMessage
               type={alertType}
               message={alertMessage}
-              handleAlertClosed={() => this.props.setAssertsStatusState({
-                ...this.props.assertsNotification,
+              handleAlertClosed={() => this.props.setAssetsStatusState({
+                ...this.props.assetsNotification,
                 alertType: undefined,
               })}
               showIcon
@@ -234,7 +167,7 @@ class ConfirmationPopup extends React.Component {
 }
 
 ConfirmationPopup.defaultProps = {
-  assertsNotification: {
+  assetsNotification: {
     alertType: '',
     alertMessage: '',
   },
@@ -253,8 +186,8 @@ ConfirmationPopup.propTypes = {
   network: PropTypes.string.isRequired,
   userIsLoggedIn: PropTypes.bool.isRequired,
   isBraveBrowser: PropTypes.bool.isRequired,
-  setAssertsStatusState: PropTypes.func.isRequired,
-  assertsNotification: PropTypes.shape({
+  setAssetsStatusState: PropTypes.func.isRequired,
+  assetsNotification: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     transactionStatus: PropTypes.string,
     acceptedTos: PropTypes.bool.isRequired,

@@ -25,7 +25,10 @@ AlertMessage.defaultProps = {
 
 AlertMessage.propTypes = {
   type: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+  ]).isRequired,
   handleAlertClosed: PropTypes.func.isRequired,
   className: PropTypes.string,
   closable: PropTypes.bool,

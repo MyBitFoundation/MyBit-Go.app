@@ -1,7 +1,7 @@
 /* eslint-disable  react/no-unused-state */
 /* eslint-disable  camelcase */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -19,6 +19,9 @@ import {
   pullAssetsFromServerTime,
   fetchAssetsFromWeb3Time,
 } from '../constants';
+import { formatMonetaryValue } from '../util/helpers';
+import NotificationLink from './NotificationLink';
+
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -31,8 +34,8 @@ class BlockchainInfo extends React.Component {
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
     this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
+    this.setAssetsStatusState = this.setAssetsStatusState.bind(this);
     this.handleAddressChange = this.handleAddressChange.bind(this);
-    this.setAssertsStatusState = this.setAssertsStatusState.bind(this);
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
     this.usingServer = this.usingServer.bind(this);
@@ -52,7 +55,7 @@ class BlockchainInfo extends React.Component {
       fetchTransactionHistory: this.fetchTransactionHistory,
       fetchMyBit: this.getMYB,
       fundAsset: this.fundAsset,
-      setAssertsStatusState: this.setAssertsStatusState,
+      setAssetsStatusState: this.setAssetsStatusState,
       changeNotificationPlace: this.changeNotificationPlace,
       user: {},
       userHasMetamask: this.props.isMetamaskInstalled,
@@ -61,13 +64,12 @@ class BlockchainInfo extends React.Component {
       extensionUrl: this.props.extensionUrl,
       userIsLoggedIn: this.props.userIsLoggedIn,
       handleClickedAssetFavorite: this.handleAssetFavorited,
-      assertsNotification: {
+      assetsNotification: {
         isLoading: false,
         transactionStatus: '',
         acceptedTos: false,
         alertType: '',
         alertMessage: '',
-
       },
       notificationPlace: 'notification',
     };
@@ -116,18 +118,18 @@ class BlockchainInfo extends React.Component {
     return Brain.withdrawFromFaucet(this.state.user);
   }
 
-  setAssertsStatusState(state) {
-    const { assertsNotification } = this.state;
+  setAssetsStatusState(state) {
+    const { assetsNotification } = this.state;
     if (state) {
       this.setState({
-        assertsNotification: {
-          ...assertsNotification,
+        assetsNotification: {
+          ...assetsNotification,
           ...state,
         },
       });
     } else {
       this.setState({
-        assertsNotification: {
+        assetsNotification: {
           isLoading: false,
           transactionStatus: '',
           acceptedTos: false,
@@ -250,41 +252,62 @@ class BlockchainInfo extends React.Component {
   }
 
   async fundAsset(assetId, amount) {
-    const { notificationPlace } = this.state;
-
-    await this.setAssertsStatusState({
+    await this.setAssetsStatusState({
       isLoading: true,
       transactionStatus: '',
       alertType: 'info',
-      alertMessage: 'Accept the transaction in metamask and wait for a brief moment.',
+      alertMessage: 'After accepting the transaction in Metamask it may take several minutes for it to be processed by the Ethereum Network. Meanwhile, you can still explore the platform.',
     });
 
     try {
+      const currentAsset = this.state.assets.find(item => item.assetID === assetId);
+
       const result = await Brain.fundAsset(
         this.state.user,
         assetId,
         amount,
       );
-
-      const currentAssert = this.state.assets.find(item => item.assetID === assetId);
+      const formatedAmount = formatMonetaryValue(this.state.prices.ether.price * amount);
 
       if (result) {
+        const { notificationPlace } = this.state;
+        const Message = (
+          <Fragment>Funded {currentAsset.name} successfully with <span className="NotificationLink__amount">{formatedAmount}</span>
+            <NotificationLink to="/portfolio" setAssetsStatus={this.setAssetsStatusState} text=" Go to Portfolio" />
+          </Fragment>
+        );
+
         const alertMessage = notificationPlace === 'notification'
-          ? `Funded ${currentAssert.name} with ${amount} Sent Successfully!`
+          ? Message
           : 'Sent Successfuly!';
 
-        this.setAssertsStatusState({
+        this.setAssetsStatusState({
           isLoading: false,
           transactionStatus: 1,
           alertType: 'success',
           alertMessage,
         });
+
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+
+        this.intervalFetchAssets =
+          setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
+        this.intervalFetchTransactionHistory =
+          setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
       } else {
+        const { notificationPlace } = this.state;
+        const currentPathName = window.location.pathname;
+        const Message = (
+          <Fragment>Failed to fund {currentAsset.name} with <span className="NotificationLink__amount">{formatedAmount}</span>
+            <NotificationLink to={currentPathName} setAssetsStatus={this.setAssetsStatusState} text=" Try again" />
+          </Fragment>
+        );
+
         const alertMessage = notificationPlace === 'notification'
-          ? `Funded ${currentAssert.name} with ${amount} ETH failed. Please try again.`
+          ? Message
           : 'Transaction failed. Please try again.';
 
-        this.setAssertsStatusState({
+        this.setAssetsStatusState({
           isLoading: false,
           transactionStatus: 0,
           alertType: 'error',
@@ -292,7 +315,7 @@ class BlockchainInfo extends React.Component {
         });
       }
     } catch (err) {
-      this.setAssertsStatusState({
+      this.setAssetsStatusState({
         isLoading: false,
       });
     }
