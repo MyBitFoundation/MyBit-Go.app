@@ -33,7 +33,7 @@ const NavigationBar = ({ currentPath, setAssetsStatusState }) => {
       selected: currentPath === '/transaction-history',
       url: '/transaction-history',
     }, {
-      name: 'WatchList',
+      name: 'Watch List',
       icon: watchIcon,
       selected: currentPath === '/watchlist',
       url: '/watchlist',

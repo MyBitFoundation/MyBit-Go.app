@@ -2,12 +2,11 @@
 
 .Portfolio{
 
-  padding-top: 50px;
+  padding-top: 20px;
 
   &__cards{
     display: flex;
-    margin-left: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 
     @include media('<tablet') {
       flex-direction: column;

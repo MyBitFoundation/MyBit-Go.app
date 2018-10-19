@@ -85,7 +85,8 @@ const routes = [
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
         {({
-          loading, assets, prices, user, changeNotificationPlace, setAssetsStatusState,
+          loading, assets, prices, user, changeNotificationPlace,
+          setAssetsStatusState, handleClickedAssetFavorite,
           }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
@@ -98,6 +99,7 @@ const routes = [
               user={user}
               changeNotificationPlace={changeNotificationPlace}
               setAssetsStatusState={setAssetsStatusState}
+              handleClickedAssetFavorite={handleClickedAssetFavorite}
             />
           ))
         }

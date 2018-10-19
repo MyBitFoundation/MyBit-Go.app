@@ -113,13 +113,13 @@ const PortfolioPage = ({ loading, assets, prices }) => {
               </b>
             </span>
             <div className="Portfolio__card-separator" />
-            <b>ETH {totalValueEth}</b>
+            <b>{totalValueEth} ETH</b>
           </div>
           <div className="Portfolio__card">
             <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
             <span>Total Revenue: <b>{formatMonetaryValue(totalPortfolioRevenue)}</b></span>
             <div className="Portfolio__card-separator" />
-            <b className="Portfolio__card-value--is-green">%{totalRevenuePercentage}</b>
+            <b className="Portfolio__card-value--is-green">{totalRevenuePercentage}%</b>
           </div>
         </div>
         <Row className="Portfolio__assets">
