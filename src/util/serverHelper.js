@@ -10,7 +10,7 @@ const API = require('../constants/contracts/API');
 const Web3 = require('web3');
 
 const web3 = new Web3();
-web3.setProvider(new web3.providers.HttpProvider(`https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`));
+web3.setProvider(new web3.providers.HttpProvider('https://remarkably-chief-impala.quiknode.io/d0ce9215-42fe-4505-b9b2-08afa9b77358/M9_EEpx0GaRrsBTssLXSKg==/'));
 
 let currentEthInUsd = 0;
 
@@ -186,6 +186,7 @@ async function fetchAssets() {
     // filter for v0.1
   assetsPlusMoreDetails = assetsPlusMoreDetails
     .filter(asset => asset.amountToBeRaisedInUSD > 0);
+
 
   const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
     if (asset.assetType) {
