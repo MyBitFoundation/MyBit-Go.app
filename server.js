@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const basicAuth = require('express-basic-auth');
+// const basicAuth = require('express-basic-auth');
 const path = require('path');
 const fetchAssets = require('./src/util/serverHelper');
 
