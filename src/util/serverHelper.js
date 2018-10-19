@@ -102,7 +102,6 @@ async function fetchAssets() {
       ipfsHash: object._ipfsHash,
     }));
 
-
   // pull assets from older contract
   apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
   assetCreationContract = new web3.eth.Contract(
@@ -186,7 +185,6 @@ async function fetchAssets() {
     // filter for v0.1
   assetsPlusMoreDetails = assetsPlusMoreDetails
     .filter(asset => asset.amountToBeRaisedInUSD > 0);
-
 
   const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
     if (asset.assetType) {
