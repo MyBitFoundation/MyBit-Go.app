@@ -191,12 +191,20 @@
     background-color: #f9f9f9;
     box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 
-    &-image{
-      background: linear-gradient(to left, #24F281, #0083FF);
+    &-container {
+      background-image: linear-gradient(to left, #0b3f9c, #0083FF) !important;
       height: 266px;
       background-position: bottom;
       border-radius: 4px;
       background-size: cover;
+      position: relative;
+      overflow: hidden;
+    }
+
+    &-image{
+      background-size: cover;
+      background-position: bottom;
+      height: 266px;
     }
 
     &-title-details{

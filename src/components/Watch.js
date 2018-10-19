@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Tooltip from 'antd/lib/tooltip';
 import 'antd/lib/tooltip/style/css';
 import styled, { createGlobalStyle } from 'styled-components';
-import WatchIcon from '../images/watch.svg';
+import WatchIcon from '../images/new-watch.svg';
 
 const GlobalStyle = createGlobalStyle`
   .Watch__tooltip .ant-tooltip-inner{
@@ -21,14 +21,14 @@ const GlobalStyle = createGlobalStyle`
 
 const StyledWatch = styled.span`
   position: absolute;
-  bottom: 5px;
+  top: 15px;
   right: 16px;
   width: 22px;
   z-index: 1;
   cursor: pointer;
 
   svg{
-    fill: ${props => props.active ? '#1890ff' : '#b9bdc3'};
+    fill: ${props => props.active ? '#1890ff' : '#fff'};
   }
 
   svg:hover{
