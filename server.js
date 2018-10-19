@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const basicAuth = require('express-basic-auth');
+// const basicAuth = require('express-basic-auth');
 const path = require('path');
 const fetchAssets = require('./src/util/serverHelper');
 
@@ -9,10 +9,10 @@ const app = express();
 let assets = [];
 let assetsLoaded = false;
 
-const staticUserAuth = basicAuth({
+/* const staticUserAuth = basicAuth({
   users: { admin: process.env.MYBIT_GO_ADMIN_PASSWORD },
   challenge: true,
-});
+}); */
 
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
@@ -29,11 +29,11 @@ app.get('/api/assets', (req, res) => {
   });
 });
 
-app.use(staticUserAuth);
+//app.use(staticUserAuth);
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/*', staticUserAuth, (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
