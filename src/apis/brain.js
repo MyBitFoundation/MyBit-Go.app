@@ -396,7 +396,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       if (process.env.NODE_ENV !== 'development') {
         // filter for test assets. Only for development
         assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
-          !testAssetIds.some(item => item === asset.assetID));
+          asset.description !== 'Coming soon');
       }
 
       const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {

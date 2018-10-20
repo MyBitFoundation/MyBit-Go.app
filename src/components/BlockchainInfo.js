@@ -176,7 +176,7 @@ class BlockchainInfo extends React.Component {
     if (!data.assetsLoaded) {
       return;
     }
-    const assetsToReturn = data.assets.map((asset) => {
+    let assetsToReturn = data.assets.map((asset) => {
       let watchListed = false;
 
       if (!this.usingServer()) {
@@ -200,6 +200,12 @@ class BlockchainInfo extends React.Component {
         watchListed,
       };
     });
+
+    if (process.env.NODE_ENV !== 'development') {
+      // filter for test assets. Only for development
+      assetsToReturn = assetsToReturn.filter(asset =>
+        asset.description !== 'Coming soon');
+    }
 
     this.setState({
       usingServer: true,
