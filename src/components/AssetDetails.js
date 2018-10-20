@@ -451,7 +451,7 @@ AssetDetails.propTypes = {
     imageSrc: PropTypes.string,
     fundingStage: PropTypes.string.isRequired,
     pastDate: PropTypes.bool.isRequired,
-    watchListed: PropTypes.bool.watchListed
+    watchListed: PropTypes.bool.isRequired,
   }),
   currentEthInUsd: PropTypes.number,
   changeNotificationPlace: PropTypes.func.isRequired,

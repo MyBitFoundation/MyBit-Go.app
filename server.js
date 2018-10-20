@@ -29,7 +29,7 @@ app.get('/api/assets', (req, res) => {
   });
 });
 
-//app.use(staticUserAuth);
+// app.use(staticUserAuth);
 
 app.use(express.static(path.join(__dirname, 'build')));
 
