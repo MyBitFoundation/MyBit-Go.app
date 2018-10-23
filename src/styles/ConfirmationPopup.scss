@@ -4,36 +4,34 @@
   background-color: #ffffff;
   font-family: 'Roboto';
 
+  &__metamask-alert{
+    margin-bottom: 30px;
+
+    p{
+      margin: 0px 0px;
+    }
+  }
+
+  .ant-modal-title{
+    color: rgba(0, 0, 0, 0.65);
+  }
+
   &__status-text{
     text-align: center;
   }
 
-  &__title{
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    line-height: 50px;
-    border-bottom: 2px solid #dfe3e6;
-  }
-
-  &__wrapper{
-    padding: 0px 20px;
-    padding-top: 20px;
-    position: relative;
-  }
-
   &__description{
-    font-size: 18px;
-    color: #5a6872;
-    padding-top: 10px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.65);
+    margin-bottom: 0px;
   }
 
   &__description-amount{
     position: absolute;
     right: 20px;
     font-size: 15px;
-    font-weight: 700;
-    color: black;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.65);
 
     &--is-inactive{
       color: #d9d9d9;
@@ -52,47 +50,42 @@
     }
   }
 
-  &__line{
-    padding-top: 40px;
-    border-bottom: 1px solid #dfe3e6;
-  }
-
   &__description-cost{
-    color: black;
     padding-top: 20px;
     line-height: 1;
   }
 
   &__tos-wrapper{
     display: flex;
-    padding: 0px 40px;
-    padding-top: 13px;
+    margin-top: 40px;
   }
 
   &__tos-text{
     font-size: 14px;
-    width: 165px;
-    text-align: center;
+    margin-left: 10px;
+    display: inline-block;
   }
 
   &__tos-message-error{
     font-size: 14px;
     color: red;
-    text-align: center;
+    margin-left: 25px;
   }
 
-  &__confirm-btn, &__cancel-btn{
-    display: block;
+  &__alert-wrapper{
+    position: absolute;
     width: 100%;
-    margin-top: 10px;
+    left: 0px;
+    margin-top: 80px;
   }
-
-  &__confirm-btn{
-      background-color: #2db84b !important;
-
-      &:focus, &:hover, &:active{
-        background-color: #2db84b  !important;
+  &--is-success {
+    .ant-modal-footer{
+      div {
+        button:first-of-type{
+          display: none;
+        }
       }
+    }
   }
 }
 

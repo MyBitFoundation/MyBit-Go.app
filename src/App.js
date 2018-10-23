@@ -8,10 +8,19 @@ import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import routes from './routes';
-import MetamaskChecker from './components/MetamaskChecker';
+import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
+import {
+  ethereumNetwork,
+  metamaskErrors,
+} from './constants/index';
+import Notification from './components/Notification';
 
 class App extends Component {
   isFirstVisit() {
+    // let the explore component handle this
+    if (this.props.location.pathname === '/') {
+      return false;
+    }
     try {
       if (localStorage.getItem('mybitUser') === null) {
         localStorage.setItem('mybitUser', 'true');
@@ -26,14 +35,57 @@ class App extends Component {
   render() {
     const firstVisit = this.isFirstVisit();
     return (
-      <div>
-        <MetamaskChecker
-          shouldDisplay={this.props.location.pathname !== '/help'}
-        />
+      <CirclesBackgroundWrapper>
         <BlockchainInfoContext.Consumer>
-          {({ user, prices }) => <AppHeader user={user} prices={prices} />}
+          {({
+            user,
+            prices,
+            userHasMetamask,
+            userIsLoggedIn,
+            network,
+            setAssetsStatusState,
+            assetsNotification,
+            notificationPlace,
+            isBraveBrowser,
+            extensionUrl,
+          }) => (
+            <React.Fragment>
+              <AppHeader
+                user={user}
+                prices={prices.mybit}
+                usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
+                setAssetsStatusState={setAssetsStatusState}
+                assetsNotification={assetsNotification}
+                notificationPlace={notificationPlace}
+              />
+              <NavigationBar
+                setAssetsStatusState={setAssetsStatusState}
+                currentPath={this.props.location.pathname}
+              />
+              {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
+            </React.Fragment>
+          )}
         </BlockchainInfoContext.Consumer>
-        <NavigationBar currentPath={this.props.location.pathname} />
+
+        <div className="notification_wrapper">
+          <BlockchainInfoContext.Consumer>
+            {({
+              notificationPlace,
+              setAssetsStatusState,
+              assetsNotification,
+            }) => {
+              if (notificationPlace === 'notification') {
+                return (<Notification
+                  setAssetsStatusState={setAssetsStatusState}
+                  assetsNotification={assetsNotification}
+                />);
+              }
+              return null;
+            }}
+          </BlockchainInfoContext.Consumer>
+        </div>
+
+
         <div className="page-wrapper">
           <Switch>
             {routes.map(({ path, exact, component: C }) => (
@@ -46,7 +98,7 @@ class App extends Component {
             ))}
           </Switch>
         </div>
-      </div>
+      </CirclesBackgroundWrapper>
     );
   }
 }

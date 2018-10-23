@@ -2,14 +2,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import MetamaskBooting from './MetamaskBooting';
-import MetamaskLogin from './MetamaskLogin';
-import MetamaskNetwork from './MetamaskNetwork';
-import BrowserNotSupported from './BrowserNotSupported';
-import isMetaMask from '../util/isMetamask';
-import checkAccount from '../util/isUserLogged';
-import checkForNetworks from '../util/checkForNetworks';
+import Web3 from 'web3';
 
 import {
   METAMASK_FIREFOX,
@@ -23,25 +16,55 @@ class MetamaskChecker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isMetamaskUserLogged: null,
-      isRopstenNetwork: false,
+      isInstalled: undefined,
+      isLoggedIn: undefined,
     };
     this.isBraveBrowser = false;
     this.extensionUrl = '';
+    this.checkNetwork = this.checkNetwork.bind(this);
+  }
 
-    checkForNetworks().then((data) => {
-      if (data === 'ropsten') {
-        this.setState({ isRopstenNetwork: true });
+  async componentDidMount() {
+    // Modern dapp browsers...
+    if (window.ethereum) {
+      const { ethereum } = window;
+      window.web3js = new Web3(ethereum);
+      await this.userHasMetamask();
+
+      try {
+        await ethereum.enable();
+      } catch (error) {
+      // User denied account access...
       }
+    } else if (window.web3) {
+      window.web3js = new Web3(window.web3.currentProvider);
+      await this.userHasMetamask();
+    } else {
+      this.isBrowserSupported();
+    }
+  }
+
+  async userHasMetamask() {
+    await this.checkNetwork();
+    const isLoggedIn = await this.checkIfLoggedIn();
+    this.setState({
+      isInstalled: true,
+      isLoggedIn,
     });
   }
 
-  componentDidMount() {
-    checkAccount().then((haveAccounts) => {
-      if (haveAccounts.length === 0) {
-        this.setState({ isMetamaskUserLogged: false });
-      }
-    });
+  async checkIfLoggedIn() {
+    const accounts = await window.web3js.eth.getAccounts();
+    if (accounts && accounts.length === 0) {
+      return false;
+    } else if (!accounts) {
+      return undefined;
+    }
+    return true;
+  }
+
+  async checkNetwork() {
+    this.network = await window.web3js.eth.net.getNetworkType();
   }
 
   isBraveBrowserBeingUsed() {
@@ -76,54 +99,38 @@ class MetamaskChecker extends Component {
     switch (browser.name) {
       case 'chrome':
         this.extensionUrl = METAMASK_CHROME;
-        return true;
+        break;
       case 'opera':
         this.extensionUrl = METAMASK_OPERA;
-        return true;
+        break;
       case 'firefox':
         this.extensionUrl = METAMASK_FIREFOX;
-        return true;
+        break;
       default:
-        return false;
+        break;
     }
-  }
-
-  // if Metamask is not established, modal is displayed with directions
-  renderMetamaskWarning() {
-    if (!this.isBrowserSupported()) {
-      return <BrowserNotSupported />;
-    }
-    if (!isMetaMask()) {
-      return (
-        <MetamaskBooting
-          extensionUrl={this.extensionUrl}
-          isBraveBrowser={this.isBraveBrowser}
-        />
-      );
-    }
-
-    if (this.state.isRopstenNetwork !== true) {
-      return <MetamaskNetwork />;
-    }
-    return null;
+    this.setState({
+      isInstalled: false,
+      isLoggedIn: false,
+    });
   }
 
   render() {
-    if (!this.props.shouldDisplay) {
+    if (this.state.isInstalled === undefined || this.state.isLoggedIn === undefined) {
       return null;
     }
-
-    return (
-      <div>
-        {this.renderMetamaskWarning()}
-        {this.state.isMetamaskUserLogged === false ? <MetamaskLogin /> : null}
-      </div>
-    );
+    return React.cloneElement(this.props.children, {
+      isMetamaskInstalled: this.state.isInstalled,
+      network: this.network,
+      isBraveBrowser: this.isBraveBrowser,
+      extensionUrl: this.extensionUrl,
+      userIsLoggedIn: this.state.isLoggedIn,
+    });
   }
 }
 
 MetamaskChecker.propTypes = {
-  shouldDisplay: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default MetamaskChecker;

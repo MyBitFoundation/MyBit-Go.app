@@ -1,26 +1,27 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Loading } from 'carbon-components-react';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
+
 import AssetDetails from '../AssetDetails';
-import CategoryBackButton from '../CategoryBackButton';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
+import LoadingPage from './LoadingPage';
 
 const AssetDetailsPage = ({
-  loading, assets, match, prices, user,
+  loading, assets, match, ether, user, history, changeNotificationPlace, setAssetsStatusState,
 }) => {
   if (loading.assets) {
     return (
-      <div style={{ width: '100%', position: 'relative', top: '50px' }}>
-        <Loading className="AssetDetailsPage--is-loading" withOverlay={false} />
-        <p className="AssetDetailsPage-loading-message">
-          Loading asset information
-        </p>
-      </div>
+      <LoadingPage
+        message="Loading asset information"
+        hasBackButton
+      />
     );
   }
 
-  const { assetId, category } = match.params;
+  const { assetId } = match.params;
   const asset = assets.find(({ assetID }) => assetID === assetId);
 
   if (!asset) {
@@ -41,26 +42,40 @@ const AssetDetailsPage = ({
     address: asset.assetManager,
     numberOfInvestors: asset.numberOfInvestors,
     imageSrc: asset.imageSrc,
+    fundingStage: asset.fundingStage,
+    pastDate: asset.pastDate,
+    watchListed: asset.watchListed,
   };
 
   return (
-    <div style={{ position: 'relative' }}>
-      <CategoryBackButton category={category} />
+    <div>
+      <Button onClick={history.goBack} className="AssetDetailsPage--back-btn">
+        Back
+      </Button>
       <AssetDetails
         information={assetInformation}
-        currentEthInUsd={prices.etherPrice}
+        currentEthInUsd={ether.price}
         user={user}
+        changeNotificationPlace={changeNotificationPlace}
+        setAssetsStatusState={setAssetsStatusState}
       />
     </div>
   );
 };
 
+AssetDetailsPage.defaultProps = {
+  ether: undefined,
+};
+
 AssetDetailsPage.propTypes = {
   loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  prices: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  ether: PropTypes.shape({ params: PropTypes.object }),
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  history: PropTypes.shape({ params: PropTypes.object }).isRequired,
+  changeNotificationPlace: PropTypes.func.isRequired,
+  setAssetsStatusState: PropTypes.func.isRequired,
 };
 
-export default AssetDetailsPage;
+export default withRouter(AssetDetailsPage);

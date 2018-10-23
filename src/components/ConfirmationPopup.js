@@ -1,23 +1,35 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable react/no-unescaped-entities */
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ToggleSmall, Modal, Button, Loading } from 'carbon-components-react';
+import Modal from 'antd/lib/modal';
+import 'antd/lib/modal/style';
+import Checkbox from 'antd/lib/checkbox';
+import 'antd/lib/checkbox/style';
 import '../styles/ConfirmationPopup.css';
+import AlertMessage from './AlertMessage';
+import {
+  ethereumNetwork,
+  metamaskErrors,
+} from '../constants/index';
 
 class ConfirmationPopup extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      transactionStatus: '',
-      acceptedTos: false,
-      displayWarning: false,
-    };
-  }
-
   setAcceptedTos(value) {
-    this.setState({ acceptedTos: value });
-    if (value === true && this.state.displayWarning) {
-      this.setState({ displayWarning: false });
+    const { assetsNotification, setAssetsStatusState } = this.props;
+
+    setAssetsStatusState({
+      ...assetsNotification,
+      acceptedTos: value,
+    });
+
+    if (value === true && this.props.assetsNotification.alertType) {
+      setAssetsStatusState({
+        ...assetsNotification,
+        alertType: undefined,
+        alertMessage: undefined,
+      });
     }
   }
 
@@ -26,180 +38,162 @@ class ConfirmationPopup extends React.Component {
   }
 
   tryAgain() {
-    this.setState({ transactionStatus: '' });
+    this.props.setAssetsStatusState({
+      transactionStatus: '',
+    });
   }
 
-  async handleConfirmClicked() {
-    if (!this.state.acceptedTos) {
-      this.setState({ displayWarning: true });
-      return;
+  handleConfirmClicked(transactionStatus) {
+    if (transactionStatus === 1) {
+      return this.handleCancel();
     }
-    this.setState({ isLoading: true, transactionStatus: '' });
-    try {
-      const result = await this.props.fundAsset(
-        this.props.assetId,
-        this.props.amountEth,
-      );
-      if (result) {
-        this.setState({ isLoading: false, transactionStatus: 1 });
-      } else {
-        this.setState({ isLoading: false, transactionStatus: 0 });
-      }
-    } catch (err) {
-      this.setState({ isLoading: false });
+
+    const { assetsNotification, setAssetsStatusState } = this.props;
+
+    if (!assetsNotification.acceptedTos) {
+      setAssetsStatusState({
+        alertType: 'error',
+        alertMessage: 'Please accept our T&C before continuing.',
+      });
+      return null;
     }
+
+    this.props.fundAsset(
+      this.props.assetId,
+      this.props.amountEth,
+
+    );
+    return null;
   }
 
   render() {
+    const {
+      userHasMetamask,
+      network,
+      userIsLoggedIn,
+      extensionUrl,
+      isBraveBrowser,
+    } = this.props;
+
+    const {
+      isLoading, transactionStatus, acceptedTos, alertType, alertMessage,
+    } = this.props.assetsNotification;
+
+
     const shouldShowConfirmAndCancel =
-      !this.state.isLoading && this.state.transactionStatus === '';
+      (((!isLoading && transactionStatus === '') || (transactionStatus === 1)) && userHasMetamask && userIsLoggedIn && network === ethereumNetwork);
+
+    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network);
+
     return (
-      <Modal open={this.props.isPopupOpen()} passiveModal>
-        <div className="ConfirmationPopup">
-          <p className="ConfirmationPopup__title">Confirm Purchase</p>
-          <div className="ConfirmationPopup__wrapper">
-            <p className="ConfirmationPopup__description">
-              Your Contribution:{' '}
-              <span className="ConfirmationPopup__description-amount">
-                ${this.props.amountUsd}
+      <Modal
+        className={transactionStatus === 1 ? 'ConfirmationPopup--is-success' : ''}
+        visible={this.props.isPopupOpen()}
+        title="Confirm with MetaMask"
+        onOk={() => this.handleConfirmClicked(transactionStatus)}
+        onCancel={() => this.props.handlePopupState(false)}
+        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Close' : 'Confirm'}
+        cancelText={transactionStatus === 1 ? null : 'Back'}
+
+        okButtonProps={{ disabled: !shouldShowConfirmAndCancel }}
+      >
+        <div>
+          {metamaskErrorsToRender && (
+            <AlertMessage
+              className="ConfirmationPopup__metamask-alert"
+              type="error"
+              message={metamaskErrorsToRender}
+              showIcon
+              closable={false}
+            />
+          )}
+          <p className="ConfirmationPopup__description">
+            Your contribution:{' '}
+            <span style={{ fontWeight: '400' }} className="ConfirmationPopup__description-amount">
+              {this.props.amountUsd}
+              <span style={{ marginLeft: '10px', fontWeight: '500' }}>
+                {this.props.amountEth} ETH
               </span>
+            </span>
+          </p>
+          <p className="ConfirmationPopup__description">
+            Ownership:{' '}
+            <span className="ConfirmationPopup__description-amount">
+              {this.props.ownership}%
+            </span>
+          </p>
+          <p className="ConfirmationPopup__description ConfirmationPopup__description-cost">
+            Total asset costs:{' '}
+            <span className="ConfirmationPopup__description-amount">
+              {this.props.amountUsd}
+            </span>
+          </p>
+          <div className="ConfirmationPopup__tos-wrapper">
+            <Checkbox
+              onChange={e => this.setAcceptedTos(e.target.checked)}
+              checked={acceptedTos}
+              disabled={isLoading}
+            />
+            <p className="ConfirmationPopup__tos-text">
+              I've read and agree to the {' '}
+              <a
+                href="https://docs.google.com/document/d/1LUArMnGpnvpe5fI4-QI_lvkJTb5Xf6me0XU1zznCqmk/edit?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Terms and Conditions
+              </a>
+              .
             </p>
-            <p className="ConfirmationPopup__description">
-              Ownership:{' '}
-              <span className="ConfirmationPopup__description-amount">
-                {this.props.ownership}%
-              </span>
-            </p>
-            <p
-              className="ConfirmationPopup__description"
-              style={{ lineHeight: '1', paddingTop: '15px' }}
-            >
-              Expected annual return:{' '}
-              <span className="ConfirmationPopup__description-amount ConfirmationPopup__description-amount--is-inactive">
-                18%
-              </span>
-            </p>
-            <p className="ConfirmationPopup__description-amount-right ConfirmationPopup__description-amount-right--is-inactive">
-              $18,000
-            </p>
-            <p className="ConfirmationPopup__description-amount-right ConfirmationPopup__description-amount-right--is-inactive">
-              {this.props.amountEth} <b>ETH</b>
-            </p>
-            <div className="ConfirmationPopup__line" />
-            <p className="ConfirmationPopup__description ConfirmationPopup__description-cost">
-              Total asset cost:{' '}
-              <span className="ConfirmationPopup__description-amount">
-                ${this.props.amountUsd}
-              </span>
-            </p>
-            <p className="ConfirmationPopup__description-amount-right">
-              {this.props.amountEth} <b>ETH</b>
-            </p>
-            <div className="ConfirmationPopup__tos-wrapper">
-              <ToggleSmall
-                onToggle={value => this.setAcceptedTos(value)}
-                className="ConfirmationPopup__tos-toggle"
-                ariaLabel="Terms and conditions"
-                id="ConfirmationPopup__tos-toggle"
-                toggled={this.state.acceptedTos}
-                disabled={this.state.isLoading}
-              />
-              <p className="ConfirmationPopup__tos-text">
-                I read and agree to the{' '}
-                <a
-                  href="https://docs.google.com/document/d/1LUArMnGpnvpe5fI4-QI_lvkJTb5Xf6me0XU1zznCqmk/edit?usp=sharing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  terms and conditions
-                </a>
-              </p>
-            </div>
-            <p
-              className="ConfirmationPopup__tos-message-error"
-              style={{
-                visibility: this.state.displayWarning ? 'visible' : 'hidden',
-              }}
-            >
-              *Please accept our T&C before continuing
-            </p>
-            {shouldShowConfirmAndCancel && (
-              <div>
-                <Button
-                  onClick={() => this.handleConfirmClicked()}
-                  className="ConfirmationPopup__confirm-btn"
-                  kind="primary"
-                >
-                  CONFIRM
-                </Button>
-                <Button
-                  onClick={() => this.props.handlePopupState(false)}
-                  className="ConfirmationPopup__cancel-btn"
-                  kind="secondary"
-                >
-                  CANCEL
-                </Button>
-              </div>
-            )}
-            {this.state.isLoading && (
-              <div>
-                <Loading
-                  small
-                  withOverlay={false}
-                  style={{ margin: '0 auto' }}
-                />
-                <p style={{ textAlign: 'center' }}>
-                  Accept the transaction in metamask and wait for a brief
-                  moment.
-                </p>
-              </div>
-            )}
-            {this.state.transactionStatus === 1 && (
-              <div>
-                <p className="ConfirmationPopup__status-text">
-                  Sent successfuly!
-                </p>
-                <Button
-                  onClick={() => this.props.handlePopupState(false)}
-                  className="ConfirmationPopup__cancel-btn"
-                  kind="secondary"
-                >
-                  GO BACK
-                </Button>
-              </div>
-            )}
-            {this.state.transactionStatus === 0 && (
-              <div>
-                <p
-                  className="ConfirmationPopup__status-text"
-                  style={{ color: 'red' }}
-                >
-                  Transaction failed.
-                </p>
-                <Button
-                  onClick={() => this.tryAgain()}
-                  className="ConfirmationPopup__cancel-btn"
-                  kind="secondary"
-                >
-                  TRY AGAIN
-                </Button>
-              </div>
-            )}
           </div>
         </div>
+        {alertType && (
+          <div className="ConfirmationPopup__alert-wrapper">
+            <AlertMessage
+              type={alertType}
+              message={alertMessage}
+              handleAlertClosed={() => this.props.setAssetsStatusState({
+                ...this.props.assetsNotification,
+                alertType: undefined,
+              })}
+              showIcon
+              closable
+            />
+          </div>
+        )}
       </Modal>
     );
   }
 }
 
+ConfirmationPopup.defaultProps = {
+  assetsNotification: {
+    alertType: '',
+    alertMessage: '',
+  },
+};
+
 ConfirmationPopup.propTypes = {
-  amountUsd: PropTypes.number.isRequired,
-  amountEth: PropTypes.number.isRequired,
-  ownership: PropTypes.number.isRequired,
+  amountUsd: PropTypes.string.isRequired,
+  amountEth: PropTypes.string.isRequired,
+  ownership: PropTypes.string.isRequired,
   handlePopupState: PropTypes.func.isRequired,
   fundAsset: PropTypes.func.isRequired,
   assetId: PropTypes.string.isRequired,
   isPopupOpen: PropTypes.func.isRequired,
+  userHasMetamask: PropTypes.bool.isRequired,
+  extensionUrl: PropTypes.string.isRequired,
+  network: PropTypes.string.isRequired,
+  userIsLoggedIn: PropTypes.bool.isRequired,
+  isBraveBrowser: PropTypes.bool.isRequired,
+  setAssetsStatusState: PropTypes.func.isRequired,
+  assetsNotification: PropTypes.shape({
+    isLoading: PropTypes.bool.isRequired,
+    transactionStatus: PropTypes.string,
+    acceptedTos: PropTypes.bool.isRequired,
+    alertType: PropTypes.string,
+    alertMessage: PropTypes.string,
+  }),
 };
 
 export default ConfirmationPopup;

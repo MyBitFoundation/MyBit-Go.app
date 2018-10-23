@@ -1,168 +1,68 @@
 @import 'include-media/dist/_include-media.scss';
 
 .HelpPage{
-
-  text-align: center;
   color: #001358;
-  margin-top: 50px;
+  margin-top: 15px;
 
-  &__title{
-    font-family: Gilroy;
-    font-weight: 900;
-    font-size: 48px;
+  &-question{
+    line-height: 22px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1890ff;
+    margin-bottom: 2px;
   }
 
-  &__desc, &__faucet-text{
-    max-width: 1020px;
-    margin: 0 auto;
-    font-size: 20px;
-    margin-top: 30px;
+  &-answer{
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.65);
   }
 
-  &__faucet-text{
-    margin-bottom: 10px;
-    margin-top: 20px;
-  }
-
-  &__faucet-status-text{
-    margin-top: 10px;
-  }
-
-  &__navigation{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    &-item{
-      text-decoration: none;
-      width: 310px;
-      height: 306px;
-      background-color: #f9f9f9;
-      margin: 0px 15px;
-      margin-top: 40px;
-      border: solid 1px #dfe3e6;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      color: #001358;
-
-      &:hover{
-        border-style: solid;
-        border-width: 6px;
-        border-image: linear-gradient(#24f281, #0083ff) 1;
-        cursor: pointer;
-      }
-
-      &:hover &-title{
-        transform: translateY(-75px);
-        font-size: 18px;
-      }
-
-      &-title{
-        display: block;
-        margin-top: 20px;
-        font-size: 28px;
-        transition: all 0.25s;
-      }
-
-      &:hover &-image-wrapper{
-        transform: translateY(-50px) scale(0.6);
-      }
-
-      &-image{
-        width: 51px;
-        height: 51px;
-      }
-
-      &-image-wrapper{
-        width: 108px;
-        height: 108px;
-        background-color: #ffffff;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-        margin-top: 60px;
-        transition: all 0.25s;
-      }
-
-      &:hover &-description{
-        visibility: visible;
-        opacity: 1;
-        transform: translateY(-45px);
-      }
-
-      &-description{
-        visibility: hidden;
-        opacity: 0;
-        transform: translateY(100px);
-        padding-left: 10px;
-        padding-right: 10px;
-        font-size: 15px;
-        transition: all 0.25s;
-      }
-    }
-  }
-
-  &__footer{
+  &-buttons{
     display: flex;
     justify-content: center;
-    margin-bottom: 100px;
+    margin-bottom: 30px;
 
-    @include media('<950px') {
-      flex-direction: column;
-      align-items: center;
+    @include media('<tablet') {
+       flex-direction: column;
+    }
+
+
+    a{
+      margin: 0px 10px;
+      width: max-content;
+
+      @include media('<tablet') {
+         margin: 10px 0px;
+      }
+    }
+
+    &--is-telegram{
+      background-image: linear-gradient(79deg, #001358, #125ac4);
+      border-radius: 4px;
+
+      button{
+        background-color: transparent;
+        border-color: transparent;
+
+        &:hover{
+          background-color: transparent;
+          border-color: transparent;
+        }
+      }
+
+      .anticon{
+        margin: 0px 3px;
+        position: relative;
+        left: 8px;
+        top: 1px;
+
+        svg{
+          fill: white;
+        }
+      }
     }
   }
-
-  &__footer-button{
-    width: 392px;
-    height: 106px;
-    color: #FFFFFF;
-    display: flex;
-    margin: 0px 20px;
-    border-radius: 6px;
-    text-decoration: none;
-    margin-top: 150px;
-
-    &-image-wrapper{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 30px;
-    }
-
-    &-text{
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-    }
-
-    &--is-metamask{
-      background-image: linear-gradient(255deg, #24f281, #0083ff);
-
-      & img{
-        width: 59px;
-        height: 54px;
-      }
-    }
-
-    &--is-bug{
-      background-image: linear-gradient(75deg, #001358, #125ac4);
-
-      & img{
-        width: 63.9px;
-        height: 84.69px;
-      }
-
-      & b{
-        padding: 0px 50px;
-      }
-
-      @include media('<950px') {
-        margin-top: 30px;
-      }
-    }
+  .ant-collapse-header{
+    font-weight: 500;
   }
 }

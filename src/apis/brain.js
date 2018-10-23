@@ -1,7 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
 
-import getWeb3Async from '../util/web3';
+import dayjs from 'dayjs';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as TokenFaucet from '../constants/contracts/TokenFaucet';
@@ -10,14 +11,14 @@ import * as MyBitToken from '../constants/contracts/MyBitToken';
 import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
   debug,
-  ETHERSCAN_API_KEY,
   ETHERSCAN_TX_BY_ADDR_ENDPOINT,
   ETHERSCAN_TX,
   ETHERSCAN_BALANCE,
   getAddressForAsset,
+  isAssetIdEnabled,
+  testAssetIds,
 } from '../constants';
 
-const web3 = getWeb3Async();
 const IPFS_URL =
   'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
 
@@ -26,8 +27,11 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
     try {
       const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
       const jsonResponse = await response.json();
-      const { price } = jsonResponse.data.quotes.USD;
-      resolve(Math.round(price * 100) / 100);
+      const { price, percent_change_24h } = jsonResponse.data.quotes.USD;
+      resolve({
+        price,
+        priceChangePercentage: percent_change_24h,
+      });
     } catch (error) {
       reject(error);
     }
@@ -43,10 +47,7 @@ export const fetchTransactionHistory = async user =>
     *  than it is to keep converting it for every iteration
     */
       const userAddressLowerCase = userAddress.toLowerCase();
-      const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(
-        ETHERSCAN_API_KEY,
-        userAddress,
-      );
+      const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(userAddress);
       const result = await fetch(endpoint);
       const jsonResult = await result.json();
       if (
@@ -60,27 +61,27 @@ export const fetchTransactionHistory = async user =>
 
       const ethTransactionHistory = jsonResult.result
         .filter(txResult =>
-          txResult.to === userAddressLowerCase ||
-            txResult.from === userAddressLowerCase)
-        .map((txResult) => {
+          txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
+        .map((txResult, index) => {
           const multiplier = txResult.from === userAddressLowerCase ? -1 : 1;
-          let status = 'Complete';
+          let status = 'Confirmed';
           if (txResult.isError === '1') {
-            status = 'Fail';
+            status = 'Error';
           } else if (txResult.confirmations === 0) {
             status = 'Pending';
           }
           return {
-            date: txResult.timeStamp * 1000,
-            amount: web3.utils.fromWei(txResult.value, 'ether') * multiplier,
-            status,
+            amount: window.web3js.utils.fromWei(txResult.value, 'ether') * multiplier,
             type: 'ETH',
             txId: txResult.hash,
+            status,
+            date: txResult.timeStamp * 1000,
+            key: `${txResult.hash} ${index}`,
           };
         });
 
       // Pull MYB transactions from event log
-      const myBitTokenContract = new web3.eth.Contract(
+      const myBitTokenContract = new window.web3js.eth.Contract(
         MyBitToken.ABI,
         MyBitToken.ADDRESS,
       );
@@ -91,22 +92,26 @@ export const fetchTransactionHistory = async user =>
 
       const mybTransactionHistory = await Promise.all(logTransactions
         .filter(txResult =>
-          txResult.returnValues.to === userAddress ||
-              txResult.returnValues.from === userAddress)
-        .map(async (txResult) => {
-          const blockInfo = await web3.eth.getBlock(txResult.blockNumber);
+          txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
+        .map(async (txResult, index) => {
+          const blockInfo = await window.web3js.eth.getBlock(txResult.blockNumber);
           const multiplier =
-              txResult.returnValues.from === userAddress ? -1 : 1;
+            txResult.returnValues.from === userAddress ? -1 : 1;
+
           return {
-            amount: (txResult.returnValues.value / 100000000) * multiplier,
+            amount: window.web3js.utils.fromWei(txResult.returnValues[2], 'ether') * multiplier,
             type: 'MYB',
             txId: txResult.transactionHash,
-            status: 'Complete',
+            status: 'Confirmed',
             date: blockInfo.timestamp * 1000,
+            key: `${txResult.transactionHash} ${index}`,
           };
         }));
 
-      resolve(ethTransactionHistory.concat(mybTransactionHistory));
+      const mixedEthAndMybitTransactions =
+        ethTransactionHistory.concat(mybTransactionHistory);
+
+      resolve(mixedEthAndMybitTransactions);
     } catch (error) {
       reject(error);
     }
@@ -115,19 +120,20 @@ export const fetchTransactionHistory = async user =>
 export const loadMetamaskUserDetails = async () =>
   new Promise(async (resolve, reject) => {
     try {
-      const accounts = await web3.eth.getAccounts();
-      const balance = await web3.eth.getBalance(accounts[0]);
-      const myBitTokenContract = new web3.eth.Contract(
+      const accounts = await window.web3js.eth.getAccounts();
+      const balance = await window.web3js.eth.getBalance(accounts[0]);
+      const myBitTokenContract = new window.web3js.eth.Contract(
         MyBitToken.ABI,
         MyBitToken.ADDRESS,
       );
       const myBitBalance = await myBitTokenContract.methods
         .balanceOf(accounts[0])
         .call();
+
       const details = {
         userName: accounts[0],
-        ethBalance: web3.utils.fromWei(balance, 'ether'),
-        myBitBalance,
+        ethBalance: window.web3js.utils.fromWei(balance, 'ether'),
+        myBitBalance: window.web3js.utils.fromWei(myBitBalance, 'ether'),
       };
       resolve(details);
     } catch (error) {
@@ -138,7 +144,7 @@ export const loadMetamaskUserDetails = async () =>
 const getNumberOfInvestors = async assetID =>
   new Promise(async (resolve, reject) => {
     try {
-      const fundingHubContract = new web3.eth.Contract(
+      const fundingHubContract = new window.web3js.eth.Contract(
         FundingHub.ABI,
         FundingHub.ADDRESS,
       );
@@ -156,17 +162,17 @@ const getNumberOfInvestors = async assetID =>
     }
   });
 
-export const createAsset = async params =>
+const createAsset = async params =>
   new Promise(async (resolve, reject) => {
     try {
-      const assetCreationContract = new web3.eth.Contract(
+      const assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
         AssetCreation.ADDRESS,
       );
 
-      const installerId = web3.utils.sha3(params.installerId);
-      const assetType = web3.utils.sha3(params.assetType);
-      const ipfsHash = web3.utils.sha3(params.ipfsHash);
+      const installerId = window.web3js.utils.sha3(params.installerId);
+      const assetType = window.web3js.utils.sha3(params.assetType);
+      const ipfsHash = window.web3js.utils.sha3(params.ipfsHash);
 
       const assetCreationResponse = await assetCreationContract.methods
         .newAsset(
@@ -192,7 +198,7 @@ const checkTransactionConfirmation = async (
   reject,
 ) => {
   try {
-    const endpoint = ETHERSCAN_TX(ETHERSCAN_API_KEY, transactionHash);
+    const endpoint = ETHERSCAN_TX(transactionHash);
     const result = await fetch(endpoint);
     const jsronResult = await result.json();
     if (jsronResult.status === '1') {
@@ -213,12 +219,12 @@ const checkTransactionConfirmation = async (
 export const withdrawFromFaucet = async user =>
   new Promise(async (resolve, reject) => {
     try {
-      const TokenFaucetContract = new web3.eth.Contract(
+      const TokenFaucetContract = new window.web3js.eth.Contract(
         TokenFaucet.ABI,
         TokenFaucet.ADDRESS,
       );
       const withdrawResponse = await TokenFaucetContract.methods
-        .register('42000000000000000000000', 'ripplesucks')
+        .withdraw('ripplesucks')
         .send({ from: user.userName });
       const { transactionHash } = withdrawResponse;
       checkTransactionConfirmation(transactionHash, resolve, reject);
@@ -230,48 +236,75 @@ export const withdrawFromFaucet = async user =>
 export const fundAsset = async (user, assetId, amount) =>
   new Promise(async (resolve, reject) => {
     try {
-      const fundingHubContract = new web3.eth.Contract(
+      const fundingHubContract = new window.web3js.eth.Contract(
         FundingHub.ABI,
         FundingHub.ADDRESS,
       );
-      const weiAmount = web3.utils.toWei(amount.toString(), 'ether');
+      const weiAmount = window.web3js.utils.toWei(amount.toString(), 'ether');
 
       const fundingResponse = await fundingHubContract.methods
         .fund(assetId)
         .send({
           value: weiAmount,
           from: user.userName,
+        })
+        .on('error', (error) => {
+          debug(error);
+          resolve(false);
+        })
+        .then((receipt) => {
+          resolve(receipt.status);
         });
-
-      const { transactionHash } = fundingResponse;
-      checkTransactionConfirmation(transactionHash, resolve, reject);
     } catch (err) {
-      reject(err);
+      resolve(false);
     }
   });
 
-// The stuff thats commented out will be updated once kyle deploys the new contracts
 export const fetchAssets = async (user, currentEthInUsd) =>
   new Promise(async (resolve, reject) => {
     try {
-      const apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
-      const assetCreationContract = new web3.eth.Contract(
+      // pull asssets from newest contract
+      let apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
+      let assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
         AssetCreation.ADDRESS,
       );
 
-      const logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
+      let logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
         { fromBlock: 0, toBlock: 'latest' },
       );
 
-      const assets = logAssetFundingStartedEvents
+      let assets = logAssetFundingStartedEvents
         .map(({ returnValues }) => returnValues)
         .map(object => ({
           assetID: object._assetID,
           assetType: object._assetType,
           ipfsHash: object._ipfsHash,
         }));
+
+      // pull assets from older contract
+
+      apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
+      assetCreationContract = new window.web3js.eth.Contract(
+        AssetCreation.ABI,
+        AssetCreation.OLD_ADDRESS,
+      );
+
+      logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
+        'LogAssetFundingStarted',
+        { fromBlock: 0, toBlock: 'latest' },
+      );
+
+      const assetsOlderContract = logAssetFundingStartedEvents
+        .map(({ returnValues }) => returnValues)
+        .map(object => ({
+          assetID: object._assetID,
+          assetType: object._assetType,
+          ipfsHash: object._ipfsHash,
+        }));
+
+      assets = assets.concat(assetsOlderContract);
 
       const assetManagers = await Promise.all(assets.map(async asset =>
         apiContract.methods.assetManager(asset.assetID).call()));
@@ -285,59 +318,74 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       const fundingDeadlines = await Promise.all(assets.map(async asset =>
         apiContract.methods.fundingDeadline(asset.assetID).call()));
 
-      const realAddress = web3.utils.toChecksumAddress(user.userName);
+      const realAddress = window.web3js.utils.toChecksumAddress(user.userName);
       const ownershipUnits = await Promise.all(assets.map(async asset =>
         apiContract.methods.ownershipUnits(asset.assetID, realAddress).call()));
 
       const assetIncomes = await Promise.all(assets.map(async asset =>
         apiContract.methods.totalReceived(asset.assetID).call()));
 
+      const fundingStages = await Promise.all(assets.map(async asset =>
+        apiContract.methods.fundingStage(asset.assetID).call()));
+
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
         const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
-        const addressForAsset = getAddressForAsset(asset.assetID);
-        let assetIncome = -1;
-        if (addressForAsset) {
-          try {
-            const endpoint = ETHERSCAN_BALANCE(addressForAsset);
-            const result = await fetch(endpoint);
-            const jsonResult = await result.json();
-            assetIncome = (
-              Number(web3.utils
-                .fromWei(jsonResult.result, 'ether')) * currentEthInUsd
-            ).toFixed(2);
-          } catch (err) {
-            debug(err);
-          }
+
+        // asset details are hardcoded for now
+        let assetIdDetails = isAssetIdEnabled(asset.assetID, true);
+        if (!assetIdDetails) {
+          assetIdDetails = {};
+          assetIdDetails.city = 'Zurich';
+          assetIdDetails.country = 'Switzerland';
+          assetIdDetails.description = 'Coming soon';
+          assetIdDetails.details = 'Coming soon';
+          assetIdDetails.name = 'Coming soon';
         }
-        let jsonResponse = {};
-        try {
-          const ipfsInfo = await fetch(`${IPFS_URL + asset.assetID}/data.json`);
-          jsonResponse = await ipfsInfo.json();
-        } catch (err) {
-          jsonResponse.city = 'Zurich';
-          jsonResponse.country = 'Switzerland';
-          jsonResponse.description = 'Coming soon';
-          jsonResponse.details = 'Coming soon';
-          jsonResponse.name = 'Coming soon';
+
+        // determine whether asset has expired
+        let pastDate = false;
+        const dueDate = dayjs(Number(fundingDeadlines[index]) * 1000);
+        if (dayjs(new Date()) > dueDate) {
+          pastDate = true;
         }
+
+        const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
+        const fundingStage = fundingStages[index];
+        let amountRaisedInUSD = 0;
+
+        // this fixes the issue of price fluctuations
+        // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
+        if (fundingStage === '3' || fundingStage === '4') {
+          amountRaisedInUSD = amountToBeRaisedInUSD;
+        } else {
+          amountRaisedInUSD =
+            Number(window.web3js.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
+              currentEthInUsd;
+        }
+
+        const searchQuery = `mybit_watchlist_${asset.assetID}`;
+        const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
+
         return {
           ...asset,
-          amountRaisedInUSD: (
-            Number(web3.utils.fromWei(amountsRaised[index], 'ether')) *
-              currentEthInUsd
-          ).toFixed(2),
-          amountToBeRaisedInUSD: amountsToBeRaised[index],
-          fundingDeadline: Number(fundingDeadlines[index]) * 1000,
+          amountRaisedInUSD,
+          amountToBeRaisedInUSD,
+          fundingDeadline: dueDate,
           ownershipUnits: ownershipUnits[index],
-          assetIncome,
+          assetIncome:
+            Number(window.web3js.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
+              currentEthInUsd,
           assetManager: assetManagers[index],
-          city: jsonResponse.city,
-          country: jsonResponse.country,
-          name: jsonResponse.name,
+          city: assetIdDetails.city,
+          country: assetIdDetails.country,
+          name: assetIdDetails.name,
           numberOfInvestors,
-          description: jsonResponse.description,
-          details: jsonResponse.details,
-          imageSrc: `${IPFS_URL + asset.assetID}/thumb.jpg`,
+          description: assetIdDetails.description,
+          details: assetIdDetails.details,
+          imageSrc: assetIdDetails.imageSrc,
+          fundingStage: fundingStages[index],
+          pastDate,
+          watchListed: alreadyFavorite,
         };
       }));
 
@@ -345,11 +393,17 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       assetsPlusMoreDetails = assetsPlusMoreDetails
         .filter(asset => asset.amountToBeRaisedInUSD > 0);
 
+      if (process.env.NODE_ENV !== 'development') {
+        // filter for test assets. Only for development
+        assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
+          asset.description !== 'Coming soon');
+      }
+
       const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
         if (asset.assetType) {
           return {
             ...asset,
-            category: getCategoryFromAssetTypeHash(web3, asset.assetType),
+            category: getCategoryFromAssetTypeHash(window.web3js, asset.assetType),
           };
         }
         return { ...asset };

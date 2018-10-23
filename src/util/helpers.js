@@ -1,87 +1,33 @@
-import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpeg';
-import autonomousvehiclesImage from '../images/categories/autonomousvehicles.png';
-import cryptominingImage from '../images/categories/Cryptomining.jpeg';
-import dronedeliveryImage from '../images/categories/dronedelivery.png';
-import solarenergyImage from '../images/categories/Solar1.jpeg';
+import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpg';
+import autonomousvehiclesImage from '../images/categories/autonomousvehicles.jpg';
+import cryptominingImage from '../images/categories/Cryptomining.jpg';
+import dronedeliveryImage from '../images/categories/dronedelivery.jpg';
+import solarenergyImage from '../images/categories/Solar1.jpg';
 // import windenergyImage from '../images/categories/windenergy.png';
-import otherImage from '../images/categories/other.png';
-import realestatecoworkingImage from '../images/categories/Co-working.png';
-import realestatestorageImage from '../images/categories/Storage.jpeg';
-import masternodeImage from '../images/categories/Masternode.jpeg';
-import chargeStationImage from '../images/categories/ChargeStation.png';
-import vendingMachineImage from '../images/categories/VendingMachine.jpeg';
+import otherImage from '../images/categories/other.jpg';
+import realestatecoworkingImage from '../images/categories/Co-working.jpg';
+import realestatestorageImage from '../images/categories/Storage.jpg';
+import masternodeImage from '../images/categories/Masternode.jpg';
+import chargeStationImage from '../images/categories/ChargeStation.jpg';
+import vendingMachineImage from '../images/categories/VendingMachine.jpg';
 
-export const parseEtherFromBalance = (web3, balance) =>
-  web3.fromWei(parseInt(balance, 10), 'ether');
-
-export const mergeAllLogsByAssetId = (logs) => {
-  const assets = [];
-  logs.forEach((logEntry, index, array) => {
-    if (index === 0) {
-      assets.push({ ...logEntry });
-      return;
-    }
-    if (logEntry.assetID === array[index - 1].assetID) {
-      const duplicateIndex = assets
-        .map(asset => asset.assetID)
-        .indexOf(logEntry.assetID);
-      if (duplicateIndex > -1) {
-        assets[duplicateIndex] = {
-          ...logEntry,
-          ...array[index - 1],
-          ...assets[duplicateIndex],
-        };
-      } else {
-        assets.push({ ...logEntry, ...array[index - 1] });
-      }
-    } else {
-      assets.push({ ...logEntry });
-    }
+export const formatMonetaryValue = (number, fractionDigits = 0) => {
+  let value = Number(number).toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: fractionDigits,
   });
-  return assets;
+
+  const index = value.indexOf('.');
+
+  if (index !== -1) {
+    const sliced = value.substr(index, 3);
+    value = sliced.length === 2 ? `${value}0` : value;
+  }
+
+  return value;
 };
 
-export const mergeAndSumFundingEvents = (fundingEvents) => {
-  const assets = [];
-  const fundingEventsWithNumbers = fundingEvents.map(({ assetID, currentEthPrice }) => ({
-    assetID,
-    currentEthPrice: Number(currentEthPrice),
-  }));
-  fundingEventsWithNumbers.forEach((logEntry, index, array) => {
-    if (index === 0) {
-      assets.push({ ...logEntry });
-      return;
-    }
-    if (logEntry.assetID === array[index - 1].assetID) {
-      const duplicateIndex = assets
-        .map(asset => asset.assetID)
-        .indexOf(logEntry.assetID);
-      if (duplicateIndex > -1) {
-        assets[duplicateIndex] = {
-          ...logEntry,
-          ...array[index - 1],
-          ...assets[duplicateIndex],
-          currentEthPrice:
-            assets[duplicateIndex].currentEthPrice + logEntry.currentEthPrice,
-        };
-      } else {
-        assets.push({
-          ...logEntry,
-          ...array[index - 1],
-          currentEthPrice:
-            array[index - 1].currentEthPrice + logEntry.currentEthPrice,
-        });
-      }
-    } else {
-      assets.push({ ...logEntry });
-    }
-  });
-  const totalAmountRaisedAssets = assets.map(({ assetID, currentEthPrice }) => ({
-    assetID,
-    totalAmountRaised: String(currentEthPrice),
-  }));
-  return totalAmountRaisedAssets;
-};
 
 export const getCategoryFromAssetTypeHash = (web3, assetTypeHash) => {
   switch (assetTypeHash) {

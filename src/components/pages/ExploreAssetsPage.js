@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button } from 'carbon-components-react';
+import Button from 'antd/lib/button';
+import 'antd/lib/button/style';
+import Row from 'antd/lib/row';
+import 'antd/lib/row/style';
+
 import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
+
 
 const ExploreAssetsPage = ({ loading, assets, match }) => {
   const { category } = match.params;
@@ -20,15 +25,13 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
 
   const backButton = (
     <Link key="/explore" to="/explore" href="/explore">
-      <Button kind="secondary" className="ExploreAssetsPage__back-button">
-        Back
-      </Button>
+      <Button className="ExploreAssetsPage__back-button">Back</Button>
     </Link>
   );
 
   const assetsToRender = [
     backButton,
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div key="ExploreAssetsPage__assets">
       {assetsInCategory.map(asset => (
         <Asset
           key={asset.assetID}
@@ -40,26 +43,19 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
           name={asset.name}
           category={getPrettyCategoryName(asset.category)}
           backgroundImage={asset.imageSrc}
+          fundingStage={asset.fundingStage}
+          pastDate={asset.pastDate}
         />
       ))}
     </div>,
   ];
 
   const loadingElement = loadingAssets && (
-    <LoadingPage message="Loading assets" hasBackButton path="/explore" />
+    <LoadingPage
+      message="Loading assets"
+      hasBackButton
+    />
   );
-
-  // const noElements =
-  //   !loading && (
-  //     <div style={{ width: '100%' }}>
-  //       {backButton}
-  //       <p
-  //         className="ExploreAssetsPage__message-no-elements"
-  //       >
-  //         {`No assets found in the ${category} category.`}
-  //       </p>
-  //     </div>
-  //   );
 
   let renderedOutput = null;
   if (loadingAssets) {
@@ -72,7 +68,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
     renderedOutput = assetsToRender;
   }
 
-  return <div className="ExploreAssetsPage">{renderedOutput}</div>;
+  return <Row className="ExploreAssetsPage">{renderedOutput}</Row>;
 };
 
 ExploreAssetsPage.propTypes = {

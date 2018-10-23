@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'carbon-components-react';
+import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { debug } from '../constants';
 
@@ -21,7 +21,7 @@ const CategoryBackButton = ({ category }) => {
       href={`/explore/${tempCategoryFix}`}
     >
       <Button
-        kind="secondary"
+        type="secondary"
         className="AssetDetailsPage__back-button"
         onClick={debug('Clicked to go back')}
       >

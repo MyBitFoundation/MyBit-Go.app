@@ -1,30 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from 'carbon-components-react';
-import { USD_MYB_SYMBOL } from '../constants';
+import { Spin } from 'antd';
+import { formatMonetaryValue } from '../util/helpers';
 
-const ExchangeRate = ({ mybitPrice }) => (
-  <div>
-    {!mybitPrice && (
-      <Loading
+const ExchangeRate = ({ price, priceChangePercentage }) => (
+  <div className="AppHeader__rate-container">
+    <div className="AppHeader__exchange-rate">
+      <p className="AppHeader__tokenprice-label">MYB TOKEN PRICE</p>
+      {price ? <b>{`${formatMonetaryValue(price, 2)}`} <span className={priceChangePercentage < 0 ? 'AppHeader__tokenprice-label--is-red' : undefined}>({priceChangePercentage > 0 ? `+ ${priceChangePercentage}` : priceChangePercentage}%)</span></b>
+      :
+      <Spin
         className="AppHeader__exchange-rate--is-loading"
-        small
-        withOverlay={false}
       />
-    )}
-    <span className="AppHeader__exchange-rate">
-      {mybitPrice && `$${mybitPrice}`}
-      <b>{USD_MYB_SYMBOL}</b>
-    </span>
+      }
+    </div>
   </div>
 );
 
 ExchangeRate.defaultProps = {
-  mybitPrice: undefined,
+  price: undefined,
+  priceChangePercentage: undefined,
 };
 
 ExchangeRate.propTypes = {
-  mybitPrice: PropTypes.number,
+  price: PropTypes.number,
+  priceChangePercentage: PropTypes.number,
 };
 
 export default ExchangeRate;

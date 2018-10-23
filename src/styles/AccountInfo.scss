@@ -1,43 +1,54 @@
 @import "./Constants.scss";
 
 .AccountInfo{
-    position: absolute;
-    right: 60px;
-    height: $headerHeight;
+  display: inline-block;
+  height: 100%;
+  display: flex;
 
-    &__balance{
-	    text-align: right;
-	    height: $headerHeight;
-	    float: left;
-	    position: relative;
-	    margin-right: 20px;
+  &__balance{
+    text-align: left;
+    font-family: 'Roboto';
+    display: flex;
+    flex-direction: column;
+    margin-top: 26px;
+  }
+
+  &__balance-header{
+    font-size: 14px;
+    margin: 0;
+  }
+
+  &__balance--is-loading{
+    margin: 0 auto;
+  }
+
+  &__balance-info{
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+
+    & svg:nth-child(3){
+      margin-left: 5px;
     }
 
-    &__balance-header{
-        font-size: 18px;
-        padding-top: 25px;
-        position: relative;
-        top: 2px;
-        display: inherit;
+    & span{
+      margin: 0px 5px;
     }
+  }
 
-    &__balance--is-loading{
-        top: 42px;
-        position: absolute;
-        right: 15px;
-    }
+  &__balance-myb{
+    padding-right: 10px;
+  }
 
-    &__balance-info{
-        font-size: 14px;
-    }
+  &__address{
+    float: left;
+    margin-top: 25px;
+  }
 
-    &__balance-myb{
-        padding-right: 10px;
-    }
-
-    &__address{
-      float: left;
-      margin-top: 25px;
-    }
+  &__loader {
+    margin-right: 5px;
+    margin-top: 5px;
+  }
 
 }

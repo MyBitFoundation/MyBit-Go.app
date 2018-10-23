@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from 'carbon-components-react';
+import { Spin } from 'antd';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
 
 const Address = ({ userName, className }) => (
-  <div className={className}>
+  <div className={`Address ${className}`}>
     {!userName ? (
       <div className="Address__loader">
-        <Loading small withOverlay={false} />
+        <Spin />
         <span>Loading account</span>
       </div>
     ) : (
-      <div>
+      <div className="Address__jazz-n-hex">
         <Jazzicon diameter={39} />
         <p className="Address__text">{userName}</p>
       </div>
@@ -22,11 +22,12 @@ const Address = ({ userName, className }) => (
 
 Address.defaultProps = {
   userName: undefined,
+  className: '',
 };
 
 Address.propTypes = {
   userName: PropTypes.string,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export default Address;

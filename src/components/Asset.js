@@ -1,10 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'carbon-components-react';
+import { Button } from 'antd';
 import { Link } from 'react-router-dom';
+
+import Progress from 'antd/lib/progress';
+import Col from 'antd/lib/col';
+import 'antd/lib/col/style';
+import 'antd/lib/progress/style';
+import Icon from 'antd/lib/icon';
+import 'antd/lib/icon/style';
 import '../styles/Asset.css';
-import locationIcon from '../images/Location-icon.svg';
-import { debug, getAddressForAsset } from '../constants';
+import locationIcon from '../images/Location-icon.png';
+import Watch from './Watch';
+import { debug, isAssetIdEnabled } from '../constants';
+import { formatMonetaryValue } from '../util/helpers';
+import BlockchainInfoContext from './BlockchainInfoContext';
 
 const Asset = ({
   clickHandler,
@@ -16,13 +26,25 @@ const Asset = ({
   category,
   id,
   backgroundImage,
+  fundingStage,
+  pastDate,
+  watchListed,
+  handleClickedAssetFavorite,
 }) => {
-  const barWidth = `${Math.ceil((funded / goal) * 100)}%`;
+  const assetFunded = fundingStage === '3' || fundingStage === '4';
+  const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
+  const goalFormatted = formatMonetaryValue(goal);
+  let buttonText = 'Contribute';
+  let buttonType = 'primary';
+  if (assetFunded || pastDate) {
+    buttonText = 'View Asset';
+    buttonType = 'default';
+  }
   return (
-    <div className="Asset">
-      <div className="Asset__container">
+    <Col xs={24} sm={24} md={12} lg={8} xl={6} className="Asset">
+      <div className="Asset__wrapper">
         <div
-          className="Asset__image-holder"
+          className="gutter-box Asset__image-holder"
           style={{ backgroundImage: `url(${backgroundImage})` }}
         >
           <div className="Asset__image-holder-gradient" />
@@ -35,25 +57,36 @@ const Asset = ({
           <p className="Asset__image-holder-location">
             {city}, <span>{country}</span>
           </p>
+          <BlockchainInfoContext.Consumer>
+            {({
+              usingServer,
+            }) =>
+              !usingServer && (
+                <Watch
+                  active={watchListed}
+                  handleClick={handleClickedAssetFavorite}
+                  assetId={id}
+                />
+            )}
+          </BlockchainInfoContext.Consumer>
         </div>
-        <div className="Asset__details">
+        <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
           <p className="Asset__details-funded">
-            Funded: <b>${Math.round(funded)}</b>
+            Funded:{' '}
+            <b>{assetFunded ? goalFormatted : `${formatMonetaryValue(funded)}`}</b>
           </p>
           <p className="Asset__details-goal">
-            Goal:
-            <b>
-              {Number(goal).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              })}
-            </b>
+            Goal:{' '}
+            <b>{goalFormatted}</b>
           </p>
           <div className="Asset__details-progress-bar">
-            <div
-              className="Asset__details-progress-bar-fill"
-              style={{ width: barWidth }}
-            />
+            <Progress percent={barWidth} />
+            {barWidth === 100 && (
+              <Icon
+                type="check-circle"
+                theme="filled"
+              />
+            )}
           </div>
 
           <Link
@@ -61,36 +94,37 @@ const Asset = ({
             href={`/explore/${category}/${id}`}
           >
             <Button
+              type={buttonType}
               onClick={
                 clickHandler ||
                 (() => debug(`Clicked to contribute, asset id: ${id}`))
               }
               className="Asset__details-contribute"
-              disabled={getAddressForAsset(id) == null}
+              disabled={isAssetIdEnabled(id) === undefined}
             >
-              Contribute
+              {buttonText}
             </Button>
           </Link>
         </div>
       </div>
-    </div>
+    </Col>
   );
 };
 
-Asset.defaultProps = {
-  clickHandler: undefined,
-};
-
 Asset.propTypes = {
-  funded: PropTypes.string.isRequired,
-  goal: PropTypes.string.isRequired,
+  funded: PropTypes.number.isRequired,
+  goal: PropTypes.number.isRequired,
   city: PropTypes.string,
   country: PropTypes.string,
   name: PropTypes.string,
   category: PropTypes.string.isRequired,
   clickHandler: PropTypes.func,
   id: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string.isRequired,
+  backgroundImage: PropTypes.string,
+  fundingStage: PropTypes.string.isRequired,
+  pastDate: PropTypes.bool.isRequired,
+  watchListed: PropTypes.bool.isRequired,
+  handleClickedAssetFavorite: PropTypes.func.isRequired,
 };
 
 Asset.defaultProps = {
@@ -98,6 +132,7 @@ Asset.defaultProps = {
   country: '',
   name: '',
   clickHandler: () => {},
+  backgroundImage: '',
 };
 
 export default Asset;

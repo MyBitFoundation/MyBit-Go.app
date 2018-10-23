@@ -3,38 +3,59 @@
 .AssetDetails{
   padding-top: 40px;
 
-  &__left{
-    padding-left: 0px;
-    padding-right: 50px;
 
-    @include media('<desktop') {
-      padding-right: 0px;
+  &__left{
+    padding-left: 40px;
+
+    @include media('<992px') {
+      padding: 0px 0px;
+      margin-top: 40px;
+    }
+
+    .ant-slider{
+      margin-right: 0px;
     }
 
     &-contribute-btn{
       width: 100%;
       margin-top: 30px;
+      height: 40px;
+      margin-bottom: 20px;
+      font-weight: bold;
 
       &:focus, &:hover, &:active{
       }
     }
 
+    &-calculate-separator{
+      margin: 0px 10px;
+      color: #1890ff;
+      font-size: 20px;
+      font-weight: 200;
+    }
+
+    &-input-eth{
+      width: 45%;
+      display: inline-block;
+    }
+
     &-name{
       font-size: 34px;
       display: block;
-      color: #383838;
+      color: rgba(0, 0, 0, 0.65);
       padding-bottom: 10px;
     }
 
     &-image-holder-location-icon{
-      height: 20px;
       position: relative;
       top: 3px;
     }
 
     &-image-holder-calendar-icon{
       position: relative;
-      top: 3px;
+      top: 6px;
+      display: inline;
+      margin-right: 11px;
     }
 
     &-location{
@@ -46,7 +67,6 @@
 
     &-days-to-go-wrapper{
       display: block;
-      padding-top: 40px;
     }
 
     &-days-to-go{
@@ -54,17 +74,17 @@
       font-size: 20px;
       font-weight: 700;
       display: inline-block;
-      padding-left: 18px;
     }
 
     &-due-date{
       font-size: 14px;
       color: #383838;
       padding-top: 6px;
+      display: inline-block;
     }
 
     &-funding-wrapper{
-      margin-top: 30px;
+      margin-top: 20px;
       text-align: center;
       display: flex;
       flex-wrap: nowrap;
@@ -72,7 +92,7 @@
     }
 
     &-funds-raised{
-      border-right: 1px solid #575757;
+      border-right: 1px solid #d0d0d0;
       padding-left: 0px;
       text-align: left;
       padding-right: 20px;
@@ -80,24 +100,27 @@
     }
 
     &-funds-goal{
-      border-right: 1px solid #575757;
+      border-right: 1px solid #d0d0d0;
       padding: 0px 20px;
       height: 57px;
     }
 
     &-funds-investors{
       padding: 0px 20px;
+      text-align: left;
     }
 
     &-funding-title{
       font-size: 14px;
       font-weight: 500;
       color: #383838;
+      text-align: left;
+      margin: 0;
     }
 
     &-funding-value{
       font-size: 18px;
-      color: black;
+      color: rgba(0, 0, 0, 0.65);
       position: relative;
       top: 6px;
     }
@@ -124,19 +147,21 @@
       padding-top: 20px;
       display: inline-block;
       padding-right: 10px;
+      color: #383838;
     }
 
     &-separator{
-      height: 31px;
-      border-right: 1px solid black;
+      height: 11px;
+      border-right: 1px solid #dddddd;
       display: inline-block;
       position: relative;
-      top: 9px;
+      top: 1px;
       margin-right: 10px;
     }
 
     &-contribution-value{
-      color: #125ac4;
+      color: rgba(0, 0, 0, 0.65);
+      display: inline;
     }
 
     &-contribution-bordered{
@@ -146,8 +171,14 @@
 
     &-ownership{
       font-size: 18px;
-      padding-top: 20px;
+      padding-top: 0px;
       padding-right: 10px;
+      display: inline-block;
+      color: #383838;
+
+      &-value{
+        color: #125ac4;
+      }
     }
 
     &-contribution-inactive{
@@ -156,93 +187,62 @@
   }
 
   &__right{
-    padding: 0px 0px;
-    background-color: rgba(231, 232, 235, 0.63);
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 
-    &-image{
-      background: linear-gradient(to left, #24F281, #0083FF);
-      
-      min-width: 100%;
-      max-width: 100%;
-      min-height: 500px;
+    &-container {
+      background-image: linear-gradient(to left, #0b3f9c, #0083FF) !important;
+      height: 266px;
+      background-position: bottom;
+      border-radius: 4px;
+      background-size: cover;
+      position: relative;
+      overflow: hidden;
     }
 
-    &-wrapper{
-      padding: 0px 22px;
+    &-image{
+      background-size: cover;
+      background-position: bottom;
+      height: 266px;
     }
 
     &-title-details{
       font-size: 20px;
-      color: #383838;
+      color: rgba(0, 0, 0, 0.65);
       display: block;
       margin-top: 30px;
     }
 
     &-content-details{
       font-size: 14px;
-      color: #383838;
+      color: rgba(0, 0, 0, 0.65);
       margin-top: 20px;
     }
 
     &-address{
-      margin-top: 20px;
       margin-bottom: 40px;
-
-      & p{
-        top: -28px;
-        width: max-content;
-        color: #125ac4;
-        cursor: pointer;
-      }
+      width: max-content;
+      margin-left: 0px;
     }
   }
 
-  .bx--slider__range-label{
-    display: none;
-  }
-
-  .bx--slider{
+  .ant-slider{
     margin: 0px 0px;
+    padding: 0px 0px;
+    margin-top: 30px;
   }
 
-  .bx--slider-container{
-    max-width: 100%;
+  .ant-slider-track{
+    background-color: #1890ff;
   }
 
-  .bx--form-item{
-    margin: 0px 0px;
+  .ant-slider-handle{
+    border: solid 2px #1890ff;
   }
 
-  .bx--slider__track{
-    background-color: rgba(31, 77, 193, 0.1);
-  }
-
-  .bx--slider__thumb{
-    background-color: #2db84b;
-
-    &:active{
-      background-color: #2db84b;
-    }
-    &:focus{
-      outline: none;
-      box-shadow: none;
-    }
-  }
-
-  .bx--modal-header{
-    display: none;
-  }
-
-  .bx--modal-content{
-    margin: 0px 0px;
-  }
-
-  .bx--slider__filled-track{
-    background-image: linear-gradient(268deg, #3ecd5d, #2db84b);
-  }
-
-  .bx--slider--disabled .bx--slider__thumb:active{
-    background-color: #2db84b;
+  .ant-slider-handle:focus{
+    box-shadow: none;
   }
 }
 

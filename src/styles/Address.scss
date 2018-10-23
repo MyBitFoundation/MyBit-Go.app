@@ -1,28 +1,47 @@
-@import "./Constants.scss";
+@import 'include-media/dist/_include-media.scss';
 
 .Address{
-  height: 39px;
+  height: 100%;
+  margin-right: 20px;
+  margin-left: 20px;
 
-    &__loader{
-      display: flex;
+  &__loader{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: max-content;
+    height: 100%;
+
+    .ant-spin-spinning{
+      margin-right: 10px;
+      margin-top: 7px;
+    }
+  }
+
+  &__text{
+      font-size: 14px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 75px;
+      line-height: 1;
+      margin: 0px 0px;
       position: relative;
-      justify-content: center;
-      align-items: center;
-      width: max-content;
-    }
+      margin-left: 15px;
+  }
 
-    &__text{
-        font-size: 14px;
-        padding-left: 50px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        width: 120px;
-        line-height: 1;
-        margin: 0px 0px;
-        position: relative;
-        top: -25px;
-    }
+  &__jazz-n-hex {
+    height: 90px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @include media('<680px') {
+    display: none;
+  } 
 }
 
 .AppHeader .paper{
