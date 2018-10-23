@@ -25,7 +25,6 @@ jobs:
             VERY_SANITIZED_BRANCH=$(tr "." "-" <<<$SANITIZED_BRANCH)
             echo ${GIT_HASH} > version
             cp CONTRIBUTORS contributors
-            npx now rm app.mybit.io -t $NOW_DEVELOPMENT_TOKEN --yes || true
             BUILD_URL=$(npx now --name app.mybit.io -t $NOW_DEVELOPMENT_TOKEN --public)
             npx now alias ${BUILD_URL} ${GIT_HASH}-app-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
             npx now alias ${BUILD_URL} ${VERY_SANITIZED_BRANCH}-app-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
