@@ -266,6 +266,16 @@ export const isAssetIdEnabled = (assetId) => {
       details: 'Air conditioning Fiber Internet 24/7 Access Security Reception 98% building occupancy rate (high-demand) Specific Location: Located across from Swiss National Bank Rent Term: Annual contract, paid quarterly',
       imageSrc: Coworking,
     },
+
+    // sixth wave of assets
+    '0x845967f73ff423ee3f137ea2dcf6fba75c315e51633a6931268b5af2628bb7e4': {
+      name: 'Climate Controlled Garage',
+      city: 'Prague',
+      country: 'Czech Republic',
+      description: 'This space is a great fit for a range of assets from artwork to household furniture. It can be accessed remotely from an external door 24/7 and offers dedicated lock boxes inside for an additional cost to customers. It is important to note that security cameras are not active at this location.',
+      details: 'Fully climate controlled space Enforced by Slock.it 40m Squared Suitable for low to mid value items Option for dedicated lock boxes 50x50x70cm Specific Location: Hidden for user protection Rent Term: Per square meter, monthly contract.',
+      imageSrc: Storage,
+    },
   };
 
   if (process.env.NODE_ENV === 'development') {
