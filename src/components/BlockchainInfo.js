@@ -21,6 +21,7 @@ import {
 } from '../constants';
 import { formatMonetaryValue } from '../util/helpers';
 import NotificationLink from './NotificationLink';
+import web3EventsListener from '../apis/web3Events';
 
 
 class BlockchainInfo extends React.Component {
@@ -35,6 +36,7 @@ class BlockchainInfo extends React.Component {
     this.fundAsset = this.fundAsset.bind(this);
     this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
     this.setAssetsStatusState = this.setAssetsStatusState.bind(this);
+    this.getAssetNotification = this.getAssetNotification.bind(this);
     this.handleAddressChange = this.handleAddressChange.bind(this);
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
@@ -102,6 +104,12 @@ class BlockchainInfo extends React.Component {
     if (userHasMetamask) {
       // event handler for when the selected account changes
       window.web3js.currentProvider.publicConfigStore.on('update', this.handleAddressChange);
+      // event handler on success asset funding
+      web3EventsListener.setLogAssetFundedListener((result, value) => {
+        result.params.forEach((item) => {
+          this.getAssetNotification(item.value, 'success', value);
+        });
+      });
     }
 
     setInterval(this.loadPrices, 15 * 1000);
@@ -140,6 +148,45 @@ class BlockchainInfo extends React.Component {
     }
   }
 
+  getAssetNotification(assetId, status, amount) {
+    const { notificationPlace } = this.state;
+    const currentAsset = this.state.assets.find(item => item.assetID === assetId);
+    const formatedAmount = formatMonetaryValue(this.state.prices.ether.price * amount);
+    const currentPathName = window.location.pathname;
+
+    let Message;
+    let alertMessage;
+    if (status === 'success') {
+      Message = (
+        <Fragment>Funded {currentAsset.name} successfully with <span className="NotificationLink__amount">{formatedAmount}</span>
+          <NotificationLink to="/portfolio" setAssetsStatus={this.setAssetsStatusState} text=" Go to Portfolio" />
+        </Fragment>
+      );
+
+      alertMessage = notificationPlace === 'notification'
+        ? Message
+        : 'Sent Successfuly!';
+    } else {
+      Message = (
+        <Fragment>Failed to fund {currentAsset.name} with <span className="NotificationLink__amount">{formatedAmount}</span>
+          <NotificationLink to={currentPathName} setAssetsStatus={this.setAssetsStatusState} text=" Try again" />
+        </Fragment>
+      );
+
+      alertMessage = notificationPlace === 'notification'
+        ? Message
+        : 'Transaction failed. Please try again.';
+    }
+
+
+    this.setAssetsStatusState({
+      isLoading: false,
+      transactionStatus: status === 'success' ? 1 : 0,
+      alertType: status,
+      alertMessage,
+    });
+  }
+
   usingServer() {
     const { userHasMetamask, userIsLoggedIn, network } = this.state;
     return !userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork;
@@ -170,6 +217,7 @@ class BlockchainInfo extends React.Component {
       notificationPlace: place,
     });
   }
+
 
   async pullAssetsFromServer() {
     const { data } = await axios(serverIp);
@@ -266,35 +314,13 @@ class BlockchainInfo extends React.Component {
     });
 
     try {
-      const currentAsset = this.state.assets.find(item => item.assetID === assetId);
-
       const result = await Brain.fundAsset(
         this.state.user,
         assetId,
         amount,
       );
 
-      const formatedAmount = formatMonetaryValue(this.state.prices.ether.price * amount);
-
       if (result) {
-        const { notificationPlace } = this.state;
-        const Message = (
-          <Fragment>Funded {currentAsset.name} successfully with <span className="NotificationLink__amount">{formatedAmount}</span>
-            <NotificationLink to="/portfolio" setAssetsStatus={this.setAssetsStatusState} text=" Go to Portfolio" />
-          </Fragment>
-        );
-
-        const alertMessage = notificationPlace === 'notification'
-          ? Message
-          : 'Sent Successfuly!';
-
-        this.setAssetsStatusState({
-          isLoading: false,
-          transactionStatus: 1,
-          alertType: 'success',
-          alertMessage,
-        });
-
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
 
         this.intervalFetchAssets =
@@ -302,24 +328,7 @@ class BlockchainInfo extends React.Component {
         this.intervalFetchTransactionHistory =
           setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
       } else {
-        const { notificationPlace } = this.state;
-        const currentPathName = window.location.pathname;
-        const Message = (
-          <Fragment>Failed to fund {currentAsset.name} with <span className="NotificationLink__amount">{formatedAmount}</span>
-            <NotificationLink to={currentPathName} setAssetsStatus={this.setAssetsStatusState} text=" Try again" />
-          </Fragment>
-        );
-
-        const alertMessage = notificationPlace === 'notification'
-          ? Message
-          : 'Transaction failed. Please try again.';
-
-        this.setAssetsStatusState({
-          isLoading: false,
-          transactionStatus: 0,
-          alertType: 'error',
-          alertMessage,
-        });
+        this.getAssetNotification(assetId, 'error', amount);
       }
     } catch (err) {
       this.setAssetsStatusState({
