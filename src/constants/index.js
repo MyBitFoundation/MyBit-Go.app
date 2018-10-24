@@ -268,13 +268,13 @@ export const isAssetIdEnabled = (assetId) => {
     },
 
     // sixth wave of assets
-    '0x4690e3275497f6896fe87298977a7f8e875a643b7a1fb3317f56a5a57acf84e6': {
-      name: 'Smart Bench',
-      city: 'Dubai',
-      country: 'UAE',
-      description: 'Manufactured by Arabco Smart Technology in Dubai, UAE Model: Steora Monetisation: Wi-Fi hotspot subscriptions and advertisements Specific Location: Dubai Mall',
-      details: 'Steora is the most ingenious smart bench ever designed. Its beautiful and timeless design hides multiple functionalities. With its perfect size and shape, Steora street bench easily adds allure to any outdoor location. Strong, powder-coated steel construction is completely weather-resistant and vandal-resistant. It offers wireless device charging, super fast internet connection, and data capturing.',
-      imageSrc: Solar,
+    '0x845967f73ff423ee3f137ea2dcf6fba75c315e51633a6931268b5af2628bb7e4': {
+      name: 'Climate Controlled Garage',
+      city: 'Prague',
+      country: 'Czech Republic',
+      description: 'This space is a great fit for a range of assets from artwork to household furniture. It can be accessed remotely from an external door 24/7 and offers dedicated lock boxes inside for an additional cost to customers. It is important to note that security cameras are not active at this location.',
+      details: 'Fully climate controlled space Enforced by Slock.it 40m Squared Suitable for low to mid value items Option for dedicated lock boxes 50x50x70cm Specific Location: Hidden for user protection Rent Term: Per square meter, monthly contract.',
+      imageSrc: Storage,
     },
   };
 
