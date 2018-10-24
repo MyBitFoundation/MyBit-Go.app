@@ -58,7 +58,7 @@
     "eslint-plugin-react": "7.11.1",
     "extract-text-webpack-plugin": "3.0.2",
     "surge": "0.20.1",
-    "ws": "3.3.3"
+    "ws": "6.1.0"
   },
   "browserslist": {
     "development": [
