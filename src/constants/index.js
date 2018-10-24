@@ -266,6 +266,16 @@ export const isAssetIdEnabled = (assetId) => {
       details: 'Air conditioning Fiber Internet 24/7 Access Security Reception 98% building occupancy rate (high-demand) Specific Location: Located across from Swiss National Bank Rent Term: Annual contract, paid quarterly',
       imageSrc: Coworking,
     },
+
+    // sixth wave of assets
+    '0x4690e3275497f6896fe87298977a7f8e875a643b7a1fb3317f56a5a57acf84e6': {
+      name: 'Smart Bench',
+      city: 'Dubai',
+      country: 'UAE',
+      description: 'Manufactured by Arabco Smart Technology in Dubai, UAE Model: Steora Monetisation: Wi-Fi hotspot subscriptions and advertisements Specific Location: Dubai Mall',
+      details: 'Steora is the most ingenious smart bench ever designed. Its beautiful and timeless design hides multiple functionalities. With its perfect size and shape, Steora street bench easily adds allure to any outdoor location. Strong, powder-coated steel construction is completely weather-resistant and vandal-resistant. It offers wireless device charging, super fast internet connection, and data capturing.',
+      imageSrc: Solar,
+    },
   };
 
   if (process.env.NODE_ENV === 'development') {
