@@ -41,7 +41,7 @@ class BlockchainInfo extends React.Component {
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
     this.usingServer = this.usingServer.bind(this);
-
+    this.setFundAssetEventId = this.setFundAssetEventId.bind(this);
     this.state = {
       loading: {
         assets: true,
@@ -105,11 +105,13 @@ class BlockchainInfo extends React.Component {
       // event handler for when the selected account changes
       window.web3js.currentProvider.publicConfigStore.on('update', this.handleAddressChange);
       // event handler on success asset funding
-      FundingHubUtil.setLogAssetFundedListener((result, value) => {
+      const id = FundingHubUtil.setLogAssetFundedListener((result, value) => {
         result.params.forEach((item) => {
           this.getAssetNotification(item.value, 'success', value);
         });
       });
+
+      this.setFundAssetEventId(id);
     }
 
     setInterval(this.loadPrices, 15 * 1000);
@@ -120,6 +122,12 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalLoadMetamaskUserDetails);
     clearInterval(this.intervalFetchTransactionHistory);
+  }
+
+  setFundAssetEventId(id) {
+    this.setState({
+      fundAssetEventId: id,
+    });
   }
 
   getMYB() {

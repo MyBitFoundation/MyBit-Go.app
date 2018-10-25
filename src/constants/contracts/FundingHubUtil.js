@@ -116,7 +116,7 @@ export default class FundingHubUtil {
   }
 
   static setLogAssetFundedListener(cb) {
-    web3EventsListener.setEvent(
+    const id = web3EventsListener.subscribe(
       FundingHub.ADDRESS,
       fundingTopics.LogAssetFunded,
       async (trxData) => {
@@ -127,9 +127,10 @@ export default class FundingHubUtil {
         return cb(decodedData, transactionValue);
       },
     );
+    return id;
   }
 
-  static removeLogAssetFundedListener() {
-    web3EventsListener.removeEventListener('LogAssetFunded');
+  static removeLogAssetFundedListener(id) {
+    web3EventsListener.unSubscribe(fundingTopics.LogAssetFunded, id);
   }
 }
