@@ -21,7 +21,7 @@ import {
 } from '../constants';
 import { formatMonetaryValue } from '../util/helpers';
 import NotificationLink from './NotificationLink';
-import web3EventsListener from '../apis/web3Events';
+import FundingHubUtil from '../constants/contracts/FundingHubUtil';
 
 
 class BlockchainInfo extends React.Component {
@@ -105,7 +105,7 @@ class BlockchainInfo extends React.Component {
       // event handler for when the selected account changes
       window.web3js.currentProvider.publicConfigStore.on('update', this.handleAddressChange);
       // event handler on success asset funding
-      web3EventsListener.setLogAssetFundedListener((result, value) => {
+      FundingHubUtil.setLogAssetFundedListener((result, value) => {
         result.params.forEach((item) => {
           this.getAssetNotification(item.value, 'success', value);
         });

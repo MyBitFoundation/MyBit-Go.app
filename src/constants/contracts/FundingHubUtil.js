@@ -1,8 +1,14 @@
 import { promisifyAll } from 'bluebird';
 import * as FundingHub from './FundingHub';
+import web3EventsListener from '../../apis/web3Events';
+import { fundingTopics } from '../topics';
+
+const abiDecoder = require('abi-decoder');
 
 const instancePromisifier = instance =>
   promisifyAll(instance, { suffix: 'Async' });
+
+abiDecoder.addABI(FundingHub.ABI);
 
 export default class FundingHubUtil {
   constructor() {
@@ -107,5 +113,23 @@ export default class FundingHubUtil {
         }
       },
     );
+  }
+
+  static setLogAssetFundedListener(cb) {
+    web3EventsListener.setEvent(
+      FundingHub.ADDRESS,
+      fundingTopics.LogAssetFunded,
+      async (trxData) => {
+        const transactionDetails =
+          await web3EventsListener.web3Obj.eth.getTransaction(trxData.transactionHash);
+        const transactionValue = window.web3.fromWei(transactionDetails.value, 'ether');
+        const decodedData = abiDecoder.decodeMethod(transactionDetails.input);
+        return cb(decodedData, transactionValue);
+      },
+    );
+  }
+
+  static removeLogAssetFundedListener() {
+    web3EventsListener.removeEventListener('LogAssetFunded');
   }
 }
