@@ -1476,13 +1476,12 @@ babel-plugin-dynamic-import-node@2.2.0:
   dependencies:
     object.assign "^4.1.0"
 
-babel-plugin-inline-react-svg@0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-inline-react-svg/-/babel-plugin-inline-react-svg-0.5.4.tgz#bc818f351cd9d78f5b3bfa7cc1da5f83e7b4010a"
+babel-plugin-inline-react-svg@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-inline-react-svg/-/babel-plugin-inline-react-svg-1.0.1.tgz#1457edae1035a12b3c5026ef28a1239edc71d2a2"
   dependencies:
-    babel-template "^6.26.0"
-    babel-traverse "^6.26.0"
-    babylon "^6.18.0"
+    "@babel/helper-plugin-utils" "^7.0.0"
+    "@babel/parser" "^7.0.0"
     lodash.isplainobject "^4.0.6"
     resolve "^1.8.1"
     svgo "^0.7.2"
