@@ -134,8 +134,8 @@ export const isAssetIdEnabled = (assetId) => {
     },
     '0x279de10410e6a69f800689137d9a7f77677cff73875b831ef0e817f54e4d7cbd': {
       name: 'Ethereum Asic',
-      city: 'Amsterdam',
-      country: 'Netherlands',
+      city: 'Zug',
+      country: 'Switzerland',
       description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
       details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
       imageSrc: CryptoMining,
@@ -176,8 +176,8 @@ export const isAssetIdEnabled = (assetId) => {
     },
     '0x9eaea5a21b1d2157ad5e6007428d0faa24ce3fce10782fb8f7936df2cc0e8646': {
       name: 'Ethereum Asic',
-      city: 'Amsterdam',
-      country: 'Netherlands',
+      city: 'Zug',
+      country: 'Switzerland',
       description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
       details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
       imageSrc: CryptoMining,
@@ -218,8 +218,8 @@ export const isAssetIdEnabled = (assetId) => {
     },
     '0xd3dc362b8292b158a6cdc6036ab5ddff81008633ecdbf7b135d421999117b8bc': {
       name: 'Ethereum Asic',
-      city: 'Amsterdam',
-      country: 'Netherlands',
+      city: 'Zug',
+      country: 'Switzerland',
       description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
       details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
       imageSrc: CryptoMining,
