@@ -92,8 +92,8 @@ export const isAssetIdEnabled = (assetId) => {
     },
     '0x77577554da83a746eca3b1ba093942c07535ca946a3561b49f48394c965d641c': {
       name: 'Ethereum Asic',
-      city: 'Amsterdam',
-      country: 'Netherlands',
+      city: 'Zug',
+      country: 'Switzerland',
       description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
       details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
       imageSrc: CryptoMining,
@@ -134,8 +134,8 @@ export const isAssetIdEnabled = (assetId) => {
     },
     '0x279de10410e6a69f800689137d9a7f77677cff73875b831ef0e817f54e4d7cbd': {
       name: 'Ethereum Asic',
-      city: 'Amsterdam',
-      country: 'Netherlands',
+      city: 'Zug',
+      country: 'Switzerland',
       description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
       details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
       imageSrc: CryptoMining,
@@ -176,8 +176,8 @@ export const isAssetIdEnabled = (assetId) => {
     },
     '0x9eaea5a21b1d2157ad5e6007428d0faa24ce3fce10782fb8f7936df2cc0e8646': {
       name: 'Ethereum Asic',
-      city: 'Amsterdam',
-      country: 'Netherlands',
+      city: 'Zug',
+      country: 'Switzerland',
       description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
       details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
       imageSrc: CryptoMining,
@@ -218,8 +218,8 @@ export const isAssetIdEnabled = (assetId) => {
     },
     '0xd3dc362b8292b158a6cdc6036ab5ddff81008633ecdbf7b135d421999117b8bc': {
       name: 'Ethereum Asic',
-      city: 'Amsterdam',
-      country: 'Netherlands',
+      city: 'Zug',
+      country: 'Switzerland',
       description: 'The Bitmain E3 model is the most powerful Ethereum Miner to date. It offers modest power consumption, advanced cooling, and high performance.',
       details: 'Manufactured by Bitmain Model: E3 Total Hash Rate: 180 MH/s Algorithm: EThash Specific Location: Crypto Valley Labs, Zug, Switzerland',
       imageSrc: CryptoMining,
@@ -265,6 +265,16 @@ export const isAssetIdEnabled = (assetId) => {
       description: 'This space is a great fit for a entrepreneurs, start-up teams, and freelancers. It is in an amazing location a few blocks from the lake in Zurich. With access to many major businesses and shops within walking distance it is great not only for working, but also for networking and expanding your professional relationships.',
       details: 'Air conditioning Fiber Internet 24/7 Access Security Reception 98% building occupancy rate (high-demand) Specific Location: Located across from Swiss National Bank Rent Term: Annual contract, paid quarterly',
       imageSrc: Coworking,
+    },
+
+    // sixth wave of assets
+    '0x845967f73ff423ee3f137ea2dcf6fba75c315e51633a6931268b5af2628bb7e4': {
+      name: 'Climate Controlled Garage',
+      city: 'Prague',
+      country: 'Czech Republic',
+      description: 'This space is a great fit for a range of assets from artwork to household furniture. It can be accessed remotely from an external door 24/7 and offers dedicated lock boxes inside for an additional cost to customers. It is important to note that security cameras are not active at this location.',
+      details: 'Fully climate controlled space Enforced by Slock.it 40m Squared Suitable for low to mid value items Option for dedicated lock boxes 50x50x70cm Specific Location: Hidden for user protection Rent Term: Per square meter, monthly contract.',
+      imageSrc: Storage,
     },
   };
 
