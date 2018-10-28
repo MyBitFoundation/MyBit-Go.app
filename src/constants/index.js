@@ -100,8 +100,8 @@ export const isAssetIdEnabled = (assetId) => {
     },
     '0x8aa3395398fa2d443fe536246271f41fe5064be02223015e79bec113821ab48b': {
       name: 'Bitcoin ATM',
-      city: 'Zug',
-      country: 'Switzerland',
+      city: 'Berlin',
+      country: 'Germany',
       description: 'Manufactured by General Bytes in Prague, Czech Republic. Model: BATMThreeXXL Supports Bitcoin and Ethereum purchases and sales. Average fee per transaction is 5.5%. Specific Location: Berlin Ostbahnhof',
       details: 'The BATMThreeXXL model is our ultimate configuration. It features a bill-acceptor with a cashbox that holds 2200 banknotes, a bill-dispenser with a capacity of 1000 banknotes (2x500) and an additional internal keypad lock on an internal safe. A keypad locked internal safe is usually a requirement for automatic collection by an armoured money transport service.',
       imageSrc: Bitcoinatm,
@@ -118,8 +118,8 @@ export const isAssetIdEnabled = (assetId) => {
     // second wave of assets
     '0x22d490637f59e4177d7325da206ffec7c1a9dd5c411b2bf4014d08059fbe2127': {
       name: 'Bitcoin ATM',
-      city: 'Zug',
-      country: 'Switzerland',
+      city: 'Berlin',
+      country: 'Germany',
       description: 'Manufactured by General Bytes in Prague, Czech Republic. Model: BATMThreeXXL Supports Bitcoin and Ethereum purchases and sales. Average fee per transaction is 5.5%. Specific Location: Berlin Ostbahnhof',
       details: 'The BATMThreeXXL model is our ultimate configuration. It features a bill-acceptor with a cashbox that holds 2200 banknotes, a bill-dispenser with a capacity of 1000 banknotes (2x500) and an additional internal keypad lock on an internal safe. A keypad locked internal safe is usually a requirement for automatic collection by an armoured money transport service.',
       imageSrc: Bitcoinatm,
@@ -160,8 +160,8 @@ export const isAssetIdEnabled = (assetId) => {
     // third wave of assets
     '0x8fccb958606876ec566e7632b9e4b9f48b5b2a5e96549fa8b2d6570629789d15': {
       name: 'Bitcoin ATM',
-      city: 'Zug',
-      country: 'Switzerland',
+      city: 'Berlin',
+      country: 'Germany',
       description: 'Manufactured by General Bytes in Prague, Czech Republic. Model: BATMThreeXXL Supports Bitcoin and Ethereum purchases and sales. Average fee per transaction is 5.5%. Specific Location: Berlin Ostbahnhof',
       details: 'The BATMThreeXXL model is our ultimate configuration. It features a bill-acceptor with a cashbox that holds 2200 banknotes, a bill-dispenser with a capacity of 1000 banknotes (2x500) and an additional internal keypad lock on an internal safe. A keypad locked internal safe is usually a requirement for automatic collection by an armoured money transport service.',
       imageSrc: Bitcoinatm,
@@ -202,8 +202,8 @@ export const isAssetIdEnabled = (assetId) => {
     // forth wave of assets
     '0x33a65575a2ea5f315e35a049e6b8d6e6bf49f89c361fab745fcf9eecdb23a88a': {
       name: 'Bitcoin ATM',
-      city: 'Zug',
-      country: 'Switzerland',
+      city: 'Berlin',
+      country: 'Germany',
       description: 'Manufactured by General Bytes in Prague, Czech Republic. Model: BATMThreeXXL Supports Bitcoin and Ethereum purchases and sales. Average fee per transaction is 5.5%. Specific Location: Berlin Ostbahnhof',
       details: 'The BATMThreeXXL model is our ultimate configuration. It features a bill-acceptor with a cashbox that holds 2200 banknotes, a bill-dispenser with a capacity of 1000 banknotes (2x500) and an additional internal keypad lock on an internal safe. A keypad locked internal safe is usually a requirement for automatic collection by an armoured money transport service.',
       imageSrc: Bitcoinatm,
@@ -244,8 +244,8 @@ export const isAssetIdEnabled = (assetId) => {
     // fifth wave of assets
     '0x6cc0911691b682f76b6fcdef2364f79bca4303382cb494e652d3c7d5ae7927b0': {
       name: 'Bitcoin ATM',
-      city: 'Zug',
-      country: 'Switzerland',
+      city: 'Berlin',
+      country: 'Germany',
       description: 'Manufactured by General Bytes in Prague, Czech Republic. Model: BATMThreeXXL Supports Bitcoin and Ethereum purchases and sales. Average fee per transaction is 5.5%. Specific Location: Berlin Ostbahnhof',
       details: 'The BATMThreeXXL model is our ultimate configuration. It features a bill-acceptor with a cashbox that holds 2200 banknotes, a bill-dispenser with a capacity of 1000 banknotes (2x500) and an additional internal keypad lock on an internal safe. A keypad locked internal safe is usually a requirement for automatic collection by an armoured money transport service.',
       imageSrc: Bitcoinatm,
