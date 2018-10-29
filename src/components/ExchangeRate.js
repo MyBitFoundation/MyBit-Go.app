@@ -7,7 +7,7 @@ const ExchangeRate = ({ price, priceChangePercentage }) => (
   <div className="AppHeader__rate-container">
     <div className="AppHeader__exchange-rate">
       <p className="AppHeader__tokenprice-label">MYB TOKEN PRICE</p>
-      {price ? <b>{`${formatMonetaryValue(price, 2)}`} <span className={priceChangePercentage < 0 ? 'AppHeader__tokenprice-label--is-red' : undefined}>({priceChangePercentage > 0 ? `+ ${priceChangePercentage}` : priceChangePercentage}%)</span></b>
+      {price ? <b>{`${formatMonetaryValue(price, 3)}`} <span className={priceChangePercentage < 0 ? 'AppHeader__tokenprice-label--is-red' : undefined}>({priceChangePercentage > 0 ? `+ ${priceChangePercentage}` : priceChangePercentage}%)</span></b>
       :
       <Spin
         className="AppHeader__exchange-rate--is-loading"
