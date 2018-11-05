@@ -1,10 +1,10 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
 import Button from 'antd/lib/button';
 import 'antd/lib/button/style';
 import '../../styles/LoadingPage.css';
+import Spin from '../../images/spin.svg';
 
 const LoadingPage = ({ message, hasBackButton, history }) => (
   <div className="LoadingPage">
@@ -18,7 +18,7 @@ const LoadingPage = ({ message, hasBackButton, history }) => (
       </Button>
     )}
     <div className="LoadingPage__wrapper">
-      <Spin size="large" />
+      <Spin style={{ height: '64px', width: '64px' }} />
       <p className="LoadingPage__message">{message}</p>
     </div>
   </div>
