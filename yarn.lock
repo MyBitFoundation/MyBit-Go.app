@@ -975,9 +975,9 @@ ant-design-palettes@^1.1.3:
   dependencies:
     tinycolor2 "^1.4.1"
 
-antd@3.10.2:
-  version "3.10.2"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-3.10.2.tgz#27accfd6b857b930dc43c1325fcc672d6e616c94"
+antd@3.10.3:
+  version "3.10.3"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-3.10.3.tgz#7b28eb5c005c3c9701366c46f2f2e52d9e175b62"
   dependencies:
     "@ant-design/icons" "~1.1.15"
     "@ant-design/icons-react" "~1.1.2"
@@ -8602,11 +8602,11 @@ react-error-overlay@^5.0.5:
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.0.5.tgz#716ff1a92fda76bb89a39adf9ce046a5d740e71a"
 
-react-facebook-pixel@^0.1.1:
+react-facebook-pixel@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/react-facebook-pixel/-/react-facebook-pixel-0.1.1.tgz#9f258a08590ec7c11837cc4bc94e294d11a908bc"
 
-react-ga@^2.5.3:
+react-ga@2.5.3:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.5.3.tgz#0f447c73664c069a5fc341f6f431262e3d4c23c4"
   optionalDependencies:
@@ -8734,7 +8734,7 @@ react-test-renderer@^16.0.0-0:
     react-is "^16.6.0"
     scheduler "^0.10.0"
 
-react-twitter-conversion-tracker@^1.0.0:
+react-twitter-conversion-tracker@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-twitter-conversion-tracker/-/react-twitter-conversion-tracker-1.0.0.tgz#6c12ed124753ad6ae66e3d0b69ed32ffcdb375bd"
 
