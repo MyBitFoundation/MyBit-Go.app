@@ -10,10 +10,12 @@
 }
 
 .ant-carousel .slick-slide {
+    z-index: 3;
     padding: 10px 40px;
 }
 
 .Onboarding__slide {
+    z-index: 3;
     position: relative;
     min-height: 620px;
     width: 100%;
@@ -24,6 +26,27 @@
     position: absolute;
     top: 20px;
     right: 20px;
+    @media screen and (max-width: 600px) {
+        display: none;
+    }
+}
+
+.Onboarding__key-img {
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    @media screen and (max-width: 600px) {
+        display: none;
+    }
+}
+
+.Onboarding__setup-img {
+    position: absolute;
+    top: 140px;
+    right: 10px;
+    @media screen and (max-width: 600px) {
+        display: none;
+    }
 }
 
 .Onboarding__main-title {
@@ -44,6 +67,7 @@
     font-size: 18px;
     font-weight: bold;
     color: #4a4a4a;
+    width: 80%;
 }
 
 .Onboarding__paragraph {
@@ -56,11 +80,8 @@
     &.width-80 {
         width: 80%;
     }
-    &.width-70 {
-        width: 70%;
-    }
-    &.width-60 {
-        width: 60%;
+    &.width-65 {
+        width: 63%;
     }
 }
 
@@ -71,17 +92,21 @@
     background-color: #1890ff;
     border: 1px solid #1890ff;
     color: #ffffff;
+    font-weight: 350;
+    &:hover, &:focus {
+        background-color: #1890ff;
+        color: #ffffff;
+    }
+}
+
+.Onboarding__next-button-arrow {
+    font-size: 12px;
 }
 
 .Onboarding__back-button {
   position: absolute;
   bottom: 20px;
   left: 0px;
-}
-
-.Onboarding__next-button-arrow {
-  font-weight: bold;
-  margin-left: 5px;
 }
 
 .Onboarding__img {
@@ -129,3 +154,27 @@
         border-top-color: #ffffff;
     }
 }
+
+.Onboarding__list {
+    padding: 0;
+    list-style: none;
+    margin-top: 60px;
+    &.no-margin-list {
+        margin-top: 10px;
+    }
+}
+
+.Onboarding__list-item {
+    margin: 5px 0px 5px 20px;
+    font-size: 18px;
+    position: relative;
+    &::before {
+        content: "•"; 
+        font-size: 28px;
+        position: absolute;
+        top: -8px;
+        left: -20px;
+        color: #1890ff;
+    }
+}
+
