@@ -12,6 +12,7 @@ import HelpPage from './components/pages/HelpPage';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import LandingPage from './components/pages/LandingPage';
 import WatchListPage from './components/pages/WatchListPage';
+import OnboardingPage from './components/pages/OnboardingPage';
 
 const redirectToOnFirstVisit = '/landing';
 
@@ -148,6 +149,11 @@ const routes = [
         {({ fetchMyBit }) => <HelpPage fetchMyBit={fetchMyBit} />}
       </BlockchainInfoContext.Consumer>
     ),
+  },
+  {
+    path: '/onboarding',
+    exact: true,
+    component: () => (<OnboardingPage />),
   },
   {
     path: '*',
