@@ -121,8 +121,11 @@
     }
     &-next {
         font-weight: 350;
-        &-arrow {
-            font-size: 12px;
+        padding-right: 8px;
+        &-arrow{
+            padding-top: 5px;
+            padding-left: 15px;
+            float: right;
         }
         @media(max-width: 600px) {
             position: static;

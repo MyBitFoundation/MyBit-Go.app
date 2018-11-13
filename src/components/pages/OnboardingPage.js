@@ -13,6 +13,7 @@ import EthereumGraphic from '../../images/onboarding/ethereum.png'
 import SmartContract from '../../images/onboarding/smart_contract.png'
 import Key from '../../images/onboarding/key.png'
 import SetupGraphic from '../../images/onboarding/setup.png'
+import RightArrow from '../../images/onboarding/arrow-right.png'
 
 class OnboardingPage extends React.Component {
     constructor(props) {
@@ -78,10 +79,11 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip"  onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                What is MyBit Go? <Icon type="right" className="Onboarding__next-button-arrow" />
+                                What is MyBit Go? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                     </div>
+
 
                     <div key={2} className="Onboarding__slide">
                         <img src={MyBitGlobe} className="Onboarding__img-default" alt="MyBit Globe" />
@@ -100,7 +102,7 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                What it isn't? <Icon type="right" className="Onboarding__next-button-arrow" />
+                                What it isn't? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -122,7 +124,7 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                What is blockchain? <Icon type="right" className="Onboarding__next-button-arrow" />
+                                What is blockchain? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -150,7 +152,7 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                Next <Icon type="right" className="Onboarding__next-button-arrow" />
+                                Next <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -171,7 +173,7 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                What is Ethereum? <Icon type="right" className="Onboarding__next-button-arrow" />
+                                What is Ethereum? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -195,7 +197,7 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                Smart contracts <Icon type="right" className="Onboarding__next-button-arrow" />
+                                Smart contracts <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -220,7 +222,7 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                How do I invest? <Icon type="right" className="Onboarding__next-button-arrow" />
+                                How do I invest? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -243,7 +245,7 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                How to secure my assets? <Icon type="right" className="Onboarding__next-button-arrow" />
+                                How to secure my assets? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -277,7 +279,7 @@ class OnboardingPage extends React.Component {
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
-                                How do I invest? <Icon type="right" className="Onboarding__next-button-arrow" />
+                                How do I invest? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -307,7 +309,7 @@ class OnboardingPage extends React.Component {
                         </p>
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
-                                Get started and explore <Icon type="right" className="Onboarding__next-button-arrow" />
+                                Get started and explore <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
