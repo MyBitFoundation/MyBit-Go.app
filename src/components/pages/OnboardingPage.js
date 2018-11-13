@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import Carousel from 'antd/lib/carousel';
 import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
+import BancorWidgetButton from '../UI/BancorWidgetButton/index';
 import '../../styles/OnboardingPage.css';
 import MyBitGoLogo from '../../images/onboarding/mybitgo.png';
 import MyBitGlobe from '../../images/onboarding/globe.png';
@@ -54,7 +55,6 @@ class OnboardingPage extends React.Component {
 
     render() {
         const { currentSlide } = this.state;
-        console.log(currentSlide)
         return (
             <div>
                 <Carousel ref={node => this.carousel = node} effect="slide" dots={false} >
@@ -76,7 +76,6 @@ class OnboardingPage extends React.Component {
                             you and only you are responsible for your security.
                         </p>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip"  onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What is MyBit Go? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
@@ -99,7 +98,6 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">Be protected from failure. If MyBit Go ceases to exist, your investments will still be safe</li>
                         </ul>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What it isn't? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
@@ -149,7 +147,6 @@ class OnboardingPage extends React.Component {
                         It is highly secure. Bitcoin has been around for over 10 years and its network has not suffered one hack or malfunction.
                         </p>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 Next <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
@@ -170,7 +167,6 @@ class OnboardingPage extends React.Component {
                         </ul>
                         <img src={SafeGraphic} className="Onboarding__img-static" alt="MyBit Globe" />
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What is Ethereum? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
@@ -194,7 +190,6 @@ class OnboardingPage extends React.Component {
                         </p>
                         <img src={EthereumGraphic} className="Onboarding__img-static" alt="MyBit Globe" />
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 Smart contracts <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
@@ -219,7 +214,6 @@ class OnboardingPage extends React.Component {
 
                         <img src={SmartContract} className="Onboarding__img-static" alt="MyBit Globe" />
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 How do I invest? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
@@ -242,7 +236,6 @@ class OnboardingPage extends React.Component {
                         When it begins generating revenue, you will receive the profits to your account in real-time!
                         </p>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 How to secure my assets? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
@@ -276,7 +269,6 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">For added protection, get a hardware wallet.</li>
                         </ul>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 How do I invest? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
@@ -294,18 +286,18 @@ class OnboardingPage extends React.Component {
                         </h2>
                         <p className="Onboarding__paragraph--80">
                             MetaMask, a browser extension that turns any ordinary browser into one that can interact with blockchain applications. 
-                            Get MetaMask
+                            <a href="http://metamask.io" className="Onboarding__buttons-get" target="_blank" rel="noopener noreferrer">Get Metamask</a>
                         </p>
-                        <p className="Onboarding__paragraph--80">
+                        <p className="Onboarding__paragraph--80--mt">
                             MyBit Tokens (MYB), the native token that fuels the MyBit Network. Applications such as MyBit Go, 
                             which run on the Network, require MYB to use. 
-                            Get MYB
                         </p>
-                        <p className="Onboarding__paragraph--80">
+                        <BancorWidgetButton operation="buy">Get MYB</BancorWidgetButton>
+                        <p className="Onboarding__paragraph--80--mt">
                             Cryptocurrency, such as Ether or DAI, which are the main cryptocurrencies MyBit Go uses to 
                             invest in assets; however, many more are supported. 
-                            Get Ether
                         </p>
+                        <BancorWidgetButton operation="buy">Get Ether</BancorWidgetButton>
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
                                 Get started and explore <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
