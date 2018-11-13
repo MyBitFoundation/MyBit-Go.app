@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import Carousel from 'antd/lib/carousel';
 import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
-import Icon from 'antd/lib/icon';
 import '../../styles/OnboardingPage.css';
 import MyBitGoLogo from '../../images/onboarding/mybitgo.png';
 import MyBitGlobe from '../../images/onboarding/globe.png';
