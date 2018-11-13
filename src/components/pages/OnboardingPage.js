@@ -59,31 +59,34 @@ class OnboardingPage extends React.Component {
             <div>
                 <Carousel ref={node => this.carousel = node} effect="slide" dots={false} >
                     <div key={1} className="Onboarding__slide">
-                        <img src={MyBitGoLogo} className="Onboarding__mybit-logo" alt="MyBit Logo" />
+                        <img src={MyBitGoLogo} className="Onboarding__img-default" alt="MyBit Logo" />
                         <h1 className="Onboarding__main-title">Welcome to MyBit Go</h1>
-                        <p className="Onboarding__paragraph width-65">
+                        <p className="Onboarding__paragraph">
                             We bring power and control back to you. Invest without a bank, broker, fund or third-party,
                             putting the power back in your hands.
                         </p>
                         <h2 className="Onboarding__paragraph-title">What is MyBit Go?</h2>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             MyBit Go is a secure investment platform available to anyone.
                             We enable users to directly invest without the need of a broker or third-party,
                             while receiving the revenue in real-time.
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             You actually own and control your investments (unlike stocks) and, likewise,
                             you and only you are responsible for your security.
                         </p>
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          What is MyBit Go? <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip"  onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                What is MyBit Go? <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
                     </div>
 
                     <div key={2} className="Onboarding__slide">
-                        <img src={MyBitGlobe} className="Onboarding__mybit-logo" alt="MyBit Globe" />
+                        <img src={MyBitGlobe} className="Onboarding__img-default" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title">
-                          The <span className="Onboarding__main-title-blue">next generation</span> <br />investment portal
+                          The <span className="Onboarding__main-title--blue">next generation</span> <br />investment portal
                         </h1>
                         <h2 className="Onboarding__paragraph-title">What can you use MyBit Go for?</h2>
                         <ul className="Onboarding__list">
@@ -94,16 +97,19 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">Receive payouts in real-time. No more waiting for quarterly or annual distributions</li>
                             <li className="Onboarding__list-item">Be protected from failure. If MyBit Go ceases to exist, your investments will still be safe</li>
                         </ul>
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          What it isn't? <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                What it isn't? <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
 
                     <div key={3} className="Onboarding__slide">
-                        <img src={MyBitDesk} className="Onboarding__mybit-logo" alt="MyBit Globe" />
+                        <img src={MyBitDesk} className="Onboarding__img-default" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title">
-                          It is <span className="Onboarding__main-title-red">not</span> an <br /> investment fund
+                          It is <span className="Onboarding__main-title--red">not</span> an <br /> investment fund
                         </h1>
                         <ul className="Onboarding__list">
                             <li className="Onboarding__list-item">We do not invest on your behalf</li>
@@ -113,40 +119,46 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">We cannot enforce investments</li>
                             <li className="Onboarding__list-item">We do not guarantee returns</li>
                         </ul>
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          What is blockchain? <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                What is blockchain? <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
 
                     <div key={4} className="Onboarding__slide">
                         <h1 className="Onboarding__main-title">
-                          What is <span className="Onboarding__main-title-blue">blackchain?</span>
+                          What is <span className="Onboarding__main-title--blue">blackchain?</span>
                         </h1>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                         It is the “value” layer that the internet is missing. The internet lets users transfer data 
                         and communicate with each other. The blockchain enables users to store and transfer value.
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                         It acts like a giant spreadsheet which keeps track of every account balance and transaction 
                         for currencies, investments, assets, and other forms of value.
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                         It is maintained by thousands of people across the globe who are incentivised to validate 
                         transactions and ensure that balances are accurate. 
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                         It is highly secure. Bitcoin has been around for over 10 years and its network has not suffered one hack or malfunction.
                         </p>
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          Next <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                Next <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
 
                     <div key={5} className="Onboarding__slide">
                         <h1 className="Onboarding__main-title">
-                          What are the <span className="Onboarding__main-title-blue">benefits?</span>
+                          What are the <span className="Onboarding__main-title--blue">benefits?</span>
                         </h1>
                         <ul className="Onboarding__list">
                             <li className="Onboarding__list-item">Faster, cheaper, safer, and more accessible</li>
@@ -155,83 +167,94 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">Fast and cheap transactions to anyone, anywhere</li>
                             <li className="Onboarding__list-item">Give ownership back to the people, putting them back in control of capital, investments, and value</li>
                         </ul>
-                        <img src={SafeGraphic} className="Onboarding__img" alt="MyBit Globe" />
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          What is Ethereum? <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <img src={SafeGraphic} className="Onboarding__img-static" alt="MyBit Globe" />
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                What is Ethereum? <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
 
                     <div key={6} className="Onboarding__slide">
                         <h1 className="Onboarding__main-title">
                           Ethereum
                         </h1>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             Ethereum is a platform based on blockchain technology. Unlike Bitcoin, users can builld applications on top of it. 
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             For comparison, you can think of it like this: if Bitcoin is a next generation bank, 
                             then Ethereum is the software that lets anyone build a next generation bank.
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             The possibilities of what can be built on Ethereum extend to nearly every business industry.
                         </p>
-                        <img src={EthereumGraphic} className="Onboarding__img" alt="MyBit Globe" />
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          Smart contracts <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <img src={EthereumGraphic} className="Onboarding__img-static" alt="MyBit Globe" />
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                Smart contracts <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
 
                     <div key={7} className="Onboarding__slide">
                         <h1 className="Onboarding__main-title">
-                          Smart <span className="Onboarding__main-title-blue">contracts</span>
+                          Smart <span className="Onboarding__main-title--blue">contracts</span>
                         </h1>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             'Smart contracts' is a phrase used to describe computer code that automatically 
                             executes when specific conditions are met. This is extremely useful for the exchange of money, 
                             content, property, or anything of value.
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             With smart contracts, the investor can be assured the contractual agreement will execute 
                             according to the defined conditions. This creates a more secure environment and also leads 
                             to lower fees because no manual process involving human labour is needed.
                         </p>
 
-                        <img src={SmartContract} className="Onboarding__img" alt="MyBit Globe" />
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          How do I invest? <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <img src={SmartContract} className="Onboarding__img-static" alt="MyBit Globe" />
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                How do I invest? <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
 
                     <div key={8} className="Onboarding__slide">
                         <h1 className="Onboarding__main-title">
                           How do I invest?
                         </h1>
-                        <p className="Onboarding__paragraph full-width">         
+                        <p className="Onboarding__paragraph--full">         
                         Find an investment you are interested in and choose the amount you would like to invest.
                         This will trigger a pop-up in metamask to confirm the transaction.
                         </p>
-                        <p className="Onboarding__paragraph full-width">
+                        <p className="Onboarding__paragraph--full">
                         It may take several minutes for the Ethereum network to process the transaction. Once confirmed, you are now the owner of the asset. 
                         </p>
-                        <p className="Onboarding__paragraph full-width">
+                        <p className="Onboarding__paragraph--full">
                         When it begins generating revenue, you will receive the profits to your account in real-time!
                         </p>
-
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          How to secure my assets? <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                How to secure my assets? <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
 
                     <div key={9} className="Onboarding__slide">
-                        <img src={Key} className="Onboarding__key-img" alt="MyBit Globe" />
+                        <img src={Key} className="Onboarding__img-key" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title">
-                          <span className="Onboarding__main-title-blue">Key</span> security
+                          <span className="Onboarding__main-title--blue">Key</span> security
                         </h1>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                         All of your investments are linked to your metamask account. We have no control over 
                         it or ability to restore it. If you lose your private key or password, it is gone forever.
                         </p>
@@ -251,38 +274,43 @@ class OnboardingPage extends React.Component {
                             </li>
                             <li className="Onboarding__list-item">For added protection, get a hardware wallet.</li>
                         </ul>
-                        <Button className="Onboarding__next-button" onClick={this.next}>
-                          How do I invest? <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                                How do I invest? <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
 
                     <div key={10} className="Onboarding__slide">
-                        <img src={SetupGraphic} className="Onboarding__setup-img" alt="MyBit Globe" />
+                        <img src={SetupGraphic} className="Onboarding__img-setup" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title">
-                          <span className="Onboarding__main-title-blue">Required</span> setup
+                          <span className="Onboarding__main-title--blue">Required</span> setup
                         </h1>
                         <h2 className="Onboarding__paragraph-title">
                             Before you are able to use the MyBit Go platform, you will need the following:
                         </h2>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             MetaMask, a browser extension that turns any ordinary browser into one that can interact with blockchain applications. 
                             Get MetaMask
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             MyBit Tokens (MYB), the native token that fuels the MyBit Network. Applications such as MyBit Go, 
                             which run on the Network, require MYB to use. 
                             Get MYB
                         </p>
-                        <p className="Onboarding__paragraph width-80">
+                        <p className="Onboarding__paragraph--80">
                             Cryptocurrency, such as Ether or DAI, which are the main cryptocurrencies MyBit Go uses to 
                             invest in assets; however, many more are supported. 
                             Get Ether
                         </p>
-                        <Button className="Onboarding__next-button" onClick={() => this.props.history.push('/explore')}>
-                          Get started and explore <Icon type="right" className="Onboarding__next-button-arrow" />
-                        </Button>
-                        <Button className="Onboarding__back-button" onClick={this.previous}>Back</Button>
+                        <div className="Onboarding__buttons">
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
+                                Get started and explore <Icon type="right" className="Onboarding__next-button-arrow" />
+                            </Button>
+                        </div>
+                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </div>
                 </Carousel>
 
