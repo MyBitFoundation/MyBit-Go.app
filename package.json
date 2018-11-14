@@ -5,7 +5,7 @@
   "dependencies": {
     "antd": "3.10.4",
     "axios": "0.18.0",
-    "bluebird": "3.5.2",
+    "bluebird": "3.5.3",
     "classnames": "2.2.6",
     "dayjs": "1.7.7",
     "detect-browser": "3.0.1",
