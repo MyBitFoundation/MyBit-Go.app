@@ -1,10 +1,10 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import Carousel from 'antd/lib/carousel';
 import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
+import Carousel from 'antd/lib/carousel';
 import BancorWidgetButton from '../UI/BancorWidgetButton/index';
-import '../../styles/OnboardingPage.css';
+import { CarouselWrapper, SliderNavigation, Slide } from '../UI/OnboardingPage/styledOnboardingPage'
 import MyBitGoLogo from '../../images/onboarding/mybitgo.png';
 import MyBitGlobe from '../../images/onboarding/globe.png';
 import MyBitDesk from '../../images/onboarding/desk.png';
@@ -56,9 +56,9 @@ class OnboardingPage extends React.Component {
     render() {
         const { currentSlide } = this.state;
         return (
-            <div>
+            <CarouselWrapper>
                 <Carousel ref={node => this.carousel = node} effect="slide" dots={false} >
-                    <div key={1} className="Onboarding__slide">
+                    <Slide>
                         <img src={MyBitGoLogo} className="Onboarding__img-default" alt="MyBit Logo" />
                         <h1 className="Onboarding__main-title">Welcome to MyBit Go</h1>
                         <p className="Onboarding__paragraph">
@@ -80,10 +80,10 @@ class OnboardingPage extends React.Component {
                                 What is MyBit Go? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                    </div>
+                    </Slide>
 
 
-                    <div key={2} className="Onboarding__slide">
+                    <Slide>
                         <img src={MyBitGlobe} className="Onboarding__img-default" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title">
                           The <span className="Onboarding__main-title--blue">next generation</span> <br />investment portal
@@ -103,9 +103,9 @@ class OnboardingPage extends React.Component {
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
 
-                    <div key={3} className="Onboarding__slide">
+                    <Slide>
                         <img src={MyBitDesk} className="Onboarding__img-default" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title">
                           It is <span className="Onboarding__main-title--red">not</span> an <br /> investment fund
@@ -125,9 +125,9 @@ class OnboardingPage extends React.Component {
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
 
-                    <div key={4} className="Onboarding__slide">
+                   <Slide>
                         <h1 className="Onboarding__main-title">
                           What is <span className="Onboarding__main-title--blue">blackchain?</span>
                         </h1>
@@ -152,9 +152,9 @@ class OnboardingPage extends React.Component {
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
 
-                    <div key={5} className="Onboarding__slide">
+                    <Slide>
                         <h1 className="Onboarding__main-title">
                           What are the <span className="Onboarding__main-title--blue">benefits?</span>
                         </h1>
@@ -172,9 +172,9 @@ class OnboardingPage extends React.Component {
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
 
-                    <div key={6} className="Onboarding__slide">
+                    <Slide>
                         <h1 className="Onboarding__main-title">
                           Ethereum
                         </h1>
@@ -195,9 +195,9 @@ class OnboardingPage extends React.Component {
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
 
-                    <div key={7} className="Onboarding__slide">
+                    <Slide>
                         <h1 className="Onboarding__main-title">
                           Smart <span className="Onboarding__main-title--blue">contracts</span>
                         </h1>
@@ -219,9 +219,9 @@ class OnboardingPage extends React.Component {
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
 
-                    <div key={8} className="Onboarding__slide">
+                    <Slide>
                         <h1 className="Onboarding__main-title">
                           How do I invest?
                         </h1>
@@ -241,9 +241,9 @@ class OnboardingPage extends React.Component {
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
 
-                    <div key={9} className="Onboarding__slide">
+                    <Slide>
                         <img src={Key} className="Onboarding__img-key" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title">
                           <span className="Onboarding__main-title--blue">Key</span> security
@@ -274,9 +274,9 @@ class OnboardingPage extends React.Component {
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
 
-                    <div key={10} className="Onboarding__slide">
+                    <Slide>
                         <img src={SetupGraphic} className="Onboarding__img-setup" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title">
                           <span className="Onboarding__main-title--blue">Required</span> setup
@@ -297,17 +297,17 @@ class OnboardingPage extends React.Component {
                             Cryptocurrency, such as Ether or DAI, which are the main cryptocurrencies MyBit Go uses to 
                             invest in assets; however, many more are supported. 
                         </p>
-                        <BancorWidgetButton operation="buy">Get Ether</BancorWidgetButton>
+                        <BancorWidgetButton operation="buy" baseCurrency="">Get Ether</BancorWidgetButton>
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
                                 Get started and explore <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
                         <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                    </div>
+                    </Slide>
                 </Carousel>
 
-                <div className="Onboarding__slider-navigation">
+                <SliderNavigation>
                     {
                         SliderNavigationTooltips.map(slideTooltip => {
                             const buttonClass = currentSlide === slideTooltip.slide 
@@ -323,8 +323,8 @@ class OnboardingPage extends React.Component {
                             )
                         })
                     }
-                </div>
-            </div>
+                </SliderNavigation>
+            </CarouselWrapper>
         );
     }
 }
@@ -341,6 +341,5 @@ const SliderNavigationTooltips = [
     { slide: 8, tooltip: "How to secure my assets?" },
     { slide: 9, tooltip: "Required setup" }
 ]
-
 
 export default withRouter(OnboardingPage);
