@@ -9,37 +9,39 @@ const BancorWidgetSpan = styled.span`
     font-size: 14px;
 `;
 
-
 class BancorWidgetButton extends Component {
   constructor(props) {
     super(props);
     this.initBancor = this.initBancor.bind(this);
+    this.createSetup = this.createSetup.bind(this);
   }
 
   componentDidMount() {
-    if (!document.getElementById('bancor-wc')) {
-      const scriptDiv = document.createElement('div');
-      scriptDiv.setAttribute('style', 'display: none;');
-      scriptDiv.setAttribute('id', 'bancor-wc');
-      document.body.appendChild(scriptDiv);
-
+    if(!document.getElementById('bancor-script')) {
+      console.log('adding bancor-script')
       const scriptFile = document.createElement('script');
       scriptFile.setAttribute('src', 'https://widget-convert.bancor.network/v1');
-
-
-      let loaded = false;
-      const loadCallback = () => {
-        if (!loaded) {
-          loaded = true;
-          this.initBancor();
-        }
-      };
-
-      scriptFile.onreadystatechange = loadCallback;
-      scriptFile.onload = loadCallback;
-
+      scriptFile.setAttribute('id', 'bancor-script');
       document.body.appendChild(scriptFile);
+      window.scriptFile = scriptFile;
+    } else {
+      console.log('bancor script has already been added');
     }
+  }
+
+  createSetup() {
+    if(document.getElementById('bancor-wc')) {
+      console.log('bancor-wc exists and is now removed')
+      let elem = document.getElementById('bancor-wc');
+      elem.parentNode.removeChild(elem);
+    }
+
+    console.log('creating bancor-wc')
+    const scriptDiv = document.createElement('div');
+    scriptDiv.setAttribute('style', 'display: none;');
+    scriptDiv.setAttribute('id', 'bancor-wc');
+    document.body.appendChild(scriptDiv);
+    this.initBancor();
   }
 
   initBancor() {
@@ -54,6 +56,7 @@ class BancorWidgetButton extends Component {
         primaryColor,
         displayCurrency,
       });
+      window.BancorConvertWidget.showConvertPopup(this.props.operation);
     }
   }
 
@@ -63,11 +66,7 @@ class BancorWidgetButton extends Component {
         <Button
           styling={Theme.buttons.primary.blue}
           size="default"
-          onClick={() => {
-            if (window.BancorConvertWidget) {
-              window.BancorConvertWidget.showConvertPopup(this.props.operation);
-            }
-          }}
+          onClick={this.createSetup}
         >
           <BancorWidgetSpan>{this.props.children}</BancorWidgetSpan>
         </Button>
