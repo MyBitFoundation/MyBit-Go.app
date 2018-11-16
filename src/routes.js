@@ -14,7 +14,7 @@ import LandingPage from './components/pages/LandingPage';
 import WatchListPage from './components/pages/WatchListPage';
 import OnboardingPage from './components/pages/OnboardingPage';
 
-const redirectToOnFirstVisit = '/landing';
+const redirectToOnFirstVisit = '/onboarding';
 
 const routes = [
   {
