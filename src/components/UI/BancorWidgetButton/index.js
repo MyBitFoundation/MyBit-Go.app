@@ -9,12 +9,6 @@ const BancorWidgetSpan = styled.span`
     font-size: 14px;
 `;
 
-function generateBancorID() {
-  function fragment() {
-    return Math.floor((1 + Math.random()) * 0x100000).toString(16).substring(1)
-  }
-  return fragment() + fragment() + fragment() + fragment() + fragment()
-}
 
 class BancorWidgetButton extends Component {
   constructor(props) {
@@ -23,15 +17,11 @@ class BancorWidgetButton extends Component {
   }
 
   componentDidMount() {
-    console.log('bancor widget did mount')
-    const bancorID = generateBancorID()
-    if (!document.getElementById(bancorID)) {
-      console.log('bancor widget did mount in if')
+    if (!document.getElementById('bancor-wc')) {
       const scriptDiv = document.createElement('div');
       scriptDiv.setAttribute('style', 'display: none;');
-      scriptDiv.setAttribute('id', bancorID);
+      scriptDiv.setAttribute('id', 'bancor-wc');
       document.body.appendChild(scriptDiv);
-
 
       const scriptFile = document.createElement('script');
       scriptFile.setAttribute('src', 'https://widget-convert.bancor.network/v1');
@@ -53,17 +43,18 @@ class BancorWidgetButton extends Component {
   }
 
   initBancor() {
+    if (window.BancorConvertWidget) {
       const {
         type, baseCurrencyId, pairCurrencyId, primaryColor, displayCurrency,
       } = this.props;
-      var myWidget = new BancorConvertWidget();
-      myWidget.BancorConvertWidget.init({
+      window.BancorConvertWidget.init({
         type,
         baseCurrencyId,
         pairCurrencyId,
         primaryColor,
         displayCurrency,
-    });
+      });
+    }
   }
 
   render() {
