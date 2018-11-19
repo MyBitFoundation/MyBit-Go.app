@@ -18,25 +18,19 @@ class BancorWidgetButton extends Component {
 
   componentDidMount() {
     if(!document.getElementById('bancor-script')) {
-      console.log('adding bancor-script')
       const scriptFile = document.createElement('script');
       scriptFile.setAttribute('src', 'https://widget-convert.bancor.network/v1');
       scriptFile.setAttribute('id', 'bancor-script');
       document.body.appendChild(scriptFile);
       window.scriptFile = scriptFile;
-    } else {
-      console.log('bancor script has already been added');
     }
   }
 
   createSetup() {
     if(document.getElementById('bancor-wc')) {
-      console.log('bancor-wc exists and is now removed')
       let elem = document.getElementById('bancor-wc');
       elem.parentNode.removeChild(elem);
     }
-
-    console.log('creating bancor-wc')
     const scriptDiv = document.createElement('div');
     scriptDiv.setAttribute('style', 'display: none;');
     scriptDiv.setAttribute('id', 'bancor-wc');
