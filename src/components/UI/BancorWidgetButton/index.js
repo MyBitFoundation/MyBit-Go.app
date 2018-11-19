@@ -17,7 +17,7 @@ class BancorWidgetButton extends Component {
   }
 
   componentDidMount() {
-    if(!document.getElementById('bancor-script')) {
+    if (!document.getElementById('bancor-script')) {
       const scriptFile = document.createElement('script');
       scriptFile.setAttribute('src', 'https://widget-convert.bancor.network/v1');
       scriptFile.setAttribute('id', 'bancor-script');
@@ -27,8 +27,8 @@ class BancorWidgetButton extends Component {
   }
 
   createSetup() {
-    if(document.getElementById('bancor-wc')) {
-      let elem = document.getElementById('bancor-wc');
+    if (document.getElementById('bancor-wc')) {
+      const elem = document.getElementById('bancor-wc');
       elem.parentNode.removeChild(elem);
     }
     const scriptDiv = document.createElement('div');
@@ -39,6 +39,7 @@ class BancorWidgetButton extends Component {
   }
 
   initBancor() {
+    const { operation } = this.props;
     if (window.BancorConvertWidget) {
       const {
         type, baseCurrencyId, pairCurrencyId, primaryColor, displayCurrency,
@@ -50,11 +51,12 @@ class BancorWidgetButton extends Component {
         primaryColor,
         displayCurrency,
       });
-      window.BancorConvertWidget.showConvertPopup(this.props.operation);
+      window.BancorConvertWidget.showConvertPopup(operation);
     }
   }
 
   render() {
+    const { children } = this.props;
     return (
       <div className="BancorWidget__button">
         <Button
@@ -62,7 +64,7 @@ class BancorWidgetButton extends Component {
           size="default"
           onClick={this.createSetup}
         >
-          <BancorWidgetSpan>{this.props.children}</BancorWidgetSpan>
+          <BancorWidgetSpan>{children}</BancorWidgetSpan>
         </Button>
       </div>
     );
