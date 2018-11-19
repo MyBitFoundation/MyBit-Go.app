@@ -1,0 +1,182 @@
+import styled from 'styled-components';
+
+export const Slide = styled.div`
+    position: relative;
+    min-height: 469px;
+    width: 100%;
+    max-width: 426px;
+    .Slider__header {
+        font-family: 'Gilroy';
+        font-size: 30px;
+        line-eight: 37px;
+        font-weight: bold;
+        padding: 25px 40px 0px 40px;
+        margin: 0px;
+        text-align: center;
+    }
+    .Slider__note {
+        margin-top: 8px;
+        font-family: Roboto;
+        line-height: normal;
+        font-size: 14px;
+        text-align: center;
+        padding: 0px 30px;
+    }
+    .Slider__buttons {
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        bottom: 24px;
+        &-continue {
+            min-width: 154px;
+            font-weight: 500;
+        }
+    }
+    .Slider__tooltip {
+        opacity: 0;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+        top: 8px;
+        right: 8px;
+        transition: all 0.5s;
+    }
+    &:hover {
+        .Slider__tooltip {
+            opacity: 1;
+            transition: all 0.5s;
+        }
+    }
+    .Slider__img {
+        margin: 0px auto;
+        padding: 10px;
+    }
+    .Slider__input {
+        &-container {
+            padding: 10px 50px 0px 50px;
+            > .ant-input {
+                margin: 5px 0px;
+            }
+            > .ant-select {
+                margin: 5px 0px;
+                width: 100%;
+            }
+        }
+        &-label {
+            padding: 24px 0px 8px 0px;
+        }
+        &-fee {
+            padding: 30px 50px 0px 50px;
+            > .ant-slider {
+                margin-bottom: 27px;
+            }
+        }
+    }
+    .Slider__upload {
+        &-container {
+            padding: 25px 21px 0px 21px;
+            > .ant-upload-drag-icon {
+                font-size: 48px;
+            }
+        }
+        &-content {
+            > .ant-upload.ant-upload-drag {
+                padding: 10px 0px;
+            }
+            > .ant-upload-list.ant-upload-list-text {
+                overflow-y: scroll;
+                max-height: 80px;
+            }
+        }
+    }
+`
+
+export const IntroList = styled.div`
+    padding-left: 91px;
+    padding-right: 48px;
+    font-family: Roboto;
+    .IntroListItem {
+        position: relative;
+        padding-bottom: 5px;
+        &__title {
+            font-style: normal;
+            font-weight: bold;
+            line-height: normal;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.65);
+        }
+        &__note {
+            line-height: normal;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.65);
+            font-weight: 500;
+        }
+        &::before {
+            content: "•"; 
+            font-size: 28px;
+            position: absolute;
+            top: -12px;
+            left: -22px;
+            color: #1890ff;
+        }
+    }
+    
+}`
+
+export const CarouselWrapper = styled.div`
+    .ant-carousel {
+        min-height: 469px;
+        width: 100%;
+        max-width: 426px;
+        margin: 0px auto;
+        overflow: hidden;
+        margin-top: 20px;
+        box-shadow: 1px 5px 15px 2px rgba(0,0,0,0.1);
+        border-radius: 4px;
+        .slick-slide {
+            padding: 0px;
+        }
+    }
+`
+
+export const SliderNavigation = styled.div`
+    text-align: center;
+    margin-top: 30px;
+    width: 100%;
+    .Onboarding__slider-nav-button {
+        width: 12px;
+        height: 12px;
+        background: black;
+        border-radius: 6px;
+        padding: 0;
+        margin: 0 4px;
+        border: none;
+        background: #dedede;
+        &:hover, &:focus {
+            background: #dedede;
+        }
+        &.active-slide {
+            background: #1890ff;
+            &:hover, &:focus {
+            background: #1890ff;
+            }
+        }
+    }
+    .Onboarding__tooltip-inner {
+        .ant-tooltip-content {
+            box-shadow: 1px 5px 20px 2px rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .ant-tooltip-inner {
+            background-color: #ffffff;
+            color: #4a4a4a;
+            padding: 10px;
+            max-width: 200px;
+        }
+        .ant-tooltip-arrow {
+            border-top-color: #ffffff;
+        }
+    }
+`
+
