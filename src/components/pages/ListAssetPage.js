@@ -9,15 +9,18 @@ import * as Slides from '../UI/ListAssetSlides'
 class ListAssetPage extends React.Component {
     constructor(props) {
         super(props)
+        this.disableButtons = this.disableButtons.bind(this)
         this.next = this.next.bind(this)
         this.previous = this.previous.bind(this)
         this.goToSlide = this.goToSlide.bind(this)
         this.state = {
-          currentSlide: 0
+            buttonsDisabled: false,
+            currentSlide: 0
         }
     }
 
     next() {
+        this.disableButtons();
         this.carousel.next();
         this.setState(function(state) {
             return {
@@ -26,7 +29,15 @@ class ListAssetPage extends React.Component {
         })
     }
 
+    disableButtons() {
+        this.setState({ buttonsDisabled: true });
+        setTimeout( () => { 
+            this.setState({ buttonsDisabled: false });
+        }, 325);
+    }
+
     previous() {
+        this.disableButtons();
         this.carousel.prev();
         this.setState(function(state) {
             return {
@@ -36,6 +47,7 @@ class ListAssetPage extends React.Component {
     }
 
     goToSlide(number) {
+        this.disableButtons();
         this.carousel.goTo(number, false);
         this.setState(function() {
             return {
@@ -56,31 +68,79 @@ class ListAssetPage extends React.Component {
         console.log("Slider ", value);
     }
 
+    confirmAsset = () => {
+        this.props.history.push('/explore')
+    }
+
     render() {
-        const { currentSlide } = this.state;
+        const { currentSlide, buttonsDisabled } = this.state;
         return (
             <CarouselWrapper>
+                {currentSlide !== 0 &&
+                    <Button type="secondary" onClick={this.previous} 
+                        className="Slider__back-button" disabled={buttonsDisabled}>
+                        Back
+                    </Button>
+                }
                 <Carousel ref={node => this.carousel = node} effect="slide" dots={false} >
-                    <Slides.IntroSlide next={this.next} />
-                    <Slides.LocationSlide next={this.next} handleSelectChange={this.handleSelectChange} handleInputChange={this.handleInputChange} />
-                    <Slides.AvailableAssetsSlide next={this.next} handleSelectChange={this.handleSelectChange} handleInputChange={this.handleInputChange} />
-                    <Slides.AssetLocationSlide next={this.next} handleSelectChange={this.handleSelectChange} handleInputChange={this.handleInputChange} />
-                    <Slides.UploadSlide next={this.next} />
-                    <Slides.FeeSlide next={this.next} handleInputChange={this.handleInputChange} onSliderChange={this.onSliderChange} />
+                    <Slides.IntroSlide 
+                        next={this.next} 
+                        buttonsDisabled={buttonsDisabled} 
+                    />
+                    <Slides.LocationSlide 
+                        next={this.next} 
+                        handleSelectChange={this.handleSelectChange} 
+                        handleInputChange={this.handleInputChange} 
+                        buttonsDisabled={buttonsDisabled}
+                    />
+                    <Slides.AvailableAssetsSlide 
+                        next={this.next} 
+                        handleSelectChange={this.handleSelectChange} 
+                        handleInputChange={this.handleInputChange}
+                        buttonsDisabled={buttonsDisabled}
+                    />
+                    <Slides.AssetLocationSlide 
+                        next={this.next} 
+                        handleSelectChange={this.handleSelectChange} 
+                        handleInputChange={this.handleInputChange} 
+                        buttonsDisabled={buttonsDisabled}
+                    />
+                    <Slides.UploadSlide 
+                        next={this.next}
+                        buttonsDisabled={buttonsDisabled}
+                    />
+                    <Slides.FeeSlide 
+                        next={this.next} 
+                        handleInputChange={this.handleInputChange} 
+                        onSliderChange={this.onSliderChange}
+                        buttonsDisabled={buttonsDisabled}
+                    />
+                    <Slides.CollateralSlide 
+                        next={this.next} 
+                        handleInputChange={this.handleInputChange} 
+                        onSliderChange={this.onSliderChange} 
+                        buttonsDisabled={buttonsDisabled}
+                    />
+                    <Slides.ConfirmAsset 
+                        next={this.next} 
+                        confirmAsset={this.confirmAsset}
+                        buttonsDisabled={buttonsDisabled}
+                    />
                 </Carousel>
 
                 <SliderNavigation>
                     {
                         SliderNavigationTooltips.map(slideTooltip => {
-                            const buttonClass = currentSlide === slideTooltip.slide 
-                                ? "Onboarding__slider-nav-button active-slide" 
-                                : "Onboarding__slider-nav-button";
+                            const buttonType = currentSlide === slideTooltip.slide ? "primary" : "secondary";
                             return (
-                                <Tooltip title={slideTooltip.tooltip} 
-                                    overlayClassName="Onboarding__tooltip-inner" 
-                                    key={`slideTooltip${slideTooltip.slide}`}
-                                >
-                                    <Button className={buttonClass} onClick={() => this.goToSlide(slideTooltip.slide)} />
+                                <Tooltip title={slideTooltip.tooltip} key={`slideTooltip${slideTooltip.slide}`}>
+                                    <Button 
+                                        type={buttonType} 
+                                        className="ListAsset-nav-button" 
+                                        shape="circle"
+                                        disabled={buttonsDisabled}
+                                        onClick={() => this.goToSlide(slideTooltip.slide)} 
+                                    />
                                 </Tooltip>
                             )
                         })
@@ -93,9 +153,14 @@ class ListAssetPage extends React.Component {
 
 
 const SliderNavigationTooltips = [
-    { slide: 0, tooltip: "What is MyBit Go?" },
-    { slide: 1, tooltip: "What can you use MyBit Go for?" },
-    { slide: 2, tooltip: "What it isn't?" },
+    { slide: 0, tooltip: "KYC" },
+    { slide: 1, tooltip: "Location" },
+    { slide: 2, tooltip: "Select Asset" },
+    { slide: 3, tooltip: "Asset Location" },
+    { slide: 4, tooltip: "Supporting Documents" },
+    { slide: 5, tooltip: "Management Fee" },
+    { slide: 6, tooltip: "Asset Collateral" },
+    { slide: 7, tooltip: "Confirm Asset" }
 ]
 
 export default withRouter(ListAssetPage);

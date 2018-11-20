@@ -51,14 +51,20 @@ export const Slide = styled.div`
     .Slider__img {
         margin: 0px auto;
         padding: 10px;
+        &--myb {
+            margin: 0px auto;
+            padding: 30px 0px 52px 0px;
+        }
     }
     .Slider__input {
         &-container {
             padding: 10px 50px 0px 50px;
             > .ant-input {
+                color: #4A4A4A;
                 margin: 5px 0px;
             }
             > .ant-select {
+                color: #4A4A4A;
                 margin: 5px 0px;
                 width: 100%;
             }
@@ -69,7 +75,7 @@ export const Slide = styled.div`
         &-fee {
             padding: 30px 50px 0px 50px;
             > .ant-slider {
-                margin-bottom: 27px;
+                margin: 0px 0px 27px 0px;
             }
         }
     }
@@ -87,6 +93,38 @@ export const Slide = styled.div`
             > .ant-upload-list.ant-upload-list-text {
                 overflow-y: scroll;
                 max-height: 80px;
+            }
+        }
+    }
+    .Slider__input-collateral {
+        padding: 20px 36px 0px 36px;
+        > .ant-slider {
+            margin: 0px 0px 5px 0px;
+        }
+        > .ant-input {
+            width: 168px;
+            display: inline-block;
+            margin: 5px 0px;
+            color: #4A4A4A;
+        }
+        > span {
+            color: #1890FF;
+            margin: 0px 3px;
+        }
+    }
+    .Slider__confirm-information {
+        padding: 0px 67px 0px 72px;
+        .Slider__confirm-entry {
+            padding-bottom: 5px;
+            &-title {
+                font-weight: bold;
+            }
+            &-note {
+                font-size: 12px;
+                line-height: 12px;
+            }
+            &-file {
+                display: block;
             }
         }
     }
@@ -125,6 +163,13 @@ export const IntroList = styled.div`
 }`
 
 export const CarouselWrapper = styled.div`
+    width: 100%;
+    position: relative;
+    .Slider__back-button {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
     .ant-carousel {
         min-height: 469px;
         width: 100%;
@@ -144,39 +189,19 @@ export const SliderNavigation = styled.div`
     text-align: center;
     margin-top: 30px;
     width: 100%;
-    .Onboarding__slider-nav-button {
+    .ListAsset-nav-button {
         width: 12px;
         height: 12px;
-        background: black;
-        border-radius: 6px;
         padding: 0;
         margin: 0 4px;
-        border: none;
-        background: #dedede;
-        &:hover, &:focus {
-            background: #dedede;
-        }
-        &.active-slide {
-            background: #1890ff;
-            &:hover, &:focus {
-            background: #1890ff;
-            }
+        > button:disabled {
+            width: 12px;
+            height: 12px;
+            background-color: #dedede;
         }
     }
-    .Onboarding__tooltip-inner {
-        .ant-tooltip-content {
-            box-shadow: 1px 5px 20px 2px rgba(0,0,0,0.2);
-            border-radius: 4px;
-        }
-        .ant-tooltip-inner {
-            background-color: #ffffff;
-            color: #4a4a4a;
-            padding: 10px;
-            max-width: 200px;
-        }
-        .ant-tooltip-arrow {
-            border-top-color: #ffffff;
-        }
+    .ListAsset-nav-button.ant-btn-secondary {
+        background-color: #dedede;
     }
 `
 

@@ -7,14 +7,15 @@ import Icon from 'antd/lib/icon';
 import Upload from 'antd/lib/upload';
 import message from 'antd/lib/message';
 import Slider from 'antd/lib/slider';
-import { Slide, IntroList } from '../OnboardingPage/styledListAssetPage'
-import questionTooltip from '../../../images/list-asset/questionTooltip.png'
-import Earth from '../../../images/list-asset/assetList_earth.png'
-import Coins from '../../../images/list-asset/assetList_coins.png'
+import { Slide, IntroList } from '../OnboardingPage/styledListAssetPage';
+import questionTooltip from '../../../images/list-asset/questionTooltip.png';
+import Earth from '../../../images/list-asset/assetList_earth.png';
+import Coins from '../../../images/list-asset/assetList_coins.png';
+import MYB from '../../../images/list-asset/assetList_myb.png';
 
 const Option = Select.Option;
 
-export const IntroSlide = ({ next }) => (
+export const IntroSlide = ({ next, buttonsDisabled }) => (
     <Slide>
         <Tooltip title="(no preview on figma)" overlayClassName="Slider_overlay-tooltip">
             <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
@@ -57,12 +58,12 @@ export const IntroSlide = ({ next }) => (
             </div>
         </IntroList>
         <div className="Slider__buttons">
-            <Button type="secondary" className="Slider__buttons-continue" onClick={next}>PLACEHOLDER CIVIC BUTTON</Button>
+            <Button disabled={buttonsDisabled} type="secondary" className="Slider__buttons-continue" onClick={next}>PLACEHOLDER CIVIC BUTTON</Button>
         </div>
     </Slide>
 )
 
-export const LocationSlide = ({ next, handleInputChange, handleSelectChange }) => (
+export const LocationSlide = ({ next, handleInputChange, handleSelectChange, buttonsDisabled }) => (
     <Slide>
         <h1 className="Slider__header">What’s your location?</h1>
         <p className="Slider__note">
@@ -86,12 +87,12 @@ export const LocationSlide = ({ next, handleInputChange, handleSelectChange }) =
         </Select>
         </div>
         <div className="Slider__buttons">
-            <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
+            <Button disabled={buttonsDisabled} type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
         </div>
     </Slide>
 )
 
-export const AvailableAssetsSlide = ({ next, handleInputChange, handleSelectChange }) => (
+export const AvailableAssetsSlide = ({ next, handleInputChange, handleSelectChange, buttonsDisabled }) => (
     <Slide>
         <Tooltip title="More assets will become available in the future." overlayClassName="Slider_overlay-tooltip">
             <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
@@ -127,18 +128,18 @@ export const AvailableAssetsSlide = ({ next, handleInputChange, handleSelectChan
             </Select>
             <div className="Slider__input-label">Selected Asset value: </div>
             <Input
-                placeholder="7000"
-                prefix={<Icon type="dollar" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="$7000"
+                defaultValue="$7000"
                 name="assetvalue" onChange={(e) => handleInputChange(e)} 
             />
         </div>
         <div className="Slider__buttons">
-            <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
+            <Button disabled={buttonsDisabled} type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
         </div>
     </Slide>
 )
 
-export const AssetLocationSlide = ({ next, handleInputChange, handleSelectChange }) => (
+export const AssetLocationSlide = ({ next, handleInputChange, handleSelectChange, buttonsDisabled }) => (
     <Slide>
         <h1 className="Slider__header">Asset location?</h1>
         <p className="Slider__note">
@@ -164,12 +165,12 @@ export const AssetLocationSlide = ({ next, handleInputChange, handleSelectChange
             <Input placeholder="Postal Code" name="postalcode" onChange={(e) => handleInputChange(e)} />
         </div>
         <div className="Slider__buttons">
-            <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
+            <Button disabled={buttonsDisabled} type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
         </div>
     </Slide>
 )
 
-export const UploadSlide = ({ next }) => {
+export const UploadSlide = ({ next, buttonsDisabled }) => {
     const props = {
         name: 'file',
         multiple: true,
@@ -207,13 +208,13 @@ export const UploadSlide = ({ next }) => {
                 </Upload.Dragger>
             </div>
             <div className="Slider__buttons">
-                <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
+                <Button disabled={buttonsDisabled} type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
             </div>
         </Slide>
     )
 }
 
-export const FeeSlide = ({ next, handleInputChange, onSliderChange }) => (
+export const FeeSlide = ({ next, handleInputChange, onSliderChange, buttonsDisabled }) => (
     <Slide>
         <Tooltip 
             title="Management fees are paid out every month from profits generated by the asset."
@@ -225,17 +226,92 @@ export const FeeSlide = ({ next, handleInputChange, onSliderChange }) => (
             Here you can calculate your fee for managing the asset. This fee should include any financial 
             costs you expect to incur in order to keep the asset maintained and in full working order. 
         </p>
-        <img src={Coins} className="Slider__img" alt="Earth" />
+        <img src={Coins} className="Slider__img" alt="Coins" />
         <div className="Slider__input-fee">
             <Slider
                 min={0}
                 max={100}
                 onChange={onSliderChange}
+                defaultValue={25}
             />
             <Input placeholder="Percentage %" name="percentageFee" onChange={(e) => handleInputChange(e)} />
         </div>
         <div className="Slider__buttons">
-            <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
+            <Button disabled={buttonsDisabled} type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
         </div>
     </Slide>
 )
+
+export const CollateralSlide = ({ next, handleInputChange, onSliderChange, buttonsDisabled }) => (
+    <Slide>
+        <Tooltip 
+            title="MYB is used as an insurance mechanism, much like a deposit to 
+            protect investors' funds and incentivise proper behaviour."
+            overlayClassName="Slider_overlay-tooltip">
+            <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
+        </Tooltip>
+        <h1 className="Slider__header">Asset collateral </h1>
+        <p className="Slider__note">
+            MYB is used as an insurance mechanism, much like a deposit to protect investors' funds and incentivise proper behaviour. 
+        </p>
+        <img src={MYB} className="Slider__img--myb" alt="MYB" />
+        <div className="Slider__input-collateral">
+            <Slider
+                min={0}
+                max={100}
+                defaultValue={50}
+                onChange={onSliderChange}
+            />
+            <div>50%</div>
+            <Input placeholder="MYB" name="mybCollateral" onChange={(e) => handleInputChange(e)} />
+            <span>=</span>
+            <Input placeholder="Dollars" name="dollarsCollateral" onChange={(e) => handleInputChange(e)} />
+        </div>
+        <div className="Slider__buttons">
+            <Button disabled={buttonsDisabled} type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
+        </div>
+    </Slide>
+)
+
+export const ConfirmAsset = ({ next, confirmAsset, buttonsDisabled }) => (
+    <Slide>
+        <h1 className="Slider__header">Confirm information</h1>
+        <p className="Slider__note">
+            Please confirm your asset information below.
+        </p>
+        <div className="Slider__confirm-information">
+            <div className="Slider__confirm-entry">
+                <div className="Slider__confirm-entry-title">Location</div>
+                <div className="Slider__confirm-entry-note">Prague/Czech Republic</div>
+            </div>
+            <div className="Slider__confirm-entry">
+                <div className="Slider__confirm-entry-title">Asset</div>
+                <div className="Slider__confirm-entry-note">Bitcoin ATM</div>
+            </div>
+            <div className="Slider__confirm-entry">
+                <div className="Slider__confirm-entry-title">Asset location</div>
+                <div className="Slider__confirm-entry-note">Street name here, 130 000, Prague, Czech Republic </div>
+            </div>
+            <div className="Slider__confirm-entry">
+                <div className="Slider__confirm-entry-title">Supporting documents</div>
+                <div className="Slider__confirm-entry-note">
+                    <a href="javascript:void()" className="Slider__confirm-entry-file">Location-verification.pdf</a>
+                    <a href="javascript:void()" className="Slider__confirm-entry-file">Property.rights.pdf</a>
+                </div>
+            </div>
+            <div className="Slider__confirm-entry">
+                <div className="Slider__confirm-entry-title">Management fee</div>
+                <div className="Slider__confirm-entry-note">5%</div>
+            </div>
+            <div className="Slider__confirm-entry">
+                <div className="Slider__confirm-entry-title">Asset collateral</div>
+                <div className="Slider__confirm-entry-note">130,000 MYB 25%</div>
+            </div>
+        </div>
+        <div className="Slider__buttons">
+            <Button disabled={buttonsDisabled} type="primary" className="Slider__buttons-continue" onClick={confirmAsset}>Confirm listing</Button>
+        </div>
+    </Slide>
+)
+
+

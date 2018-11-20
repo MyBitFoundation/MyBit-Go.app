@@ -329,35 +329,15 @@ export const SliderNavigation = styled.div`
     .Onboarding__slider-nav-button {
         width: 12px;
         height: 12px;
-        background: black;
-        border-radius: 6px;
         padding: 0;
         margin: 0 4px;
-        border: none;
-        background: #dedede;
-        &:hover, &:focus {
-            background: #dedede;
-        }
-        &.active-slide {
-            background: #1890ff;
-            &:hover, &:focus {
-            background: #1890ff;
-            }
+        > button:disabled {
+            width: 12px;
+            height: 12px;
+            background-color: #dedede;
         }
     }
-    .Onboarding__tooltip-inner {
-        .ant-tooltip-content {
-            box-shadow: 1px 5px 20px 2px rgba(0,0,0,0.2);
-            border-radius: 4px;
-        }
-        .ant-tooltip-inner {
-            background-color: #ffffff;
-            color: #4a4a4a;
-            padding: 10px;
-            max-width: 200px;
-        }
-        .ant-tooltip-arrow {
-            border-top-color: #ffffff;
-        }
+    .Onboarding__slider-nav-button.ant-btn-secondary {
+        background-color: #dedede;
     }
 `

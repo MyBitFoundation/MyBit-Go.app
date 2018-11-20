@@ -18,15 +18,25 @@ import RightArrow from '../../images/onboarding/arrow-right.png'
 class OnboardingPage extends React.Component {
     constructor(props) {
         super(props)
+        this.disableButtons = this.disableButtons.bind(this)
         this.next = this.next.bind(this)
         this.previous = this.previous.bind(this)
         this.goToSlide = this.goToSlide.bind(this)
         this.state = {
-          currentSlide: 0
+          currentSlide: 0,
+          buttonsDisabled: false
         }
     }
 
+    disableButtons() {
+        this.setState({ buttonsDisabled: true });
+        setTimeout( () => { 
+            this.setState({ buttonsDisabled: false });
+        }, 325);
+    }
+
     next() {
+        this.disableButtons();
         this.carousel.next();
         this.setState(function(state) {
             return {
@@ -36,6 +46,7 @@ class OnboardingPage extends React.Component {
     }
 
     previous() {
+        this.disableButtons();
         this.carousel.prev();
         this.setState(function(state) {
             return {
@@ -45,6 +56,7 @@ class OnboardingPage extends React.Component {
     }
 
     goToSlide(number) {
+        this.disableButtons();
         this.carousel.goTo(number, false);
         this.setState(function() {
             return {
@@ -54,7 +66,7 @@ class OnboardingPage extends React.Component {
     }
 
     render() {
-        const { currentSlide } = this.state;
+        const { currentSlide, buttonsDisabled } = this.state;
         return (
             <CarouselWrapper>
                 <Carousel ref={node => this.carousel = node} effect="slide" dots={false} >
@@ -76,7 +88,7 @@ class OnboardingPage extends React.Component {
                             you and only you are responsible for your security.
                         </p>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What is MyBit Go? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -98,11 +110,11 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">Be protected from failure. If MyBit Go ceases to exist, your investments will still be safe</li>
                         </ul>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What it isn't <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </Slide>
 
                     <Slide>
@@ -119,12 +131,12 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">We do not guarantee returns</li>
                         </ul>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What is blockchain? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </Slide>
 
                    <Slide>
@@ -147,11 +159,11 @@ class OnboardingPage extends React.Component {
                         It is highly secure. Bitcoin has been around for over 10 years and its network has not suffered one hack or malfunction.
                         </p>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 Next <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </Slide>
 
                     <Slide>
@@ -169,11 +181,11 @@ class OnboardingPage extends React.Component {
                             <img src={SafeGraphic} className="Onboarding__img-static" alt="MyBit Globe" />
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What is Ethereum? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </Slide>
 
                     <Slide>
@@ -196,11 +208,11 @@ class OnboardingPage extends React.Component {
                             <img src={EthereumGraphic} className="Onboarding__img-static" alt="MyBit Globe" />
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 Smart contracts <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </Slide>
 
                     <Slide>
@@ -221,11 +233,11 @@ class OnboardingPage extends React.Component {
                             <img src={SmartContract} className="Onboarding__img-static" alt="MyBit Globe" />
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 How do I invest? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </Slide>
 
                     <Slide>
@@ -243,11 +255,11 @@ class OnboardingPage extends React.Component {
                         When it begins generating revenue, you will receive the profits to your account in real-time!
                         </p>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 How to secure my assets? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </Slide>
 
                     <Slide>
@@ -276,11 +288,11 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">For added protection, get a hardware wallet.</li>
                         </ul>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 Next <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
                     </Slide>
 
                     <Slide>
@@ -314,26 +326,27 @@ class OnboardingPage extends React.Component {
                         >Get Ether
                         </BancorWidgetButton>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
+                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
                                 Get started and explore <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
-                        <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                        <Button className="Onboarding__buttons-back" disabled={buttonsDisabled} onClick={this.previous}>Back</Button>
                     </Slide>
                 </Carousel>
 
                 <SliderNavigation>
                     {
                         SliderNavigationTooltips.map(slideTooltip => {
-                            const buttonClass = currentSlide === slideTooltip.slide 
-                                ? "Onboarding__slider-nav-button active-slide" 
-                                : "Onboarding__slider-nav-button";
+                            const buttonType = currentSlide === slideTooltip.slide ? "primary" : "secondary";
                             return (
-                                <Tooltip title={slideTooltip.tooltip} 
-                                    overlayClassName="Onboarding__tooltip-inner" 
-                                    key={`slideTooltip${slideTooltip.slide}`}
-                                >
-                                    <Button className={buttonClass} onClick={() => this.goToSlide(slideTooltip.slide)} />
+                                <Tooltip title={slideTooltip.tooltip} key={`slideTooltip${slideTooltip.slide}`}>
+                                    <Button 
+                                        type={buttonType} 
+                                        className="Onboarding__slider-nav-button" 
+                                        shape="circle"
+                                        disabled={buttonsDisabled}
+                                        onClick={() => this.goToSlide(slideTooltip.slide)} 
+                                    />
                                 </Tooltip>
                             )
                         })
