@@ -151,7 +151,6 @@ class ListAssetPage extends React.Component {
     }
 }
 
-
 const SliderNavigationTooltips = [
     { slide: 0, tooltip: "KYC" },
     { slide: 1, tooltip: "Location" },
