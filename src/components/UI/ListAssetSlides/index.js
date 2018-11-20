@@ -295,8 +295,8 @@ export const ConfirmAsset = ({ next, confirmAsset, buttonsDisabled }) => (
             <div className="Slider__confirm-entry">
                 <div className="Slider__confirm-entry-title">Supporting documents</div>
                 <div className="Slider__confirm-entry-note">
-                    <a href="javascript:void()" className="Slider__confirm-entry-file">Location-verification.pdf</a>
-                    <a href="javascript:void()" className="Slider__confirm-entry-file">Property.rights.pdf</a>
+                    <a href="/list-asset" className="Slider__confirm-entry-file">Location-verification.pdf</a>
+                    <a href="/list-asset" className="Slider__confirm-entry-file">Property.rights.pdf</a>
                 </div>
             </div>
             <div className="Slider__confirm-entry">

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
 import Carousel from 'antd/lib/carousel';
-import { CarouselWrapper, SliderNavigation, Slide, IntroList } from '../UI/OnboardingPage/styledListAssetPage'
+import { CarouselWrapper, SliderNavigation } from '../UI/OnboardingPage/styledListAssetPage'
 import * as Slides from '../UI/ListAssetSlides'
 
 class ListAssetPage extends React.Component {
