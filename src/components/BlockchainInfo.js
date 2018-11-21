@@ -262,7 +262,7 @@ class BlockchainInfo extends React.Component {
       isLoading: true,
       transactionStatus: '',
       alertType: 'info',
-      alertMessage: 'After accepting the transaction in Metamask it may take several minutes for it to be processed by the Ethereum Network. Meanwhile, you can still explore the platform.',
+      alertMessage: 'After accepting the transaction in Metamask it may take several minutes for it to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
     });
 
     try {

@@ -9,11 +9,6 @@ const app = express();
 let assets = [];
 let assetsLoaded = false;
 
-/* const staticUserAuth = basicAuth({
-  users: { admin: process.env.MYBIT_GO_ADMIN_PASSWORD },
-  challenge: true,
-}); */
-
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
