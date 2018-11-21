@@ -69,7 +69,7 @@ export const LocationSlide = ({ next, handleInputChange, handleSelectChange, but
         <p className="Slider__note">
             Different assets will be available to fund depending on where you are.
         </p>
-        <img src={Earth} className="Slider__img" alt="Earth" />
+        <img src={Earth} className="Slider__img" alt="Earth" width="120px" height="120px"/>
         <div className="Slider__input-container">
             <Input placeholder="City" name="locationCity" onChange={(e) => handleInputChange(e)} />
             <Select
@@ -226,7 +226,7 @@ export const FeeSlide = ({ next, handleInputChange, onSliderChange, buttonsDisab
             Here you can calculate your fee for managing the asset. This fee should include any financial 
             costs you expect to incur in order to keep the asset maintained and in full working order. 
         </p>
-        <img src={Coins} className="Slider__img" alt="Coins" />
+        <img src={Coins} className="Slider__img" alt="Coins" width="83px" height="100px" />
         <div className="Slider__input-fee">
             <Slider
                 min={0}
@@ -254,7 +254,7 @@ export const CollateralSlide = ({ next, handleInputChange, onSliderChange, butto
         <p className="Slider__note">
             MYB is used as an insurance mechanism, much like a deposit to protect investors' funds and incentivise proper behaviour. 
         </p>
-        <img src={MYB} className="Slider__img--myb" alt="MYB" />
+        <img src={MYB} className="Slider__img--myb" alt="MYB" width="90px" heght="65px" />
         <div className="Slider__input-collateral">
             <Slider
                 min={0}

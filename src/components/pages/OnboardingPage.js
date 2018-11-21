@@ -95,7 +95,7 @@ class OnboardingPage extends React.Component {
 
 
                     <Slide>
-                        <img src={MyBitGlobe} className="Onboarding__img-globe" alt="MyBit Onboarding Slide 2" />
+                        <img src={MyBitGlobe} className="Onboarding__img-globe" alt="MyBit Globe" />
                         <h1 className="Onboarding__main-title--long">
                           The <span className="Onboarding__main-title--blue">next generation</span> <br />investment portal
                         </h1>
@@ -117,7 +117,7 @@ class OnboardingPage extends React.Component {
                     </Slide>
 
                     <Slide>
-                        <img src={MyBitDesk} className="Onboarding__img-desk" alt="MyBit Onboarding Slide 3" />
+                        <img src={MyBitDesk} className="Onboarding__img-desk" alt="MyBit Desk" />
                         <h1 className="Onboarding__main-title">
                           It is <span className="Onboarding__main-title--red">not</span> an <br /> investment fund
                         </h1>
@@ -179,7 +179,7 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list--small-mt-item">Give ownership back to the people, putting them back in control of capital, investments, and value</li>
                         </ul>
                         <div className="Onboarding__static-img-wrapper">
-                            <img src={SafeGraphic} className="Onboarding__img-safe-graphic" alt="MyBit Globe" />
+                            <img src={SafeGraphic} className="Onboarding__img-safe-graphic" alt="MyBit Safe Graphic" />
                         </div>
                         <div className="Onboarding__buttons">
                             <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -206,7 +206,7 @@ class OnboardingPage extends React.Component {
                             </p>
                         </div>
                         <div className="Onboarding__static-img-wrapper">
-                            <img src={EthereumGraphic} className="Onboarding__img-ethereum" alt="MyBit Globe" />
+                            <img src={EthereumGraphic} className="Onboarding__img-ethereum" alt="MyBit Ethereum Graphic" />
                         </div>
                         <div className="Onboarding__buttons">
                             <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -233,7 +233,7 @@ class OnboardingPage extends React.Component {
                             </p>
                         </div>
                         <div className="Onboarding__static-img-wrapper">
-                            <img src={SmartContract} className="Onboarding__img-smart-contract" alt="MyBit Globe" />
+                            <img src={SmartContract} className="Onboarding__img-smart-contract" alt="MyBit Smart Contract Graphic" />
                         </div>
                         <div className="Onboarding__buttons">
                             <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
@@ -270,7 +270,7 @@ class OnboardingPage extends React.Component {
                     </Slide>
 
                     <Slide>
-                        <img src={Key} className="Onboarding__img-key" alt="MyBit Globe" />
+                        <img src={Key} className="Onboarding__img-key" alt="MyBit Key Graphic" />
                         <h1 className="Onboarding__main-title">
                           <span className="Onboarding__main-title--blue">Key</span> security
                         </h1>
@@ -306,7 +306,7 @@ class OnboardingPage extends React.Component {
                     </Slide>
 
                     <Slide>
-                        <img src={SetupGraphic} className="Onboarding__img-setup" alt="MyBit Globe" />
+                        <img src={SetupGraphic} className="Onboarding__img-setup" alt="MyBit Setup Graphic" />
                         <h1 className="Onboarding__main-title">
                           <span className="Onboarding__main-title--blue">Required</span> setup
                         </h1>
