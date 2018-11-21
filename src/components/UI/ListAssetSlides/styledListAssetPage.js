@@ -13,6 +13,10 @@ export const Slide = styled.div`
         padding: 25px 40px 0px 40px;
         margin: 0px;
         text-align: center;
+        @media(max-width: 500px) {
+            line-height: normal;
+            padding: 20px 20px 0px 20px;
+        }
     }
     .Slider__note {
         margin-top: 8px;
@@ -21,6 +25,9 @@ export const Slide = styled.div`
         font-size: 14px;
         text-align: center;
         padding: 0px 30px;
+        @media(max-width: 500px) {
+            padding: 0px 20px 0px 20px;
+        }
     }
     .Slider__buttons {
         text-align: center;
@@ -30,6 +37,10 @@ export const Slide = styled.div`
         &-continue {
             min-width: 154px;
             font-weight: 500;
+        }
+        @media(max-width: 500px) {
+            position: static;
+            padding: 10px 0px;
         }
     }
     .Slider__tooltip {
@@ -98,6 +109,9 @@ export const Slide = styled.div`
     }
     .Slider__input-collateral {
         padding: 20px 36px 0px 36px;
+        @media(max-width: 500px) {
+            text-align: center;
+        }
         > .ant-slider {
             margin: 0px 0px 5px 0px;
         }
@@ -106,6 +120,9 @@ export const Slide = styled.div`
             display: inline-block;
             margin: 5px 0px;
             color: #4A4A4A;
+            @media(max-width: 500px) {
+                width: 45%;
+            }
         }
         > span {
             color: #1890FF;
@@ -114,6 +131,10 @@ export const Slide = styled.div`
     }
     .Slider__confirm-information {
         padding: 0px 67px 0px 72px;
+        @media(max-width: 500px) {
+           padding: 0px 30px 0px 30px;
+           text-align: center;
+        }
         .Slider__confirm-entry {
             padding-bottom: 5px;
             &-title {
@@ -134,6 +155,9 @@ export const IntroList = styled.div`
     padding-left: 91px;
     padding-right: 48px;
     font-family: Roboto;
+    @media(max-width: 500px) {
+        padding: 0px 20px 0px 40px;
+    }
     .IntroListItem {
         position: relative;
         padding-bottom: 5px;
@@ -157,6 +181,11 @@ export const IntroList = styled.div`
             top: -12px;
             left: -22px;
             color: #1890ff;
+            @media(max-width: 500px) {
+                line-height: normal;
+                top: -9px;
+                left: -18px;
+            }
         }
     }
     
@@ -165,10 +194,16 @@ export const IntroList = styled.div`
 export const CarouselWrapper = styled.div`
     width: 100%;
     position: relative;
-    .Slider__back-button {
+    .Slider__back-button-wrapper {
         position: absolute;
         top: 0px;
         left: 0px;
+        @media(max-width: 500px) {
+            position: static;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
     }
     .ant-carousel {
         min-height: 469px;

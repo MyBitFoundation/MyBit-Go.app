@@ -77,10 +77,12 @@ class ListAssetPage extends React.Component {
         return (
             <CarouselWrapper>
                 {currentSlide !== 0 &&
-                    <Button type="secondary" onClick={this.previous} 
-                        className="Slider__back-button" disabled={buttonsDisabled}>
-                        Back
-                    </Button>
+                    <div className="Slider__back-button-wrapper">
+                        <Button type="secondary" onClick={this.previous} 
+                            className="Slider__back-button" disabled={buttonsDisabled}>
+                            Back
+                        </Button>
+                    </div>
                 }
                 <Carousel ref={node => this.carousel = node} effect="slide" dots={false} >
                     <Slides.IntroSlide 
