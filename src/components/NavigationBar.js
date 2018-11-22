@@ -40,7 +40,8 @@ const NavigationBar = ({ currentPath, setAssetsStatusState }) => {
     }, {
       name: 'List Asset',
       icon: listAssetIcon,
-      disabled: true,
+      selected: currentPath === '/list-asset',
+      url: '/list-asset',
     }, {
       name: 'MYDAX',
       icon: exchangeIcon,

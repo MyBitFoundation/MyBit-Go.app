@@ -135,7 +135,7 @@ class ListAssetPage extends React.Component {
                         SliderNavigationTooltips.map(slideTooltip => {
                             const buttonType = currentSlide === slideTooltip.slide ? "primary" : "secondary";
                             return (
-                                <Tooltip title={slideTooltip.tooltip} key={`slideTooltip${slideTooltip.slide}`}>
+                                <Tooltip title={slideTooltip.tooltip} key={`slideTooltip${slideTooltip.slide}`} overlayClassName="ListAssetTooltip">
                                     <Button 
                                         type={buttonType} 
                                         className="ListAsset-nav-button" 

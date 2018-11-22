@@ -172,7 +172,7 @@ export const IntroList = styled.div`
             line-height: normal;
             font-size: 12px;
             color: rgba(0, 0, 0, 0.65);
-            font-weight: 500;
+            font-weight: 400;
         }
         &::before {
             content: "•"; 
