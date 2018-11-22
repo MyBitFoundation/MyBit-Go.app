@@ -17,55 +17,38 @@ import RightArrow from '../../images/onboarding/arrow-right.png'
 class OnboardingPage extends React.Component {
     constructor(props) {
         super(props)
-        this.disableButtons = this.disableButtons.bind(this)
         this.next = this.next.bind(this)
         this.previous = this.previous.bind(this)
         this.goToSlide = this.goToSlide.bind(this)
         this.state = {
-          currentSlide: 0,
-          buttonsDisabled: false
+          currentSlide: 0
         }
     }
 
-    disableButtons() {
-        this.setState({ buttonsDisabled: true });
-        setTimeout( () => { 
-            this.setState({ buttonsDisabled: false });
+    getCurrentSlide = () => {
+        setTimeout(() => {
+            let activeSlide = parseInt(document.getElementsByClassName('slick-current')[0].getAttribute('data-index'));
+            this.setState({ currentSlide: activeSlide })
         }, 325);
     }
 
     next() {
-        this.disableButtons();
         this.carousel.next();
-        this.setState(function(state) {
-            return {
-                currentSlide: state.currentSlide + 1
-            }
-        })
+        this.getCurrentSlide();
     }
 
     previous() {
-        this.disableButtons();
         this.carousel.prev();
-        this.setState(function(state) {
-            return {
-                currentSlide: state.currentSlide - 1
-            }
-        })
+        this.getCurrentSlide();
     }
 
     goToSlide(number) {
-        this.disableButtons();
         this.carousel.goTo(number, false);
-        this.setState(function() {
-            return {
-                currentSlide: number
-            }
-        })
+        this.getCurrentSlide();
     }
 
     render() {
-        const { currentSlide, buttonsDisabled } = this.state;
+        const { currentSlide } = this.state;
         return (
             <CarouselWrapper>
                 <Carousel ref={node => this.carousel = node} effect="slide" dots={false} >
@@ -87,7 +70,7 @@ class OnboardingPage extends React.Component {
                             you and only you are responsible for your security.
                         </p>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What is MyBit Go? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -109,8 +92,8 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">Be protected from failure. If MyBit Go ceases to exist, your investments will still be safe</li>
                         </ul>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What it isn't <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -130,11 +113,11 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">We do not guarantee returns</li>
                         </ul>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What is blockchain? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
+                            <Button className="Onboarding__buttons-skip" onClick={() => this.goToSlide(9)}>Skip tutorial</Button>
                         </div>
                     </Slide>
 
@@ -160,8 +143,8 @@ class OnboardingPage extends React.Component {
                             </p>
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 Next <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -182,8 +165,8 @@ class OnboardingPage extends React.Component {
                             <img src={SafeGraphic} className="Onboarding__img-safe-graphic" alt="MyBit Safe Graphic" />
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 What is Ethereum? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -209,8 +192,8 @@ class OnboardingPage extends React.Component {
                             <img src={EthereumGraphic} className="Onboarding__img-ethereum" alt="MyBit Ethereum Graphic" />
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 Smart contracts <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -236,8 +219,8 @@ class OnboardingPage extends React.Component {
                             <img src={SmartContract} className="Onboarding__img-smart-contract" alt="MyBit Smart Contract Graphic" />
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 How do I invest? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -261,8 +244,8 @@ class OnboardingPage extends React.Component {
                             </p>
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 How to secure my assets? <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -298,8 +281,8 @@ class OnboardingPage extends React.Component {
                             <li className="Onboarding__list-item">For added protection, get a hardware wallet.</li>
                         </ul>
                         <div className="Onboarding__buttons">
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={this.next}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
                                 Next <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -332,8 +315,8 @@ class OnboardingPage extends React.Component {
                             </p>
                         </div>
                         <div className="Onboarding__buttons">
-                            <Button className="Onboarding__buttons-back" disabled={buttonsDisabled} onClick={this.previous}>Back</Button>
-                            <Button disabled={buttonsDisabled} className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
+                            <Button className="Onboarding__buttons-back" onClick={this.previous}>Back</Button>
+                            <Button className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
                                 Get started and explore <img src={RightArrow} className="Onboarding__buttons-next-arrow" alt="Next Button Arrow" />
                             </Button>
                         </div>
@@ -350,7 +333,6 @@ class OnboardingPage extends React.Component {
                                         type={buttonType} 
                                         className="Onboarding__slider-nav-button" 
                                         shape="circle"
-                                        disabled={buttonsDisabled}
                                         onClick={() => this.goToSlide(slideTooltip.slide)} 
                                     />
                                 </Tooltip>

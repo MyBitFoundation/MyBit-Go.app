@@ -9,48 +9,34 @@ import * as Slides from '../UI/ListAssetSlides'
 class ListAssetPage extends React.Component {
     constructor(props) {
         super(props)
-        this.disableButtons = this.disableButtons.bind(this)
         this.next = this.next.bind(this)
         this.previous = this.previous.bind(this)
         this.goToSlide = this.goToSlide.bind(this)
         this.state = {
-            buttonsDisabled: false,
             currentSlide: 0
         }
     }
 
     next() {
-        this.disableButtons();
-        this.setState(function(state) {
-            return {
-                currentSlide: state.currentSlide + 1
-            }
-        }, this.carousel.next())
+        this.carousel.next();
+        this.getCurrentSlide();
     }
 
-    disableButtons() {
-        this.setState({ buttonsDisabled: true });
-        setTimeout( () => { 
-            this.setState({ buttonsDisabled: false });
+    getCurrentSlide = () => {
+        setTimeout(() => {
+            let activeSlide = parseInt(document.getElementsByClassName('slick-current')[0].getAttribute('data-index'));
+            this.setState({ currentSlide: activeSlide })
         }, 325);
     }
 
     previous() {
-        this.disableButtons();
-        this.setState(function(state) {
-            return {
-                currentSlide: state.currentSlide - 1
-            }
-        }, this.carousel.prev())
+        this.carousel.prev();
+        this.getCurrentSlide();
     }
 
     goToSlide(number) {
-        this.disableButtons();
-        this.setState( function(state) {
-            return {
-                currentSlide: number
-            }
-        }, this.carousel.goTo(this.state.currentSlide, false))
+        this.carousel.goTo(number, false);
+        this.getCurrentSlide();
     }
 
     handleSelectChange(value) {
@@ -70,60 +56,52 @@ class ListAssetPage extends React.Component {
     }
 
     render() {
-        const { currentSlide, buttonsDisabled } = this.state;
+        const { currentSlide } = this.state;
         return (
             <CarouselWrapper>
                 {currentSlide !== 0 &&
                     <div className="Slider__back-button-wrapper">
                         <Button type="secondary" onClick={this.previous} 
-                            className="Slider__back-button" disabled={buttonsDisabled}>
+                            className="Slider__back-button">
                             Back
                         </Button>
                     </div>
                 }
                 <Carousel ref={node => this.carousel = node} effect="slide" dots={false} >
                     <Slides.IntroSlide 
-                        next={this.next} 
-                        buttonsDisabled={buttonsDisabled} 
+                        next={this.next}
                     />
                     <Slides.LocationSlide 
                         next={this.next} 
                         handleSelectChange={this.handleSelectChange} 
                         handleInputChange={this.handleInputChange} 
-                        buttonsDisabled={buttonsDisabled}
                     />
                     <Slides.AvailableAssetsSlide 
                         next={this.next} 
                         handleSelectChange={this.handleSelectChange} 
                         handleInputChange={this.handleInputChange}
-                        buttonsDisabled={buttonsDisabled}
                     />
                     <Slides.AssetLocationSlide 
                         next={this.next} 
                         handleSelectChange={this.handleSelectChange} 
                         handleInputChange={this.handleInputChange} 
-                        buttonsDisabled={buttonsDisabled}
                     />
                     <Slides.UploadSlide 
                         next={this.next}
-                        buttonsDisabled={buttonsDisabled}
                     />
                     <Slides.FeeSlide 
                         next={this.next} 
                         handleInputChange={this.handleInputChange} 
                         onSliderChange={this.onSliderChange}
-                        buttonsDisabled={buttonsDisabled}
                     />
                     <Slides.CollateralSlide 
                         next={this.next} 
                         handleInputChange={this.handleInputChange} 
                         onSliderChange={this.onSliderChange} 
-                        buttonsDisabled={buttonsDisabled}
                     />
                     <Slides.ConfirmAsset 
                         next={this.next} 
                         confirmAsset={this.confirmAsset}
-                        buttonsDisabled={buttonsDisabled}
                     />
                 </Carousel>
 
@@ -137,7 +115,6 @@ class ListAssetPage extends React.Component {
                                         type={buttonType} 
                                         className="ListAsset-nav-button" 
                                         shape="circle"
-                                        disabled={buttonsDisabled}
                                         onClick={() => this.goToSlide(slideTooltip.slide)} 
                                     />
                                 </Tooltip>
