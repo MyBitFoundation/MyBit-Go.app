@@ -79,6 +79,9 @@ export const Slide = styled.div`
                 margin: 5px 0px;
                 width: 100%;
             }
+            > .ant-input-number {
+                width: 100%;
+            }
         }
         &-label {
             padding: 24px 0px 8px 0px;
@@ -87,6 +90,9 @@ export const Slide = styled.div`
             padding: 30px 50px 0px 50px;
             > .ant-slider {
                 margin: 0px 0px 27px 0px;
+            }
+            > .ant-input-number {
+                width: 100%;
             }
         }
     }
@@ -115,7 +121,7 @@ export const Slide = styled.div`
         > .ant-slider {
             margin: 0px 0px 5px 0px;
         }
-        > .ant-input {
+        > .ant-input-number {
             width: 168px;
             display: inline-block;
             margin: 5px 0px;

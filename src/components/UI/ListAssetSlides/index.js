@@ -2,6 +2,7 @@ import React from 'react';
 import Button from 'antd/lib/button';
 import Tooltip from 'antd/lib/tooltip';
 import Input from 'antd/lib/input';
+import InputNumber from 'antd/lib/input-number'
 import Select from 'antd/lib/select';
 import Icon from 'antd/lib/icon';
 import Upload from 'antd/lib/upload';
@@ -12,6 +13,7 @@ import questionTooltip from '../../../images/list-asset/questionTooltip.png';
 import Earth from '../../../images/list-asset/assetList_earth.png';
 import Coins from '../../../images/list-asset/assetList_coins.png';
 import MYB from '../../../images/list-asset/assetList_myb.png';
+import * as DummyData from './dummyData'
 
 const Option = Select.Option;
 
@@ -71,19 +73,20 @@ export const LocationSlide = ({ next, handleInputChange, handleSelectChange }) =
         </p>
         <img src={Earth} className="Slider__img" alt="Earth" width="120px" height="120px"/>
         <div className="Slider__input-container">
-            <Input placeholder="City" name="locationCity" onChange={(e) => handleInputChange(e)} />
+            <Input placeholder="City" name="userCity" onChange={(e) => handleInputChange(e)} />
             <Select
             showSearch
             style={{ width: "100%", marginTop: "10px" }}
             placeholder="Country"
             optionFilterProp="children"
-            onChange={handleSelectChange}
+            onChange={(value) => handleSelectChange(value, "userCountry")}
             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
         >
-            <Option value="bulgaria">Bulgaria</Option>
-            <Option value="unitedkingdom">United Kingdom</Option>
-            <Option value="spain">Spain</Option>
-            <Option value="portugal">Portugal</Option>
+            { 
+                DummyData.Countries.map(country => (
+                    <Option key={country} value={country}>{country}</Option>
+                ))
+            }
         </Select>
         </div>
         <div className="Slider__buttons">
@@ -92,7 +95,7 @@ export const LocationSlide = ({ next, handleInputChange, handleSelectChange }) =
     </Slide>
 )
 
-export const AvailableAssetsSlide = ({ next, handleInputChange, handleSelectChange }) => (
+export const AvailableAssetsSlide = ({ next, assetValue, handleSelectChange }) => (
     <Slide>
         <Tooltip title="More assets will become available in the future." overlayClassName="Slider_overlay-tooltip">
             <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
@@ -107,30 +110,37 @@ export const AvailableAssetsSlide = ({ next, handleInputChange, handleSelectChan
                 style={{ width: "100%", marginTop: "10px" }}
                 placeholder="Asset Category"
                 optionFilterProp="children"
-                onChange={handleSelectChange}
+                onChange={(value) => handleSelectChange(value, "category")}
                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             >
-                <Option value="option1">Crypto</Option>
-                <Option value="option2">Energy</Option>
-                <Option value="option3">Real Estate</Option>
+                { 
+                    DummyData.Categories.map(category => (
+                        <Option key={category} value={category}>{category}</Option>
+                    ))
+                }
             </Select>
             <Select
                 showSearch
                 style={{ width: "100%", marginTop: "10px" }}
                 placeholder="Available Assets"
                 optionFilterProp="children"
-                onChange={handleSelectChange}
+                onChange={(value) => handleSelectChange(value, "asset")}
                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             >
-                <Option value="option1">Crypto</Option>
-                <Option value="option2">Energy</Option>
-                <Option value="option3">Real Estate</Option>
+                { 
+                    DummyData.Assets.map(asset => (
+                        <Option key={asset} value={asset}>{asset}</Option>
+                    ))
+                }
             </Select>
             <div className="Slider__input-label">Selected Asset value: </div>
-            <Input
-                placeholder="$7000"
-                defaultValue="$7000"
-                name="assetvalue" onChange={(e) => handleInputChange(e)} 
+            <InputNumber
+                placeholder="Funding Goal"
+                name="assetValue"
+                value={assetValue}
+                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => handleSelectChange(value, "assetValue")}
             />
         </div>
         <div className="Slider__buttons">
@@ -146,23 +156,24 @@ export const AssetLocationSlide = ({ next, handleInputChange, handleSelectChange
             This is where your asset is going to be once fully funded.
         </p>
         <div className="Slider__input-container">
-            <Input placeholder="Address Line 1" name="address1" onChange={(e) => handleInputChange(e)} />
-            <Input placeholder="Address Line 2" name="address2" onChange={(e) => handleInputChange(e)} />
-            <Input placeholder="City/Town"name="city/town" onChange={(e) => handleInputChange(e)} />
+            <Input placeholder="Address Line 1" name="assetAddress1" onChange={(e) => handleInputChange(e)} />
+            <Input placeholder="Address Line 2" name="assetAddress2" onChange={(e) => handleInputChange(e)} />
+            <Input placeholder="City/Town"name="assetCity" onChange={(e) => handleInputChange(e)} />
             <Select
                 showSearch
                 placeholder="Country"
                 optionFilterProp="children"
-                onChange={handleSelectChange}
+                onChange={(value) => handleSelectChange(value, "assetCountry")}
                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             >
-                <Option value="bulgaria">Bulgaria</Option>
-                <Option value="unitedkingdom">United Kingdom</Option>
-                <Option value="spain">Spain</Option>
-                <Option value="portugal">Portugal</Option>
+                { 
+                    DummyData.Countries.map(country => (
+                        <Option key={country} value={country}>{country}</Option>
+                    ))
+                }
             </Select>
-            <Input placeholder="Province/Region" name="province/region" onChange={(e) => handleInputChange(e)} />
-            <Input placeholder="Postal Code" name="postalcode" onChange={(e) => handleInputChange(e)} />
+            <Input placeholder="Province/Region" name="assetProvince" onChange={(e) => handleInputChange(e)} />
+            <Input placeholder="Postal Code" name="assetPostalCode" onChange={(e) => handleInputChange(e)} />
         </div>
         <div className="Slider__buttons">
             <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
@@ -170,7 +181,7 @@ export const AssetLocationSlide = ({ next, handleInputChange, handleSelectChange
     </Slide>
 )
 
-export const UploadSlide = ({ next }) => {
+export const UploadSlide = ({ next, handleFileUpload }) => {
     const props = {
         name: 'file',
         multiple: true,
@@ -199,7 +210,7 @@ export const UploadSlide = ({ next }) => {
                 While not essential, assets with supporting documents are more likely to get funded.
             </p>
             <div className="Slider__upload-container">
-                <Upload.Dragger {...props} className="Slider__upload-content">
+                <Upload.Dragger {...props} className="Slider__upload-content" onChange={handleFileUpload}>
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                     </p>
@@ -214,7 +225,7 @@ export const UploadSlide = ({ next }) => {
     )
 }
 
-export const FeeSlide = ({ next, handleInputChange, onSliderChange }) => (
+export const FeeSlide = ({ next, handleSliderChange, handleSelectChange, managementFee }) => (
     <Slide>
         <Tooltip 
             title="Management fees are paid out every month from profits generated by the asset."
@@ -231,10 +242,19 @@ export const FeeSlide = ({ next, handleInputChange, onSliderChange }) => (
             <Slider
                 min={0}
                 max={100}
-                onChange={onSliderChange}
-                defaultValue={25}
+                value={managementFee}
+                onChange={(value) => handleSelectChange(value, "managementFee")}
+                defaultValue={managementFee}
             />
-            <Input placeholder="Percentage %" name="percentageFee" onChange={(e) => handleInputChange(e)} />
+            <InputNumber
+                defaultValue={managementFee}
+                min={0}
+                max={100}
+                value={managementFee}
+                formatter={value => `${value}%`}
+                parser={value => value.replace('%', '')}
+                onChange={(value) => handleSelectChange(value, "managementFee")}
+            />
         </div>
         <div className="Slider__buttons">
             <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
@@ -242,11 +262,11 @@ export const FeeSlide = ({ next, handleInputChange, onSliderChange }) => (
     </Slide>
 )
 
-export const CollateralSlide = ({ next, handleInputChange, onSliderChange }) => (
-    <Slide>
+export const CollateralSlide = ({ next, handleCollateralChange, collateralPercentage, collateralMyb, collateralDollar, constraints }) => {
+    return (
+        <Slide>
         <Tooltip 
-            title="MYB is used as an insurance mechanism, much like a deposit to 
-            protect investors' funds and incentivise proper behaviour."
+            title="Assets with a high collateral are more likely to get funded."
             overlayClassName="Slider_overlay-tooltip">
             <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
         </Tooltip>
@@ -259,21 +279,43 @@ export const CollateralSlide = ({ next, handleInputChange, onSliderChange }) => 
             <Slider
                 min={0}
                 max={100}
-                defaultValue={50}
-                onChange={onSliderChange}
+                defaultValue={collateralPercentage}
+                value={collateralPercentage}
+                onChange={(value) => handleCollateralChange(value, "percentage")}
             />
-            <div>50%</div>
-            <Input placeholder="MYB" name="mybCollateral" onChange={(e) => handleInputChange(e)} />
+            <div>{`${collateralPercentage}%`}</div>
+            <InputNumber
+                defaultValue={collateralMyb}
+                value={collateralMyb}
+                step={0.1}
+                precision={2}
+                min={constraints.min_myb}
+                max={constraints.max_myb}
+                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => handleCollateralChange(value, "myb")}
+            />
             <span>=</span>
-            <Input placeholder="Dollars" name="dollarsCollateral" onChange={(e) => handleInputChange(e)} />
+            <InputNumber
+                defaultValue={collateralDollar}
+                value={collateralDollar}
+                step={0.1}
+                precision={2}
+                min={constraints.min_dollars}
+                max={constraints.max_dollars}
+                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                onChange={(value) => handleCollateralChange(value, "dollar")}
+            />
         </div>
         <div className="Slider__buttons">
             <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
         </div>
     </Slide>
-)
+    )
+}
 
-export const ConfirmAsset = ({ next, confirmAsset }) => (
+export const ConfirmAsset = ({ next, confirmAsset, dataObject }) => (
     <Slide>
         <h1 className="Slider__header">Confirm information</h1>
         <p className="Slider__note">
@@ -282,30 +324,44 @@ export const ConfirmAsset = ({ next, confirmAsset }) => (
         <div className="Slider__confirm-information">
             <div className="Slider__confirm-entry">
                 <div className="Slider__confirm-entry-title">Location</div>
-                <div className="Slider__confirm-entry-note">Prague/Czech Republic</div>
+                <div className="Slider__confirm-entry-note">
+                    {dataObject.userCity === '' ? '[city missing]' : dataObject.userCity}
+                    /
+                    {dataObject.userCountry === '' ? '[country missing]' : dataObject.userCountry}
+                </div>
             </div>
             <div className="Slider__confirm-entry">
                 <div className="Slider__confirm-entry-title">Asset</div>
-                <div className="Slider__confirm-entry-note">Bitcoin ATM</div>
+                <div className="Slider__confirm-entry-note">
+                    {dataObject.asset === '' ? '[asset missing]' : dataObject.asset}
+                </div>
             </div>
             <div className="Slider__confirm-entry">
                 <div className="Slider__confirm-entry-title">Asset location</div>
-                <div className="Slider__confirm-entry-note">Street name here, 130 000, Prague, Czech Republic </div>
+                <div className="Slider__confirm-entry-note">
+                {dataObject.assetAddress1 === '' ? '[address missing]' : dataObject.assetAddress1}
+                {dataObject.assetAddress2 === '' ? '' : `,${dataObject.assetAddress2}`}
+                </div>
             </div>
             <div className="Slider__confirm-entry">
                 <div className="Slider__confirm-entry-title">Supporting documents</div>
                 <div className="Slider__confirm-entry-note">
-                    <a href="/list-asset" className="Slider__confirm-entry-file">Location-verification.pdf</a>
-                    <a href="/list-asset" className="Slider__confirm-entry-file">Property.rights.pdf</a>
+                    {
+                        dataObject.fileList.length === 0 
+                        ? '[files not uploaded]' 
+                        : dataObject.fileList.map(file => (
+                            <a href="/list-asset" key={file.name} className="Slider__confirm-entry-file">{file.name}</a>
+                        ))
+                    }
                 </div>
             </div>
             <div className="Slider__confirm-entry">
                 <div className="Slider__confirm-entry-title">Management fee</div>
-                <div className="Slider__confirm-entry-note">5%</div>
+                <div className="Slider__confirm-entry-note">{dataObject.managementFee}%</div>
             </div>
             <div className="Slider__confirm-entry">
                 <div className="Slider__confirm-entry-title">Asset collateral</div>
-                <div className="Slider__confirm-entry-note">130,000 MYB 25%</div>
+                <div className="Slider__confirm-entry-note">{dataObject.collateralMyb} MYB {dataObject.collateralPercentage}%</div>
             </div>
         </div>
         <div className="Slider__buttons">
