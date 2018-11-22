@@ -26,7 +26,7 @@ class ListAssetPage extends React.Component {
         setTimeout(() => {
             let activeSlide = parseInt(document.getElementsByClassName('slick-current')[0].getAttribute('data-index'));
             this.setState({ currentSlide: activeSlide })
-        }, 325);
+        }, 25);
     }
 
     previous() {
