@@ -21,6 +21,21 @@ export const Slide = styled.div`
     min-height: 600px;
     width: 100%;
     max-width: 600px;
+    .Onboarding__btn-close {
+      border-radius: 50%;
+      display: block;
+      width: 26px;
+      height: 26px;
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      font-size: 26px;
+      background: #dedede;
+      color: #595959;
+      line-height: 26px;
+      text-align: center;
+      transform: rotate(45deg);
+    }
     .Onboarding__img {
         &-default {
             position: absolute;
@@ -113,7 +128,7 @@ export const Slide = styled.div`
                 width: 100%;
             }
         }
-    } 
+    }
     .Onboarding__static-img-wrapper {
         width: 100%;
         padding-right: 40px;
@@ -255,7 +270,7 @@ export const Slide = styled.div`
                 line-height: 28px;
             }
             &::before {
-                content: "•"; 
+                content: "•";
                 font-size: 28px;
                 position: absolute;
                 top: 0px;
@@ -283,7 +298,7 @@ export const Slide = styled.div`
                 line-height: 28px;
             }
             &::before {
-                content: "•"; 
+                content: "•";
                 font-size: 28px;
                 position: absolute;
                 top: 0px;
@@ -311,7 +326,7 @@ export const Slide = styled.div`
                 line-height: 28px;
             }
             &::before {
-                content: "•"; 
+                content: "•";
                 font-size: 28px;
                 position: absolute;
                 top: -6px;
