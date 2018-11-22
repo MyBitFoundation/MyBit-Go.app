@@ -21,12 +21,11 @@ class ListAssetPage extends React.Component {
 
     next() {
         this.disableButtons();
-        this.carousel.next();
         this.setState(function(state) {
             return {
                 currentSlide: state.currentSlide + 1
             }
-        })
+        }, this.carousel.next())
     }
 
     disableButtons() {
@@ -38,22 +37,20 @@ class ListAssetPage extends React.Component {
 
     previous() {
         this.disableButtons();
-        this.carousel.prev();
         this.setState(function(state) {
             return {
                 currentSlide: state.currentSlide - 1
             }
-        })
+        }, this.carousel.prev())
     }
 
     goToSlide(number) {
         this.disableButtons();
-        this.carousel.goTo(number, false);
-        this.setState(function() {
+        this.setState( function(state) {
             return {
                 currentSlide: number
             }
-        })
+        }, () => setTimeout(this.carousel.goTo(this.state.currentSlide, false), 325))
     }
 
     handleSelectChange(value) {
@@ -135,7 +132,8 @@ class ListAssetPage extends React.Component {
                         SliderNavigationTooltips.map(slideTooltip => {
                             const buttonType = currentSlide === slideTooltip.slide ? "primary" : "secondary";
                             return (
-                                <Tooltip title={slideTooltip.tooltip} key={`slideTooltip${slideTooltip.slide}`} overlayClassName="ListAssetTooltip">
+                                <Tooltip title={slideTooltip.tooltip} key={`slideTooltip${slideTooltip.slide}`} overlayClassName="ListAssetTooltip"
+                                    mouseLeaveDelay={0}>
                                     <Button 
                                         type={buttonType} 
                                         className="ListAsset-nav-button" 
