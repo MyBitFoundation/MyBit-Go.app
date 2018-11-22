@@ -21,6 +21,7 @@ export const Slide = styled.div`
     min-height: 600px;
     width: 100%;
     max-width: 600px;
+    padding-right: 40px;
     .Onboarding__btn-close {
       border-radius: 50%;
       display: block;
