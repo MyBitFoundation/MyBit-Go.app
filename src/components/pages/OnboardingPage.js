@@ -65,18 +65,14 @@ class OnboardingPage extends React.Component {
                         <p className="Onboarding__paragraph--intro">
                           <strong>
                             MyBit Go brings power and control back to you.
-                            Invest without a bank, broker, fund or third-party,
-                            putting the power back in your hands.
+                            Invest without a bank, broker, fund or third-party.
                           </strong>
                         </p>
                         <p className="Onboarding__paragraph">
-                          MyBit Go is a secure investment platform available to anyone.
-                          We enable users to directly invest without the need of a broker or third-party,
-                          while receiving the revenue in real-time.
+                          MyBit Go is a secure investment platform available to anyone. It enables you to invest in high ROI assets and receive revenue in real-time.
                         </p>
                         <p className="Onboarding__paragraph">
-                          You actually own and control your investments (unlike stocks) and,
-                          therefore, you and only you are responsible for your security.
+                          In addition, you actually own and control your investments, unlike stocks.
                         </p>
                         <div className="Onboarding__buttons">
                             <Button className="Onboarding__buttons-next" type="primary" onClick={this.next}>
