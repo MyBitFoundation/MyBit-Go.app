@@ -69,7 +69,7 @@ class OnboardingPage extends React.Component {
                           </strong>
                         </p>
                         <p className="Onboarding__paragraph">
-                          MyBit Go is a secure investment platform available to anyone. It enables you to invest in high ROI assets and receive revenue in real-time.
+                          MyBit Go is a secure investment platform available to anyone. It enables you to invest in high ROI opportunities and receive revenue in real-time.
                         </p>
                         <p className="Onboarding__paragraph">
                           In addition, you actually own and control your investments, unlike stocks.
