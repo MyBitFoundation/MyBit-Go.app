@@ -14,7 +14,7 @@ export const CarouselWrapper = styled.div`
             padding: 0px 0px 0px 40px;
         }
     }
-`
+`;
 
 export const Slide = styled.div`
     position: relative;
@@ -376,4 +376,4 @@ export const SliderNavigation = styled.div`
             border-top-color: #ffffff;
         }
     }
-`
+`;
