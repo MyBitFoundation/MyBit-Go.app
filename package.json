@@ -30,7 +30,7 @@
     "websocket": "1.0.28",
     "react-twitter-conversion-tracker": "1.0.0",
     "react-facebook-pixel": "0.1.1",
-    "react-ga": "2.5.3",
+    "react-ga": "2.5.5",
     "styled-components": "4.1.1"
   },
   "scripts": {
