@@ -316,14 +316,14 @@ class OnboardingPage extends React.Component {
                             </p>
                             <p className="Onboarding__paragraph--no-images">
                                 Cryptocurrency, such as Ether or DAI, which are the main cryptocurrencies MyBit Go uses to
-                                invest in assets; however, many more are supported. <a href="/bankor" onClick={(e) => { e.preventDefault(); initBancor({}
+                                invest in assets; however, many more are supported. <a href="/bankor" onClick={(e) => { e.preventDefault(); initBancor({
                                   type: 1,
                                   baseCurrencyId: "5937d635231e97001f744267",
                                   pairCurrencyId: "5937d635231e97001f744267",
                                   primaryColor: "#1890ff",
                                   displayCurrency: "ETH",
                                   operation: "buy",
-                                })}>Get Ether</a>
+                                })}}>Get Ether</a>
                             </p>
                             <div className="Onboarding__buttons">
                                 <Button className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>
