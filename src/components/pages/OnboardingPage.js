@@ -312,11 +312,11 @@ class OnboardingPage extends React.Component {
                             </p>
                             <p className="Onboarding__paragraph--no-images">
                                 MyBit Tokens (MYB), the native token that fuels the <br />MyBit Network. Applications such as MyBit Go,
-                                which <br />run on the Network, require MYB to use. <a href="javascript:;" onClick={() => initBancor()}>Get MYB</a>
+                                which <br />run on the Network, require MYB to use. <a href="#" onClick={() => initBancor()}>Get MYB</a>
                             </p>
                             <p className="Onboarding__paragraph--no-images">
                                 Cryptocurrency, such as Ether or DAI, which are the main cryptocurrencies MyBit Go uses to
-                                invest in assets; however, many more are supported. <a href="javascript:;" onClick={() => initBancor({
+                                invest in assets; however, many more are supported. <a href="#" onClick={() => initBancor({
                                   type: 1,
                                   baseCurrencyId: "5937d635231e97001f744267",
                                   pairCurrencyId: "5937d635231e97001f744267",
