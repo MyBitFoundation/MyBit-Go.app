@@ -64,7 +64,7 @@ class OnboardingPage extends React.Component {
                         <h1 className="Onboarding__main-title">Welcome to MyBit Go</h1>
                         <p className="Onboarding__paragraph--intro">
                           <strong>
-                            It brings power and control back to you.
+                            MyBit Go brings power and control back to you.
                             Invest without a bank, broker, fund or third-party,
                             putting the power back in your hands.
                           </strong>
@@ -113,7 +113,7 @@ class OnboardingPage extends React.Component {
                         <Link to="/explore" className="Onboarding__btn-close">+</Link>
                         <img src={MyBitDesk} width="190" className="Onboarding__img-desk" alt="MyBit Onboarding Slide 3" />
                         <h1 className="Onboarding__main-title">
-                          It is <span className="Onboarding__main-title--red">not</span> an <br /> investment fund
+                          MyBit Go is <span className="Onboarding__main-title--red">not</span> an <br /> investment fund
                         </h1>
                         <ul className="Onboarding__list">
                             <li className="Onboarding__list-item">We do not invest on your behalf</li>
@@ -311,10 +311,6 @@ class OnboardingPage extends React.Component {
                                 <a href="http://metamask.io" className="Onboarding__buttons-get" target="_blank" rel="noopener noreferrer">Get MetaMask</a>
                             </p>
                             <p className="Onboarding__paragraph--no-images">
-                                MyBit Tokens (MYB), the native token that fuels the <br />MyBit Network. Applications such as MyBit Go,
-                                which <br />run on the Network, require MYB to use. <a href="/bankor" onClick={(e) => { e.preventDefault(); initBancor()}}>Get MYB</a>
-                            </p>
-                            <p className="Onboarding__paragraph--no-images">
                                 Cryptocurrency, such as Ether or DAI, which are the main cryptocurrencies MyBit Go uses to
                                 invest in assets; however, many more are supported. <a href="/bankor" onClick={(e) => { e.preventDefault(); initBancor({
                                   type: 1,
@@ -324,6 +320,10 @@ class OnboardingPage extends React.Component {
                                   displayCurrency: "ETH",
                                   operation: "buy",
                                 })}}>Get Ether</a>
+                            </p>
+                            <p className="Onboarding__paragraph--no-images">
+                                MyBit Tokens (MYB), the native token that fuels the <br />MyBit Network. Applications such as MyBit Go,
+                                which <br />run on the Network, require MYB to use. <a href="/bankor" onClick={(e) => { e.preventDefault(); initBancor()}}>Get MYB</a>
                             </p>
                             <div className="Onboarding__buttons">
                                 <Button className="Onboarding__buttons-next" type="primary" onClick={() => this.props.history.push('/explore')}>

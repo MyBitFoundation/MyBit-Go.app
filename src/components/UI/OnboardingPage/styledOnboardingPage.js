@@ -252,7 +252,7 @@ export const Slide = styled.div`
     .Onboarding__list {
         padding: 0;
         list-style: none;
-        margin-top: 50px;
+        margin-top: 20px;
         @media(max-width: 600px) {
             margin-top: 10px;
         }
