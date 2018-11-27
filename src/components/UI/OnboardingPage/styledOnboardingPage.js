@@ -37,8 +37,11 @@ export const Slide = styled.div`
       text-align: center;
       transform: rotate(45deg);
       opacity: .4;
+      transition: all .3s cubic-bezier(.645,.045,.355,1);
+
       &:hover {
         opacity: 1;
+        transition: all .3s cubic-bezier(.645,.045,.355,1);
       }
     }
     .Onboarding__img {
