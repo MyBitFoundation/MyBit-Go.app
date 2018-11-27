@@ -31,11 +31,15 @@ export const Slide = styled.div`
       right: 5px;
       top: 5px;
       font-size: 26px;
-      background: #dedede;
+      background: transparent;
       color: #595959;
       line-height: 26px;
       text-align: center;
       transform: rotate(45deg);
+      opacity: .4;
+      &:hover {
+        opacity: 1;
+      }
     }
     .Onboarding__img {
         &-default {
