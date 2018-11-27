@@ -36,7 +36,7 @@
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "start-js": "react-app-rewired start",
-    "start": "cross-env NODE_ENV=development npm-run-all -p watch-css start-js",
+    "start": "cross-env NODE_ENV=development npm run -p watch-css | npm run start-js",
     "build-js": "GENERATE_SOURCEMAP=false react-app-rewired build",
     "build": "npm run build-css | npm run build-js",
     "run-test": "react-scripts test --env=jsdom",
