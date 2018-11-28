@@ -24,8 +24,7 @@ const AppHeader = ({
       )}
     </div>
     <div className="AppHeader__BancrorWidget-container">
-      <BancorWidgetButton operation="buy">Buy</BancorWidgetButton>
-      <BancorWidgetButton operation="sell">Sell</BancorWidgetButton>
+      <BancorWidgetButton operation="buy">Get MYB</BancorWidgetButton>
     </div>
     {!usingServer && (
       <Address {...user} />
