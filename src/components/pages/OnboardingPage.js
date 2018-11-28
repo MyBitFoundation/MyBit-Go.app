@@ -63,6 +63,11 @@ class OnboardingPage extends React.Component {
           ref={(node) => { this.carousel = node; }}
           effect="slide"
           dots={false}
+          infinite={false}
+          beforeChange={(from, to) => {
+            console.log(from, to);
+            return false;
+          }}
           afterChange={(current) => {
             this.setState({
               currentSlide: current,
@@ -188,12 +193,10 @@ class OnboardingPage extends React.Component {
               alt="MyBit Onboarding Slide 3"
             />
             <h1 className="Onboarding__main-title">
-              MyBit Go is
-              {' '}
+              MyBit Go is&nbsp;
               <span className="Onboarding__main-title--red">not</span>
-              an
+              &nbsp;an
               <br />
-              {' '}
               investment fund
             </h1>
             <ul className="Onboarding__list">
