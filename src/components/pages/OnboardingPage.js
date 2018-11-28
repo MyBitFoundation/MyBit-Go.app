@@ -188,8 +188,12 @@ class OnboardingPage extends React.Component {
               alt="MyBit Onboarding Slide 3"
             />
             <h1 className="Onboarding__main-title">
-              MyBit Go is{" "}
-              <span className="Onboarding__main-title--red">not</span> an <br />{" "}
+              MyBit Go is
+              {' '}
+              <span className="Onboarding__main-title--red">not</span>
+              an
+              <br />
+              {' '}
               investment fund
             </h1>
             <ul className="Onboarding__list">
