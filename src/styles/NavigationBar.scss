@@ -16,7 +16,8 @@
   }
   @media(max-width: 600px) {
     overflow-y: hidden;
-    overflow-x: auto;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
     .ant-menu-item {
       display: inline-block !important;
     }
