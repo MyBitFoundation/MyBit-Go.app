@@ -45,23 +45,14 @@ class OnboardingPage extends React.Component {
 
   next() {
     this.carousel.next();
-    // this.setState(state => ({
-    //   currentSlide: state.currentSlide + 1,
-    // }));
   }
 
   previous() {
     this.carousel.prev();
-    // this.setState(state => ({
-    //   currentSlide: state.currentSlide - 1,
-    // }));
   }
 
   goToSlide(number) {
     this.carousel.goTo(number, false);
-    // this.setState(() => ({
-    //   currentSlide: number,
-    // }));
   }
 
   render() {
