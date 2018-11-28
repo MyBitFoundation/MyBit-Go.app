@@ -340,7 +340,7 @@ export const Slide = styled.div`
             }
         }
     }
-`
+`;
 
 export const SliderNavigation = styled.div`
     text-align: center;
