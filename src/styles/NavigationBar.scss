@@ -14,4 +14,14 @@
   .ant-menu-item-active svg path{
     fill: #1890ff;
   }
+  @media(max-width: 600px) {
+    overflow-y: hidden;
+    overflow-x: auto;
+    .ant-menu-item {
+      display: inline-block !important;
+    }
+    .ant-menu-submenu {
+      display: none !important;
+    }
+  }
 }
