@@ -1,7 +1,6 @@
 {
   "name": "app.mybit.io",
   "env": {
-    "MYBIT_GO_ADMIN_PASSWORD": "@mybit-go-admin-password",
     "INFURA_API_KEY": "@infura-api-key"
   }
 }

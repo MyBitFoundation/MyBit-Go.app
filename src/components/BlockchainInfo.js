@@ -31,7 +31,6 @@ class BlockchainInfo extends React.Component {
     this.fetchTransactionHistory = this.fetchTransactionHistory.bind(this);
     this.loadMetamaskUserDetails = this.loadMetamaskUserDetails.bind(this);
     this.loadPrices = this.loadPrices.bind(this);
-    this.fetchAssets = this.fetchAssets.bind(this);
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
     this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
@@ -75,6 +74,8 @@ class BlockchainInfo extends React.Component {
       },
       notificationPlace: 'notification',
     };
+    this.fundingHubUtil = new FundingHubUtil()
+    
   }
 
   async componentDidMount() {
@@ -104,8 +105,8 @@ class BlockchainInfo extends React.Component {
     if (userHasMetamask) {
       // event handler for when the selected account changes
       window.web3js.currentProvider.publicConfigStore.on('update', this.handleAddressChange);
-      // event handler on success asset funding
-      const id = FundingHubUtil.setLogAssetFundedListener((result, value) => {
+      // event handler on with assets funding result
+      const id = this.fundingHubUtil.setLogAssetFundedListener((result, value) => {
         result.params.forEach((item) => {
           this.getAssetNotification(item.value, 'success', value);
         });
@@ -318,7 +319,7 @@ class BlockchainInfo extends React.Component {
       isLoading: true,
       transactionStatus: '',
       alertType: 'info',
-      alertMessage: 'After accepting the transaction in Metamask it may take several minutes for it to be processed by the Ethereum Network. Meanwhile, you can still explore the platform.',
+      alertMessage: 'After accepting the transaction in Metamask it may take several minutes for it to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
     });
 
     try {

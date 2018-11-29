@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
 import Jazzicon from 'react-jazzicon';
 import '../styles/Address.css';
+import Spin from '../images/spin.svg';
 
 const Address = ({ userName, className }) => (
   <div className={`Address ${className}`}>
     {!userName ? (
       <div className="Address__loader">
-        <Spin />
+        <Spin style={{ height: '32px', width: '32px' }} />
         <span>Loading account</span>
       </div>
     ) : (

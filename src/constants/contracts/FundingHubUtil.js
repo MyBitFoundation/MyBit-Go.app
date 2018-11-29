@@ -1,8 +1,7 @@
 import { promisifyAll } from 'bluebird';
 import * as FundingHub from './FundingHub';
-import web3EventsListener from '../../apis/web3Events';
 import { fundingTopics } from '../topics';
-
+const Network = require('@mybit/network.js');
 const abiDecoder = require('abi-decoder');
 
 const instancePromisifier = instance =>
@@ -13,6 +12,11 @@ abiDecoder.addABI(FundingHub.ABI);
 export default class FundingHubUtil {
   constructor() {
     this.totalContributorsPerAssetID = {};
+    const testNet = 'wss://possibly-possible-lark.quiknode.io/49102400-d67e-456d-bd4d-05b51fef855c/kula72q-V9q6lO5DDhTahw==/'
+    this.web3EventsListener = Network.getWeb3EventsListener(testNet)
+
+    this.setLogAssetFundedListener = this.setLogAssetFundedListener.bind(this);
+    this.removeLogAssetFundedListener = this.removeLogAssetFundedListener.bind(this);
   }
 
   async load(web3, assetID) {
@@ -115,13 +119,17 @@ export default class FundingHubUtil {
     );
   }
 
-  static setLogAssetFundedListener(cb) {
-    const id = web3EventsListener.subscribe(
-      FundingHub.ADDRESS,
-      fundingTopics.LogAssetFunded,
+   setLogAssetFundedListener(cb) {
+    const id = this.web3EventsListener.subscribeToLogs(
+      'logAssetFunded',
+     { 
+      address: FundingHub.ADDRESS,
+      topics: fundingTopics.LogAssetFunded
+    },
       async (trxData) => {
+        
         const transactionDetails =
-          await web3EventsListener.web3Obj.eth.getTransaction(trxData.transactionHash);
+          await this.web3EventsListener.web3Obj.eth.getTransaction(trxData.transactionHash);
         const transactionValue = window.web3.fromWei(transactionDetails.value, 'ether');
         const decodedData = abiDecoder.decodeMethod(transactionDetails.input);
         return cb(decodedData, transactionValue);
@@ -130,7 +138,7 @@ export default class FundingHubUtil {
     return id;
   }
 
-  static removeLogAssetFundedListener(id) {
-    web3EventsListener.unSubscribe(fundingTopics.LogAssetFunded, id);
+   removeLogAssetFundedListener(id) {
+    this.web3EventsListener.unSubscribe(fundingTopics.LogAssetFunded, id);
   }
 }

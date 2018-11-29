@@ -53,7 +53,7 @@ class ConfirmationPopup extends React.Component {
     if (!assetsNotification.acceptedTos) {
       setAssetsStatusState({
         alertType: 'error',
-        alertMessage: 'Please accept our T&C before continuing.',
+        alertMessage: 'Please accept the Terms and Conditions before continuing.',
       });
       return null;
     }
