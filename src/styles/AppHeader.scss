@@ -77,4 +77,7 @@
       max-width: 305px;
       width: 100%;
     }
+    @media(max-width: 600px) {
+      display: none;
+    }
 }
