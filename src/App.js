@@ -23,8 +23,8 @@ class App extends Component {
       return false;
     }
     try {
-      if (localStorage.getItem('mybitUser') === null) {
-        localStorage.setItem('mybitUser', 'true');
+      if (localStorage.getItem('mybitUser2') === null) {
+        localStorage.setItem('mybitUser2', 'true');
         return true;
       }
       return false;
