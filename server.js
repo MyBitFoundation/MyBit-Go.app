@@ -6,10 +6,10 @@ const AWS = require('aws-sdk');
 const multer = require('multer');
 const fetchAssets = require('./src/util/serverHelper');
 
-const accessKeyId = process.env.AWS_ACCESS_KEY || 'xxxxxx';
-const secretAccessKey = process.env.AWS_SECRET_KEY || '+xxxxxx+B+xxxxxxx';
-const bucketName = process.env.BUCKET_NAME || 'castle_in_berlin';
-const bucketRegion = process.env.BUCKET_REGION || 'alps';
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_KEY;
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
 const app = express();
 
 if (process.env.NODE_ENV === 'development') {
@@ -28,6 +28,13 @@ const multipleUpload = multer({
   storage: multerStorage,
 }).any(); // TODO: use more specific validation of any()
 
+const s3bucket = new AWS.S3({
+  accessKeyId,
+  secretAccessKey,
+  region: bucketRegion,
+  Bucket: bucketName,
+});
+
 app.get('/api/assets', (req, res) => {
   res.send({
     assets,
@@ -36,13 +43,6 @@ app.get('/api/assets', (req, res) => {
 });
 
 app.get('/api/files/list', (req, res) => {
-  const s3bucket = new AWS.S3({
-    accessKeyId,
-    secretAccessKey,
-    region: bucketRegion,
-    Bucket: bucketName,
-  });
-
   const params = {
     Bucket: bucketName,
     MaxKeys: 1000, // TODO: make this dynamic
@@ -61,15 +61,8 @@ app.get('/api/files/list', (req, res) => {
 
 app.post('/api/files/upload', multipleUpload, (req, res) => {
   const file = req.files;
-
-  const s3bucket = new AWS.S3({
-    accessKeyId,
-    secretAccessKey,
-    region: bucketRegion,
-    Bucket: bucketName,
-  });
-
   const ResponseData = [];
+  
   file.map((item) => {
     console.log(item);
     const params = {
