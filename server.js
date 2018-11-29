@@ -15,8 +15,8 @@ const app = express();
 let assets = [];
 let assetsLoaded = false;
 
-var storage = multer.memoryStorage()
-let multipleUpload = multer({ storage: storage }).any(); //TODO: use more specific validation of any()
+let multerStorage = multer.memoryStorage()
+let multipleUpload = multer({ storage: multerStorage }).any(); //TODO: use more specific validation of any()
 
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
@@ -33,7 +33,11 @@ app.get('/api/assets', (req, res) => {
   });
 });
 
-app.post('/api/upload',  multipleUpload, (req, res) => {
+app.get('/api/files/list', (req, res) => {
+
+})
+
+app.post('/api/files/upload', multipleUpload, (req, res) => {
   const file = req.files;
 
   let s3bucket = new AWS.S3({
@@ -43,32 +47,30 @@ app.post('/api/upload',  multipleUpload, (req, res) => {
     Bucket: bucketName
   });
 
-  s3bucket.createBucket(function () {
-    var ResponseData = [];
-    file.map((item) => {
-      var params = {
-        Bucket: bucketName,
-        Key: item.originalname,
-        Body: item.buffer,
-        ACL: 'public-read'
-      };
-      s3bucket.upload(params, function (err, data) {
-        if (err) {
+  var ResponseData = [];
+  file.map((item) => {
+    var params = {
+      Bucket: bucketName,
+      Key: item.originalname,
+      Body: item.buffer,
+      ACL: 'public-read'
+    };
+    s3bucket.upload(params, function (err, data) {
+      if (err) {
+        res.json({
+          "error": true,
+          "Message": err
+        });
+      } else {
+        ResponseData.push(data);
+        if (ResponseData.length == file.length) {
           res.json({
-            "error": true,
-            "Message": err
+            "error": false,
+            "Message": "It works! Awesome! Its uploaded!",
+            Data: ResponseData
           });
-        } else {
-          ResponseData.push(data);
-          if (ResponseData.length == file.length) {
-            res.json({
-              "error": false,
-              "Message": "It works! Awesome! Its uploaded!",
-              Data: ResponseData
-            });
-          }
         }
-      });
+      }
     });
   });
 
