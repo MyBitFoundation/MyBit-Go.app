@@ -24,7 +24,13 @@ const AppHeader = ({
       )}
     </div>
     <div className="AppHeader__BancrorWidget-container">
-      <BancorWidgetButton operation="buy">Get MYB</BancorWidgetButton>
+      <BancorWidgetButton
+        operation="buy"
+        baseCurrencyId="5b164627ae2482321708eb93"
+        pairCurrencyId="5937d635231e97001f744267"
+      >
+        Get MYB
+      </BancorWidgetButton>
     </div>
     {!usingServer && (
       <Address {...user} />
