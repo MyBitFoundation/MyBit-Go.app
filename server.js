@@ -48,7 +48,7 @@ app.get('/api/files/list', (req, res) => {
 
   s3bucket.listObjectsV2(params, function(err, data) {
     if(err) {
-      console.log(err, err.stack)
+      res.json(err)
     } else {
       res.json(data);
     }
