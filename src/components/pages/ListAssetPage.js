@@ -6,6 +6,8 @@ import Carousel from 'antd/lib/carousel';
 import { CarouselWrapper, SliderNavigation } from '../UI/ListAssetSlides/styledListAssetPage'
 import * as Slides from '../UI/ListAssetSlides'
 
+const testConst = 0;
+
 class ListAssetPage extends React.Component {
     constructor(props) {
         super(props)
