@@ -34,7 +34,25 @@ app.get('/api/assets', (req, res) => {
 });
 
 app.get('/api/files/list', (req, res) => {
+  let s3bucket = new AWS.S3({
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+    region: bucketRegion,
+    Bucket: bucketName
+  });
 
+  var params = {
+    Bucket: bucketName,
+    MaxKeys: 1000 //TODO: make this dynamic endpoint 
+  };
+
+  s3bucket.listObjectsV2(params, function(err, data) {
+    if(err) {
+      console.log(err, err.stack)
+    } else {
+      res.json(data);
+    }
+  });
 })
 
 app.post('/api/files/upload', multipleUpload, (req, res) => {
