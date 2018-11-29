@@ -14,13 +14,36 @@ export const CarouselWrapper = styled.div`
             padding: 0px;
         }
     }
-`
+`;
 
 export const Slide = styled.div`
     position: relative;
     min-height: 600px;
     width: 100%;
     max-width: 600px;
+    padding-right: 40px;
+    .Onboarding__btn-close {
+      border-radius: 50%;
+      display: block;
+      width: 26px;
+      height: 26px;
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      font-size: 26px;
+      background: transparent;
+      color: #595959;
+      line-height: 26px;
+      text-align: center;
+      transform: rotate(45deg);
+      opacity: .4;
+      transition: all .3s cubic-bezier(.645,.045,.355,1);
+
+      &:hover {
+        opacity: 1;
+        transition: all .3s cubic-bezier(.645,.045,.355,1);
+      }
+    }
     .Onboarding__img {
         &-mybit {
             position: absolute;
@@ -161,7 +184,7 @@ export const Slide = styled.div`
                 text-align: center;
             }
         }
-    } 
+    }
     .Onboarding__static-img-wrapper {
         width: 100%;
         text-align: center;
@@ -327,6 +350,7 @@ export const Slide = styled.div`
         padding: 40px 40px 0px 40px;
         margin: 0px;
         list-style: none;
+        margin-top: 20px;
         @media(max-width: 600px) {
             padding: 20px 20px 0px 20px;
         }
@@ -344,7 +368,7 @@ export const Slide = styled.div`
                 padding-right: 20px;
             }
             &::before {
-                content: "•"; 
+                content: "•";
                 font-size: 28px;
                 position: absolute;
                 top: 0px;
@@ -381,7 +405,7 @@ export const Slide = styled.div`
                 padding-right: 20px;
             }
             &::before {
-                content: "•"; 
+                content: "•";
                 font-size: 28px;
                 position: absolute;
                 top: 0px;
@@ -412,7 +436,7 @@ export const Slide = styled.div`
                 padding-right: 20px;
             }
             &::before {
-                content: "•"; 
+                content: "•";
                 font-size: 28px;
                 position: absolute;
                 top: -6px;
@@ -424,7 +448,7 @@ export const Slide = styled.div`
             }
         }
     }
-`
+`;
 
 export const SliderNavigation = styled.div`
     text-align: center;
@@ -444,4 +468,4 @@ export const SliderNavigation = styled.div`
     .Onboarding__slider-nav-button.ant-btn-secondary {
         background-color: #dedede;
     }
-`
+`;

@@ -11,7 +11,6 @@ const exploreIcon = require('../images/search.svg');
 const portfolioIcon = require('../images/chart-area.svg');
 const transactionsIcon = require('../images/history.svg');
 const listAssetIcon = require('../images/plus.svg');
-const exchangeIcon = require('../images/mydax.svg');
 const knowledgeBaseIcon = require('../images/question.svg');
 const watchIcon = require('../images/watchList.svg');
 
@@ -42,10 +41,6 @@ const NavigationBar = ({ currentPath, setAssetsStatusState }) => {
       icon: listAssetIcon,
       selected: currentPath === '/list-asset',
       url: '/list-asset',
-    }, {
-      name: 'MYDAX',
-      icon: exchangeIcon,
-      disabled: true,
     }, {
       name: 'Knowledge Base',
       icon: knowledgeBaseIcon,
