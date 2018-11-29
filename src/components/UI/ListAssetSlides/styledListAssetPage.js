@@ -34,13 +34,19 @@ export const Slide = styled.div`
         width: 100%;
         position: absolute;
         bottom: 24px;
+        padding: 0 40px;
         &-continue {
             min-width: 154px;
             font-weight: 500;
+            float: right;
         }
-        @media(max-width: 500px) {
-            position: static;
-            padding: 10px 0px;
+        &-back {
+            font-weight: 500;
+            float: left;
+        }
+        &-centered {
+            min-width: 154px;
+            font-weight: 500;
         }
     }
     .Slider__tooltip {
