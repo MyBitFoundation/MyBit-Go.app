@@ -2,21 +2,15 @@ require('dotenv').config();
 const express = require('express');
 // const basicAuth = require('express-basic-auth');
 const path = require('path');
-const fetchAssets = require('./src/util/serverHelper');
 const AWS = require('aws-sdk');
-const multer  = require('multer');
+const multer = require('multer');
+const fetchAssets = require('./src/util/serverHelper');
 
-const accessKeyId =  process.env.AWS_ACCESS_KEY || "xxxxxx";
-const secretAccessKey = process.env.AWS_SECRET_KEY || "+xxxxxx+B+xxxxxxx";
-const bucketName = process.env.BUCKET_NAME || "castle_in_berlin";
-const bucketRegion = process.env.BUCKET_REGION || "alps";
+const accessKeyId = process.env.AWS_ACCESS_KEY || 'xxxxxx';
+const secretAccessKey = process.env.AWS_SECRET_KEY || '+xxxxxx+B+xxxxxxx';
+const bucketName = process.env.BUCKET_NAME || 'castle_in_berlin';
+const bucketRegion = process.env.BUCKET_REGION || 'alps';
 const app = express();
-
-let assets = [];
-let assetsLoaded = false;
-
-let multerStorage = multer.memoryStorage()
-let multipleUpload = multer({ storage: multerStorage }).any(); //TODO: use more specific validation of any()
 
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
@@ -26,6 +20,14 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
+let assets = [];
+let assetsLoaded = false;
+
+const multerStorage = multer.memoryStorage();
+const multipleUpload = multer({
+  storage: multerStorage,
+}).any(); // TODO: use more specific validation of any()
+
 app.get('/api/assets', (req, res) => {
   res.send({
     assets,
@@ -34,65 +36,69 @@ app.get('/api/assets', (req, res) => {
 });
 
 app.get('/api/files/list', (req, res) => {
-  let s3bucket = new AWS.S3({
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
+  const s3bucket = new AWS.S3({
+    accessKeyId,
+    secretAccessKey,
     region: bucketRegion,
-    Bucket: bucketName
+    Bucket: bucketName,
   });
 
-  var params = {
+  const params = {
     Bucket: bucketName,
-    MaxKeys: 1000 //TODO: make this dynamic endpoint 
+    MaxKeys: 1000, // TODO: make this dynamic
   };
 
-  s3bucket.listObjectsV2(params, function(err, data) {
-    if(err) {
-      res.json(err)
+  s3bucket.listObjectsV2(params, (err, data) => {
+    if (err) {
+      res.statusCode = 404;
+      res.json(err);
     } else {
+      res.statusCode = 200;
       res.json(data);
     }
   });
-})
+});
 
 app.post('/api/files/upload', multipleUpload, (req, res) => {
   const file = req.files;
 
-  let s3bucket = new AWS.S3({
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
+  const s3bucket = new AWS.S3({
+    accessKeyId,
+    secretAccessKey,
     region: bucketRegion,
-    Bucket: bucketName
+    Bucket: bucketName,
   });
 
-  var ResponseData = [];
+  const ResponseData = [];
   file.map((item) => {
-    var params = {
+    console.log(item);
+    const params = {
       Bucket: bucketName,
       Key: item.originalname,
       Body: item.buffer,
-      ACL: 'public-read'
+      ACL: 'public-read',
     };
-    s3bucket.upload(params, function (err, data) {
+    s3bucket.upload(params, (err, data) => {
       if (err) {
+        res.statusCode = 404;
         res.json({
-          "error": true,
-          "Message": err
+          error: true,
+          message: err,
         });
       } else {
         ResponseData.push(data);
-        if (ResponseData.length == file.length) {
+        if (ResponseData.length === file.length) {
+          res.statusCode = 200;
           res.json({
-            "error": false,
-            "Message": "It works! Awesome! Its uploaded!",
-            Data: ResponseData
+            error: false,
+            message: 'It works! Awesome! Its uploaded!',
+            data: ResponseData,
           });
         }
       }
     });
   });
-
-})
+});
 
 // app.use(staticUserAuth);
 
