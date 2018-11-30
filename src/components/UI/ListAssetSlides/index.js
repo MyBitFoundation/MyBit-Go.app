@@ -51,14 +51,14 @@ export const IntroSlide = ({ next }) => (
                 <div className="IntroListItem__title">Location of your asset</div>
                 <div className="IntroListItem__note">
                     Enter a location. For investors, it's important they know exactly where the asset is based.
-                                </div>
+                </div>
             </div>
             <div className="IntroListItem">
                 <div className="IntroListItem__title">Supporting documents</div>
                 <div className="IntroListItem__note">
                     Additional documents build trust with investors, confirming you have the necessary
                     legal and property rights to install the asset.
-                                </div>
+                </div>
             </div>
             <div className="IntroListItem">
                 <div className="IntroListItem__title">Calculate your personal management fee</div>
@@ -117,73 +117,90 @@ export const LocationSlide = ({ next, previous, handleInputChange, handleSelectC
     )
 }
 
-export const AvailableAssetsSlide = ({ next, previous, assetValue, handleSelectChange, formData }) => {
+export const AvailableAssetsSlide = ({ next, previous, assetValue, handleSelectChange, formData, history }) => {
     const { category, asset } = formData;
     let forbidNext = (category !== '') && (asset !== '') && (assetValue !== 0) ? false : true;
+    let categories = [...DummyData.Categories]
     return (
         <Slide>
             <Tooltip title="More assets will become available in the future." overlayClassName="Slider_overlay-tooltip">
                 <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
             </Tooltip>
-            <h1 className="Slider__header">Assets available</h1>
-            <p className="Slider__note">
-                Below is the list of assets available to you
-            </p>
-            <div className="Slider__input-container">
-                <Select
-                    showSearch
-                    style={{ width: "100%", marginTop: "10px" }}
-                    placeholder="Asset Category"
-                    optionFilterProp="children"
-                    onChange={(value) => handleSelectChange(value, "category")}
-                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                    { 
-                        DummyData.Categories.map(category => (
-                            <Option key={category} value={category}>{category}</Option>
-                        ))
-                    }
-                </Select>
-                <Select
-                    showSearch
-                    style={{ width: "100%", marginTop: "10px" }}
-                    placeholder="Available Assets"
-                    optionFilterProp="children"
-                    onChange={(value) => handleSelectChange(value, "asset")}
-                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                    { 
-                        DummyData.Assets.map(asset => (
-                            <Option key={asset} value={asset}>{asset}</Option>
-                        ))
-                    }
-                </Select>
-                <div className="Slider__input-label">Selected Asset value: </div>
-                <InputNumber
-                    placeholder="Funding Goal"
-                    name="assetValue"
-                    value={assetValue}
-                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                    onChange={(value) => handleSelectChange(value, "assetValue")}
+            {categories.length !== 0 ? (
+            <div>
+                <h1 className="Slider__header">Assets available</h1>
+                <p className="Slider__note">
+                    Below is the list of assets available to you
+                </p>
+                <div className="Slider__input-container">
+                    <Select
+                        showSearch
+                        style={{ width: "100%", marginTop: "10px" }}
+                        placeholder="Asset Category"
+                        optionFilterProp="children"
+                        onChange={(value) => handleSelectChange(value, "category")}
+                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    >
+                        { 
+                            categories.map(category => (
+                                <Option key={category} value={category}>{category}</Option>
+                            ))
+                        }
+                    </Select>
+                    <Select
+                        showSearch
+                        style={{ width: "100%", marginTop: "10px" }}
+                        placeholder="Available Assets"
+                        optionFilterProp="children"
+                        onChange={(value) => handleSelectChange(value, "asset")}
+                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    >
+                        { 
+                            DummyData.Assets.map(asset => (
+                                <Option key={asset} value={asset}>{asset}</Option>
+                            ))
+                        }
+                    </Select>
+                    <div className="Slider__input-label">Selected Asset value: </div>
+                    <InputNumber
+                        placeholder="Funding Goal"
+                        name="assetValue"
+                        value={assetValue}
+                        formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                        onChange={(value) => handleSelectChange(value, "assetValue")}
+                    />
+                </div>
+                <SlideButtons 
+                    nextMessage="Next" 
+                    disabledMassage="All fields are required" 
+                    previous={previous} 
+                    next={next} 
+                    forbidNext={forbidNext} 
                 />
             </div>
-            <SlideButtons 
-                nextMessage="Next" 
-                disabledMassage="All fields are required" 
-                previous={previous} 
-                next={next} 
-                forbidNext={forbidNext} 
-            />
+            ) : (
+                <div>
+                    <h1 className="Slider__header">No assets</h1>
+                    <p className="Slider__note">
+                        No assets have been found in your country.
+                    </p>
+                    <div className="Slider__buttons">
+                        <Button type="secondary" className="Slider__buttons-centered" 
+                            onClick={() => history.push("/explore")}>
+                            Go to Explore page
+                        </Button>
+                    </div>
+                </div>
+            )}
         </Slide>
     )
 }
 
 export const AssetLocationSlide = ({ next, previous, handleInputChange, handleSelectChange, formData }) => {
-    const { assetCountry, assetAddress1, assetAddress2, assetCity, assetProvince, assetPostalCode } = formData;
+    const { assetCountry, assetAddress1, assetCity, assetProvince, assetPostalCode } = formData;
     let forbidNext = (assetCountry !== '') && (assetAddress1 !== '') 
-            && (assetAddress2 !== '') && (assetCity !== '') && (assetProvince !== '') 
-            && (assetPostalCode !== '') ? false : true;
+        && (assetCity !== '') && (assetProvince !== '') && (assetPostalCode !== '') ? false : true;
     return (
         <Slide>
             <h1 className="Slider__header">Asset location?</h1>
@@ -420,7 +437,7 @@ export const ConfirmAsset = ({ next, confirmAsset, formData }) => (
             </div>
             <div className="Slider__confirm-entry">
                 <div className="Slider__confirm-entry-title">Asset collateral</div>
-                <div className="Slider__confirm-entry-note">{formData.collateralMyb} MYB {formData.collateralPercentage}%</div>
+                <div className="Slider__confirm-entry-note">{formData.collateralMyb.toFixed(2)} MYB {formData.collateralPercentage}%</div>
             </div>
         </div>
         <div className="Slider__buttons">

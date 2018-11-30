@@ -132,7 +132,7 @@ class ListAssetPage extends React.Component {
         const { managementFee, collateralDollar, collateralMyb, collateralPercentage, assetValue } = this.state.data;
         return (
             <CarouselWrapper>
-                <Carousel ref={node => this.carousel = node} effect="slide" dots={false} swipe={false} accessibility={false} >
+                <Carousel ref={node => this.carousel = node} infinite={false} effect="slide" dots={false} swipe={false} accessibility={false} >
                     <Slides.IntroSlide 
                         next={this.next}
                         slidePosition={0}
@@ -153,6 +153,7 @@ class ListAssetPage extends React.Component {
                         handleInputChange={this.handleInputChange}
                         assetValue={typeof assetValue === 'string' ? 0 : assetValue}
                         formData={data} 
+                        history={this.props.history}
                     />
                     <Slides.AssetLocationSlide 
                         next={this.next}
