@@ -45,7 +45,7 @@ class Bancor extends Component {
         document.body.appendChild(scriptDiv);
         if (window.BancorConvertWidget) {
             const {
-                type, blockchainType, baseCurrencyId, pairCurrencyId, primaryColor, displayCurrency, operation,
+                type, blockchainType, baseCurrencyId, pairCurrencyId, primaryColor, displayCurrency,
             } = options;
             window.BancorConvertWidget.createInstance({
                 type,
