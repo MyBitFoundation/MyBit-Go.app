@@ -8,7 +8,10 @@ class Bancor extends Component {
         super(props);
         this.initBancor = this.initBancor.bind(this);
         this.defaultOptions = {
-            type: 1,
+            type: 0,
+            // baseCurrencyId: '5b164627ae2482321708eb93',
+            // pairCurrencyId: '5937d635231e97001f744267',
+            blockchainType: 'ethereum',
             baseCurrencyId: '5b164627ae2482321708eb93',
             pairCurrencyId: '5937d635231e97001f744267',
             primaryColor: '#1890ff',
@@ -42,16 +45,17 @@ class Bancor extends Component {
         document.body.appendChild(scriptDiv);
         if (window.BancorConvertWidget) {
             const {
-                type, baseCurrencyId, pairCurrencyId, primaryColor, displayCurrency, operation
+                type, blockchainType, baseCurrencyId, pairCurrencyId, primaryColor, displayCurrency, operation,
             } = options;
-            window.BancorConvertWidget.init({
+            window.BancorConvertWidget.createInstance({
                 type,
+                blockchainType,
                 baseCurrencyId,
                 pairCurrencyId,
                 primaryColor,
                 displayCurrency,
             });
-            window.BancorConvertWidget.showConvertPopup(operation);
+            window.BancorConvertWidget.showConvertPopup();
         }
     }
     render() {
