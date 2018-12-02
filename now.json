@@ -1,6 +1,10 @@
 {
   "name": "app.mybit.io",
   "env": {
-    "INFURA_API_KEY": "@infura-api-key"
+    "INFURA_API_KEY": "@infura-api-key",
+    "AWS_ACCESS_KEY": "@aws-access-key",
+    "AWS_SECRET_KEY": "@aws-secret-key",
+    "BUCKET_NAME": "@bucket-name",
+    "BUCKET_REGION": "@bucket-region"
   }
 }
