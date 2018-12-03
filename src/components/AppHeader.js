@@ -10,6 +10,9 @@ import { Consumer as BancorConsumer } from './UI/BancorContainer/index';
 import Button from './UI/Button/index';
 import Theme from './UI/theme/index';
 
+
+import '../styles/BancorWidgetButton.css';
+
 const AppHeader = ({
   user, prices, usingServer,
 }) => (
@@ -28,17 +31,19 @@ const AppHeader = ({
           )}
         </div>
         <div className="AppHeader__BancrorWidget-container">
-          <Button
-            styling={Theme.buttons.primary.blue}
-            size="default"
-            onClick={(e) => {
-              e.preventDefault();
-              initBancor();
+          <div className="BancorWidget__button">
+            <Button
+              styling={Theme.buttons.primary.blue}
+              size="large"
+              onClick={(e) => {
+                e.preventDefault();
+                initBancor();
 
-            }}
-          >
-            Get MYB
-          </Button>
+              }}
+              >
+              Get MYB
+            </Button>
+          </div>
         </div>
         {!usingServer && (
           <Address {...user} />
