@@ -34,6 +34,7 @@ const AppHeader = ({
             onClick={(e) => {
               e.preventDefault();
               initBancor();
+
             }}
           >
             Get MYB
