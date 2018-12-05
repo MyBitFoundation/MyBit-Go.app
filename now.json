@@ -2,5 +2,6 @@
   "name": "app.mybit.io",
   "env": {
     "INFURA_API_KEY": "@infura-api-key"
-  }
+  },
+  "version": 1
 }
