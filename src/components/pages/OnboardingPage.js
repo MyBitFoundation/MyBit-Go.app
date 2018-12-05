@@ -613,10 +613,7 @@ class OnboardingPage extends React.Component {
                         initBancor({
                           type: 1,
                           baseCurrencyId: '5937d635231e97001f744267',
-                          pairCurrencyId: '5937d635231e97001f744267',
-                          primaryColor: '#1890ff',
-                          displayCurrency: 'ETH',
-                          operation: 'buy',
+                          pairCurrencyId: '5b164627ae2482321708eb93',
                         });
                       }}
                     >
