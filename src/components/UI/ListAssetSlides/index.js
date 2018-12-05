@@ -56,8 +56,7 @@ export const IntroSlide = ({ next }) => (
             <div className="IntroListItem">
                 <div className="IntroListItem__title">Supporting documents</div>
                 <div className="IntroListItem__note">
-                    Additional documents build trust with investors, confirming you have the necessary
-                    legal and property rights to install the asset.
+                    Confirm you have the necessary legal and property rights to install the asset. 
                 </div>
             </div>
             <div className="IntroListItem">
@@ -441,7 +440,7 @@ export const ConfirmAsset = ({ next, confirmAsset, formData }) => (
             </div>
         </div>
         <div className="Slider__buttons">
-            <Button type="primary" className="Slider__buttons-continue" onClick={confirmAsset}>Confirm listing</Button>
+            <Button type="primary" className="Slider__buttons-centered" onClick={confirmAsset}>Confirm listing</Button>
         </div>
     </Slide>
 )

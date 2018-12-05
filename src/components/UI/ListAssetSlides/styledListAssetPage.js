@@ -153,7 +153,7 @@ export const Slide = styled.div`
                 font-weight: bold;
             }
             &-note {
-                font-size: 12px;
+                font-size: 14px;
                 line-height: 12px;
             }
             &-file {
@@ -182,7 +182,7 @@ export const IntroList = styled.div`
         }
         &__note {
             line-height: normal;
-            font-size: 12px;
+            font-size: 14px;
             color: rgba(0, 0, 0, 0.65);
             font-weight: 400;
         }
