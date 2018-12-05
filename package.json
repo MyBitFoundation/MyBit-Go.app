@@ -3,8 +3,6 @@
   "version": "0.2.4",
   "private": true,
   "dependencies": {
-    "@bit/mybit.ui.showcase.button": "^0.0.3",
-    "@bit/mybit.ui.showcase.tooltip": "^0.0.1",
     "antd": "3.10.9",
     "axios": "0.18.0",
     "bluebird": "3.5.3",
