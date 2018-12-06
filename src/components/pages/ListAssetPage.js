@@ -5,6 +5,7 @@ import Tooltip from 'antd/lib/tooltip';
 import Carousel from 'antd/lib/carousel';
 import { CarouselWrapper, SliderNavigation } from '../UI/ListAssetSlides/styledListAssetPage'
 import * as Slides from '../UI/ListAssetSlides'
+import { withCivic } from "../UI/CivicContainer";
 
 class ListAssetPage extends React.Component {
     constructor(props) {
@@ -63,31 +64,31 @@ class ListAssetPage extends React.Component {
     }
 
     handleInputChange = (e) => {
-        this.setState({ 
-            data: { ...this.state.data, 
+        this.setState({
+            data: { ...this.state.data,
                 [e.target.name]: e.target.value }
-        }, () => console.log(this.state)); 
+        }, () => console.log(this.state));
     }
 
     handleSelectChange = (value, name) => {
-        this.setState({ 
-            data: { ...this.state.data, 
+        this.setState({
+            data: { ...this.state.data,
                 [name]: value }
         }, () => {
             if( name === 'userCountry') {
-                this.setState({ 
-                    data: { ...this.state.data, 
+                this.setState({
+                    data: { ...this.state.data,
                         assetCountry: value }
-                }, () => console.log(this.state)); 
+                }, () => console.log(this.state));
             }
         });
     }
 
     handleFileUpload = (filesObject) => {
-        this.setState({ 
-            data: { ...this.state.data, 
+        this.setState({
+            data: { ...this.state.data,
                 fileList: filesObject.fileList }
-        }, () => console.log(this.state)); 
+        }, () => console.log(this.state));
     }
 
     handleCollateralChange = (value, name) => {
@@ -113,18 +114,27 @@ class ListAssetPage extends React.Component {
             default:
                 console.log(this.state);
         }
-        this.setState({ 
-            data: { ...this.state.data, 
+        this.setState({
+            data: { ...this.state.data,
                 collateralDollar: dollar,
                 collateralMyb: myb,
                 collateralPercentage: percentage
              }
-        }, () => console.log(this.state)); 
+        }, () => console.log(this.state));
     }
 
     confirmAsset = () => {
-        alert('UI is still in progress!');
-        //this.props.history.push('/explore')
+      fetch('/api/list-asset/auth', {
+        method: 'POST',
+        body: this.state.data,
+        headers: {
+          Authorization: `Bearer ${this.props.civic.token}`,
+        },
+      }).then(res => res.json()).then(res => {
+        this.props.history.push('/explore')
+      }).catch((err) => {
+        console.log(err);
+      });
     }
 
     render() {
@@ -133,52 +143,52 @@ class ListAssetPage extends React.Component {
         return (
             <CarouselWrapper>
                 <Carousel ref={node => this.carousel = node} infinite={false} effect="slide" dots={false} swipe={false} accessibility={false} >
-                    <Slides.IntroSlide 
+                    <Slides.IntroSlide
                         next={this.next}
                         slidePosition={0}
                     />
-                    <Slides.LocationSlide 
+                    <Slides.LocationSlide
                         next={this.next}
-                        previous={this.previous} 
-                        handleSelectChange={this.handleSelectChange} 
+                        previous={this.previous}
+                        handleSelectChange={this.handleSelectChange}
                         handleInputChange={this.handleInputChange}
                         formData={data}
                         slidePosition={1}
-                        setMaximumAllowedSlide={this.setMaximumAllowedSlide} 
+                        setMaximumAllowedSlide={this.setMaximumAllowedSlide}
                     />
-                    <Slides.AvailableAssetsSlide 
+                    <Slides.AvailableAssetsSlide
                         next={this.next}
-                        previous={this.previous} 
-                        handleSelectChange={this.handleSelectChange} 
+                        previous={this.previous}
+                        handleSelectChange={this.handleSelectChange}
                         handleInputChange={this.handleInputChange}
                         assetValue={typeof assetValue === 'string' ? 0 : assetValue}
-                        formData={data} 
+                        formData={data}
                         history={this.props.history}
                     />
-                    <Slides.AssetLocationSlide 
+                    <Slides.AssetLocationSlide
                         next={this.next}
-                        previous={this.previous} 
-                        handleSelectChange={this.handleSelectChange} 
+                        previous={this.previous}
+                        handleSelectChange={this.handleSelectChange}
                         handleInputChange={this.handleInputChange}
-                        formData={data}  
+                        formData={data}
                     />
-                    <Slides.UploadSlide 
+                    <Slides.UploadSlide
                         next={this.next}
-                        previous={this.previous} 
+                        previous={this.previous}
                         handleFileUpload={this.handleFileUpload}
-                        formData={data} 
+                        formData={data}
                     />
-                    <Slides.FeeSlide 
-                        next={this.next} 
-                        previous={this.previous} 
-                        handleSelectChange={this.handleSelectChange} 
+                    <Slides.FeeSlide
+                        next={this.next}
+                        previous={this.previous}
+                        handleSelectChange={this.handleSelectChange}
                         managementFee={typeof managementFee === 'string' ? 0 : managementFee}
-                        formData={data} 
+                        formData={data}
                     />
-                    <Slides.CollateralSlide 
-                        next={this.next} 
-                        previous={this.previous} 
-                        handleCollateralChange={this.handleCollateralChange} 
+                    <Slides.CollateralSlide
+                        next={this.next}
+                        previous={this.previous}
+                        handleCollateralChange={this.handleCollateralChange}
                         collateralDollar={typeof collateralDollar === 'string' ? 0 : collateralDollar}
                         collateralPercentage={collateralPercentage}
                         collateralMyb={typeof collateralMyb === 'string' ? 0 : collateralMyb}
@@ -189,13 +199,13 @@ class ListAssetPage extends React.Component {
                             min_dollars: 0,
                             max_dollars: assetValue
                         }}
-                        formData={data} 
+                        formData={data}
                     />
-                    <Slides.ConfirmAsset 
-                        next={this.next} 
-                        previous={this.previous} 
+                    <Slides.ConfirmAsset
+                        next={this.next}
+                        previous={this.previous}
                         confirmAsset={this.confirmAsset}
-                        formData={data} 
+                        formData={data}
                     />
                 </Carousel>
 
@@ -205,12 +215,12 @@ class ListAssetPage extends React.Component {
                             const buttonType = currentSlide === slideTooltip.slide ? "primary" : "secondary";
                             return (
                                 <Tooltip title={slideTooltip.tooltip} key={`slideTooltip${slideTooltip.slide}`} >
-                                    <Button 
-                                        type={buttonType} 
-                                        className="ListAsset-nav-button" 
+                                    <Button
+                                        type={buttonType}
+                                        className="ListAsset-nav-button"
                                         shape="circle"
                                         disabled={slideTooltip.slide > currentSlide}
-                                        onClick={() => this.goToSlide(slideTooltip.slide)} 
+                                        onClick={() => this.goToSlide(slideTooltip.slide)}
                                     />
                                 </Tooltip>
                             )
@@ -233,4 +243,4 @@ const SliderNavigationTooltips = [
     { slide: 7, tooltip: "Confirm Asset" }
 ]
 
-export default withRouter(ListAssetPage);
+export default withRouter(withCivic(ListAssetPage));
