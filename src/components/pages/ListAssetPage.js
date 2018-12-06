@@ -124,7 +124,7 @@ class ListAssetPage extends React.Component {
     }
 
     confirmAsset = () => {
-      fetch('/api/assets', {
+      fetch('/api/list-asset/auth', {
         method: 'POST',
         body: this.state.data,
         headers: {

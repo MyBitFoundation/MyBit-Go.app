@@ -37,12 +37,12 @@ const s3bucket = new AWS.S3({
 });
 
 const civicClient = civicSip.newClient({
-  appId: 'AHGcgJfpu',
+  appId: process.env.REACT_APP_CIVIC_APP_ID,
   prvKey: process.env.CIVIC_PRIVATE_KEY,
   appSecret: process.env.CIVIC_APP_SECRET,
 });
 
-app.post('/api/assets', (req, res) => {
+app.post('/api/list-asset/auth', (req, res) => {
   const jwt = req.header('Authorization').split('Bearer ')[1];
   civicClient.exchangeCode(jwt)
     .then((userData) => {
