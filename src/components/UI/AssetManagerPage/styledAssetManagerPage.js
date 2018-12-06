@@ -15,24 +15,24 @@ export const Slide = styled.div`
         text-align: center;
         color: #000000;
     }
-    .Slider__buttons-wrapper {
+    .Slider__buttons {
         text-align: center;
         width: 100%;
         position: absolute;
         bottom: 24px;
-    }
-    .Slider__buttons {
-        position: relative;
+        padding: 0 24px;
         &-continue {
             min-width: 154px;
             font-weight: 500;
-            line-height: 22px;
+            float: right;
         }
         &-back {
-            position: absolute;
-            left: 24px;
-            font-weight: normal;
-            min-width: 74px;
+            font-weight: 500;
+            float: left;
+        }
+        &-centered {
+            min-width: 154px;
+            font-weight: 500;
         }
     }
     .Slider__IntroNote {

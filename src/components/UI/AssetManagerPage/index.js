@@ -6,11 +6,9 @@ import Myb from '../../../images/asset-manager/myb.png';
 
 const SlideButtons = ({ previous, next, nextText = "Next" }) => {
     return (
-        <div className="Slider__buttons-wrapper">
-            <div className="Slider__buttons">
-                <Button type="secondary" className="Slider__buttons-back" onClick={previous}>Back</Button>
-                <Button type="primary" className="Slider__buttons-continue" onClick={next}>{nextText}</Button>
-            </div>
+        <div className="Slider__buttons">
+            <Button type="secondary" className="Slider__buttons-back" onClick={previous}>Back</Button>
+            <Button type="primary" className="Slider__buttons-continue" onClick={next}>{nextText}</Button>
         </div>
     )
 }
@@ -34,8 +32,8 @@ export const WhatSlide = ({ next }) => (
             and ensuring it functions properly. This may include security, repairs, marketing, 
             or replenishing funds in the case of a Crypto ATM.
         </p>
-        <div className="Slider__buttons-wrapper">
-            <Button type="primary" className="Slider__buttons-continue" onClick={next}>Next</Button>
+        <div className="Slider__buttons">
+            <Button type="primary" className="Slider__buttons-centered" onClick={next}>Next</Button>
         </div>
     </Slide>
 )
