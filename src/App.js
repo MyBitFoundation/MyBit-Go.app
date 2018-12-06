@@ -8,7 +8,7 @@ import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import BancorContainer from './components/UI/BancorContainer';
-import CivicContainer, { Consumer as CivicConsumer } from './components/UI/CivicContainer';
+import CivicContainer from './components/UI/CivicContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 import {
