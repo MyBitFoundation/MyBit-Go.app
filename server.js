@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 // const basicAuth = require('express-basic-auth');
+const civicSip = require('civic-sip-api');
 const path = require('path');
 const AWS = require('aws-sdk');
 const multer = require('multer');
@@ -35,6 +36,24 @@ const s3bucket = new AWS.S3({
   Bucket: bucketName,
 });
 
+const civicClient = civicSip.newClient({
+  appId: process.env.REACT_APP_CIVIC_APP_ID,
+  prvKey: process.env.CIVIC_PRIVATE_KEY,
+  appSecret: process.env.CIVIC_APP_SECRET,
+});
+
+app.post('/api/list-asset/auth', (req, res) => {
+  const jwt = req.header('Authorization').split('Bearer ')[1];
+  civicClient.exchangeCode(jwt)
+    .then((userData) => {
+      res.send({ userData: JSON.stringify(userData, null, 4) });
+    }).catch((error) => {
+      res.statusCode = 500;
+      res.send(error);
+      console.log(error);
+    });
+});
+
 app.get('/api/assets', (req, res) => {
   res.send({
     assets,
@@ -62,7 +81,7 @@ app.get('/api/files/list', (req, res) => {
 app.post('/api/files/upload', multipleUpload, (req, res) => {
   const file = req.files;
   const ResponseData = [];
-  
+
   file.map((item) => {
     console.log(item);
     const params = {

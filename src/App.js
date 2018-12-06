@@ -8,6 +8,7 @@ import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import BancorContainer from './components/UI/BancorContainer';
+import CivicContainer from './components/UI/CivicContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 import {
@@ -50,74 +51,74 @@ class App extends Component {
   render() {
     const firstVisit = this.isFirstVisit();
     const firstListAssetVisit = this.isFirstListAssetVisit(firstVisit);
-    console.log(firstListAssetVisit)
   
     return (
       <CirclesBackgroundWrapper>
-        <BancorContainer>
-          <BlockchainInfoContext.Consumer>
-            {({
-              user,
-              prices,
-              userHasMetamask,
-              userIsLoggedIn,
-              network,
-              setAssetsStatusState,
-              assetsNotification,
-              notificationPlace,
-              isBraveBrowser,
-              extensionUrl,
-            }) => (
-              <React.Fragment>
-                <AppHeader
-                  user={user}
-                  prices={prices.mybit}
-                  usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
-                  setAssetsStatusState={setAssetsStatusState}
-                  assetsNotification={assetsNotification}
-                  notificationPlace={notificationPlace}
-                />
-                <NavigationBar
-                  setAssetsStatusState={setAssetsStatusState}
-                  currentPath={this.props.location.pathname}
-                />
-                {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
-              </React.Fragment>
-            )}
-          </BlockchainInfoContext.Consumer>
-
-          <div className="notification_wrapper">
+        <CivicContainer>
+          <BancorContainer>
             <BlockchainInfoContext.Consumer>
               {({
-                notificationPlace,
+                user,
+                prices,
+                userHasMetamask,
+                userIsLoggedIn,
+                network,
                 setAssetsStatusState,
                 assetsNotification,
-              }) => {
-                if (notificationPlace === 'notification') {
-                  return (<Notification
+                notificationPlace,
+                isBraveBrowser,
+                extensionUrl,
+              }) => (
+                <React.Fragment>
+                  <AppHeader
+                    user={user}
+                    prices={prices.mybit}
+                    usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
                     setAssetsStatusState={setAssetsStatusState}
                     assetsNotification={assetsNotification}
-                  />);
-                }
-                return null;
-              }}
+                    notificationPlace={notificationPlace}
+                  />
+                  <NavigationBar
+                    setAssetsStatusState={setAssetsStatusState}
+                    currentPath={this.props.location.pathname}
+                  />
+                  {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
+                </React.Fragment>
+              )}
             </BlockchainInfoContext.Consumer>
-          </div>
 
-
-          <div className="page-wrapper">
-            <Switch>
-              {routes.map(({ path, exact, component: C }) => (
-                <Route
-                  key={path}
-                  path={path}
-                  exact={exact}
-                  render={props => <C isFirstVisit={firstVisit} isFirstListAssetVisit={firstListAssetVisit} {...props} />}
-                />
-              ))}
-            </Switch>
-          </div>
-        </BancorContainer>
+            <div className="notification_wrapper">
+              <BlockchainInfoContext.Consumer>
+                {({
+                  notificationPlace,
+                  setAssetsStatusState,
+                  assetsNotification,
+                }) => {
+                  if (notificationPlace === 'notification') {
+                    return (<Notification
+                      setAssetsStatusState={setAssetsStatusState}
+                      assetsNotification={assetsNotification}
+                    />);
+                  }
+                  return null;
+                }}
+              </BlockchainInfoContext.Consumer>
+            </div>
+                            
+            <div className="page-wrapper">
+              <Switch>
+                {routes.map(({ path, exact, component: C }) => (
+                  <Route
+                    key={path}
+                    path={path}
+                    exact={exact}
+                     render={props => <C isFirstVisit={firstVisit} isFirstListAssetVisit={firstListAssetVisit} {...props} />}
+                  />
+                ))}
+              </Switch>
+            </div>
+          </BancorContainer>
+        </CivicContainer>
       </CirclesBackgroundWrapper>
     );
   }
