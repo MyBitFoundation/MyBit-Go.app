@@ -8,6 +8,7 @@ import Storage from '../images/categories/Storage.jpg';
 import Bitcoinatm from '../images/categories/Bitcoinatm.jpg';
 import Solar from '../images/categories/Solar1.jpg';
 import Coworking from '../images/categories/Co-working.jpg';
+import ChargeStation from '../images/categories/ChargeStation.jpg';
 
 export const ethereumNetwork = 'ropsten';
 
@@ -66,6 +67,14 @@ const testEnabledAssetIdsData = {
     description: 'Test description',
     details: 'Test details',
     imgSrc: CryptoMining,
+  },
+  '0x66e4f6c81b9a0962f6e7a03381f3f8c922cdb467ba270e0d15056f64833a238d': {
+    name: 'Test charging station asset for development',
+    city: 'Zurich',
+    country: 'Switzerland',
+    description: 'Test description',
+    details: 'Test details',
+    imgSrc: ChargeStation,
   },
 };
 

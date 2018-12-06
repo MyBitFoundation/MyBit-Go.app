@@ -127,10 +127,9 @@ export default class FundingHubUtil {
       topics: fundingTopics.LogAssetFunded
     },
       async (trxData) => {
-        
         const transactionDetails =
-          await this.web3EventsListener.web3Obj.eth.getTransaction(trxData.transactionHash);
-        const transactionValue = window.web3.fromWei(transactionDetails.value, 'ether');
+          await this.web3EventsListener.web3Instance.eth.getTransaction(trxData.transactionHash);
+        const transactionValue = this.web3EventsListener.web3Instance.utils.fromWei(transactionDetails.value, 'ether');
         const decodedData = abiDecoder.decodeMethod(transactionDetails.input);
         return cb(decodedData, transactionValue);
       },
