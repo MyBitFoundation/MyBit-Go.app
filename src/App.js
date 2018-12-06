@@ -23,7 +23,7 @@ class App extends Component {
     try {
       if (localStorage.getItem('mybitUser2') === null) {
         localStorage.setItem('mybitUser2', 'true');
-        localStorage.setItem('firstLocation', this.props.location.pathname);
+        localStorage.setItem('onboardingRedirect', this.props.location.pathname);
         return true;
       }
       return false;

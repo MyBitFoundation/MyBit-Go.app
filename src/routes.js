@@ -147,11 +147,12 @@ const routes = [
   {
     path: '/help',
     exact: true,
-    component: () => (
+    component: ({ isFirstVisit }) =>
+    (isFirstVisit ? <Redirect to={redirectToOnFirstVisit} /> : (
       <BlockchainInfoContext.Consumer>
         {({ fetchMyBit }) => <HelpPage fetchMyBit={fetchMyBit} />}
       </BlockchainInfoContext.Consumer>
-    ),
+    )),
   },
   {
     path: '/onboarding',
