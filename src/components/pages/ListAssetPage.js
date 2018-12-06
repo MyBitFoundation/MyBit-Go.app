@@ -124,15 +124,15 @@ class ListAssetPage extends React.Component {
     }
 
     confirmAsset = () => {
-        alert('UI is still in progress!');
-        //this.props.history.push('/explore')
       fetch('/api/assets', {
-        method: 'POST', // or 'PUT'
-        body: '', // data can be `string` or {object}!
+        method: 'POST',
+        body: this.state.data,
         headers: {
           Authorization: `Bearer ${this.props.civic.token}`,
         },
-      }).then(res => res.json()).then(res => console.log(res)).catch((err) => {
+      }).then(res => res.json()).then(res => {
+        this.props.history.push('/explore')
+      }).catch((err) => {
         console.log(err);
       });
     }
