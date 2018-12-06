@@ -43,6 +43,11 @@ class OnboardingPage extends React.Component {
     };
   }
 
+  getFirstLocation() {
+    const location = localStorage.getItem('firstLocation');
+    return location === '/onboarding' ? '/explore' : location;
+  }
+
   next() {
     this.carousel.next();
   }
@@ -57,6 +62,8 @@ class OnboardingPage extends React.Component {
 
   render() {
     const { currentSlide } = this.state;
+    const firstLocation = this.getFirstLocation();
+
     return (
       <CarouselWrapper>
         <Carousel
@@ -638,7 +645,7 @@ class OnboardingPage extends React.Component {
                     <Button
                       className="Onboarding__buttons-next"
                       type="primary"
-                      onClick={() => this.props.history.push("/explore")}
+                      onClick={() => this.props.history.push(firstLocation)}
                     >
                       Get started and explore{" "}
                       <img
