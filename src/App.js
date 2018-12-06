@@ -33,8 +33,25 @@ class App extends Component {
     }
   }
 
+  isFirstListAssetVisit(firstVisit) {
+    // let the explore component handle this
+    try {
+      if (this.props.location.pathname === '/list-asset' && !firstVisit &&
+            localStorage.getItem('first-list-asset-visit') === null) {
+        localStorage.setItem('first-list-asset-visit', 'true');
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   render() {
     const firstVisit = this.isFirstVisit();
+    const firstListAssetVisit = this.isFirstListAssetVisit(firstVisit);
+    console.log(firstListAssetVisit)
+  
     return (
       <CirclesBackgroundWrapper>
         <BancorContainer>
@@ -95,7 +112,7 @@ class App extends Component {
                   key={path}
                   path={path}
                   exact={exact}
-                  render={props => <C isFirstVisit={firstVisit} {...props} />}
+                  render={props => <C isFirstVisit={firstVisit} isFirstListAssetVisit={firstListAssetVisit} {...props} />}
                 />
               ))}
             </Switch>

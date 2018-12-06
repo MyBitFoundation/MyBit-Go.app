@@ -17,6 +17,7 @@ import ListAssetPage from './components/pages/ListAssetPage'
 import AssetManagerPage from './components/pages/AssetManagerPage'
 
 const redirectToOnFirstVisit = '/onboarding';
+const redirectOnFirstListAssetVisit = '/asset-manager';
 
 const routes = [
   {
@@ -160,7 +161,23 @@ const routes = [
   {
     path: '/list-asset',
     exact: true,
-    component: () => (<ListAssetPage />),
+    component: ({ isFirstVisit, isFirstListAssetVisit }) => {
+      if(isFirstVisit) {
+        return (
+          <Redirect to={redirectToOnFirstVisit} />
+        )
+      } else {
+        if(isFirstListAssetVisit) {
+          return (
+            <Redirect to={redirectOnFirstListAssetVisit} />
+          )
+        } else {
+          return (
+            <ListAssetPage />
+          )
+        }
+      }
+    }
   },
   {
     path: '/asset-manager',
