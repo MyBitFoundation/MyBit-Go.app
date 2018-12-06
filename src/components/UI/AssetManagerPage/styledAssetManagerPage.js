@@ -43,6 +43,10 @@ export const Slide = styled.div`
         color: rgba(0, 0, 0, 0.65);
         padding: 22px 56px 0px 91px;
         margin: 0;
+        @media(max-width: 500px) {
+            padding: 22px 35px 0px 35px;
+            text-align: justify;
+        }
     }
     .Slider__ListItem {
         line-height: normal;
@@ -53,12 +57,16 @@ export const Slide = styled.div`
         color: rgba(0, 0, 0, 0.65);
         padding: 0px 48px 0px 91px;
         position: relative;
+        @media(max-width: 500px) {
+            padding: 0px 35px 0px 55px;
+            text-align: justify;
+        }
         &::before {
             content: "•";
             font-size: 28px;
             position: absolute;
             top: -10px;
-            left: 70px;
+            left: 35px;
             color: #1890ff;
         }
     }
@@ -86,6 +94,10 @@ export const Slide = styled.div`
         font-size: 12px;
         margin: 0;
         color: rgba(0, 0, 0, 0.65);
+        @media(max-width: 500px) {
+            padding: 0px 35px 12px 35px;
+            text-align: justify;
+        }
         &--last-slide {
             padding: 0px 61px 15px 78px;
             font-family: Roboto;
@@ -93,7 +105,12 @@ export const Slide = styled.div`
             font-size: 12px;
             margin: 0;
             color: rgba(0, 0, 0, 0.65);
+            @media(max-width: 500px) {
+                padding: 0px 35px 12px 35px;
+                text-align: justify;
+            }
         }
+
     }
     
 `
