@@ -1,13 +1,17 @@
 require('dotenv').config();
 const express = require('express');
 // const basicAuth = require('express-basic-auth');
+const civicSip = require('civic-sip-api');
 const path = require('path');
+const AWS = require('aws-sdk');
+const multer = require('multer');
 const fetchAssets = require('./src/util/serverHelper');
 
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_KEY;
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
 const app = express();
-
-let assets = [];
-let assetsLoaded = false;
 
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
@@ -17,10 +21,94 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
+let assets = [];
+let assetsLoaded = false;
+
+const multerStorage = multer.memoryStorage();
+const multipleUpload = multer({
+  storage: multerStorage,
+}).any(); // TODO: use more specific validation of any()
+
+const s3bucket = new AWS.S3({
+  accessKeyId,
+  secretAccessKey,
+  region: bucketRegion,
+  Bucket: bucketName,
+});
+
+const civicClient = civicSip.newClient({
+  appId: process.env.REACT_APP_CIVIC_APP_ID,
+  prvKey: process.env.CIVIC_PRIVATE_KEY,
+  appSecret: process.env.CIVIC_APP_SECRET,
+});
+
+app.post('/api/list-asset/auth', (req, res) => {
+  const jwt = req.header('Authorization').split('Bearer ')[1];
+  civicClient.exchangeCode(jwt)
+    .then((userData) => {
+      res.send({ userData: JSON.stringify(userData, null, 4) });
+    }).catch((error) => {
+      res.statusCode = 500;
+      res.send(error);
+      console.log(error);
+    });
+});
+
 app.get('/api/assets', (req, res) => {
   res.send({
     assets,
     assetsLoaded,
+  });
+});
+
+app.get('/api/files/list', (req, res) => {
+  const params = {
+    Bucket: bucketName,
+    MaxKeys: 1000, // TODO: make this dynamic
+  };
+
+  s3bucket.listObjectsV2(params, (err, data) => {
+    if (err) {
+      res.statusCode = 404;
+      res.json(err);
+    } else {
+      res.statusCode = 200;
+      res.json(data);
+    }
+  });
+});
+
+app.post('/api/files/upload', multipleUpload, (req, res) => {
+  const file = req.files;
+  const ResponseData = [];
+
+  file.map((item) => {
+    console.log(item);
+    const params = {
+      Bucket: bucketName,
+      Key: item.originalname,
+      Body: item.buffer,
+      ACL: 'public-read',
+    };
+    s3bucket.upload(params, (err, data) => {
+      if (err) {
+        res.statusCode = 404;
+        res.json({
+          error: true,
+          message: err,
+        });
+      } else {
+        ResponseData.push(data);
+        if (ResponseData.length === file.length) {
+          res.statusCode = 200;
+          res.json({
+            error: false,
+            message: 'It works! Awesome! Its uploaded!',
+            data: ResponseData,
+          });
+        }
+      }
+    });
   });
 });
 

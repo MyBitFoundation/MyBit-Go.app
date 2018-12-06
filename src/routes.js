@@ -13,6 +13,7 @@ import BlockchainInfoContext from './components/BlockchainInfoContext';
 import LandingPage from './components/pages/LandingPage';
 import WatchListPage from './components/pages/WatchListPage';
 import OnboardingPage from './components/pages/OnboardingPage';
+import ListAssetPage from './components/pages/ListAssetPage'
 
 const redirectToOnFirstVisit = '/onboarding';
 
@@ -154,6 +155,11 @@ const routes = [
     path: '/onboarding',
     exact: true,
     component: () => (<OnboardingPage />),
+  },
+  {
+    path: '/list-asset',
+    exact: true,
+    component: () => (<ListAssetPage />),
   },
   {
     path: '*',
