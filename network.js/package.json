@@ -1,0 +1,27 @@
+{
+  "name": "@mybit/network.js",
+  "version": "0.0.9",
+  "description": "API for interacting the MyBit Network SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "blockchain": "mybit-network"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MyBitFoundation/MyBit-Network.website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MyBitFoundation/MyBit-Network.website/issues"
+  },
+  "homepage": "https://github.com/MyBitFoundation/MyBit-Network.website#readme",
+  "dependencies": {
+    "@mybit/contracts": "0.1.11",
+    "@mybit/network-chain": "0.1.15",
+    "truffle-contract": "3.0.6",
+    "web3": "1.0.0-beta.36"
+  }
+}
