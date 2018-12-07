@@ -1,6 +1,7 @@
 import { promisifyAll } from 'bluebird';
 import * as FundingHub from './FundingHub';
 import { fundingTopics } from '../topics';
+import contractAddresses from '../contractAddresses.json'
 const Network = require('@mybit/network.js');
 const abiDecoder = require('abi-decoder');
 
@@ -11,10 +12,10 @@ abiDecoder.addABI(FundingHub.ABI);
 
 export default class FundingHubUtil {
   constructor() {
-    this.totalContributorsPerAssetID = {};
     const testNet = 'wss://possibly-possible-lark.quiknode.io/49102400-d67e-456d-bd4d-05b51fef855c/kula72q-V9q6lO5DDhTahw==/'
-    this.web3EventsListener = Network.getWeb3EventsListener(testNet)
-
+    this.network = Network(window.web3js, contractAddresses)
+    this.totalContributorsPerAssetID = {};
+    this.web3EventsListener = this.network.getWeb3EventsListener(testNet)
     this.setLogAssetFundedListener = this.setLogAssetFundedListener.bind(this);
     this.removeLogAssetFundedListener = this.removeLogAssetFundedListener.bind(this);
   }

@@ -1,0 +1,22 @@
+{
+  "MyBitToken": "0x7e064335e609eb6482ff1ac87d868c80fa0126f7",
+  "ERC20Burner": "0xc36e01cd3ef07beb48ee4bef5bc4f50be67537f2",
+  "Database": "0x500418744cd9918491e79fca6f6393dbfbab559c",
+  "Events": "0x7780640cabacaea3ed429b37fef584853ee0c49e",
+  "ContractManager": "0x847a94ec599f5468176b07bb50090b72247724fc",
+  "API": "0x4003e5dae33c753269d76f7fd672a84bd640cebd",
+  "SingleOwned": "0x9dc17321a61311edfe38445445c3c68ee719c1d8",
+  "Pausible": "0x6b993b0c7b55a02ae46daf2273b2653238c2ee9d",
+  "AccessHierarchy": "0xbaed6cd375cfd13cd3e76d8ccefc0da309a835cc",
+  "PlatformFunds": "0x6f1d6a9386b6be80296eab920d3306fce121f102",
+  "Operators": "0x549306c42e22492591e08e3c709c4c7f68d78fd1",
+  "AssetGovernance": "0x552f85ba49cadd9811d9e156f58e47e6649476fb",
+  "AssetManagerEscrow": "0x4b9c2e08cac0ddccc62ebcbe71860b4c2e9dee85",
+  "AssetManagerFunds": "0xdeabf68ff413cd1d673ff83a45df45f1aa155882",
+  "AssetGenerator": "0x977fc8b5c1dbb1aeb6447245a82a49783208931b",
+  "CrowdsaleETH": "0x789cf5d31e8525e8ae9c0e621fcd2119339fdedf",
+  "CrowdsaleGeneratorETH": "0xb71da0b271bb067f202cd191f9b9d7cc68553a9d",
+  "CrowdsaleERC20": "0x254dc859b76cd89c01ee2c402499f94a0b90c032",
+  "CrowdsaleGeneratorERC20": "0xb6eee15d6567e3028d517f33aa8a0760c63c315d",
+  "AssetExchange": "0x67f34c3109078f32f9ebd7d7a1290ae01c49617e"
+}
