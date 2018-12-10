@@ -13,7 +13,6 @@ import questionTooltip from "../../../images/list-asset/questionTooltip.png";
 import Earth from "../../../images/list-asset/assetList_earth.png";
 import Coins from "../../../images/list-asset/assetList_coins.png";
 import MYB from "../../../images/list-asset/assetList_myb.png";
-import * as DummyData from "./dummyData";
 import { CivicButton, withCivic } from "../CivicContainer";
 
 const Option = Select.Option;

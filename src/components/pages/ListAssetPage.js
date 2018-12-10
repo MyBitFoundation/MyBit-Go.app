@@ -105,7 +105,7 @@ class ListAssetPage extends React.Component {
           const hasCategory = row.fields.Category !== undefined;
           const matchesLocation = row.fields.Location === undefined ? true : matchLocation();
           const hasName = row.fields.Asset !== undefined;
-          return matchesLocation && hasName //&& (!hasCategory || row.fields.Category === category);
+          return matchesLocation && hasName && (!hasCategory || row.fields.Category === category);
         })
         // .reduce((acc, row) => {
         //   let category = row.fields.Category
