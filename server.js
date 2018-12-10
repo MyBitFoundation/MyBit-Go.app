@@ -6,7 +6,6 @@ const civicSip = require('civic-sip-api');
 const path = require('path');
 const AWS = require('aws-sdk');
 const multer = require('multer');
-const proxy = require('express-http-proxy');
 const fetchAssets = require('./src/util/serverHelper');
 
 const accessKeyId = process.env.AWS_ACCESS_KEY;
