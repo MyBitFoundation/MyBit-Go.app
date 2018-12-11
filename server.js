@@ -57,7 +57,7 @@ const civicClient = civicSip.newClient({
 // }));
 
 app.use('/api/airtable', function(req, res) {
-  req.pipe(request("https://api.airtable.com/v0/appqG0TWhvhplwrGL/Imported%20table?api_key=keyW2cXNlNgOlIKSl")).pipe(res);
+  req.pipe(request(`https://api.airtable.com/v0/appqG0TWhvhplwrGL/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)).pipe(res);
 });
 
 app.post('/api/list-asset/auth', (req, res) => {
