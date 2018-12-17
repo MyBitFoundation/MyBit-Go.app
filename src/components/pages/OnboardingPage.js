@@ -32,12 +32,19 @@ const SliderNavigationTooltips = [
   { slide: 9, tooltip: 'Required setup' },
 ];
 
+const getFirstLocation = () => {
+  const onboardingIsFinished = localStorage.getItem('onboardingFinished');
+  const location = onboardingIsFinished ? '/explore' : localStorage.getItem('onboardingRedirect');
+  return location === '/onboarding' ? '/explore' : location;
+}
+
 class OnboardingPage extends React.Component {
   constructor(props) {
     super(props);
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.goToSlide = this.goToSlide.bind(this);
+    this.finishOnboarding = this.finishOnboarding.bind(this);
     this.state = {
       currentSlide: 0,
     };
@@ -55,8 +62,17 @@ class OnboardingPage extends React.Component {
     this.carousel.goTo(number, false);
   }
 
+  finishOnboarding() {
+    const firstLocation = getFirstLocation();
+    if (localStorage.getItem('onboardingFinished') === null) {
+      localStorage.setItem('onboardingFinished', 'true');
+    }
+    this.props.history.push(firstLocation)
+  }
+
   render() {
     const { currentSlide } = this.state;
+
     return (
       <CarouselWrapper>
         <Carousel
@@ -638,7 +654,7 @@ class OnboardingPage extends React.Component {
                     <Button
                       className="Onboarding__buttons-next"
                       type="primary"
-                      onClick={() => this.props.history.push("/explore")}
+                      onClick={this.finishOnboarding}
                     >
                       Get started and explore{" "}
                       <img

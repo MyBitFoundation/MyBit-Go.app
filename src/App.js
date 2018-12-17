@@ -1,5 +1,3 @@
-/* eslint-disable class-methods-use-this */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
@@ -8,7 +6,6 @@ import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
 import BancorContainer from './components/UI/BancorContainer';
-import CivicContainer from './components/UI/CivicContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 import {
@@ -26,6 +23,21 @@ class App extends Component {
     try {
       if (localStorage.getItem('mybitUser2') === null) {
         localStorage.setItem('mybitUser2', 'true');
+        localStorage.setItem('onboardingRedirect', this.props.location.pathname);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  isFirstListAssetVisit(firstVisit) {
+    // let the explore component handle this
+    try {
+      if (this.props.location.pathname === '/list-asset' && !firstVisit &&
+            localStorage.getItem('first-list-asset-visit') === null) {
+        localStorage.setItem('first-list-asset-visit', 'true');
         return true;
       }
       return false;
@@ -36,72 +48,75 @@ class App extends Component {
 
   render() {
     const firstVisit = this.isFirstVisit();
+    const firstListAssetVisit = this.isFirstListAssetVisit(firstVisit);
+    console.log(firstListAssetVisit)
+  
     return (
       <CirclesBackgroundWrapper>
-        <CivicContainer>
-          <BancorContainer>
+        <BancorContainer>
+          <BlockchainInfoContext.Consumer>
+            {({
+              user,
+              prices,
+              userHasMetamask,
+              userIsLoggedIn,
+              network,
+              setAssetsStatusState,
+              assetsNotification,
+              notificationPlace,
+              isBraveBrowser,
+              extensionUrl,
+            }) => (
+              <React.Fragment>
+                <AppHeader
+                  user={user}
+                  prices={prices.mybit}
+                  usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
+                  setAssetsStatusState={setAssetsStatusState}
+                  assetsNotification={assetsNotification}
+                  notificationPlace={notificationPlace}
+                />
+                <NavigationBar
+                  setAssetsStatusState={setAssetsStatusState}
+                  currentPath={this.props.location.pathname}
+                />
+                {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
+              </React.Fragment>
+            )}
+          </BlockchainInfoContext.Consumer>
+
+          <div className="notification_wrapper">
             <BlockchainInfoContext.Consumer>
               {({
-                user,
-                prices,
-                userHasMetamask,
-                userIsLoggedIn,
-                network,
+                notificationPlace,
                 setAssetsStatusState,
                 assetsNotification,
-                notificationPlace,
-                isBraveBrowser,
-                extensionUrl,
-              }) => (
-                <React.Fragment>
-                  <AppHeader
-                    user={user}
-                    prices={prices.mybit}
-                    usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
+              }) => {
+                if (notificationPlace === 'notification') {
+                  return (<Notification
                     setAssetsStatusState={setAssetsStatusState}
                     assetsNotification={assetsNotification}
-                    notificationPlace={notificationPlace}
-                  />
-                  <NavigationBar
-                    setAssetsStatusState={setAssetsStatusState}
-                    currentPath={this.props.location.pathname}
-                  />
-                  {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
-                </React.Fragment>
-              )}
+                  />);
+                }
+                return null;
+              }}
             </BlockchainInfoContext.Consumer>
+          </div>
 
-            <div className="notification_wrapper">
-              <BlockchainInfoContext.Consumer>
-                {({
-                  notificationPlace,
-                  setAssetsStatusState,
-                  assetsNotification,
-                }) => {
-                  if (notificationPlace === 'notification') {
-                    return (<Notification
-                      setAssetsStatusState={setAssetsStatusState}
-                      assetsNotification={assetsNotification}
-                    />);
-                  }
-                  return null;
-                }}
-              </BlockchainInfoContext.Consumer>
-            </div>
-            <div className="page-wrapper">
-              <Switch>
-                {routes.map(({ path, exact, component: C }) => (
-                  <Route
-                    key={path}
-                    path={path}
-                    exact={exact}
-                    render={props => <C isFirstVisit={firstVisit} {...props} />}
-                  />
-                ))}
-              </Switch>
-            </div>
-          </BancorContainer>
-        </CivicContainer>
+
+          <div className="page-wrapper">
+            <Switch>
+              {routes.map(({ path, exact, component: C }) => (
+                <Route
+                  key={path}
+                  path={path}
+                  exact={exact}
+                  render={props => <C isFirstVisit={firstVisit} isFirstListAssetVisit={firstListAssetVisit} {...props} />}
+                />
+              ))}
+            </Switch>
+          </div>
+        </BancorContainer>
       </CirclesBackgroundWrapper>
     );
   }

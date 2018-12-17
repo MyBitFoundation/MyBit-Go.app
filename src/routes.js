@@ -14,8 +14,10 @@ import LandingPage from './components/pages/LandingPage';
 import WatchListPage from './components/pages/WatchListPage';
 import OnboardingPage from './components/pages/OnboardingPage';
 import ListAssetPage from './components/pages/ListAssetPage'
+import AssetManagerPage from './components/pages/AssetManagerPage'
 
 const redirectToOnFirstVisit = '/onboarding';
+const redirectOnFirstListAssetVisit = '/asset-manager';
 
 const routes = [
   {
@@ -145,11 +147,12 @@ const routes = [
   {
     path: '/help',
     exact: true,
-    component: () => (
+    component: ({ isFirstVisit }) =>
+    (isFirstVisit ? <Redirect to={redirectToOnFirstVisit} /> : (
       <BlockchainInfoContext.Consumer>
         {({ fetchMyBit }) => <HelpPage fetchMyBit={fetchMyBit} />}
       </BlockchainInfoContext.Consumer>
-    ),
+    )),
   },
   {
     path: '/onboarding',
@@ -159,7 +162,28 @@ const routes = [
   {
     path: '/list-asset',
     exact: true,
-    component: () => (<ListAssetPage />),
+    component: ({ isFirstVisit, isFirstListAssetVisit }) => {
+      if(isFirstVisit) {
+        return (
+          <Redirect to={redirectToOnFirstVisit} />
+        )
+      } else {
+        if(isFirstListAssetVisit) {
+          return (
+            <Redirect to={redirectOnFirstListAssetVisit} />
+          )
+        } else {
+          return (
+            <ListAssetPage />
+          )
+        }
+      }
+    }
+  },
+  {
+    path: '/asset-manager',
+    exact: true,
+    component: () => (<AssetManagerPage />),
   },
   {
     path: '*',
