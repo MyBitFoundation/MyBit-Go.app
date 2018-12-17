@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const request = require('request');
 // const basicAuth = require('express-basic-auth');
 const civicSip = require('civic-sip-api');
 const path = require('path');
@@ -12,6 +13,8 @@ const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const app = express();
+
+
 
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
@@ -40,6 +43,21 @@ const civicClient = civicSip.newClient({
   appId: process.env.REACT_APP_CIVIC_APP_ID,
   prvKey: process.env.CIVIC_PRIVATE_KEY,
   appSecret: process.env.CIVIC_APP_SECRET,
+});
+
+
+// app.use('/api/airtable', proxy('https://api.airtable.com/v0/appqG0TWhvhplwrGL/Imported%20table?api_key=keyW2cXNlNgOlIKSl', {
+//   userResHeaderDecorator(headers, userReq, userRes, proxyReq, proxyRes) {
+//     // recieves an Object of headers, returns an Object of headers.
+//     return {
+//       'Access-Control-Allow-Origin': '*',
+//       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+//     };
+//   },
+// }));
+
+app.use('/api/airtable', function(req, res) {
+  req.pipe(request(`https://api.airtable.com/v0/appqG0TWhvhplwrGL/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)).pipe(res);
 });
 
 app.post('/api/list-asset/auth', (req, res) => {
@@ -116,8 +134,9 @@ app.post('/api/files/upload', multipleUpload, (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 
 app.listen(8080);

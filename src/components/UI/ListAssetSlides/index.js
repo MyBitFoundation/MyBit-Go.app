@@ -13,7 +13,6 @@ import questionTooltip from "../../../images/list-asset/questionTooltip.png";
 import Earth from "../../../images/list-asset/assetList_earth.png";
 import Coins from "../../../images/list-asset/assetList_coins.png";
 import MYB from "../../../images/list-asset/assetList_myb.png";
-import * as DummyData from "./dummyData";
 import { CivicButton, withCivic } from "../CivicContainer";
 
 const Option = Select.Option;
@@ -62,9 +61,12 @@ export const IntroSlide = withCivic(({ next, civic }) => (
       <div className="IntroListItem">
         <div className="IntroListItem__title">A Civic account</div>
         <div className="IntroListItem__note">
-
           Login securely using your Civic account. You can create one{" "}
-          <a href="https://www.civic.com/app/" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://www.civic.com/app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             here
           </a>
         </div>
@@ -101,14 +103,16 @@ export const IntroSlide = withCivic(({ next, civic }) => (
       </div>
     </IntroList>
     <div className="Slider__buttons">
-      {!civic.token && <CivicButton onClick={civic.signUp}/>}
-      {civic.token && <Button
-        type="primary"
-        className="Slider__buttons-continue"
-        onClick={next}
-      >
-        Continue
-      </Button>}
+      {!civic.token && <CivicButton onClick={civic.signUp} />}
+      {civic.token && (
+        <Button
+          type="primary"
+          className="Slider__buttons-continue"
+          onClick={next}
+        >
+          Continue
+        </Button>
+      )}
     </div>
   </Slide>
 ));
@@ -118,7 +122,8 @@ export const LocationSlide = ({
   previous,
   handleInputChange,
   handleSelectChange,
-  formData
+  formData,
+  countries
 }) => {
   const { userCity, userCountry } = formData;
   let forbidNext = userCity !== "" && userCountry !== "" ? false : true;
@@ -147,7 +152,7 @@ export const LocationSlide = ({
             0
           }
         >
-          {DummyData.Countries.map(country => (
+          {countries.map(country => (
             <Option key={country} value={country}>
               {country}
             </Option>
@@ -176,12 +181,14 @@ export const AvailableAssetsSlide = ({
   assetValue,
   handleSelectChange,
   formData,
-  history
+  history,
+  assets,
+  categories
 }) => {
   const { category, asset } = formData;
+  console.log(categories);
   let forbidNext =
     category !== "" && asset !== "" && assetValue !== 0 ? false : true;
-  let categories = [...DummyData.Categories];
   return (
     <Slide>
       <Tooltip
@@ -209,11 +216,11 @@ export const AvailableAssetsSlide = ({
                   .indexOf(input.toLowerCase()) >= 0
               }
             >
-              {categories.map(category => (
-                <Option key={category} value={category}>
-                  {category}
-                </Option>
-              ))}
+              {categories.map(cat => (
+                  <Option key={cat} value={cat}>
+                    {cat}
+                  </Option>
+                ))}
             </Select>
             <Select
               showSearch
@@ -227,9 +234,9 @@ export const AvailableAssetsSlide = ({
                   .indexOf(input.toLowerCase()) >= 0
               }
             >
-              {DummyData.Assets.map(asset => (
-                <Option key={asset} value={asset}>
-                  {asset}
+              {assets.filter(row => row.fields.Category === category).map(row => (
+                <Option key={row.fields.Asset} value={row.fields.Asset}>
+                  {row.fields.Asset}
                 </Option>
               ))}
             </Select>
@@ -279,7 +286,8 @@ export const AssetLocationSlide = ({
   previous,
   handleInputChange,
   handleSelectChange,
-  formData
+  formData,
+  countries
 }) => {
   const {
     assetCountry,
@@ -321,14 +329,15 @@ export const AssetLocationSlide = ({
         <Select
           showSearch
           value={assetCountry}
+          disabled={true}
           optionFilterProp="children"
-          onChange={value => handleSelectChange(value, "assetCountry")}
+          // onChange={value => handleSelectChange(value, "assetCountry")}
           filterOption={(input, option) =>
             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
             0
           }
         >
-          {DummyData.Countries.map(country => (
+          {countries.map(country => (
             <Option key={country} value={country}>
               {country}
             </Option>
