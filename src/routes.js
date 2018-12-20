@@ -15,6 +15,7 @@ import WatchListPage from './components/pages/WatchListPage';
 import OnboardingPage from './components/pages/OnboardingPage';
 import ListAssetPage from './components/pages/ListAssetPage'
 import AssetManagerPage from './components/pages/AssetManagerPage'
+import PortfolioManagedAssetPage from './components/pages/PortfolioManagedAssetPage'
 
 const redirectToOnFirstVisit = '/onboarding';
 const redirectOnFirstListAssetVisit = '/asset-manager';
@@ -143,6 +144,14 @@ const routes = [
         }
       </BlockchainInfoContext.Consumer>
     ),
+  },
+  {
+    path: '/managed-asset',
+    exact: true,
+    component: ({ isFirstVisit }) =>
+    (isFirstVisit ? <Redirect to={redirectToOnFirstVisit} /> : (
+      <PortfolioManagedAssetPage />
+    )),
   },
   {
     path: '/help',
