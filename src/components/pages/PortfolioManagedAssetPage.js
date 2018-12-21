@@ -40,7 +40,7 @@ class PortfolioManagedAssetPage extends React.Component {
                         <Button>Back</Button>
                     </div>
                     <div className="ManagedAsset__alert-column">
-                        <Alert className="ManagedAsset__alert" message="This is an success message from MyBit." type="success" showIcon />
+                        <Alert className="ManagedAsset__alert" message="This is an success message from MyBit." type="success" showIcon closable/>
                     </div>
                 </div>
 

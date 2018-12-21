@@ -10,6 +10,7 @@ import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
 import AssetPortfolio from '../AssetPortfolio';
 import { formatMonetaryValue } from '../../util/helpers';
+import { ManagedAssetCardGrid } from '../UI/ManagedAssetPage/ManagedAssetCardGrid'
 
 const ButtonGroup = Button.Group;
 
@@ -79,7 +80,7 @@ class PortfolioPage extends React.Component {
     this.displayOwned = this.displayOwned.bind(this);
     this.displayManaged = this.displayManaged.bind(this);
     this.state = {
-      currentView: "owned",
+      currentView: "managed",
     };
   }
 
@@ -179,7 +180,7 @@ class PortfolioPage extends React.Component {
               />
             ))}
             {currentView === "managed" && (
-              <h1>managed assets display</h1>
+              <ManagedAssetCardGrid assets={[]} />
             )}
           </Row>
         </div>
