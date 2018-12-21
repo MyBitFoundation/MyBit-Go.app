@@ -19,6 +19,9 @@ import {
   testAssetIds,
 } from '../constants';
 
+const Network = require('@mybit/network.js');
+console.log(Network)
+
 const IPFS_URL =
   'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
 

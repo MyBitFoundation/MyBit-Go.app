@@ -45,7 +45,7 @@ class ListAssetPage extends React.Component {
   }
 
   componentDidMount() {
-    fetch("/api/airtable")
+    fetch(process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable' : '/api/airtable')
       .then(res => res.json())
       .then(data => {
         this.setState({

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const request = require('request');
+const cors = require('cors')
 // const basicAuth = require('express-basic-auth');
 const civicSip = require('civic-sip-api');
 const path = require('path');
@@ -13,8 +14,7 @@ const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const app = express();
-
-
+app.use(cors);
 
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
