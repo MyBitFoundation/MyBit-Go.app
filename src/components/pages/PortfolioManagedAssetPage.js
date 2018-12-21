@@ -13,6 +13,7 @@ import {
 import LocationIcon from '../../images/Location-blue.svg';
 import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
+import Fee from '../../images/Fee.png';
 
 const ButtonGroup = Button.Group;
 
@@ -42,7 +43,7 @@ class PortfolioManagedAssetPage extends React.Component {
                         <Button>Back</Button>
                     </div>
                     <div className="ManagedAsset__alert-column">
-                        <Alert className="ManagedAsset__alert" message="This is an success message from MyBit." type="success" showIcon closable/>
+                        <Alert className="ManagedAsset__alert" message="This is an success message from MyBit." type="success" showIcon closable />
                     </div>
                 </div>
 
@@ -72,19 +73,19 @@ class PortfolioManagedAssetPage extends React.Component {
                                 <img className="AssetValueRow__Card-img-pie-chart" src={PieChart} alt="Line chart" />
                                 Asset Value
                                 <div className="AssetValueRow__Card-box-separator" />
-                                <b className="AssetValueRow__Card-value--is-blue">2049.53$</b>
+                                <b className="AssetValueRow__Card-value--is-blue">$2049.53</b>
                             </div>
                             <div className="AssetValueRow__Card">
                                 <img className="AssetValueRow__Card-img-line-chart" src={LineChart} alt="Line chart" />
                                 Asset Revenue
                                 <div className="AssetValueRow__Card-box-separator" />
-                                <b className="AssetValueRow__Card-value--is-green">5030.63$</b>
+                                <b className="AssetValueRow__Card-value--is-green">$5030.63</b>
                             </div>
                             <div className="AssetValueRow__Card">
-                                <img className="AssetValueRow__Card-img-pie-chart" src={PieChart} alt="Line chart" />
+                                <img className="AssetValueRow__Card-img-pie-chart" src={Fee} alt="Line chart" />
                                 Fee
                                 <div className="AssetValueRow__Card-box-separator" />
-                                <b className="AssetValueRow__Card-value--is-blue">5$</b>
+                                <b className="AssetValueRow__Card-value--is-blue">5%</b>
                             </div>
                         </AssetValueRow>
                         <EqualBoxes>
@@ -143,7 +144,7 @@ class PortfolioManagedAssetPage extends React.Component {
                         <div className="ManagedAsset__graphics">
                             {this.state.chartBoxView === "profit" && (
                                 <div className="ManagedAsset__chart-container">
-                                    <div>chart</div>
+                                    chart
                                 </div>
                             )}
                             {this.state.chartBoxView === "collateral" && (

@@ -8,6 +8,7 @@ import LoadingPage from './LoadingPage';
 import { isAssetIdEnabled } from '../../constants';
 import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
+import Fee from '../../images/Fee.png';
 import AssetPortfolio from '../AssetPortfolio';
 import { formatMonetaryValue } from '../../util/helpers';
 import { ManagedAssetCardGrid } from '../UI/ManagedAssetPage/ManagedAssetCardGrid'
@@ -132,7 +133,7 @@ class PortfolioPage extends React.Component {
           <div className="Portfolio__cards">
             <div className="Portfolio__card">
               <img className="Portfolio__card-img" src={PieChart} alt="Pie chart" />
-              <span>Total Portfolio Value: {' '}
+              <span>Total Portfolio Value {' '}
                 <b>
                   {formatMonetaryValue(totalPortfolioValue)}
                 </b>
@@ -142,16 +143,16 @@ class PortfolioPage extends React.Component {
             </div>
             <div className="Portfolio__card">
               <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
-              <span>Total Revenue: <b>{formatMonetaryValue(totalPortfolioRevenue)}</b></span>
+              <span>Total Revenue <b>{formatMonetaryValue(totalPortfolioRevenue)}</b></span>
               <div className="Portfolio__card-separator" />
               <b className="Portfolio__card-value--is-green">{totalRevenuePercentage}%</b>
             </div>
             {currentView === "managed" && (
               <div className="Portfolio__card">
-                <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
-                <span>Total Management Profit: </span>
+                <img className="Portfolio__card-img" src={Fee} alt="Fee icon" />
+                <span>Total Management Profit</span>
                 <div className="Portfolio__card-separator" />
-                <b className="Portfolio__card-value--is-green">450$</b>
+                <b className="Portfolio__card-value--is-blue">450$</b>
               </div>
             )}
             <div className="Portfolio__card-buttons">

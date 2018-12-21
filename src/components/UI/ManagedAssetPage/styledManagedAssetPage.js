@@ -201,22 +201,22 @@ export const AssetValueRow = styled.div`
         border-radius: 4px;
         background-color: #ffffff;
         display: flex;
-        align-items: center;
         font-size: 12px;
         line-height: 22px;
         height: 40px;
-        justify-content: center;
+        justify-content: space-between;
+        padding-left: 10px;
+        padding-right: 3px;
         align-items: center;
-        padding: 3px 3px 3px 3px;
         margin: 5px 0;
         &:nth-child(1) {
-            width: 33%;
+            width: 35%;
         }
         &:nth-child(2) {
-            width: 38%;
+            width: 39%;
         }
         &:nth-child(3) {
-            width: 23%;
+            width: 22%;
         }
         b {
             font-weight: 500;
@@ -230,13 +230,13 @@ export const AssetValueRow = styled.div`
             color: #2db84b !important;
             background-color: #F6FFED;
             border-radius: 4px;
-            padding: 8px 5px 7px 5px;
+            padding: 8px 10px 7px 10px;
         }
         &-value--is-blue {
             color: #1890FF !important;
             background-color: rgba(24, 144, 255, 0.1);
             border-radius: 4px;
-            padding: 8px 5px 7px 5px;
+            padding: 8px 10px 7px 10px;
         }
         &-box-separator {
             background-color: rgba(0, 0, 0, 0.09);

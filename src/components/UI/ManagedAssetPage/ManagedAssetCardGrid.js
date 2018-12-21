@@ -10,12 +10,12 @@ export const ManagedAssetCardGrid = ({ assets }) => (
         {[...Array(5)].map((e, i) => (
         <div className="ManagedAsset__Card" key={i}>
             <div className="ManagedAsset__Card-header">
-                <img src={img_url} className="ManagedAsset__Card-header-image" />
+                <img src={img_url} className="ManagedAsset__Card-header-image" alt="Asset Preview" />
                 <div className="ManagedAsset__Card-header-title">
                     Bitcoin ATM
                 </div>
                 <div className="ManagedAsset__Card-header-location">
-                    <img src={LocationIcon} className="ManagedAsset__Card-header-location-icon" />
+                    <img src={LocationIcon} className="ManagedAsset__Card-header-location-icon" alt="Location Icon" />
                     Zug, Switzerland
                 </div>
             </div>

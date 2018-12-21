@@ -114,13 +114,13 @@ export const ManagedAssetCardsWrapper = styled.div`
                         color: #2db84b !important;
                         background-color: #F6FFED;
                         border-radius: 4px;
-                        padding: 8px 5px 7px 5px;
+                        padding: 8px 10px 7px 10px;
                     }
                     &--is-blue {
                         color: #1890FF !important;
                         background-color: rgba(24, 144, 255, 0.1);
                         border-radius: 4px;
-                        padding: 8px 5px 7px 5px;
+                        padding: 8px 10px 7px 10px;
                     }
                 } 
             }
