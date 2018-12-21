@@ -76,6 +76,7 @@ class Civic extends Component {
   }
 
   signUp(onSuccess, onReadCallback, onErrorCallback) {
+    console.log('civic signup')
     this.civicSip.signup({
       style: 'popup',
       scopeRequest: this.civicSip.ScopeRequests.BASIC_SIGNUP,
@@ -114,9 +115,11 @@ class Civic extends Component {
 
 export function withCivic(WrappedComponent) {
   return props => (
-    <Consumer>
-      {civic => <WrappedComponent {...props} civic={civic} />}
-    </Consumer>
+    <Civic>
+      <Consumer>
+        {(civic) => <WrappedComponent {...props} civic={civic} />}
+      </Consumer>
+    </Civic>
   );
 }
 
