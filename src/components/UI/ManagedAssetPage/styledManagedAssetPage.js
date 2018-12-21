@@ -48,19 +48,109 @@ export const ManagedAssetWrapper = styled.div`
             max-height: 280px;
             border-radius: 6px;
         }
-        .ManagedAsset__chart-container {
+        .ManagedAsset__graphics {
             min-height: 392px;
             background: #FFFFFF;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            .ManagedAsset__chart-container {
+                padding: 15px 50px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .ManagedAsset__collateral-container {
+                padding: 15px 50px;
+                .ManagedAsset__collateral-title {
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    font-size: 16px;
+                    padding-bottom: 7px;
+                }
+                .ManagedAsset__collateral-description {
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: normal;
+                    line-height: 16px;
+                    font-size: 12px;
+                }
+                .ManagedAsset__collateral-bars {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    padding-top: 46px;
+                    &-column {
+                        flex-direction: column;
+                        width: 99px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        &-percentage {
+                            padding-bottom: 10px;
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: bold;
+                            line-height: normal;
+                            font-size: 14px;
+                            color: #595959;
+                        }
+                        &-status {
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            font-size: 12px;
+                            color: #595959;
+                            padding: 12px 0px 8px 0px;
+                        }
+                        &-button {
+                            > button {
+                                width: 99px;
+                                font-family: Roboto;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: 22px;
+                                font-size: 14px;
+                                padding: 5px 0px;
+                            }
+                            > span {
+                                > button {
+                                    width: 99px;
+                                    font-family: Roboto;
+                                    font-style: normal;
+                                    font-weight: 500;
+                                    line-height: 22px;
+                                    font-size: 14px;
+                                    padding: 5px 0px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+`
 
-    .
-    
+export const CollateralBar = styled.div`
+    display: block;
+    position: relative;
+    height: 172px;
+    width: 36px;
+    background: #EFEFEF;
+    border-radius: 4px;
+    .CollateralBar_percentage {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 36px;
+        height: ${props => props.percentage}
+        background: #1890FF;
+        border-radius: 4px;
+    }
 `
 
 export const FlexRowTwoItems = styled.div`
@@ -302,4 +392,8 @@ export const EqualBoxesWithShadow = styled.div`
             }
         }
     }
+`
+
+export const CollateralView = styled.div`
+    .
 `

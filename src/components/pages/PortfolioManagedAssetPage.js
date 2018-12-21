@@ -1,12 +1,14 @@
 import React from 'react';
 import Button from 'antd/lib/button';
 import Alert from 'antd/lib/alert';
+import Tooltip from 'antd/lib/tooltip';
 import {
     ManagedAssetWrapper,
     FlexRowTwoItems,
     AssetValueRow,
     EqualBoxes,
-    EqualBoxesWithShadow
+    EqualBoxesWithShadow,
+    CollateralBar
 } from '../UI/ManagedAssetPage/styledManagedAssetPage'
 import LocationIcon from '../../images/Location-blue.svg';
 import PieChart from '../../images/chart-pie.png';
@@ -138,12 +140,75 @@ class PortfolioManagedAssetPage extends React.Component {
                                 </div>
                             </div>
                         </EqualBoxesWithShadow>
-                        <div className="ManagedAsset__chart-container">
+                        <div className="ManagedAsset__graphics">
                             {this.state.chartBoxView === "profit" && (
-                                <h1>profit</h1>
+                                <div className="ManagedAsset__chart-container">
+                                    <div>chart</div>
+                                </div>
                             )}
                             {this.state.chartBoxView === "collateral" && (
-                                <h1>collateral</h1>
+                                <div className="ManagedAsset__collateral-container">
+                                    <div className="ManagedAsset__collateral-title">
+                                        Asset collateral
+                                    </div>
+                                    <div className="ManagedAsset__collateral-description">
+                                        Once asset revenue supasses the asset value you can withdraw your asset collateral.
+                                    </div>
+                                    <div className="ManagedAsset__collateral-bars">
+                                        <div className="ManagedAsset__collateral-bars-column">
+                                            <div className="ManagedAsset__collateral-bars-column-percentage">25%</div>
+                                            <CollateralBar percentage="172px">
+                                                <div className="CollateralBar_percentage" />
+                                            </CollateralBar>
+                                            <div className="ManagedAsset__collateral-bars-column-status">Ready to withdraw</div>
+                                            <div className="ManagedAsset__collateral-bars-column-button">
+                                                <Button type="primary">Withdraw</Button>
+                                            </div>
+                                        </div>
+                                        <div className="ManagedAsset__collateral-bars-column">
+                                            <div className="ManagedAsset__collateral-bars-column-percentage">50%</div>
+                                            <CollateralBar percentage="42px">
+                                                <div className="CollateralBar_percentage" />
+                                            </CollateralBar>
+                                            <div className="ManagedAsset__collateral-bars-column-status">$1,859/2,800</div>
+                                            <div className="ManagedAsset__collateral-bars-column-button">
+                                                <Tooltip
+                                                    title="Once asset revenue reaches $4,200 you can withdraw (25% of collateral) MYB."
+                                                >
+                                                    <Button type="secondary" disabled>Withdraw</Button>
+                                                </Tooltip>
+                                            </div>
+                                        </div>
+                                        <div className="ManagedAsset__collateral-bars-column">
+                                            <div className="ManagedAsset__collateral-bars-column-percentage">75%</div>
+                                            <CollateralBar percentage="0px">
+                                                <div className="CollateralBar_percentage" />
+                                            </CollateralBar>
+                                            <div className="ManagedAsset__collateral-bars-column-status">$0/4,200</div>
+                                            <div className="ManagedAsset__collateral-bars-column-button">
+                                                <Tooltip
+                                                    title="Once asset revenue reaches $4,200 you can withdraw (25% of collateral) MYB."
+                                                >
+                                                    <Button type="secondary" disabled>Withdraw</Button>
+                                                </Tooltip>
+                                            </div>
+                                        </div>
+                                        <div className="ManagedAsset__collateral-bars-column">
+                                            <div className="ManagedAsset__collateral-bars-column-percentage">100%</div>
+                                            <CollateralBar percentage="0px">
+                                                <div className="CollateralBar_percentage" />
+                                            </CollateralBar>
+                                            <div className="ManagedAsset__collateral-bars-column-status">$0/5,600</div>
+                                            <div className="ManagedAsset__collateral-bars-column-button">
+                                                <Tooltip
+                                                    title="Once asset revenue reaches $4,200 you can withdraw (25% of collateral) MYB."
+                                                >
+                                                    <Button type="secondary" disabled>Withdraw</Button>
+                                                </Tooltip>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>
