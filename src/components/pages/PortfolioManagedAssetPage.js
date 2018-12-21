@@ -1,12 +1,12 @@
 import React from 'react';
 import Button from 'antd/lib/button';
 import Alert from 'antd/lib/alert';
-import { 
-    ManagedAssetWrapper, 
-    FlexRowTwoItems, 
-    AssetValueRow, 
-    EqualBoxes, 
-    EqualBoxesWithShadow 
+import {
+    ManagedAssetWrapper,
+    FlexRowTwoItems,
+    AssetValueRow,
+    EqualBoxes,
+    EqualBoxesWithShadow
 } from '../UI/ManagedAssetPage/styledManagedAssetPage'
 import LocationIcon from '../../images/Location-blue.svg';
 import PieChart from '../../images/chart-pie.png';
@@ -15,6 +15,23 @@ import LineChart from '../../images/chart-line.png';
 const ButtonGroup = Button.Group;
 
 class PortfolioManagedAssetPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.displayProfit = this.displayProfit.bind(this);
+        this.displayCollateral = this.displayCollateral.bind(this);
+        this.state = {
+            chartBoxView: "profit",
+        };
+    }
+
+    displayProfit() {
+        this.setState({ chartBoxView: "profit" });
+    }
+
+    displayCollateral() {
+        this.setState({ chartBoxView: "collateral" });
+    }
+
     render() {
         return (
             <ManagedAssetWrapper>
@@ -38,13 +55,13 @@ class PortfolioManagedAssetPage extends React.Component {
                         </FlexRowTwoItems>
                         <FlexRowTwoItems>
                             <div><h2 className="ManagedAsset__asset-meta">
-                            <LocationIcon className="ManagedAsset__location-icon"/>
+                                <LocationIcon className="ManagedAsset__location-icon" />
                                 Zug, Switzerland
                             </h2></div>
                             <div><h2 className="ManagedAsset__asset-meta">Manufacturer company (Partner Name)</h2></div>
                         </FlexRowTwoItems>
-                        <img 
-                            className="ManagedAsset__asset-image" 
+                        <img
+                            className="ManagedAsset__asset-image"
                             src="https://i2.wp.com/smartereum.com/wp-content/uploads/2017/11/hyosung-bitcoin-atm-korea-e1522530212417.png?resize=696%2C348&ssl=1"
                             alt="Asset Preview"
                         />
@@ -97,12 +114,12 @@ class PortfolioManagedAssetPage extends React.Component {
                                 <div className="AssetBoxedRow__Card-text--is-green">1200.67$</div>
                                 <div className="AssetBoxedRow__Card-text">12 ETH</div>
                                 <div className="AssetBoxedRow__Card-button-group">
-                                <ButtonGroup size="small">
-                                    <Button>1W</Button>
-                                    <Button>1M</Button>
-                                    <Button>1Y</Button>
-                                    <Button>MAX</Button>
-                                </ButtonGroup>
+                                    <ButtonGroup size="small">
+                                        <Button onClick={this.displayProfit}>1W</Button>
+                                        <Button onClick={this.displayProfit}>1M</Button>
+                                        <Button onClick={this.displayProfit}>1Y</Button>
+                                        <Button onClick={this.displayProfit}>MAX</Button>
+                                    </ButtonGroup>
                                 </div>
                             </div>
                             <div className="AssetBoxedRow__Card">
@@ -110,7 +127,7 @@ class PortfolioManagedAssetPage extends React.Component {
                                 <div className="AssetBoxedRow__Card-text--is-blue">2000.00$</div>
                                 <div className="AssetBoxedRow__Card-text">65,000 MYB</div>
                                 <div className="AssetBoxedRow__Card-button">
-                                    <Button type="secondary">View</Button>
+                                    <Button type="secondary" onClick={this.displayCollateral}>View</Button>
                                 </div>
                             </div>
                             <div className="AssetBoxedRow__Card">
@@ -122,7 +139,12 @@ class PortfolioManagedAssetPage extends React.Component {
                             </div>
                         </EqualBoxesWithShadow>
                         <div className="ManagedAsset__chart-container">
-                            dasdas
+                            {this.state.chartBoxView === "profit" && (
+                                <h1>profit</h1>
+                            )}
+                            {this.state.chartBoxView === "collateral" && (
+                                <h1>collateral</h1>
+                            )}
                         </div>
                     </div>
                 </div>

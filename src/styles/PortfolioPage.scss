@@ -55,11 +55,12 @@
 
   &__assets{
     position: relative;
-    margin-left: 0;
+    margin-left: 155;
     margin-right: 0;
     height: auto;
     zoom: 1;
     display: block;
     box-sizing: border-box;
+    border: 10px solid black;
   }
 }
