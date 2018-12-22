@@ -161,6 +161,13 @@ export const isAssetIdEnabled = (assetId) => {
     '0xb6b1783a50b4eebdfdac574e49d2bca295b0ef84c2965b9de0752f72c5eca764': CryptoMiningAsset,
     '0xaaed38e80f289be2fede11d7f929790f49d4d6b20d63514d650c8456de66426a': BitcoinAtmAsset,
     '0xf2140db78a524e7a2640cdfec65d60f674d0015e0a3c908e23d16fc6b8f448a4': SolarAsset,
+
+    //eith wave of assets
+    '0xba5414b699ded7519910ef507eaf92f50ce2495500c0e35e6890daf68a2eae40': CoworkingAsset,
+    '0xeedb061663542d13d0ea3b561e2b47497c68040e65189d9faf1513ce971ca4fd': StorageAsset,
+    '0xd866e36c248afbe72c80a33116b3b11ff66ae33542a28b3a1510210a57af6335': CryptoMiningAsset,
+    '0x9871c4b89c8567d0ad49bb81749c5ea7e7e48049110224b4944a3b5aca080473': BitcoinAtmAsset,
+    '0x4883f262a729f9720432f3f71e3e3e0bb998ceabf6789b124ea3f124da231434': SolarAsset,
   };
 
   if (process.env.NODE_ENV === 'development') {
