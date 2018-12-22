@@ -9,6 +9,9 @@ import {
 } from "../UI/ListAssetSlides/styledListAssetPage";
 import * as Slides from "../UI/ListAssetSlides";
 import { withCivic } from "../UI/CivicContainer";
+import {
+  COUNTRIES,
+} from '../../constants';
 
 class ListAssetPage extends React.Component {
   constructor(props) {
@@ -21,102 +24,26 @@ class ListAssetPage extends React.Component {
       MYB_PLACEHOLDER: 0.18,
       maximumAllowedSlide: 1,
       data: {
-        userCity: "",
-        userCountry: "",
-        category: "",
-        asset: "",
-        assetValue: 0,
-        assetAddress1: "",
-        assetAddress2: "",
-        assetCity: "",
-        assetCountry: "",
-        assetProvince: "",
-        assetPostalCode: "",
+        userCity: "a",
+        userCountry: "Switzerland",
+        category: "Crypto",
+        asset: "Bitcoin ATM",
+        assetValue: 10,
+        assetAddress1: "aa",
+        assetAddress2: "aa",
+        assetCity: "aa",
+        assetCountry: "aa",
+        assetProvince: "aa",
+        assetPostalCode: "aa",
         fileList: [],
-        managementFee: 0,
+        managementFee: 10,
         collateralPercentage: 0,
         collateralMyb: 0,
         collateralDollar: 0
       },
-      countries: [],
-      assets: [],
-      filteredAssets: [],
+      countries: COUNTRIES,
     };
   }
-
-  componentDidMount() {
-    fetch(process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable' : '/api/airtable')
-      .then(res => res.json())
-      .then(data => {
-        this.setState({
-          countries: data.records
-            .filter(row => row.fields.Location !== undefined)
-            .map(row =>
-              row.fields.Location.replace(/ *\([^)]*\) */g, "").split(", ")
-            )
-            .reduce((acc, curr) => {
-              curr.forEach(el => {
-                if (acc.indexOf(el) < 0) {
-                  acc.push(el);
-                }
-              });
-              return acc;
-            }, []),
-          assets: data.records,
-          filteredAssets: data.records
-        });
-      })
-      .catch(console.log);
-  }
-
-  filterAssets = () => {
-    const { userCity, userCountry, category } = this.state.data;
-    this.setState({
-      filteredAssets: this.state.assets
-        .filter(row => {
-          function matchLocation() {
-            let countries = row.fields.Location.replace(
-              /,\s*(?![^()]*\))/g,
-              "//"
-            )
-              .split("//")
-              .reduce((acc, curr) => {
-                const country = curr.split(" (")[0];
-                let cities = [];
-                if (curr.split(" (")[1]) {
-                  cities = curr
-                    .split(" (")[1]
-                    .replace(")", "")
-                    .split(",")
-                    .map(str => str.trim())
-                    .filter(str => str !== "");
-                }
-                acc[country] = acc[country]
-                  ? acc[country].concat(cities)
-                  : cities;
-                return acc;
-              }, {});
-            return (
-              Object.keys(countries).indexOf(userCountry) >= 0 &&
-              (countries[userCountry].lengnth === 0 ||
-                countries[userCountry].indexOf(userCity) >= 0)
-            );
-          }
-          const hasCategory = row.fields.Category !== undefined;
-          const matchesLocation = row.fields.Location === undefined ? true : matchLocation();
-          const hasName = row.fields.Asset !== undefined;
-          return matchesLocation && hasName && (!hasCategory || row.fields.Category === category);
-        })
-        // .reduce((acc, row) => {
-        //   let category = row.fields.Category
-        //     ? row.fields.Category
-        //     : "No Category";
-        //   acc[category] = acc[category] ? acc[category] : [];
-        //   acc[category].push(row);
-        //   return acc;
-        // }, {})
-    }, console.log);
-  };
 
   getCurrentSlide = () => {
     setTimeout(() => {
@@ -160,13 +87,7 @@ class ListAssetPage extends React.Component {
           case 'userCountry': {
             this.setState({
               data: { ...this.state.data, assetCountry: value, category: '', asset: '' }
-            },this.filterAssets);break;
-          }
-          case 'userCity' : this.filterAssets(); break;
-          case 'category' : {
-            this.setState({
-              data: { ...this.state.data, asset: '' }
-            },this.filterAssets); break;
+            });break;
           }
           default: {
             console.log(this.state)
@@ -221,7 +142,7 @@ class ListAssetPage extends React.Component {
     );
   };
 
-  confirmAsset = () => {
+  /*confirmAsset = () => {
     fetch("/api/list-asset/auth", {
       method: "POST",
       body: this.state.data,
@@ -236,17 +157,26 @@ class ListAssetPage extends React.Component {
       .catch(err => {
         console.log(err);
       });
-  };
+  };*/
 
   render() {
-    const { currentSlide, MYB_PLACEHOLDER, data, countries, filteredAssets } = this.state;
+    const {
+      currentSlide,
+      MYB_PLACEHOLDER,
+      data,
+      countries,
+      filteredAssets,
+      categories,
+     } = this.state;
+
     const {
       managementFee,
       collateralDollar,
       collateralMyb,
       collateralPercentage,
-      assetValue
+      assetValue,
     } = this.state.data;
+
     return (
       <CarouselWrapper>
         <Carousel
@@ -257,7 +187,11 @@ class ListAssetPage extends React.Component {
           swipe={false}
           accessibility={false}
         >
-          <Slides.IntroSlide next={this.next} slidePosition={0} />
+          <Slides.IntroSlide
+            next={this.next}
+            slidePosition={0}
+            dev={process.env.NODE_ENV === 'development'}
+         />
           <Slides.LocationSlide
             next={this.next}
             previous={this.previous}
@@ -276,15 +210,7 @@ class ListAssetPage extends React.Component {
             assetValue={typeof assetValue === "string" ? 0 : assetValue}
             formData={data}
             history={this.props.history}
-            assets={filteredAssets}
-            categories={filteredAssets
-              .filter(row => row.fields.Category !== undefined)
-              .reduce((acc, curr) => {
-                if (acc.indexOf(curr.fields.Category) === -1) {
-                  acc.push(curr.fields.Category);
-                }
-                return acc;
-              }, [])}
+            categories={categories}
           />
           <Slides.AssetLocationSlide
             next={this.next}
@@ -332,7 +258,6 @@ class ListAssetPage extends React.Component {
           <Slides.ConfirmAsset
             next={this.next}
             previous={this.previous}
-            confirmAsset={this.confirmAsset}
             formData={data}
           />
         </Carousel>

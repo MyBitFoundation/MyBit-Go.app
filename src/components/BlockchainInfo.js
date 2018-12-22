@@ -39,6 +39,9 @@ class BlockchainInfo extends React.Component {
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
     this.usingServer = this.usingServer.bind(this);
+    this.getAssetsFromAirTable = this.getAssetsFromAirTable.bind(this);
+    this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
+    this.handleListAsset = this.handleListAsset.bind(this);
 
     this.state = {
       loading: {
@@ -64,6 +67,8 @@ class BlockchainInfo extends React.Component {
       extensionUrl: this.props.extensionUrl,
       userIsLoggedIn: this.props.userIsLoggedIn,
       handleClickedAssetFavorite: this.handleAssetFavorited,
+      getCategoriesForAssets: this.getCategoriesForAssets,
+      handleListAsset: this.handleListAsset,
       assetsNotification: {
         isLoading: false,
         transactionStatus: '',
@@ -76,6 +81,8 @@ class BlockchainInfo extends React.Component {
   }
 
   async componentDidMount() {
+    this.getAssetsFromAirTable();
+    this.getCategoriesFromAirTable();
     const { userHasMetamask } = this.state;
     try {
       const usingServer = this.usingServer();
@@ -112,6 +119,87 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalLoadMetamaskUserDetails);
     clearInterval(this.intervalFetchTransactionHistory);
+  }
+
+  handleListAsset(formData){
+    console.log("DATA")
+    console.log(formData)
+  }
+
+  processAssetsFromAirTable({ fields }){
+    let location = undefined;
+    if(fields.Location){
+      let countries = fields.Location.split(',');
+      location = {};
+      countries.forEach(country => {
+        country = country.trim();
+        let cities = /\(([^)]+)\)/g.exec(country);
+
+        if(cities){
+          country = country.substring(0, country.indexOf('('))
+          cities = cities[1].split(';');
+          location[country] = cities;
+        } else {
+           location[country] = {};
+        }
+      })
+    }
+    return {
+      name: fields.Asset,
+      category: fields.Category,
+      description: fields.Description,
+      details: fields.Details,
+      amountToBeRaisedInUSDAirtable: fields['Funding goal'],
+      location,
+    };
+  }
+
+  processCategoriesFromAirTable(data){
+    const categories = {};
+    data.forEach(({ fields }) => {
+      categories[fields.Category] = {
+        contractName: fields['Category Contract'],
+        encoded: fields['byte32'],
+      }
+    })
+    return categories;
+  }
+
+  async getAssetsFromAirTable(){
+    const request = await fetch(process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable/assets' : '/api/airtable/assets');
+    const json = await request.json();
+    const { records } = json;
+    const assets = records.filter(({ fields })  => Object.keys(fields).length >= 5).map(this.processAssetsFromAirTable)
+    this.setState({
+      assetsAirTable: assets,
+    });
+  }
+
+  async getCategoriesFromAirTable(){
+    const request = await fetch(process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable/categories' : '/api/airtable/categories');
+    const json = await request.json();
+    const { records } = json;
+    const categories = this.processCategoriesFromAirTable(records.filter(({ fields })  => Object.keys(fields).length == 3));
+    categories['Crypto'] = {};
+    this.setState({
+      categoriesAirTable: categories,
+    })
+  }
+
+  getCategoriesForAssets(country, city){
+    const { assetsAirTable } = this.state;
+    let categories = [];
+    assetsAirTable.forEach(asset => {
+      if(categories.includes(asset.category)){
+        return;
+      }
+      if(!asset.location){
+        categories.push(this.state.categoriesAirTable[asset.category] ? asset.category : undefined);
+      } else if (asset.location && asset.location.country === country && (!asset.location.cities || asset.location.cities.includes(city.toLowerCase()))){
+        categories.push(this.state.categoriesAirTable[asset.category] ? asset.category : undefined);
+      }
+    })
+    return categories;
   }
 
   getMYB() {

@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const request = require('request');
-const cors = require('cors')
 // const basicAuth = require('express-basic-auth');
 const civicSip = require('civic-sip-api');
 const path = require('path');
@@ -14,7 +13,6 @@ const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const app = express();
-app.use(cors);
 
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
@@ -56,8 +54,12 @@ const civicClient = civicSip.newClient({
 //   },
 // }));
 
-app.use('/api/airtable', function(req, res) {
+app.use('/api/airtable/assets', function(req, res) {
   req.pipe(request(`https://api.airtable.com/v0/appqG0TWhvhplwrGL/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)).pipe(res);
+});
+
+app.use('/api/airtable/categories', function(req, res) {
+  req.pipe(request(`https://api.airtable.com/v0/applQoSDpfQMllZc6/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)).pipe(res);
 });
 
 app.post('/api/list-asset/auth', (req, res) => {
@@ -143,8 +145,10 @@ app.listen(8080);
 
 async function pullAssets() {
   try {
+    console.log(`${new Date().toString()} - pulling assets`)
     assets = await fetchAssets();
     assetsLoaded = true;
+    console.log(`${new Date().toString()} - done pulling assets`)
   } catch (err) {
     /* eslint no-console: ["error", { allow: ["log", "error"] }] */
     console.log(err);
