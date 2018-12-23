@@ -1512,7 +1512,7 @@ autoprefixer@^9.1.5:
     postcss "^7.0.5"
     postcss-value-parser "^3.3.1"
 
-aws-sdk@^2.366.0:
+aws-sdk@2.370.0:
   version "2.370.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.370.0.tgz#9f22251e4e69022c434ffedccbcd0711b1b3caf2"
   integrity sha512-MyOrX6bb4Vp+NLt767sKSbWpZj5drM7I1GM2VuAF40RoJLwTr+UpJp2waY8xFPWWbV4hl1seK0W4rJzWCkd8Yg==
@@ -2478,7 +2478,7 @@ circular-json@^0.3.1:
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.3.tgz#815c99ea84f6809529d2f45791bdf82711352d66"
   integrity sha512-UZK3NBx2Mca+b5LsG7bY183pHWt5Y1xts4P3Pz7ENTwGVnJOUWbRb3ocjvX7hx9tq/yTAdclXm9sZ38gNuem4A==
 
-civic-sip-api@^1.1.0:
+civic-sip-api@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/civic-sip-api/-/civic-sip-api-1.1.0.tgz#58d3f5ff0f77adef98e722934880010c3e5a587a"
   integrity sha512-NxF3FJGex3eF3AUG9x9aPFU+2JMYPZ+TlX1biEXvZjia7J0uyxBOT/k2uetIoIX7Lbv5FFsmsr11gyWFAjYUbw==
@@ -2491,7 +2491,7 @@ civic-sip-api@^1.1.0:
     promise "^7.1.1"
     request "^2.88.0"
     request-promise-native "^1.0.5"
-    sjcl civicteam/sjcl.git
+    sjcl "github:civicteam/sjcl"
     unix-timestamp "^0.2.0"
     uuid "^3.0.1"
     xmlhttprequest "^1.8.0"
@@ -7692,7 +7692,7 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-multer@^1.4.1:
+multer@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/multer/-/multer-1.4.1.tgz#24b12a416a22fec2ade810539184bf138720159e"
   integrity sha512-zzOLNRxzszwd+61JFuAo0fxdQfvku12aNJgnla0AQ+hHxFmfc/B7jBVuPr5Rmvu46Jze/iJrFpSOsD7afO8SDw==
@@ -11122,8 +11122,9 @@ sisteransi@^0.1.1:
   resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-0.1.1.tgz#5431447d5f7d1675aac667ccd0b865a4994cb3ce"
   integrity sha512-PmGOd02bM9YO5ifxpw36nrNMBTptEtfRl4qUYl9SndkolplkrZZOW7PGHjrZL53QvMVj9nQ+TKqUnRsw4tJa4g==
 
-sjcl@civicteam/sjcl.git:
+"sjcl@github:civicteam/sjcl":
   version "1.0.7"
+  uid "1dab1ddd60e722bb22c36080bcca5b9e73df91b5"
   resolved "https://codeload.github.com/civicteam/sjcl/tar.gz/1dab1ddd60e722bb22c36080bcca5b9e73df91b5"
 
 slash@^1.0.0:
