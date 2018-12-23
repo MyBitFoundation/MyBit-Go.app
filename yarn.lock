@@ -8461,8 +8461,8 @@ rc-cascader@~0.16.0:
     warning "^4.0.1"
 
 rc-checkbox@~2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/rc-checkbox/-/rc-checkbox-2.1.5.tgz#411858448c0ee2a797ef8544dac63bcaeef722ef"
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/rc-checkbox/-/rc-checkbox-2.1.6.tgz#5dc00653e5277018c431fec55e38b91c1f976e90"
   dependencies:
     babel-runtime "^6.23.0"
     classnames "2.x"
@@ -8470,8 +8470,8 @@ rc-checkbox@~2.1.5:
     rc-util "^4.0.4"
 
 rc-collapse@~1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/rc-collapse/-/rc-collapse-1.10.0.tgz#b39578633a1e033391597776758763a10d3bc261"
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/rc-collapse/-/rc-collapse-1.10.1.tgz#cf98d94d8813bfd849276104496c6284326ca6bc"
   dependencies:
     classnames "2.x"
     css-animation "1.x"
