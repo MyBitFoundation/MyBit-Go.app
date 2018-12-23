@@ -3,7 +3,7 @@
   "version": "0.2.4",
   "private": true,
   "dependencies": {
-    "antd": "3.11.2",
+    "antd": "3.11.4",
     "aws-sdk": "^2.366.0",
     "axios": "0.18.0",
     "bluebird": "3.5.3",
