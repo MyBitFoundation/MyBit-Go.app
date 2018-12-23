@@ -119,7 +119,8 @@ class ListAssetPage extends React.Component {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
-
+    /*
+    // handles uploading to our server
     let data = new FormData();
     data.append('assetId', '0xasdasdasd');
     data.append('file', filesObject.file.originFileObj);
@@ -136,7 +137,7 @@ class ListAssetPage extends React.Component {
     .catch((err) => {
       console.log('fail');
     });
-
+  */
 
     this.setState(
       {
