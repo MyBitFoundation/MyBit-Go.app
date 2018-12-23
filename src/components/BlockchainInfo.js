@@ -137,7 +137,11 @@ class BlockchainInfo extends React.Component {
       return 'Crypto Mining';
     } else if(assetName === 'Bitcoin ATM'){
       return 'Bitcoin ATM';
-    } else return category;
+    } else if(assetName === 'Storage Unit'){
+      return 'Real Estate (Storage)';
+    } else if(assetName === 'Co-Working Space')
+      return 'Real Estate (Co-Working)';
+    else return category;
   }
 
   async handleListAsset(formData){
