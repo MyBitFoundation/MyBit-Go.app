@@ -64,27 +64,7 @@ class ExplorePage extends Component {
         return false;
       }
       const assetCategory = asset.category;
-      if (assetCategory === 'bitcoinatm' && selectedFilters.includes('Crypto')) {
-        return true;
-      } else if (assetCategory === 'cryptomining' && selectedFilters.includes('Crypto')) {
-        return true;
-      } else if (assetCategory === 'other' && selectedFilters.includes('Other')) {
-        return true;
-      } else if (assetCategory === 'solarenergy' && selectedFilters.includes('Energy')) {
-        return true;
-      } else if (assetCategory === 'masternodes' && selectedFilters.includes('Crypto')) {
-        return true;
-      } else if (assetCategory === 'realestatestorage' && selectedFilters.includes('Real Estate')) {
-        return true;
-      } else if (assetCategory === 'realestatecoworking' && selectedFilters.includes('Real Estate')) {
-        return true;
-      } else if (assetCategory === 'vendingmachines' && selectedFilters.includes('Machinery')) {
-        return true;
-      } else if (assetCategory === 'autonomousvehicles' && selectedFilters.includes('Transportation')) {
-        return true;
-      } else if (assetCategory === 'dronedelivery' && selectedFilters.includes('Transportation')) {
-        return true;
-      } else if (assetCategory === 'chargingstation' && selectedFilters.includes('Energy')) {
+      if (selectedFilters.includes(assetCategory)) {
         return true;
       }
 

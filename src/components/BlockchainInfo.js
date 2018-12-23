@@ -132,20 +132,6 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalFetchTransactionHistory);
   }
 
-  // TODO ditch the problematic categories in favor of their
-  // general ones
-  getCorrectCategoryForAsset(category, assetName){
-    if(assetName === 'Ethereum Miner'){
-      return 'Crypto Mining';
-    } else if(assetName === 'Bitcoin ATM'){
-      return 'Bitcoin ATM';
-    } else if(assetName === 'Storage Unit'){
-      return 'Real Estate (Storage)';
-    } else if(assetName === 'Co-Working Space')
-      return 'Real Estate (Co-Working)';
-    else return category;
-  }
-
   async handleListAsset(formData){
     const {
       asset,
@@ -172,7 +158,7 @@ class BlockchainInfo extends React.Component {
       assetName: asset,
       country: userCountry,
       city: userCity,
-      assetType: categoriesAirTable[this.getCorrectCategoryForAsset(category, asset)].encoded,
+      assetType: categoriesAirTable[category].encoded,
       amountToBeRaisedInUSD: this.getAssetFromAirTableByName(asset).amountToBeRaisedInUSDAirtable,
       fileList,
       onSuccess,
@@ -286,8 +272,6 @@ class BlockchainInfo extends React.Component {
     const json = await request.json();
     const { records } = json;
     const categories = this.processCategoriesFromAirTable(records.filter(({ fields })  => Object.keys(fields).length === AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS));
-    categories['Crypto'] = {};
-    categories['Real Estate'] = {};
     this.setState({
       categoriesAirTable: categories,
     })

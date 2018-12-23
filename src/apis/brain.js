@@ -388,8 +388,6 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         .map(({ returnValues }) => returnValues)
         .map(object => ({
           assetID: object._assetID,
-          assetType: object._assetType,
-          ipfsHash: object._ipfsHash,
         }));
 
       assets = assets.concat(assetsOlderContract);
@@ -419,7 +417,6 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
         const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
 
-        // asset details are hardcoded for now
         let assetIdDetails = assetsAirTableById[asset.assetID];
         // if the asset Id is not on airtable it doens't show up in the platform
         if (!assetIdDetails) {
@@ -470,6 +467,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           fundingStage: fundingStages[index],
           pastDate,
           watchListed: alreadyFavorite,
+          category: assetIdDetails.category,
         };
       }));
 
@@ -483,17 +481,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           asset.description !== 'Coming soon');
       }
 
-      const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
-        if (asset.assetType) {
-          return {
-            ...asset,
-            category: getCategoryFromAssetTypeHash(asset.assetType, categoriesAirTable),
-          };
-        }
-        return { ...asset };
-      });
-
-      resolve(assetsWithCategories);
+      resolve(assetsPlusMoreDetails);
     } catch (error) {
       reject(error);
     }
