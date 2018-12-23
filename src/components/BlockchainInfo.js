@@ -132,6 +132,8 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalFetchTransactionHistory);
   }
 
+  // TODO ditch the problematic categories in favor of their
+  // general ones
   getCorrectCategoryForAsset(category, assetName){
     if(assetName === 'Ethereum Miner'){
       return 'Crypto Mining';
