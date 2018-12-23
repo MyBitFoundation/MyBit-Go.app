@@ -88,6 +88,7 @@ class BlockchainInfo extends React.Component {
       },
       notificationPlace: 'notification',
       notifications: {},
+      isUserContributing: false,
     };
   }
 
@@ -132,7 +133,7 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalFetchTransactionHistory);
   }
 
-  async handleListAsset(formData){
+  async handleListAsset(formData, setUserListingAsset){
     const {
       asset,
       userCountry,
@@ -148,7 +149,7 @@ class BlockchainInfo extends React.Component {
 
     const onSuccess = async (callback) => {
       await this.getAssetsFromAirTable();
-      this.fetchAssets(callback);
+      this.fetchAssets(callback, setUserListingAsset);
     }
 
     const result = await Brain.createAsset({
@@ -162,6 +163,7 @@ class BlockchainInfo extends React.Component {
       amountToBeRaisedInUSD: this.getAssetFromAirTableByName(asset).amountToBeRaisedInUSDAirtable,
       fileList,
       onSuccess,
+      onFailure: () => setUserListingAsset(false),
     });
 
     debug(result);
@@ -174,9 +176,9 @@ class BlockchainInfo extends React.Component {
   }
 
 
-  removeNotification(date){
+  removeNotification(id){
     const notifications = Object.assign({}, this.state.notifications);
-    delete notifications[date];
+    delete notifications[id];
     this.setState({notifications});
   }
 
@@ -542,7 +544,7 @@ class BlockchainInfo extends React.Component {
       });
   }
 
-  async fetchAssets(callback) {
+  async fetchAssets(updateNotification, updateUserListingAsset) {
     if (!this.state.prices.ether) {
       setTimeout(this.fetchAssets, 10000);
       return;
@@ -552,11 +554,19 @@ class BlockchainInfo extends React.Component {
     });
     await Brain.fetchAssets(this.state.user, this.state.prices.ether.price, this.state.assetsAirTableById, this.state.categoriesAirTable)
       .then((response) => {
-        console.log(response)
         this.setState({
           assets: response,
           loading: { ...this.state.loading, assets: false },
-        }, callback ? callback() : null);
+        }, () => {
+          if(updateNotification){
+            console.log("calling callback 1, updating notification")
+            updateNotification();
+          }
+          if(updateUserListingAsset){
+            console.log("calling callback 2, updating button state")
+            updateUserListingAsset();
+          }
+        });
       })
       .catch((err) => {
         debug(err);

@@ -172,15 +172,15 @@ const getNumberOfInvestors = async assetID =>
 export const createAsset = async params =>
   new Promise(async (resolve, reject) => {
     try {
-      console.log(params)
       const id = Date.now();
       const {
         updateNotification,
         assetName,
         onSuccess,
+        onFailure,
         country,
         city,
-        fileList
+        fileList,
       } = params;
 
       updateNotification(id, {
@@ -229,6 +229,7 @@ export const createAsset = async params =>
           });
         })
         .on('error', (error) => {
+          onFailure();
           updateNotification(id, {
             metamaskProps: {},
             status: 'error',
@@ -264,7 +265,7 @@ export const createAsset = async params =>
             });
           }
 
-          onSuccess(updateNotification(id, {
+          onSuccess(() => updateNotification(id, {
             listAssetProps: {
               assetName: assetName,
               assetId: futureAssetId,

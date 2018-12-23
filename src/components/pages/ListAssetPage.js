@@ -23,29 +23,49 @@ class ListAssetPage extends React.Component {
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.goToSlide = this.goToSlide.bind(this);
+    this.setUserListingAsset = this.setUserListingAsset.bind(this);
+
     this.state = {
       currentSlide: 0,
       MYB_PLACEHOLDER: 0.18,
       maximumAllowedSlide: 1,
       data: {
-        userCity: '',
-        userCountry: '',
-        category: '',
-        asset: '',
-        assetAddress1: '',
-        assetAddress2: '',
-        assetCity: '',
-        assetCountry: '',
-        assetProvince: '',
-        assetPostalCode: '',
+        userCity: 'Zug',
+        userCountry: 'Switzerland',
+        category: 'Real Estate',
+        asset: 'Storage Unit',
+        assetAddress1: 'a',
+        assetAddress2: 'a',
+        assetCity: 'a',
+        assetCountry: 'a',
+        assetProvince: 'a',
+        assetPostalCode: 'a',
         fileList: [],
-        managementFee: 0,
+        managementFee: 10,
         collateralPercentage: 0,
         collateralMyb: 0,
         collateralDollar: 0
       },
       countries: COUNTRIES,
+      isUserListingAsset: false,
     };
+  }
+
+  componentDidMount(){
+    this.ismounted = true;
+  }
+
+  componentWillUnmount() {
+     this.ismounted = false;
+  }
+
+  setUserListingAsset(flag){
+    if(!this.ismounted){
+      return;
+    }
+    this.setState({
+      isUserListingAsset: flag,
+    })
   }
 
   getCurrentSlide = () => {
@@ -185,6 +205,7 @@ class ListAssetPage extends React.Component {
       data,
       countries,
       categories,
+      isUserListingAsset,
      } = this.state;
 
     const {
@@ -279,6 +300,8 @@ class ListAssetPage extends React.Component {
             next={this.next}
             previous={this.previous}
             formData={data}
+            isUserListingAsset={isUserListingAsset}
+            setUserListingAsset={this.setUserListingAsset}
           />
         </Carousel>
 
@@ -295,7 +318,7 @@ class ListAssetPage extends React.Component {
                   type={buttonType}
                   className="ListAsset-nav-button"
                   shape="circle"
-                  disabled={slideTooltip.slide > currentSlide}
+                  disabled={slideTooltip.slide > currentSlide || isUserListingAsset}
                   onClick={() => this.goToSlide(slideTooltip.slide)}
                 />
               </Tooltip>

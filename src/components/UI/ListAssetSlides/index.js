@@ -560,7 +560,7 @@ export const CollateralSlide = ({
   );
 };
 
-export const ConfirmAsset = ({ next, formData }) => (
+export const ConfirmAsset = ({ next, formData, isUserListingAsset, setUserListingAsset }) => (
   <BlockchainInfoContext.Consumer>
     {({ handleListAsset }) =>
     <Slide>
@@ -623,11 +623,15 @@ export const ConfirmAsset = ({ next, formData }) => (
       </div>
       <div className="Slider__buttons">
         <Button
+          loading={isUserListingAsset}
           type="primary"
           className="Slider__buttons-continue"
-          onClick={() => handleListAsset(formData)}
+          onClick={() => {
+            setUserListingAsset(true);
+            handleListAsset(formData, setUserListingAsset);
+          }}
         >
-          Confirm listing
+          {isUserListingAsset ? 'Confirming listing' : 'Confirm Listing'}
         </Button>
       </div>
     </Slide>

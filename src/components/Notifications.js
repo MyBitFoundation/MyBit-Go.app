@@ -9,9 +9,11 @@ const Notifications = ({ data, removeNotification }) => {
   }
   const initialBottomDistance = 20;
   const difference = 110;
+  const toRemove = [];
   const toRender = entries.map(([id, notification], index) => {
     const details = getContentForNotification(notification);
     if(!details){
+      toRemove.push(id);
       return null;
     }
     const type = notification.status;
@@ -27,6 +29,10 @@ const Notifications = ({ data, removeNotification }) => {
       />
     )
   });
+
+  for(const id of toRemove){
+    removeNotification(id);
+  }
 
   return toRender;
 };
