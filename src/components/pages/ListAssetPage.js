@@ -11,7 +11,10 @@ import * as Slides from "../UI/ListAssetSlides";
 import { withCivic } from "../UI/CivicContainer";
 import {
   COUNTRIES,
+  MAX_FILES_UPLOAD,
+  MAX_FILE_SIZE,
 } from '../../constants';
+import axios from 'axios';
 
 class ListAssetPage extends React.Component {
   constructor(props) {
@@ -98,9 +101,46 @@ class ListAssetPage extends React.Component {
   };
 
   handleFileUpload = filesObject => {
+    console.log("handleFileUpload")
+
+    // so that we get no loading animation in the UI next to the file name
+    filesObject.file.status = 'success';
+    let files = filesObject.fileList;
+    // apply file size restriction
+    for(let i = 0; i < files.length; i++){
+      if(files[i].size > MAX_FILE_SIZE){
+        files = files.filter(file => file !== files[i]);
+        i--;
+      }
+    }
+
+    // apply number of files restriction
+    if(files.length > MAX_FILES_UPLOAD){
+      files = files.slice(0, MAX_FILES_UPLOAD);
+    }
+
+
+    let data = new FormData();
+    data.append('assetId', '0xasdasdasd');
+    data.append('file', filesObject.file.originFileObj);
+
+    axios.post('http://localhost:8080/api/files/upload',
+      data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    ).then((response) => {
+      console.log('success');
+    })
+    .catch((err) => {
+      console.log('fail');
+    });
+
+
     this.setState(
       {
-        data: { ...this.state.data, fileList: filesObject.fileList }
+        data: { ...this.state.data, fileList: files }
       },
       () => console.log(this.state)
     );
@@ -165,7 +205,6 @@ class ListAssetPage extends React.Component {
       MYB_PLACEHOLDER,
       data,
       countries,
-      filteredAssets,
       categories,
      } = this.state;
 
@@ -175,6 +214,7 @@ class ListAssetPage extends React.Component {
       collateralMyb,
       collateralPercentage,
       assetValue,
+      fileList,
     } = this.state.data;
 
     return (
@@ -225,6 +265,7 @@ class ListAssetPage extends React.Component {
             previous={this.previous}
             handleFileUpload={this.handleFileUpload}
             formData={data}
+            fileList={fileList}
           />
           <Slides.FeeSlide
             next={this.next}

@@ -49,8 +49,7 @@ class App extends Component {
   render() {
     const firstVisit = this.isFirstVisit();
     const firstListAssetVisit = this.isFirstListAssetVisit(firstVisit);
-    console.log(firstListAssetVisit)
-  
+
     return (
       <CirclesBackgroundWrapper>
         <BancorContainer>

@@ -15,9 +15,13 @@ import {
   ETHERSCAN_TX,
   ETHERSCAN_BALANCE,
   getAddressForAsset,
-  isAssetIdEnabled,
   testAssetIds,
 } from '../constants';
+
+import {
+  generateAssetId,
+  generateRandomHex,
+} from '../util/helpers'
 
 const IPFS_URL =
   'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
@@ -170,27 +174,66 @@ const createAsset = async params =>
         AssetCreation.ADDRESS,
       );
 
-      const installerId = window.web3js.utils.sha3(params.installerId);
+      const installerId = generateRandomHex(window.web3js);
       const assetType = window.web3js.utils.sha3(params.assetType);
-      const ipfsHash = window.web3js.utils.sha3(params.ipfsHash);
+      const ipfsHash = installerId; // ipfshash doesn't really matter right now
+      const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
+
+      const futureAssetId = generateAssetId(
+        window.web3js,
+        params.userAddress,
+        params.managerPercentage,
+        params.amountToBeRaisedInUSD,
+        installerId,
+        assetType,
+        randomBlockNumber
+      );
+
+          /*const response = await axios.post('http://localhost:8080/api/airtable/update', {
+      assetId: '0xf61f06f3e01177598dc16ac0a9bc15b63bb1b5955d561bbab1de036601bdd082',
+      assetName: 'Bitcoin ATM',
+      country: 'Switzerland',
+      city: 'Zug',
+    });*/
+
+      console.log(futureAssetId);
 
       const assetCreationResponse = await assetCreationContract.methods
         .newAsset(
-          params.amountToBeRaisedInUSD,
-          params.managerPercentage,
-          params.amountToEscrow,
+          params.amountToBeRaisedInUSD.toString(),
+          params.managerPercentage.toString(),
+          params.amountToEscrow.toString(),
           installerId,
           assetType,
-          params.blockAtCreation,
+          randomBlockNumber.toString(),
           ipfsHash,
         )
-        .send({ from: params.userAddress });
+        .send({ from: params.userAddress })
+        .on('transactionHash', (transactionHash) => {
+          console.log(transactionHash)
+        })
+        .on('error', (error) => {
+          resolve(false);
+        })
+        .then((receipt) => {
+          debug(receipt)
+          resolve(receipt.status);
+        });
 
       resolve(assetCreationResponse);
     } catch (err) {
       reject(err);
     }
   });
+
+/*setTimeout(() => createAsset({
+  assetType: '0x89c2e778df1760738073f345cda4cc7882d91c5930ecfbb6c7169ebb424d798c',
+  userAddress: '0x11cF613d319DC923f3248175e0271588F1B26991',
+  managerPercentage: 10,
+  amountToBeRaisedInUSD: 444,
+  amountToEscrow: 0,
+}), 5000);
+*/
 
 const checkTransactionConfirmation = async (
   transactionHash,
@@ -260,7 +303,7 @@ export const fundAsset = async (user, assetId, amount) =>
     }
   });
 
-export const fetchAssets = async (user, currentEthInUsd) =>
+export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
       // pull asssets from newest contract
@@ -282,6 +325,8 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           assetType: object._assetType,
           ipfsHash: object._ipfsHash,
         }));
+
+      console.log(assets)
 
       // pull assets from older contract
 
@@ -332,14 +377,10 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
 
         // asset details are hardcoded for now
-        let assetIdDetails = isAssetIdEnabled(asset.assetID, true);
+        let assetIdDetails = assetsAirTableById[asset.assetID];
+        // if the asset Id is not on airtable it doens't show up in the platform
         if (!assetIdDetails) {
-          assetIdDetails = {};
-          assetIdDetails.city = 'Zurich';
-          assetIdDetails.country = 'Switzerland';
-          assetIdDetails.description = 'Coming soon';
-          assetIdDetails.details = 'Coming soon';
-          assetIdDetails.name = 'Coming soon';
+          return undefined;
         }
 
         // determine whether asset has expired
@@ -391,7 +432,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
 
       // filter for v0.1
       assetsPlusMoreDetails = assetsPlusMoreDetails
-        .filter(asset => asset.amountToBeRaisedInUSD > 0);
+        .filter(asset => asset && asset.amountToBeRaisedInUSD > 0);
 
       if (process.env.NODE_ENV !== 'development') {
         // filter for test assets. Only for development
@@ -403,7 +444,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         if (asset.assetType) {
           return {
             ...asset,
-            category: getCategoryFromAssetTypeHash(window.web3js, asset.assetType),
+            category: getCategoryFromAssetTypeHash(asset.assetType, categoriesAirTable),
           };
         }
         return { ...asset };

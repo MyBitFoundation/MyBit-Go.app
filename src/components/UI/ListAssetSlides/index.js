@@ -6,7 +6,6 @@ import InputNumber from "antd/lib/input-number";
 import Select from "antd/lib/select";
 import Icon from "antd/lib/icon";
 import Upload from "antd/lib/upload";
-import message from "antd/lib/message";
 import Slider from "antd/lib/slider";
 import { Slide, IntroList } from "./styledListAssetPage";
 import questionTooltip from "../../../images/list-asset/questionTooltip.png";
@@ -375,22 +374,12 @@ export const AssetLocationSlide = ({
   );
 };
 
-export const UploadSlide = ({ next, previous, handleFileUpload }) => {
+export const UploadSlide = ({ next, previous, handleFileUpload, fileList }) => {
   const props = {
     name: "file",
     multiple: true,
-    action: "//jsonplaceholder.typicode.com/posts/",
-    onChange(info) {
-      const status = info.file.status;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    }
+    customRequest: () => {},
+    fileList,
   };
   return (
     <Slide>
@@ -404,7 +393,7 @@ export const UploadSlide = ({ next, previous, handleFileUpload }) => {
       <h1 className="Slider__header">Supporting docs</h1>
       <p className="Slider__note">
         While not essential, assets with supporting documents are more likely to
-        get funded.
+        get funded. A maximum of two files can be uploaded., each file can have up to 5MB.
       </p>
       <div className="Slider__upload-container">
         <Upload.Dragger
@@ -462,7 +451,7 @@ export const FeeSlide = ({
       />
       <div className="Slider__input-fee">
         <Slider
-          min={0}
+          min={1}
           max={100}
           value={managementFee}
           onChange={value => handleSelectChange(value, "managementFee")}
@@ -470,7 +459,7 @@ export const FeeSlide = ({
         />
         <InputNumber
           defaultValue={managementFee}
-          min={0}
+          min={1}
           max={100}
           value={managementFee}
           formatter={value => `${value}%`}

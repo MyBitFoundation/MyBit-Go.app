@@ -45,7 +45,11 @@ class ExplorePage extends Component {
   }
 
   render() {
-    const { loading, assets } = this.props;
+    const {
+      loading,
+       assets,
+       categoriesAirTable
+      } = this.props;
     if (loading.assets) {
       return <LoadingPage message="Loading assets" />;
     }
@@ -105,7 +109,7 @@ class ExplorePage extends Component {
             city={asset.city}
             country={asset.country}
             name={asset.name}
-            category={getPrettyCategoryName(asset.category)}
+            category={getPrettyCategoryName(asset.category, categoriesAirTable)}
             backgroundImage={asset.imageSrc}
             fundingStage={asset.fundingStage}
             pastDate={asset.pastDate}

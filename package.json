@@ -3,6 +3,7 @@
   "version": "0.2.4",
   "private": true,
   "dependencies": {
+    "airtable": "^0.5.8",
     "antd": "3.11.2",
     "aws-sdk": "^2.366.0",
     "axios": "0.18.0",

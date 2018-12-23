@@ -33,7 +33,7 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets, handleClickedAssetFavorite }) =>
+        {({ loading, assets, handleClickedAssetFavorite, categoriesAirTable }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -41,6 +41,7 @@ const routes = [
               loading={loading}
               assets={assets}
               handleClickedAssetFavorite={handleClickedAssetFavorite}
+              categoriesAirTable={categoriesAirTable}
             />
           ))
         }
@@ -51,7 +52,7 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets, handleClickedAssetFavorite }) =>
+        {({ loading, assets, handleClickedAssetFavorite, categoriesAirTable }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -59,6 +60,7 @@ const routes = [
               loading={loading}
               assets={assets}
               handleClickedAssetFavorite={handleClickedAssetFavorite}
+              categoriesAirTable={categoriesAirTable}
             />
           ))
         }
@@ -69,7 +71,7 @@ const routes = [
     exact: true,
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets }) =>
+        {({ loading, assets, categoriesAirTable }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -77,6 +79,7 @@ const routes = [
               loading={loading}
               assets={assets}
               match={match}
+              categoriesAirTable={categoriesAirTable}
             />
           ))
         }
