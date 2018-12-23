@@ -152,7 +152,6 @@ class BlockchainInfo extends React.Component {
 
     const {
       categoriesAirTable,
-      assetsAirTable,
     } = this.state;
 
     const onSuccess = async (callback) => {
@@ -172,6 +171,8 @@ class BlockchainInfo extends React.Component {
       fileList,
       onSuccess,
     });
+
+    debug(result);
   }
 
   updateNotification(id, data){

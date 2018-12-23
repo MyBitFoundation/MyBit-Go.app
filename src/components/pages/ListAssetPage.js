@@ -1,3 +1,5 @@
+/* eslint-disable  no-loop-func */
+
 import React from "react";
 import { withRouter } from "react-router-dom";
 import Button from "antd/lib/button";
@@ -14,7 +16,6 @@ import {
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
 } from '../../constants';
-import axios from 'axios';
 
 class ListAssetPage extends React.Component {
   constructor(props) {

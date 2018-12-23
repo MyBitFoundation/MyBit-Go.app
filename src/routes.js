@@ -3,7 +3,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import AssetDetailsPage from './components/pages/AssetDetailsPage';
-import ExploreAssetsPage from './components/pages/ExploreAssetsPage';
 import ExplorePage from './components/pages/ExplorePage';
 import NotFoundPage from './components/pages/NotFoundPage';
 import PortfolioPage from './components/pages/PortfolioPage';

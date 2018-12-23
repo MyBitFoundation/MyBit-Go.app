@@ -20,19 +20,18 @@ export const getContentForNotification = (obj) => {
             {' '}here.
             </Link></span>,
         }
-        break;
       case 'info':
         return {
           title: `Starting the crowdsale for ${listAssetProps.assetName}`,
           message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
         }
-        break;
       case 'error':
         return {
           title: `Failed to start the crowdsale for ${listAssetProps.assetName}`,
           message: 'Unfortunately your transaction failed.',
         }
-        break;
+      default:
+        return null;
     }
   } else if(metamaskProps){
     switch(status) {
@@ -41,9 +40,10 @@ export const getContentForNotification = (obj) => {
           title: `Creation of crowdsale for ${metamaskProps.AssetName}`,
           message: 'Please confirm the transaction in Metamask to start the crowdsale. Thank you for beta testing the platform.',
         }
-        break;
       case 'error':
         return undefined;
+      default:
+        return null;
     }
   }
 }

@@ -3,7 +3,6 @@ const express = require('express');
 const request = require('request');
 const Airtable = require('airtable');
 const dev = process.env.NODE_ENV === 'development';
-// const basicAuth = require('express-basic-auth');
 const civicSip = require('civic-sip-api');
 const path = require('path');
 const AWS = require('aws-sdk');
@@ -15,7 +14,7 @@ const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const app = express();
-const airtableBaseAssets = dev ? 'appnvQb0LqM1nKTTQ' : 'appqG0TWhvhplwrGL';
+const airtableBaseAssets = dev ? 'appnvQb0LqM1nKTTQ' : 'appDMxPZPCcBkNuab';
 
 const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(airtableBaseAssets);
 

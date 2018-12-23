@@ -490,7 +490,6 @@ export const CollateralSlide = ({
   constraints,
   formData
 }) => {
-  let forbidNext = collateralPercentage !== 0 ? false : true;
   return (
     <Slide>
       <Tooltip
