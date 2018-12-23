@@ -378,6 +378,8 @@ export const UploadSlide = ({ next, previous, handleFileUpload, fileList }) => {
   const props = {
     name: "file",
     multiple: true,
+    // so that the Upload component doesn't attempt to upload the files
+    // we're doing that later
     customRequest: () => {},
     fileList,
   };
