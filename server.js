@@ -68,9 +68,11 @@ async function UpdateAirTableEntry(id, currentAssetIds, newAssetId, country, cit
     base('Imported table').update(id, {
       "Asset IDs": newAssetIds
     }, function(err, record) {
-        console.log(record)
         if (err) { console.error(err); resolve(false);}
-        else resolve(true)
+        else {
+          console.log("Updated Airtable successfuly.")
+          resolve(true)
+        }
     });
   });
 }
@@ -132,15 +134,12 @@ app.get('/api/files/list', (req, res) => {
 });
 
 app.post('/api/files/upload', multipleUpload, (req, res) => {
-  console.log("handling upload")
   const assetId = req.body.assetId;
 
   const file = req.files;
   const ResponseData = [];
-  console.log("file: ", file)
 
   file.map((item) => {
-    console.log(item);
     const params = {
       Bucket: bucketName,
       Key: `${assetId}:${item.originalname}`,
@@ -157,6 +156,7 @@ app.post('/api/files/upload', multipleUpload, (req, res) => {
       } else {
         ResponseData.push(data);
         if (ResponseData.length === file.length) {
+          debug("Uploaded file(s) successfuly.")
           res.statusCode = 200;
           res.json({
             error: false,

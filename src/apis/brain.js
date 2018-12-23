@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
-
+import axios from 'axios';
 import dayjs from 'dayjs';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
@@ -16,6 +16,9 @@ import {
   ETHERSCAN_BALANCE,
   getAddressForAsset,
   testAssetIds,
+  UPDATE_ASSETS_URL,
+  S3_UPLOAD_URL,
+  BLOCK_NUMBER_CONTRACT_CREATION,
 } from '../constants';
 
 import {
@@ -166,16 +169,33 @@ const getNumberOfInvestors = async assetID =>
     }
   });
 
-const createAsset = async params =>
+export const createAsset = async params =>
   new Promise(async (resolve, reject) => {
     try {
+      console.log(params)
+      const id = Date.now();
+      const {
+        updateNotification,
+        assetName,
+        onSuccess,
+        country,
+        city,
+        fileList
+      } = params;
+
+      updateNotification(id, {
+        metamaskProps: {
+          AssetName: assetName,
+        },
+        status: 'info',
+      });
       const assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
         AssetCreation.ADDRESS,
       );
 
       const installerId = generateRandomHex(window.web3js);
-      const assetType = window.web3js.utils.sha3(params.assetType);
+      const assetType = params.assetType;
       const ipfsHash = installerId; // ipfshash doesn't really matter right now
       const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
 
@@ -189,20 +209,11 @@ const createAsset = async params =>
         randomBlockNumber
       );
 
-          /*const response = await axios.post('http://localhost:8080/api/airtable/update', {
-      assetId: '0xf61f06f3e01177598dc16ac0a9bc15b63bb1b5955d561bbab1de036601bdd082',
-      assetName: 'Bitcoin ATM',
-      country: 'Switzerland',
-      city: 'Zug',
-    });*/
-
-      console.log(futureAssetId);
-
       const assetCreationResponse = await assetCreationContract.methods
         .newAsset(
           params.amountToBeRaisedInUSD.toString(),
           params.managerPercentage.toString(),
-          params.amountToEscrow.toString(),
+          '0',
           installerId,
           assetType,
           randomBlockNumber.toString(),
@@ -210,12 +221,56 @@ const createAsset = async params =>
         )
         .send({ from: params.userAddress })
         .on('transactionHash', (transactionHash) => {
-          console.log(transactionHash)
+          updateNotification(id, {
+            listAssetProps: {
+              assetName: assetName,
+            },
+            status: 'info',
+          });
         })
         .on('error', (error) => {
+          updateNotification(id, {
+            metamaskProps: {},
+            status: 'error',
+          });
           resolve(false);
         })
-        .then((receipt) => {
+        .then( async(receipt) => {
+          //TODO add error handling
+          const response = await axios.post(UPDATE_ASSETS_URL, {
+            assetId: futureAssetId,
+            assetName: assetName,
+            country: country,
+            city: city,
+          });
+
+          if(fileList.length > 0){
+            let data = new FormData();
+            data.append('assetId', futureAssetId);
+            for(const file of fileList){
+              data.append('file', file.originFileObj);
+            }
+            axios.post(S3_UPLOAD_URL,
+              data, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              }
+            ).then((response) => {
+              console.log('success');
+            })
+            .catch((err) => {
+              console.log('fail');
+            });
+          }
+
+          onSuccess(updateNotification(id, {
+            listAssetProps: {
+              assetName: assetName,
+              assetId: futureAssetId,
+            },
+            status: 'success',
+          }))
           debug(receipt)
           resolve(receipt.status);
         });
@@ -225,15 +280,6 @@ const createAsset = async params =>
       reject(err);
     }
   });
-
-/*setTimeout(() => createAsset({
-  assetType: '0x89c2e778df1760738073f345cda4cc7882d91c5930ecfbb6c7169ebb424d798c',
-  userAddress: '0x11cF613d319DC923f3248175e0271588F1B26991',
-  managerPercentage: 10,
-  amountToBeRaisedInUSD: 444,
-  amountToEscrow: 0,
-}), 5000);
-*/
 
 const checkTransactionConfirmation = async (
   transactionHash,
@@ -315,7 +361,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
 
       let logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
-        { fromBlock: 0, toBlock: 'latest' },
+        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
       );
 
       let assets = logAssetFundingStartedEvents
@@ -326,10 +372,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           ipfsHash: object._ipfsHash,
         }));
 
-      console.log(assets)
-
       // pull assets from older contract
-
       apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
       assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
@@ -338,7 +381,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
 
       logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
-        { fromBlock: 0, toBlock: 'latest' },
+        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
       );
 
       const assetsOlderContract = logAssetFundingStartedEvents

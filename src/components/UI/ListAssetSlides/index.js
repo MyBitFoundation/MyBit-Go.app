@@ -502,7 +502,8 @@ export const CollateralSlide = ({
       <h1 className="Slider__header">Asset collateral </h1>
       <p className="Slider__note">
         MYB is used as an insurance mechanism, much like a deposit to protect
-        investors' funds and incentivise proper behaviour.
+        investors' funds and incentivise proper behaviour. This feature is coming in
+        the next version of MyBit Go.
       </p>
       <img
         src={MYB}
@@ -513,6 +514,7 @@ export const CollateralSlide = ({
       />
       <div className="Slider__input-collateral">
         <Slider
+          disabled
           min={0}
           max={constraints.max_percentage}
           defaultValue={collateralPercentage}
@@ -521,6 +523,7 @@ export const CollateralSlide = ({
         />
         <div>{`${collateralPercentage}%`}</div>
         <InputNumber
+          disabled
           defaultValue={collateralMyb}
           value={collateralMyb}
           step={0.1}
@@ -533,6 +536,7 @@ export const CollateralSlide = ({
         />
         <span>=</span>
         <InputNumber
+          disabled
           defaultValue={collateralDollar}
           value={collateralDollar}
           step={0.1}
@@ -551,7 +555,7 @@ export const CollateralSlide = ({
         disabledMassage="All fields are required"
         previous={previous}
         next={next}
-        forbidNext={forbidNext}
+        forbidNext={false}
       />
     </Slide>
   );

@@ -27,19 +27,18 @@ class ListAssetPage extends React.Component {
       MYB_PLACEHOLDER: 0.18,
       maximumAllowedSlide: 1,
       data: {
-        userCity: "a",
-        userCountry: "Switzerland",
-        category: "Crypto",
-        asset: "Bitcoin ATM",
-        assetValue: 10,
-        assetAddress1: "aa",
-        assetAddress2: "aa",
-        assetCity: "aa",
-        assetCountry: "aa",
-        assetProvince: "aa",
-        assetPostalCode: "aa",
+        userCity: '',
+        userCountry: '',
+        category: '',
+        asset: '',
+        assetAddress1: '',
+        assetAddress2: '',
+        assetCity: '',
+        assetCountry: '',
+        assetProvince: '',
+        assetPostalCode: '',
         fileList: [],
-        managementFee: 10,
+        managementFee: 0,
         collateralPercentage: 0,
         collateralMyb: 0,
         collateralDollar: 0
@@ -101,8 +100,6 @@ class ListAssetPage extends React.Component {
   };
 
   handleFileUpload = filesObject => {
-    console.log("handleFileUpload")
-
     // so that we get no loading animation in the UI next to the file name
     filesObject.file.status = 'success';
     let files = filesObject.fileList;
@@ -118,26 +115,6 @@ class ListAssetPage extends React.Component {
     if(files.length > MAX_FILES_UPLOAD){
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
-
-    /*
-    // handles uploading to our server
-    let data = new FormData();
-    data.append('assetId', '0xasdasdasd');
-    data.append('file', filesObject.file.originFileObj);
-
-    axios.post('http://localhost:8080/api/files/upload',
-      data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    ).then((response) => {
-      console.log('success');
-    })
-    .catch((err) => {
-      console.log('fail');
-    });
-  */
 
     this.setState(
       {

@@ -48,6 +48,9 @@ class BlockchainInfo extends React.Component {
     this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
     this.handleListAsset = this.handleListAsset.bind(this);
     this.getAssetFromAirTableByName = this.getAssetFromAirTableByName.bind(this);
+    this.removeNotification = this.removeNotification.bind(this);
+    this.updateNotification = this.updateNotification.bind(this);
+    this.getCategoriesFromAirTable = this.getCategoriesFromAirTable.bind(this);
 
     this.state = {
       loading: {
@@ -75,6 +78,7 @@ class BlockchainInfo extends React.Component {
       handleClickedAssetFavorite: this.handleAssetFavorited,
       getCategoriesForAssets: this.getCategoriesForAssets,
       handleListAsset: this.handleListAsset,
+      removeNotification: this.removeNotification,
       assetsNotification: {
         isLoading: false,
         transactionStatus: '',
@@ -83,6 +87,7 @@ class BlockchainInfo extends React.Component {
         alertMessage: '',
       },
       notificationPlace: 'notification',
+      notifications: {},
     };
   }
 
@@ -127,9 +132,59 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalFetchTransactionHistory);
   }
 
-  handleListAsset(formData){
-    console.log("DATA")
-    console.log(formData)
+  getCorrectCategoryForAsset(category, assetName){
+    if(assetName === 'Ethereum Miner'){
+      return 'Crypto Mining';
+    } else if(assetName === 'Bitcoin ATM'){
+      return 'Bitcoin ATM';
+    } else return category;
+  }
+
+  async handleListAsset(formData){
+    const {
+      asset,
+      userCountry,
+      userCity,
+      managementFee,
+      category,
+      fileList,
+    } = formData;
+
+    const {
+      categoriesAirTable,
+      assetsAirTable,
+    } = this.state;
+
+    const onSuccess = async (callback) => {
+      await this.getAssetsFromAirTable();
+      this.fetchAssets(callback);
+    }
+
+    const result = await Brain.createAsset({
+      updateNotification: this.updateNotification,
+      userAddress: this.state.user.userName,
+      managerPercentage: managementFee,
+      assetName: asset,
+      country: userCountry,
+      city: userCity,
+      assetType: categoriesAirTable[this.getCorrectCategoryForAsset(category, asset)].encoded,
+      amountToBeRaisedInUSD: this.getAssetFromAirTableByName(asset).amountToBeRaisedInUSDAirtable,
+      fileList,
+      onSuccess,
+    });
+  }
+
+  updateNotification(id, data){
+    const notifications = Object.assign({}, this.state.notifications);
+    notifications[id] = data;
+    this.setState({notifications});
+  }
+
+
+  removeNotification(date){
+    const notifications = Object.assign({}, this.state.notifications);
+    delete notifications[date];
+    this.setState({notifications});
   }
 
   processAssetsFromAirTable({ fields }){
@@ -205,10 +260,14 @@ class BlockchainInfo extends React.Component {
 
   async getAssetsFromAirTable(){
     const request = await fetch(AIRTABLE_ASSETS_URL);
+    if(request.status !== 200){
+      //TODO AIRTABLE DOWN - handle loader
+    }
     const json = await request.json();
     const { records } = json;
     const assets = records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS).map(this.processAssetsFromAirTable)
     const assetsById = this.processAssetsByIdFromAirTable(records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS), assets);
+
     this.setState({
       assetsAirTable: assets,
       assetsAirTableById: assetsById,
@@ -492,7 +551,7 @@ class BlockchainInfo extends React.Component {
       });
   }
 
-  async fetchAssets() {
+  async fetchAssets(callback) {
     if (!this.state.prices.ether) {
       setTimeout(this.fetchAssets, 10000);
       return;
@@ -502,10 +561,11 @@ class BlockchainInfo extends React.Component {
     });
     await Brain.fetchAssets(this.state.user, this.state.prices.ether.price, this.state.assetsAirTableById, this.state.categoriesAirTable)
       .then((response) => {
+        console.log(response)
         this.setState({
           assets: response,
           loading: { ...this.state.loading, assets: false },
-        });
+        }, callback ? callback() : null);
       })
       .catch((err) => {
         debug(err);

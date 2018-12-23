@@ -5,6 +5,7 @@ import './styles/App.css';
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import BlockchainInfoContext from './components/BlockchainInfoContext';
+import Notifications from './components/Notifications';
 import BancorContainer from './components/UI/BancorContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
@@ -101,7 +102,17 @@ class App extends Component {
               }}
             </BlockchainInfoContext.Consumer>
           </div>
-
+          <BlockchainInfoContext.Consumer>
+            {({
+              notifications,
+              removeNotification,
+            }) =>
+              <Notifications
+                data={notifications}
+                removeNotification={removeNotification}
+              />
+            }
+          </BlockchainInfoContext.Consumer>
 
           <div className="page-wrapper">
             <Switch>

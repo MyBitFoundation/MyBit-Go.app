@@ -90,8 +90,8 @@ const Asset = ({
           </div>
 
           <Link
-            to={`/explore/${category}/${id}`}
-            href={`/explore/${category}/${id}`}
+            to={`/explore/${id}`}
+            href={`/explore/${id}`}
           >
             <Button
               type={buttonType}

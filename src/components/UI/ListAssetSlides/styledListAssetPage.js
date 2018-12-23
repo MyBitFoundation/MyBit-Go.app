@@ -70,7 +70,7 @@ export const Slide = styled.div`
         padding: 10px;
         &--myb {
             margin: 0px auto;
-            padding: 30px 0px 52px 0px;
+            padding: 30px 0px 26px 0px;
         }
     }
     .Slider__input {
@@ -187,7 +187,7 @@ export const IntroList = styled.div`
             font-weight: 400;
         }
         &::before {
-            content: "•"; 
+            content: "•";
             font-size: 28px;
             position: absolute;
             top: -12px;
@@ -200,7 +200,7 @@ export const IntroList = styled.div`
             }
         }
     }
-    
+
 }`
 
 export const CarouselWrapper = styled.div`

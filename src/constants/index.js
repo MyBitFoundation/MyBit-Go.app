@@ -26,10 +26,13 @@ export const checkIfLoggedInTime = 5 * 1000;
 export const S3_URL = 'https://s3.eu-central-1.amazonaws.com/mybit-go/';
 export const AIRTABLE_CATEGORIES_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable/categories' : '/api/airtable/categories';
 export const AIRTABLE_ASSETS_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable/assets' : '/api/airtable/assets';
+export const UPDATE_ASSETS_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable/update' : '/api/airtable/update';
+export const S3_UPLOAD_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/files/upload' : '/api/files/upload';
 export const AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS = 3;
 export const AIRTABLE_ASSETS_NUMBER_OF_FIELDS = 6;
 export const MAX_FILES_UPLOAD = 2;
 export const MAX_FILE_SIZE = 5000000; //5 MB
+export const BLOCK_NUMBER_CONTRACT_CREATION = 4619384;
 
 export const ETHERSCAN_TX_BY_ADDR_ENDPOINT = address =>
   `https://api-ropsten.etherscan.io/api?module=account&action=txlist&address=${address}&sort=asc`;

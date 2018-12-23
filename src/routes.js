@@ -67,27 +67,7 @@ const routes = [
       </BlockchainInfoContext.Consumer>
     ),
   }, {
-    path: '/explore/:category',
-    exact: true,
-    component: ({ match, isFirstVisit }) => (
-      <BlockchainInfoContext.Consumer>
-        {({ loading, assets, categoriesAirTable }) =>
-          (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
-          ) : (
-            <ExploreAssetsPage
-              loading={loading}
-              assets={assets}
-              match={match}
-              categoriesAirTable={categoriesAirTable}
-            />
-          ))
-        }
-      </BlockchainInfoContext.Consumer>
-    ),
-  },
-  {
-    path: '/explore/:category/:assetId',
+    path: '/explore/:assetId',
     exact: true,
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
