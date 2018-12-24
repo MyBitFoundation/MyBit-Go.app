@@ -50,3 +50,9 @@ export const generateRandomHex = (web3) => {
 
   return web3.utils.sha3(text);
 }
+
+export const shortenAddress = (address, leftSide=15, rightSide=8) => {
+  const size = address.length;
+  let splitAddress = [address.slice(0, leftSide), address.slice(size - rightSide, size)]
+  return splitAddress[0] + "..." + splitAddress[1];
+}

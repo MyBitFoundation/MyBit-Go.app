@@ -22,7 +22,8 @@ import {
   AIRTABLE_CATEGORIES_URL,
   AIRTABLE_ASSETS_URL,
   AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
-  AIRTABLE_ASSETS_NUMBER_OF_FIELDS
+  AIRTABLE_ASSETS_NUMBER_OF_FIELDS,
+  S3_ASSET_FILES_URL,
 } from '../constants';
 
 class BlockchainInfo extends React.Component {
@@ -129,6 +130,27 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalLoadMetamaskUserDetails);
     clearInterval(this.intervalFetchTransactionHistory);
+  }
+
+  async pullFileInfoForAssets(assets){
+    try{
+      const response = await axios(S3_ASSET_FILES_URL);
+
+      const filesByAssetId = response.data.filesByAssetId;
+      console.log(filesByAssetId)
+
+      for(const asset of assets){
+        const assetId = asset.assetID;
+        if(filesByAssetId[assetId]){
+          asset.files = filesByAssetId[assetId];
+        }
+      }
+      return assets;
+    }catch(err){
+      debug("Error pulling files from server");
+      debug(err)
+      return assets;
+    }
   }
 
   async handleListAsset(formData, setUserListingAsset){
@@ -358,6 +380,7 @@ class BlockchainInfo extends React.Component {
     if (!data.assetsLoaded) {
       return;
     }
+
     let assetsToReturn = data.assets.map((asset) => {
       let watchListed = false;
 
@@ -366,15 +389,12 @@ class BlockchainInfo extends React.Component {
         watchListed = window.localStorage.getItem(searchQuery) || false;
       }
 
-      let details = isAssetIdEnabled(asset.assetID, true);
+      let details = this.state.assetsAirTableById[asset.assetID];
+      // if the asset Id is not on airtable it doens't show up in the platform
       if (!details) {
-        details = {};
-        details.city = 'Zurich';
-        details.country = 'Switzerland';
-        details.description = 'Coming soon';
-        details.details = 'Coming soon';
-        details.name = 'Coming soon';
+        return undefined;
       }
+
       return {
         ...details,
         ...asset,
@@ -386,12 +406,19 @@ class BlockchainInfo extends React.Component {
     if (process.env.NODE_ENV !== 'development') {
       // filter for test assets. Only for development
       assetsToReturn = assetsToReturn.filter(asset =>
-        asset.description !== 'Coming soon');
+        asset && asset.description !== 'Coming soon');
+    } else {
+      // returns all assets that were matched to the assets
+      // in Airtable
+      assetsToReturn = assetsToReturn.filter(asset =>
+        asset !== undefined);
     }
+
+    const updatedAssets = await this.pullFileInfoForAssets(assetsToReturn);
 
     this.setState({
       usingServer: true,
-      assets: assetsToReturn,
+      assets: updatedAssets,
       transactions: [],
       loading: {
         ...this.state.loading,
@@ -517,9 +544,11 @@ class BlockchainInfo extends React.Component {
       usingServer: false,
     });
     await Brain.fetchAssets(this.state.user, this.state.prices.ether.price, this.state.assetsAirTableById, this.state.categoriesAirTable)
-      .then((response) => {
+      .then( async (response) => {
+        const updatedAssets = await this.pullFileInfoForAssets(response);
+        console.log(updatedAssets)
         this.setState({
-          assets: response,
+          assets: updatedAssets,
           loading: { ...this.state.loading, assets: false },
         }, () => {
           if(updateNotification){
