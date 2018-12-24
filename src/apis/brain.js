@@ -464,6 +464,9 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
       const fundingStages = await Promise.all(assets.map(async asset =>
         apiContract.methods.fundingStage(asset.assetID).call()));
 
+      const managerPercentages = await Promise.all(assets.map(async asset =>
+        apiContract.methods.managerPercentage(asset.assetID).call()));
+
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
         const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
 
@@ -515,6 +518,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           details: assetIdDetails.details,
           imageSrc: assetIdDetails.imageSrc,
           fundingStage: fundingStages[index],
+          managerPercentage: Number(managerPercentages[index]),
           pastDate,
           watchListed: alreadyFavorite,
           category: assetIdDetails.category,

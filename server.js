@@ -17,6 +17,7 @@ const app = express();
 const airtableBaseAssets = dev ? 'appnvQb0LqM1nKTTQ' : 'appDMxPZPCcBkNuab';
 
 const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(airtableBaseAssets);
+const SIZE_OF_ASSETID = 66;
 
 if (dev) {
   app.use((req, res, next) => {
@@ -28,6 +29,7 @@ if (dev) {
 
 let assets = [];
 let assetsLoaded = false;
+let filesByAssetId = {};
 
 const multerStorage = multer.memoryStorage();
 const multipleUpload = multer({
@@ -76,6 +78,58 @@ async function UpdateAirTableEntry(id, currentAssetIds, newAssetId, country, cit
   });
 }
 
+ /*
+ // delete files from testing
+ var params = {
+  Bucket: bucketName,
+  Delete: {
+   Objects: [
+      {
+     Key: ''
+    }
+   ],
+   Quiet: false
+  }
+ };
+ s3bucket.deleteObjects(params, function(err, data) {
+   if (err) console.log(err, err.stack);
+   else     console.log(data);
+  });*/
+
+async function ProcessFilesForAssets(){
+  const params = {
+    Bucket: bucketName,
+    MaxKeys: 1000, // TODO: make this dynamic
+  };
+
+  s3bucket.listObjectsV2(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      setTimeout(ProcessFilesForAssets, 10000);
+    } else {
+      const filesByAssetIdTmp = {};
+      for(const file of data.Contents){
+        const key = file.Key;
+
+        const indexOfHex = key.indexOf('0x');
+        const indexOfSeparator = key.indexOf(':');
+
+        if(indexOfHex !== -1 && indexOfSeparator !== -1){
+          const assetId = key.substring(0, indexOfSeparator);
+          const fileName = key.substring(indexOfSeparator + 1);
+          if(assetId.length === SIZE_OF_ASSETID){
+            if(!filesByAssetIdTmp[assetId]){
+              filesByAssetIdTmp[assetId] = [];
+            }
+            filesByAssetIdTmp[assetId].push(fileName);
+          }
+        }
+      }
+      filesByAssetId = filesByAssetIdTmp;
+    }
+  });
+}
+
 app.use(express.json())
 
 app.post('/api/airtable/update', async function(req, res){
@@ -115,20 +169,9 @@ app.get('/api/assets', (req, res) => {
   });
 });
 
-app.get('/api/files/list', (req, res) => {
-  const params = {
-    Bucket: bucketName,
-    MaxKeys: 1000, // TODO: make this dynamic
-  };
-
-  s3bucket.listObjectsV2(params, (err, data) => {
-    if (err) {
-      res.statusCode = 404;
-      res.json(err);
-    } else {
-      res.statusCode = 200;
-      res.json(data);
-    }
+app.get('/api/assets/files', (req, res) => {
+  res.json({
+    filesByAssetId,
   });
 });
 
@@ -155,7 +198,8 @@ app.post('/api/files/upload', multipleUpload, (req, res) => {
       } else {
         ResponseData.push(data);
         if (ResponseData.length === file.length) {
-          debug("Uploaded file(s) successfuly.")
+          ProcessFilesForAssets();
+          console.log("Uploaded file(s) successfuly.")
           res.statusCode = 200;
           res.json({
             error: false,
@@ -189,6 +233,8 @@ async function pullAssets() {
     console.log(err);
   }
 }
+
+ProcessFilesForAssets();
 
 pullAssets();
 

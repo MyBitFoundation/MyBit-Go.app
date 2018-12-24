@@ -45,7 +45,11 @@ const AssetDetailsPage = ({
     fundingStage: asset.fundingStage,
     pastDate: asset.pastDate,
     watchListed: asset.watchListed,
+    files: asset.files,
+    managerPercentage: asset.managerPercentage,
   };
+
+  console.log(assetInformation)
 
   return (
     <div>

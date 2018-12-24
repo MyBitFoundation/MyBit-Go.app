@@ -1,11 +1,81 @@
 @import 'include-media/dist/_include-media.scss';
 
 .AssetDetails{
-  padding-top: 40px;
-
+  padding-top: 40px;;
 
   &__left{
     padding-left: 40px;
+
+    @include media('<500px') {
+      .ant-input-group-wrapper{
+        width: 50% !important;
+        display: block;
+      }
+    }
+
+    &-assetManager{
+      padding: 20px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+
+      @include media('<500px') {
+        flex-direction: column;
+      }
+
+      &-right{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        @include media('<500px') {
+          align-items: end;
+          margin-top: 20px;
+        }
+
+        .ValueDisplay{
+          margin: 5px 0px;
+        }
+      }
+
+      & a{
+        display: block;
+
+        &:focus{
+          text-decoration: none;
+        }
+      }
+
+      &-title{
+        font-size: 20px;
+        color: rgba(0, 0, 0, 0.65);
+        display: block;
+        font-weight: bolder;
+        margin-bottom: 0px;
+        display: inline-block;
+      }
+
+      &-address{
+        display: inline-block;
+      }
+
+      &-civic{
+        position: relative;
+        top: 3px;
+        left: 3px;
+      }
+
+      &-address{
+        display: block;
+      }
+
+      &-supportingDocuments{
+        margin-top: 10px;
+        font-weight: 500;
+        margin-bottom: 0px;
+      }
+    }
 
     @include media('<992px') {
       padding: 0px 0px;

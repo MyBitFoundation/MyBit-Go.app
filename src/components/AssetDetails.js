@@ -11,15 +11,22 @@ import 'antd/lib/row/style';
 import Col from 'antd/lib/col';
 import 'antd/lib/col/style';
 
+import ValueDisplay from './ValueDisplay';
 import Watch from './Watch';
 import ConfirmationPopup from './ConfirmationPopup';
-import Address from './Address';
 import '../styles/AssetDetails.css';
 import LocationIcon from '../images/Location-blue.svg';
+import MyBitLogo from '../images/mybit-blue.svg';
+import Sliders from '../images/sliders.svg';
+import Civic from '../images/civic.svg';
 import CalendarIcon from '../images/calendar.svg';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import NumericInput from './NumericInput';
-import { formatMonetaryValue } from '../util/helpers';
+import {
+  formatMonetaryValue,
+  shortenAddress,
+} from '../util/helpers';
+import { S3_URL } from '../constants';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -136,6 +143,21 @@ class AssetDetails extends React.Component {
     this.clearInterval();
   }
 
+  getFilesToRender(files, assetId){
+    if(!files || files.length === 0){
+      return <span>None</span>;
+    }
+    const toReturn = files.map(file => (
+      <a
+        href={`${S3_URL}${assetId}:${file}`}
+      >
+        {file}
+      </a>
+    ))
+
+    return toReturn;
+  }
+
   render() {
     const { selectedAmountUsd, selectedAmountEth } = this.state;
     const { currentEthInUsd } = this.props;
@@ -150,7 +172,11 @@ class AssetDetails extends React.Component {
       address,
       numberOfInvestors,
       watchListed,
+      files,
+      managerPercentage
     } = this.props.information;
+
+    const filesToRender = this.getFilesToRender(files, assetID);
 
     const maxInvestment =
       this.assetFunded || this.state.daysToGo < 0
@@ -250,11 +276,6 @@ class AssetDetails extends React.Component {
               <p className="AssetDetails__right-content-details">
                 {description}
               </p>
-              <b className="AssetDetails__right-title-details">Asset manager</b>
-              <Address
-                userName={address}
-                className="AssetDetails__right-address"
-              />
             </div>
           </Col>
 
@@ -408,6 +429,38 @@ class AssetDetails extends React.Component {
             >
             Contribute
             </Button>
+            <div className="AssetDetails__left-assetManager">
+              <div className="AssetDetails__left-assetManager-left">
+                <p className="AssetDetails__left-assetManager-title">Asset Manager</p>
+                <Civic className="AssetDetails__left-assetManager-civic"/>
+                <a
+                  className="AssetDetails__left-assetManager-address"
+                  href={`https://ropsten.etherscan.io/address/${address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {shortenAddress(address, 5, 2)}
+                </a>
+                <p className="AssetDetails__left-assetManager-supportingDocuments">Supporting documents</p>
+                {filesToRender}
+              </div>
+              <div className="AssetDetails__left-assetManager-right">
+                <ValueDisplay
+                  text="Total Management Fee"
+                  icon={<Sliders />}
+                  value={`${managerPercentage}%`}
+                  hasSeparator
+                  hasIcon
+                />
+                <ValueDisplay
+                  text="Asset Collateral"
+                  icon={<MyBitLogo />}
+                  value="0%"
+                  hasSeparator
+                  hasIcon
+                />
+              </div>
+            </div>
           </Col>
         </div>
       </Row>
