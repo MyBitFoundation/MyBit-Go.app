@@ -1,7 +1,7 @@
 /* eslint-disable  react/no-unused-state */
 /* eslint-disable  camelcase */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -24,8 +24,6 @@ import {
   AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
   AIRTABLE_ASSETS_NUMBER_OF_FIELDS
 } from '../constants';
-import { formatMonetaryValue } from '../util/helpers';
-import NotificationLink from './NotificationLink';
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -470,6 +468,8 @@ class BlockchainInfo extends React.Component {
         this.updateNotification,
         amountDollars
       );
+
+      debug(result);
 
     } catch (err) {
       console.log(err);
