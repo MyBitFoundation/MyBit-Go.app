@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
-
+import axios from 'axios';
 import dayjs from 'dayjs';
 import * as API from '../constants/contracts/API';
 import * as AssetCreation from '../constants/contracts/AssetCreation';
@@ -15,9 +15,16 @@ import {
   ETHERSCAN_TX,
   ETHERSCAN_BALANCE,
   getAddressForAsset,
-  isAssetIdEnabled,
   testAssetIds,
+  UPDATE_ASSETS_URL,
+  S3_UPLOAD_URL,
+  BLOCK_NUMBER_CONTRACT_CREATION,
 } from '../constants';
+
+import {
+  generateAssetId,
+  generateRandomHex,
+} from '../util/helpers'
 
 const IPFS_URL =
   'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
@@ -162,29 +169,124 @@ const getNumberOfInvestors = async assetID =>
     }
   });
 
-const createAsset = async params =>
+export const createAsset = async params =>
   new Promise(async (resolve, reject) => {
     try {
+      const id = Date.now();
+      const {
+        updateNotification,
+        assetName,
+        onSuccess,
+        onFailure,
+        country,
+        city,
+        fileList,
+      } = params;
+
+      updateNotification(id, {
+        metamaskProps: {
+          assetName: assetName,
+          operationType: 'list-asset',
+        },
+        status: 'info',
+      });
       const assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
         AssetCreation.ADDRESS,
       );
 
-      const installerId = window.web3js.utils.sha3(params.installerId);
-      const assetType = window.web3js.utils.sha3(params.assetType);
-      const ipfsHash = window.web3js.utils.sha3(params.ipfsHash);
+      const installerId = generateRandomHex(window.web3js);
+      const assetType = params.assetType;
+      const ipfsHash = installerId; // ipfshash doesn't really matter right now
+      const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
+
+      const futureAssetId = generateAssetId(
+        window.web3js,
+        params.userAddress,
+        params.managerPercentage,
+        params.amountToBeRaisedInUSD,
+        installerId,
+        assetType,
+        randomBlockNumber
+      );
 
       const assetCreationResponse = await assetCreationContract.methods
         .newAsset(
-          params.amountToBeRaisedInUSD,
-          params.managerPercentage,
-          params.amountToEscrow,
+          params.amountToBeRaisedInUSD.toString(),
+          params.managerPercentage.toString(),
+          '0',
           installerId,
           assetType,
-          params.blockAtCreation,
+          randomBlockNumber.toString(),
           ipfsHash,
         )
-        .send({ from: params.userAddress });
+        .send({ from: params.userAddress })
+        .on('transactionHash', (transactionHash) => {
+          updateNotification(id, {
+            listAssetProps: {
+              assetName: assetName,
+            },
+            status: 'info',
+          });
+        })
+        .on('error', (error) => {
+          onFailure();
+          updateNotification(id, {
+            metamaskProps: {},
+            status: 'error',
+            operationType: 'list-asset',
+          });
+          resolve(false);
+        })
+        .then( async(receipt) => {
+          //TODO add error handling
+          if(receipt.status){
+            const response = await axios.post(UPDATE_ASSETS_URL, {
+              assetId: futureAssetId,
+              assetName: assetName,
+              country: country,
+              city: city,
+            });
+
+            if(fileList.length > 0){
+              let data = new FormData();
+              data.append('assetId', futureAssetId);
+              for(const file of fileList){
+                data.append('file', file.originFileObj);
+              }
+              axios.post(S3_UPLOAD_URL,
+                data, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
+                }
+              ).then((response) => {
+                console.log('success');
+              })
+              .catch((err) => {
+                console.log('fail');
+              });
+            }
+
+            onSuccess(() => updateNotification(id, {
+              listAssetProps: {
+                assetName: assetName,
+                assetId: futureAssetId,
+              },
+              status: 'success',
+            }))
+          } else {
+            updateNotification(id, {
+              listAssetProps: {
+                assetName: assetName,
+              },
+              status: 'error',
+            });
+          }
+
+          debug(receipt)
+          resolve(receipt.status);
+        });
 
       resolve(assetCreationResponse);
     } catch (err) {
@@ -233,9 +335,17 @@ export const withdrawFromFaucet = async user =>
     }
   });
 
-export const fundAsset = async (user, assetId, amount) =>
+export const fundAsset = async (user, assetId, amount, onFailureContributionPopup, onSuccessRefreshData, notificationId, assetName, updateNotification, amountDollars) =>
   new Promise(async (resolve, reject) => {
     try {
+      updateNotification(notificationId, {
+        metamaskProps: {
+          assetName: assetName,
+          operationType: 'contribution',
+        },
+        status: 'info',
+      });
+
       const fundingHubContract = new window.web3js.eth.Contract(
         FundingHub.ABI,
         FundingHub.ADDRESS,
@@ -248,11 +358,40 @@ export const fundAsset = async (user, assetId, amount) =>
           value: weiAmount,
           from: user.userName,
         })
+        .on('transactionHash', (transactionHash) => {
+          updateNotification(notificationId, {
+            fundingProps: {
+              assetName: assetName,
+              amount: amountDollars,
+            },
+            status: 'info',
+          });
+        })
         .on('error', (error) => {
+          onFailureContributionPopup();
+          updateNotification(notificationId, {
+            metamaskProps: {
+              assetName: assetName,
+              operationType: 'contribution',
+            },
+            status: 'error',
+          });
           debug(error);
           resolve(false);
         })
         .then((receipt) => {
+          if(receipt.status){
+            onSuccessRefreshData();
+          } else {
+            onFailureContributionPopup();
+            updateNotification(notificationId, {
+              fundingProps: {
+                assetName: assetName,
+                operationType: 'contribution',
+              },
+              status: 'error',
+            });
+          }
           resolve(receipt.status);
         });
     } catch (err) {
@@ -260,7 +399,7 @@ export const fundAsset = async (user, assetId, amount) =>
     }
   });
 
-export const fetchAssets = async (user, currentEthInUsd) =>
+export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
       // pull asssets from newest contract
@@ -272,7 +411,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
 
       let logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
-        { fromBlock: 0, toBlock: 'latest' },
+        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
       );
 
       let assets = logAssetFundingStartedEvents
@@ -284,7 +423,6 @@ export const fetchAssets = async (user, currentEthInUsd) =>
         }));
 
       // pull assets from older contract
-
       apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
       assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
@@ -293,15 +431,13 @@ export const fetchAssets = async (user, currentEthInUsd) =>
 
       logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
-        { fromBlock: 0, toBlock: 'latest' },
+        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
       );
 
       const assetsOlderContract = logAssetFundingStartedEvents
         .map(({ returnValues }) => returnValues)
         .map(object => ({
           assetID: object._assetID,
-          assetType: object._assetType,
-          ipfsHash: object._ipfsHash,
         }));
 
       assets = assets.concat(assetsOlderContract);
@@ -328,18 +464,16 @@ export const fetchAssets = async (user, currentEthInUsd) =>
       const fundingStages = await Promise.all(assets.map(async asset =>
         apiContract.methods.fundingStage(asset.assetID).call()));
 
+      const managerPercentages = await Promise.all(assets.map(async asset =>
+        apiContract.methods.managerPercentage(asset.assetID).call()));
+
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
         const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
 
-        // asset details are hardcoded for now
-        let assetIdDetails = isAssetIdEnabled(asset.assetID, true);
+        let assetIdDetails = assetsAirTableById[asset.assetID];
+        // if the asset Id is not on airtable it doens't show up in the platform
         if (!assetIdDetails) {
-          assetIdDetails = {};
-          assetIdDetails.city = 'Zurich';
-          assetIdDetails.country = 'Switzerland';
-          assetIdDetails.description = 'Coming soon';
-          assetIdDetails.details = 'Coming soon';
-          assetIdDetails.name = 'Coming soon';
+          return undefined;
         }
 
         // determine whether asset has expired
@@ -384,14 +518,16 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           details: assetIdDetails.details,
           imageSrc: assetIdDetails.imageSrc,
           fundingStage: fundingStages[index],
+          managerPercentage: Number(managerPercentages[index]),
           pastDate,
           watchListed: alreadyFavorite,
+          category: assetIdDetails.category,
         };
       }));
 
       // filter for v0.1
       assetsPlusMoreDetails = assetsPlusMoreDetails
-        .filter(asset => asset.amountToBeRaisedInUSD > 0);
+        .filter(asset => asset && asset.amountToBeRaisedInUSD > 0);
 
       if (process.env.NODE_ENV !== 'development') {
         // filter for test assets. Only for development
@@ -399,17 +535,7 @@ export const fetchAssets = async (user, currentEthInUsd) =>
           asset.description !== 'Coming soon');
       }
 
-      const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
-        if (asset.assetType) {
-          return {
-            ...asset,
-            category: getCategoryFromAssetTypeHash(window.web3js, asset.assetType),
-          };
-        }
-        return { ...asset };
-      });
-
-      resolve(assetsWithCategories);
+      resolve(assetsPlusMoreDetails);
     } catch (error) {
       reject(error);
     }

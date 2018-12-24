@@ -13,7 +13,7 @@ import LoadingPage from './LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
 
 
-const ExploreAssetsPage = ({ loading, assets, match }) => {
+const ExploreAssetsPage = ({ loading, assets, match, categoriesAirTable }) => {
   const { category } = match.params;
 
   if (!category) {
@@ -41,7 +41,7 @@ const ExploreAssetsPage = ({ loading, assets, match }) => {
           city={asset.city}
           country={asset.country}
           name={asset.name}
-          category={getPrettyCategoryName(asset.category)}
+          category={getPrettyCategoryName(asset.category, categoriesAirTable)}
           backgroundImage={asset.imageSrc}
           fundingStage={asset.fundingStage}
           pastDate={asset.pastDate}

@@ -1,7 +1,7 @@
 /* eslint-disable  react/no-unused-state */
 /* eslint-disable  camelcase */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -11,17 +11,19 @@ import {
   debug,
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
-  isAssetIdEnabled,
   serverIp,
   ethereumNetwork,
   fetchTransactionHistoryTime,
   loadMetamaskUserDetailsTime,
   pullAssetsFromServerTime,
   fetchAssetsFromWeb3Time,
+  S3_URL,
+  AIRTABLE_CATEGORIES_URL,
+  AIRTABLE_ASSETS_URL,
+  AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
+  AIRTABLE_ASSETS_NUMBER_OF_FIELDS,
+  S3_ASSET_FILES_URL,
 } from '../constants';
-import { formatMonetaryValue } from '../util/helpers';
-import NotificationLink from './NotificationLink';
-
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -39,6 +41,13 @@ class BlockchainInfo extends React.Component {
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
     this.usingServer = this.usingServer.bind(this);
+    this.getAssetsFromAirTable = this.getAssetsFromAirTable.bind(this);
+    this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
+    this.handleListAsset = this.handleListAsset.bind(this);
+    this.getAssetFromAirTableByName = this.getAssetFromAirTableByName.bind(this);
+    this.removeNotification = this.removeNotification.bind(this);
+    this.updateNotification = this.updateNotification.bind(this);
+    this.getCategoriesFromAirTable = this.getCategoriesFromAirTable.bind(this);
 
     this.state = {
       loading: {
@@ -64,6 +73,10 @@ class BlockchainInfo extends React.Component {
       extensionUrl: this.props.extensionUrl,
       userIsLoggedIn: this.props.userIsLoggedIn,
       handleClickedAssetFavorite: this.handleAssetFavorited,
+      getCategoriesForAssets: this.getCategoriesForAssets,
+      handleListAsset: this.handleListAsset,
+      removeNotification: this.removeNotification,
+      updateNotification: this.updateNotification,
       assetsNotification: {
         isLoading: false,
         transactionStatus: '',
@@ -72,10 +85,14 @@ class BlockchainInfo extends React.Component {
         alertMessage: '',
       },
       notificationPlace: 'notification',
+      notifications: {},
+      isUserContributing: false,
     };
   }
 
   async componentDidMount() {
+    // TODO perhaps we don't need to wait for these here
+    await Promise.all([this.getAssetsFromAirTable(), this.getCategoriesFromAirTable()]);
     const { userHasMetamask } = this.state;
     try {
       const usingServer = this.usingServer();
@@ -112,6 +129,192 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalLoadMetamaskUserDetails);
     clearInterval(this.intervalFetchTransactionHistory);
+  }
+
+  async pullFileInfoForAssets(assets){
+    try{
+      const response = await axios(S3_ASSET_FILES_URL);
+
+      const filesByAssetId = response.data.filesByAssetId;
+      console.log(filesByAssetId)
+
+      for(const asset of assets){
+        const assetId = asset.assetID;
+        if(filesByAssetId[assetId]){
+          asset.files = filesByAssetId[assetId];
+        }
+      }
+      return assets;
+    }catch(err){
+      debug("Error pulling files from server");
+      debug(err)
+      return assets;
+    }
+  }
+
+  async handleListAsset(formData, setUserListingAsset){
+    const {
+      asset,
+      userCountry,
+      userCity,
+      managementFee,
+      category,
+      fileList,
+    } = formData;
+
+    const {
+      categoriesAirTable,
+    } = this.state;
+
+    const onSuccess = async (callback) => {
+      await this.getAssetsFromAirTable();
+      this.fetchAssets(callback, setUserListingAsset);
+    }
+
+    const result = await Brain.createAsset({
+      updateNotification: this.updateNotification,
+      userAddress: this.state.user.userName,
+      managerPercentage: managementFee,
+      assetName: asset,
+      country: userCountry,
+      city: userCity,
+      assetType: categoriesAirTable[category].encoded,
+      amountToBeRaisedInUSD: this.getAssetFromAirTableByName(asset).amountToBeRaisedInUSDAirtable,
+      fileList,
+      onSuccess,
+      onFailure: () => setUserListingAsset(false),
+    });
+
+    debug(result);
+  }
+
+  updateNotification(id, data){
+    const notifications = Object.assign({}, this.state.notifications);
+    notifications[id] = data;
+    this.setState({notifications});
+  }
+
+
+  removeNotification(id){
+    const notifications = Object.assign({}, this.state.notifications);
+    delete notifications[id];
+    this.setState({notifications});
+  }
+
+  processAssetsFromAirTable({ fields }){
+    let location = undefined;
+    if(fields.Location){
+      let countries = fields.Location.split(',');
+      location = {};
+      countries.forEach(country => {
+        country = country.trim();
+        let cities = /\(([^)]+)\)/g.exec(country);
+
+        if(cities){
+          country = country.substring(0, country.indexOf('('))
+          cities = cities[1].split(';');
+          location[country] = cities;
+        } else {
+           location[country] = {};
+        }
+      })
+    }
+    return {
+      name: fields.Asset,
+      category: fields.Category,
+      description: fields.Description,
+      details: fields.Details,
+      imageSrc: `${S3_URL}assetImages:${fields['Image']}`,
+      amountToBeRaisedInUSDAirtable: fields['Funding goal'],
+      location,
+    };
+  }
+
+  processCategoriesFromAirTable(data){
+    const categories = {};
+    data.forEach(({ fields }) => {
+      categories[fields.Category] = {
+        contractName: fields['Category Contract'],
+        encoded: fields['byte32'],
+      }
+    })
+    return categories;
+  }
+
+  getAssetFromAirTableByName(assetName, assetsFromAirTable){
+    assetsFromAirTable = assetsFromAirTable || this.state.assetsAirTable;
+    const tmpAsset = Object.assign({}, assetsFromAirTable.filter(asset => asset.name === assetName)[0]);
+    tmpAsset.location = undefined;
+    return tmpAsset;
+  }
+
+  processAssetsByIdFromAirTable(assetsToProcess, assetsFromAirTable){
+    const assetsAirTableById = {};
+    const tmpCache = {};
+    assetsToProcess.forEach(({ fields }) => {
+      let assetIds = fields['Asset IDs'];
+      if(assetIds){
+        const assetName = fields['Asset'];
+        const airtableAsset = tmpCache[assetName] || this.getAssetFromAirTableByName(assetName, assetsFromAirTable);
+        // add to temporary cache (will help when we have a lot of assets)
+        if(airtableAsset && !tmpCache[assetName]){
+          tmpCache[assetName] = airtableAsset;
+        }
+        assetIds = assetIds.split(',');
+        assetIds.forEach(assetIdInfo => {
+          const [assetId, city, country] = assetIdInfo.split('|');
+          airtableAsset.city = city;
+          airtableAsset.country = country;
+          assetsAirTableById[assetId] = airtableAsset;
+        })
+      }
+    })
+    return assetsAirTableById;
+  }
+
+  async getAssetsFromAirTable(){
+    const request = await fetch(AIRTABLE_ASSETS_URL);
+    if(request.status !== 200){
+      //TODO AIRTABLE DOWN - handle loader
+    }
+    const json = await request.json();
+    const { records } = json;
+    const assets = records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS).map(this.processAssetsFromAirTable)
+    const assetsById = this.processAssetsByIdFromAirTable(records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS), assets);
+
+    this.setState({
+      assetsAirTable: assets,
+      assetsAirTableById: assetsById,
+    });
+  }
+
+  async getCategoriesFromAirTable(){
+    const request = await fetch(AIRTABLE_CATEGORIES_URL);
+    const json = await request.json();
+    const { records } = json;
+    const categories = this.processCategoriesFromAirTable(records.filter(({ fields })  => Object.keys(fields).length === AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS));
+    this.setState({
+      categoriesAirTable: categories,
+    })
+  }
+
+  getCategoriesForAssets(country, city){
+    const {
+      assetsAirTable,
+      categoriesAirTable,
+    } = this.state;
+    let categories = [];
+    for(const asset of assetsAirTable){
+      if(categories.includes(asset.category)){
+        continue;
+      }
+      if(!asset.location){
+        categories.push(categoriesAirTable[asset.category] ? asset.category : undefined);
+      } else if (asset.location && asset.location.country === country && (!asset.location.cities || asset.location.cities.includes(city.toLowerCase()))){
+        categories.push(categoriesAirTable[asset.category] ? asset.category : undefined);
+      }
+    }
+    return categories;
   }
 
   getMYB() {
@@ -176,6 +379,7 @@ class BlockchainInfo extends React.Component {
     if (!data.assetsLoaded) {
       return;
     }
+
     let assetsToReturn = data.assets.map((asset) => {
       let watchListed = false;
 
@@ -184,15 +388,12 @@ class BlockchainInfo extends React.Component {
         watchListed = window.localStorage.getItem(searchQuery) || false;
       }
 
-      let details = isAssetIdEnabled(asset.assetID, true);
+      let details = this.state.assetsAirTableById[asset.assetID];
+      // if the asset Id is not on airtable it doens't show up in the platform
       if (!details) {
-        details = {};
-        details.city = 'Zurich';
-        details.country = 'Switzerland';
-        details.description = 'Coming soon';
-        details.details = 'Coming soon';
-        details.name = 'Coming soon';
+        return undefined;
       }
+
       return {
         ...details,
         ...asset,
@@ -204,12 +405,19 @@ class BlockchainInfo extends React.Component {
     if (process.env.NODE_ENV !== 'development') {
       // filter for test assets. Only for development
       assetsToReturn = assetsToReturn.filter(asset =>
-        asset.description !== 'Coming soon');
+        asset && asset.description !== 'Coming soon');
+    } else {
+      // returns all assets that were matched to the assets
+      // in Airtable
+      assetsToReturn = assetsToReturn.filter(asset =>
+        asset !== undefined);
     }
+
+    const updatedAssets = await this.pullFileInfoForAssets(assetsToReturn);
 
     this.setState({
       usingServer: true,
-      assets: assetsToReturn,
+      assets: updatedAssets,
       transactions: [],
       loading: {
         ...this.state.loading,
@@ -257,74 +465,40 @@ class BlockchainInfo extends React.Component {
     }
   }
 
-  async fundAsset(assetId, amount) {
-    await this.setAssetsStatusState({
-      isLoading: true,
-      transactionStatus: '',
-      alertType: 'info',
-      alertMessage: 'After accepting the transaction in Metamask it may take several minutes for it to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
-    });
-
+  async fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {
     try {
       const currentAsset = this.state.assets.find(item => item.assetID === assetId);
+      const notificationId = Date.now();
+
+      const onSuccessRefreshData = async () => {
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        onSuccessConfirmationPopup();
+        this.updateNotification(notificationId, {
+          fundingProps: {
+            assetName: currentAsset.name,
+            amount: amountDollars,
+            operationType: 'contribution',
+          },
+          status: 'success',
+        })
+      }
 
       const result = await Brain.fundAsset(
         this.state.user,
         assetId,
         amount,
+        onFailureContributionPopup,
+        onSuccessRefreshData,
+        notificationId,
+        currentAsset.name,
+        this.updateNotification,
+        amountDollars
       );
 
-      const formatedAmount = formatMonetaryValue(this.state.prices.ether.price * amount);
+      debug(result);
 
-      if (result) {
-        const { notificationPlace } = this.state;
-        const Message = (
-          <Fragment>Funded {currentAsset.name} successfully with <span className="NotificationLink__amount">{formatedAmount}</span>
-            <NotificationLink to="/portfolio" setAssetsStatus={this.setAssetsStatusState} text=" Go to Portfolio" />
-          </Fragment>
-        );
-
-        const alertMessage = notificationPlace === 'notification'
-          ? Message
-          : 'Sent Successfuly!';
-
-        this.setAssetsStatusState({
-          isLoading: false,
-          transactionStatus: 1,
-          alertType: 'success',
-          alertMessage,
-        });
-
-        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-
-        this.intervalFetchAssets =
-          setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
-        this.intervalFetchTransactionHistory =
-          setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
-      } else {
-        const { notificationPlace } = this.state;
-        const currentPathName = window.location.pathname;
-        const Message = (
-          <Fragment>Failed to fund {currentAsset.name} with <span className="NotificationLink__amount">{formatedAmount}</span>
-            <NotificationLink to={currentPathName} setAssetsStatus={this.setAssetsStatusState} text=" Try again" />
-          </Fragment>
-        );
-
-        const alertMessage = notificationPlace === 'notification'
-          ? Message
-          : 'Transaction failed. Please try again.';
-
-        this.setAssetsStatusState({
-          isLoading: false,
-          transactionStatus: 0,
-          alertType: 'error',
-          alertMessage,
-        });
-      }
     } catch (err) {
-      this.setAssetsStatusState({
-        isLoading: false,
-      });
+      console.log(err);
     }
   }
 
@@ -360,7 +534,7 @@ class BlockchainInfo extends React.Component {
       });
   }
 
-  async fetchAssets() {
+  async fetchAssets(updateNotification, updateUserListingAsset) {
     if (!this.state.prices.ether) {
       setTimeout(this.fetchAssets, 10000);
       return;
@@ -368,11 +542,20 @@ class BlockchainInfo extends React.Component {
     this.setState({
       usingServer: false,
     });
-    await Brain.fetchAssets(this.state.user, this.state.prices.ether.price)
-      .then((response) => {
+    await Brain.fetchAssets(this.state.user, this.state.prices.ether.price, this.state.assetsAirTableById, this.state.categoriesAirTable)
+      .then( async (response) => {
+        const updatedAssets = await this.pullFileInfoForAssets(response);
+        console.log(updatedAssets)
         this.setState({
-          assets: response,
+          assets: updatedAssets,
           loading: { ...this.state.loading, assets: false },
+        }, () => {
+          if(updateNotification){
+            updateNotification();
+          }
+          if(updateUserListingAsset){
+            updateUserListingAsset();
+          }
         });
       })
       .catch((err) => {

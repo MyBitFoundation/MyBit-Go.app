@@ -1,16 +1,3 @@
-import cryptocurrencyAtmCategoryImage from '../images/categories/Bitcoinatm.jpg';
-import autonomousvehiclesImage from '../images/categories/autonomousvehicles.jpg';
-import cryptominingImage from '../images/categories/Cryptomining.jpg';
-import dronedeliveryImage from '../images/categories/dronedelivery.jpg';
-import solarenergyImage from '../images/categories/Solar1.jpg';
-// import windenergyImage from '../images/categories/windenergy.png';
-import otherImage from '../images/categories/other.jpg';
-import realestatecoworkingImage from '../images/categories/Co-working.jpg';
-import realestatestorageImage from '../images/categories/Storage.jpg';
-import masternodeImage from '../images/categories/Masternode.jpg';
-import chargeStationImage from '../images/categories/ChargeStation.jpg';
-import vendingMachineImage from '../images/categories/VendingMachine.jpg';
-
 export const formatMonetaryValue = (number, fractionDigits = 0) => {
   let value = Number(number).toLocaleString('en-US', {
     style: 'currency',
@@ -28,90 +15,44 @@ export const formatMonetaryValue = (number, fractionDigits = 0) => {
   return value;
 };
 
-
-export const getCategoryFromAssetTypeHash = (web3, assetTypeHash) => {
-  switch (assetTypeHash) {
-    case web3.utils.sha3('bitcoinatm'):
-      return 'bitcoinatm';
-    case web3.utils.sha3('cryptomining'):
-      return 'cryptomining';
-    case web3.utils.sha3('realestatestorage'):
-      return 'realestatestorage';
-    case web3.utils.sha3('realestatecoworking'):
-      return 'realestatecoworking';
-    case web3.utils.sha3('chargingstation'):
-      return 'chargingstation';
-    case web3.utils.sha3('dronedelivery'):
-      return 'dronedelivery';
-    case web3.utils.sha3('autonomousvehicles'):
-      return 'autonomousvehicles';
-    case web3.utils.sha3('solarenergy'):
-      return 'solarenergy';
-    case web3.utils.sha3('windenergy'):
-      return 'other';
-    case web3.utils.sha3('masternodes'):
-      return 'masternodes';
-    case web3.utils.sha3('vendingmachines'):
-      return 'vendingmachines';
-    default:
-      return 'other';
+export const getCategoryFromAssetTypeHash = (assetTypeHash, categoriesAirTable) => {
+  for(let entry of Object.entries(categoriesAirTable)){
+    const value = entry[1];
+    if(value.encoded === assetTypeHash) return value.contractName;
   }
 };
 
-export const getPrettyCategoryName = (category) => {
-  switch (category) {
-    case 'bitcoinatm':
-      return 'Bitcoin ATM';
-    case 'cryptomining':
-      return 'Crypto Mining';
-    case 'realestatestorage':
-      return 'Real Estate (Storage)';
-    case 'realestatecoworking':
-      return 'Real Estate (Co-Working)';
-    case 'chargingstation':
-      return 'Charging Station';
-    case 'dronedelivery':
-      return 'Drone Delivery';
-    case 'autonomousvehicles':
-      return 'Autonomous Vehicles';
-    case 'solarenergy':
-      return 'Energy';
-    // case 'windenergy':
-    //   return 'Energy';
-    case 'masternodes':
-      return 'Masternodes';
-    case 'vendingmachines':
-      return 'Vending Machines';
-    default:
-      return 'Other';
+export const getPrettyCategoryName = (category, categoriesAirTable) => {
+  for(let entry of Object.entries(categoriesAirTable)){
+    const [key, value] = entry;
+    if(value.contractName === category) return key;
   }
 };
 
-export const getImageForCategory = (category) => {
-  switch (category) {
-    case 'bitcoinatm':
-      return cryptocurrencyAtmCategoryImage;
-    case 'autonomousvehicles':
-      return autonomousvehiclesImage;
-    case 'cryptomining':
-      return cryptominingImage;
-    case 'dronedelivery':
-      return dronedeliveryImage;
-    case 'solarenergy':
-      return solarenergyImage;
-    case 'realestatestorage':
-      return realestatestorageImage;
-    // case 'windenergy':
-    //   return windenergyImage;
-    case 'realestatecoworking':
-      return realestatecoworkingImage;
-    case 'masternodes':
-      return masternodeImage;
-    case 'chargingstation':
-      return chargeStationImage;
-    case 'vendingmachines':
-      return vendingMachineImage;
-    default:
-      return otherImage;
-  }
-};
+export const generateAssetId = (web3, address, managerPercentage, amountToBeRaisedInUSD, installerId, assetType, blockNumber) => {
+  return web3.utils.soliditySha3(
+    address,
+    '0', // escrow is 0 by default
+    managerPercentage.toString(),
+    amountToBeRaisedInUSD.toString(),
+    installerId,
+    assetType,
+    blockNumber.toString(),
+  )
+}
+
+export const generateRandomHex = (web3) => {
+  let text = "";
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return web3.utils.sha3(text);
+}
+
+export const shortenAddress = (address, leftSide=15, rightSide=8) => {
+  const size = address.length;
+  let splitAddress = [address.slice(0, leftSide), address.slice(size - rightSide, size)]
+  return splitAddress[0] + "..." + splitAddress[1];
+}

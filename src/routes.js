@@ -3,7 +3,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import AssetDetailsPage from './components/pages/AssetDetailsPage';
-import ExploreAssetsPage from './components/pages/ExploreAssetsPage';
 import ExplorePage from './components/pages/ExplorePage';
 import NotFoundPage from './components/pages/NotFoundPage';
 import PortfolioPage from './components/pages/PortfolioPage';
@@ -33,7 +32,7 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets, handleClickedAssetFavorite }) =>
+        {({ loading, assets, handleClickedAssetFavorite, categoriesAirTable }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -41,6 +40,7 @@ const routes = [
               loading={loading}
               assets={assets}
               handleClickedAssetFavorite={handleClickedAssetFavorite}
+              categoriesAirTable={categoriesAirTable}
             />
           ))
         }
@@ -51,7 +51,7 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets, handleClickedAssetFavorite }) =>
+        {({ loading, assets, handleClickedAssetFavorite, categoriesAirTable }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -59,32 +59,14 @@ const routes = [
               loading={loading}
               assets={assets}
               handleClickedAssetFavorite={handleClickedAssetFavorite}
+              categoriesAirTable={categoriesAirTable}
             />
           ))
         }
       </BlockchainInfoContext.Consumer>
     ),
   }, {
-    path: '/explore/:category',
-    exact: true,
-    component: ({ match, isFirstVisit }) => (
-      <BlockchainInfoContext.Consumer>
-        {({ loading, assets }) =>
-          (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
-          ) : (
-            <ExploreAssetsPage
-              loading={loading}
-              assets={assets}
-              match={match}
-            />
-          ))
-        }
-      </BlockchainInfoContext.Consumer>
-    ),
-  },
-  {
-    path: '/explore/:category/:assetId',
+    path: '/explore/:assetId',
     exact: true,
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>

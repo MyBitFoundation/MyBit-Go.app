@@ -61,7 +61,6 @@ class Civic extends Component {
     this.civicSip = new window.civic.sip({
       appId: process.env.REACT_APP_CIVIC_APP_ID,
     });
-    console.log(this.civicSip);
     this.civicSip.on("auth-code-received", this.handleCodeReceived);
     this.civicSip.on("user-cancelled", this.handleCanceled);
     this.civicSip.on("read", this.handleRead);

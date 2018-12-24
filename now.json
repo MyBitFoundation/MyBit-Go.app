@@ -4,7 +4,12 @@
     "INFURA_API_KEY": "@infura-api-key",
     "CIVIC_PRIVATE_KEY": "@civic-private-key",
     "CIVIC_APP_SECRET": "@civic-app-secret",
-    "REACT_APP_CIVIC_APP_ID": "@react-app-civic-app-id"
+    "REACT_APP_CIVIC_APP_ID": "@react-app-civic-app-id",
+    "AIRTABLE_KEY": "@airtable-key",
+    "BUCKET_REGION": "@bucket-region",
+    "BUCKET_NAME": "@bucket-name",
+    "AWS_SECRET_KEY": "@aws-secret-key",
+    "AWS_ACCESS_KEY": "@aws-access-key"
   },
   "version": 1
 }

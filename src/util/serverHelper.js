@@ -14,6 +14,8 @@ web3.setProvider(new web3.providers.HttpProvider(`https://ropsten.infura.io/v3/$
 
 let currentEthInUsd = 0;
 
+const BLOCK_NUMBER_CONTRACT_CREATION = 4619384;
+
 async function fetchPriceFromCoinmarketcap() {
   return new Promise(async (resolve, reject) => {
     try {
@@ -35,7 +37,7 @@ async function getNumberOfInvestors(assetID) {
       );
       const assetFundersLog = await fundingHubContract.getPastEvents(
         'LogNewFunder',
-        { fromBlock: 0, toBlock: 'latest' },
+        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
       );
 
       const investorsForThisAsset = assetFundersLog
@@ -91,7 +93,7 @@ async function fetchAssets() {
 
   let logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
     'LogAssetFundingStarted',
-    { fromBlock: 0, toBlock: 'latest' },
+    { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
   );
 
   let assets = logAssetFundingStartedEvents
@@ -111,7 +113,7 @@ async function fetchAssets() {
 
   logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
     'LogAssetFundingStarted',
-    { fromBlock: 0, toBlock: 'latest' },
+    { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
   );
 
   const assetsOlderContract = logAssetFundingStartedEvents
@@ -141,6 +143,9 @@ async function fetchAssets() {
 
   const fundingStages = await Promise.all(assets.map(async asset =>
     apiContract.methods.fundingStage(asset.assetID).call()));
+
+  const managerPercentages = await Promise.all(assets.map(async asset =>
+    apiContract.methods.managerPercentage(asset.assetID).call()));
 
   let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
     const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
@@ -178,6 +183,7 @@ async function fetchAssets() {
       assetManager: assetManagers[index],
       numberOfInvestors,
       fundingStage: fundingStages[index],
+      managerPercentage: Number(managerPercentages[index]),
       pastDate,
     };
   }));
@@ -186,17 +192,7 @@ async function fetchAssets() {
   assetsPlusMoreDetails = assetsPlusMoreDetails
     .filter(asset => asset.amountToBeRaisedInUSD > 0);
 
-  const assetsWithCategories = assetsPlusMoreDetails.map((asset) => {
-    if (asset.assetType) {
-      return {
-        ...asset,
-        category: getCategoryFromAssetTypeHash(asset.assetType),
-      };
-    }
-    return { ...asset };
-  });
-
-  return assetsWithCategories;
+  return assetsPlusMoreDetails;
 }
 
 module.exports = fetchAssets;

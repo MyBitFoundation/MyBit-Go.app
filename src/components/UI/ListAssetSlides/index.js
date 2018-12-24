@@ -6,7 +6,6 @@ import InputNumber from "antd/lib/input-number";
 import Select from "antd/lib/select";
 import Icon from "antd/lib/icon";
 import Upload from "antd/lib/upload";
-import message from "antd/lib/message";
 import Slider from "antd/lib/slider";
 import { Slide, IntroList } from "./styledListAssetPage";
 import questionTooltip from "../../../images/list-asset/questionTooltip.png";
@@ -14,6 +13,7 @@ import Earth from "../../../images/list-asset/assetList_earth.png";
 import Coins from "../../../images/list-asset/assetList_coins.png";
 import MYB from "../../../images/list-asset/assetList_myb.png";
 import { CivicButton, withCivic } from "../CivicContainer";
+import BlockchainInfoContext from '../../BlockchainInfoContext';
 
 const Option = Select.Option;
 
@@ -45,7 +45,7 @@ const SlideButtons = ({
   );
 };
 
-export const IntroSlide = withCivic(({ next, civic }) => (
+export const IntroSlide = withCivic(({ next, civic, dev }) => (
   <Slide>
     <Tooltip
       title="(no preview on figma)"
@@ -103,8 +103,8 @@ export const IntroSlide = withCivic(({ next, civic }) => (
       </div>
     </IntroList>
     <div className="Slider__buttons">
-      {!civic.token && <CivicButton onClick={civic.signUp} />}
-      {civic.token && (
+      {(!civic.token && !dev) && <CivicButton onClick={civic.signUp} />}
+      {(civic.token || dev) && (
         <Button
           type="primary"
           className="Slider__buttons-continue"
@@ -178,106 +178,115 @@ export const LocationSlide = ({
 export const AvailableAssetsSlide = ({
   next,
   previous,
-  assetValue,
   handleSelectChange,
   formData,
   history,
-  assets,
-  categories
 }) => {
   const { category, asset } = formData;
-  console.log(categories);
   let forbidNext =
-    category !== "" && asset !== "" && assetValue !== 0 ? false : true;
+    category !== "" && asset !== "" ? false : true;
   return (
-    <Slide>
-      <Tooltip
-        title="More assets will become available in the future."
-        overlayClassName="Slider_overlay-tooltip"
-      >
-        <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
-      </Tooltip>
-      {categories.length !== 0 ? (
-        <div>
-          <h1 className="Slider__header">Assets available</h1>
-          <p className="Slider__note">
-            Below is the list of assets available to you
-          </p>
-          <div className="Slider__input-container">
-            <Select
-              showSearch
-              style={{ width: "100%", marginTop: "10px" }}
-              placeholder="Asset Category"
-              optionFilterProp="children"
-              onChange={value => handleSelectChange(value, "category")}
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
-              }
+    <BlockchainInfoContext.Consumer>
+       {({ assetsAirTable, getCategoriesForAssets, categoriesAirTable }) => {
+        if(!assetsAirTable || !categoriesAirTable){
+          return null;
+        }
+        const categories = getCategoriesForAssets(formData.userCountry, formData.userCity);
+        const assetValue = !asset ? 0 : assetsAirTable.filter(assetTmp => assetTmp.name === asset)[0].amountToBeRaisedInUSDAirtable;
+        return (
+          <Slide>
+            <Tooltip
+              title="More assets will become available in the future."
+              overlayClassName="Slider_overlay-tooltip"
             >
-              {categories.map(cat => (
-                  <Option key={cat} value={cat}>
-                    {cat}
-                  </Option>
-                ))}
-            </Select>
-            <Select
-              showSearch
-              style={{ width: "100%", marginTop: "10px" }}
-              placeholder="Available Assets"
-              optionFilterProp="children"
-              onChange={value => handleSelectChange(value, "asset")}
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              {assets.filter(row => row.fields.Category === category).map(row => (
-                <Option key={row.fields.Asset} value={row.fields.Asset}>
-                  {row.fields.Asset}
-                </Option>
-              ))}
-            </Select>
-            <div className="Slider__input-label">Selected Asset value: </div>
-            <InputNumber
-              placeholder="Funding Goal"
-              name="assetValue"
-              value={assetValue}
-              formatter={value =>
-                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              }
-              parser={value => value.replace(/\$\s?|(,*)/g, "")}
-              onChange={value => handleSelectChange(value, "assetValue")}
-            />
-          </div>
-          <SlideButtons
-            nextMessage="Next"
-            disabledMassage="All fields are required"
-            previous={previous}
-            next={next}
-            forbidNext={forbidNext}
-          />
-        </div>
-      ) : (
-        <div>
-          <h1 className="Slider__header">No assets</h1>
-          <p className="Slider__note">
-            No assets have been found in your country.
-          </p>
-          <div className="Slider__buttons">
-            <Button
-              type="secondary"
-              className="Slider__buttons-centered"
-              onClick={() => history.push("/explore")}
-            >
-              Go to Explore page
-            </Button>
-          </div>
-        </div>
-      )}
-    </Slide>
+              <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
+            </Tooltip>
+            {categories.length !== 0 ? (
+              <div>
+                <h1 className="Slider__header">Assets available</h1>
+                <p className="Slider__note">
+                  Below is the list of assets available to you
+                </p>
+                <div className="Slider__input-container">
+                  <Select
+                    showSearch
+                    style={{ width: "100%", marginTop: "10px" }}
+                    placeholder="Asset Category"
+                    optionFilterProp="children"
+                    onChange={value => handleSelectChange(value, "category")}
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {categories.map(cat => (
+                        <Option key={cat} value={cat}>
+                          {cat}
+                        </Option>
+                      ))}
+                  </Select>
+                  <Select
+                    showSearch
+                    style={{ width: "100%", marginTop: "10px" }}
+                    placeholder="Available Assets"
+                    optionFilterProp="children"
+                    onChange={value => handleSelectChange(value, "asset")}
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {assetsAirTable.filter(asset => asset.category === category).map(asset => {
+                      return (
+                        <Option key={asset.name} value={asset.name}>
+                          {asset.name}
+                        </Option>
+                      )}
+                    )}
+                  </Select>
+                  <div className="Slider__input-label">Selected Asset value: </div>
+                  <InputNumber
+                    disabled
+                    placeholder="Funding Goal"
+                    name="assetValue"
+                    value={assetValue}
+                    formatter={value =>
+                     `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    parser={value => value.replace(/\$\s?|(,*)/g, "")}
+                    onChange={value => handleSelectChange(value, "assetValue")}
+                  />
+                </div>
+                <SlideButtons
+                  nextMessage="Next"
+                  disabledMassage="All fields are required"
+                  previous={previous}
+                  next={next}
+                  forbidNext={forbidNext}
+                />
+              </div>
+            ) : (
+              <div>
+                <h1 className="Slider__header">No assets</h1>
+                <p className="Slider__note">
+                  No assets have been found in your country.
+                </p>
+                <div className="Slider__buttons">
+                  <Button
+                    type="secondary"
+                    className="Slider__buttons-centered"
+                    onClick={() => history.push("/explore")}
+                  >
+                    Go to Explore page
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Slide>
+        )}}
+    </BlockchainInfoContext.Consumer>
   );
 };
 
@@ -365,22 +374,14 @@ export const AssetLocationSlide = ({
   );
 };
 
-export const UploadSlide = ({ next, previous, handleFileUpload }) => {
+export const UploadSlide = ({ next, previous, handleFileUpload, fileList }) => {
   const props = {
     name: "file",
     multiple: true,
-    action: "//jsonplaceholder.typicode.com/posts/",
-    onChange(info) {
-      const status = info.file.status;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    }
+    // so that the Upload component doesn't attempt to upload the files
+    // we're doing that later
+    customRequest: () => {},
+    fileList,
   };
   return (
     <Slide>
@@ -394,7 +395,7 @@ export const UploadSlide = ({ next, previous, handleFileUpload }) => {
       <h1 className="Slider__header">Supporting docs</h1>
       <p className="Slider__note">
         While not essential, assets with supporting documents are more likely to
-        get funded.
+        get funded. A maximum of two files can be uploaded., each file can have up to 5MB.
       </p>
       <div className="Slider__upload-container">
         <Upload.Dragger
@@ -452,7 +453,7 @@ export const FeeSlide = ({
       />
       <div className="Slider__input-fee">
         <Slider
-          min={0}
+          min={1}
           max={100}
           value={managementFee}
           onChange={value => handleSelectChange(value, "managementFee")}
@@ -460,7 +461,7 @@ export const FeeSlide = ({
         />
         <InputNumber
           defaultValue={managementFee}
-          min={0}
+          min={1}
           max={100}
           value={managementFee}
           formatter={value => `${value}%`}
@@ -489,7 +490,6 @@ export const CollateralSlide = ({
   constraints,
   formData
 }) => {
-  let forbidNext = collateralPercentage !== 0 ? false : true;
   return (
     <Slide>
       <Tooltip
@@ -501,7 +501,8 @@ export const CollateralSlide = ({
       <h1 className="Slider__header">Asset collateral </h1>
       <p className="Slider__note">
         MYB is used as an insurance mechanism, much like a deposit to protect
-        investors' funds and incentivise proper behaviour.
+        investors' funds and incentivise proper behaviour. This feature is coming in
+        the next version of MyBit Go.
       </p>
       <img
         src={MYB}
@@ -512,6 +513,7 @@ export const CollateralSlide = ({
       />
       <div className="Slider__input-collateral">
         <Slider
+          disabled
           min={0}
           max={constraints.max_percentage}
           defaultValue={collateralPercentage}
@@ -520,6 +522,7 @@ export const CollateralSlide = ({
         />
         <div>{`${collateralPercentage}%`}</div>
         <InputNumber
+          disabled
           defaultValue={collateralMyb}
           value={collateralMyb}
           step={0.1}
@@ -532,6 +535,7 @@ export const CollateralSlide = ({
         />
         <span>=</span>
         <InputNumber
+          disabled
           defaultValue={collateralDollar}
           value={collateralDollar}
           step={0.1}
@@ -550,79 +554,87 @@ export const CollateralSlide = ({
         disabledMassage="All fields are required"
         previous={previous}
         next={next}
-        forbidNext={forbidNext}
+        forbidNext={false}
       />
     </Slide>
   );
 };
 
-export const ConfirmAsset = ({ next, confirmAsset, formData }) => (
-  <Slide>
-    <h1 className="Slider__header">Confirm information</h1>
-    <p className="Slider__note">Please confirm your asset information below.</p>
-    <div className="Slider__confirm-information">
-      <div className="Slider__confirm-entry">
-        <div className="Slider__confirm-entry-title">Location</div>
-        <div className="Slider__confirm-entry-note">
-          {formData.userCity === "" ? "[city missing]" : formData.userCity}/
-          {formData.userCountry === ""
-            ? "[country missing]"
-            : formData.userCountry}
+export const ConfirmAsset = ({ next, formData, isUserListingAsset, setUserListingAsset }) => (
+  <BlockchainInfoContext.Consumer>
+    {({ handleListAsset }) =>
+    <Slide>
+      <h1 className="Slider__header">Confirm information</h1>
+      <p className="Slider__note">Please confirm your asset information below.</p>
+      <div className="Slider__confirm-information">
+        <div className="Slider__confirm-entry">
+          <div className="Slider__confirm-entry-title">Location</div>
+          <div className="Slider__confirm-entry-note">
+            {formData.userCity === "" ? "[city missing]" : formData.userCity}/
+            {formData.userCountry === ""
+              ? "[country missing]"
+              : formData.userCountry}
+          </div>
+        </div>
+        <div className="Slider__confirm-entry">
+          <div className="Slider__confirm-entry-title">Asset</div>
+          <div className="Slider__confirm-entry-note">
+            {formData.asset === "" ? "[asset missing]" : formData.asset}
+          </div>
+        </div>
+        <div className="Slider__confirm-entry">
+          <div className="Slider__confirm-entry-title">Asset location</div>
+          <div className="Slider__confirm-entry-note">
+            {formData.assetAddress1 === ""
+              ? "[address missing]"
+              : formData.assetAddress1}
+            {formData.assetAddress2 === "" ? "" : `,${formData.assetAddress2}`}
+          </div>
+        </div>
+        <div className="Slider__confirm-entry">
+          <div className="Slider__confirm-entry-title">Supporting documents</div>
+          <div className="Slider__confirm-entry-note">
+            {formData.fileList.length === 0
+              ? "[files not uploaded]"
+              : formData.fileList.map(file => (
+                  <a
+                    href="/list-asset"
+                    key={file.name}
+                    className="Slider__confirm-entry-file"
+                  >
+                    {file.name}
+                  </a>
+                ))}
+          </div>
+        </div>
+        <div className="Slider__confirm-entry">
+          <div className="Slider__confirm-entry-title">Management fee</div>
+          <div className="Slider__confirm-entry-note">
+            {formData.managementFee}%
+          </div>
+        </div>
+        <div className="Slider__confirm-entry">
+          <div className="Slider__confirm-entry-title">Asset collateral</div>
+          <div className="Slider__confirm-entry-note">
+            {formData.collateralMyb.toFixed(2)} MYB{" "}
+            {formData.collateralPercentage}%
+          </div>
         </div>
       </div>
-      <div className="Slider__confirm-entry">
-        <div className="Slider__confirm-entry-title">Asset</div>
-        <div className="Slider__confirm-entry-note">
-          {formData.asset === "" ? "[asset missing]" : formData.asset}
-        </div>
+      <div className="Slider__buttons">
+        <Button
+          loading={isUserListingAsset}
+          type="primary"
+          className="Slider__buttons-continue"
+          onClick={() => {
+            setUserListingAsset(true);
+            handleListAsset(formData, setUserListingAsset);
+          }}
+        >
+          {isUserListingAsset ? 'Confirming listing' : 'Confirm Listing'}
+        </Button>
       </div>
-      <div className="Slider__confirm-entry">
-        <div className="Slider__confirm-entry-title">Asset location</div>
-        <div className="Slider__confirm-entry-note">
-          {formData.assetAddress1 === ""
-            ? "[address missing]"
-            : formData.assetAddress1}
-          {formData.assetAddress2 === "" ? "" : `,${formData.assetAddress2}`}
-        </div>
-      </div>
-      <div className="Slider__confirm-entry">
-        <div className="Slider__confirm-entry-title">Supporting documents</div>
-        <div className="Slider__confirm-entry-note">
-          {formData.fileList.length === 0
-            ? "[files not uploaded]"
-            : formData.fileList.map(file => (
-                <a
-                  href="/list-asset"
-                  key={file.name}
-                  className="Slider__confirm-entry-file"
-                >
-                  {file.name}
-                </a>
-              ))}
-        </div>
-      </div>
-      <div className="Slider__confirm-entry">
-        <div className="Slider__confirm-entry-title">Management fee</div>
-        <div className="Slider__confirm-entry-note">
-          {formData.managementFee}%
-        </div>
-      </div>
-      <div className="Slider__confirm-entry">
-        <div className="Slider__confirm-entry-title">Asset collateral</div>
-        <div className="Slider__confirm-entry-note">
-          {formData.collateralMyb.toFixed(2)} MYB{" "}
-          {formData.collateralPercentage}%
-        </div>
-      </div>
-    </div>
-    <div className="Slider__buttons">
-      <Button
-        type="primary"
-        className="Slider__buttons-continue"
-        onClick={confirmAsset}
-      >
-        Confirm listing
-      </Button>
-    </div>
-  </Slide>
+    </Slide>
+  }
+  </BlockchainInfoContext.Consumer>
 );

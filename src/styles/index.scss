@@ -77,13 +77,18 @@ b{
 
 
 .MetaMaskErrors{
-  background-color: red;
+  background-color: orange;
   color: white;
   text-align: center;
   font-family: Roboto;
   font-weight: 600;
   position: relative;
   top: 0px;
+  padding: 0px 10px;
+
+  & p{
+    padding: 2px 0px;
+  }
 
   & a{
     color: white;
@@ -111,3 +116,21 @@ b{
     }
   }
 }
+
+.Notifications{
+  .ant-alert-with-description{
+    padding: 15px 35px 15px 64px;
+  }
+
+  .ant-alert{
+    position: fixed !important;
+    z-index: 100000;
+    right: 20px;
+    max-width: 500px;
+
+    & a:focus{
+      text-decoration: none;
+    }
+  }
+}
+

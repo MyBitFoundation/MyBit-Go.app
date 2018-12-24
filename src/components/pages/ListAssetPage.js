@@ -1,3 +1,5 @@
+/* eslint-disable  no-loop-func */
+
 import React from "react";
 import { withRouter } from "react-router-dom";
 import Button from "antd/lib/button";
@@ -9,6 +11,11 @@ import {
 } from "../UI/ListAssetSlides/styledListAssetPage";
 import * as Slides from "../UI/ListAssetSlides";
 import { withCivic } from "../UI/CivicContainer";
+import {
+  COUNTRIES,
+  MAX_FILES_UPLOAD,
+  MAX_FILE_SIZE,
+} from '../../constants';
 
 class ListAssetPage extends React.Component {
   constructor(props) {
@@ -16,107 +23,50 @@ class ListAssetPage extends React.Component {
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.goToSlide = this.goToSlide.bind(this);
+    this.setUserListingAsset = this.setUserListingAsset.bind(this);
+
     this.state = {
       currentSlide: 0,
       MYB_PLACEHOLDER: 0.18,
       maximumAllowedSlide: 1,
       data: {
-        userCity: "",
-        userCountry: "",
-        category: "",
-        asset: "",
-        assetValue: 0,
-        assetAddress1: "",
-        assetAddress2: "",
-        assetCity: "",
-        assetCountry: "",
-        assetProvince: "",
-        assetPostalCode: "",
+        userCity: '',
+        userCountry: '',
+        category: '',
+        asset: '',
+        assetAddress1: '',
+        assetAddress2: '',
+        assetCity: '',
+        assetCountry: '',
+        assetProvince: '',
+        assetPostalCode: '',
         fileList: [],
         managementFee: 0,
         collateralPercentage: 0,
         collateralMyb: 0,
         collateralDollar: 0
       },
-      countries: [],
-      assets: [],
-      filteredAssets: [],
+      countries: COUNTRIES,
+      isUserListingAsset: false,
     };
   }
 
-  componentDidMount() {
-    fetch("/api/airtable")
-      .then(res => res.json())
-      .then(data => {
-        this.setState({
-          countries: data.records
-            .filter(row => row.fields.Location !== undefined)
-            .map(row =>
-              row.fields.Location.replace(/ *\([^)]*\) */g, "").split(", ")
-            )
-            .reduce((acc, curr) => {
-              curr.forEach(el => {
-                if (acc.indexOf(el) < 0) {
-                  acc.push(el);
-                }
-              });
-              return acc;
-            }, []),
-          assets: data.records,
-          filteredAssets: data.records
-        });
-      })
-      .catch(console.log);
+  componentDidMount(){
+    this.ismounted = true;
   }
 
-  filterAssets = () => {
-    const { userCity, userCountry, category } = this.state.data;
+  componentWillUnmount() {
+     this.ismounted = false;
+  }
+
+  setUserListingAsset(flag){
+    if(!this.ismounted){
+      return;
+    }
     this.setState({
-      filteredAssets: this.state.assets
-        .filter(row => {
-          function matchLocation() {
-            let countries = row.fields.Location.replace(
-              /,\s*(?![^()]*\))/g,
-              "//"
-            )
-              .split("//")
-              .reduce((acc, curr) => {
-                const country = curr.split(" (")[0];
-                let cities = [];
-                if (curr.split(" (")[1]) {
-                  cities = curr
-                    .split(" (")[1]
-                    .replace(")", "")
-                    .split(",")
-                    .map(str => str.trim())
-                    .filter(str => str !== "");
-                }
-                acc[country] = acc[country]
-                  ? acc[country].concat(cities)
-                  : cities;
-                return acc;
-              }, {});
-            return (
-              Object.keys(countries).indexOf(userCountry) >= 0 &&
-              (countries[userCountry].lengnth === 0 ||
-                countries[userCountry].indexOf(userCity) >= 0)
-            );
-          }
-          const hasCategory = row.fields.Category !== undefined;
-          const matchesLocation = row.fields.Location === undefined ? true : matchLocation();
-          const hasName = row.fields.Asset !== undefined;
-          return matchesLocation && hasName && (!hasCategory || row.fields.Category === category);
-        })
-        // .reduce((acc, row) => {
-        //   let category = row.fields.Category
-        //     ? row.fields.Category
-        //     : "No Category";
-        //   acc[category] = acc[category] ? acc[category] : [];
-        //   acc[category].push(row);
-        //   return acc;
-        // }, {})
-    }, console.log);
-  };
+      isUserListingAsset: flag,
+    })
+  }
 
   getCurrentSlide = () => {
     setTimeout(() => {
@@ -160,13 +110,7 @@ class ListAssetPage extends React.Component {
           case 'userCountry': {
             this.setState({
               data: { ...this.state.data, assetCountry: value, category: '', asset: '' }
-            },this.filterAssets);break;
-          }
-          case 'userCity' : this.filterAssets(); break;
-          case 'category' : {
-            this.setState({
-              data: { ...this.state.data, asset: '' }
-            },this.filterAssets); break;
+            });break;
           }
           default: {
             console.log(this.state)
@@ -177,9 +121,25 @@ class ListAssetPage extends React.Component {
   };
 
   handleFileUpload = filesObject => {
+    // so that we get no loading animation in the UI next to the file name
+    filesObject.file.status = 'success';
+    let files = filesObject.fileList;
+    // apply file size restriction
+    for(let i = 0; i < files.length; i++){
+      if(files[i].size > MAX_FILE_SIZE){
+        files = files.filter(file => file !== files[i]);
+        i--;
+      }
+    }
+
+    // apply number of files restriction
+    if(files.length > MAX_FILES_UPLOAD){
+      files = files.slice(0, MAX_FILES_UPLOAD);
+    }
+
     this.setState(
       {
-        data: { ...this.state.data, fileList: filesObject.fileList }
+        data: { ...this.state.data, fileList: files }
       },
       () => console.log(this.state)
     );
@@ -221,7 +181,7 @@ class ListAssetPage extends React.Component {
     );
   };
 
-  confirmAsset = () => {
+  /*confirmAsset = () => {
     fetch("/api/list-asset/auth", {
       method: "POST",
       body: this.state.data,
@@ -236,17 +196,27 @@ class ListAssetPage extends React.Component {
       .catch(err => {
         console.log(err);
       });
-  };
+  };*/
 
   render() {
-    const { currentSlide, MYB_PLACEHOLDER, data, countries, filteredAssets } = this.state;
+    const {
+      currentSlide,
+      MYB_PLACEHOLDER,
+      data,
+      countries,
+      categories,
+      isUserListingAsset,
+     } = this.state;
+
     const {
       managementFee,
       collateralDollar,
       collateralMyb,
       collateralPercentage,
-      assetValue
+      assetValue,
+      fileList,
     } = this.state.data;
+
     return (
       <CarouselWrapper>
         <Carousel
@@ -257,7 +227,11 @@ class ListAssetPage extends React.Component {
           swipe={false}
           accessibility={false}
         >
-          <Slides.IntroSlide next={this.next} slidePosition={0} />
+          <Slides.IntroSlide
+            next={this.next}
+            slidePosition={0}
+            dev={process.env.NODE_ENV === 'development'}
+         />
           <Slides.LocationSlide
             next={this.next}
             previous={this.previous}
@@ -276,15 +250,7 @@ class ListAssetPage extends React.Component {
             assetValue={typeof assetValue === "string" ? 0 : assetValue}
             formData={data}
             history={this.props.history}
-            assets={filteredAssets}
-            categories={filteredAssets
-              .filter(row => row.fields.Category !== undefined)
-              .reduce((acc, curr) => {
-                if (acc.indexOf(curr.fields.Category) === -1) {
-                  acc.push(curr.fields.Category);
-                }
-                return acc;
-              }, [])}
+            categories={categories}
           />
           <Slides.AssetLocationSlide
             next={this.next}
@@ -299,6 +265,7 @@ class ListAssetPage extends React.Component {
             previous={this.previous}
             handleFileUpload={this.handleFileUpload}
             formData={data}
+            fileList={fileList}
           />
           <Slides.FeeSlide
             next={this.next}
@@ -332,8 +299,9 @@ class ListAssetPage extends React.Component {
           <Slides.ConfirmAsset
             next={this.next}
             previous={this.previous}
-            confirmAsset={this.confirmAsset}
             formData={data}
+            isUserListingAsset={isUserListingAsset}
+            setUserListingAsset={this.setUserListingAsset}
           />
         </Carousel>
 
@@ -350,7 +318,7 @@ class ListAssetPage extends React.Component {
                   type={buttonType}
                   className="ListAsset-nav-button"
                   shape="circle"
-                  disabled={slideTooltip.slide > currentSlide}
+                  disabled={slideTooltip.slide > currentSlide || isUserListingAsset}
                   onClick={() => this.goToSlide(slideTooltip.slide)}
                 />
               </Tooltip>
