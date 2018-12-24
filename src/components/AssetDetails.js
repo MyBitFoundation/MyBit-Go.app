@@ -456,7 +456,7 @@ class AssetDetails extends React.Component {
                 <ValueDisplay
                   text="Asset Collateral"
                   icon={<MyBitLogo />}
-                  value="10%"
+                  value="0%"
                   hasSeparator
                   hasIcon
                 />
