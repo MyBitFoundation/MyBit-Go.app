@@ -145,8 +145,8 @@ class AssetDetails extends React.Component {
   }
 
   getFilesToRender(files, assetId){
-    if(files.length === 0){
-      return null;
+    if(!files || files.length === 0){
+      return <span>None</span>;
     }
     const toReturn = files.map(file => (
       <a
