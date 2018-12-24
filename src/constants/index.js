@@ -196,7 +196,7 @@ export const metamaskErrors = (
   let toRender = null;
   if (!userHasMetamask && extensionUrl && !isBraveBrowser) {
     toRender = (
-      <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a> to confirm contribution.
+      <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a> to be able to fund and create assets.
         You can download the extension via{' '}
         <a href={extensionUrl} target="_blank" rel="noopener noreferrer">this</a> link.
       </p>
