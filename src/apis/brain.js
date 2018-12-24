@@ -185,7 +185,8 @@ export const createAsset = async params =>
 
       updateNotification(id, {
         metamaskProps: {
-          AssetName: assetName,
+          assetName: assetName,
+          operationType: 'list-asset',
         },
         status: 'info',
       });
@@ -233,45 +234,56 @@ export const createAsset = async params =>
           updateNotification(id, {
             metamaskProps: {},
             status: 'error',
+            operationType: 'list-asset',
           });
           resolve(false);
         })
         .then( async(receipt) => {
           //TODO add error handling
-          const response = await axios.post(UPDATE_ASSETS_URL, {
-            assetId: futureAssetId,
-            assetName: assetName,
-            country: country,
-            city: city,
-          });
+          if(receipt.status){
+            const response = await axios.post(UPDATE_ASSETS_URL, {
+              assetId: futureAssetId,
+              assetName: assetName,
+              country: country,
+              city: city,
+            });
 
-          if(fileList.length > 0){
-            let data = new FormData();
-            data.append('assetId', futureAssetId);
-            for(const file of fileList){
-              data.append('file', file.originFileObj);
-            }
-            axios.post(S3_UPLOAD_URL,
-              data, {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
+            if(fileList.length > 0){
+              let data = new FormData();
+              data.append('assetId', futureAssetId);
+              for(const file of fileList){
+                data.append('file', file.originFileObj);
               }
-            ).then((response) => {
-              console.log('success');
-            })
-            .catch((err) => {
-              console.log('fail');
+              axios.post(S3_UPLOAD_URL,
+                data, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
+                }
+              ).then((response) => {
+                console.log('success');
+              })
+              .catch((err) => {
+                console.log('fail');
+              });
+            }
+
+            onSuccess(() => updateNotification(id, {
+              listAssetProps: {
+                assetName: assetName,
+                assetId: futureAssetId,
+              },
+              status: 'success',
+            }))
+          } else {
+            updateNotification(id, {
+              listAssetProps: {
+                assetName: assetName,
+              },
+              status: 'error',
             });
           }
 
-          onSuccess(() => updateNotification(id, {
-            listAssetProps: {
-              assetName: assetName,
-              assetId: futureAssetId,
-            },
-            status: 'success',
-          }))
           debug(receipt)
           resolve(receipt.status);
         });
@@ -323,9 +335,17 @@ export const withdrawFromFaucet = async user =>
     }
   });
 
-export const fundAsset = async (user, assetId, amount) =>
+export const fundAsset = async (user, assetId, amount, onFailureContributionPopup, onSuccessRefreshData, notificationId, assetName, updateNotification, amountDollars) =>
   new Promise(async (resolve, reject) => {
     try {
+      updateNotification(notificationId, {
+        metamaskProps: {
+          assetName: assetName,
+          operationType: 'contribution',
+        },
+        status: 'info',
+      });
+
       const fundingHubContract = new window.web3js.eth.Contract(
         FundingHub.ABI,
         FundingHub.ADDRESS,
@@ -338,11 +358,40 @@ export const fundAsset = async (user, assetId, amount) =>
           value: weiAmount,
           from: user.userName,
         })
+        .on('transactionHash', (transactionHash) => {
+          updateNotification(notificationId, {
+            fundingProps: {
+              assetName: assetName,
+              amount: amountDollars,
+            },
+            status: 'info',
+          });
+        })
         .on('error', (error) => {
+          onFailureContributionPopup();
+          updateNotification(notificationId, {
+            metamaskProps: {
+              assetName: assetName,
+              operationType: 'contribution',
+            },
+            status: 'error',
+          });
           debug(error);
           resolve(false);
         })
         .then((receipt) => {
+          if(receipt.status){
+            onSuccessRefreshData();
+          } else {
+            onFailureContributionPopup();
+            updateNotification(notificationId, {
+              fundingProps: {
+                assetName: assetName,
+                operationType: 'contribution',
+              },
+              status: 'error',
+            });
+          }
           resolve(receipt.status);
         });
     } catch (err) {

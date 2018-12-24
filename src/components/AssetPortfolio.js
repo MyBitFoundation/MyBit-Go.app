@@ -25,7 +25,7 @@ const AssetPortfolio = ({
   assetID,
   category,
 }) => {
-  const url = `/explore/${category}/${assetID}`;
+  const url = `/explore/${assetID}`;
 
   let type = 'primary';
   let text = 'Contribute more';
