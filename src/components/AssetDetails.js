@@ -122,16 +122,6 @@ class AssetDetails extends React.Component {
 
   handlePopupState(value) {
     this.setState({ isPopupOpen: value });
-    this.props.changeNotificationPlace(value ? 'confirmation' : 'notification');
-    if (value) {
-      this.props.setAssetsStatusState(null);
-      return null;
-    }
-    this.props.setAssetsStatusState({
-      alertType: undefined,
-      alertMessage: undefined,
-    });
-    return null;
   }
 
   isPopupOpen() {
@@ -193,8 +183,7 @@ class AssetDetails extends React.Component {
               network,
               extensionUrl,
               isBraveBrowser,
-              assetsNotification,
-              setAssetsStatusState,
+              updateNotification,
             }) => (
               <ConfirmationPopup
                 amountUsd={formatMonetaryValue(selectedAmountUsd)}
@@ -209,9 +198,7 @@ class AssetDetails extends React.Component {
                 network={network}
                 extensionUrl={extensionUrl}
                 isBraveBrowser={isBraveBrowser}
-                assetsNotification={assetsNotification}
-                changeNotificationPlace={assetsNotification.changeNotificationPlace}
-                setAssetsStatusState={setAssetsStatusState}
+                updateNotification={updateNotification}
               />
             )}
           </BlockchainInfoContext.Consumer>
@@ -454,8 +441,6 @@ AssetDetails.propTypes = {
     watchListed: PropTypes.bool.isRequired,
   }),
   currentEthInUsd: PropTypes.number,
-  changeNotificationPlace: PropTypes.func.isRequired,
-  setAssetsStatusState: PropTypes.func.isRequired,
 };
 
 export default AssetDetails;

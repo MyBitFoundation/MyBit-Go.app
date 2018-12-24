@@ -34,7 +34,7 @@ const Notifications = ({ data, removeNotification }) => {
     removeNotification(id);
   }
 
-  return toRender;
+  return <div className="Notifications">{toRender}</div>
 };
 
 export default Notifications;

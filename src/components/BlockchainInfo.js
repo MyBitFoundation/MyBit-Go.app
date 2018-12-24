@@ -1,7 +1,7 @@
 /* eslint-disable  react/no-unused-state */
 /* eslint-disable  camelcase */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -24,9 +24,6 @@ import {
   AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
   AIRTABLE_ASSETS_NUMBER_OF_FIELDS
 } from '../constants';
-import { formatMonetaryValue } from '../util/helpers';
-import NotificationLink from './NotificationLink';
-
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -79,6 +76,7 @@ class BlockchainInfo extends React.Component {
       getCategoriesForAssets: this.getCategoriesForAssets,
       handleListAsset: this.handleListAsset,
       removeNotification: this.removeNotification,
+      updateNotification: this.updateNotification,
       assetsNotification: {
         isLoading: false,
         transactionStatus: '',
@@ -441,74 +439,40 @@ class BlockchainInfo extends React.Component {
     }
   }
 
-  async fundAsset(assetId, amount) {
-    await this.setAssetsStatusState({
-      isLoading: true,
-      transactionStatus: '',
-      alertType: 'info',
-      alertMessage: 'After accepting the transaction in Metamask it may take several minutes for it to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
-    });
-
+  async fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {
     try {
       const currentAsset = this.state.assets.find(item => item.assetID === assetId);
+      const notificationId = Date.now();
+
+      const onSuccessRefreshData = async () => {
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        onSuccessConfirmationPopup();
+        this.updateNotification(notificationId, {
+          fundingProps: {
+            assetName: currentAsset.name,
+            amount: amountDollars,
+            operationType: 'contribution',
+          },
+          status: 'success',
+        })
+      }
 
       const result = await Brain.fundAsset(
         this.state.user,
         assetId,
         amount,
+        onFailureContributionPopup,
+        onSuccessRefreshData,
+        notificationId,
+        currentAsset.name,
+        this.updateNotification,
+        amountDollars
       );
 
-      const formatedAmount = formatMonetaryValue(this.state.prices.ether.price * amount);
+      debug(result);
 
-      if (result) {
-        const { notificationPlace } = this.state;
-        const Message = (
-          <Fragment>Funded {currentAsset.name} successfully with <span className="NotificationLink__amount">{formatedAmount}</span>
-            <NotificationLink to="/portfolio" setAssetsStatus={this.setAssetsStatusState} text=" Go to Portfolio" />
-          </Fragment>
-        );
-
-        const alertMessage = notificationPlace === 'notification'
-          ? Message
-          : 'Sent Successfuly!';
-
-        this.setAssetsStatusState({
-          isLoading: false,
-          transactionStatus: 1,
-          alertType: 'success',
-          alertMessage,
-        });
-
-        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-
-        this.intervalFetchAssets =
-          setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
-        this.intervalFetchTransactionHistory =
-          setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
-      } else {
-        const { notificationPlace } = this.state;
-        const currentPathName = window.location.pathname;
-        const Message = (
-          <Fragment>Failed to fund {currentAsset.name} with <span className="NotificationLink__amount">{formatedAmount}</span>
-            <NotificationLink to={currentPathName} setAssetsStatus={this.setAssetsStatusState} text=" Try again" />
-          </Fragment>
-        );
-
-        const alertMessage = notificationPlace === 'notification'
-          ? Message
-          : 'Transaction failed. Please try again.';
-
-        this.setAssetsStatusState({
-          isLoading: false,
-          transactionStatus: 0,
-          alertType: 'error',
-          alertMessage,
-        });
-      }
     } catch (err) {
-      this.setAssetsStatusState({
-        isLoading: false,
-      });
+      console.log(err);
     }
   }
 
@@ -559,11 +523,9 @@ class BlockchainInfo extends React.Component {
           loading: { ...this.state.loading, assets: false },
         }, () => {
           if(updateNotification){
-            console.log("calling callback 1, updating notification")
             updateNotification();
           }
           if(updateUserListingAsset){
-            console.log("calling callback 2, updating button state")
             updateUserListingAsset();
           }
         });
