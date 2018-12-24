@@ -18,6 +18,11 @@ import {
   loadMetamaskUserDetailsTime,
   pullAssetsFromServerTime,
   fetchAssetsFromWeb3Time,
+  S3_URL,
+  AIRTABLE_CATEGORIES_URL,
+  AIRTABLE_ASSETS_URL,
+  AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
+  AIRTABLE_ASSETS_NUMBER_OF_FIELDS
 } from '../constants';
 import { formatMonetaryValue } from '../util/helpers';
 import NotificationLink from './NotificationLink';
@@ -39,6 +44,13 @@ class BlockchainInfo extends React.Component {
     this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
     this.usingServer = this.usingServer.bind(this);
+    this.getAssetsFromAirTable = this.getAssetsFromAirTable.bind(this);
+    this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
+    this.handleListAsset = this.handleListAsset.bind(this);
+    this.getAssetFromAirTableByName = this.getAssetFromAirTableByName.bind(this);
+    this.removeNotification = this.removeNotification.bind(this);
+    this.updateNotification = this.updateNotification.bind(this);
+    this.getCategoriesFromAirTable = this.getCategoriesFromAirTable.bind(this);
 
     this.state = {
       loading: {
@@ -64,6 +76,9 @@ class BlockchainInfo extends React.Component {
       extensionUrl: this.props.extensionUrl,
       userIsLoggedIn: this.props.userIsLoggedIn,
       handleClickedAssetFavorite: this.handleAssetFavorited,
+      getCategoriesForAssets: this.getCategoriesForAssets,
+      handleListAsset: this.handleListAsset,
+      removeNotification: this.removeNotification,
       assetsNotification: {
         isLoading: false,
         transactionStatus: '',
@@ -72,10 +87,14 @@ class BlockchainInfo extends React.Component {
         alertMessage: '',
       },
       notificationPlace: 'notification',
+      notifications: {},
+      isUserContributing: false,
     };
   }
 
   async componentDidMount() {
+    // TODO perhaps we don't need to wait for these here
+    await Promise.all([this.getAssetsFromAirTable(), this.getCategoriesFromAirTable()]);
     const { userHasMetamask } = this.state;
     try {
       const usingServer = this.usingServer();
@@ -112,6 +131,171 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalLoadMetamaskUserDetails);
     clearInterval(this.intervalFetchTransactionHistory);
+  }
+
+  async handleListAsset(formData, setUserListingAsset){
+    const {
+      asset,
+      userCountry,
+      userCity,
+      managementFee,
+      category,
+      fileList,
+    } = formData;
+
+    const {
+      categoriesAirTable,
+    } = this.state;
+
+    const onSuccess = async (callback) => {
+      await this.getAssetsFromAirTable();
+      this.fetchAssets(callback, setUserListingAsset);
+    }
+
+    const result = await Brain.createAsset({
+      updateNotification: this.updateNotification,
+      userAddress: this.state.user.userName,
+      managerPercentage: managementFee,
+      assetName: asset,
+      country: userCountry,
+      city: userCity,
+      assetType: categoriesAirTable[category].encoded,
+      amountToBeRaisedInUSD: this.getAssetFromAirTableByName(asset).amountToBeRaisedInUSDAirtable,
+      fileList,
+      onSuccess,
+      onFailure: () => setUserListingAsset(false),
+    });
+
+    debug(result);
+  }
+
+  updateNotification(id, data){
+    const notifications = Object.assign({}, this.state.notifications);
+    notifications[id] = data;
+    this.setState({notifications});
+  }
+
+
+  removeNotification(id){
+    const notifications = Object.assign({}, this.state.notifications);
+    delete notifications[id];
+    this.setState({notifications});
+  }
+
+  processAssetsFromAirTable({ fields }){
+    let location = undefined;
+    if(fields.Location){
+      let countries = fields.Location.split(',');
+      location = {};
+      countries.forEach(country => {
+        country = country.trim();
+        let cities = /\(([^)]+)\)/g.exec(country);
+
+        if(cities){
+          country = country.substring(0, country.indexOf('('))
+          cities = cities[1].split(';');
+          location[country] = cities;
+        } else {
+           location[country] = {};
+        }
+      })
+    }
+    return {
+      name: fields.Asset,
+      category: fields.Category,
+      description: fields.Description,
+      details: fields.Details,
+      imageSrc: `${S3_URL}assetImages:${fields['Image']}`,
+      amountToBeRaisedInUSDAirtable: fields['Funding goal'],
+      location,
+    };
+  }
+
+  processCategoriesFromAirTable(data){
+    const categories = {};
+    data.forEach(({ fields }) => {
+      categories[fields.Category] = {
+        contractName: fields['Category Contract'],
+        encoded: fields['byte32'],
+      }
+    })
+    return categories;
+  }
+
+  getAssetFromAirTableByName(assetName, assetsFromAirTable){
+    assetsFromAirTable = assetsFromAirTable || this.state.assetsAirTable;
+    const tmpAsset = Object.assign({}, assetsFromAirTable.filter(asset => asset.name === assetName)[0]);
+    tmpAsset.location = undefined;
+    return tmpAsset;
+  }
+
+  processAssetsByIdFromAirTable(assetsToProcess, assetsFromAirTable){
+    const assetsAirTableById = {};
+    const tmpCache = {};
+    assetsToProcess.forEach(({ fields }) => {
+      let assetIds = fields['Asset IDs'];
+      if(assetIds){
+        const assetName = fields['Asset'];
+        const airtableAsset = tmpCache[assetName] || this.getAssetFromAirTableByName(assetName, assetsFromAirTable);
+        // add to temporary cache (will help when we have a lot of assets)
+        if(airtableAsset && !tmpCache[assetName]){
+          tmpCache[assetName] = airtableAsset;
+        }
+        assetIds = assetIds.split(',');
+        assetIds.forEach(assetIdInfo => {
+          const [assetId, city, country] = assetIdInfo.split('|');
+          airtableAsset.city = city;
+          airtableAsset.country = country;
+          assetsAirTableById[assetId] = airtableAsset;
+        })
+      }
+    })
+    return assetsAirTableById;
+  }
+
+  async getAssetsFromAirTable(){
+    const request = await fetch(AIRTABLE_ASSETS_URL);
+    if(request.status !== 200){
+      //TODO AIRTABLE DOWN - handle loader
+    }
+    const json = await request.json();
+    const { records } = json;
+    const assets = records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS).map(this.processAssetsFromAirTable)
+    const assetsById = this.processAssetsByIdFromAirTable(records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS), assets);
+
+    this.setState({
+      assetsAirTable: assets,
+      assetsAirTableById: assetsById,
+    });
+  }
+
+  async getCategoriesFromAirTable(){
+    const request = await fetch(AIRTABLE_CATEGORIES_URL);
+    const json = await request.json();
+    const { records } = json;
+    const categories = this.processCategoriesFromAirTable(records.filter(({ fields })  => Object.keys(fields).length === AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS));
+    this.setState({
+      categoriesAirTable: categories,
+    })
+  }
+
+  getCategoriesForAssets(country, city){
+    const {
+      assetsAirTable,
+      categoriesAirTable,
+    } = this.state;
+    let categories = [];
+    for(const asset of assetsAirTable){
+      if(categories.includes(asset.category)){
+        continue;
+      }
+      if(!asset.location){
+        categories.push(categoriesAirTable[asset.category] ? asset.category : undefined);
+      } else if (asset.location && asset.location.country === country && (!asset.location.cities || asset.location.cities.includes(city.toLowerCase()))){
+        categories.push(categoriesAirTable[asset.category] ? asset.category : undefined);
+      }
+    }
+    return categories;
   }
 
   getMYB() {
@@ -360,7 +544,7 @@ class BlockchainInfo extends React.Component {
       });
   }
 
-  async fetchAssets() {
+  async fetchAssets(updateNotification, updateUserListingAsset) {
     if (!this.state.prices.ether) {
       setTimeout(this.fetchAssets, 10000);
       return;
@@ -368,11 +552,20 @@ class BlockchainInfo extends React.Component {
     this.setState({
       usingServer: false,
     });
-    await Brain.fetchAssets(this.state.user, this.state.prices.ether.price)
+    await Brain.fetchAssets(this.state.user, this.state.prices.ether.price, this.state.assetsAirTableById, this.state.categoriesAirTable)
       .then((response) => {
         this.setState({
           assets: response,
           loading: { ...this.state.loading, assets: false },
+        }, () => {
+          if(updateNotification){
+            console.log("calling callback 1, updating notification")
+            updateNotification();
+          }
+          if(updateUserListingAsset){
+            console.log("calling callback 2, updating button state")
+            updateUserListingAsset();
+          }
         });
       })
       .catch((err) => {

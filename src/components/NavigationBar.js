@@ -9,10 +9,10 @@ import '../styles/NavigationBar.css';
 
 const exploreIcon = require('../images/search.svg');
 const portfolioIcon = require('../images/chart-area.svg');
-const transactionsIcon = require('../images/history.svg');
-const listAssetIcon = require('../images/plus.svg');
+const transactionsIcon = require('../images/history-v2.svg');
+const listAssetIcon = require('../images/plus-v3.svg');
 const knowledgeBaseIcon = require('../images/question.svg');
-const watchIcon = require('../images/watchList.svg');
+const watchIcon = require('../images/watchList-v2.svg');
 
 const NavigationBar = ({ currentPath, setAssetsStatusState }) => {
   const menuOptions = [

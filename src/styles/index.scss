@@ -111,3 +111,18 @@ b{
     }
   }
 }
+
+.ant-alert-with-description{
+  padding: 15px 35px 15px 64px;
+}
+
+.ant-alert{
+  position: fixed !important;
+  z-index: 100000;
+  right: 20px;
+  max-width: 500px;
+
+  & a:focus{
+    text-decoration: none;
+  }
+}
