@@ -14,7 +14,6 @@ import 'antd/lib/col/style';
 import ValueDisplay from './ValueDisplay';
 import Watch from './Watch';
 import ConfirmationPopup from './ConfirmationPopup';
-import Address from './Address';
 import '../styles/AssetDetails.css';
 import LocationIcon from '../images/Location-blue.svg';
 import MyBitLogo from '../images/mybit-blue.svg';

@@ -11,7 +11,6 @@ import {
   debug,
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
-  isAssetIdEnabled,
   serverIp,
   ethereumNetwork,
   fetchTransactionHistoryTime,
