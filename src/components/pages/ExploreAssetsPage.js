@@ -45,6 +45,7 @@ const ExploreAssetsPage = ({ loading, assets, match, categoriesAirTable }) => {
           backgroundImage={asset.imageSrc}
           fundingStage={asset.fundingStage}
           pastDate={asset.pastDate}
+          numberOfInvestors={asset.numberOfInvestors}
         />
       ))}
     </div>,

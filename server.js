@@ -14,7 +14,7 @@ const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const app = express();
-const airtableBaseAssets = dev ? 'appnvQb0LqM1nKTTQ' : 'appDMxPZPCcBkNuab';
+const airtableBaseAssets = 'appnvQb0LqM1nKTTQ';
 
 const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(airtableBaseAssets);
 const SIZE_OF_ASSETID = 66;

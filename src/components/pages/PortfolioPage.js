@@ -1,28 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Row from 'antd/lib/col';
+import Button from 'antd/lib/button';
 import 'antd/lib/row/style';
 import '../../styles/PortfolioPage.css';
 import LoadingPage from './LoadingPage';
-import { isAssetIdEnabled } from '../../constants';
 import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
+import Fee from '../../images/Fee.png';
 import AssetPortfolio from '../AssetPortfolio';
 import { formatMonetaryValue } from '../../util/helpers';
+import { ManagedAssetCardGrid } from '../UI/ManagedAssetPage/ManagedAssetCardGrid'
+
+const ButtonGroup = Button.Group;
 
 const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue, 'ether');
 
 const getOwnedAssets = assets =>
   assets
     .filter(asset => asset.ownershipUnits > 0
-      && isAssetIdEnabled(asset.assetID)
       && !(asset.pastDate && asset.amountToBeRaisedInUSD !== asset.amountRaisedInUSD));
 
 const getPortfolioValue = (assets, currentEthPrice) =>
   assets.reduce(
     (accumulator, currentValue) =>
       accumulator +
-      (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice),
+      currentValue.amountToBeRaisedInUSD === currentValue.amountRaisedInUSD
+        ?  currentValue.amountRaisedInUSD :
+          (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice),
     0,
   );
 
@@ -70,78 +75,120 @@ const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
     };
   });
 
-const PortfolioPage = ({ loading, assets, prices }) => {
-  if (loading.assets || !prices.ether) {
-    return <LoadingPage message="Loading portfolio" />;
+class PortfolioPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.displayOwned = this.displayOwned.bind(this);
+    this.displayManaged = this.displayManaged.bind(this);
+    this.state = {
+      currentView: "managed",
+    };
   }
 
-  const { ether } = prices;
-  const ownedAssets = getOwnedAssets(assets);
-  const totalPortfolioValue = getPortfolioValue(
-    ownedAssets,
-    ether.price,
-  );
-  const totalPortfolioRevenue = getPortfolioRevenue(
-    ownedAssets,
-    ether.price,
-  );
+  displayOwned() {
+    this.setState({ currentView: "owned" });
+  }
 
-  const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, ether.price);
-  const portfolioRevenueAssets = getPortfolioRevenueAssets(
-    ownedAssets,
-    ether.price,
-  );
+  displayManaged() {
+    this.setState({ currentView: "managed" });
+  }
 
-  const totalValueEth =
-    parseFloat((totalPortfolioValue / ether.price)
-      .toFixed(5));
+  render() {
+    const { loading, assets, prices } = this.props;
+    const { currentView } = this.state;
 
-  const totalRevenuePercentage =
-    (totalPortfolioValue > 0 && totalPortfolioRevenue > 0)
-      ? parseFloat(((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2))
-      : 0;
+    if (loading.assets || !prices.ether) {
+      return <LoadingPage message="Loading portfolio" />;
+    }
 
-  return (
-    <div>
-      <div className="Portfolio">
-        <div className="Portfolio__cards">
-          <div className="Portfolio__card">
-            <img className="Portfolio__card-img" src={PieChart} alt="Pie chart" />
-            <span>Total Portfolio Value: {' '}
-              <b>
-                {formatMonetaryValue(totalPortfolioValue)}
-              </b>
-            </span>
-            <div className="Portfolio__card-separator" />
-            <b>{totalValueEth} ETH</b>
+    const { ether } = prices;
+    const ownedAssets = getOwnedAssets(assets);
+    const totalPortfolioValue = getPortfolioValue(
+      ownedAssets,
+      ether.price,
+    );
+    const totalPortfolioRevenue = getPortfolioRevenue(
+      ownedAssets,
+      ether.price,
+    );
+
+    const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, ether.price);
+    const portfolioRevenueAssets = getPortfolioRevenueAssets(
+      ownedAssets,
+      ether.price,
+    );
+
+    const totalValueEth =
+      parseFloat((totalPortfolioValue / ether.price)
+        .toFixed(5));
+
+    const totalRevenuePercentage =
+      (totalPortfolioValue > 0 && totalPortfolioRevenue > 0)
+        ? parseFloat(((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2))
+        : 0;
+
+    return (
+      <div>
+        <div className="Portfolio">
+          <div className="Portfolio__cards">
+            <div className="Portfolio__card">
+              <img className="Portfolio__card-img" src={PieChart} alt="Pie chart" />
+              <span>Total Portfolio Value {' '}
+                <b>
+                  {formatMonetaryValue(totalPortfolioValue)}
+                </b>
+              </span>
+              <div className="Portfolio__card-separator" />
+              <b>{totalValueEth} ETH</b>
+            </div>
+            <div className="Portfolio__card">
+              <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
+              <span>Total Revenue <b>{formatMonetaryValue(totalPortfolioRevenue)}</b></span>
+              <div className="Portfolio__card-separator" />
+              <b className="Portfolio__card-value--is-green">{totalRevenuePercentage}%</b>
+            </div>
+            {currentView === "managed" && (
+              <div className="Portfolio__card">
+                <img className="Portfolio__card-img" src={Fee} alt="Fee icon" />
+                <span>Total Management Profit</span>
+                <div className="Portfolio__card-separator" />
+                <b className="Portfolio__card-value--is-blue">450$</b>
+              </div>
+            )}
+            <div className="Portfolio__card-buttons">
+              <ButtonGroup size="large">
+                <Button onClick={this.displayOwned}
+                  type={currentView === "owned" ? "primary" : "secondary"}>Owned assets</Button>
+                <Button onClick={this.displayManaged}
+                  type={currentView === "managed" ? "primary" : "secondary"}>Managed assets</Button>
+              </ButtonGroup>
+            </div>
           </div>
-          <div className="Portfolio__card">
-            <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
-            <span>Total Revenue: <b>{formatMonetaryValue(totalPortfolioRevenue)}</b></span>
-            <div className="Portfolio__card-separator" />
-            <b className="Portfolio__card-value--is-green">{totalRevenuePercentage}%</b>
-          </div>
+          <Row className="Portfolio__assets">
+            {currentView === "owned" && ownedAssets.map((asset, index) => (
+              <AssetPortfolio
+                key={asset.assetID}
+                name={asset.name}
+                backgroundImage={asset.imageSrc}
+                unrealizedProfit={portfolioRevenueAssets[index].totalRevenue}
+                ownershipUsd={portfolioValueAssets[index].value}
+                ownershipPercentage={portfolioValueAssets[index].ownership}
+                funding={asset.amountRaisedInUSD}
+                fundingTotal={asset.amountToBeRaisedInUSD}
+                fundingStage={asset.fundingStage}
+                assetID={asset.assetID}
+                category={asset.category}
+                numberOfInvestors={asset.numberOfInvestors}
+              />
+            ))}
+            {currentView === "managed" && (
+              <ManagedAssetCardGrid assets={[]} />
+            )}
+          </Row>
         </div>
-        <Row className="Portfolio__assets">
-          {ownedAssets.map((asset, index) => (
-            <AssetPortfolio
-              key={asset.assetID}
-              name={asset.name}
-              backgroundImage={asset.imageSrc}
-              unrealizedProfit={portfolioRevenueAssets[index].totalRevenue}
-              ownershipUsd={portfolioValueAssets[index].value}
-              ownershipPercentage={portfolioValueAssets[index].ownership}
-              funding={asset.amountRaisedInUSD}
-              fundingTotal={asset.amountToBeRaisedInUSD}
-              fundingStage={asset.fundingStage}
-              assetID={asset.assetID}
-              category={asset.category}
-            />
-          ))}
-        </Row>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 PortfolioPage.propTypes = {

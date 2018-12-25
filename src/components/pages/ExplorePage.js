@@ -58,16 +58,16 @@ class ExplorePage extends Component {
     let assetsFiltered = assets.slice();
     let { selectedFilters } = this.state;
 
+    console.log(fundingActive)
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      if ((fundingActive && (asset.fundingStage !== '1' || asset.pastDate)) || (!fundingActive && !asset.pastDate)) {
-        return false;
-      }
       const assetCategory = asset.category;
-      if (selectedFilters.includes(assetCategory)) {
+      console.log(asset)
+      console.log(selectedFilters.includes(assetCategory))
+      if (((fundingActive && asset.fundingStage === '1' && !asset.pastDate) || (!fundingActive && (asset.fundingStage === '4' || asset.fundingStage === '3' || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
+        console.log(asset.assetID)
         return true;
       }
-
       return false;
     });
 
@@ -125,7 +125,7 @@ class ExplorePage extends Component {
           <div className="ExplorePage__filters--is-switch">
             <span>Funding Active</span>
             <Switch
-              onChange={isFundingActive => this.setState({ fundingActive: isFundingActive })}
+              onChange={isFundingActive => this.setState({ fundingActive: isFundingActive, currentPage: 0 })}
               checked={fundingActive}
               checkedChildren={<Icon type="check" />}
               unCheckedChildren={<Icon type="close" />}

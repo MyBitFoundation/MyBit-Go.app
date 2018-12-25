@@ -24,6 +24,7 @@ const AssetPortfolio = ({
   fundingStage,
   assetID,
   category,
+  numberOfInvestors,
 }) => {
   const url = `/explore/${assetID}`;
 
@@ -67,11 +68,11 @@ const AssetPortfolio = ({
           <div className="AssetPortfolio__details-section">
             <span>Your ownership:</span>
             <div>
-              <span>{formatMonetaryValue(ownershipUsd)}</span>
+              <span>{formatMonetaryValue(numberOfInvestors === 1 ? fundingTotal : ownershipUsd)}</span>
               <Divider
                 type="vertical"
               />
-              <span>{ownershipPercentage}%</span>
+              <span>{numberOfInvestors === 1 ? '100' : ownershipPercentage}%</span>
             </div>
           </div>
           <div className="AssetPortfolio__details-section">
@@ -106,4 +107,5 @@ AssetPortfolio.propTypes = {
   fundingStage: PropTypes.string.isRequired,
   assetID: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
+  numberOfInvestors: PropTypes.number.isRequired,
 };

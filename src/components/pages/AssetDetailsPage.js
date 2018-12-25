@@ -49,8 +49,6 @@ const AssetDetailsPage = ({
     managerPercentage: asset.managerPercentage,
   };
 
-  console.log(assetInformation)
-
   return (
     <div>
       <Button onClick={history.goBack} className="AssetDetailsPage--back-btn">

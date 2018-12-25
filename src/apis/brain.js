@@ -204,7 +204,7 @@ export const createAsset = async params =>
         window.web3js,
         params.userAddress,
         params.managerPercentage,
-        params.amountToBeRaisedInUSD,
+        110,
         installerId,
         assetType,
         randomBlockNumber
@@ -212,7 +212,7 @@ export const createAsset = async params =>
 
       const assetCreationResponse = await assetCreationContract.methods
         .newAsset(
-          params.amountToBeRaisedInUSD.toString(),
+          '110',
           params.managerPercentage.toString(),
           '0',
           installerId,
@@ -268,13 +268,23 @@ export const createAsset = async params =>
               });
             }
 
-            onSuccess(() => updateNotification(id, {
-              listAssetProps: {
-                assetName: assetName,
+            onSuccess(() => {
+              axios.post('http://localhost:8082/collateral', {
+                address: params.userAddress,
+                escrow: 100,
                 assetId: futureAssetId,
-              },
-              status: 'success',
-            }))
+              }).catch((error) => {
+                console.log(error);
+              })
+
+              updateNotification(id, {
+                listAssetProps: {
+                  assetName: assetName,
+                  assetId: futureAssetId,
+                },
+                status: 'success',
+              })
+            })
           } else {
             updateNotification(id, {
               listAssetProps: {
@@ -468,7 +478,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         apiContract.methods.managerPercentage(asset.assetID).call()));
 
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
-        const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
+        const numberOfInvestors = Number(await getNumberOfInvestors(asset.assetID));
 
         let assetIdDetails = assetsAirTableById[asset.assetID];
         // if the asset Id is not on airtable it doens't show up in the platform
