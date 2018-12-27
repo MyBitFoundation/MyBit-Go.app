@@ -48,7 +48,7 @@ class BlockchainInfo extends React.Component {
     this.removeNotification = this.removeNotification.bind(this);
     this.updateNotification = this.updateNotification.bind(this);
     this.getCategoriesFromAirTable = this.getCategoriesFromAirTable.bind(this);
-
+    this.withdrawInvestorProfit = this.withdrawInvestorProfit.bind(this);
     this.state = {
       loading: {
         assets: true,
@@ -77,6 +77,7 @@ class BlockchainInfo extends React.Component {
       handleListAsset: this.handleListAsset,
       removeNotification: this.removeNotification,
       updateNotification: this.updateNotification,
+      withdrawInvestorProfit: this.withdrawInvestorProfit,
       assetsNotification: {
         isLoading: false,
         transactionStatus: '',
@@ -87,6 +88,7 @@ class BlockchainInfo extends React.Component {
       notificationPlace: 'notification',
       notifications: {},
       isUserContributing: false,
+      withdrawingAssetIds: [],
     };
   }
 
@@ -166,9 +168,9 @@ class BlockchainInfo extends React.Component {
       categoriesAirTable,
     } = this.state;
 
-    const onSuccess = async (callback) => {
+    const onSuccess = async (callback, assetId) => {
       await this.getAssetsFromAirTable();
-      this.fetchAssets(callback, setUserListingAsset);
+      this.fetchAssets(callback, setUserListingAsset, assetId);
     }
 
     const result = await Brain.createAsset({
@@ -477,7 +479,6 @@ class BlockchainInfo extends React.Component {
           fundingProps: {
             assetName: currentAsset.name,
             amount: amountDollars,
-            operationType: 'contribution',
           },
           status: 'success',
         })
@@ -493,6 +494,57 @@ class BlockchainInfo extends React.Component {
         currentAsset.name,
         this.updateNotification,
         amountDollars
+      );
+
+      debug(result);
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async withdrawInvestorProfit(assetId, amount) {
+    try {
+      const currentAsset = this.state.assets.find(item => item.assetID === assetId);
+      const notificationId = Date.now();
+
+      const withdrawingAssetIds = this.state.withdrawingAssetIds.slice();
+      withdrawingAssetIds.push(assetId);
+      this.setState({
+        withdrawingAssetIds,
+      })
+
+      const removeAssetIdFromList = () => {
+        let withdrawingAssetIds = this.state.withdrawingAssetIds.slice();
+        withdrawingAssetIds = withdrawingAssetIds.filter(assetId => assetId !== assetId);
+        this.setState({
+          withdrawingAssetIds,
+        })
+      }
+
+      const onSuccessRefreshData = async () => {
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        this.updateNotification(notificationId, {
+          withdrawInvestorProps: {
+            assetName: currentAsset.name,
+            amount: amount,
+          },
+          status: 'success',
+        })
+        removeAssetIdFromList();
+      }
+
+      const onFail = () => {
+        removeAssetIdFromList(assetId);
+      }
+
+      const result = await Brain.withdrawInvestorProfit(
+        this.state.user,
+        currentAsset,
+        notificationId,
+        this.updateNotification,
+        onSuccessRefreshData,
+        onFail,
       );
 
       debug(result);
@@ -534,7 +586,7 @@ class BlockchainInfo extends React.Component {
       });
   }
 
-  async fetchAssets(updateNotification, updateUserListingAsset) {
+  async fetchAssets(updateNotification, updateUserListingAsset, assetId) {
     if (!this.state.prices.ether) {
       setTimeout(this.fetchAssets, 10000);
       return;
@@ -545,7 +597,6 @@ class BlockchainInfo extends React.Component {
     await Brain.fetchAssets(this.state.user, this.state.prices.ether.price, this.state.assetsAirTableById, this.state.categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
-        console.log(updatedAssets)
         this.setState({
           assets: updatedAssets,
           loading: { ...this.state.loading, assets: false },
@@ -554,7 +605,7 @@ class BlockchainInfo extends React.Component {
             updateNotification();
           }
           if(updateUserListingAsset){
-            updateUserListingAsset();
+            updateUserListingAsset(false, assetId);
           }
         });
       })

@@ -8,6 +8,7 @@ import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as TokenFaucet from '../constants/contracts/TokenFaucet';
 import * as FundingHub from '../constants/contracts/FundingHub';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
+import * as Asset from '../constants/contracts/Asset';
 import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
   debug,
@@ -284,7 +285,7 @@ export const createAsset = async params =>
                 },
                 status: 'success',
               })
-            })
+            }, futureAssetId)
           } else {
             updateNotification(id, {
               listAssetProps: {
@@ -340,6 +341,67 @@ export const withdrawFromFaucet = async user =>
         .send({ from: user.userName });
       const { transactionHash } = withdrawResponse;
       checkTransactionConfirmation(transactionHash, resolve, reject);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+
+export const withdrawInvestorProfit = async (user, asset, notificationId, updateNotification, onSuccessRefreshData, onFail) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetName = asset.name;
+      updateNotification(notificationId, {
+        metamaskProps: {
+          assetName: assetName,
+          operationType: 'withdrawInvestor',
+        },
+        status: 'info',
+      });
+
+      const AssetContract = new window.web3js.eth.Contract(
+        Asset.ABI,
+        Asset.ADDRESS,
+      );
+
+      const withdrawResponse = await AssetContract.methods
+        .withdraw(asset.assetID)
+        .send({ from: user.userName })
+        .on('transactionHash', (transactionHash) => {
+          updateNotification(notificationId, {
+            withdrawInvestorProps: {
+              assetName: assetName,
+            },
+            status: 'info',
+          });
+        })
+        .on('error', (error) => {
+          updateNotification(notificationId, {
+            metamaskProps: {
+              assetName: assetName,
+              operationType: 'withdrawInvestor',
+            },
+            status: 'error',
+          });
+          onFail();
+          debug(error);
+          resolve(false);
+        })
+        .then((receipt) => {
+          if(receipt.status){
+            onSuccessRefreshData();
+          } else {
+            updateNotification(notificationId, {
+              withdrawInvestorProps: {
+                assetName: assetName,
+                operationType: 'contribution',
+              },
+              status: 'error',
+            });
+            onFail();
+          }
+          resolve(receipt.status);
+        });
     } catch (err) {
       reject(err);
     }
@@ -432,26 +494,6 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           ipfsHash: object._ipfsHash,
         }));
 
-      // pull assets from older contract
-      apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
-      assetCreationContract = new window.web3js.eth.Contract(
-        AssetCreation.ABI,
-        AssetCreation.OLD_ADDRESS,
-      );
-
-      logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
-        'LogAssetFundingStarted',
-        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-      );
-
-      const assetsOlderContract = logAssetFundingStartedEvents
-        .map(({ returnValues }) => returnValues)
-        .map(object => ({
-          assetID: object._assetID,
-        }));
-
-      assets = assets.concat(assetsOlderContract);
-
       const assetManagers = await Promise.all(assets.map(async asset =>
         apiContract.methods.assetManager(asset.assetID).call()));
 
@@ -477,8 +519,16 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
       const managerPercentages = await Promise.all(assets.map(async asset =>
         apiContract.methods.managerPercentage(asset.assetID).call()));
 
+
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
         const numberOfInvestors = Number(await getNumberOfInvestors(asset.assetID));
+
+        const ownershipUnitsTmp = ownershipUnits[index];
+        let owedToInvestor = 0;
+        if(ownershipUnitsTmp > 0){
+          owedToInvestor = await apiContract.methods.getAmountOwed(asset.assetID, realAddress).call();
+          console.log(owedToInvestor)
+        }
 
         let assetIdDetails = assetsAirTableById[asset.assetID];
         // if the asset Id is not on airtable it doens't show up in the platform
@@ -515,7 +565,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           amountRaisedInUSD,
           amountToBeRaisedInUSD,
           fundingDeadline: dueDate,
-          ownershipUnits: ownershipUnits[index],
+          ownershipUnits: ownershipUnitsTmp,
           assetIncome:
             Number(window.web3js.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
               currentEthInUsd,
@@ -532,6 +582,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           pastDate,
           watchListed: alreadyFavorite,
           category: assetIdDetails.category,
+          owedToInvestor,
         };
       }));
 

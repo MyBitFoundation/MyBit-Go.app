@@ -25,6 +25,9 @@ const AssetPortfolio = ({
   assetID,
   category,
   numberOfInvestors,
+  owedToInvestor,
+  withdrawInvestorProfit,
+  withdrawingAssetIds,
 }) => {
   const url = `/explore/${assetID}`;
 
@@ -33,8 +36,10 @@ const AssetPortfolio = ({
 
   if (fundingStage !== '1') {
     type = 'secondary';
-    text = 'View asset';
+    text = 'View asset listing';
   }
+
+  const withdrawing = withdrawingAssetIds.includes(assetID);
 
   const button = (
     <Link to={url} href={url}>
@@ -45,6 +50,18 @@ const AssetPortfolio = ({
       </Button>
     </Link>
   );
+
+  const withdrawButton = owedToInvestor > 0 ? (
+    <Button
+      onClick={() => withdrawInvestorProfit(assetID, formatMonetaryValue(unrealizedProfit))}
+      type="primary"
+      loading={withdrawing}
+      className="AssetPortfolio__details-buttons--is-withdrawl"
+    >
+      {withdrawing ? 'Withdrawing' : 'Withdraw'}
+    </Button>
+
+  ) : null;
 
   return (
     <Col xs={24} sm={24} md={12} lg={12} xl={8} style={{ padding: '20px 40px 10px 0px' }}>
@@ -68,11 +85,11 @@ const AssetPortfolio = ({
           <div className="AssetPortfolio__details-section">
             <span>Your ownership:</span>
             <div>
-              <span>{formatMonetaryValue(numberOfInvestors === 1 ? fundingTotal : ownershipUsd)}</span>
+              <span>{formatMonetaryValue(numberOfInvestors === 1 && (fundingStage === 3 || fundingStage === 4) ? fundingTotal : ownershipUsd)}</span>
               <Divider
                 type="vertical"
               />
-              <span>{numberOfInvestors === 1 ? '100' : ownershipPercentage}%</span>
+              <span>{numberOfInvestors === 1 && (fundingStage === 3 || fundingStage === 4) ? '100' : ownershipPercentage}%</span>
             </div>
           </div>
           <div className="AssetPortfolio__details-section">
@@ -82,7 +99,10 @@ const AssetPortfolio = ({
                 {formatMonetaryValue(funding)}/{formatMonetaryValue(fundingTotal)}
               </span>
             </div>
-            {button}
+            <div className="AssetPortfolio__details-buttons">
+              {withdrawButton}
+              {button}
+            </div>
           </div>
         </div>
       </div>

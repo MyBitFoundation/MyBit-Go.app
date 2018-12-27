@@ -98,11 +98,17 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, prices, assets }) =>
+        {({ loading, prices, assets, withdrawInvestorProfit, withdrawingAssetIds }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
-            <PortfolioPage loading={loading} prices={prices} assets={assets} />
+            <PortfolioPage
+              loading={loading}
+              prices={prices}
+              assets={assets}
+              withdrawingAssetIds={withdrawingAssetIds}
+              withdrawInvestorProfit={withdrawInvestorProfit}
+            />
           ))
         }
       </BlockchainInfoContext.Consumer>

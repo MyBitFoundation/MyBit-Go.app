@@ -30,24 +30,25 @@ class ListAssetPage extends React.Component {
       MYB_PLACEHOLDER: 0.18,
       maximumAllowedSlide: 1,
       data: {
-        userCity: '',
-        userCountry: '',
+        userCity: 'Zug',
+        userCountry: 'Switzerland',
         category: '',
         asset: '',
-        assetAddress1: '',
-        assetAddress2: '',
-        assetCity: '',
-        assetCountry: '',
-        assetProvince: '',
-        assetPostalCode: '',
+        assetAddress1: 'a',
+        assetAddress2: 'a',
+        assetCity: 'a',
+        assetCountry: 'a',
+        assetProvince: 'a',
+        assetPostalCode: 'a',
         fileList: [],
-        managementFee: 0,
+        managementFee: 10,
         collateralPercentage: 0,
         collateralMyb: 0,
         collateralDollar: 0
       },
       countries: COUNTRIES,
       isUserListingAsset: false,
+      listedAssetId: undefined,
     };
   }
 
@@ -59,12 +60,13 @@ class ListAssetPage extends React.Component {
      this.ismounted = false;
   }
 
-  setUserListingAsset(flag){
+  setUserListingAsset(isUserListingAsset, listedAssetId){
     if(!this.ismounted){
       return;
     }
     this.setState({
-      isUserListingAsset: flag,
+      isUserListingAsset,
+      listedAssetId,
     })
   }
 
@@ -181,23 +183,6 @@ class ListAssetPage extends React.Component {
     );
   };
 
-  /*confirmAsset = () => {
-    fetch("/api/list-asset/auth", {
-      method: "POST",
-      body: this.state.data,
-      headers: {
-        Authorization: `Bearer ${this.props.civic.token}`
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        this.props.history.push("/explore");
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };*/
-
   render() {
     const {
       currentSlide,
@@ -206,6 +191,7 @@ class ListAssetPage extends React.Component {
       countries,
       categories,
       isUserListingAsset,
+      listedAssetId,
      } = this.state;
 
     const {
@@ -302,6 +288,7 @@ class ListAssetPage extends React.Component {
             formData={data}
             isUserListingAsset={isUserListingAsset}
             setUserListingAsset={this.setUserListingAsset}
+            listedAssetId={listedAssetId}
           />
         </Carousel>
 

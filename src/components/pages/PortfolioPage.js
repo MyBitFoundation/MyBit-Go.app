@@ -5,12 +5,13 @@ import Button from 'antd/lib/button';
 import 'antd/lib/row/style';
 import '../../styles/PortfolioPage.css';
 import LoadingPage from './LoadingPage';
-import PieChart from '../../images/chart-pie.png';
-import LineChart from '../../images/chart-line.png';
+import PieChart from '../../images/chart-pie.svg';
+import LineChart from '../../images/chart-line.svg';
 import Fee from '../../images/Fee.png';
 import AssetPortfolio from '../AssetPortfolio';
 import { formatMonetaryValue } from '../../util/helpers';
 import { ManagedAssetCardGrid } from '../UI/ManagedAssetPage/ManagedAssetCardGrid'
+import ValueDisplay from '../ValueDisplay';
 
 const ButtonGroup = Button.Group;
 
@@ -94,7 +95,7 @@ class PortfolioPage extends React.Component {
   }
 
   render() {
-    const { loading, assets, prices } = this.props;
+    const { loading, assets, prices, withdrawInvestorProfit, withdrawingAssetIds } = this.props;
     const { currentView } = this.state;
 
     if (loading.assets || !prices.ether) {
@@ -131,22 +132,24 @@ class PortfolioPage extends React.Component {
       <div>
         <div className="Portfolio">
           <div className="Portfolio__cards">
-            <div className="Portfolio__card">
-              <img className="Portfolio__card-img" src={PieChart} alt="Pie chart" />
-              <span>Total Portfolio Value {' '}
-                <b>
-                  {formatMonetaryValue(totalPortfolioValue)}
-                </b>
-              </span>
-              <div className="Portfolio__card-separator" />
-              <b>{totalValueEth} ETH</b>
-            </div>
-            <div className="Portfolio__card">
-              <img className="Portfolio__card-img" src={LineChart} alt="Line chart" />
-              <span>Total Revenue <b>{formatMonetaryValue(totalPortfolioRevenue)}</b></span>
-              <div className="Portfolio__card-separator" />
-              <b className="Portfolio__card-value--is-green">{totalRevenuePercentage}%</b>
-            </div>
+            <ValueDisplay
+              text="Total Portfolio Value"
+              value={formatMonetaryValue(totalPortfolioValue)}
+              icon={<PieChart />}
+              hasSeparator
+              hasIcon
+              hasShadow
+              isBlue
+            />
+            <ValueDisplay
+              text="Total Revenue"
+              value={`${formatMonetaryValue(totalPortfolioRevenue)}%`}
+              icon={<LineChart />}
+              hasSeparator
+              hasIcon
+              hasShadow
+              isGreen
+            />
             {currentView === "managed" && (
               <div className="Portfolio__card">
                 <img className="Portfolio__card-img" src={Fee} alt="Fee icon" />
@@ -158,7 +161,7 @@ class PortfolioPage extends React.Component {
             <div className="Portfolio__card-buttons">
               <ButtonGroup size="large">
                 <Button onClick={this.displayOwned}
-                  type={currentView === "owned" ? "primary" : "secondary"}>Owned assets</Button>
+                  type={currentView === "owned" ? "primary" : "secondary"}>Investments</Button>
                 <Button onClick={this.displayManaged}
                   type={currentView === "managed" ? "primary" : "secondary"}>Managed assets</Button>
               </ButtonGroup>
@@ -179,6 +182,9 @@ class PortfolioPage extends React.Component {
                 assetID={asset.assetID}
                 category={asset.category}
                 numberOfInvestors={asset.numberOfInvestors}
+                owedToInvestor={asset.owedToInvestor}
+                withdrawInvestorProfit={withdrawInvestorProfit}
+                withdrawingAssetIds={withdrawingAssetIds}
               />
             ))}
             {currentView === "managed" && (

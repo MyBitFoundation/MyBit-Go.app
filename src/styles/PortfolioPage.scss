@@ -7,9 +7,23 @@
   &__cards{
     display: flex;
     margin-bottom: 5px;
+    padding-right: 40px;
 
-    @include media('<tablet') {
-      flex-direction: column;
+    & .ValueDisplay:nth-child(1){
+      margin-right: 10px;
+    }
+
+    @include media('<950px') {
+      flex-direction: column-reverse;
+
+      .Portfolio__card-buttons{
+        margin-left: unset;
+        margin-bottom: 20px;
+      }
+
+      .ValueDisplay:nth-child(2){
+        margin-bottom: 15px;
+      }
     }
   }
 

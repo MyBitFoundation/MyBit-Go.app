@@ -1,3 +1,25 @@
+@import 'include-media/dist/_include-media.scss';
+
+@mixin flexButtons {
+  flex-direction: column;
+  display: flex;
+  align-items: flex-end;
+
+  &--is-withdrawl{
+    margin-right: 0px;
+    top: -5px;
+  }
+}
+
+@mixin resetButtons {
+  display: block;
+
+  &--is-withdrawl{
+    margin-right: 10px;
+    top: 0px;
+  }
+}
+
 .AssetPortfolio{
   position: relative;
   border-radius: 4px;
@@ -41,6 +63,7 @@
       justify-content: space-between;
       font-size: 16px;
       color: #383838;
+      align-items: center;
 
       &:nth-child(1){
         margin-bottom: 2px;
@@ -73,15 +96,36 @@
           margin: 0px 0px;
         }
 
-        a{
-          margin-top: 10px;
-        }
-
         span span{
           font-weight: 500;
           color: rgba(0, 0, 0, 0.65);
           margin-left: 5px;
         }
+      }
+    }
+
+    &-buttons{
+      position: absolute;
+      right: 10px;
+
+        &--is-withdrawl{
+          margin-right: 10px;
+        }
+
+      @include media('<1350px') {
+        @include flexButtons;
+      }
+      @include media('<1200px') {
+        @include resetButtons;
+      }
+      @include media('<950px') {
+        @include flexButtons;
+      }
+      @include media('<768px') {
+        @include resetButtons;
+      }
+      @include media('<500px') {
+        @include flexButtons;
       }
     }
   }
