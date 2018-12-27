@@ -7,8 +7,6 @@ const Notifications = ({ data, removeNotification }) => {
   if(entries.length === 0){
     return null;
   }
-  const initialBottomDistance = 20;
-  const difference = 110;
   const toRemove = [];
   const toRender = entries.map(([id, notification], index) => {
     const details = getContentForNotification(notification);
@@ -24,7 +22,7 @@ const Notifications = ({ data, removeNotification }) => {
         type={type}
         showIcon
         closable={type === 'success' || type === 'error'}
-        style={{bottom: initialBottomDistance + (index * difference) + 'px'}} key={id}
+        key={id}
         onClose={() => removeNotification(id)}
       />
     )
