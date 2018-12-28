@@ -13,7 +13,6 @@ import {
   ethereumNetwork,
   metamaskErrors,
 } from './constants/index';
-import Notification from './components/Notification';
 
 class App extends Component {
   isFirstVisit() {
@@ -61,47 +60,23 @@ class App extends Component {
               userHasMetamask,
               userIsLoggedIn,
               network,
-              setAssetsStatusState,
-              assetsNotification,
-              notificationPlace,
               isBraveBrowser,
               extensionUrl,
+              enabled,
             }) => (
               <React.Fragment>
                 <AppHeader
                   user={user}
                   prices={prices.mybit}
                   usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork}
-                  setAssetsStatusState={setAssetsStatusState}
-                  assetsNotification={assetsNotification}
-                  notificationPlace={notificationPlace}
                 />
                 <NavigationBar
-                  setAssetsStatusState={setAssetsStatusState}
                   currentPath={this.props.location.pathname}
                 />
-                {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network)}
+                {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network, enabled)}
               </React.Fragment>
             )}
           </BlockchainInfoContext.Consumer>
-
-          <div className="notification_wrapper">
-            <BlockchainInfoContext.Consumer>
-              {({
-                notificationPlace,
-                setAssetsStatusState,
-                assetsNotification,
-              }) => {
-                if (notificationPlace === 'notification') {
-                  return (<Notification
-                    setAssetsStatusState={setAssetsStatusState}
-                    assetsNotification={assetsNotification}
-                  />);
-                }
-                return null;
-              }}
-            </BlockchainInfoContext.Consumer>
-          </div>
           <BlockchainInfoContext.Consumer>
             {({
               notifications,

@@ -14,7 +14,6 @@ import {
   serverIp,
   ethereumNetwork,
   fetchTransactionHistoryTime,
-  loadMetamaskUserDetailsTime,
   pullAssetsFromServerTime,
   fetchAssetsFromWeb3Time,
   S3_URL,
@@ -30,15 +29,12 @@ class BlockchainInfo extends React.Component {
     super(props);
     this.fetchAssets = this.fetchAssets.bind(this);
     this.fetchTransactionHistory = this.fetchTransactionHistory.bind(this);
-    this.loadMetamaskUserDetails = this.loadMetamaskUserDetails.bind(this);
     this.loadPrices = this.loadPrices.bind(this);
     this.fetchAssets = this.fetchAssets.bind(this);
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
     this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
-    this.setAssetsStatusState = this.setAssetsStatusState.bind(this);
     this.handleAddressChange = this.handleAddressChange.bind(this);
-    this.changeNotificationPlace = this.changeNotificationPlace.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
     this.usingServer = this.usingServer.bind(this);
     this.getAssetsFromAirTable = this.getAssetsFromAirTable.bind(this);
@@ -64,13 +60,12 @@ class BlockchainInfo extends React.Component {
       fetchTransactionHistory: this.fetchTransactionHistory,
       fetchMyBit: this.getMYB,
       fundAsset: this.fundAsset,
-      setAssetsStatusState: this.setAssetsStatusState,
-      changeNotificationPlace: this.changeNotificationPlace,
       user: {},
       userHasMetamask: this.props.isMetamaskInstalled,
       network: this.props.network,
       isBraveBrowser: this.props.isBraveBrowser,
       extensionUrl: this.props.extensionUrl,
+      enabled: this.props.enabled,
       userIsLoggedIn: this.props.userIsLoggedIn,
       handleClickedAssetFavorite: this.handleAssetFavorited,
       getCategoriesForAssets: this.getCategoriesForAssets,
@@ -78,14 +73,6 @@ class BlockchainInfo extends React.Component {
       removeNotification: this.removeNotification,
       updateNotification: this.updateNotification,
       withdrawInvestorProfit: this.withdrawInvestorProfit,
-      assetsNotification: {
-        isLoading: false,
-        transactionStatus: '',
-        acceptedTos: false,
-        alertType: '',
-        alertMessage: '',
-      },
-      notificationPlace: 'notification',
       notifications: {},
       isUserContributing: false,
       withdrawingAssetIds: [],
@@ -95,19 +82,16 @@ class BlockchainInfo extends React.Component {
   async componentDidMount() {
     // TODO perhaps we don't need to wait for these here
     await Promise.all([this.getAssetsFromAirTable(), this.getCategoriesFromAirTable()]);
-    const { userHasMetamask } = this.state;
     try {
       const usingServer = this.usingServer();
       if (!usingServer) {
         // we need the prices and the user details before getting the assets and transactions
-        await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
+        await this.loadPrices();
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
         this.intervalFetchAssets =
           setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
         this.intervalFetchTransactionHistory =
           setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
-        this.intervalLoadMetamaskUserDetails =
-          setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
       } else {
         await this.loadPrices();
         this.pullAssetsFromServer();
@@ -118,18 +102,36 @@ class BlockchainInfo extends React.Component {
       debug(err);
     }
 
-    if (userHasMetamask) {
-      // event handler for when the selected account changes
-      window.web3js.currentProvider.publicConfigStore.on('update', this.handleAddressChange);
-    }
-
     setInterval(this.loadPrices, 15 * 1000);
+  }
+
+  componentWillReceiveProps(nextProps){
+    // case where account changes
+    if((nextProps.user.userName && (this.state.user.userName !== nextProps.user.userName)) || (this.state.userIsLoggedIn !== nextProps.isLoggedIn && (this.props.network === ethereumNetwork))){
+      this.setState({
+        user: nextProps.user,
+        userIsLoggedIn: nextProps.isLoggedIn,
+      }, () => this.handleAddressChange(this.state.user.userName, this.state.userIsLoggedIn, this.state.enabled));
+    }
+    if(nextProps.user.balance && (this.state.user.balance !== nextProps.user.balance)){
+      this.setState({
+        user: {
+          ...this.state.user,
+          balance: nextProps.user.balance,
+        },
+      })
+    }
+    //case where user enables us to access accounts
+    if(!this.state.enabled && nextProps.enabled){
+      this.setState({
+        enabled: true,
+      });
+    }
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalFetchAssets);
     clearInterval(this.intervalAssetsFromServer);
-    clearInterval(this.intervalLoadMetamaskUserDetails);
     clearInterval(this.intervalFetchTransactionHistory);
   }
 
@@ -323,28 +325,6 @@ class BlockchainInfo extends React.Component {
     return Brain.withdrawFromFaucet(this.state.user);
   }
 
-  setAssetsStatusState(state) {
-    const { assetsNotification } = this.state;
-    if (state) {
-      this.setState({
-        assetsNotification: {
-          ...assetsNotification,
-          ...state,
-        },
-      });
-    } else {
-      this.setState({
-        assetsNotification: {
-          isLoading: false,
-          transactionStatus: '',
-          acceptedTos: false,
-          alertMessage: '',
-          alertType: undefined,
-        },
-      });
-    }
-  }
-
   usingServer() {
     const { userHasMetamask, userIsLoggedIn, network } = this.state;
     return !userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork;
@@ -366,13 +346,6 @@ class BlockchainInfo extends React.Component {
 
     this.setState({
       assets,
-    });
-  }
-
-  changeNotificationPlace(place) {
-    // place can be "confirmation" or "notification"
-    this.setState({
-      notificationPlace: place,
     });
   }
 
@@ -429,34 +402,34 @@ class BlockchainInfo extends React.Component {
     });
   }
 
-  async handleAddressChange({ selectedAddress }) {
+  async handleAddressChange(previousAddress, previouslyLoggedIn, previouslyEnabled) {
     let shouldReloadUI = false;
+    const selectedAddress = this.state.user.userName;
+    const {
+      userIsLoggedIn,
+      enabled,
+    } = this.state;
     // case where user was not logged in but logged in and opposite case
-    if (!this.state.userIsLoggedIn && selectedAddress) {
+    if ((!previouslyLoggedIn && userIsLoggedIn) || (!previousAddress && selectedAddress) || (!previouslyEnabled && enabled)) {
       shouldReloadUI = true;
-      await this.loadMetamaskUserDetails();
       this.fetchAssets();
       this.fetchTransactionHistory();
       this.intervalFetchAssets =
         setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
       this.intervalFetchTransactionHistory =
         setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
-      this.intervalLoadMetamaskUserDetails =
-        setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
       clearInterval(this.intervalAssetsFromServer);
-    } else if (this.state.userIsLoggedIn && !selectedAddress) {
+    } else if ((previouslyLoggedIn && !userIsLoggedIn) || ( previousAddress && !selectedAddress) || (previouslyEnabled && !enabled)) {
       shouldReloadUI = true;
       this.pullAssetsFromServer();
       clearInterval(this.intervalFetchAssets);
       clearInterval(this.intervalFetchTransactionHistory);
-      clearInterval(this.intervalLoadMetamaskUserDetails);
       this.intervalAssetsFromServer =
         setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
     }
 
     if (shouldReloadUI) {
       this.setState({
-        userIsLoggedIn: selectedAddress || false,
         assets: [],
         loading: {
           ...this.state.loading,
@@ -566,22 +539,6 @@ class BlockchainInfo extends React.Component {
         debug(err);
         if (this.state.userIsLoggedIn) {
           setTimeout(this.fetchTransactionHistory, 5000);
-        }
-      });
-  }
-
-  async loadMetamaskUserDetails() {
-    await Brain.loadMetamaskUserDetails()
-      .then((response) => {
-        this.setState({
-          user: response,
-          loading: { ...this.state.loading, user: false },
-        });
-      })
-      .catch((err) => {
-        debug(err);
-        if (this.state.userIsLoggedIn) {
-          setTimeout(this.loadMetamaskUserDetails, 5000);
         }
       });
   }

@@ -6,7 +6,7 @@ import './styles/index.css';
 import App from './App';
 // import registerServiceWorker from './registerServiceWorker';
 import BlockchainInfo from './components/BlockchainInfo';
-import MetamaskChecker from './components/MetamaskChecker';
+import MetamaskChecker from './components/MetamaskChecker/index';
 import Layout from './components/Layout';
 
 ReactDOM.render(

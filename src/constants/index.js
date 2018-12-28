@@ -192,7 +192,13 @@ export const isAssetIdEnabled = (assetId) => {
 };
 
 export const metamaskErrors = (
-  className, userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network,
+  className,
+  userHasMetamask,
+  extensionUrl,
+  isBraveBrowser,
+  userIsLoggedIn,
+  network,
+  enabled,
 ) => {
   let toRender = null;
   if (!userHasMetamask && extensionUrl && !isBraveBrowser) {
@@ -266,6 +272,10 @@ export const metamaskErrors = (
         The main Ethereum network is not supported yet,
         please change to the Ropsten network to contribute.
       </p>
+    );
+  } else if(enabled === false){
+    toRender = (
+      <p><span onClick={() => window.ethereum.enable()}>Connect</span> your MetaMask account to get started.</p>
     );
   }
 

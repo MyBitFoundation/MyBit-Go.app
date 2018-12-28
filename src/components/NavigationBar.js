@@ -14,7 +14,7 @@ const listAssetIcon = require('../images/plus-v3.svg');
 const knowledgeBaseIcon = require('../images/question.svg');
 const watchIcon = require('../images/watchList-v2.svg');
 
-const NavigationBar = ({ currentPath, setAssetsStatusState }) => {
+const NavigationBar = ({ currentPath }) => {
   const menuOptions = [
     {
       name: 'Explore',
@@ -52,11 +52,6 @@ const NavigationBar = ({ currentPath, setAssetsStatusState }) => {
   const navBarOptions = menuOptions.map(menuItem => (
     <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected && 'ant-menu-item-selected'}>
       <Link
-        onClick={() => {
-          setAssetsStatusState({
-            alertType: undefined,
-          });
-        }}
         to={menuItem.url || '/'}
         href={menuItem.url || '/'}
       >
@@ -78,7 +73,6 @@ const NavigationBar = ({ currentPath, setAssetsStatusState }) => {
 };
 
 NavigationBar.propTypes = {
-  setAssetsStatusState: PropTypes.func.isRequired,
   currentPath: PropTypes.string.isRequired,
 };
 
