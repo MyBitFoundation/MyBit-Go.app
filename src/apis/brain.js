@@ -544,12 +544,12 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         }
 
         const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
-        const fundingStage = fundingStages[index];
+        const fundingStage = Number(fundingStages[index]);
         let amountRaisedInUSD = 0;
 
         // this fixes the issue of price fluctuations
         // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
-        if (fundingStage === '3' || fundingStage === '4') {
+        if (fundingStage === 3 || fundingStage === 4) {
           amountRaisedInUSD = amountToBeRaisedInUSD;
         } else {
           amountRaisedInUSD =
@@ -577,7 +577,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           description: assetIdDetails.description,
           details: assetIdDetails.details,
           imageSrc: assetIdDetails.imageSrc,
-          fundingStage: fundingStages[index],
+          fundingStage,
           managerPercentage: Number(managerPercentages[index]),
           pastDate,
           watchListed: alreadyFavorite,

@@ -58,14 +58,10 @@ class ExplorePage extends Component {
     let assetsFiltered = assets.slice();
     let { selectedFilters } = this.state;
 
-    console.log(fundingActive)
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
       const assetCategory = asset.category;
-      console.log(asset)
-      console.log(selectedFilters.includes(assetCategory))
-      if (((fundingActive && asset.fundingStage === '1' && !asset.pastDate) || (!fundingActive && (asset.fundingStage === '4' || asset.fundingStage === '3' || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
-        console.log(asset.assetID)
+      if (((fundingActive && asset.fundingStage === 1 && !asset.pastDate) || (!fundingActive && (asset.fundingStage === 4 || asset.fundingStage === 3 || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
         return true;
       }
       return false;

@@ -104,27 +104,6 @@ async function fetchAssets() {
       ipfsHash: object._ipfsHash,
     }));
 
-  // pull assets from older contract
-  apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
-  assetCreationContract = new web3.eth.Contract(
-    AssetCreation.ABI,
-    AssetCreation.OLD_ADDRESS,
-  );
-
-  logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
-    'LogAssetFundingStarted',
-    { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-  );
-
-  const assetsOlderContract = logAssetFundingStartedEvents
-    .map(({ returnValues }) => returnValues)
-    .map(object => ({
-      assetID: object._assetID,
-      assetType: object._assetType,
-      ipfsHash: object._ipfsHash,
-    }));
-
-  assets = assets.concat(assetsOlderContract);
 
   const assetManagers = await Promise.all(assets.map(async asset =>
     apiContract.methods.assetManager(asset.assetID).call()));
@@ -147,6 +126,7 @@ async function fetchAssets() {
   const managerPercentages = await Promise.all(assets.map(async asset =>
     apiContract.methods.managerPercentage(asset.assetID).call()));
 
+
   let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
     const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
 
@@ -158,12 +138,12 @@ async function fetchAssets() {
     }
 
     const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
-    const fundingStage = fundingStages[index];
+    const fundingStage = Number(fundingStages[index]);
     let amountRaisedInUSD = 0;
 
     // this fixes the issue of price fluctuations
     // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
-    if (fundingStage === '3' || fundingStage === '4') {
+    if (fundingStage === 3 || fundingStage === 4) {
       amountRaisedInUSD = amountToBeRaisedInUSD;
     } else {
       amountRaisedInUSD =
@@ -182,7 +162,7 @@ async function fetchAssets() {
           currentEthInUsd,
       assetManager: assetManagers[index],
       numberOfInvestors,
-      fundingStage: fundingStages[index],
+      fundingStage,
       managerPercentage: Number(managerPercentages[index]),
       pastDate,
     };

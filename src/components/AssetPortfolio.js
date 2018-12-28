@@ -34,7 +34,7 @@ const AssetPortfolio = ({
   let type = 'primary';
   let text = 'Contribute more';
 
-  if (fundingStage !== '1') {
+  if (fundingStage !== 1) {
     type = 'secondary';
     text = 'View asset listing';
   }
@@ -79,7 +79,7 @@ const AssetPortfolio = ({
             <span
               className={unrealizedProfit && 'AssetPortfolio__details--value-green'}
             >
-              {fundingStage === '1' ? <span>Funding in progress</span> : `${formatMonetaryValue(unrealizedProfit)}`}
+              {fundingStage === 1 ? <span>Funding in progress</span> : `${formatMonetaryValue(unrealizedProfit)}`}
             </span>
           </div>
           <div className="AssetPortfolio__details-section">

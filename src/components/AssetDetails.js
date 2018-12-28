@@ -63,7 +63,7 @@ class AssetDetails extends React.Component {
       fundingStage,
     } = this.props.information;
 
-    const assetFunded = this.props.information.fundingStage === '3' || this.props.information.fundingStage === '4'
+    const assetFunded = this.props.information.fundingStage === 3 || this.props.information.fundingStage === 4
     const maxInvestment =
       this.props.information.goal - this.props.information.raised;
 
