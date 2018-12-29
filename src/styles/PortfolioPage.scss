@@ -25,6 +25,30 @@
         margin-bottom: 15px;
       }
     }
+
+    &--has-three{
+      & .ValueDisplay:nth-child(3){
+        margin-left: 10px;
+      }
+
+      @include media('<1100px') {
+        flex-direction: column-reverse;
+
+        .Portfolio__card-buttons{
+          margin-left: unset;
+          margin-bottom: 20px;
+        }
+
+        .ValueDisplay:nth-child(3){
+          margin-left: 0px;
+          margin-bottom: 15px;
+        }
+
+        .ValueDisplay:nth-child(2){
+          margin-bottom: 15px;
+        }
+      }
+    }
   }
 
   &__card{

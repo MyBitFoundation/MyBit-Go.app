@@ -16,7 +16,6 @@ import {
   ETHERSCAN_TX,
   ETHERSCAN_BALANCE,
   getAddressForAsset,
-  testAssetIds,
   UPDATE_ASSETS_URL,
   S3_UPLOAD_URL,
   BLOCK_NUMBER_CONTRACT_CREATION,
@@ -474,6 +473,7 @@ export const fundAsset = async (user, assetId, amount, onFailureContributionPopu
 export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
+      console.log("FETCHING ASSETS")
       // pull asssets from newest contract
       let apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
       let assetCreationContract = new window.web3js.eth.Contract(
@@ -527,7 +527,6 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         let owedToInvestor = 0;
         if(ownershipUnitsTmp > 0){
           owedToInvestor = await apiContract.methods.getAmountOwed(asset.assetID, realAddress).call();
-          console.log(owedToInvestor)
         }
 
         let assetIdDetails = assetsAirTableById[asset.assetID];
@@ -582,7 +581,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           pastDate,
           watchListed: alreadyFavorite,
           category: assetIdDetails.category,
-          owedToInvestor,
+          owedToInvestor: owedToInvestor.toString(),
         };
       }));
 
@@ -595,6 +594,8 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
           asset.description !== 'Coming soon');
       }
+
+      console.log("DONE FETCHING ASSETS")
 
       resolve(assetsPlusMoreDetails);
     } catch (error) {

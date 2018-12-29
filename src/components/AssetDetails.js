@@ -168,8 +168,16 @@ class AssetDetails extends React.Component {
   }
 
   render() {
-    const { selectedAmountUsd, selectedAmountEth } = this.state;
-    const { currentEthInUsd } = this.props;
+    const {
+      selectedAmountUsd,
+      selectedAmountEth,
+    } = this.state;
+
+    const {
+      currentEthInUsd,
+      user,
+    } = this.props;
+
     const {
       goal,
       raised,
@@ -434,9 +442,10 @@ class AssetDetails extends React.Component {
                 this.state.daysToGo < 0
                 || maxInvestment === 0
                 || selectedAmountUsd < minInvestment
+                || user.userName === address
               }
             >
-            Contribute
+            {user.userName === address ? 'Not allowed to contribute to your own asset' :  'Contribute'}
             </Button>
             <div className="AssetDetails__left-assetManager">
               <div className="AssetDetails__left-assetManager-left">

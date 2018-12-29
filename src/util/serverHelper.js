@@ -104,7 +104,6 @@ async function fetchAssets() {
       ipfsHash: object._ipfsHash,
     }));
 
-
   const assetManagers = await Promise.all(assets.map(async asset =>
     apiContract.methods.assetManager(asset.assetID).call()));
 

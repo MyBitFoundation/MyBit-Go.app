@@ -10,12 +10,15 @@ import 'antd/lib/col/style';
 
 import '../styles/Asset.css';
 import '../styles/AssetPortfolio.css';
+import locationIcon from '../images/Location-icon.png';
 
 import { formatMonetaryValue } from '../util/helpers';
 
 const AssetPortfolio = ({
+  type,
   name,
   backgroundImage,
+  totalProfit,
   unrealizedProfit,
   ownershipUsd,
   ownershipPercentage,
@@ -28,23 +31,34 @@ const AssetPortfolio = ({
   owedToInvestor,
   withdrawInvestorProfit,
   withdrawingAssetIds,
+  value,
+  fee,
+  totalProfitAssetManager,
+  city,
+  country,
 }) => {
-  const url = `/explore/${assetID}`;
+  let url = `/explore/${assetID}`;
 
-  let type = 'primary';
+  let buttonType = 'primary';
   let text = 'Contribute more';
 
-  if (fundingStage !== 1) {
-    type = 'secondary';
+  if (type === 'owned' && fundingStage !== 1) {
+    buttonType = 'secondary';
+    text = 'View asset listing';
+  } else if(type === 'managed' && (fundingStage === 3 || fundingStage === 4)){
+    buttonType = 'secondary';
+    text = 'Manage asset';
+    url = `/manage/${assetID}`;
+  } else if(type === 'managed' && fundingStage === 1){
     text = 'View asset listing';
   }
 
   const withdrawing = withdrawingAssetIds.includes(assetID);
 
   const button = (
-    <Link to={url} href={url}>
+    <Link to={url} href={url} className="AssetPortfolio__details-buttons--is-view">
       <Button
-        type={type}
+        type={buttonType}
       >
         {text}
       </Button>
@@ -71,40 +85,84 @@ const AssetPortfolio = ({
           style={{ backgroundImage: `url(${backgroundImage})` }}
         >
           <div className="AssetPortfolio__image-holder-gradient" />
-          <b className="AssetPortfolio__name">{name}</b>
+          <img
+            alt="Location icon"
+            className="Asset__image-holder-location-icon"
+            src={locationIcon}
+          />
+          <b className="Asset__image-holder-name">{name}</b>
+          <p className="Asset__image-holder-location">
+            {city}, <span>{country}</span>
+          </p>
         </div>
-        <div className="AssetPortfolio__details">
-          <div className="AssetPortfolio__details-section">
-            <span>Unrealised profit:</span>
-            <span
-              className={unrealizedProfit && 'AssetPortfolio__details--value-green'}
-            >
-              {fundingStage === 1 ? <span>Funding in progress</span> : `${formatMonetaryValue(unrealizedProfit)}`}
-            </span>
-          </div>
-          <div className="AssetPortfolio__details-section">
-            <span>Your ownership:</span>
-            <div>
-              <span>{formatMonetaryValue(numberOfInvestors === 1 && (fundingStage === 3 || fundingStage === 4) ? fundingTotal : ownershipUsd)}</span>
-              <Divider
-                type="vertical"
-              />
-              <span>{numberOfInvestors === 1 && (fundingStage === 3 || fundingStage === 4) ? '100' : ownershipPercentage}%</span>
+        {type === 'owned' && (
+          <div className={`AssetPortfolio__details ${(fundingStage === 0 || fundingStage === 1) ? 'AssetPortfolio__details--is-three-sections' : undefined}`}>
+            <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-unrealised">
+              <span>Unrealised profit:</span>
+              <span>{fundingStage === 1 ? <span>Funding in progress</span> : `${formatMonetaryValue(unrealizedProfit)}`}</span>
+            </div>
+            {(fundingStage === 3 || fundingStage === 4) && (
+              <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-totalProfit">
+                <span>Total profit:</span>
+                <div>
+                  <span>{formatMonetaryValue(totalProfit)}</span>
+                </div>
+              </div>
+            )}
+            <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-ownership">
+              <span>Your ownership:</span>
+              <div>
+                <span>{numberOfInvestors === 1 && (fundingStage === 3 || fundingStage === 4) ? '100' : ownershipPercentage}%</span>
+              </div>
+            </div>
+            <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-funding">
+              <div>
+                <p>Funding:</p>
+                <span>
+                  {formatMonetaryValue(funding)}/{formatMonetaryValue(fundingTotal)}
+                </span>
+              </div>
+              <div className="AssetPortfolio__details-buttons">
+                {withdrawButton}
+                {button}
+              </div>
             </div>
           </div>
-          <div className="AssetPortfolio__details-section">
-            <div>
-              <p>Funding:</p>
-              <span>
-                {formatMonetaryValue(funding)}/{formatMonetaryValue(fundingTotal)}
-              </span>
+        )}
+        {type === 'managed' && (
+          <div className={'AssetPortfolio__details AssetPortfolio__details--is-managed'}>
+            <div className="AssetPortfolio__details-section AssetPortfolio__details-section">
+              <span>Your management fee:</span>
+              <span className="AssetPortfolio__details--is-bold">{fee}%</span>
             </div>
-            <div className="AssetPortfolio__details-buttons">
-              {withdrawButton}
-              {button}
+            <div className="AssetPortfolio__details-section AssetPortfolio__details-section">
+              <span>Total profit:</span>
+              <div>
+                <span className="AssetPortfolio__details--is-bold">{formatMonetaryValue(totalProfitAssetManager)}</span>
+              </div>
+            </div>
+            <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-ownership">
+              <span>Available for withdrawal:</span>
+              <div>
+                <span className="AssetPortfolio__details--is-bold">$0</span>
+              </div>
+            </div>
+            <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-funding">
+              <div>
+                {(fundingStage === 3 || fundingStage === 4) && (
+                  <span>Fully funded</span>
+                )}
+                {fundingStage === 1 && (
+                  <span>Funded: <span className="AssetPortfolio__details--is-bold">{formatMonetaryValue(funding)}</span>/{formatMonetaryValue(fundingTotal)}</span>
+                )}
+              </div>
+              <div className="AssetPortfolio__details-buttons">
+                {withdrawButton}
+                {button}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </Col>
   );
@@ -117,9 +175,10 @@ AssetPortfolio.defaultProps = {
 };
 
 AssetPortfolio.propTypes = {
+  type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   backgroundImage: PropTypes.string,
-  unrealizedProfit: PropTypes.string.isRequired,
+  totalProfit: PropTypes.string.isRequired,
   ownershipUsd: PropTypes.string.isRequired,
   ownershipPercentage: PropTypes.string.isRequired,
   funding: PropTypes.number.isRequired,

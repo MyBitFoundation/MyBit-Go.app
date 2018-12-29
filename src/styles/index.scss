@@ -146,3 +146,11 @@ b{
 .christmas.ant-btn-primary:before{
   display: none !important;
 }
+
+.MetamaksErrors__connect{
+  text-decoration: underline;
+
+  &:hover{
+    cursor: pointer;
+  }
+}

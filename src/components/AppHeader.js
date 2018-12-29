@@ -14,7 +14,9 @@ import Theme from './UI/theme/index';
 import '../styles/BancorWidgetButton.css';
 
 const AppHeader = ({
-  user, prices, usingServer,
+  user,
+  prices,
+  usingServer,
 }) => (
   <BancorConsumer>
     {({ initBancor }) => (
@@ -38,7 +40,6 @@ const AppHeader = ({
               onClick={(e) => {
                 e.preventDefault();
                 initBancor();
-
               }}
               >
               Get MYB
@@ -61,9 +62,6 @@ AppHeader.propTypes = {
   prices: PropTypes.shape({ params: PropTypes.object }),
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   usingServer: PropTypes.bool.isRequired,
-  assetsNotification: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  setAssetsStatusState: PropTypes.func.isRequired,
-  notificationPlace: PropTypes.string.isRequired,
 };
 
 export default AppHeader;

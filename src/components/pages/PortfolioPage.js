@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import Row from 'antd/lib/col';
 import Button from 'antd/lib/button';
@@ -7,6 +8,7 @@ import '../../styles/PortfolioPage.css';
 import LoadingPage from './LoadingPage';
 import PieChart from '../../images/chart-pie.svg';
 import LineChart from '../../images/chart-line.svg';
+import Sliders from '../../images/sliders.svg';
 import Fee from '../../images/Fee.png';
 import AssetPortfolio from '../AssetPortfolio';
 import { formatMonetaryValue } from '../../util/helpers';
@@ -17,28 +19,38 @@ const ButtonGroup = Button.Group;
 
 const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue, 'ether');
 
-const getOwnedAssets = assets =>
+const getOwnedAssets = (assets, address) =>
   assets
-    .filter(asset => asset.ownershipUnits > 0
-      && !(asset.pastDate && asset.amountToBeRaisedInUSD !== asset.amountRaisedInUSD));
+    .filter(asset => (asset.ownershipUnits > 0
+      && !(asset.pastDate && asset.amountToBeRaisedInUSD !== asset.amountRaisedInUSD)) || (asset.assetManager === address));
+
+const getManagedAssets = (assets, address) =>
+  assets
+    .filter(asset => asset.assetManager === address);
 
 const getPortfolioValue = (assets, currentEthPrice) =>
   assets.reduce(
-    (accumulator, currentValue) =>
-      accumulator +
-      currentValue.amountToBeRaisedInUSD === currentValue.amountRaisedInUSD
+    (accumulator, currentValue) => {
+      let value = 0;
+
+      if(currentValue.ownershipUnits !== '0'){
+       value = currentValue.amountToBeRaisedInUSD === currentValue.amountRaisedInUSD
         ?  currentValue.amountRaisedInUSD :
-          (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice),
+          (fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice)
+      }
+
+      return accumulator + value;
+      },
     0,
   );
 
-const getPortfolioRevenue = (assets, currentEthPrice) =>
+const getPortfolioRevenue = (assets, currentEthPrice, address) =>
   assets.reduce(
     (accumulator, currentValue) =>
       (accumulator) +
       (((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
         (currentValue.amountToBeRaisedInUSD)) *
-        currentValue.assetIncome),
+        currentValue.assetIncome) + (address == currentValue.assetManager ? (currentValue.managerPercentage / 100) * currentValue.assetIncome : 0),
     0,
   );
 
@@ -56,9 +68,6 @@ const getPortfolioValueAssets = (assets, currentEthPrice) =>
       assetID: asset.assetID,
       name: asset.name,
       ownership,
-      value: (
-        fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice
-      ).toFixed(2),
     };
   });
 
@@ -68,11 +77,15 @@ const getPortfolioRevenueAssets = (assets, currentEthPrice) =>
       ((fromWeiToEth(asset.ownershipUnits, 'ether') * currentEthPrice) /
         asset.amountToBeRaisedInUSD) *
       asset.assetIncome;
+    const unrealizedProfit = fromWeiToEth(asset.owedToInvestor, 'ether') * currentEthPrice;
+    const totalProfitAssetManager = asset.assetIncome * (asset.managerPercentage / 100);
     return {
       assetID: asset.assetID,
       name: asset.name,
       monthlyRevenue: (totalRevenue / 12).toFixed(2),
       totalRevenue: totalRevenue.toFixed(2),
+      unrealizedProfit,
+      totalProfitAssetManager,
     };
   });
 
@@ -82,7 +95,7 @@ class PortfolioPage extends React.Component {
     this.displayOwned = this.displayOwned.bind(this);
     this.displayManaged = this.displayManaged.bind(this);
     this.state = {
-      currentView: "managed",
+      currentView: "owned",
     };
   }
 
@@ -95,7 +108,7 @@ class PortfolioPage extends React.Component {
   }
 
   render() {
-    const { loading, assets, prices, withdrawInvestorProfit, withdrawingAssetIds } = this.props;
+    const { loading, assets, prices, withdrawInvestorProfit, withdrawingAssetIds, user } = this.props;
     const { currentView } = this.state;
 
     if (loading.assets || !prices.ether) {
@@ -103,11 +116,12 @@ class PortfolioPage extends React.Component {
     }
 
     const { ether } = prices;
-    const ownedAssets = getOwnedAssets(assets);
+    const ownedAssets = getOwnedAssets(assets, user.userName);
     const totalPortfolioValue = getPortfolioValue(
       ownedAssets,
       ether.price,
     );
+
     const totalPortfolioRevenue = getPortfolioRevenue(
       ownedAssets,
       ether.price,
@@ -128,10 +142,42 @@ class PortfolioPage extends React.Component {
         ? parseFloat(((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2))
         : 0;
 
+    let assetsToRender;
+    if(currentView === 'owned'){
+      assetsToRender = ownedAssets.map((asset, index) => {
+        if(user.userName == asset.assetManager) return null;
+        return{
+          ...asset,
+          totalProfit: portfolioRevenueAssets[index].totalRevenue,
+          unrealizedProfit: portfolioRevenueAssets[index].unrealizedProfit,
+          ownershipPercentage: portfolioValueAssets[index].ownership,
+        }
+      })
+    } else {
+      assetsToRender = ownedAssets.map((asset, index) => {
+        if(asset.ownershipUnits !== '0') return null;
+        return{
+          ...asset,
+          totalProfitAssetManager: portfolioRevenueAssets[index].totalProfitAssetManager,
+        }
+      })
+    }
+
+    assetsToRender = assetsToRender.filter(asset => asset !== null);
+
+    const totalManagementProfit = currentView === 'managed' ?
+      assetsToRender.reduce(
+        (accumulator, currentValue) =>
+          (accumulator) + currentValue.totalProfitAssetManager
+        , 0) : undefined;
+
     return (
       <div>
         <div className="Portfolio">
-          <div className="Portfolio__cards">
+          <div className={classnames({
+            'Portfolio__cards': true,
+            'Portfolio__cards--has-three': currentView === 'managed',
+          })}>
             <ValueDisplay
               text="Total Portfolio Value"
               value={formatMonetaryValue(totalPortfolioValue)}
@@ -150,13 +196,16 @@ class PortfolioPage extends React.Component {
               hasShadow
               isGreen
             />
-            {currentView === "managed" && (
-              <div className="Portfolio__card">
-                <img className="Portfolio__card-img" src={Fee} alt="Fee icon" />
-                <span>Total Management Profit</span>
-                <div className="Portfolio__card-separator" />
-                <b className="Portfolio__card-value--is-blue">450$</b>
-              </div>
+            {currentView === 'managed' && (
+              <ValueDisplay
+                text="Total Management Profit"
+                value={formatMonetaryValue(totalManagementProfit)}
+                icon={<Sliders />}
+                hasSeparator
+                hasIcon
+                hasShadow
+                isBlue
+              />
             )}
             <div className="Portfolio__card-buttons">
               <ButtonGroup size="large">
@@ -168,14 +217,15 @@ class PortfolioPage extends React.Component {
             </div>
           </div>
           <Row className="Portfolio__assets">
-            {currentView === "owned" && ownedAssets.map((asset, index) => (
+            {assetsToRender.map((asset, index) => (
               <AssetPortfolio
+                type={currentView}
                 key={asset.assetID}
                 name={asset.name}
                 backgroundImage={asset.imageSrc}
-                unrealizedProfit={portfolioRevenueAssets[index].totalRevenue}
-                ownershipUsd={portfolioValueAssets[index].value}
-                ownershipPercentage={portfolioValueAssets[index].ownership}
+                totalProfit={asset.totalProfit}
+                unrealizedProfit={asset.unrealizedProfit}
+                ownershipPercentage={asset.ownershipPercentage}
                 funding={asset.amountRaisedInUSD}
                 fundingTotal={asset.amountToBeRaisedInUSD}
                 fundingStage={asset.fundingStage}
@@ -185,11 +235,13 @@ class PortfolioPage extends React.Component {
                 owedToInvestor={asset.owedToInvestor}
                 withdrawInvestorProfit={withdrawInvestorProfit}
                 withdrawingAssetIds={withdrawingAssetIds}
+                value={asset.amountToBeRaisedInUSD}
+                fee={asset.managerPercentage}
+                totalProfitAssetManager={asset.totalProfitAssetManager}
+                city={asset.city}
+                country={asset.country}
               />
             ))}
-            {currentView === "managed" && (
-              <ManagedAssetCardGrid assets={[]} />
-            )}
           </Row>
         </div>
       </div>
