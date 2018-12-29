@@ -14,6 +14,7 @@ import {
   serverIp,
   ethereumNetwork,
   fetchTransactionHistoryTime,
+  loadMetamaskUserDetailsTime,
   pullAssetsFromServerTime,
   fetchAssetsFromWeb3Time,
   S3_URL,
@@ -28,6 +29,7 @@ class BlockchainInfo extends React.Component {
   constructor(props) {
     super(props);
     this.fetchAssets = this.fetchAssets.bind(this);
+    this.loadMetamaskUserDetails = this.loadMetamaskUserDetails.bind(this);
     this.fetchTransactionHistory = this.fetchTransactionHistory.bind(this);
     this.loadPrices = this.loadPrices.bind(this);
     this.fetchAssets = this.fetchAssets.bind(this);
@@ -86,12 +88,14 @@ class BlockchainInfo extends React.Component {
       const usingServer = this.usingServer();
       if (!usingServer) {
         // we need the prices and the user details before getting the assets and transactions
-        await this.loadPrices();
+        await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
         this.intervalFetchAssets =
           setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
         this.intervalFetchTransactionHistory =
           setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
+        this.intervalLoadMetamaskUserDetails =
+          setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
       } else {
         await this.loadPrices();
         this.pullAssetsFromServer();
@@ -101,7 +105,6 @@ class BlockchainInfo extends React.Component {
     } catch (err) {
       debug(err);
     }
-
     setInterval(this.loadPrices, 15 * 1000);
   }
 
@@ -133,6 +136,7 @@ class BlockchainInfo extends React.Component {
     clearInterval(this.intervalFetchAssets);
     clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalFetchTransactionHistory);
+    clearInterval(this.intervalLoadMetamaskUserDetails);
   }
 
   async pullFileInfoForAssets(assets){
@@ -412,8 +416,11 @@ class BlockchainInfo extends React.Component {
     // case where user was not logged in but logged in and opposite case
     if ((!previouslyLoggedIn && userIsLoggedIn) || (!previousAddress && selectedAddress) || (!previouslyEnabled && enabled)) {
       shouldReloadUI = true;
+      this.loadMetamaskUserDetails();
       this.fetchAssets();
       this.fetchTransactionHistory();
+      this.intervalLoadMetamaskUserDetails =
+        setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
       this.intervalFetchAssets =
         setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
       this.intervalFetchTransactionHistory =
@@ -424,6 +431,7 @@ class BlockchainInfo extends React.Component {
       this.pullAssetsFromServer();
       clearInterval(this.intervalFetchAssets);
       clearInterval(this.intervalFetchTransactionHistory);
+      clearInterval(this.intervalLoadMetamaskUserDetails);
       this.intervalAssetsFromServer =
         setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
     }
@@ -525,6 +533,22 @@ class BlockchainInfo extends React.Component {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async loadMetamaskUserDetails() {
+    await Brain.loadMetamaskUserDetails()
+      .then((response) => {
+        this.setState({
+          user: response,
+          loading: { ...this.state.loading, user: false },
+        });
+      })
+      .catch((err) => {
+        debug(err);
+        if (this.state.userIsLoggedIn) {
+          setTimeout(this.loadMetamaskUserDetails, 5000);
+        }
+      });
   }
 
   async fetchTransactionHistory() {

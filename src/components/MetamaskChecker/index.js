@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Web3 from 'web3';
-import dynamic from 'next/dynamic'
 
 import {
   METAMASK_FIREFOX,
@@ -66,7 +65,7 @@ class MetamaskChecker extends Component {
           this.setState({
             user: {
               userName: accounts[0],
-              balance,
+              ethBalance: balance,
             },
             enabled: true,
             isLoggedIn: true,

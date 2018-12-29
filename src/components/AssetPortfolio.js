@@ -85,7 +85,7 @@ const AssetPortfolio = ({
           <div className="AssetPortfolio__details-section">
             <span>Your ownership:</span>
             <div>
-              <span>{formatMonetaryValue(numberOfInvestors === 1 && (fundingStage === 3 || fundingStage === 4) ? fundingTotal : ownershipUsd)}</span>
+              <span>{formatMonetaryValue(numberOfInvestors === 1 && (fundingStage === 3 || fundingStage === 4) ? fundingTotal : ownershipUsd > fundingTotal ? fundingTotal : ownershipUsd)}</span>
               <Divider
                 type="vertical"
               />

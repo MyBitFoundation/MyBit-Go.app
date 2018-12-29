@@ -104,28 +104,6 @@ async function fetchAssets() {
       ipfsHash: object._ipfsHash,
     }));
 
-  // pull assets from older contract
-  apiContract = new web3.eth.Contract(API.ABI, API.ADDRESS);
-  assetCreationContract = new web3.eth.Contract(
-    AssetCreation.ABI,
-    AssetCreation.OLD_ADDRESS,
-  );
-
-  logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
-    'LogAssetFundingStarted',
-    { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-  );
-
-  const assetsOlderContract = logAssetFundingStartedEvents
-    .map(({ returnValues }) => returnValues)
-    .map(object => ({
-      assetID: object._assetID,
-      assetType: object._assetType,
-      ipfsHash: object._ipfsHash,
-    }));
-
-  assets = assets.concat(assetsOlderContract);
-
   const assetManagers = await Promise.all(assets.map(async asset =>
     apiContract.methods.assetManager(asset.assetID).call()));
 
