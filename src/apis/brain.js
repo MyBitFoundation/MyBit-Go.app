@@ -473,7 +473,6 @@ export const fundAsset = async (user, assetId, amount, onFailureContributionPopu
 export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
-      console.log("FETCHING ASSETS")
       // pull asssets from newest contract
       let apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
       let assetCreationContract = new window.web3js.eth.Contract(
@@ -594,9 +593,6 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
           asset.description !== 'Coming soon');
       }
-
-      console.log("DONE FETCHING ASSETS")
-
       resolve(assetsPlusMoreDetails);
     } catch (error) {
       reject(error);

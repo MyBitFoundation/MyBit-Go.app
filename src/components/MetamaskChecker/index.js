@@ -101,7 +101,6 @@ class MetamaskChecker extends Component {
   async handleAddressChanged(selectedAddress) {
     const isLoggedIn = await this.checkIfLoggedIn();
     const enabled = await this.haveAccessToAccounts();
-    console.log("logged in: ", isLoggedIn)
     if(isLoggedIn || !this.state.enabled){
       this.getAccount();
     }
@@ -185,7 +184,6 @@ class MetamaskChecker extends Component {
     if (this.state.isInstalled === undefined || this.state.isLoggedIn === undefined) {
       return null;
     }
-    console.log(this.state)
     return React.cloneElement(this.props.children, {
       isMetamaskInstalled: this.state.isInstalled,
       network: this.network,

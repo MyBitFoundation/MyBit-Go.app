@@ -88,7 +88,6 @@ class BlockchainInfo extends React.Component {
       if (!usingServer) {
         // we need the prices and the user details before getting the assets and transactions
         await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
-        console.log("calling fetch assets")
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
         this.createIntervalsNonServer();
       } else {
@@ -428,7 +427,6 @@ class BlockchainInfo extends React.Component {
 
     // case where user was not logged in but logged in and opposite case
     if ((!previouslyLoggedIn && userIsLoggedIn && enabled) || (!previouslyEnabled && enabled) || (previousAddress !== selectedAddress && enabled)) {
-      console.log("here1")
       shouldReloadUI = true;
       this.loadMetamaskUserDetails();
       this.fetchAssets();
@@ -436,13 +434,6 @@ class BlockchainInfo extends React.Component {
       this.resetIntervals();
       this.createIntervalsNonServer();
     } else if ((previouslyLoggedIn && !userIsLoggedIn) || ( previousAddress && !selectedAddress) || (previouslyEnabled !== enabled)) {
-      console.log(previouslyLoggedIn)
-      console.log(userIsLoggedIn)
-      console.log(previousAddress)
-      console.log(selectedAddress)
-      console.log(previouslyEnabled)
-      console.log(enabled)
-      console.log("here2")
       shouldReloadUI = true;
       this.pullAssetsFromServer();
       this.resetIntervals();
