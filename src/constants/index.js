@@ -3,11 +3,6 @@
 /* eslint-disable function-paren-newline */
 
 import React from 'react';
-import CryptoMining from '../images/categories/assetImages:autonomous_vehicles.jpg';
-import Storage from '../images/categories/assetImages:autonomous_vehicles.jpg';
-import Bitcoinatm from '../images/categories/assetImages:autonomous_vehicles.jpg';
-import Solar from '../images/categories/assetImages:autonomous_vehicles.jpg';
-import Coworking from '../images/categories/assetImages:autonomous_vehicles.jpg';
 
 export const ethereumNetwork = 'ropsten';
 
@@ -44,41 +39,6 @@ export const ETHERSCAN_BALANCE = address =>
 
 export const serverIp = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/assets' : '/api/assets';
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
-
-const testEnabledAssetIdsData = {
-  '0x8d896c37eb6f50f35ddefe472f91f51d30faff549cd251e5f8a4a90a471ab0c8': {
-    name: 'Test asset for development 1',
-    city: 'Zurich',
-    country: 'Switzerland',
-    description: 'Test description',
-    details: 'Test details',
-    imgSrc: CryptoMining,
-  },
-  '0x4b2ee232401b105c8a92fade0722e56b428f6d41ec99053ccbb82b9e7c1e1b22': {
-    name: 'Test asset for development 2',
-    city: 'Zurich',
-    country: 'Switzerland',
-    description: 'Test description',
-    details: 'Test details',
-    imgSrc: CryptoMining,
-  },
-  '0x769d3fff60149b2037323933c28ddd3284f072bd83c376b6e5f36cd61ad31316': {
-    name: 'Test asset for development 3',
-    city: 'Zurich',
-    country: 'Switzerland',
-    description: 'Test description',
-    details: 'Test details',
-    imgSrc: CryptoMining,
-  },
-  '0x171705b3ea7e2cb6df9f4efa06ee550939cee76d5b861a1e40f19122da715112': {
-    name: 'Test asset for development 4',
-    city: 'Zurich',
-    country: 'Switzerland',
-    description: 'Test description',
-    details: 'Test details',
-    imgSrc: CryptoMining,
-  },
-};
 
 export const metamaskErrors = (
   className,

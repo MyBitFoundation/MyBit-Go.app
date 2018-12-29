@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Divider from 'antd/lib/divider';
 import 'antd/lib/divider/style';
 import Button from 'antd/lib/button';
 import 'antd/lib/button/style';

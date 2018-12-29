@@ -9,10 +9,8 @@ import LoadingPage from './LoadingPage';
 import PieChart from '../../images/chart-pie.svg';
 import LineChart from '../../images/chart-line.svg';
 import Sliders from '../../images/sliders.svg';
-import Fee from '../../images/Fee.png';
 import AssetPortfolio from '../AssetPortfolio';
 import { formatMonetaryValue } from '../../util/helpers';
-import { ManagedAssetCardGrid } from '../UI/ManagedAssetPage/ManagedAssetCardGrid'
 import ValueDisplay from '../ValueDisplay';
 
 const ButtonGroup = Button.Group;
@@ -23,10 +21,6 @@ const getOwnedAssets = (assets, address) =>
   assets
     .filter(asset => (asset.ownershipUnits > 0
       && !(asset.pastDate && asset.amountToBeRaisedInUSD !== asset.amountRaisedInUSD)) || (asset.assetManager === address));
-
-const getManagedAssets = (assets, address) =>
-  assets
-    .filter(asset => asset.assetManager === address);
 
 const getPortfolioValue = (assets, currentEthPrice) =>
   assets.reduce(
@@ -50,7 +44,7 @@ const getPortfolioRevenue = (assets, currentEthPrice, address) =>
       (accumulator) +
       (((fromWeiToEth(currentValue.ownershipUnits, 'ether') * currentEthPrice) /
         (currentValue.amountToBeRaisedInUSD)) *
-        currentValue.assetIncome) + (address == currentValue.assetManager ? (currentValue.managerPercentage / 100) * currentValue.assetIncome : 0),
+        currentValue.assetIncome) + (address === currentValue.assetManager ? (currentValue.managerPercentage / 100) * currentValue.assetIncome : 0),
     0,
   );
 
@@ -133,19 +127,10 @@ class PortfolioPage extends React.Component {
       ether.price,
     );
 
-    const totalValueEth =
-      parseFloat((totalPortfolioValue / ether.price)
-        .toFixed(5));
-
-    const totalRevenuePercentage =
-      (totalPortfolioValue > 0 && totalPortfolioRevenue > 0)
-        ? parseFloat(((totalPortfolioRevenue * 100) / totalPortfolioValue).toFixed(2))
-        : 0;
-
     let assetsToRender;
     if(currentView === 'owned'){
       assetsToRender = ownedAssets.map((asset, index) => {
-        if(user.userName == asset.assetManager) return null;
+        if(user.userName === asset.assetManager) return null;
         return{
           ...asset,
           totalProfit: portfolioRevenueAssets[index].totalRevenue,
