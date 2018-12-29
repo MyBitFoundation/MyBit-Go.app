@@ -31,7 +31,7 @@
         margin-left: 10px;
       }
 
-      @include media('<1100px') {
+      @include media('<1150px') {
         flex-direction: column-reverse;
 
         .Portfolio__card-buttons{
