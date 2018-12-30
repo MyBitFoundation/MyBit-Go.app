@@ -46,6 +46,9 @@ class BlockchainInfo extends React.Component {
     this.updateNotification = this.updateNotification.bind(this);
     this.getCategoriesFromAirTable = this.getCategoriesFromAirTable.bind(this);
     this.withdrawInvestorProfit = this.withdrawInvestorProfit.bind(this);
+    this.withdrawCollateral = this.withdrawCollateral.bind(this);
+    this.resetNotifications = this.resetNotifications.bind(this);
+
     this.state = {
       loading: {
         assets: true,
@@ -74,9 +77,11 @@ class BlockchainInfo extends React.Component {
       removeNotification: this.removeNotification,
       updateNotification: this.updateNotification,
       withdrawInvestorProfit: this.withdrawInvestorProfit,
+      withdrawCollateral: this.withdrawCollateral,
       notifications: {},
       isUserContributing: false,
       withdrawingAssetIds: [],
+      withdrawingCollateral: [],
     };
   }
 
@@ -171,6 +176,64 @@ class BlockchainInfo extends React.Component {
     }
   }
 
+  async withdrawCollateral(asset, percentage, amount, onFinished){
+    const notificationId = Date.now();
+    const {
+      assetID,
+      name,
+    } = asset;
+
+    this.updateNotification(notificationId, {
+      metamaskProps: {
+        assetName: name,
+        operationType: 'withdrawCollateral',
+      },
+      status: 'info',
+    });
+
+    //update state so users can't trigger the withdrawal multiple times
+    const withdrawingCollateral = this.state.withdrawingCollateral.slice();
+    withdrawingCollateral.push(assetID);
+    this.setState({
+      withdrawingCollateral,
+    });
+
+    const result = await Brain.withdrawEscrow(
+      this.state.user,
+      assetID,
+      name,
+      notificationId,
+      this.updateNotification,
+    );
+
+    const updateWithdrawingCollateral = () => {
+      let withdrawingCollateral = this.state.withdrawingCollateral.slice();
+      withdrawingCollateral = withdrawingCollateral.filter(assetIdTmp => assetIdTmp !== assetID);
+      this.setState({
+        withdrawingCollateral,
+      });
+    }
+
+    console.log("result: ", result)
+
+    if(result === true || result === false){
+      onFinished(() => {
+        console.log("here")
+        updateWithdrawingCollateral();
+        this.updateNotification(notificationId, {
+          withdrawCollateralProps: {
+            assetName: name,
+            amount,
+            percentage,
+          },
+          status: result ? 'success' : 'error',
+        })
+      })
+    } else {
+      updateWithdrawingCollateral();
+    }
+  }
+
   async handleListAsset(formData, setUserListingAsset){
     const {
       asset,
@@ -179,6 +242,8 @@ class BlockchainInfo extends React.Component {
       managementFee,
       category,
       fileList,
+      collateralMyb,
+      collateralPercentage
     } = formData;
 
     const {
@@ -202,6 +267,8 @@ class BlockchainInfo extends React.Component {
       fileList,
       onSuccess,
       onFailure: () => setUserListingAsset(false),
+      collateralMyb,
+      collateralPercentage,
     });
 
     debug(result);
@@ -281,9 +348,11 @@ class BlockchainInfo extends React.Component {
         }
         assetIds = assetIds.split(',');
         assetIds.forEach(assetIdInfo => {
-          const [assetId, city, country] = assetIdInfo.split('|');
+          const [assetId, city, country, collateral, collateralPercentage] = assetIdInfo.split('|');
           airtableAsset.city = city;
           airtableAsset.country = country;
+          airtableAsset.collateral = Number(collateral);
+          airtableAsset.collateralPercentage = collateralPercentage;
           assetsAirTableById[assetId] = airtableAsset;
         })
       }
@@ -300,7 +369,6 @@ class BlockchainInfo extends React.Component {
     const { records } = json;
     const assets = records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS).map(this.processAssetsFromAirTable)
     const assetsById = this.processAssetsByIdFromAirTable(records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS), assets);
-
     this.setState({
       assetsAirTable: assets,
       assetsAirTableById: assetsById,
@@ -417,6 +485,12 @@ class BlockchainInfo extends React.Component {
     });
   }
 
+  resetNotifications(){
+    this.setState({
+      notifications: [],
+    });
+  }
+
   async handleAddressChange(previousAddress, previouslyLoggedIn, previouslyEnabled) {
     let shouldReloadUI = false;
     const selectedAddress = this.state.user.userName;
@@ -433,9 +507,11 @@ class BlockchainInfo extends React.Component {
       this.fetchTransactionHistory();
       this.resetIntervals();
       this.createIntervalsNonServer();
+      this.resetNotifications();
     } else if ((previouslyLoggedIn && !userIsLoggedIn) || ( previousAddress && !selectedAddress) || (previouslyEnabled !== enabled)) {
       shouldReloadUI = true;
       this.pullAssetsFromServer();
+      this.resetNotifications();
       this.resetIntervals();
       this.intervalAssetsFromServer =
         setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);

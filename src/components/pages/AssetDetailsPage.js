@@ -47,6 +47,7 @@ const AssetDetailsPage = ({
     watchListed: asset.watchListed,
     files: asset.files,
     managerPercentage: asset.managerPercentage,
+    collateralPercentage: asset.collateralPercentage,
   };
 
   return (

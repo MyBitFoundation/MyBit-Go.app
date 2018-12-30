@@ -110,23 +110,19 @@ export const ManagedAssetWrapper = styled.div`
                         }
                         &-button {
                             > button {
-                                width: 99px;
                                 font-family: Roboto;
                                 font-style: normal;
                                 font-weight: 500;
                                 line-height: 22px;
                                 font-size: 14px;
-                                padding: 5px 0px;
                             }
                             > span {
                                 > button {
-                                    width: 99px;
                                     font-family: Roboto;
                                     font-style: normal;
                                     font-weight: 500;
                                     line-height: 22px;
                                     font-size: 14px;
-                                    padding: 5px 0px;
                                 }
                             }
                         }

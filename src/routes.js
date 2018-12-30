@@ -147,6 +147,8 @@ const routes = [
             user={props.user}
             match={match}
             prices={props.prices}
+            withdrawCollateral={props.withdrawCollateral}
+            withdrawingCollateral={props.withdrawingCollateral}
           />
         }
       </BlockchainInfoContext.Consumer>

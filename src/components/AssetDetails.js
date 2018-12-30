@@ -186,7 +186,8 @@ class AssetDetails extends React.Component {
       numberOfInvestors,
       watchListed,
       files,
-      managerPercentage
+      managerPercentage,
+      collateralPercentage,
     } = this.props.information;
 
     const filesToRender = this.getFilesToRender(files, assetID);
@@ -469,7 +470,7 @@ class AssetDetails extends React.Component {
                 <ValueDisplay
                   text="Asset Collateral"
                   icon={<MyBitLogo />}
-                  value="0%"
+                  value={`${collateralPercentage}%`}
                   hasSeparator
                   hasIcon
                 />

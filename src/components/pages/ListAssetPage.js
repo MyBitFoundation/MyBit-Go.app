@@ -27,7 +27,6 @@ class ListAssetPage extends React.Component {
 
     this.state = {
       currentSlide: 0,
-      MYB_PLACEHOLDER: 0.18,
       maximumAllowedSlide: 1,
       data: {
         userCity: 'Zug',
@@ -103,23 +102,35 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectChange = (value, name) => {
-    this.setState(
-      {
-        data: { ...this.state.data, [name]: value }
-      },
-      () => {
-        switch(name) {
-          case 'userCountry': {
-            this.setState({
-              data: { ...this.state.data, assetCountry: value, category: '', asset: '' }
-            });break;
-          }
-          default: {
-            console.log(this.state)
+    if(name === 'asset'){
+      const assetName = value.name;
+      const assetValue = value.assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0].amountToBeRaisedInUSDAirtable
+      this.setState({
+        data: {
+          ...this.state.data,
+          asset: assetName,
+          assetValue,
+        }
+      })
+    } else {
+      this.setState(
+        {
+          data: { ...this.state.data, [name]: value }
+        },
+        () => {
+          switch(name) {
+            case 'userCountry': {
+              this.setState({
+                data: { ...this.state.data, assetCountry: value, category: '', asset: '' }
+              });break;
+            }
+            default: {
+              console.log(this.state)
+            }
           }
         }
-      }
-    );
+      );
+    }
   };
 
   handleFileUpload = filesObject => {
@@ -150,21 +161,24 @@ class ListAssetPage extends React.Component {
   handleCollateralChange = (value, name) => {
     let percentage, dollar, myb;
     const { assetValue } = this.state.data;
-    const { MYB_PLACEHOLDER } = this.state;
+    const {
+      selectedAmount,
+      mybPrice,
+    } = value;
     switch (name) {
       case "percentage":
-        percentage = value;
+        percentage = selectedAmount;
         dollar = (percentage / 100) * assetValue;
-        myb = dollar / MYB_PLACEHOLDER;
+        myb = dollar / mybPrice;
         break;
       case "myb":
-        myb = value;
-        dollar = MYB_PLACEHOLDER * myb;
+        myb = selectedAmount;
+        dollar = mybPrice * myb;
         percentage = parseInt((dollar / assetValue) * 100);
         break;
       case "dollar":
-        dollar = value;
-        myb = dollar / MYB_PLACEHOLDER;
+        dollar = selectedAmount;
+        myb = dollar / mybPrice;
         percentage = parseInt((dollar / assetValue) * 100);
         break;
       default:

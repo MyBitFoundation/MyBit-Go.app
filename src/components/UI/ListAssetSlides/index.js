@@ -235,7 +235,7 @@ export const AvailableAssetsSlide = ({
                     style={{ width: "100%", marginTop: "10px" }}
                     placeholder="Available Assets"
                     optionFilterProp="children"
-                    onChange={value => handleSelectChange(value, "asset")}
+                    onChange={value => handleSelectChange({name: value, assetsAirTable}, "asset")}
                     filterOption={(input, option) =>
                       option.props.children
                         .toLowerCase()
@@ -495,6 +495,8 @@ export const CollateralSlide = ({
   formData
 }) => {
   return (
+    <BlockchainInfoContext.Consumer>
+       {({ prices }) => (
     <Slide>
       <Tooltip
         title="Assets with a high collateral are more likely to get funded."
@@ -505,8 +507,8 @@ export const CollateralSlide = ({
       <h1 className="Slider__header">Asset collateral </h1>
       <p className="Slider__note">
         MYB is used as an insurance mechanism, much like a deposit to protect
-        investors' funds and incentivise proper behaviour. This feature is coming in
-        the next version of MyBit Go.
+        investors' funds and incentivise proper behaviour. In this version of Go you are
+        not required to deposit MYB but you will still be able to withdraw the collateral.
       </p>
       <img
         src={MYB}
@@ -517,16 +519,14 @@ export const CollateralSlide = ({
       />
       <div className="Slider__input-collateral">
         <Slider
-          disabled
           min={0}
           max={constraints.max_percentage}
           defaultValue={collateralPercentage}
           value={collateralPercentage}
-          onChange={value => handleCollateralChange(value, "percentage")}
+          onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: prices.mybit.price}, "percentage")}
         />
         <div>{`${collateralPercentage}%`}</div>
         <InputNumber
-          disabled
           defaultValue={collateralMyb}
           value={collateralMyb}
           step={0.1}
@@ -535,11 +535,10 @@ export const CollateralSlide = ({
           max={constraints.max_myb}
           formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           parser={value => value.replace(/\$\s?|(,*)/g, "")}
-          onChange={value => handleCollateralChange(value, "myb")}
+          onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: prices.mybit.price}, "myb")}
         />
         <span>=</span>
         <InputNumber
-          disabled
           defaultValue={collateralDollar}
           value={collateralDollar}
           step={0.1}
@@ -550,7 +549,7 @@ export const CollateralSlide = ({
             `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
           }
           parser={value => value.replace(/\$\s?|(,*)/g, "")}
-          onChange={value => handleCollateralChange(value, "dollar")}
+          onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: prices.mybit.price}, "dollar")}
         />
       </div>
       <SlideButtons
@@ -561,8 +560,9 @@ export const CollateralSlide = ({
         forbidNext={false}
       />
     </Slide>
-  );
-};
+  )}
+  </BlockchainInfoContext.Consumer>
+)};
 
 const listedAssetSuccessfuly = (assetId) => {
   return (
