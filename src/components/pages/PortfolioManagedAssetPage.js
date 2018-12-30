@@ -15,10 +15,13 @@ import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
 import Fee from '../../images/Fee.png';
 import LoadingPage from './LoadingPage';
+import {Chart, Axis, Legend, Geom} from "bizcharts";
 import { formatMonetaryValue } from '../../util/helpers';
 import * as Brain from '../../apis/brain';
 
 const ButtonGroup = Button.Group;
+
+const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue, 'ether');
 
 class PortfolioManagedAssetPage extends React.Component {
     constructor(props) {
@@ -27,6 +30,7 @@ class PortfolioManagedAssetPage extends React.Component {
         this.displayCollateral = this.displayCollateral.bind(this);
         this.state = {
           chartBoxView: "profit",
+          revenueData: [],
           loading: true,
         };
         this.asset = undefined;
@@ -90,14 +94,22 @@ class PortfolioManagedAssetPage extends React.Component {
 
       // calculate asset manager profits
       const assetManagerProfits = [];
-      const revenueLogs = await Brain.fetchRevenueLogsByAssetId(asset.assetID);
-      console.log(revenueLogs)
+      const revenueRawData = await Brain.fetchRevenueLogsByAssetId(asset.assetID);
+      
+      const revenueData = revenueRawData.map( revenue => {
+          return {
+              amount: fromWeiToEth(revenue.amount),
+              date: new Date(revenue.timestamp).toLocaleTimeString()
+          }
+      })
+      console.log(revenueData)
 
       //set the state with the calculated data
       this.setState({
         loading: false,
         assetManagerProfits,
         collateralData,
+        revenueData
       })
     }
 
@@ -119,7 +131,7 @@ class PortfolioManagedAssetPage extends React.Component {
         } = this.props;
 
         const componentLoading = this.state.loading;
-        console.log(' Loading ', componentLoading)
+        const { revenueData } = this.state;
 
         if(loading.assets || componentLoading){
           return(
@@ -278,7 +290,18 @@ class PortfolioManagedAssetPage extends React.Component {
                         <div className="ManagedAsset__graphics">
                             {this.state.chartBoxView === "profit" && (
                                 <div className="ManagedAsset__chart-container">
-                                    chart
+                                    <Chart 
+                                        height={420} 
+                                        data={revenueData} 
+                                        forceFit
+                                    >
+                                      <Axis name="date" />
+                                      <Axis name="amount" />
+                                      <Legend position="top" dy={-20} />
+                                      <Tooltip crosshairs={{type : "y"}}/>
+                                      <Geom type="line" position="date*amount" size={1} />
+                                      <Geom type='point' position="date*amount" size={3} shape={'circle'} />
+                                    </Chart>
                                 </div>
                             )}
                             {this.state.chartBoxView === "collateral" && (
