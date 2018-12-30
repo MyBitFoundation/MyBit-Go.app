@@ -291,14 +291,14 @@ class PortfolioManagedAssetPage extends React.Component {
                             {this.state.chartBoxView === "profit" && (
                                 <div className="ManagedAsset__chart-container">
                                     <Chart 
+                                        width={550} 
                                         height={420} 
-                                        data={revenueData} 
-                                        forceFit
-                                    >
+                                        data={revenueData}
+                                        >
                                       <Axis name="date" />
                                       <Axis name="amount" />
                                       <Legend position="top" dy={-20} />
-                                      <Tooltip crosshairs={{type : "y"}}/>
+                                     <Tooltip crosshairs={{type : "y"}}/>
                                       <Geom type="line" position="date*amount" size={1} />
                                       <Geom type='point' position="date*amount" size={3} shape={'circle'} />
                                     </Chart>
