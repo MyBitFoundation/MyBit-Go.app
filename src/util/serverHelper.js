@@ -155,7 +155,7 @@ async function fetchAssets() {
       amountRaisedInUSD,
       amountToBeRaisedInUSD: amountsToBeRaised[index],
       fundingDeadline: fundingDeadlines[index],
-      ownershipUnits: 0,
+      ownershipUnits: '0',
       assetIncome:
         Number(web3.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
           currentEthInUsd,

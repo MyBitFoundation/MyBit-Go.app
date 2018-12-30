@@ -62,9 +62,9 @@ async function getIdAndAssetIdsOfAssetName(assetName){
   };
 }
 
-async function UpdateAirTableEntry(id, currentAssetIds, newAssetId, country, city){
+async function UpdateAirTableEntry(id, currentAssetIds, newAssetId, country, city, collateral, collateralPercentage){
   return new Promise(async (resolve, reject) => {
-    const formatedString = `${newAssetId}|${country}|${city}`
+    const formatedString = `${newAssetId}|${country}|${city}|${collateral}|${collateralPercentage}`
     const newAssetIds = currentAssetIds ? currentAssetIds +  `,${formatedString}`: formatedString;
     base('Imported table').update(id, {
       "Asset IDs": newAssetIds
@@ -137,8 +137,10 @@ app.post('/api/airtable/update', async function(req, res){
   const country = req.body.country;
   const city = req.body.city;
   const assetName = req.body.assetName;
+  const collateral = req.body.collateral;
+  const collateralPercentage = req.body.collateralPercentage;
   const rowIdAndAssetId = await getIdAndAssetIdsOfAssetName(assetName);
-  const result = await UpdateAirTableEntry(rowIdAndAssetId.id, rowIdAndAssetId.assetIds, assetId, country, city, res);
+  const result = await UpdateAirTableEntry(rowIdAndAssetId.id, rowIdAndAssetId.assetIds, assetId, country, city, collateral, collateralPercentage);
   res.sendStatus(result ? 200 : 500);
 });
 
