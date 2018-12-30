@@ -15,7 +15,9 @@ export const METAMASK_OPERA = 'https://addons.opera.com/extensions/details/metam
 
 const baseUrl = 'http://localhost'
 const port = 8081;
+const secondPort = 8082;
 const host = `${baseUrl}:${port}`
+const secondHost = `${baseUrl}:${secondPort}`
 
 export const fetchTransactionHistoryTime = 60 * 1000;
 export const loadMetamaskUserDetailsTime = 5 * 1000;
@@ -28,6 +30,8 @@ export const AIRTABLE_ASSETS_URL = process.env.NODE_ENV === 'development' ? `${h
 export const UPDATE_ASSETS_URL = process.env.NODE_ENV === 'development' ? `${host}/api/airtable/update` : '/api/airtable/update';
 export const S3_UPLOAD_URL = process.env.NODE_ENV === 'development' ? `${host}/api/files/upload` : '/api/files/upload';
 export const S3_ASSET_FILES_URL = process.env.NODE_ENV === 'development' ? `${host}/api/assets/files` : '/api/assets/files';
+export const MYBIT_API_COLLATERAL = process.env.NODE_ENV === 'development' ? `${secondHost}/collateral` : 'https://api.mybit.io/collateral';
+
 export const AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS = 3;
 export const AIRTABLE_ASSETS_NUMBER_OF_FIELDS = 6;
 export const MAX_FILES_UPLOAD = 2;

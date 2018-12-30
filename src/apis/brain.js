@@ -20,6 +20,7 @@ import {
   UPDATE_ASSETS_URL,
   S3_UPLOAD_URL,
   BLOCK_NUMBER_CONTRACT_CREATION,
+  MYBIT_API_COLLATERAL,
 } from '../constants';
 
 import {
@@ -439,7 +440,7 @@ export const createAsset = async params =>
             }
 
             onSuccess(() => {
-              axios.post('http://localhost:8082/collateral', {
+              axios.post(MYBIT_API_COLLATERAL, {
                 address: params.userAddress,
                 escrow: collateral,
                 assetId: futureAssetId,
