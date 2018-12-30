@@ -809,6 +809,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           description: assetIdDetails.description,
           details: assetIdDetails.details,
           imageSrc: assetIdDetails.imageSrc,
+          partner: assetIdDetails.partner,
           fundingStage,
           managerPercentage: Number(managerPercentages[index]),
           pastDate,

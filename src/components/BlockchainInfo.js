@@ -369,6 +369,7 @@ class BlockchainInfo extends React.Component {
       category: fields.Category,
       description: fields.Description,
       details: fields.Details,
+      partner: fields.Partner,
       imageSrc: `${S3_URL}assetImages:${fields['Image']}`,
       amountToBeRaisedInUSDAirtable: fields['Funding goal'],
       location,

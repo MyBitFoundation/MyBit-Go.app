@@ -69,9 +69,6 @@ class PortfolioManagedAssetPage extends React.Component {
       const { assetId } = this.props.match.params;
       const asset = nextProps.assets.find(({ assetID }) => assetID === assetId);
       if(this.asset && asset && (this.asset.assetIncome !== asset.assetIncome)){
-        console.log("HEREEEEEE")
-        console.log(this.asset.assetIncome)
-        console.log(asset.assetIncome)
         this.asset = asset;
         this.getDataForAsset(asset);
         return true;
@@ -394,6 +391,7 @@ class PortfolioManagedAssetPage extends React.Component {
           country,
           name,
           imageSrc,
+          partner,
         } = asset;
 
         const mybitPrice = prices.mybit.price;
@@ -480,7 +478,7 @@ class PortfolioManagedAssetPage extends React.Component {
                                 <LocationIcon className="ManagedAsset__location-icon" />
                                 {city}, {country}
                             </h2></div>
-                            <div><h2 className="ManagedAsset__asset-meta">Manufacturer company (Partner Name)</h2></div>
+                            <div><h2 className="ManagedAsset__asset-meta">{partner}</h2></div>
                         </FlexRowTwoItems>
                         <div
                             className="ManagedAsset__asset-image"
