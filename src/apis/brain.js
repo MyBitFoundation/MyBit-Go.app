@@ -691,7 +691,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           amountRaisedInUSD,
           amountToBeRaisedInUSD,
           fundingDeadline: dueDate,
-          ownershipUnits: ownershipUnitsTmp,
+          ownershipUnits: ownershipUnitsTmp.toString(),
           assetIncome:
             Number(window.web3js.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
               currentEthInUsd,
