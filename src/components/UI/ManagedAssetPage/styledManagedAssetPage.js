@@ -25,6 +25,7 @@ export const ManagedAssetWrapper = styled.div`
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        margin-bottom: 50px;
         .ManagedAsset__content-column {
             flex: 1 1 auto;
             width: 100%;
@@ -44,8 +45,9 @@ export const ManagedAssetWrapper = styled.div`
         }
         .ManagedAsset__asset-image {
             margin-bottom: 10px;
-            width: 100%;
-            max-height: 280px;
+            background-size: cover;
+            background-position: bottom;
+            height: 266px;
             border-radius: 6px;
         }
         .ManagedAsset__graphics {

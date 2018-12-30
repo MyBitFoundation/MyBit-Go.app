@@ -89,7 +89,7 @@ class PortfolioPage extends React.Component {
     this.displayOwned = this.displayOwned.bind(this);
     this.displayManaged = this.displayManaged.bind(this);
     this.state = {
-      currentView: "owned",
+      currentView: "managed",
     };
   }
 

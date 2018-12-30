@@ -9,6 +9,7 @@ import * as TokenFaucet from '../constants/contracts/TokenFaucet';
 import * as FundingHub from '../constants/contracts/FundingHub';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
 import * as Asset from '../constants/contracts/Asset';
+import * as AssetCollateral from '../constants/contracts/AssetCollateral';
 import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
   debug,
@@ -148,6 +149,90 @@ export const loadMetamaskUserDetails = async () =>
     }
   });
 
+export const unlockedEscrow = async assetID =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetCollateralContract = new window.web3js.eth.Contract(
+        AssetCollateral.ABI,
+        AssetCollateral.ADDRESS,
+      );
+
+      const response = await assetCollateralContract.methods
+        .unlockedEscrow(assetID).call();
+
+      resolve(response);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+const remainingEscrow = async assetID =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetCollateralContract = new window.web3js.eth.Contract(
+        AssetCollateral.ABI,
+        AssetCollateral.ADDRESS,
+      );
+
+      const response = await assetCollateralContract.methods
+        .remainingEscrow(assetID).call();
+
+      resolve(response);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+const withdrawEscrow = async assetID =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetCollateralContract = new window.web3js.eth.Contract(
+        AssetCollateral.ABI,
+        AssetCollateral.ADDRESS,
+      );
+
+      const response = await assetCollateralContract.methods
+        .withdrawEscrow(assetID).call();
+
+      resolve(response);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+export const fetchRevenueLogsByAssetId = async (assetId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // pull asssets from newest contract
+      let assetContract = new window.web3js.eth.Contract(
+        Asset.ABI,
+        Asset.ADDRESS,
+      );
+
+      let logIncomeReceived = await assetContract.getPastEvents(
+        'LogIncomeReceived',
+        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+      );
+
+      let revenueIncomeData = await Promise.all(logIncomeReceived
+        .map(async data => {
+          const blockNumber = data.blockNumber;
+          const blockInfo = await window.web3js.eth.getBlock(blockNumber);
+          const timestamp = blockInfo.timestamp;
+          const amount = data.returnValues._amount;
+          return{
+            amount,
+            timestamp,
+          }
+        }))
+
+        resolve(revenueIncomeData);
+      }catch(err){
+        console.log(err);
+        reject(err);
+      }
+  })
+
 const getNumberOfInvestors = async assetID =>
   new Promise(async (resolve, reject) => {
     try {
@@ -271,7 +356,7 @@ export const createAsset = async params =>
             onSuccess(() => {
               axios.post('http://localhost:8082/collateral', {
                 address: params.userAddress,
-                escrow: 100,
+                escrow: 50,
                 assetId: futureAssetId,
               }).catch((error) => {
                 console.log(error);
@@ -480,6 +565,11 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         AssetCreation.ADDRESS,
       );
 
+      const assetCollateralContract = new window.web3js.eth.Contract(
+        AssetCollateral.ABI,
+        AssetCollateral.ADDRESS,
+      );
+
       let logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
         'LogAssetFundingStarted',
         { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
@@ -518,6 +608,8 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
       const managerPercentages = await Promise.all(assets.map(async asset =>
         apiContract.methods.managerPercentage(asset.assetID).call()));
 
+      const collaterals = await Promise.all(assets.map(async asset =>
+        assetCollateralContract.methods.totalEscrow(asset.assetID).call()));
 
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
         const numberOfInvestors = Number(await getNumberOfInvestors(asset.assetID));
@@ -581,6 +673,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           watchListed: alreadyFavorite,
           category: assetIdDetails.category,
           owedToInvestor: owedToInvestor.toString(),
+          collateral: Number(collaterals[index]),
         };
       }));
 

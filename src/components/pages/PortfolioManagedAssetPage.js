@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from 'antd/lib/button';
-import Alert from 'antd/lib/alert';
+import { Link } from 'react-router-dom';
 import Tooltip from 'antd/lib/tooltip';
 import {
     ManagedAssetWrapper,
@@ -14,6 +14,9 @@ import LocationIcon from '../../images/Location-blue.svg';
 import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
 import Fee from '../../images/Fee.png';
+import LoadingPage from './LoadingPage';
+import { formatMonetaryValue } from '../../util/helpers';
+import * as Brain from '../../apis/brain';
 
 const ButtonGroup = Button.Group;
 
@@ -23,76 +26,207 @@ class PortfolioManagedAssetPage extends React.Component {
         this.displayProfit = this.displayProfit.bind(this);
         this.displayCollateral = this.displayCollateral.bind(this);
         this.state = {
-            chartBoxView: "profit",
+          chartBoxView: "profit",
+          loading: true,
         };
+        this.asset = undefined;
+    }
+
+    componentWillReceiveProps(nextProps){
+      // once the assets are loaded up we can start crunching the data
+      if(this.props.loading.assets && !nextProps.loading.assets){
+        const { assetId } = this.props.match.params;
+        const asset = nextProps.assets.find(({ assetID }) => assetID === assetId);
+        if(asset){
+          this.asset = asset;
+          this.getDataForAsset(asset);
+        } else {
+          this.setState({
+            loading: false,
+          })
+        }
+      }
+    }
+
+    async getDataForAsset(asset){
+      const {
+        collateral,
+        amountToBeRaisedInUSD,
+      } = asset;
+
+      const mybitPrice = this.props.prices.mybit.price;
+      const collateralUSD = collateral * mybitPrice;
+
+      // calculate collateral data to be displayed
+      const collateralUSDPart = collateralUSD / 4;
+      const collateralPart = collateral / 4;
+
+      const unlockedEscrow = await Brain.unlockedEscrow(asset.assetID);
+      const percentageWithdrawableCollateral = unlockedEscrow === 0 ? 0 : (unlockedEscrow * 100) / collateral;
+      console.log(percentageWithdrawableCollateral)
+
+      const collateralData = [];
+      for(let i = 1; i < 5; i++){
+        const required = (25 * i)/100 * amountToBeRaisedInUSD;
+        if(percentageWithdrawableCollateral >= 25 * i){
+          collateralData.push({
+            withdrawable: true,
+            current: required,
+            required,
+          })
+        } else {
+          const x = (25 * i) + (percentageWithdrawableCollateral - (25 * i));
+          console.log(x)
+          collateralData.push({
+            withdrawable: false,
+            current: (x / 100) * amountToBeRaisedInUSD,
+            required,
+          })
+        }
+      }
+
+      console.log(collateralData)
+
+      // calculate asset manager profits
+      const assetManagerProfits = [];
+      const revenueLogs = await Brain.fetchRevenueLogsByAssetId(asset.assetID);
+      console.log(revenueLogs)
+
+      //set the state with the calculated data
+      /*
+        this.setState({
+          loading: false,
+          assetManagerProfits,
+          collateralData,
+        })
+      */
     }
 
     displayProfit() {
-        this.setState({ chartBoxView: "profit" });
+      this.setState({ chartBoxView: "profit" });
     }
 
     displayCollateral() {
-        this.setState({ chartBoxView: "collateral" });
+      this.setState({ chartBoxView: "collateral" });
     }
 
     render() {
+        const {
+          match,
+          loading,
+          user,
+          assets,
+          prices,
+        } = this.props;
+
+        const componentLoading = this.state.loading;
+
+        if(loading.assets || componentLoading){
+          return(
+            <LoadingPage
+              message="Loading asset information"
+            />
+          )
+        }
+
+        const { assetId } = match.params;
+        const asset = assets.find(({ assetID }) => assetID === assetId);
+        const userAddress = user.userName;
+        if(!asset){
+          return(
+            <p>This asset does not exist</p>
+          )
+        }
+
+        if(!userAddress || (userAddress && (userAddress !== asset.assetManager))){
+          return(
+            <p>you don't have permissions to view this page.</p>
+          )
+        }
+
+        const {
+          collateral,
+          managerPercentage,
+          amountToBeRaisedInUSD,
+          assetIncome,
+          city,
+          country,
+          name,
+          imageSrc,
+        } = asset;
+
+        const mybitPrice = prices.mybit.price;
+        const etherPrice = prices.ether.price;
+
+        const profitUSD = assetIncome * (managerPercentage / 100);
+        const profitETH = (profitUSD / etherPrice).toFixed(4);
+        const assetListingUrl = `/explore/${asset.assetID}`;
+        console.log(asset)
+
         return (
             <ManagedAssetWrapper>
                 <div className="ManagedAsset__alert-row">
                     <div className="ManagedAsset__back-column">
-                        <Button>Back</Button>
-                    </div>
-                    <div className="ManagedAsset__alert-column">
-                        <Alert className="ManagedAsset__alert" message="This is an success message from MyBit." type="success" showIcon closable />
+                       <Link
+                          to='/portfolio'
+                          href='/portfolio'
+                        >
+                          <Button>Back</Button>
+                        </Link>
                     </div>
                 </div>
 
                 <div className="ManagedAsset__content-wrapper">
                     <div className="ManagedAsset__content-column">
                         <FlexRowTwoItems>
-                            <div><h1 className="ManagedAsset__asset-title">Bitcoin ATM</h1></div>
+                            <div><h1 className="ManagedAsset__asset-title">{name}</h1></div>
                             <div>
-                                <Button className="ManagedAsset__button--margin-right">Sell on MYDAX</Button>
+                              <Button disabled className="ManagedAsset__button--margin-right">Sell on MYDAX</Button>
+                              <Link
+                                to={assetListingUrl}
+                                href={assetListingUrl}
+                              >
                                 <Button className="ManagedAsset__button">View asset listing</Button>
+                              </Link>
                             </div>
                         </FlexRowTwoItems>
                         <FlexRowTwoItems>
                             <div><h2 className="ManagedAsset__asset-meta">
                                 <LocationIcon className="ManagedAsset__location-icon" />
-                                Zug, Switzerland
+                                {city}, {country}
                             </h2></div>
                             <div><h2 className="ManagedAsset__asset-meta">Manufacturer company (Partner Name)</h2></div>
                         </FlexRowTwoItems>
-                        <img
+                        <div
                             className="ManagedAsset__asset-image"
-                            src="https://i2.wp.com/smartereum.com/wp-content/uploads/2017/11/hyosung-bitcoin-atm-korea-e1522530212417.png?resize=696%2C348&ssl=1"
                             alt="Asset Preview"
+                            style={{ backgroundImage: `url(${imageSrc})` }}
                         />
                         <AssetValueRow>
                             <div className="AssetValueRow__Card">
                                 <img className="AssetValueRow__Card-img-pie-chart" src={PieChart} alt="Line chart" />
                                 Asset Value
                                 <div className="AssetValueRow__Card-box-separator" />
-                                <b className="AssetValueRow__Card-value--is-blue">$2049.53</b>
+                                <b className="AssetValueRow__Card-value--is-blue">${amountToBeRaisedInUSD}</b>
                             </div>
                             <div className="AssetValueRow__Card">
                                 <img className="AssetValueRow__Card-img-line-chart" src={LineChart} alt="Line chart" />
                                 Asset Revenue
                                 <div className="AssetValueRow__Card-box-separator" />
-                                <b className="AssetValueRow__Card-value--is-green">$5030.63</b>
+                                <b className="AssetValueRow__Card-value--is-green">{formatMonetaryValue(assetIncome)}</b>
                             </div>
                             <div className="AssetValueRow__Card">
                                 <img className="AssetValueRow__Card-img-pie-chart" src={Fee} alt="Line chart" />
                                 Fee
                                 <div className="AssetValueRow__Card-box-separator" />
-                                <b className="AssetValueRow__Card-value--is-blue">5%</b>
+                                <b className="AssetValueRow__Card-value--is-blue">{managerPercentage}%</b>
                             </div>
                         </AssetValueRow>
                         <EqualBoxes>
                             <div className="AssetBoxedRow__Card">
                                 <div className="AssetBoxedRow__Card-title">Total profit</div>
-                                <div className="AssetBoxedRow__Card-text--is-green">1200.67$</div>
-                                <div className="AssetBoxedRow__Card-text">12 ETH</div>
+                                <div className="AssetBoxedRow__Card-text--is-green">{formatMonetaryValue(profitUSD)}</div>
+                                <div className="AssetBoxedRow__Card-text">{profitETH }ETH</div>
                             </div>
                             <div className="AssetBoxedRow__Card">
                                 <div className="AssetBoxedRow__Card-title">Average profit</div>
@@ -127,8 +261,8 @@ class PortfolioManagedAssetPage extends React.Component {
                             </div>
                             <div className="AssetBoxedRow__Card">
                                 <div className="AssetBoxedRow__Card-title">Collateral</div>
-                                <div className="AssetBoxedRow__Card-text--is-blue">2000.00$</div>
-                                <div className="AssetBoxedRow__Card-text">65,000 MYB</div>
+                                <div className="AssetBoxedRow__Card-text--is-blue">{formatMonetaryValue(collateral * mybitPrice)}</div>
+                                <div className="AssetBoxedRow__Card-text">{collateral.toLocaleString('en-US')} MYB</div>
                                 <div className="AssetBoxedRow__Card-button">
                                     <Button type="secondary" onClick={this.displayCollateral}>View</Button>
                                 </div>

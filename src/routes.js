@@ -136,12 +136,21 @@ const routes = [
     ),
   },
   {
-    path: '/managed-asset',
+    path: '/manage/:assetId',
     exact: true,
-    component: ({ isFirstVisit }) =>
-    (isFirstVisit ? <Redirect to={redirectToOnFirstVisit} /> : (
-      <PortfolioManagedAssetPage />
-    )),
+    component: ({ match, isFirstVisit }) => (
+      <BlockchainInfoContext.Consumer>
+        {props =>
+          <PortfolioManagedAssetPage
+            loading={props.loading}
+            assets={props.assets}
+            user={props.user}
+            match={match}
+            prices={props.prices}
+          />
+        }
+      </BlockchainInfoContext.Consumer>
+    )
   },
   {
     path: '/help',
