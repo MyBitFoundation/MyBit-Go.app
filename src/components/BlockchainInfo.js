@@ -48,6 +48,7 @@ class BlockchainInfo extends React.Component {
     this.withdrawInvestorProfit = this.withdrawInvestorProfit.bind(this);
     this.withdrawCollateral = this.withdrawCollateral.bind(this);
     this.resetNotifications = this.resetNotifications.bind(this);
+    this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
 
     this.state = {
       loading: {
@@ -78,10 +79,12 @@ class BlockchainInfo extends React.Component {
       updateNotification: this.updateNotification,
       withdrawInvestorProfit: this.withdrawInvestorProfit,
       withdrawCollateral: this.withdrawCollateral,
+      withdrawProfitAssetManager: this.withdrawProfitAssetManager,
       notifications: {},
       isUserContributing: false,
       withdrawingAssetIds: [],
       withdrawingCollateral: [],
+      withdrawingAssetManager: [],
     };
   }
 
@@ -176,6 +179,63 @@ class BlockchainInfo extends React.Component {
     }
   }
 
+  async withdrawProfitAssetManager(asset, amount, onFinished){
+    const notificationId = Date.now();
+    const {
+      assetID,
+      name,
+    } = asset;
+
+    this.updateNotification(notificationId, {
+      metamaskProps: {
+        assetName: name,
+        operationType: 'withdrawManager',
+      },
+      status: 'info',
+    });
+
+    //update state so users can't trigger the withdrawal multiple times
+    const withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
+    withdrawingAssetManager.push(assetID);
+    this.setState({
+      withdrawingAssetManager,
+    });
+
+    const result = await Brain.withdrawEscrow(
+      this.state.user,
+      assetID,
+      name,
+      notificationId,
+      this.updateNotification,
+    );
+
+    const updatewithdrawingAssetManager = () => {
+      let withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
+      withdrawingAssetManager = withdrawingAssetManager.filter(assetIdTmp => assetIdTmp !== assetID);
+      this.setState({
+        withdrawingAssetManager,
+      });
+    }
+
+    console.log("result: ", result)
+
+    if(result === true || result === false){
+      onFinished(() => {
+        updatewithdrawingAssetManager();
+        this.updateNotification(notificationId, {
+          withdrawManagerProps: {
+            assetName: name,
+            amount,
+          },
+          status: result ? 'success' : 'error',
+        })
+      })
+    } else {
+      updatewithdrawingAssetManager();
+    }
+  }
+
+
   async withdrawCollateral(asset, percentage, amount, onFinished){
     const notificationId = Date.now();
     const {
@@ -218,7 +278,6 @@ class BlockchainInfo extends React.Component {
 
     if(result === true || result === false){
       onFinished(() => {
-        console.log("here")
         updateWithdrawingCollateral();
         this.updateNotification(notificationId, {
           withdrawCollateralProps: {

@@ -1,7 +1,9 @@
 import React from 'react';
 import Button from 'antd/lib/button';
 import { Link } from 'react-router-dom';
-import Tooltip from 'antd/lib/tooltip';
+import TooltipAnt from 'antd/lib/tooltip';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween'
 import {
     ManagedAssetWrapper,
     FlexRowTwoItems,
@@ -15,13 +17,18 @@ import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
 import Fee from '../../images/Fee.png';
 import LoadingPage from './LoadingPage';
-import {Chart, Axis, Legend, Geom} from "bizcharts";
+import {Chart, Axis, Legend, Geom, Tooltip} from "bizcharts";
 import { formatMonetaryValue } from '../../util/helpers';
 import * as Brain from '../../apis/brain';
+import {
+  getDayInText,
+  getMonthInText,
+} from '../../constants';
+dayjs.extend(isBetween)
 
 const ButtonGroup = Button.Group;
 
-const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue, 'ether');
+const fromWeiToEth = weiValue => Number(window.web3js.utils.fromWei(weiValue, 'ether'));
 
 class PortfolioManagedAssetPage extends React.Component {
     constructor(props) {
@@ -32,8 +39,8 @@ class PortfolioManagedAssetPage extends React.Component {
         this.startProcessingAsset = this.startProcessingAsset.bind(this);
         this.state = {
           chartBoxView: "profit",
-          revenueData: [],
           loading: true,
+          profitChartView: 'weekly',
         };
         this.asset = undefined;
         this.getDataForAsset = this.getDataForAsset.bind(this);
@@ -50,6 +57,44 @@ class PortfolioManagedAssetPage extends React.Component {
       if(this.props.loading.assets && !nextProps.loading.assets){
         this.startProcessingAsset(nextProps);
       }
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+      if(this.props.loading.assets && !nextProps.loading.assets){
+        return true;
+      }
+      if(!this.state.revenueData && nextState.revenueData){
+        return true;
+      }
+      const { assetId } = this.props.match.params;
+      const asset = nextProps.assets.find(({ assetID }) => assetID === assetId);
+      if(this.asset && asset && (this.asset.assetIncome !== asset.assetIncome)){
+        console.log("HEREEEEEE")
+        console.log(this.asset.assetIncome)
+        console.log(asset.assetIncome)
+        this.asset = asset;
+        this.getDataForAsset(asset);
+        return true;
+      }
+      if(this.state.profitChartView !== nextState.profitChartView){
+        return true;
+      }
+      if(this.props.withdrawingCollateral !== nextProps.withdrawingCollateral){
+        return true;
+      }
+      if(this.state.daysSinceItWentLive !== nextState.daysSinceItWentLive){
+        return true;
+      }
+      if(this.state.chartBoxView !== nextState.chartBoxView){
+        return true;
+      }
+      if(this.props.withdrawingAssetManager !== nextProps.withdrawingAssetManager){
+        return true;
+      }
+      if(this.state.toWithdraw !== nextState.toWithdraw){
+        return true;
+      }
+      return false;
     }
 
     startProcessingAsset(props){
@@ -71,27 +116,19 @@ class PortfolioManagedAssetPage extends React.Component {
           collateral,
           amountToBeRaisedInUSD,
           assetIncome,
+          blockNumberitWentLive,
+          assetManager,
         } = asset;
-        console.log(asset)
 
         const mybitPrice = this.props.prices.mybit.price;
         const collateralUSD = collateral * mybitPrice;
 
         // calculate collateral data to be displayed
-        const collateralUSDPart = collateralUSD / 4;
-        const collateralPart = collateral / 4;
-
-        const unlockedEscrow = window.web3js.utils.fromWei(await Brain.unlockedEscrow(asset.assetID), 'ether');
-        const remainingEscrow = window.web3js.utils.fromWei(await Brain.remainingEscrow(asset.assetID), 'ether');
+        let [unlockedEscrow, remainingEscrow] = await Promise.all([await Brain.unlockedEscrow(asset.assetID), await Brain.remainingEscrow(asset.assetID)]);
+        unlockedEscrow = window.web3js.utils.fromWei(unlockedEscrow, 'ether');
+        remainingEscrow = window.web3js.utils.fromWei(remainingEscrow, 'ether');
         const percentageWithdrawn = remainingEscrow !== collateral ? 100 - ((remainingEscrow * 100) / collateral) : 0;
-        console.log("collateral", collateral)
-        console.log("percentageWithdrawn: ", percentageWithdrawn)
-        console.log("remainingEscrow: ", remainingEscrow)
-        console.log("unlockedEscrow: ", unlockedEscrow)
-        console.log("assetIncome: ", assetIncome)
         const percentageWithdrawableCollateralUsd = ((assetIncome * 100) / amountToBeRaisedInUSD) / 100;
-        console.log(percentageWithdrawableCollateralUsd)
-        let counter = 4;
         const collateralData = [];
         for(let i = 1; i < 5; i++){
           const required = (25 * i)/100 * amountToBeRaisedInUSD;
@@ -108,8 +145,6 @@ class PortfolioManagedAssetPage extends React.Component {
             let current = 0;
             const minValue = i - 1 === 0 ? 0 : (25 * (i -1))/100;
             const maxValue = (25 * i)/100;
-            console.log("min: ", minValue)
-            console.log("max: ", maxValue)
             if(percentageWithdrawableCollateralUsd < maxValue && percentageWithdrawableCollateralUsd > minValue){
               current = percentageWithdrawableCollateralUsd * amountToBeRaisedInUSD;
             }
@@ -119,31 +154,40 @@ class PortfolioManagedAssetPage extends React.Component {
               required,
             })
           }
-          counter -= 1;
         }
 
-        console.log(collateralData)
-
-      // calculate asset manager profits
-      const assetManagerProfits = [];
-      const revenueRawData = await Brain.fetchRevenueLogsByAssetId(asset.assetID);
-      
-      const revenueData = revenueRawData.map( revenue => {
+        // calculate asset manager profits
+        const assetManagerProfits = [];
+        const revenueRawData = await Brain.fetchRevenueLogsByAssetId(asset.assetID);
+        const revenueData = revenueRawData.map( revenue => {
           return {
-              amount: fromWeiToEth(revenue.amount),
-              date: new Date(revenue.timestamp).toLocaleTimeString()
+            amount: fromWeiToEth(revenue.amount),
+            date: dayjs(revenue.timestamp * 1000),
           }
-      })
-      console.log(revenueData)
+        })
 
-      //set the state with the calculated data
-      this.setState({
-        loading: false,
-        assetManagerProfits,
-        collateralData,
-        revenueData
-      })
-        
+        let daysSinceItWentLive = 1;
+
+        if(blockNumberitWentLive){
+          const blockInfo = await window.web3js.eth.getBlock(blockNumberitWentLive);
+          const timestamp = blockInfo.timestamp;
+
+          daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
+          daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
+        }
+
+        //calculate how much the asset manager can withdraw
+        const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetID), Brain.getManagerIncomeWithdraw(assetManager, asset.assetID)]);
+
+        //set the state with the calculated data
+        this.setState({
+          loading: false,
+          assetManagerProfits,
+          collateralData,
+          revenueData,
+          daysSinceItWentLive,
+          toWithdraw: totalIncome - totalWithdrawn,
+        })
       }catch(err){
         console.log(err)
       }
@@ -152,8 +196,147 @@ class PortfolioManagedAssetPage extends React.Component {
       }
     }
 
-    displayProfit() {
-      this.setState({ chartBoxView: "profit" });
+    getWeeklyData(managerPercentage){
+      const etherPrice = this.props.prices.ether.price;
+      const dataWeekly = [];
+      let currentDay = dayjs().day();
+      const minDate = dayjs().subtract(7, 'day').set('hour', 0).set('minute', 0).set('second', 0);
+      const maxDate = dayjs();
+      const assetsFiltered = this.state.revenueData.filter(({date}) => date.isBetween(minDate, maxDate));
+      let totalProfit = 0;
+      for(let i = 0; i < 7; i++){
+        const revenueFilteredByDay =
+          this.state.revenueData
+            .filter(({date}) => date.day() === currentDay);
+
+        const data = {
+          month: getDayInText(currentDay),
+        }
+
+        let managerFee = 0;
+        let assetRevenue = 0;
+
+        for(let revenue of revenueFilteredByDay){
+          const totalRevenue = revenue.amount;
+          managerFee += totalRevenue * (managerPercentage / 100);
+          assetRevenue += totalRevenue;
+        }
+
+        data['Asset Revenue'] = Number((assetRevenue * etherPrice).toFixed(2));
+        data['Manager Fee'] = Number((managerFee * etherPrice).toFixed(2));
+
+        totalProfit += (managerFee * etherPrice);
+        dataWeekly.push(data);
+
+        currentDay-=1;
+        if(currentDay === -1){
+          currentDay = 6;
+        }
+      }
+
+      dataWeekly.reverse();
+
+      return {
+        data: dataWeekly,
+        totalProfitUSD: totalProfit,
+        totalProfitETH: (totalProfit / etherPrice).toFixed(4)
+      };
+    }
+
+    getMonthlyData(managerPercentage){
+      const etherPrice = this.props.prices.ether.price;
+      const dataMonthly = [];
+      let totalProfit = 0;
+      let currentDay = dayjs();
+      const minDate = dayjs().subtract(31, 'day').set('hour', 0).set('minute', 0).set('second', 0);
+      const maxDate = dayjs();
+      const assetsFiltered = this.state.revenueData.filter(({date}) => date.isBetween(minDate, maxDate));
+      for(let i = 0; i < 30; i++){
+
+        const revenueFilteredByDayAndMonth =
+          this.state.revenueData
+            .filter(({date}) => date.date() === currentDay.date() && date.month() === currentDay.month());
+
+        const data = {
+          month: `${currentDay.date()}`,
+        }
+
+        let managerFee = 0;
+        let assetRevenue = 0;
+
+        for(let revenue of revenueFilteredByDayAndMonth){
+          const totalRevenue = revenue.amount;
+          managerFee += totalRevenue * (managerPercentage / 100);
+          assetRevenue += totalRevenue;
+        }
+
+        data['Asset Revenue'] = Number((assetRevenue * etherPrice).toFixed(2));
+        data['Manager Fee'] = Number((managerFee * etherPrice).toFixed(2));
+
+        totalProfit += (managerFee * etherPrice);
+
+        dataMonthly.push(data);
+
+        currentDay = currentDay.subtract(1, 'day');
+      }
+
+      dataMonthly.reverse();
+
+      return {
+        data: dataMonthly,
+        totalProfitUSD: totalProfit,
+        totalProfitETH: (totalProfit / etherPrice).toFixed(4)
+      };
+    }
+
+    getYearlyData(managerPercentage){
+      const etherPrice = this.props.prices.ether.price;
+      const dataYearly = [];
+      let totalProfit = 0;
+      let currentDay = dayjs();
+      const minDate = dayjs().subtract(12, 'month').set('hour', 0).set('minute', 0).set('second', 0);
+      const maxDate = dayjs();
+      const assetsFiltered = this.state.revenueData.filter(({date}) => date.isBetween(minDate, maxDate));
+      for(let i = 0; i < 12; i++){
+
+        const revenueFilteredByDayAndMonth =
+          this.state.revenueData
+            .filter(({date}) => date.month() === currentDay.month());
+
+        const data = {
+          month: `${getMonthInText(currentDay.month())}`,
+        }
+
+        let managerFee = 0;
+        let assetRevenue = 0;
+
+        for(let revenue of revenueFilteredByDayAndMonth){
+          const totalRevenue = revenue.amount;
+          managerFee += totalRevenue * (managerPercentage / 100);
+          assetRevenue += totalRevenue;
+        }
+
+        data['Asset Revenue'] = Number((assetRevenue * etherPrice).toFixed(2));
+        data['Manager Fee'] = Number((managerFee * etherPrice).toFixed(2));
+
+        totalProfit += (managerFee * etherPrice);
+
+        dataYearly.push(data);
+
+        currentDay = currentDay.subtract(1, 'month');
+      }
+
+      dataYearly.reverse();
+
+      return {
+        data: dataYearly,
+        totalProfitUSD: totalProfit,
+        totalProfitETH: (totalProfit / etherPrice).toFixed(4)
+      };
+    }
+
+    displayProfit(type) {
+      this.setState({ chartBoxView: "profit", profitChartView: type });
     }
 
     displayCollateral() {
@@ -167,10 +350,17 @@ class PortfolioManagedAssetPage extends React.Component {
           user,
           assets,
           prices,
+          withdrawingAssetManager,
         } = this.props;
 
         const componentLoading = this.state.loading;
-        const { revenueData } = this.state;
+        const {
+          revenueData,
+          profitChartView,
+          collateralData,
+          daysSinceItWentLive,
+          toWithdraw,
+        } = this.state;
 
         if(loading.assets || componentLoading){
           return(
@@ -218,7 +408,7 @@ class PortfolioManagedAssetPage extends React.Component {
         let percentageMax;
 
         let alreadyWithdrawn = 0;
-        this.state.collateralData.forEach((data, index) => {
+        collateralData.forEach((data, index) => {
           if(data.paidOut){
             alreadyWithdrawn += 1;
           }
@@ -228,8 +418,35 @@ class PortfolioManagedAssetPage extends React.Component {
           }
         })
 
-        //console.log(withdrawMax)
-        //console.log(percentage)
+        let graphData;
+        if(profitChartView === 'weekly'){
+          graphData = this.getWeeklyData(managerPercentage);
+        } else if(profitChartView === 'monthly'){
+          graphData = this.getMonthlyData(managerPercentage);
+        } else if(profitChartView === 'yearly'){
+          graphData = this.getYearlyData(managerPercentage);
+        }
+
+        const ds = new window.DataSet();
+        const dv = ds.createView().source(graphData.data);
+        dv.transform({
+          type: 'fold',
+          fields: [ 'Manager Fee', 'Asset Revenue' ],
+          key: 'profit',
+          value: 'currency',
+        });
+        const cols = {
+          month: {
+            range: [ 0, 1 ]
+          }
+        }
+
+        const averageProfitUSD = profitUSD / daysSinceItWentLive;
+        const averageProfitETH = (profitETH / daysSinceItWentLive).toFixed(4);
+
+        const toWithdrawETH = window.web3js.utils.fromWei(toWithdraw.toString(), 'ether');
+        const toWithdrawUSD = formatMonetaryValue(toWithdrawETH * etherPrice);
+        const isLoadingWithdraw = this.props.withdrawingAssetManager.includes(asset.assetID);
 
         return (
             <ManagedAssetWrapper>
@@ -298,16 +515,25 @@ class PortfolioManagedAssetPage extends React.Component {
                             </div>
                             <div className="AssetBoxedRow__Card">
                                 <div className="AssetBoxedRow__Card-title">Average profit</div>
-                                <div className="AssetBoxedRow__Card-text--is-blue">23.77$</div>
-                                <div className="AssetBoxedRow__Card-text">0.3 ETH</div>
+                                <div className="AssetBoxedRow__Card-text--is-blue">{formatMonetaryValue(averageProfitUSD)}</div>
+                                <div className="AssetBoxedRow__Card-text">{averageProfitETH} ETH</div>
                                 <div className="AssetBoxedRow__Card-text-bottom">Daily</div>
                             </div>
                             <div className="AssetBoxedRow__Card">
                                 <div className="AssetBoxedRow__Card-title-rows">Available to <br />withdraw</div>
-                                <div className="AssetBoxedRow__Card-text--is-green">150.77$</div>
-                                <div className="AssetBoxedRow__Card-text">1.3 ETH</div>
+                                <div className="AssetBoxedRow__Card-text--is-green">{toWithdrawUSD}</div>
+                                <div className="AssetBoxedRow__Card-text">{Number(toWithdrawETH).toLocaleString('en-US', {maximumFractionDigits: 4})} ETH</div>
                                 <div className="AssetBoxedRow__Card-button">
-                                    <Button type="primary">Withdraw</Button>
+                                    <Button
+                                      type="primary"
+                                      disabled={toWithdrawETH === 0}
+                                      loading={isLoadingWithdraw}
+                                      onClick={() => this.props.withdrawProfitAssetManager(asset, toWithdrawUSD, (cb) => {
+                                        this.getDataForAsset(this.asset, cb);
+                                      })}
+                                    >
+                                      {isLoadingWithdraw ? 'Withdrawing' : 'Withdraw'}
+                                    </Button>
                                 </div>
                             </div>
                         </EqualBoxes>
@@ -316,21 +542,35 @@ class PortfolioManagedAssetPage extends React.Component {
                         <EqualBoxesWithShadow>
                             <div className="AssetBoxedRow__Card">
                                 <div className="AssetBoxedRow__Card-title">Total profit</div>
-                                <div className="AssetBoxedRow__Card-text--is-green">1200.67$</div>
-                                <div className="AssetBoxedRow__Card-text">12 ETH</div>
+                                <div className="AssetBoxedRow__Card-text--is-green">{formatMonetaryValue(graphData.totalProfitUSD)}</div>
+                                <div className="AssetBoxedRow__Card-text">{graphData.totalProfitETH} ETH</div>
                                 <div className="AssetBoxedRow__Card-button-group">
                                     <ButtonGroup size="small">
-                                        <Button onClick={this.displayProfit}>1W</Button>
-                                        <Button onClick={this.displayProfit}>1M</Button>
-                                        <Button onClick={this.displayProfit}>1Y</Button>
-                                        <Button onClick={this.displayProfit}>MAX</Button>
+                                        <Button
+                                          type={profitChartView === 'weekly' && this.state.chartBoxView === "profit" ? 'primary' : undefined}
+                                          onClick={() => this.displayProfit('weekly')}
+                                        >
+                                          1W
+                                        </Button>
+                                        <Button
+                                          type={profitChartView === 'monthly' && this.state.chartBoxView === "profit" ? 'primary' : undefined}
+                                          onClick={() => this.displayProfit('monthly')}
+                                        >
+                                          1M
+                                        </Button>
+                                        <Button
+                                          type={profitChartView === 'yearly' && this.state.chartBoxView === "profit" ? 'primary' : undefined}
+                                          onClick={() => this.displayProfit('yearly')}
+                                        >
+                                          1Y
+                                        </Button>
                                     </ButtonGroup>
                                 </div>
                             </div>
                             <div className="AssetBoxedRow__Card">
                                 <div className="AssetBoxedRow__Card-title">Collateral</div>
                                 <div className="AssetBoxedRow__Card-text--is-blue">{formatMonetaryValue(collateral * mybitPrice)}</div>
-                                <div className="AssetBoxedRow__Card-text">{collateral.toLocaleString('en-US', {maximumFractionDigits: 4})} MYB</div>
+                                <div className="AssetBoxedRow__Card-text">{Number(collateral).toLocaleString('en-US', {maximumFractionDigits: 4})} MYB</div>
                                 <div className="AssetBoxedRow__Card-button">
                                     <Button type="secondary" onClick={this.displayCollateral}>View</Button>
                                 </div>
@@ -345,20 +585,16 @@ class PortfolioManagedAssetPage extends React.Component {
                         </EqualBoxesWithShadow>
                         <div className="ManagedAsset__graphics">
                             {this.state.chartBoxView === "profit" && (
-                                <div className="ManagedAsset__chart-container">
-                                    <Chart 
-                                        width={550} 
-                                        height={420} 
-                                        data={revenueData}
-                                        >
-                                      <Axis name="date" />
-                                      <Axis name="amount" />
-                                      <Legend position="top" dy={-20} />
-                                     <Tooltip crosshairs={{type : "y"}}/>
-                                      <Geom type="line" position="date*amount" size={1} />
-                                      <Geom type='point' position="date*amount" size={3} shape={'circle'} />
-                                    </Chart>
-                                </div>
+                              <div className="ManagedAsset__chart-container">
+                                <Chart height={400} data={dv} scale={cols}>
+                                  <Legend />
+                                  <Axis name="month" />
+                                  <Axis name="currency" label={{formatter: val => `${formatMonetaryValue(val)}`}}/>
+                                  <Tooltip crosshairs={{type : "y"}}/>
+                                  <Geom type="line" position="month*currency" size={2} color={'profit'} />
+                                  <Geom type='point' position="month*currency" size={4} shape={'circle'} color={'profit'} style={{ stroke: '#fff', lineWidth: 1}} />
+                                </Chart>
+                              </div>
                             )}
                             {this.state.chartBoxView === "collateral" && (
                                 <div className="ManagedAsset__collateral-container">
@@ -395,7 +631,7 @@ class PortfolioManagedAssetPage extends React.Component {
                                             </CollateralBar>
                                             <div className="ManagedAsset__collateral-bars-column-status">{text}</div>
                                             <div className="ManagedAsset__collateral-bars-column-button">
-                                              <Tooltip
+                                              <TooltipAnt
                                                   title={`Once asset revenue reaches $${required} you can withdraw (${percentage}% of collateral) MYB.`}
                                               >
                                                 <Button
@@ -408,7 +644,7 @@ class PortfolioManagedAssetPage extends React.Component {
                                                 >
                                                   {(isLoading && withdrawable) ? 'Withdrawing' : 'Withdraw'}
                                                 </Button>
-                                              </Tooltip>
+                                              </TooltipAnt>
                                             </div>
                                           </div>
                                         )})}

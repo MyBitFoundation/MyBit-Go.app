@@ -119,7 +119,10 @@ class PortfolioPage extends React.Component {
     const totalPortfolioRevenue = getPortfolioRevenue(
       ownedAssets,
       ether.price,
+      user.userName,
     );
+
+    console.log(totalPortfolioRevenue)
 
     const portfolioValueAssets = getPortfolioValueAssets(ownedAssets, ether.price);
     const portfolioRevenueAssets = getPortfolioRevenueAssets(
@@ -174,7 +177,7 @@ class PortfolioPage extends React.Component {
             />
             <ValueDisplay
               text="Total Revenue"
-              value={`${formatMonetaryValue(totalPortfolioRevenue)}%`}
+              value={`${formatMonetaryValue(totalPortfolioRevenue)}`}
               icon={<LineChart />}
               hasSeparator
               hasIcon

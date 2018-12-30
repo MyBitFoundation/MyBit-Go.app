@@ -200,6 +200,46 @@ export const remainingEscrow = async assetID =>
     }
   });
 
+export const withdrawAssetManager = async (user, assetID, assetName, notificationId, updateNotification) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetContract = new window.web3js.eth.Contract(
+        Asset.ABI,
+        Asset.ADDRESS,
+      );
+
+      const response = await assetContract.methods
+        .withdrawManagerIncome(assetID)
+        .send({ from: user.userName })
+        .on('transactionHash', (transactionHash) => {
+          updateNotification(notificationId, {
+            withdrawManagerProps: {
+              assetName: assetName,
+            },
+            status: 'info',
+          });
+        })
+        .on('error', (error) => {
+          updateNotification(notificationId, {
+            metamaskProps: {
+              operationType: 'withdrawManager',
+            },
+            status: 'error',
+          });
+          debug(error);
+          resolve(1);
+        })
+        .then((receipt) => {
+          console.log(receipt)
+          resolve(receipt.status);
+        });
+    } catch (err) {
+      console.log(err)
+      resolve(0);
+    }
+  });
+
+
 export const withdrawEscrow = async (user, assetID, assetName, notificationId, updateNotification) =>
   new Promise(async (resolve, reject) => {
     try {
@@ -254,6 +294,7 @@ export const fetchRevenueLogsByAssetId = async (assetId) =>
       );
 
       let revenueIncomeData = await Promise.all(logIncomeReceived
+        .filter(({returnValues}) => returnValues._assetID === assetId)
         .map(async data => {
           const blockNumber = data.blockNumber;
           const blockInfo = await window.web3js.eth.getBlock(blockNumber);
@@ -599,9 +640,53 @@ export const fundAsset = async (user, assetId, amount, onFailureContributionPopu
     }
   });
 
+export const getManagerIncomeEarned = async (managerAddress, assetID) =>
+  new Promise(async (resolve, reject) => {
+    let assetContract = new window.web3js.eth.Contract(
+      Asset.ABI,
+      Asset.ADDRESS,
+    );
+
+    let logsIncomeEarned = await assetContract.getPastEvents(
+      'LogManagerIncomeEarned',
+      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+    );
+
+    let incomeEarned = logsIncomeEarned
+      .filter(({ returnValues }) => returnValues._manager === managerAddress && returnValues._assetID === assetID)
+      .reduce((accumulator, currentValue) =>
+        (accumulator) + Number(currentValue.returnValues._managerAmount)
+        ,0)
+
+    resolve(incomeEarned);
+  });
+
+export const getManagerIncomeWithdraw = async (managerAddress, assetID) =>
+  new Promise(async (resolve, reject) => {
+    let assetContract = new window.web3js.eth.Contract(
+      Asset.ABI,
+      Asset.ADDRESS,
+    );
+
+    let logsIncomeEarned = await assetContract.getPastEvents(
+      'LogManagerIncomeWithdraw',
+      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+    );
+
+    let withdrawn = logsIncomeEarned
+      .filter(({ returnValues }) => returnValues._manager === managerAddress && returnValues._assetID === assetID)
+      .reduce((accumulator, currentValue) =>
+        (accumulator) + Number(currentValue.returnValues._owed)
+        ,0)
+
+    resolve(withdrawn);
+  });
+
+
 export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
+      console.log("fetching assets...")
       // pull asssets from newest contract
       let apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
       let assetCreationContract = new window.web3js.eth.Contract(
@@ -620,6 +705,22 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           assetID: object._assetID,
           assetType: object._assetType,
           ipfsHash: object._ipfsHash,
+        }));
+
+      let fundingHubContract = new window.web3js.eth.Contract(
+        FundingHub.ABI,
+        FundingHub.ADDRESS,
+      );
+
+      let logAssetsWentLive = await fundingHubContract.getPastEvents(
+        'LogAssetPayout',
+        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+      );
+
+      let assetsWentLive = logAssetsWentLive
+        .map(object => ({
+          assetID: object.returnValues._assetID,
+          blockNumber: object.blockNumber,
         }));
 
       const assetManagers = await Promise.all(assets.map(async asset =>
@@ -671,6 +772,11 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
 
         const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
         const fundingStage = Number(fundingStages[index]);
+        let blockNumberitWentLive = undefined;
+        if(fundingStage === 4){
+          blockNumberitWentLive = assetsWentLive.filter(assetTmp => assetTmp.assetID === asset.assetID)[0].blockNumber;
+        }
+
         let amountRaisedInUSD = 0;
 
         // this fixes the issue of price fluctuations
@@ -711,6 +817,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           owedToInvestor: owedToInvestor.toString(),
           collateral: assetIdDetails.collateral,
           collateralPercentage: Number(assetIdDetails.collateralPercentage),
+          blockNumberitWentLive,
         };
       }));
 

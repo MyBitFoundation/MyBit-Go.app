@@ -51,16 +51,23 @@ export const ManagedAssetWrapper = styled.div`
             border-radius: 6px;
         }
         .ManagedAsset__graphics {
-            min-height: 392px;
             background: #FFFFFF;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             border-radius: 4px;
+            height: 392px;
             .ManagedAsset__chart-container {
                 padding: 15px 50px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 height: 100%;
+
+                & canvas{
+                  top: 18px;
+                  position: relative;
+                  cursor: default;
+                  left: -22px;
+                }
             }
             .ManagedAsset__collateral-container {
                 padding: 15px 50px;

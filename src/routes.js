@@ -149,6 +149,8 @@ const routes = [
             prices={props.prices}
             withdrawCollateral={props.withdrawCollateral}
             withdrawingCollateral={props.withdrawingCollateral}
+            withdrawProfitAssetManager={props.withdrawProfitAssetManager}
+            withdrawingAssetManager={props.withdrawingAssetManager}
           />
         }
       </BlockchainInfoContext.Consumer>

@@ -154,3 +154,34 @@ export const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","
   ,"Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia"
   ,"Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","Uruguay"
   ,"Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+
+export const getDayInText = number => {
+  switch(number){
+    case 0: return 'Sun';
+    case 1: return 'Mon';
+    case 2: return 'Tue';
+    case 3: return 'Wed';
+    case 4: return 'Fri';
+    case 5: return 'Thu';
+    case 6: return 'Sat';
+    default: return '';
+  }
+}
+
+export const getMonthInText = number => {
+  switch(number){
+    case 0: return 'Jan';
+    case 1: return 'Fev';
+    case 2: return 'Mar';
+    case 3: return 'Apr';
+    case 4: return 'May';
+    case 5: return 'Jun';
+    case 6: return 'Jul';
+    case 7: return 'Aug';
+    case 8: return 'Set';
+    case 9: return 'Oct';
+    case 10: return 'Nov';
+    case 11: return 'Dec';
+    default: return '';
+  }
+}

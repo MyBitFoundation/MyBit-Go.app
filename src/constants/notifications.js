@@ -8,7 +8,8 @@ export const getContentForNotification = (obj) => {
     fundingProps,
     withdrawInvestorProps,
     withdrawCollateralProps,
-    status
+    withdrawManagerProps,
+    status,
   } = obj;
   if(listAssetProps){
     switch (status) {
@@ -119,6 +120,30 @@ export const getContentForNotification = (obj) => {
         default:
           return null;
       }
+  } else if(withdrawManagerProps){
+      switch(status){
+        case 'success':
+          return {
+            title: <span style={{marginRight: '10px'}}>Withdrew profits of {withdrawManagerProps.assetName} successfuly</span>,
+            message: (
+                <React.Fragment>
+                  <span style={{display: 'block'}}>Amount received: <span style={{fontWeight: 600}}>{withdrawManagerProps.amount}</span></span>
+                </React.Fragment>
+              )
+          }
+        case 'info':
+          return {
+            title: `Withdrawing profits of ${withdrawManagerProps.assetName}`,
+            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+          }
+        case 'error':
+          return {
+            title: `Failed to withdraw profits from ${withdrawManagerProps.assetName}`,
+            message: 'Unfortunately your transaction failed. Please try again.',
+          }
+        default:
+          return null;
+      }
   } else if(metamaskProps){
     const { operationType } = metamaskProps;
     switch(operationType){
@@ -164,6 +189,18 @@ export const getContentForNotification = (obj) => {
             return {
               title: `Withdrawing collateral of ${metamaskProps.assetName}`,
               message: 'Please confirm the transaction in Metamask to withdraw your collateral. Thank you for beta testing the platform.',
+            }
+          case 'error':
+            return undefined;
+          default:
+            return null;
+        }
+      case 'withdrawManager':
+        switch(status) {
+          case 'info':
+            return {
+              title: `Withdrawing profits of ${metamaskProps.assetName}`,
+              message: 'Please confirm the transaction in Metamask to withdraw your profits. Thank you for beta testing the platform.',
             }
           case 'error':
             return undefined;
