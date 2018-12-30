@@ -13,17 +13,21 @@ export const METAMASK_FIREFOX = 'https://addons.mozilla.org/en-US/firefox/addon/
 export const METAMASK_CHROME = 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
 export const METAMASK_OPERA = 'https://addons.opera.com/extensions/details/metamask/';
 
+const baseUrl = 'https://mybit-dapp-jjperezaguinaga.c9users.io'
+const port = 8081;
+const host = `${baseUrl}:${port}`
+
 export const fetchTransactionHistoryTime = 60 * 1000;
 export const loadMetamaskUserDetailsTime = 5 * 1000;
 export const pullAssetsFromServerTime = 30 * 1000;
 export const fetchAssetsFromWeb3Time = 30 * 1000;
 export const checkIfLoggedInTime = 5 * 1000;
 export const S3_URL = 'https://s3.eu-central-1.amazonaws.com/mybit-go/';
-export const AIRTABLE_CATEGORIES_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable/categories' : '/api/airtable/categories';
-export const AIRTABLE_ASSETS_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable/assets' : '/api/airtable/assets';
-export const UPDATE_ASSETS_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/airtable/update' : '/api/airtable/update';
-export const S3_UPLOAD_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/files/upload' : '/api/files/upload';
-export const S3_ASSET_FILES_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/assets/files' : '/api/assets/files';
+export const AIRTABLE_CATEGORIES_URL = process.env.NODE_ENV === 'development' ? `${host}/api/airtable/categories` : '/api/airtable/categories';
+export const AIRTABLE_ASSETS_URL = process.env.NODE_ENV === 'development' ? `${host}/api/airtable/assets` : '/api/airtable/assets';
+export const UPDATE_ASSETS_URL = process.env.NODE_ENV === 'development' ? `${host}/api/airtable/update` : '/api/airtable/update';
+export const S3_UPLOAD_URL = process.env.NODE_ENV === 'development' ? `${host}/api/files/upload` : '/api/files/upload';
+export const S3_ASSET_FILES_URL = process.env.NODE_ENV === 'development' ? `${host}/api/assets/files` : '/api/assets/files';
 export const AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS = 3;
 export const AIRTABLE_ASSETS_NUMBER_OF_FIELDS = 6;
 export const MAX_FILES_UPLOAD = 2;
@@ -37,7 +41,7 @@ export const ETHERSCAN_TX = txHash =>
 export const ETHERSCAN_BALANCE = address =>
   `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`;
 
-export const serverIp = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api/assets' : '/api/assets';
+export const serverIp = process.env.NODE_ENV === 'development' ? `${host}/api/assets` : '/api/assets';
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
 
 export const metamaskErrors = (

@@ -30,6 +30,7 @@ class PortfolioManagedAssetPage extends React.Component {
           loading: true,
         };
         this.asset = undefined;
+        this.getDataForAsset = this.getDataForAsset.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -93,13 +94,11 @@ class PortfolioManagedAssetPage extends React.Component {
       console.log(revenueLogs)
 
       //set the state with the calculated data
-      /*
-        this.setState({
-          loading: false,
-          assetManagerProfits,
-          collateralData,
-        })
-      */
+      this.setState({
+        loading: false,
+        assetManagerProfits,
+        collateralData,
+      })
     }
 
     displayProfit() {
@@ -120,6 +119,7 @@ class PortfolioManagedAssetPage extends React.Component {
         } = this.props;
 
         const componentLoading = this.state.loading;
+        console.log(' Loading ', componentLoading)
 
         if(loading.assets || componentLoading){
           return(

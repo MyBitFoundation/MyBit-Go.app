@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors')
 const request = require('request');
 const Airtable = require('airtable');
 const dev = process.env.NODE_ENV === 'development';
@@ -131,6 +132,7 @@ async function ProcessFilesForAssets(){
 }
 
 app.use(express.json())
+app.use(cors())
 
 app.post('/api/airtable/update', async function(req, res){
   const assetId = req.body.assetId;
@@ -220,7 +222,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 
-app.listen(8080);
+app.listen(8081);
 
 async function pullAssets() {
   try {
