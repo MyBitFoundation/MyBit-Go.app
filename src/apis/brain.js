@@ -160,7 +160,7 @@ const roiEscrow = async assetID =>
 
       const response = await assetCollateralContract.methods
         .roiEscrow(assetID).call();
-        console.log(response)
+        debug(response)
       resolve(response);
     } catch (err) {
       reject(err);
@@ -231,11 +231,11 @@ export const withdrawAssetManager = async (user, assetID, assetName, notificatio
           resolve(1);
         })
         .then((receipt) => {
-          console.log(receipt)
+          debug(receipt)
           resolve(receipt.status);
         });
     } catch (err) {
-      console.log(err)
+      debug(err)
       resolve(0);
     }
   });
@@ -271,11 +271,11 @@ export const withdrawEscrow = async (user, assetID, assetName, notificationId, u
           resolve(1);
         })
         .then((receipt) => {
-          console.log(receipt)
+          debug(receipt)
           resolve(receipt.status);
         });
     } catch (err) {
-      console.log(err)
+      debug(err)
       resolve(0);
     }
   });
@@ -309,7 +309,7 @@ export const fetchRevenueLogsByAssetId = async (assetId) =>
 
         resolve(revenueIncomeData);
       }catch(err){
-        console.log(err);
+        debug(err);
         reject(err);
       }
   })
@@ -351,7 +351,7 @@ export const createAsset = async params =>
         collateralPercentage,
       } = params;
       const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
-      console.log(collateral)
+      debug(collateral)
       updateNotification(id, {
         metamaskProps: {
           assetName: assetName,
@@ -432,10 +432,10 @@ export const createAsset = async params =>
                   }
                 }
               ).then((response) => {
-                console.log('success');
+                debug('success');
               })
               .catch((err) => {
-                console.log('fail');
+                debug('fail');
               });
             }
 
@@ -445,7 +445,7 @@ export const createAsset = async params =>
                 escrow: collateral,
                 assetId: futureAssetId,
               }).catch((error) => {
-                console.log(error);
+                debug(error);
               })
 
               updateNotification(id, {

@@ -1,3 +1,5 @@
+/* eslint-disable  no-loop-func */
+
 import React from 'react';
 import Button from 'antd/lib/button';
 import { Link } from 'react-router-dom';
@@ -121,13 +123,8 @@ class PortfolioManagedAssetPage extends React.Component {
           assetManager,
         } = asset;
 
-        const mybitPrice = this.props.prices.mybit.price;
-        const collateralUSD = collateral * mybitPrice;
-
         // calculate collateral data to be displayed
-        let [unlockedEscrow, remainingEscrow] = await Promise.all([await Brain.unlockedEscrow(asset.assetID), await Brain.remainingEscrow(asset.assetID)]);
-        unlockedEscrow = window.web3js.utils.fromWei(unlockedEscrow, 'ether');
-        remainingEscrow = window.web3js.utils.fromWei(remainingEscrow, 'ether');
+        const remainingEscrow = window.web3js.utils.fromWei(await Brain.remainingEscrow(asset.assetID), 'ether');
         const percentageWithdrawn = remainingEscrow !== collateral ? 100 - ((remainingEscrow * 100) / collateral) : 0;
         const percentageWithdrawableCollateralUsd = ((assetIncome * 100) / amountToBeRaisedInUSD) / 100;
         const collateralData = [];
@@ -207,7 +204,7 @@ class PortfolioManagedAssetPage extends React.Component {
       let totalProfit = 0;
       for(let i = 0; i < 7; i++){
         const revenueFilteredByDay =
-          this.state.revenueData
+          assetsFiltered
             .filter(({date}) => date.day() === currentDay);
 
         const data = {
@@ -255,7 +252,7 @@ class PortfolioManagedAssetPage extends React.Component {
       for(let i = 0; i < 30; i++){
 
         const revenueFilteredByDayAndMonth =
-          this.state.revenueData
+          assetsFiltered
             .filter(({date}) => date.date() === currentDay.date() && date.month() === currentDay.month());
 
         const data = {
@@ -301,7 +298,7 @@ class PortfolioManagedAssetPage extends React.Component {
       for(let i = 0; i < 12; i++){
 
         const revenueFilteredByDayAndMonth =
-          this.state.revenueData
+          assetsFiltered
             .filter(({date}) => date.month() === currentDay.month());
 
         const data = {
@@ -371,7 +368,6 @@ class PortfolioManagedAssetPage extends React.Component {
 
         const componentLoading = this.state.loading;
         const {
-          revenueData,
           profitChartView,
           collateralData,
           daysSinceItWentLive,
@@ -464,7 +460,7 @@ class PortfolioManagedAssetPage extends React.Component {
 
         const toWithdrawETH = window.web3js.utils.fromWei(toWithdraw.toString(), 'ether');
         const toWithdrawUSD = formatMonetaryValue(toWithdrawETH * etherPrice);
-        const isLoadingWithdraw = this.props.withdrawingAssetManager.includes(asset.assetID);
+        const isLoadingWithdraw = withdrawingAssetManager.includes(asset.assetID);
 
         const filesToRender = this.getFilesToRender(files, asset.assetID);
 

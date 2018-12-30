@@ -98,7 +98,7 @@ class ListAssetPage extends React.Component {
   handleInputChange = e => {
     this.setState({
         data: { ...this.state.data, [e.target.name]: e.target.value }
-    },() => console.log(this.state));
+    });
   };
 
   handleSelectChange = (value, name) => {
@@ -124,9 +124,7 @@ class ListAssetPage extends React.Component {
                 data: { ...this.state.data, assetCountry: value, category: '', asset: '' }
               });break;
             }
-            default: {
-              console.log(this.state)
-            }
+            default: return null;
           }
         }
       );
@@ -150,12 +148,9 @@ class ListAssetPage extends React.Component {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
-    this.setState(
-      {
-        data: { ...this.state.data, fileList: files }
-      },
-      () => console.log(this.state)
-    );
+    this.setState({
+      data: { ...this.state.data, fileList: files }
+    });
   };
 
   handleCollateralChange = (value, name) => {
@@ -181,8 +176,7 @@ class ListAssetPage extends React.Component {
         myb = dollar / mybPrice;
         percentage = parseInt((dollar / assetValue) * 100);
         break;
-      default:
-        console.log(this.state);
+      default: return null;
     }
     this.setState(
       {
@@ -192,9 +186,7 @@ class ListAssetPage extends React.Component {
           collateralMyb: myb,
           collateralPercentage: percentage
         }
-      },
-      () => console.log(this.state)
-    );
+      });
   };
 
   render() {

@@ -217,8 +217,6 @@ class BlockchainInfo extends React.Component {
       });
     }
 
-    console.log("result: ", result)
-
     if(result === true || result === false){
       onFinished(() => {
         updatewithdrawingAssetManager();
@@ -273,8 +271,6 @@ class BlockchainInfo extends React.Component {
         withdrawingCollateral,
       });
     }
-
-    console.log("result: ", result)
 
     if(result === true || result === false){
       onFinished(() => {
@@ -621,7 +617,7 @@ class BlockchainInfo extends React.Component {
       debug(result);
 
     } catch (err) {
-      console.log(err);
+      debug(err);
     }
   }
 
@@ -672,7 +668,7 @@ class BlockchainInfo extends React.Component {
       debug(result);
 
     } catch (err) {
-      console.log(err);
+      debug(err);
     }
   }
 
