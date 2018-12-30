@@ -686,7 +686,6 @@ export const getManagerIncomeWithdraw = async (managerAddress, assetID) =>
 export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
-      console.log("fetching assets...")
       // pull asssets from newest contract
       let apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
       let assetCreationContract = new window.web3js.eth.Contract(

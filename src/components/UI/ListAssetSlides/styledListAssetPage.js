@@ -157,7 +157,10 @@ export const Slide = styled.div`
                 line-height: 12px;
             }
             &-file {
-                display: block;
+              display: block;
+              hite-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
         }
     }

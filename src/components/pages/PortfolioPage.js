@@ -231,6 +231,9 @@ class PortfolioPage extends React.Component {
               />
             ))}
           </Row>
+          {assetsToRender.length === 0 && (
+            <p className="ManagedAsset__error">{currentView === 'owned' ? 'You have not yet invested in any assets.' : 'You have not yet created any assets.'}</p>
+          )}
         </div>
       </div>
     );

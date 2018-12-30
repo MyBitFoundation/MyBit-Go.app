@@ -50,6 +50,7 @@ export const ManagedAssetWrapper = styled.div`
             height: 266px;
             border-radius: 6px;
         }
+
         .ManagedAsset__graphics {
             background: #FFFFFF;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -386,15 +387,22 @@ export const EqualBoxesWithShadow = styled.div`
             padding-top: 29px;
         }
         &-documents {
-            padding-left: 18px;
-            padding-top: 12px;
-            > p {
-                text-align: left;
-                padding: 0px;
-                margin: 0px;
-                line-height: 22px;
-                color: #1890FF;
+          padding-left: 18px;
+          padding-top: 12px;
+          text-align: left;
+
+          & a{
+            display: block;
+
+            &:focus{
+              text-decoration: none;
             }
+          }
+
+          & span{
+            position: absolute;
+            left: 77px;
+          }
         }
     }
 `

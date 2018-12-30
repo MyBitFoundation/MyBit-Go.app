@@ -644,13 +644,12 @@ export const ConfirmAsset = ({ next, formData, isUserListingAsset, setUserListin
                 {formData.fileList.length === 0
                   ? "[files not uploaded]"
                   : formData.fileList.map(file => (
-                      <a
-                        href="/list-asset"
+                      <span
                         key={file.name}
                         className="Slider__confirm-entry-file"
                       >
                         {file.name}
-                      </a>
+                      </span>
                     ))}
               </div>
             </div>

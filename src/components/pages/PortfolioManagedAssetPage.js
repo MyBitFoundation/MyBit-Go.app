@@ -23,6 +23,7 @@ import * as Brain from '../../apis/brain';
 import {
   getDayInText,
   getMonthInText,
+  S3_URL,
 } from '../../constants';
 dayjs.extend(isBetween)
 
@@ -89,6 +90,9 @@ class PortfolioManagedAssetPage extends React.Component {
         return true;
       }
       if(this.state.toWithdraw !== nextState.toWithdraw){
+        return true;
+      }
+      if(this.props.user !== nextProps.user){
         return true;
       }
       return false;
@@ -340,6 +344,21 @@ class PortfolioManagedAssetPage extends React.Component {
       this.setState({ chartBoxView: "collateral" });
     }
 
+    getFilesToRender(files, assetId){
+      if(!files || files.length === 0){
+        return <span>None</span>;
+      }
+      const toReturn = files.map(file => (
+        <a
+          href={`${S3_URL}${assetId}:${file}`}
+        >
+          {file}
+        </a>
+      ))
+
+      return toReturn;
+    }
+
     render() {
         const {
           match,
@@ -372,13 +391,13 @@ class PortfolioManagedAssetPage extends React.Component {
         const userAddress = user.userName;
         if(!asset){
           return(
-            <p>This asset does not exist</p>
+            <p className="ManagedAsset__error">This asset does not exist.</p>
           )
         }
 
         if(!userAddress || (userAddress && (userAddress !== asset.assetManager))){
           return(
-            <p>you don't have permissions to view this page.</p>
+            <p className="ManagedAsset__error">You don't have permissions to view this page.</p>
           )
         }
 
@@ -392,6 +411,7 @@ class PortfolioManagedAssetPage extends React.Component {
           name,
           imageSrc,
           partner,
+          files,
         } = asset;
 
         const mybitPrice = prices.mybit.price;
@@ -445,6 +465,8 @@ class PortfolioManagedAssetPage extends React.Component {
         const toWithdrawETH = window.web3js.utils.fromWei(toWithdraw.toString(), 'ether');
         const toWithdrawUSD = formatMonetaryValue(toWithdrawETH * etherPrice);
         const isLoadingWithdraw = this.props.withdrawingAssetManager.includes(asset.assetID);
+
+        const filesToRender = this.getFilesToRender(files, asset.assetID);
 
         return (
             <ManagedAssetWrapper>
@@ -524,7 +546,7 @@ class PortfolioManagedAssetPage extends React.Component {
                                 <div className="AssetBoxedRow__Card-button">
                                     <Button
                                       type="primary"
-                                      disabled={toWithdrawETH === 0}
+                                      disabled={Number(toWithdrawETH) === 0}
                                       loading={isLoadingWithdraw}
                                       onClick={() => this.props.withdrawProfitAssetManager(asset, toWithdrawUSD, (cb) => {
                                         this.getDataForAsset(this.asset, cb);
@@ -576,8 +598,7 @@ class PortfolioManagedAssetPage extends React.Component {
                             <div className="AssetBoxedRow__Card">
                                 <div className="AssetBoxedRow__Card-title-rows">Supporting documents</div>
                                 <div className="AssetBoxedRow__Card-documents">
-                                    <p>property.docx</p>
-                                    <p>more_documents.pdf</p>
+                                  {filesToRender}
                                 </div>
                             </div>
                         </EqualBoxesWithShadow>
