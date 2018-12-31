@@ -54,12 +54,17 @@ class AssetDetails extends React.Component {
     this.setDateDetails();
   }
 
+  componentWillReceiveProps(){
+    this.setDateDetails();
+  }
+
   setDateDetails() {
+    const assetFunded = this.props.information.fundingStage === 3 || this.props.information.fundingStage === 4
     const maxInvestment =
       this.props.information.goal - this.props.information.raised;
 
     // funding goal has been reached
-    if (maxInvestment === 0 || this.assetFunded) {
+    if (maxInvestment === 0 || assetFunded) {
       this.setState({
         timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
@@ -159,8 +164,16 @@ class AssetDetails extends React.Component {
   }
 
   render() {
-    const { selectedAmountUsd, selectedAmountEth } = this.state;
-    const { currentEthInUsd } = this.props;
+    const {
+      selectedAmountUsd,
+      selectedAmountEth,
+    } = this.state;
+
+    const {
+      currentEthInUsd,
+      user,
+    } = this.props;
+
     const {
       goal,
       raised,
@@ -173,7 +186,8 @@ class AssetDetails extends React.Component {
       numberOfInvestors,
       watchListed,
       files,
-      managerPercentage
+      managerPercentage,
+      collateralPercentage,
     } = this.props.information;
 
     const filesToRender = this.getFilesToRender(files, assetID);
@@ -425,9 +439,10 @@ class AssetDetails extends React.Component {
                 this.state.daysToGo < 0
                 || maxInvestment === 0
                 || selectedAmountUsd < minInvestment
+                || user.userName === address
               }
             >
-            Contribute
+            {user.userName === address ? 'Not allowed to contribute to your own asset' :  'Contribute'}
             </Button>
             <div className="AssetDetails__left-assetManager">
               <div className="AssetDetails__left-assetManager-left">
@@ -455,7 +470,7 @@ class AssetDetails extends React.Component {
                 <ValueDisplay
                   text="Asset Collateral"
                   icon={<MyBitLogo />}
-                  value="0%"
+                  value={`${collateralPercentage}%`}
                   hasSeparator
                   hasIcon
                 />

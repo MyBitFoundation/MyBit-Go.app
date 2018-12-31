@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import Button from "antd/lib/button";
 import Tooltip from "antd/lib/tooltip";
 import Input from "antd/lib/input";
@@ -12,6 +13,9 @@ import questionTooltip from "../../../images/list-asset/questionTooltip.png";
 import Earth from "../../../images/list-asset/assetList_earth.png";
 import Coins from "../../../images/list-asset/assetList_coins.png";
 import MYB from "../../../images/list-asset/assetList_myb.png";
+import SuccessCheckmark from "../../../images/list-asset/success-list-asset.svg";
+import SuccessEarth from "../../../images/list-asset/success-list-asset-earth.svg";
+
 import { CivicButton, withCivic } from "../CivicContainer";
 import BlockchainInfoContext from '../../BlockchainInfoContext';
 
@@ -231,7 +235,7 @@ export const AvailableAssetsSlide = ({
                     style={{ width: "100%", marginTop: "10px" }}
                     placeholder="Available Assets"
                     optionFilterProp="children"
-                    onChange={value => handleSelectChange(value, "asset")}
+                    onChange={value => handleSelectChange({name: value, assetsAirTable}, "asset")}
                     filterOption={(input, option) =>
                       option.props.children
                         .toLowerCase()
@@ -491,6 +495,8 @@ export const CollateralSlide = ({
   formData
 }) => {
   return (
+    <BlockchainInfoContext.Consumer>
+       {({ prices }) => (
     <Slide>
       <Tooltip
         title="Assets with a high collateral are more likely to get funded."
@@ -501,8 +507,8 @@ export const CollateralSlide = ({
       <h1 className="Slider__header">Asset collateral </h1>
       <p className="Slider__note">
         MYB is used as an insurance mechanism, much like a deposit to protect
-        investors' funds and incentivise proper behaviour. This feature is coming in
-        the next version of MyBit Go.
+        investors' funds and incentivise proper behaviour. In this version of Go you are
+        not required to deposit MYB but you will still be able to withdraw the collateral.
       </p>
       <img
         src={MYB}
@@ -513,16 +519,14 @@ export const CollateralSlide = ({
       />
       <div className="Slider__input-collateral">
         <Slider
-          disabled
           min={0}
           max={constraints.max_percentage}
           defaultValue={collateralPercentage}
           value={collateralPercentage}
-          onChange={value => handleCollateralChange(value, "percentage")}
+          onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: prices.mybit.price}, "percentage")}
         />
         <div>{`${collateralPercentage}%`}</div>
         <InputNumber
-          disabled
           defaultValue={collateralMyb}
           value={collateralMyb}
           step={0.1}
@@ -531,11 +535,10 @@ export const CollateralSlide = ({
           max={constraints.max_myb}
           formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           parser={value => value.replace(/\$\s?|(,*)/g, "")}
-          onChange={value => handleCollateralChange(value, "myb")}
+          onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: prices.mybit.price}, "myb")}
         />
         <span>=</span>
         <InputNumber
-          disabled
           defaultValue={collateralDollar}
           value={collateralDollar}
           step={0.1}
@@ -546,7 +549,7 @@ export const CollateralSlide = ({
             `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
           }
           parser={value => value.replace(/\$\s?|(,*)/g, "")}
-          onChange={value => handleCollateralChange(value, "dollar")}
+          onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: prices.mybit.price}, "dollar")}
         />
       </div>
       <SlideButtons
@@ -557,83 +560,128 @@ export const CollateralSlide = ({
         forbidNext={false}
       />
     </Slide>
-  );
-};
+  )}
+  </BlockchainInfoContext.Consumer>
+)};
 
-export const ConfirmAsset = ({ next, formData, isUserListingAsset, setUserListingAsset }) => (
+const listedAssetSuccessfuly = (assetId) => {
+  return (
+    <React.Fragment>
+      <h1 className="Slider__header">Listing confirmed</h1>
+      <p className="Slider__note">Your asset has been succesfully listed. <br />You can access it
+        <Link
+          href={`/explore/${assetId}`}
+          to={`/explore/${assetId}`}
+        >{' '}here</Link>.</p>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          marginTop: '40px',
+        }}>
+          <SuccessCheckmark style={{marginBottom: '10px'}}/>
+          <SuccessEarth />
+        </div>
+        <div className="Slider__buttons">
+          <Link
+            href="/explore"
+            to="/explore"
+            style={{
+              width: 'max-content',
+              textAlign: 'center',
+              display: 'block',
+              margin: '0 auto',
+            }}
+          >
+            <Button
+              type="primary"
+              className="Slider__buttons-continue"
+            >
+              Go to Explore
+            </Button>
+          </Link>
+        </div>
+    </React.Fragment>
+  )
+}
+
+export const ConfirmAsset = ({ next, formData, isUserListingAsset, setUserListingAsset, listedAssetId }) => (
   <BlockchainInfoContext.Consumer>
     {({ handleListAsset }) =>
     <Slide>
-      <h1 className="Slider__header">Confirm information</h1>
-      <p className="Slider__note">Please confirm your asset information below.</p>
-      <div className="Slider__confirm-information">
-        <div className="Slider__confirm-entry">
-          <div className="Slider__confirm-entry-title">Location</div>
-          <div className="Slider__confirm-entry-note">
-            {formData.userCity === "" ? "[city missing]" : formData.userCity}/
-            {formData.userCountry === ""
-              ? "[country missing]"
-              : formData.userCountry}
+      {listedAssetId ? listedAssetSuccessfuly(listedAssetId) : (
+        <React.Fragment>
+          <h1 className="Slider__header">Confirm information</h1>
+          <p className="Slider__note">Please confirm your asset information below.</p>
+          <div className="Slider__confirm-information">
+            <div className="Slider__confirm-entry">
+              <div className="Slider__confirm-entry-title">Location</div>
+              <div className="Slider__confirm-entry-note">
+                {formData.userCity === "" ? "[city missing]" : formData.userCity}/
+                {formData.userCountry === ""
+                  ? "[country missing]"
+                  : formData.userCountry}
+              </div>
+            </div>
+            <div className="Slider__confirm-entry">
+              <div className="Slider__confirm-entry-title">Asset</div>
+              <div className="Slider__confirm-entry-note">
+                {formData.asset === "" ? "[asset missing]" : formData.asset}
+              </div>
+            </div>
+            <div className="Slider__confirm-entry">
+              <div className="Slider__confirm-entry-title">Asset location</div>
+              <div className="Slider__confirm-entry-note">
+                {formData.assetAddress1 === ""
+                  ? "[address missing]"
+                  : formData.assetAddress1}
+                {formData.assetAddress2 === "" ? "" : `,${formData.assetAddress2}`}
+              </div>
+            </div>
+            <div className="Slider__confirm-entry">
+              <div className="Slider__confirm-entry-title">Supporting documents</div>
+              <div className="Slider__confirm-entry-note">
+                {formData.fileList.length === 0
+                  ? "[files not uploaded]"
+                  : formData.fileList.map(file => (
+                      <span
+                        key={file.name}
+                        className="Slider__confirm-entry-file"
+                      >
+                        {file.name}
+                      </span>
+                    ))}
+              </div>
+            </div>
+            <div className="Slider__confirm-entry">
+              <div className="Slider__confirm-entry-title">Management fee</div>
+              <div className="Slider__confirm-entry-note">
+                {formData.managementFee}%
+              </div>
+            </div>
+            <div className="Slider__confirm-entry">
+              <div className="Slider__confirm-entry-title">Asset collateral</div>
+              <div className="Slider__confirm-entry-note">
+                {formData.collateralMyb.toFixed(2)} MYB{" "}
+                {formData.collateralPercentage}%
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="Slider__confirm-entry">
-          <div className="Slider__confirm-entry-title">Asset</div>
-          <div className="Slider__confirm-entry-note">
-            {formData.asset === "" ? "[asset missing]" : formData.asset}
+          <div className="Slider__buttons">
+            <Button
+              loading={isUserListingAsset}
+              type="primary"
+              className="Slider__buttons-continue"
+              onClick={() => {
+                setUserListingAsset(true);
+                handleListAsset(formData, setUserListingAsset);
+              }}
+            >
+              {isUserListingAsset ? 'Confirming listing' : 'Confirm Listing'}
+            </Button>
           </div>
-        </div>
-        <div className="Slider__confirm-entry">
-          <div className="Slider__confirm-entry-title">Asset location</div>
-          <div className="Slider__confirm-entry-note">
-            {formData.assetAddress1 === ""
-              ? "[address missing]"
-              : formData.assetAddress1}
-            {formData.assetAddress2 === "" ? "" : `,${formData.assetAddress2}`}
-          </div>
-        </div>
-        <div className="Slider__confirm-entry">
-          <div className="Slider__confirm-entry-title">Supporting documents</div>
-          <div className="Slider__confirm-entry-note">
-            {formData.fileList.length === 0
-              ? "[files not uploaded]"
-              : formData.fileList.map(file => (
-                  <a
-                    href="/list-asset"
-                    key={file.name}
-                    className="Slider__confirm-entry-file"
-                  >
-                    {file.name}
-                  </a>
-                ))}
-          </div>
-        </div>
-        <div className="Slider__confirm-entry">
-          <div className="Slider__confirm-entry-title">Management fee</div>
-          <div className="Slider__confirm-entry-note">
-            {formData.managementFee}%
-          </div>
-        </div>
-        <div className="Slider__confirm-entry">
-          <div className="Slider__confirm-entry-title">Asset collateral</div>
-          <div className="Slider__confirm-entry-note">
-            {formData.collateralMyb.toFixed(2)} MYB{" "}
-            {formData.collateralPercentage}%
-          </div>
-        </div>
-      </div>
-      <div className="Slider__buttons">
-        <Button
-          loading={isUserListingAsset}
-          type="primary"
-          className="Slider__buttons-continue"
-          onClick={() => {
-            setUserListingAsset(true);
-            handleListAsset(formData, setUserListingAsset);
-          }}
-        >
-          {isUserListingAsset ? 'Confirming listing' : 'Confirm Listing'}
-        </Button>
-      </div>
+        </React.Fragment>
+      )}
     </Slide>
   }
   </BlockchainInfoContext.Consumer>

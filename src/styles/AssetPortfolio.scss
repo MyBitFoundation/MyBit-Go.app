@@ -1,3 +1,29 @@
+@import 'include-media/dist/_include-media.scss';
+
+@mixin flexButtons {
+  flex-direction: column;
+  display: flex;
+  align-items: flex-end;
+
+  &--is-withdrawl{
+    margin-right: 0px;
+    top: -5px;
+  }
+
+  &--is-view{
+    margin-bottom: 5px;
+  }
+}
+
+@mixin resetButtons {
+  display: block;
+
+  &--is-withdrawl{
+    margin-right: 10px;
+    top: 0px;
+  }
+}
+
 .AssetPortfolio{
   position: relative;
   border-radius: 4px;
@@ -11,6 +37,15 @@
     position: relative;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+
+    &:after{
+      content: ' ';
+      position: absolute;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent 80px, transparent);
+    }
   }
 
   &__image-holder-gradient{
@@ -36,15 +71,19 @@
   &__details{
     padding: 10px 10px;
 
+    & p{
+      margin-bottom: 0px;
+    }
+
     &-section{
       display: flex;
       justify-content: space-between;
       font-size: 16px;
       color: #383838;
+      align-items: center;
+      margin-bottom: 5px;
 
-      &:nth-child(1){
-        margin-bottom: 2px;
-
+      &--is-unrealised{
         span:nth-child(2){
           color: #2db84b;
           font-weight: 500;
@@ -55,33 +94,62 @@
         }
       }
 
-      &:nth-child(2){
+      &--is-totalProfit{
+        div span{
+          font-weight: 500;
+        }
+      }
+
+      &--is-ownership{
+        margin-bottom: 30px;
+
         div span{
           font-weight: 500;
         }
 
-        div span:nth-child(3){
-          color: #125ac4;
+        div span{
+          color: #1890FF;
         }
       }
 
-      &:nth-child(3){
-        margin-top: 40px;
-        margin-bottom: 5px;
+      &--is-funding{
+        margin-bottom: 0px;
+      }
+    }
 
-        p{
-          margin: 0px 0px;
+    &--is-three-sections{
+      .AssetPortfolio__details-section--is-ownership{
+        margin-bottom: 60px;
+      }
+    }
+
+    &--is-bold{
+      font-weight: 500;
+      color: #595959 !important;
+    }
+
+    &-buttons{
+      position: absolute;
+      right: 10px;
+
+        &--is-withdrawl{
+          margin-right: 10px;
         }
 
-        a{
-          margin-top: 10px;
-        }
-
-        span span{
-          font-weight: 500;
-          color: rgba(0, 0, 0, 0.65);
-          margin-left: 5px;
-        }
+      @include media('<1350px') {
+        @include flexButtons;
+      }
+      @include media('<1200px') {
+        @include resetButtons;
+      }
+      @include media('<950px') {
+        @include flexButtons;
+      }
+      @include media('<768px') {
+        @include resetButtons;
+      }
+      @include media('<500px') {
+        @include flexButtons;
       }
     }
   }

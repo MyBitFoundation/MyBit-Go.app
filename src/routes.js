@@ -14,6 +14,7 @@ import WatchListPage from './components/pages/WatchListPage';
 import OnboardingPage from './components/pages/OnboardingPage';
 import ListAssetPage from './components/pages/ListAssetPage'
 import AssetManagerPage from './components/pages/AssetManagerPage'
+import PortfolioManagedAssetPage from './components/pages/PortfolioManagedAssetPage'
 
 const redirectToOnFirstVisit = '/onboarding';
 const redirectOnFirstListAssetVisit = '/asset-manager';
@@ -71,9 +72,12 @@ const routes = [
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
         {({
-          loading, assets, prices, user, changeNotificationPlace,
-          setAssetsStatusState, handleClickedAssetFavorite,
-          }) =>
+          loading,
+          assets,
+          prices,
+          user,
+          handleClickedAssetFavorite,
+        }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -83,8 +87,6 @@ const routes = [
               assets={assets}
               match={match}
               user={user}
-              changeNotificationPlace={changeNotificationPlace}
-              setAssetsStatusState={setAssetsStatusState}
               handleClickedAssetFavorite={handleClickedAssetFavorite}
             />
           ))
@@ -97,11 +99,18 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, prices, assets }) =>
+        {({ loading, prices, assets, withdrawInvestorProfit, withdrawingAssetIds, user }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
-            <PortfolioPage loading={loading} prices={prices} assets={assets} />
+            <PortfolioPage
+              loading={loading}
+              prices={prices}
+              assets={assets}
+              withdrawingAssetIds={withdrawingAssetIds}
+              withdrawInvestorProfit={withdrawInvestorProfit}
+              user={user}
+            />
           ))
         }
       </BlockchainInfoContext.Consumer>
@@ -125,6 +134,27 @@ const routes = [
         }
       </BlockchainInfoContext.Consumer>
     ),
+  },
+  {
+    path: '/manage/:assetId',
+    exact: true,
+    component: ({ match, isFirstVisit }) => (
+      <BlockchainInfoContext.Consumer>
+        {props =>
+          <PortfolioManagedAssetPage
+            loading={props.loading}
+            assets={props.assets}
+            user={props.user}
+            match={match}
+            prices={props.prices}
+            withdrawCollateral={props.withdrawCollateral}
+            withdrawingCollateral={props.withdrawingCollateral}
+            withdrawProfitAssetManager={props.withdrawProfitAssetManager}
+            withdrawingAssetManager={props.withdrawingAssetManager}
+          />
+        }
+      </BlockchainInfoContext.Consumer>
+    )
   },
   {
     path: '/help',

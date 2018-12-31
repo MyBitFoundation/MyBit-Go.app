@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors')
 const request = require('request');
 const Airtable = require('airtable');
 const dev = process.env.NODE_ENV === 'development';
@@ -14,7 +15,7 @@ const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const app = express();
-const airtableBaseAssets = dev ? 'appnvQb0LqM1nKTTQ' : 'appDMxPZPCcBkNuab';
+const airtableBaseAssets = 'appnvQb0LqM1nKTTQ';
 
 const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(airtableBaseAssets);
 const SIZE_OF_ASSETID = 66;
@@ -62,9 +63,9 @@ async function getIdAndAssetIdsOfAssetName(assetName){
   };
 }
 
-async function UpdateAirTableEntry(id, currentAssetIds, newAssetId, country, city){
+async function UpdateAirTableEntry(id, currentAssetIds, newAssetId, country, city, collateral, collateralPercentage){
   return new Promise(async (resolve, reject) => {
-    const formatedString = `${newAssetId}|${country}|${city}`
+    const formatedString = `${newAssetId}|${country}|${city}|${collateral}|${collateralPercentage}`
     const newAssetIds = currentAssetIds ? currentAssetIds +  `,${formatedString}`: formatedString;
     base('Imported table').update(id, {
       "Asset IDs": newAssetIds
@@ -131,14 +132,17 @@ async function ProcessFilesForAssets(){
 }
 
 app.use(express.json())
+app.use(cors())
 
 app.post('/api/airtable/update', async function(req, res){
   const assetId = req.body.assetId;
   const country = req.body.country;
   const city = req.body.city;
   const assetName = req.body.assetName;
+  const collateral = req.body.collateral;
+  const collateralPercentage = req.body.collateralPercentage;
   const rowIdAndAssetId = await getIdAndAssetIdsOfAssetName(assetName);
-  const result = await UpdateAirTableEntry(rowIdAndAssetId.id, rowIdAndAssetId.assetIds, assetId, country, city, res);
+  const result = await UpdateAirTableEntry(rowIdAndAssetId.id, rowIdAndAssetId.assetIds, assetId, country, city, collateral, collateralPercentage);
   res.sendStatus(result ? 200 : 500);
 });
 
@@ -220,7 +224,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 
-app.listen(8080);
+app.listen(8081);
 
 async function pullAssets() {
   try {

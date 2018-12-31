@@ -31,7 +31,7 @@ const Asset = ({
   watchListed,
   handleClickedAssetFavorite,
 }) => {
-  const assetFunded = fundingStage === '3' || fundingStage === '4';
+  const assetFunded = fundingStage === 3 || fundingStage === 4;
   const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
   const goalFormatted = formatMonetaryValue(goal);
   let buttonText = 'Contribute';

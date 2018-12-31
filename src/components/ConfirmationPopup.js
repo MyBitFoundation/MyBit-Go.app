@@ -51,12 +51,6 @@ class ConfirmationPopup extends React.Component {
     this.props.handlePopupState(false);
   }
 
-  tryAgain() {
-    this.props.setAssetsStatusState({
-      transactionStatus: '',
-    });
-  }
-
   onSuccess = () => {
     if(!this.ismounted){
       return;
@@ -230,13 +224,6 @@ class ConfirmationPopup extends React.Component {
   }
 }
 
-ConfirmationPopup.defaultProps = {
-  assetsNotification: {
-    alertType: '',
-    alertMessage: '',
-  },
-};
-
 ConfirmationPopup.propTypes = {
   amountUsd: PropTypes.string.isRequired,
   amountEth: PropTypes.string.isRequired,
@@ -250,14 +237,6 @@ ConfirmationPopup.propTypes = {
   network: PropTypes.string.isRequired,
   userIsLoggedIn: PropTypes.bool.isRequired,
   isBraveBrowser: PropTypes.bool.isRequired,
-  setAssetsStatusState: PropTypes.func.isRequired,
-  assetsNotification: PropTypes.shape({
-    isLoading: PropTypes.bool.isRequired,
-    transactionStatus: PropTypes.string,
-    acceptedTos: PropTypes.bool.isRequired,
-    alertType: PropTypes.string,
-    alertMessage: PropTypes.string,
-  }),
 };
 
 export default ConfirmationPopup;

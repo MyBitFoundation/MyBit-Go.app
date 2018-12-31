@@ -8,6 +8,8 @@ import * as AssetCreation from '../constants/contracts/AssetCreation';
 import * as TokenFaucet from '../constants/contracts/TokenFaucet';
 import * as FundingHub from '../constants/contracts/FundingHub';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
+import * as Asset from '../constants/contracts/Asset';
+import * as AssetCollateral from '../constants/contracts/AssetCollateral';
 import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
   debug,
@@ -15,10 +17,10 @@ import {
   ETHERSCAN_TX,
   ETHERSCAN_BALANCE,
   getAddressForAsset,
-  testAssetIds,
   UPDATE_ASSETS_URL,
   S3_UPLOAD_URL,
   BLOCK_NUMBER_CONTRACT_CREATION,
+  MYBIT_API_COLLATERAL,
 } from '../constants';
 
 import {
@@ -148,6 +150,170 @@ export const loadMetamaskUserDetails = async () =>
     }
   });
 
+const roiEscrow = async assetID =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetCollateralContract = new window.web3js.eth.Contract(
+        AssetCollateral.ABI,
+        AssetCollateral.ADDRESS,
+      );
+
+      const response = await assetCollateralContract.methods
+        .roiEscrow(assetID).call();
+        debug(response)
+      resolve(response);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+export const unlockedEscrow = async assetID =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetCollateralContract = new window.web3js.eth.Contract(
+        AssetCollateral.ABI,
+        AssetCollateral.ADDRESS,
+      );
+
+      const response = await assetCollateralContract.methods
+        .unlockedEscrow(assetID).call();
+
+      resolve(response);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+export const remainingEscrow = async assetID =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetCollateralContract = new window.web3js.eth.Contract(
+        AssetCollateral.ABI,
+        AssetCollateral.ADDRESS,
+      );
+
+      const response = await assetCollateralContract.methods
+        .remainingEscrow(assetID).call();
+
+      resolve(response);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+export const withdrawAssetManager = async (user, assetID, assetName, notificationId, updateNotification) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetContract = new window.web3js.eth.Contract(
+        Asset.ABI,
+        Asset.ADDRESS,
+      );
+
+      const response = await assetContract.methods
+        .withdrawManagerIncome(assetID)
+        .send({ from: user.userName })
+        .on('transactionHash', (transactionHash) => {
+          updateNotification(notificationId, {
+            withdrawManagerProps: {
+              assetName: assetName,
+            },
+            status: 'info',
+          });
+        })
+        .on('error', (error) => {
+          updateNotification(notificationId, {
+            metamaskProps: {
+              operationType: 'withdrawManager',
+            },
+            status: 'error',
+          });
+          debug(error);
+          resolve(1);
+        })
+        .then((receipt) => {
+          debug(receipt)
+          resolve(receipt.status);
+        });
+    } catch (err) {
+      debug(err)
+      resolve(0);
+    }
+  });
+
+
+export const withdrawEscrow = async (user, assetID, assetName, notificationId, updateNotification) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetCollateralContract = new window.web3js.eth.Contract(
+        AssetCollateral.ABI,
+        AssetCollateral.ADDRESS,
+      );
+
+      const response = await assetCollateralContract.methods
+        .withdrawEscrow(assetID)
+        .send({ from: user.userName })
+        .on('transactionHash', (transactionHash) => {
+          updateNotification(notificationId, {
+            withdrawCollateralProps: {
+              assetName: assetName,
+            },
+            status: 'info',
+          });
+        })
+        .on('error', (error) => {
+          updateNotification(notificationId, {
+            metamaskProps: {
+              operationType: 'withdrawCollateral',
+            },
+            status: 'error',
+          });
+          debug(error);
+          resolve(1);
+        })
+        .then((receipt) => {
+          debug(receipt)
+          resolve(receipt.status);
+        });
+    } catch (err) {
+      debug(err)
+      resolve(0);
+    }
+  });
+
+export const fetchRevenueLogsByAssetId = async (assetId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // pull asssets from newest contract
+      let assetContract = new window.web3js.eth.Contract(
+        Asset.ABI,
+        Asset.ADDRESS,
+      );
+
+      let logIncomeReceived = await assetContract.getPastEvents(
+        'LogIncomeReceived',
+        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+      );
+
+      let revenueIncomeData = await Promise.all(logIncomeReceived
+        .filter(({returnValues}) => returnValues._assetID === assetId)
+        .map(async data => {
+          const blockNumber = data.blockNumber;
+          const blockInfo = await window.web3js.eth.getBlock(blockNumber);
+          const timestamp = blockInfo.timestamp;
+          const amount = data.returnValues._amount;
+          return{
+            amount,
+            timestamp,
+          }
+        }))
+
+        resolve(revenueIncomeData);
+      }catch(err){
+        debug(err);
+        reject(err);
+      }
+  })
+
 const getNumberOfInvestors = async assetID =>
   new Promise(async (resolve, reject) => {
     try {
@@ -181,8 +347,11 @@ export const createAsset = async params =>
         country,
         city,
         fileList,
+        collateralMyb,
+        collateralPercentage,
       } = params;
-
+      const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
+      debug(collateral)
       updateNotification(id, {
         metamaskProps: {
           assetName: assetName,
@@ -204,7 +373,7 @@ export const createAsset = async params =>
         window.web3js,
         params.userAddress,
         params.managerPercentage,
-        params.amountToBeRaisedInUSD,
+        500,
         installerId,
         assetType,
         randomBlockNumber
@@ -212,7 +381,7 @@ export const createAsset = async params =>
 
       const assetCreationResponse = await assetCreationContract.methods
         .newAsset(
-          params.amountToBeRaisedInUSD.toString(),
+          '500',
           params.managerPercentage.toString(),
           '0',
           installerId,
@@ -246,6 +415,8 @@ export const createAsset = async params =>
               assetName: assetName,
               country: country,
               city: city,
+              collateral: collateralMyb,
+              collateralPercentage,
             });
 
             if(fileList.length > 0){
@@ -261,20 +432,30 @@ export const createAsset = async params =>
                   }
                 }
               ).then((response) => {
-                console.log('success');
+                debug('success');
               })
               .catch((err) => {
-                console.log('fail');
+                debug('fail');
               });
             }
 
-            onSuccess(() => updateNotification(id, {
-              listAssetProps: {
-                assetName: assetName,
+            onSuccess(() => {
+              axios.post(MYBIT_API_COLLATERAL, {
+                address: params.userAddress,
+                escrow: collateral,
                 assetId: futureAssetId,
-              },
-              status: 'success',
-            }))
+              }).catch((error) => {
+                debug(error);
+              })
+
+              updateNotification(id, {
+                listAssetProps: {
+                  assetName: assetName,
+                  assetId: futureAssetId,
+                },
+                status: 'success',
+              })
+            }, futureAssetId)
           } else {
             updateNotification(id, {
               listAssetProps: {
@@ -330,6 +511,67 @@ export const withdrawFromFaucet = async user =>
         .send({ from: user.userName });
       const { transactionHash } = withdrawResponse;
       checkTransactionConfirmation(transactionHash, resolve, reject);
+    } catch (err) {
+      reject(err);
+    }
+  });
+
+
+export const withdrawInvestorProfit = async (user, asset, notificationId, updateNotification, onSuccessRefreshData, onFail) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const assetName = asset.name;
+      updateNotification(notificationId, {
+        metamaskProps: {
+          assetName: assetName,
+          operationType: 'withdrawInvestor',
+        },
+        status: 'info',
+      });
+
+      const AssetContract = new window.web3js.eth.Contract(
+        Asset.ABI,
+        Asset.ADDRESS,
+      );
+
+      const withdrawResponse = await AssetContract.methods
+        .withdraw(asset.assetID)
+        .send({ from: user.userName })
+        .on('transactionHash', (transactionHash) => {
+          updateNotification(notificationId, {
+            withdrawInvestorProps: {
+              assetName: assetName,
+            },
+            status: 'info',
+          });
+        })
+        .on('error', (error) => {
+          updateNotification(notificationId, {
+            metamaskProps: {
+              assetName: assetName,
+              operationType: 'withdrawInvestor',
+            },
+            status: 'error',
+          });
+          onFail();
+          debug(error);
+          resolve(false);
+        })
+        .then((receipt) => {
+          if(receipt.status){
+            onSuccessRefreshData();
+          } else {
+            updateNotification(notificationId, {
+              withdrawInvestorProps: {
+                assetName: assetName,
+                operationType: 'contribution',
+              },
+              status: 'error',
+            });
+            onFail();
+          }
+          resolve(receipt.status);
+        });
     } catch (err) {
       reject(err);
     }
@@ -399,6 +641,49 @@ export const fundAsset = async (user, assetId, amount, onFailureContributionPopu
     }
   });
 
+export const getManagerIncomeEarned = async (managerAddress, assetID) =>
+  new Promise(async (resolve, reject) => {
+    let assetContract = new window.web3js.eth.Contract(
+      Asset.ABI,
+      Asset.ADDRESS,
+    );
+
+    let logsIncomeEarned = await assetContract.getPastEvents(
+      'LogManagerIncomeEarned',
+      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+    );
+
+    let incomeEarned = logsIncomeEarned
+      .filter(({ returnValues }) => returnValues._manager === managerAddress && returnValues._assetID === assetID)
+      .reduce((accumulator, currentValue) =>
+        (accumulator) + Number(currentValue.returnValues._managerAmount)
+        ,0)
+
+    resolve(incomeEarned);
+  });
+
+export const getManagerIncomeWithdraw = async (managerAddress, assetID) =>
+  new Promise(async (resolve, reject) => {
+    let assetContract = new window.web3js.eth.Contract(
+      Asset.ABI,
+      Asset.ADDRESS,
+    );
+
+    let logsIncomeEarned = await assetContract.getPastEvents(
+      'LogManagerIncomeWithdraw',
+      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+    );
+
+    let withdrawn = logsIncomeEarned
+      .filter(({ returnValues }) => returnValues._manager === managerAddress && returnValues._assetID === assetID)
+      .reduce((accumulator, currentValue) =>
+        (accumulator) + Number(currentValue.returnValues.owed)
+        ,0)
+
+    resolve(withdrawn);
+  });
+
+
 export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
@@ -422,25 +707,21 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           ipfsHash: object._ipfsHash,
         }));
 
-      // pull assets from older contract
-      apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
-      assetCreationContract = new window.web3js.eth.Contract(
-        AssetCreation.ABI,
-        AssetCreation.OLD_ADDRESS,
+      let fundingHubContract = new window.web3js.eth.Contract(
+        FundingHub.ABI,
+        FundingHub.ADDRESS,
       );
 
-      logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
-        'LogAssetFundingStarted',
+      let logAssetsWentLive = await fundingHubContract.getPastEvents(
+        'LogAssetPayout',
         { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
       );
 
-      const assetsOlderContract = logAssetFundingStartedEvents
-        .map(({ returnValues }) => returnValues)
+      let assetsWentLive = logAssetsWentLive
         .map(object => ({
-          assetID: object._assetID,
+          assetID: object.returnValues._assetID,
+          blockNumber: object.blockNumber,
         }));
-
-      assets = assets.concat(assetsOlderContract);
 
       const assetManagers = await Promise.all(assets.map(async asset =>
         apiContract.methods.assetManager(asset.assetID).call()));
@@ -468,7 +749,13 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         apiContract.methods.managerPercentage(asset.assetID).call()));
 
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
-        const numberOfInvestors = await getNumberOfInvestors(asset.assetID);
+        const numberOfInvestors = Number(await getNumberOfInvestors(asset.assetID));
+
+        const ownershipUnitsTmp = ownershipUnits[index];
+        let owedToInvestor = 0;
+        if(ownershipUnitsTmp > 0){
+          owedToInvestor = await apiContract.methods.getAmountOwed(asset.assetID, realAddress).call();
+        }
 
         let assetIdDetails = assetsAirTableById[asset.assetID];
         // if the asset Id is not on airtable it doens't show up in the platform
@@ -484,12 +771,17 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         }
 
         const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
-        const fundingStage = fundingStages[index];
+        const fundingStage = Number(fundingStages[index]);
+        let blockNumberitWentLive = undefined;
+        if(fundingStage === 4){
+          blockNumberitWentLive = assetsWentLive.filter(assetTmp => assetTmp.assetID === asset.assetID)[0].blockNumber;
+        }
+
         let amountRaisedInUSD = 0;
 
         // this fixes the issue of price fluctuations
         // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
-        if (fundingStage === '3' || fundingStage === '4') {
+        if (fundingStage === 3 || fundingStage === 4) {
           amountRaisedInUSD = amountToBeRaisedInUSD;
         } else {
           amountRaisedInUSD =
@@ -505,7 +797,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           amountRaisedInUSD,
           amountToBeRaisedInUSD,
           fundingDeadline: dueDate,
-          ownershipUnits: ownershipUnits[index],
+          ownershipUnits: ownershipUnitsTmp.toString(),
           assetIncome:
             Number(window.web3js.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
               currentEthInUsd,
@@ -517,11 +809,16 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           description: assetIdDetails.description,
           details: assetIdDetails.details,
           imageSrc: assetIdDetails.imageSrc,
-          fundingStage: fundingStages[index],
+          partner: assetIdDetails.partner,
+          fundingStage,
           managerPercentage: Number(managerPercentages[index]),
           pastDate,
           watchListed: alreadyFavorite,
           category: assetIdDetails.category,
+          owedToInvestor: owedToInvestor.toString(),
+          collateral: assetIdDetails.collateral,
+          collateralPercentage: Number(assetIdDetails.collateralPercentage),
+          blockNumberitWentLive,
         };
       }));
 
@@ -534,7 +831,6 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
           asset.description !== 'Coming soon');
       }
-
       resolve(assetsPlusMoreDetails);
     } catch (error) {
       reject(error);

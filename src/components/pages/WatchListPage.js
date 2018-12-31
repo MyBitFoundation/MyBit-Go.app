@@ -42,7 +42,7 @@ class WatchListPage extends Component {
 
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      if ((fundingActive && (asset.fundingStage !== '1' || asset.pastDate)) || (!fundingActive && !asset.pastDate) || !asset.watchListed) {
+      if ((fundingActive && (asset.fundingStage !== 1 || asset.pastDate)) || (!fundingActive && !asset.pastDate) || !asset.watchListed) {
         return false;
       }
       return true;

@@ -157,7 +157,7 @@ export const Slide = styled.div`
                 line-height: 12px;
             }
             &-file {
-                display: block;
+              display: block;
             }
         }
     }

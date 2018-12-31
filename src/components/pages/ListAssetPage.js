@@ -27,7 +27,6 @@ class ListAssetPage extends React.Component {
 
     this.state = {
       currentSlide: 0,
-      MYB_PLACEHOLDER: 0.18,
       maximumAllowedSlide: 1,
       data: {
         userCity: '',
@@ -48,6 +47,7 @@ class ListAssetPage extends React.Component {
       },
       countries: COUNTRIES,
       isUserListingAsset: false,
+      listedAssetId: undefined,
     };
   }
 
@@ -59,12 +59,13 @@ class ListAssetPage extends React.Component {
      this.ismounted = false;
   }
 
-  setUserListingAsset(flag){
+  setUserListingAsset(isUserListingAsset, listedAssetId){
     if(!this.ismounted){
       return;
     }
     this.setState({
-      isUserListingAsset: flag,
+      isUserListingAsset,
+      listedAssetId,
     })
   }
 
@@ -97,27 +98,37 @@ class ListAssetPage extends React.Component {
   handleInputChange = e => {
     this.setState({
         data: { ...this.state.data, [e.target.name]: e.target.value }
-    },() => console.log(this.state));
+    });
   };
 
   handleSelectChange = (value, name) => {
-    this.setState(
-      {
-        data: { ...this.state.data, [name]: value }
-      },
-      () => {
-        switch(name) {
-          case 'userCountry': {
-            this.setState({
-              data: { ...this.state.data, assetCountry: value, category: '', asset: '' }
-            });break;
-          }
-          default: {
-            console.log(this.state)
+    if(name === 'asset'){
+      const assetName = value.name;
+      const assetValue = value.assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0].amountToBeRaisedInUSDAirtable
+      this.setState({
+        data: {
+          ...this.state.data,
+          asset: assetName,
+          assetValue,
+        }
+      })
+    } else {
+      this.setState(
+        {
+          data: { ...this.state.data, [name]: value }
+        },
+        () => {
+          switch(name) {
+            case 'userCountry': {
+              this.setState({
+                data: { ...this.state.data, assetCountry: value, category: '', asset: '' }
+              });break;
+            }
+            default: return null;
           }
         }
-      }
-    );
+      );
+    }
   };
 
   handleFileUpload = filesObject => {
@@ -137,36 +148,35 @@ class ListAssetPage extends React.Component {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
-    this.setState(
-      {
-        data: { ...this.state.data, fileList: files }
-      },
-      () => console.log(this.state)
-    );
+    this.setState({
+      data: { ...this.state.data, fileList: files }
+    });
   };
 
   handleCollateralChange = (value, name) => {
     let percentage, dollar, myb;
     const { assetValue } = this.state.data;
-    const { MYB_PLACEHOLDER } = this.state;
+    const {
+      selectedAmount,
+      mybPrice,
+    } = value;
     switch (name) {
       case "percentage":
-        percentage = value;
+        percentage = selectedAmount;
         dollar = (percentage / 100) * assetValue;
-        myb = dollar / MYB_PLACEHOLDER;
+        myb = dollar / mybPrice;
         break;
       case "myb":
-        myb = value;
-        dollar = MYB_PLACEHOLDER * myb;
+        myb = selectedAmount;
+        dollar = mybPrice * myb;
         percentage = parseInt((dollar / assetValue) * 100);
         break;
       case "dollar":
-        dollar = value;
-        myb = dollar / MYB_PLACEHOLDER;
+        dollar = selectedAmount;
+        myb = dollar / mybPrice;
         percentage = parseInt((dollar / assetValue) * 100);
         break;
-      default:
-        console.log(this.state);
+      default: return null;
     }
     this.setState(
       {
@@ -176,27 +186,8 @@ class ListAssetPage extends React.Component {
           collateralMyb: myb,
           collateralPercentage: percentage
         }
-      },
-      () => console.log(this.state)
-    );
-  };
-
-  /*confirmAsset = () => {
-    fetch("/api/list-asset/auth", {
-      method: "POST",
-      body: this.state.data,
-      headers: {
-        Authorization: `Bearer ${this.props.civic.token}`
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        this.props.history.push("/explore");
-      })
-      .catch(err => {
-        console.log(err);
       });
-  };*/
+  };
 
   render() {
     const {
@@ -206,6 +197,7 @@ class ListAssetPage extends React.Component {
       countries,
       categories,
       isUserListingAsset,
+      listedAssetId,
      } = this.state;
 
     const {
@@ -302,6 +294,7 @@ class ListAssetPage extends React.Component {
             formData={data}
             isUserListingAsset={isUserListingAsset}
             setUserListingAsset={this.setUserListingAsset}
+            listedAssetId={listedAssetId}
           />
         </Carousel>
 
