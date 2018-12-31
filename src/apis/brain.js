@@ -373,7 +373,7 @@ export const createAsset = async params =>
         window.web3js,
         params.userAddress,
         params.managerPercentage,
-        110,
+        500,
         installerId,
         assetType,
         randomBlockNumber
@@ -381,7 +381,7 @@ export const createAsset = async params =>
 
       const assetCreationResponse = await assetCreationContract.methods
         .newAsset(
-          '110',
+          '500',
           params.managerPercentage.toString(),
           '0',
           installerId,
