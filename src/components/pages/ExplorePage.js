@@ -45,7 +45,11 @@ class ExplorePage extends Component {
   }
 
   render() {
-    const { loading, assets } = this.props;
+    const {
+      loading,
+       assets,
+       categoriesAirTable
+      } = this.props;
     if (loading.assets) {
       return <LoadingPage message="Loading assets" />;
     }
@@ -56,34 +60,10 @@ class ExplorePage extends Component {
 
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      if ((fundingActive && (asset.fundingStage !== '1' || asset.pastDate)) || (!fundingActive && !asset.pastDate)) {
-        return false;
-      }
       const assetCategory = asset.category;
-      if (assetCategory === 'bitcoinatm' && selectedFilters.includes('Crypto')) {
-        return true;
-      } else if (assetCategory === 'cryptomining' && selectedFilters.includes('Crypto')) {
-        return true;
-      } else if (assetCategory === 'other' && selectedFilters.includes('Other')) {
-        return true;
-      } else if (assetCategory === 'solarenergy' && selectedFilters.includes('Energy')) {
-        return true;
-      } else if (assetCategory === 'masternodes' && selectedFilters.includes('Crypto')) {
-        return true;
-      } else if (assetCategory === 'realestatestorage' && selectedFilters.includes('Real Estate')) {
-        return true;
-      } else if (assetCategory === 'realestatecoworking' && selectedFilters.includes('Real Estate')) {
-        return true;
-      } else if (assetCategory === 'vendingmachines' && selectedFilters.includes('Machinery')) {
-        return true;
-      } else if (assetCategory === 'autonomousvehicles' && selectedFilters.includes('Transportation')) {
-        return true;
-      } else if (assetCategory === 'dronedelivery' && selectedFilters.includes('Transportation')) {
-        return true;
-      } else if (assetCategory === 'chargingstation' && selectedFilters.includes('Energy')) {
+      if (((fundingActive && asset.fundingStage === 1 && !asset.pastDate) || (!fundingActive && (asset.fundingStage === 4 || asset.fundingStage === 3 || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
         return true;
       }
-
       return false;
     });
 
@@ -105,7 +85,7 @@ class ExplorePage extends Component {
             city={asset.city}
             country={asset.country}
             name={asset.name}
-            category={getPrettyCategoryName(asset.category)}
+            category={getPrettyCategoryName(asset.category, categoriesAirTable)}
             backgroundImage={asset.imageSrc}
             fundingStage={asset.fundingStage}
             pastDate={asset.pastDate}
@@ -141,7 +121,7 @@ class ExplorePage extends Component {
           <div className="ExplorePage__filters--is-switch">
             <span>Funding Active</span>
             <Switch
-              onChange={isFundingActive => this.setState({ fundingActive: isFundingActive })}
+              onChange={isFundingActive => this.setState({ fundingActive: isFundingActive, currentPage: 0 })}
               checked={fundingActive}
               checkedChildren={<Icon type="check" />}
               unCheckedChildren={<Icon type="close" />}

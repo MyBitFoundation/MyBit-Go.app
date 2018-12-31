@@ -77,13 +77,18 @@ b{
 
 
 .MetaMaskErrors{
-  background-color: red;
+  background-color: orange;
   color: white;
   text-align: center;
   font-family: Roboto;
   font-weight: 600;
   position: relative;
   top: 0px;
+  padding: 0px 10px;
+
+  & p{
+    padding: 2px 0px;
+  }
 
   & a{
     color: white;
@@ -95,4 +100,64 @@ b{
       text-decoration: underline;
     }
   }
+}
+
+.ant-tooltip {
+  .ant-tooltip-content {
+    box-shadow: 1px 5px 20px 2px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    .ant-tooltip-inner {
+      background-color: #ffffff;
+      color: #4a4a4a;
+      padding: 10px;
+    }
+    .ant-tooltip-arrow {
+      border-top-color: #ffffff;
+    }
+  }
+}
+
+.Notifications{
+  position: fixed;
+  z-index: 10;
+  bottom: 0px;
+  right: 0px;
+  display: flex;
+  flex-direction: column-reverse;
+
+
+  .ant-alert-with-description{
+    padding: 15px 35px 15px 64px;
+  }
+
+  .ant-alert{
+    position: relative;
+    z-index: 100000;
+    right: 20px;
+    max-width: 500px;
+    margin-bottom: 20px;
+
+    & a:focus{
+      text-decoration: none;
+    }
+  }
+}
+
+.christmas.ant-btn-primary:before{
+  display: none !important;
+}
+
+.MetamaksErrors__connect{
+  text-decoration: underline;
+
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+.ManagedAsset__error{
+  text-align: center;
+  font-size: 26px;
+  margin-top: 100px;
+  padding: 0px 40px;
 }

@@ -28,7 +28,11 @@ class WatchListPage extends Component {
   }
 
   render() {
-    const { loading, assets } = this.props;
+    const {
+      loading,
+      assets,
+      categoriesAirTable
+     } = this.props;
     if (loading.assets) {
       return <LoadingPage message="Loading WatchList" />;
     }
@@ -38,7 +42,7 @@ class WatchListPage extends Component {
 
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      if ((fundingActive && (asset.fundingStage !== '1' || asset.pastDate)) || (!fundingActive && !asset.pastDate) || !asset.watchListed) {
+      if ((fundingActive && (asset.fundingStage !== 1 || asset.pastDate)) || (!fundingActive && !asset.pastDate) || !asset.watchListed) {
         return false;
       }
       return true;
@@ -62,7 +66,7 @@ class WatchListPage extends Component {
             city={asset.city}
             country={asset.country}
             name={asset.name}
-            category={getPrettyCategoryName(asset.category)}
+            category={getPrettyCategoryName(asset.category, categoriesAirTable)}
             backgroundImage={asset.imageSrc}
             fundingStage={asset.fundingStage}
             pastDate={asset.pastDate}

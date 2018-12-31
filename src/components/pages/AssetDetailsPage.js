@@ -10,7 +10,7 @@ import NotFoundPage from './NotFoundPage';
 import LoadingPage from './LoadingPage';
 
 const AssetDetailsPage = ({
-  loading, assets, match, ether, user, history, changeNotificationPlace, setAssetsStatusState,
+  loading, assets, match, ether, user, history,
 }) => {
   if (loading.assets) {
     return (
@@ -45,6 +45,9 @@ const AssetDetailsPage = ({
     fundingStage: asset.fundingStage,
     pastDate: asset.pastDate,
     watchListed: asset.watchListed,
+    files: asset.files,
+    managerPercentage: asset.managerPercentage,
+    collateralPercentage: asset.collateralPercentage,
   };
 
   return (
@@ -56,8 +59,6 @@ const AssetDetailsPage = ({
         information={assetInformation}
         currentEthInUsd={ether.price}
         user={user}
-        changeNotificationPlace={changeNotificationPlace}
-        setAssetsStatusState={setAssetsStatusState}
       />
     </div>
   );
@@ -74,8 +75,6 @@ AssetDetailsPage.propTypes = {
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   history: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  changeNotificationPlace: PropTypes.func.isRequired,
-  setAssetsStatusState: PropTypes.func.isRequired,
 };
 
 export default withRouter(AssetDetailsPage);

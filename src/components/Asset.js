@@ -12,7 +12,7 @@ import 'antd/lib/icon/style';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.png';
 import Watch from './Watch';
-import { debug, isAssetIdEnabled } from '../constants';
+import { debug } from '../constants';
 import { formatMonetaryValue } from '../util/helpers';
 import BlockchainInfoContext from './BlockchainInfoContext';
 
@@ -31,7 +31,7 @@ const Asset = ({
   watchListed,
   handleClickedAssetFavorite,
 }) => {
-  const assetFunded = fundingStage === '3' || fundingStage === '4';
+  const assetFunded = fundingStage === 3 || fundingStage === 4;
   const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
   const goalFormatted = formatMonetaryValue(goal);
   let buttonText = 'Contribute';
@@ -90,8 +90,8 @@ const Asset = ({
           </div>
 
           <Link
-            to={`/explore/${category}/${id}`}
-            href={`/explore/${category}/${id}`}
+            to={`/explore/${id}`}
+            href={`/explore/${id}`}
           >
             <Button
               type={buttonType}
@@ -100,7 +100,6 @@ const Asset = ({
                 (() => debug(`Clicked to contribute, asset id: ${id}`))
               }
               className="Asset__details-contribute"
-              disabled={isAssetIdEnabled(id) === undefined}
             >
               {buttonText}
             </Button>

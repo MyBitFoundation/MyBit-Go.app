@@ -3,7 +3,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import AssetDetailsPage from './components/pages/AssetDetailsPage';
-import ExploreAssetsPage from './components/pages/ExploreAssetsPage';
 import ExplorePage from './components/pages/ExplorePage';
 import NotFoundPage from './components/pages/NotFoundPage';
 import PortfolioPage from './components/pages/PortfolioPage';
@@ -13,8 +12,12 @@ import BlockchainInfoContext from './components/BlockchainInfoContext';
 import LandingPage from './components/pages/LandingPage';
 import WatchListPage from './components/pages/WatchListPage';
 import OnboardingPage from './components/pages/OnboardingPage';
+import ListAssetPage from './components/pages/ListAssetPage'
+import AssetManagerPage from './components/pages/AssetManagerPage'
+import PortfolioManagedAssetPage from './components/pages/PortfolioManagedAssetPage'
 
 const redirectToOnFirstVisit = '/onboarding';
+const redirectOnFirstListAssetVisit = '/asset-manager';
 
 const routes = [
   {
@@ -30,7 +33,7 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets, handleClickedAssetFavorite }) =>
+        {({ loading, assets, handleClickedAssetFavorite, categoriesAirTable }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -38,6 +41,7 @@ const routes = [
               loading={loading}
               assets={assets}
               handleClickedAssetFavorite={handleClickedAssetFavorite}
+              categoriesAirTable={categoriesAirTable}
             />
           ))
         }
@@ -48,7 +52,7 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, assets, handleClickedAssetFavorite }) =>
+        {({ loading, assets, handleClickedAssetFavorite, categoriesAirTable }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -56,39 +60,24 @@ const routes = [
               loading={loading}
               assets={assets}
               handleClickedAssetFavorite={handleClickedAssetFavorite}
+              categoriesAirTable={categoriesAirTable}
             />
           ))
         }
       </BlockchainInfoContext.Consumer>
     ),
   }, {
-    path: '/explore/:category',
-    exact: true,
-    component: ({ match, isFirstVisit }) => (
-      <BlockchainInfoContext.Consumer>
-        {({ loading, assets }) =>
-          (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
-          ) : (
-            <ExploreAssetsPage
-              loading={loading}
-              assets={assets}
-              match={match}
-            />
-          ))
-        }
-      </BlockchainInfoContext.Consumer>
-    ),
-  },
-  {
-    path: '/explore/:category/:assetId',
+    path: '/explore/:assetId',
     exact: true,
     component: ({ match, isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
         {({
-          loading, assets, prices, user, changeNotificationPlace,
-          setAssetsStatusState, handleClickedAssetFavorite,
-          }) =>
+          loading,
+          assets,
+          prices,
+          user,
+          handleClickedAssetFavorite,
+        }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
@@ -98,8 +87,6 @@ const routes = [
               assets={assets}
               match={match}
               user={user}
-              changeNotificationPlace={changeNotificationPlace}
-              setAssetsStatusState={setAssetsStatusState}
               handleClickedAssetFavorite={handleClickedAssetFavorite}
             />
           ))
@@ -112,11 +99,18 @@ const routes = [
     exact: true,
     component: ({ isFirstVisit }) => (
       <BlockchainInfoContext.Consumer>
-        {({ loading, prices, assets }) =>
+        {({ loading, prices, assets, withdrawInvestorProfit, withdrawingAssetIds, user }) =>
           (isFirstVisit ? (
             <Redirect to={redirectToOnFirstVisit} />
           ) : (
-            <PortfolioPage loading={loading} prices={prices} assets={assets} />
+            <PortfolioPage
+              loading={loading}
+              prices={prices}
+              assets={assets}
+              withdrawingAssetIds={withdrawingAssetIds}
+              withdrawInvestorProfit={withdrawInvestorProfit}
+              user={user}
+            />
           ))
         }
       </BlockchainInfoContext.Consumer>
@@ -142,18 +136,66 @@ const routes = [
     ),
   },
   {
+    path: '/manage/:assetId',
+    exact: true,
+    component: ({ match, isFirstVisit }) => (
+      <BlockchainInfoContext.Consumer>
+        {props =>
+          <PortfolioManagedAssetPage
+            loading={props.loading}
+            assets={props.assets}
+            user={props.user}
+            match={match}
+            prices={props.prices}
+            withdrawCollateral={props.withdrawCollateral}
+            withdrawingCollateral={props.withdrawingCollateral}
+            withdrawProfitAssetManager={props.withdrawProfitAssetManager}
+            withdrawingAssetManager={props.withdrawingAssetManager}
+          />
+        }
+      </BlockchainInfoContext.Consumer>
+    )
+  },
+  {
     path: '/help',
     exact: true,
-    component: () => (
+    component: ({ isFirstVisit }) =>
+    (isFirstVisit ? <Redirect to={redirectToOnFirstVisit} /> : (
       <BlockchainInfoContext.Consumer>
         {({ fetchMyBit }) => <HelpPage fetchMyBit={fetchMyBit} />}
       </BlockchainInfoContext.Consumer>
-    ),
+    )),
   },
   {
     path: '/onboarding',
     exact: true,
     component: () => (<OnboardingPage />),
+  },
+  {
+    path: '/list-asset',
+    exact: true,
+    component: ({ isFirstVisit, isFirstListAssetVisit }) => {
+      if(isFirstVisit) {
+        return (
+          <Redirect to={redirectToOnFirstVisit} />
+        )
+      } else {
+        if(isFirstListAssetVisit) {
+          return (
+            <Redirect to={redirectOnFirstListAssetVisit} />
+          )
+        } else {
+          return (
+            <ListAssetPage />
+          )
+        }
+      }
+    }
+  },
+  {
+    path: '/asset-manager',
+    exact: true,
+    component: () => (<AssetManagerPage />),
   },
   {
     path: '*',

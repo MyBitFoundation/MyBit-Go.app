@@ -16,54 +16,109 @@ import {
 } from '../constants/index';
 
 class ConfirmationPopup extends React.Component {
-  setAcceptedTos(value) {
-    const { assetsNotification, setAssetsStatusState } = this.props;
+  state = {
+    acceptedTos: false,
+    alertType: undefined,
+    alertMessage: undefined,
+    transactionStatus: '',
+    isLoading: false,
+  }
 
-    setAssetsStatusState({
-      ...assetsNotification,
-      acceptedTos: value,
-    });
+  componentDidMount(){
+    this.ismounted = true;
+  }
 
-    if (value === true && this.props.assetsNotification.alertType) {
-      setAssetsStatusState({
-        ...assetsNotification,
+  componentWillUnmount() {
+     this.ismounted = false;
+  }
+
+  setAcceptedTos = (value) => {
+    const {
+      alertType
+    } = this.state;
+    if (value === true && alertType) {
+      this.setState({
         alertType: undefined,
         alertMessage: undefined,
       });
     }
+    this.setState({
+      acceptedTos: value,
+    })
   }
 
   handleCancel() {
     this.props.handlePopupState(false);
   }
 
-  tryAgain() {
-    this.props.setAssetsStatusState({
-      transactionStatus: '',
+  onSuccess = () => {
+    if(!this.ismounted){
+      return;
+    }
+    this.setState({
+      transactionStatus: 1,
+      isLoading: false,
+    })
+  }
+
+  onFailure = () => {
+    if(!this.ismounted){
+      return;
+    }
+    this.setState({
+      transactionStatus: 0,
+      isLoading: false,
     });
   }
 
-  handleConfirmClicked(transactionStatus) {
+  handleConfirmClicked = (transactionStatus) => {
     if (transactionStatus === 1) {
       return this.handleCancel();
     }
 
-    const { assetsNotification, setAssetsStatusState } = this.props;
-
-    if (!assetsNotification.acceptedTos) {
-      setAssetsStatusState({
+    if (!this.state.acceptedTos) {
+      this.setState({
         alertType: 'error',
         alertMessage: 'Please accept the Terms and Conditions before continuing.',
       });
       return null;
     }
 
+    this.setState({
+      isLoading: true,
+    })
+
     this.props.fundAsset(
       this.props.assetId,
       this.props.amountEth,
-
+      this.onSuccess,
+      this.onFailure,
+      this.props.amountUsd
     );
+
+    this.props.handlePopupState(false);
+
     return null;
+  }
+
+  getOkText = () => {
+    const {
+      isLoading,
+      transactionStatus,
+    } = this.state;
+
+    if(isLoading){
+      return 'Confirming';
+    }
+
+    switch (transactionStatus) {
+      case 0:
+        return 'Try again';
+      case 1:
+        return 'Close';
+      default:
+        return 'Confirm';
+    }
   }
 
   render() {
@@ -76,8 +131,12 @@ class ConfirmationPopup extends React.Component {
     } = this.props;
 
     const {
-      isLoading, transactionStatus, acceptedTos, alertType, alertMessage,
-    } = this.props.assetsNotification;
+      acceptedTos,
+      transactionStatus,
+      isLoading,
+      alertType,
+      alertMessage,
+    } = this.state;
 
 
     const shouldShowConfirmAndCancel =
@@ -92,9 +151,9 @@ class ConfirmationPopup extends React.Component {
         title="Confirm with MetaMask"
         onOk={() => this.handleConfirmClicked(transactionStatus)}
         onCancel={() => this.props.handlePopupState(false)}
-        okText={transactionStatus === 0 ? 'Try again' : transactionStatus === 1 ? 'Close' : 'Confirm'}
+        okText={this.getOkText()}
         cancelText={transactionStatus === 1 ? null : 'Back'}
-
+        confirmLoading={isLoading}
         okButtonProps={{ disabled: !shouldShowConfirmAndCancel }}
       >
         <div>
@@ -152,8 +211,7 @@ class ConfirmationPopup extends React.Component {
             <AlertMessage
               type={alertType}
               message={alertMessage}
-              handleAlertClosed={() => this.props.setAssetsStatusState({
-                ...this.props.assetsNotification,
+              handleAlertClosed={() => this.setState({
                 alertType: undefined,
               })}
               showIcon
@@ -165,13 +223,6 @@ class ConfirmationPopup extends React.Component {
     );
   }
 }
-
-ConfirmationPopup.defaultProps = {
-  assetsNotification: {
-    alertType: '',
-    alertMessage: '',
-  },
-};
 
 ConfirmationPopup.propTypes = {
   amountUsd: PropTypes.string.isRequired,
@@ -186,14 +237,6 @@ ConfirmationPopup.propTypes = {
   network: PropTypes.string.isRequired,
   userIsLoggedIn: PropTypes.bool.isRequired,
   isBraveBrowser: PropTypes.bool.isRequired,
-  setAssetsStatusState: PropTypes.func.isRequired,
-  assetsNotification: PropTypes.shape({
-    isLoading: PropTypes.bool.isRequired,
-    transactionStatus: PropTypes.string,
-    acceptedTos: PropTypes.bool.isRequired,
-    alertType: PropTypes.string,
-    alertMessage: PropTypes.string,
-  }),
 };
 
 export default ConfirmationPopup;

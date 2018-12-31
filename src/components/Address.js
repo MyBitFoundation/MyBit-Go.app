@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Jazzicon from 'react-jazzicon';
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import '../styles/Address.css';
 import Spin from '../images/spin.svg';
 
@@ -13,7 +13,7 @@ const Address = ({ userName, className }) => (
       </div>
     ) : (
       <div className="Address__jazz-n-hex">
-        <Jazzicon diameter={39} />
+        <Jazzicon diameter={39} seed={jsNumberForAddress(userName)} />
         <p className="Address__text">{userName}</p>
       </div>
     )}
