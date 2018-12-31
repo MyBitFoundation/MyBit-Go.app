@@ -176,7 +176,7 @@ class PortfolioManagedAssetPage extends React.Component {
 
         //calculate how much the asset manager can withdraw
         const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetID), Brain.getManagerIncomeWithdraw(assetManager, asset.assetID)]);
-
+        console.log(totalIncome, totalWithdrawn)
         //set the state with the calculated data
         this.setState({
           loading: false,
@@ -458,6 +458,7 @@ class PortfolioManagedAssetPage extends React.Component {
         const averageProfitUSD = profitUSD / daysSinceItWentLive;
         const averageProfitETH = (profitETH / daysSinceItWentLive).toFixed(4);
 
+        console.log(toWithdraw)
         const toWithdrawETH = window.web3js.utils.fromWei(toWithdraw.toString(), 'ether');
         const toWithdrawUSD = formatMonetaryValue(toWithdrawETH * etherPrice);
         const isLoadingWithdraw = withdrawingAssetManager.includes(asset.assetID);

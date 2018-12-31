@@ -201,7 +201,7 @@ class BlockchainInfo extends React.Component {
       withdrawingAssetManager,
     });
 
-    const result = await Brain.withdrawEscrow(
+    const result = await Brain.withdrawAssetManager(
       this.state.user,
       assetID,
       name,

@@ -677,7 +677,7 @@ export const getManagerIncomeWithdraw = async (managerAddress, assetID) =>
     let withdrawn = logsIncomeEarned
       .filter(({ returnValues }) => returnValues._manager === managerAddress && returnValues._assetID === assetID)
       .reduce((accumulator, currentValue) =>
-        (accumulator) + Number(currentValue.returnValues._owed)
+        (accumulator) + Number(currentValue.returnValues.owed)
         ,0)
 
     resolve(withdrawn);
