@@ -158,9 +158,6 @@ export const Slide = styled.div`
             }
             &-file {
               display: block;
-              hite-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
             }
         }
     }
