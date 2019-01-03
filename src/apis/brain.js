@@ -349,6 +349,7 @@ export const createAsset = async params =>
         fileList,
         collateralMyb,
         collateralPercentage,
+        amountToBeRaisedInUSD,
       } = params;
       const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
       debug(collateral)
@@ -373,7 +374,7 @@ export const createAsset = async params =>
         window.web3js,
         params.userAddress,
         params.managerPercentage,
-        500,
+        amountToBeRaisedInUSD,
         installerId,
         assetType,
         randomBlockNumber
@@ -381,7 +382,7 @@ export const createAsset = async params =>
 
       const assetCreationResponse = await assetCreationContract.methods
         .newAsset(
-          '500',
+          amountToBeRaisedInUSD.toString(),
           params.managerPercentage.toString(),
           '0',
           installerId,
