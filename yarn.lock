@@ -9265,9 +9265,9 @@ react-error-overlay@^5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.1.tgz#56f0439f001ff3588da0f479a86482ccb1e708cb"
 
-react-facebook-pixel@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-facebook-pixel/-/react-facebook-pixel-0.1.1.tgz#9f258a08590ec7c11837cc4bc94e294d11a908bc"
+react-facebook-pixel@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-facebook-pixel/-/react-facebook-pixel-0.1.2.tgz#a1519f215611eb136802d78542aface547972827"
 
 react-ga@2.5.6:
   version "2.5.6"
@@ -10218,8 +10218,9 @@ sisteransi@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-0.1.1.tgz#5431447d5f7d1675aac667ccd0b865a4994cb3ce"
 
-"sjcl@github:civicteam/sjcl":
+sjcl@civicteam/sjcl.git:
   version "1.0.7"
+  uid "1dab1ddd60e722bb22c36080bcca5b9e73df91b5"
   resolved "https://codeload.github.com/civicteam/sjcl/tar.gz/1dab1ddd60e722bb22c36080bcca5b9e73df91b5"
 
 slash@^1.0.0:
