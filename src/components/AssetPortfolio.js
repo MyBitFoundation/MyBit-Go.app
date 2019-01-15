@@ -12,43 +12,48 @@ import '../styles/AssetPortfolio.css';
 import locationIcon from '../images/Location-icon.png';
 
 import { formatMonetaryValue } from '../util/helpers';
+import {
+  FundingStages,
+} from '../constants/fundingStages';
 
 const AssetPortfolio = ({
   type,
-  name,
-  backgroundImage,
-  totalProfit,
-  unrealizedProfit,
-  ownershipUsd,
-  ownershipPercentage,
-  funding,
-  fundingTotal,
-  fundingStage,
-  assetID,
-  category,
-  numberOfInvestors,
-  owedToInvestor,
+  asset,
   withdrawInvestorProfit,
   withdrawingAssetIds,
-  value,
-  fee,
-  totalProfitAssetManager,
-  city,
-  country,
 }) => {
+  const {
+    name,
+    imageSrc,
+    totalProfit,
+    unrealizedProfit,
+    ownershipPercentage,
+    amountToBeRaisedInUSD,
+    amountRaisedInUSD,
+    numberOfInvestors,
+    assetID,
+    owedToInvestor,
+    city,
+    country,
+    totalProfitAssetManager,
+    managerPercentage,
+    funded,
+    fundingStage,
+  } = asset;
+
   let url = `/explore/${assetID}`;
 
   let buttonType = 'primary';
   let text = 'Contribute more';
 
-  if (type === 'owned' && fundingStage !== 1) {
+  if (type === 'owned' && funded) {
     buttonType = 'secondary';
     text = 'View asset listing';
-  } else if(type === 'managed' && (fundingStage === 3 || fundingStage === 4)){
+  } else if(type === 'managed' && funded){
     buttonType = 'secondary';
     text = 'Manage asset';
     url = `/manage/${assetID}`;
-  } else if(type === 'managed' && fundingStage === 1){
+  } else if(type === 'managed' && fundingStage === FundingStages.IN_PROGRESS){
     text = 'View asset listing';
   }
 
@@ -81,7 +86,7 @@ const AssetPortfolio = ({
       <div className="AssetPortfolio">
         <div
           className="AssetPortfolio__image"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
+          style={{ backgroundImage: `url(${imageSrc})` }}
         >
           <div className="AssetPortfolio__image-holder-gradient" />
           <img
@@ -95,12 +100,12 @@ const AssetPortfolio = ({
           </p>
         </div>
         {type === 'owned' && (
-          <div className={`AssetPortfolio__details ${(fundingStage === 0 || fundingStage === 1) ? 'AssetPortfolio__details--is-three-sections' : undefined}`}>
+          <div className={`AssetPortfolio__details ${funded ? 'AssetPortfolio__details--is-three-sections' : undefined}`}>
             <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-unrealised">
               <span>Unrealised profit:</span>
-              <span>{fundingStage === 1 ? <span>Funding in progress</span> : `${formatMonetaryValue(unrealizedProfit)}`}</span>
+              <span>{fundingStage === FundingStages.IN_PROGRESS ? <span>Funding in progress</span> : `${formatMonetaryValue(unrealizedProfit)}`}</span>
             </div>
-            {(fundingStage === 3 || fundingStage === 4) && (
+            {funded && (
               <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-totalProfit">
                 <span>Total profit:</span>
                 <div>
@@ -111,14 +116,14 @@ const AssetPortfolio = ({
             <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-ownership">
               <span>Your ownership:</span>
               <div>
-                <span>{numberOfInvestors === 1 && (fundingStage === 3 || fundingStage === 4) ? '100' : ownershipPercentage}%</span>
+                <span>{(numberOfInvestors === 1 && funded) ? '100' : ownershipPercentage}%</span>
               </div>
             </div>
             <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-funding">
               <div>
                 <p>Funding:</p>
                 <span>
-                  {formatMonetaryValue(funding)}/{formatMonetaryValue(fundingTotal)}
+                  {formatMonetaryValue(amountRaisedInUSD)}/{formatMonetaryValue(amountToBeRaisedInUSD)}
                 </span>
               </div>
               <div className="AssetPortfolio__details-buttons">
@@ -132,7 +137,7 @@ const AssetPortfolio = ({
           <div className={'AssetPortfolio__details AssetPortfolio__details--is-managed'}>
             <div className="AssetPortfolio__details-section AssetPortfolio__details-section">
               <span>Your management fee:</span>
-              <span className="AssetPortfolio__details--is-bold">{fee}%</span>
+              <span className="AssetPortfolio__details--is-bold">{managerPercentage}%</span>
             </div>
             <div className="AssetPortfolio__details-section AssetPortfolio__details-section">
               <span>Total profit:</span>
@@ -148,11 +153,11 @@ const AssetPortfolio = ({
             </div>
             <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-funding">
               <div>
-                {(fundingStage === 3 || fundingStage === 4) && (
+                {funded && (
                   <span>Fully funded</span>
                 )}
-                {fundingStage === 1 && (
-                  <span>Funded: <span className="AssetPortfolio__details--is-bold">{formatMonetaryValue(funding)}</span>/{formatMonetaryValue(fundingTotal)}</span>
+                {fundingStage === FundingStages.IN_PROGRESS && (
+                  <span>Funded: <span className="AssetPortfolio__details--is-bold">{formatMonetaryValue(amountRaisedInUSD)}</span>/{formatMonetaryValue(amountToBeRaisedInUSD)}</span>
                 )}
               </div>
               <div className="AssetPortfolio__details-buttons">
@@ -178,12 +183,10 @@ AssetPortfolio.propTypes = {
   name: PropTypes.string.isRequired,
   backgroundImage: PropTypes.string,
   totalProfit: PropTypes.string.isRequired,
-  ownershipUsd: PropTypes.string.isRequired,
   ownershipPercentage: PropTypes.string.isRequired,
   funding: PropTypes.number.isRequired,
   fundingTotal: PropTypes.number.isRequired,
   fundingStage: PropTypes.string.isRequired,
   assetID: PropTypes.string.isRequired,
-  category: PropTypes.string.isRequired,
   numberOfInvestors: PropTypes.number.isRequired,
 };

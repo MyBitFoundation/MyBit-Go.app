@@ -24,6 +24,11 @@ import {
 } from '../constants';
 
 import {
+  FundingStages,
+  getFundingStage,
+} from '../constants/fundingStages';
+
+import {
   generateAssetId,
   generateRandomHex,
 } from '../util/helpers'
@@ -772,17 +777,19 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         }
 
         const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
-        const fundingStage = Number(fundingStages[index]);
+        const fundingStageTmp = Number(fundingStages[index]);
+        const fundingStage = getFundingStage(fundingStageTmp);
+
         let blockNumberitWentLive = undefined;
-        if(fundingStage === 4){
+        let amountRaisedInUSD = 0;
+
+        if(fundingStageTmp === 4){
           blockNumberitWentLive = assetsWentLive.filter(assetTmp => assetTmp.assetID === asset.assetID)[0].blockNumber;
         }
 
-        let amountRaisedInUSD = 0;
-
         // this fixes the issue of price fluctuations
         // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
-        if (fundingStage === 3 || fundingStage === 4) {
+        if(fundingStage === FundingStages.FUNDED){
           amountRaisedInUSD = amountToBeRaisedInUSD;
         } else {
           amountRaisedInUSD =
@@ -820,6 +827,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           collateral: assetIdDetails.collateral,
           collateralPercentage: Number(assetIdDetails.collateralPercentage),
           blockNumberitWentLive,
+          funded: fundingStage === FundingStages.FUNDED,
         };
       }));
 
@@ -832,6 +840,8 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
           asset.description !== 'Coming soon');
       }
+
+      debug(assetsPlusMoreDetails)
       resolve(assetsPlusMoreDetails);
     } catch (error) {
       reject(error);

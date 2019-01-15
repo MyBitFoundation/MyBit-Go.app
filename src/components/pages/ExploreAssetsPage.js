@@ -35,17 +35,17 @@ const ExploreAssetsPage = ({ loading, assets, match, categoriesAirTable }) => {
       {assetsInCategory.map(asset => (
         <Asset
           key={asset.assetID}
-          id={asset.assetID}
-          funded={asset.amountRaisedInUSD}
-          goal={asset.amountToBeRaisedInUSD}
+          assetID={asset.assetID}
+          amountRaisedInUSD={asset.amountRaisedInUSD}
+          amountToBeRaisedInUSD={asset.amountToBeRaisedInUSD}
           city={asset.city}
           country={asset.country}
           name={asset.name}
           category={getPrettyCategoryName(asset.category, categoriesAirTable)}
           backgroundImage={asset.imageSrc}
-          fundingStage={asset.fundingStage}
           pastDate={asset.pastDate}
           numberOfInvestors={asset.numberOfInvestors}
+          funded={asset.funded}
         />
       ))}
     </div>,

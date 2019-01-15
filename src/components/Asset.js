@@ -18,25 +18,24 @@ import BlockchainInfoContext from './BlockchainInfoContext';
 
 const Asset = ({
   clickHandler,
-  funded,
-  goal,
+  amountRaisedInUSD,
+  amountToBeRaisedInUSD,
   city,
   country,
   name,
   category,
-  id,
+  assetID,
   backgroundImage,
-  fundingStage,
   pastDate,
   watchListed,
   handleClickedAssetFavorite,
+  funded,
 }) => {
-  const assetFunded = fundingStage === 3 || fundingStage === 4;
-  const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
-  const goalFormatted = formatMonetaryValue(goal);
+  const barWidth = funded ? 100 : Math.ceil((amountRaisedInUSD / amountToBeRaisedInUSD) * 100);
+  const goalFormatted = formatMonetaryValue(amountToBeRaisedInUSD);
   let buttonText = 'Contribute';
   let buttonType = 'primary';
-  if (assetFunded || pastDate) {
+  if (funded || pastDate) {
     buttonText = 'View Asset';
     buttonType = 'default';
   }
@@ -65,7 +64,7 @@ const Asset = ({
                 <Watch
                   active={watchListed}
                   handleClick={handleClickedAssetFavorite}
-                  assetId={id}
+                  assetId={assetID}
                 />
             )}
           </BlockchainInfoContext.Consumer>
@@ -73,7 +72,7 @@ const Asset = ({
         <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
           <p className="Asset__details-funded">
             Funded:{' '}
-            <b>{assetFunded ? goalFormatted : `${formatMonetaryValue(funded)}`}</b>
+            <b>{funded ? goalFormatted : `${formatMonetaryValue(amountRaisedInUSD)}`}</b>
           </p>
           <p className="Asset__details-goal">
             Goal:{' '}
@@ -90,14 +89,14 @@ const Asset = ({
           </div>
 
           <Link
-            to={`/explore/${id}`}
-            href={`/explore/${id}`}
+            to={`/explore/${assetID}`}
+            href={`/explore/${assetID}`}
           >
             <Button
               type={buttonType}
               onClick={
                 clickHandler ||
-                (() => debug(`Clicked to contribute, asset id: ${id}`))
+                (() => debug(`Clicked to contribute, asset id: ${assetID}`))
               }
               className="Asset__details-contribute"
             >
