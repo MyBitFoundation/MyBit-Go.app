@@ -417,7 +417,7 @@ export const createAsset = async params =>
             let counterCallsToInternalActions = 0;
 
             // we need to perform a few actions before declaring the listing of the asset as successful
-            const performedInternalAction = () => {
+            const performInternalAction = () => {
               counterCallsToInternalActions++;
               if(counterCallsToInternalActions === requiredCallsToInternalActions){
                 onSuccess(() => {
@@ -434,9 +434,9 @@ export const createAsset = async params =>
               }
             }
 
-            updateAirTableWithNewAsset(futureAssetId, assetName, country, city, collateralMyb, collateralPercentage, performedInternalAction)
-            createEntryForNewCollateral(userAddress, collateral, futureAssetId, performedInternalAction);
-            filesUploaded && uploadFilesToAWS(futureAssetId, fileList, performedInternalAction);
+            updateAirTableWithNewAsset(futureAssetId, assetName, country, city, collateralMyb, collateralPercentage, performInternalAction)
+            createEntryForNewCollateral(userAddress, collateral, futureAssetId, performInternalAction);
+            filesUploaded && uploadFilesToAWS(futureAssetId, fileList, performInternalAction);
 
           } else {
             updateNotification(id, {
@@ -457,7 +457,7 @@ export const createAsset = async params =>
 const uploadFilesToAWS = async (
   assetId,
   fileList,
-  performedInternalAction,
+  performInternalAction,
 ) => {
   try{
     let data = new FormData();
@@ -473,9 +473,9 @@ const uploadFilesToAWS = async (
       }
     )
 
-    performedInternalAction();
+    performInternalAction();
   } catch(err){
-    setTimeout(() => uploadFilesToAWS(assetId, fileList, performedInternalAction), 5000);
+    setTimeout(() => uploadFilesToAWS(assetId, fileList, performInternalAction), 5000);
     debug(err);
   }
 }
@@ -484,7 +484,7 @@ const createEntryForNewCollateral = async (
   address,
   escrow,
   assetId,
-  performedInternalAction,
+  performInternalAction,
 ) => {
   try{
     await axios.post(MYBIT_API_COLLATERAL, {
@@ -492,9 +492,9 @@ const createEntryForNewCollateral = async (
       escrow,
       assetId,
     })
-    performedInternalAction();
+    performInternalAction();
   } catch(err){
-    setTimeout(() => createEntryForNewCollateral(address, escrow, assetId, performedInternalAction), 5000);
+    setTimeout(() => createEntryForNewCollateral(address, escrow, assetId, performInternalAction), 5000);
     debug(err);
   }
 }
@@ -506,7 +506,7 @@ const updateAirTableWithNewAsset = async (
   city,
   collateral,
   collateralPercentage,
-  performedInternalAction,
+  performInternalAction,
 ) => {
   try{
     await axios.post(UPDATE_ASSETS_URL, {
@@ -517,9 +517,9 @@ const updateAirTableWithNewAsset = async (
       collateral,
       collateralPercentage,
     });
-    performedInternalAction();
+    performInternalAction();
   } catch(err){
-    setTimeout(() => updateAirTableWithNewAsset(assetId, assetName, country, city, collateral, collateralPercentage, performedInternalAction), 5000);
+    setTimeout(() => updateAirTableWithNewAsset(assetId, assetName, country, city, collateral, collateralPercentage, performInternalAction), 5000);
     debug(err);
   }
 }
