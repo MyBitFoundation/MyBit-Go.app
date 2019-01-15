@@ -841,7 +841,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           asset.description !== 'Coming soon');
       }
 
-      console.log(assetsPlusMoreDetails)
+      debug(assetsPlusMoreDetails)
       resolve(assetsPlusMoreDetails);
     } catch (error) {
       reject(error);
