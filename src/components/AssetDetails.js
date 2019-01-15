@@ -64,10 +64,12 @@ class AssetDetails extends React.Component {
 
     const {
       fundingDeadline,
+      amountToBeRaisedInUSD,
+      amountRaisedInUSD,
     } = asset;
 
     const maxInvestment =
-      asset.amountToBeRaisedInUSD - asset.amountRaisedInUSD;
+      amountToBeRaisedInUSD - amountRaisedInUSD;
 
     // funding goal has been reached
     if (maxInvestment === 0 || asset.funded) {
