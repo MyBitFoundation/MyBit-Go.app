@@ -780,8 +780,6 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         const fundingStageTmp = Number(fundingStages[index]);
         const fundingStage = getFundingStage(fundingStageTmp);
 
-        console.log(fundingStage)
-
         let blockNumberitWentLive = undefined;
         let amountRaisedInUSD = 0;
 

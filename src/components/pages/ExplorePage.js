@@ -82,9 +82,9 @@ class ExplorePage extends Component {
         {assetsFiltered.map(asset => (
           <Asset
             key={asset.assetID}
-            id={asset.assetID}
-            fundingAmount={asset.amountRaisedInUSD}
-            goal={asset.amountToBeRaisedInUSD}
+            assetID={asset.assetID}
+            amountRaisedInUSD={asset.amountRaisedInUSD}
+            amountToBeRaisedInUSD={asset.amountToBeRaisedInUSD}
             city={asset.city}
             country={asset.country}
             name={asset.name}

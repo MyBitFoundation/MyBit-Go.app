@@ -18,21 +18,21 @@ import BlockchainInfoContext from './BlockchainInfoContext';
 
 const Asset = ({
   clickHandler,
-  fundingAmount,
-  goal,
+  amountRaisedInUSD,
+  amountToBeRaisedInUSD,
   city,
   country,
   name,
   category,
-  id,
+  assetID,
   backgroundImage,
   pastDate,
   watchListed,
   handleClickedAssetFavorite,
   funded,
 }) => {
-  const barWidth = funded ? 100 : Math.ceil((fundingAmount / goal) * 100);
-  const goalFormatted = formatMonetaryValue(goal);
+  const barWidth = funded ? 100 : Math.ceil((amountRaisedInUSD / amountToBeRaisedInUSD) * 100);
+  const goalFormatted = formatMonetaryValue(amountToBeRaisedInUSD);
   let buttonText = 'Contribute';
   let buttonType = 'primary';
   if (funded || pastDate) {
@@ -64,7 +64,7 @@ const Asset = ({
                 <Watch
                   active={watchListed}
                   handleClick={handleClickedAssetFavorite}
-                  assetId={id}
+                  assetId={assetID}
                 />
             )}
           </BlockchainInfoContext.Consumer>
@@ -72,7 +72,7 @@ const Asset = ({
         <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
           <p className="Asset__details-funded">
             Funded:{' '}
-            <b>{funded ? goalFormatted : `${formatMonetaryValue(fundingAmount)}`}</b>
+            <b>{funded ? goalFormatted : `${formatMonetaryValue(amountRaisedInUSD)}`}</b>
           </p>
           <p className="Asset__details-goal">
             Goal:{' '}
@@ -89,14 +89,14 @@ const Asset = ({
           </div>
 
           <Link
-            to={`/explore/${id}`}
-            href={`/explore/${id}`}
+            to={`/explore/${assetID}`}
+            href={`/explore/${assetID}`}
           >
             <Button
               type={buttonType}
               onClick={
                 clickHandler ||
-                (() => debug(`Clicked to contribute, asset id: ${id}`))
+                (() => debug(`Clicked to contribute, asset id: ${assetID}`))
               }
               className="Asset__details-contribute"
             >
