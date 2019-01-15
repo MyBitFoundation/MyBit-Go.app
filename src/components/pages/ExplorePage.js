@@ -15,6 +15,9 @@ import { getPrettyCategoryName } from '../../util/helpers';
 import LoadingPage from './LoadingPage';
 import CategoryFilter from '../CategoryFilter';
 import Asset from '../Asset';
+import {
+  FundingStages,
+} from '../../constants/fundingStages';
 
 const assetsPerPage = 12;
 
@@ -61,7 +64,7 @@ class ExplorePage extends Component {
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
       const assetCategory = asset.category;
-      if (((fundingActive && asset.fundingStage === 1 && !asset.pastDate) || (!fundingActive && (asset.fundingStage === 4 || asset.fundingStage === 3 || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
+      if (((fundingActive && asset.fundingStage === FundingStages.IN_PROGRESS && !asset.pastDate) || (!fundingActive && (asset.funded || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
         return true;
       }
       return false;
@@ -80,7 +83,7 @@ class ExplorePage extends Component {
           <Asset
             key={asset.assetID}
             id={asset.assetID}
-            funded={asset.amountRaisedInUSD}
+            fundingAmount={asset.amountRaisedInUSD}
             goal={asset.amountToBeRaisedInUSD}
             city={asset.city}
             country={asset.country}

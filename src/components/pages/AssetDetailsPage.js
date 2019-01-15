@@ -29,26 +29,6 @@ const AssetDetailsPage = ({
       <NotFoundPage message="The desired asset could not be found. Assets previously listed may no longer exist." />
     );
   }
-  const assetInformation = {
-    assetID: asset.assetID,
-    dueDate: asset.fundingDeadline,
-    goal: asset.amountToBeRaisedInUSD,
-    raised: asset.amountRaisedInUSD,
-    assetName: asset.name,
-    city: asset.city,
-    country: asset.country,
-    details: asset.details,
-    description: asset.description,
-    address: asset.assetManager,
-    numberOfInvestors: asset.numberOfInvestors,
-    imageSrc: asset.imageSrc,
-    fundingStage: asset.fundingStage,
-    pastDate: asset.pastDate,
-    watchListed: asset.watchListed,
-    files: asset.files,
-    managerPercentage: asset.managerPercentage,
-    collateralPercentage: asset.collateralPercentage,
-  };
 
   return (
     <div>
@@ -56,9 +36,9 @@ const AssetDetailsPage = ({
         Back
       </Button>
       <AssetDetails
-        information={assetInformation}
         currentEthInUsd={ether.price}
         user={user}
+        asset={asset}
       />
     </div>
   );

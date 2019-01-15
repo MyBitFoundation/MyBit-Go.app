@@ -209,25 +209,9 @@ class PortfolioPage extends React.Component {
               <AssetPortfolio
                 type={currentView}
                 key={asset.assetID}
-                name={asset.name}
-                backgroundImage={asset.imageSrc}
-                totalProfit={asset.totalProfit}
-                unrealizedProfit={asset.unrealizedProfit}
-                ownershipPercentage={asset.ownershipPercentage}
-                funding={asset.amountRaisedInUSD}
-                fundingTotal={asset.amountToBeRaisedInUSD}
-                fundingStage={asset.fundingStage}
-                assetID={asset.assetID}
-                category={asset.category}
-                numberOfInvestors={asset.numberOfInvestors}
-                owedToInvestor={asset.owedToInvestor}
                 withdrawInvestorProfit={withdrawInvestorProfit}
                 withdrawingAssetIds={withdrawingAssetIds}
-                value={asset.amountToBeRaisedInUSD}
-                fee={asset.managerPercentage}
-                totalProfitAssetManager={asset.totalProfitAssetManager}
-                city={asset.city}
-                country={asset.country}
+                asset={asset}
               />
             ))}
           </Row>

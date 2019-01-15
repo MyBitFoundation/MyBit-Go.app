@@ -18,7 +18,7 @@ import BlockchainInfoContext from './BlockchainInfoContext';
 
 const Asset = ({
   clickHandler,
-  funded,
+  fundingAmount,
   goal,
   city,
   country,
@@ -26,17 +26,16 @@ const Asset = ({
   category,
   id,
   backgroundImage,
-  fundingStage,
   pastDate,
   watchListed,
   handleClickedAssetFavorite,
+  funded,
 }) => {
-  const assetFunded = fundingStage === 3 || fundingStage === 4;
-  const barWidth = assetFunded ? 100 : Math.ceil((funded / goal) * 100);
+  const barWidth = funded ? 100 : Math.ceil((fundingAmount / goal) * 100);
   const goalFormatted = formatMonetaryValue(goal);
   let buttonText = 'Contribute';
   let buttonType = 'primary';
-  if (assetFunded || pastDate) {
+  if (funded || pastDate) {
     buttonText = 'View Asset';
     buttonType = 'default';
   }
@@ -73,7 +72,7 @@ const Asset = ({
         <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
           <p className="Asset__details-funded">
             Funded:{' '}
-            <b>{assetFunded ? goalFormatted : `${formatMonetaryValue(funded)}`}</b>
+            <b>{funded ? goalFormatted : `${formatMonetaryValue(fundingAmount)}`}</b>
           </p>
           <p className="Asset__details-goal">
             Goal:{' '}

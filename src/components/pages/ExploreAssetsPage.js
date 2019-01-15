@@ -36,16 +36,16 @@ const ExploreAssetsPage = ({ loading, assets, match, categoriesAirTable }) => {
         <Asset
           key={asset.assetID}
           id={asset.assetID}
-          funded={asset.amountRaisedInUSD}
+          fundingAmount={asset.amountRaisedInUSD}
           goal={asset.amountToBeRaisedInUSD}
           city={asset.city}
           country={asset.country}
           name={asset.name}
           category={getPrettyCategoryName(asset.category, categoriesAirTable)}
           backgroundImage={asset.imageSrc}
-          fundingStage={asset.fundingStage}
           pastDate={asset.pastDate}
           numberOfInvestors={asset.numberOfInvestors}
+          funded={asset.funded}
         />
       ))}
     </div>,

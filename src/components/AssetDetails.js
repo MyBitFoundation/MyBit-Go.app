@@ -31,8 +31,6 @@ import { S3_URL } from '../constants';
 class AssetDetails extends React.Component {
   constructor(props) {
     super(props);
-    const { goal, raised } = this.props.information;
-    this.assetFunded = raised === goal;
     this.state = {
       selectedAmountUsd: null,
       selectedAmountEth: null,
@@ -43,7 +41,6 @@ class AssetDetails extends React.Component {
       isPopupOpen: false,
     };
     this.setDateDetails = this.setDateDetails.bind(this);
-    this.endDateLocal = this.props.information.dueDate;
     this.clearInterval = this.clearInterval.bind(this);
     this.getAcceptedTos = this.getAcceptedTos.bind(this);
     this.runningMinInterval = false;
@@ -51,7 +48,9 @@ class AssetDetails extends React.Component {
   }
 
   componentDidMount() {
-    this.setDateDetails();
+    if(this.props.asset){
+      this.setDateDetails();
+    }
   }
 
   componentWillReceiveProps(){
@@ -59,12 +58,19 @@ class AssetDetails extends React.Component {
   }
 
   setDateDetails() {
-    const assetFunded = this.props.information.fundingStage === 3 || this.props.information.fundingStage === 4
+    const {
+      asset,
+    } = this.props;
+
+    const {
+      fundingDeadline,
+    } = asset;
+
     const maxInvestment =
-      this.props.information.goal - this.props.information.raised;
+      asset.amountToBeRaisedInUSD - asset.amountRaisedInUSD;
 
     // funding goal has been reached
-    if (maxInvestment === 0 || assetFunded) {
+    if (maxInvestment === 0 || asset.funded) {
       this.setState({
         timeToGo: 'Funding goal has been reached',
         daysToGo: 0,
@@ -74,24 +80,24 @@ class AssetDetails extends React.Component {
       return;
     }
     // funding period has reached end date
-    if (this.props.information.pastDate) {
+    if (asset.pastDate) {
       this.setState({
         daysToGo: -1,
         timeToGo: 'Funding period has ended',
-        endingAt: `Funding period has ended on ${dayjs(this.endDateLocal).format('dddd, MMMM D')}`,
+        endingAt: `Funding period has ended on ${dayjs(fundingDeadline).format('dddd, MMMM D')}`,
       });
       this.clearInterval();
       return;
     }
-    const days = this.endDateLocal.diff(dayjs(), 'days');
-    const seconds = this.endDateLocal.diff(dayjs(), 'seconds');
+    const days = fundingDeadline.diff(dayjs(), 'days');
+    const seconds = fundingDeadline.diff(dayjs(), 'seconds');
     const calculateRemainingTime = dayjs()
       .startOf('day')
       .add(seconds, 'seconds');
 
     // less than 1 day until funding period ends
     if (days === 0) {
-      const secondsToEndDate = this.endDateLocal.diff(dayjs(), 'seconds');
+      const secondsToEndDate = fundingDeadline.diff(dayjs(), 'seconds');
       const aux = dayjs()
         .startOf('day')
         .add(86400, 'seconds');
@@ -102,7 +108,7 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `Ending in ${calculateRemainingTime.hour()}h ${calculateRemainingTime.minute()}m ${calculateRemainingTime.second()}s`,
         daysToGo: 0,
-        endingAt: `Funding period ends ${day} at ${dayjs(this.endDateLocal).format('H:mm:ss')}`,
+        endingAt: `Funding period ends ${day} at ${dayjs(fundingDeadline).format('H:mm:ss')}`,
       });
 
       if (!this.setDateInterval || this.runningMinInterval) {
@@ -117,7 +123,7 @@ class AssetDetails extends React.Component {
       this.setState({
         timeToGo: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go`,
         daysToGo: days,
-        endingAt: `Funding period ends on ${dayjs(this.endDateLocal).format('dddd, MMMM D')}`,
+        endingAt: `Funding period ends on ${dayjs(fundingDeadline).format('dddd, MMMM D')}`,
       });
       if (!this.setDateInterval) {
         this.setDateInterval = setInterval(() => {
@@ -175,27 +181,30 @@ class AssetDetails extends React.Component {
     } = this.props;
 
     const {
-      goal,
-      raised,
       city,
       country,
       assetID,
       details,
       description,
-      address,
+      assetManager,
       numberOfInvestors,
       watchListed,
       files,
       managerPercentage,
       collateralPercentage,
-    } = this.props.information;
+      name,
+      amountToBeRaisedInUSD,
+      amountRaisedInUSD,
+      imageSrc,
+      funded,
+    } = this.props.asset;
 
     const filesToRender = this.getFilesToRender(files, assetID);
 
     const maxInvestment =
-      this.assetFunded || this.state.daysToGo < 0
+      funded || this.state.daysToGo < 0
         ? 0
-        : Number((goal - raised).toFixed(2));
+        : Number((amountToBeRaisedInUSD - amountRaisedInUSD).toFixed(2));
 
     let minInvestment =
       this.state.daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
@@ -204,12 +213,12 @@ class AssetDetails extends React.Component {
       minInvestment = 1;
     }
 
-    const goalFormatted = formatMonetaryValue(goal);
+    const goalFormatted = formatMonetaryValue(amountToBeRaisedInUSD);
 
     const maxEther = Number(maxInvestment / currentEthInUsd).toFixed(5);
     const maxOwnership = maxInvestment && (
       (maxInvestment * 100) /
-      this.props.information.goal
+      amountToBeRaisedInUSD
     ).toFixed(2);
 
     return (
@@ -246,7 +255,7 @@ class AssetDetails extends React.Component {
         <div>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} className="AssetDetails__right">
             <b className="AssetDetails__left-name">
-              {this.props.information.assetName}
+              {name}
             </b>
             <LocationIcon
               className="AssetDetails__left-image-holder-location-icon"
@@ -257,7 +266,7 @@ class AssetDetails extends React.Component {
             <div
               alt="Asset details background"
               className="AssetDetails__right-container"
-              style={{ backgroundImage: `url(${this.props.information.imageSrc})` }}
+              style={{ backgroundImage: `url(${imageSrc})` }}
             >
               <BlockchainInfoContext.Consumer>
                 {({
@@ -277,7 +286,7 @@ class AssetDetails extends React.Component {
               <div
                 alt="Asset details background"
                 className="AssetDetails__right-image"
-                style={{ backgroundImage: `url(${this.props.information.imageSrc})` }}
+                style={{ backgroundImage: `url(${imageSrc})` }}
               />
             </div>
 
@@ -308,7 +317,7 @@ class AssetDetails extends React.Component {
                 <b
                   className="AssetDetails__left-funding-value"
                 >
-                  {this.assetFunded ? goalFormatted : `${formatMonetaryValue(raised)}`}
+                  {funded ? goalFormatted : `${formatMonetaryValue(amountRaisedInUSD)}`}
                 </b>
               </div>
               <div className="AssetDetails__left-funds-goal">
@@ -346,7 +355,7 @@ class AssetDetails extends React.Component {
                     selectedAmountEth: number,
                     selectedOwnership: (number * currentEthInUsd) && (
                   (number * currentEthInUsd * 100) /
-                  goal
+                  amountToBeRaisedInUSD
                 ).toFixed(2),
               })
               }
@@ -365,7 +374,7 @@ class AssetDetails extends React.Component {
               : this.setState({
                 selectedAmountUsd: number,
                 selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
-                selectedOwnership: number && ((number * 100) / goal).toFixed(2),
+                selectedOwnership: number && ((number * 100) / amountToBeRaisedInUSD).toFixed(2),
               })}
               label="$"
               min={0}
@@ -384,7 +393,7 @@ class AssetDetails extends React.Component {
                     selectedOwnership: maxOwnership,
                   })
                 : this.setState({
-                  selectedAmountUsd: (goal / 100) * number,
+                  selectedAmountUsd: (amountToBeRaisedInUSD / 100) * number,
                   selectedOwnership: number,
                   selectedAmountEth: (Number(maxEther) * (number / 100)).toFixed(5),
                 })
@@ -406,7 +415,7 @@ class AssetDetails extends React.Component {
                   this.setState({
                   selectedAmountUsd: number,
                   selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
-                  selectedOwnership: number && ((number * 100) / goal).toFixed(2),
+                  selectedOwnership: number && ((number * 100) / amountToBeRaisedInUSD).toFixed(2),
                 })}
               disabled={this.state.daysToGo < 0 || maxInvestment === 0}
             />
@@ -439,10 +448,10 @@ class AssetDetails extends React.Component {
                 this.state.daysToGo < 0
                 || maxInvestment === 0
                 || selectedAmountUsd < minInvestment
-                || user.userName === address
+                || user.userName === assetManager
               }
             >
-            {user.userName === address ? 'Not allowed to contribute to your own asset' :  'Contribute'}
+            {user.userName === assetManager ? 'Not allowed to contribute to your own asset' :  'Contribute'}
             </Button>
             <div className="AssetDetails__left-assetManager">
               <div className="AssetDetails__left-assetManager-left">
@@ -450,11 +459,11 @@ class AssetDetails extends React.Component {
                 <Civic className="AssetDetails__left-assetManager-civic"/>
                 <a
                   className="AssetDetails__left-assetManager-address"
-                  href={`https://ropsten.etherscan.io/address/${address}`}
+                  href={`https://ropsten.etherscan.io/address/${assetManager}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {shortenAddress(address, 5, 2)}
+                  {shortenAddress(assetManager, 5, 2)}
                 </a>
                 <p className="AssetDetails__left-assetManager-supportingDocuments">Supporting documents</p>
                 {filesToRender}
