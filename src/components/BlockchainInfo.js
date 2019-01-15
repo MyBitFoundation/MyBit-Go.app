@@ -417,28 +417,35 @@ class BlockchainInfo extends React.Component {
   }
 
   async getAssetsFromAirTable(){
-    const request = await fetch(AIRTABLE_ASSETS_URL);
-    if(request.status !== 200){
-      //TODO AIRTABLE DOWN - handle loader
+    try{
+      const request = await fetch(AIRTABLE_ASSETS_URL);
+      const json = await request.json();
+      const { records } = json;
+      const assets = records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS).map(this.processAssetsFromAirTable)
+      const assetsById = this.processAssetsByIdFromAirTable(records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS), assets);
+      this.setState({
+        assetsAirTable: assets,
+        assetsAirTableById: assetsById,
+      });
+    }catch(err){
+      setTimeout(this.getAssetsFromAirTable, 5000);
+      debug(err);
     }
-    const json = await request.json();
-    const { records } = json;
-    const assets = records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS).map(this.processAssetsFromAirTable)
-    const assetsById = this.processAssetsByIdFromAirTable(records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS), assets);
-    this.setState({
-      assetsAirTable: assets,
-      assetsAirTableById: assetsById,
-    });
   }
 
   async getCategoriesFromAirTable(){
-    const request = await fetch(AIRTABLE_CATEGORIES_URL);
-    const json = await request.json();
-    const { records } = json;
-    const categories = this.processCategoriesFromAirTable(records.filter(({ fields })  => Object.keys(fields).length === AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS));
-    this.setState({
-      categoriesAirTable: categories,
-    })
+    try{
+      const request = await fetch(AIRTABLE_CATEGORIES_URL);
+      const json = await request.json();
+      const { records } = json;
+      const categories = this.processCategoriesFromAirTable(records.filter(({ fields })  => Object.keys(fields).length === AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS));
+      this.setState({
+        categoriesAirTable: categories,
+      })
+    }catch(err){
+      setTimeout(this.getCategoriesFromAirTable, 5000);
+      debug(err);
+    }
   }
 
   getCategoriesForAssets(country, city){
@@ -705,14 +712,20 @@ class BlockchainInfo extends React.Component {
   }
 
   async fetchAssets(updateNotification, updateUserListingAsset, assetId) {
-    if (!this.state.prices.ether) {
+    const {
+      assetsAirTableById,
+      prices,
+      categoriesAirTable,
+      user,
+    } = this.state;
+    if (!prices.ether || !assetsAirTableById || !categoriesAirTable) {
       setTimeout(this.fetchAssets, 10000);
       return;
     }
     this.setState({
       usingServer: false,
     });
-    await Brain.fetchAssets(this.state.user, this.state.prices.ether.price, this.state.assetsAirTableById, this.state.categoriesAirTable)
+    await Brain.fetchAssets(user, prices.ether.price, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
         this.setState({

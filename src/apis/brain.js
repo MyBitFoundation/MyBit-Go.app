@@ -350,6 +350,8 @@ export const createAsset = async params =>
         collateralMyb,
         collateralPercentage,
         amountToBeRaisedInUSD,
+        userAddress,
+        managerPercentage,
       } = params;
       const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
       debug(collateral)
@@ -372,8 +374,8 @@ export const createAsset = async params =>
 
       const futureAssetId = generateAssetId(
         window.web3js,
-        params.userAddress,
-        params.managerPercentage,
+        userAddress,
+        managerPercentage,
         amountToBeRaisedInUSD,
         installerId,
         assetType,
@@ -390,7 +392,7 @@ export const createAsset = async params =>
           randomBlockNumber.toString(),
           ipfsHash,
         )
-        .send({ from: params.userAddress })
+        .send({ from: userAddress })
         .on('transactionHash', (transactionHash) => {
           updateNotification(id, {
             listAssetProps: {
@@ -409,54 +411,33 @@ export const createAsset = async params =>
           resolve(false);
         })
         .then( async(receipt) => {
-          //TODO add error handling
           if(receipt.status){
-            const response = await axios.post(UPDATE_ASSETS_URL, {
-              assetId: futureAssetId,
-              assetName: assetName,
-              country: country,
-              city: city,
-              collateral: collateralMyb,
-              collateralPercentage,
-            });
+            const filesUploaded = fileList.length > 0;
+            const requiredCallsToInternalActions = filesUploaded ? 3 : 2;
+            let counterCallsToInternalActions = 0;
 
-            if(fileList.length > 0){
-              let data = new FormData();
-              data.append('assetId', futureAssetId);
-              for(const file of fileList){
-                data.append('file', file.originFileObj);
+            // we need to perform a few actions before declaring the listing of the asset as successful
+            const performedInternalAction = () => {
+              counterCallsToInternalActions++;
+              if(counterCallsToInternalActions === requiredCallsToInternalActions){
+                onSuccess(() => {
+                  updateNotification(id, {
+                    listAssetProps: {
+                      assetName: assetName,
+                      assetId: futureAssetId,
+                    },
+                    status: 'success',
+                  })
+                }, futureAssetId)
+
+                resolve(receipt.status);
               }
-              axios.post(S3_UPLOAD_URL,
-                data, {
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }
-                }
-              ).then((response) => {
-                debug('success');
-              })
-              .catch((err) => {
-                debug('fail');
-              });
             }
 
-            onSuccess(() => {
-              axios.post(MYBIT_API_COLLATERAL, {
-                address: params.userAddress,
-                escrow: collateral,
-                assetId: futureAssetId,
-              }).catch((error) => {
-                debug(error);
-              })
+            updateAirTableWithNewAsset(futureAssetId, assetName, country, city, collateralMyb, collateralPercentage, performedInternalAction)
+            createEntryForNewCollateral(userAddress, collateral, futureAssetId, performedInternalAction);
+            filesUploaded && uploadFilesToAWS(futureAssetId, fileList, performedInternalAction);
 
-              updateNotification(id, {
-                listAssetProps: {
-                  assetName: assetName,
-                  assetId: futureAssetId,
-                },
-                status: 'success',
-              })
-            }, futureAssetId)
           } else {
             updateNotification(id, {
               listAssetProps: {
@@ -464,17 +445,84 @@ export const createAsset = async params =>
               },
               status: 'error',
             });
+            resolve(assetCreationResponse);
           }
-
-          debug(receipt)
-          resolve(receipt.status);
         });
 
-      resolve(assetCreationResponse);
     } catch (err) {
       reject(err);
     }
   });
+
+const uploadFilesToAWS = async (
+  assetId,
+  fileList,
+  performedInternalAction,
+) => {
+  try{
+    let data = new FormData();
+    data.append('assetId', assetId);
+    for(const file of fileList){
+      data.append('file', file.originFileObj);
+    }
+    await axios.post(S3_UPLOAD_URL,
+      data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+
+    performedInternalAction();
+  } catch(err){
+    setTimeout(() => uploadFilesToAWS(assetId, fileList, performedInternalAction), 5000);
+    debug(err);
+  }
+}
+
+const createEntryForNewCollateral = async (
+  address,
+  escrow,
+  assetId,
+  performedInternalAction,
+) => {
+  try{
+    await axios.post(MYBIT_API_COLLATERAL, {
+      address,
+      escrow,
+      assetId,
+    })
+    performedInternalAction();
+  } catch(err){
+    setTimeout(() => createEntryForNewCollateral(address, escrow, assetId, performedInternalAction), 5000);
+    debug(err);
+  }
+}
+
+const updateAirTableWithNewAsset = async (
+  assetId,
+  assetName,
+  country,
+  city,
+  collateral,
+  collateralPercentage,
+  performedInternalAction,
+) => {
+  try{
+    await axios.post(UPDATE_ASSETS_URL, {
+      assetId,
+      assetName,
+      country,
+      city,
+      collateral,
+      collateralPercentage,
+    });
+    performedInternalAction();
+  } catch(err){
+    setTimeout(() => updateAirTableWithNewAsset(assetId, assetName, country, city, collateral, collateralPercentage, performedInternalAction), 5000);
+    debug(err);
+  }
+}
 
 const checkTransactionConfirmation = async (
   transactionHash,
