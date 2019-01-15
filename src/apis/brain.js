@@ -791,7 +791,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
         if(fundingStage === FundingStages.FUNDED){
           amountRaisedInUSD = amountToBeRaisedInUSD;
-        } else{
+        } else {
           amountRaisedInUSD =
             Number(window.web3js.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
               currentEthInUsd;
