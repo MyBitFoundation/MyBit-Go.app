@@ -412,8 +412,10 @@ export const createAsset = async params =>
         })
         .then( async(receipt) => {
           if(receipt.status){
+            const numberOfInternalActions = 2;
+            const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
             const filesUploaded = fileList.length > 0;
-            const requiredCallsToInternalActions = filesUploaded ? 3 : 2;
+            const requiredCallsToInternalActions = filesUploaded ? numberOfInternalActionsWithFileUpload : numberOfInternalActions;
             let counterCallsToInternalActions = 0;
 
             // we need to perform a few actions before declaring the listing of the asset as successful
