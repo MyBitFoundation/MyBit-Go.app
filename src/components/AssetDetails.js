@@ -66,6 +66,7 @@ class AssetDetails extends React.Component {
       fundingDeadline,
       amountToBeRaisedInUSD,
       amountRaisedInUSD,
+      pastDate,
     } = asset;
 
     const maxInvestment =
@@ -82,7 +83,7 @@ class AssetDetails extends React.Component {
       return;
     }
     // funding period has reached end date
-    if (asset.pastDate) {
+    if (pastDate) {
       this.setState({
         daysToGo: -1,
         timeToGo: 'Funding period has ended',
