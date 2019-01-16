@@ -63,12 +63,13 @@ class App extends Component {
               isBraveBrowser,
               extensionUrl,
               enabled,
+              isReadOnlyMode,
             }) => (
               <React.Fragment>
                 <AppHeader
                   user={user}
                   prices={prices.mybit}
-                  usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork || !enabled}
+                  readOnlyMode={isReadOnlyMode()}
                 />
                 <NavigationBar
                   currentPath={this.props.location.pathname}

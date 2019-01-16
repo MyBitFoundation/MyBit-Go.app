@@ -51,10 +51,9 @@ export const fetchPriceFromCoinmarketcap = async ticker =>
     }
   });
 
-export const fetchTransactionHistory = async user =>
+export const fetchTransactionHistory = async userAddress =>
   new Promise(async (resolve, reject) => {
     try {
-      const userAddress = user.userName;
       /*
     *  results from etherscan come in lower case
     *  its cheaper to create a var to hold the address in lower case,
@@ -135,6 +134,9 @@ export const loadMetamaskUserDetails = async () =>
   new Promise(async (resolve, reject) => {
     try {
       const accounts = await window.web3js.eth.getAccounts();
+      if(accounts.length === 0){
+        resolve();
+      }
       const balance = await window.web3js.eth.getBalance(accounts[0]);
       const myBitTokenContract = new window.web3js.eth.Contract(
         MyBitToken.ABI,
@@ -791,8 +793,9 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
       const fundingDeadlines = await Promise.all(assets.map(async asset =>
         apiContract.methods.fundingDeadline(asset.assetID).call()));
 
-      const realAddress = window.web3js.utils.toChecksumAddress(user.userName);
-      const ownershipUnits = await Promise.all(assets.map(async asset =>
+      const realAddress = user.userName && window.web3js.utils.toChecksumAddress(user.userName);
+
+      const ownershipUnits = realAddress && await Promise.all(assets.map(async asset =>
         apiContract.methods.ownershipUnits(asset.assetID, realAddress).call()));
 
       const assetIncomes = await Promise.all(assets.map(async asset =>
@@ -805,18 +808,19 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
         apiContract.methods.managerPercentage(asset.assetID).call()));
 
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
-        const numberOfInvestors = Number(await getNumberOfInvestors(asset.assetID));
-
-        const ownershipUnitsTmp = ownershipUnits[index];
-        let owedToInvestor = 0;
-        if(ownershipUnitsTmp > 0){
-          owedToInvestor = await apiContract.methods.getAmountOwed(asset.assetID, realAddress).call();
-        }
-
         let assetIdDetails = assetsAirTableById[asset.assetID];
+
         // if the asset Id is not on airtable it doens't show up in the platform
         if (!assetIdDetails) {
           return undefined;
+        }
+
+        const numberOfInvestors = Number(await getNumberOfInvestors(asset.assetID));
+
+        const ownershipUnitsTmp = (realAddress && ownershipUnits[index]) || 0;
+        let owedToInvestor = 0;
+        if(ownershipUnitsTmp > 0){
+          owedToInvestor = await apiContract.methods.getAmountOwed(asset.assetID, realAddress).call();
         }
 
         // determine whether asset has expired
@@ -854,6 +858,10 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           ...asset,
           amountRaisedInUSD,
           amountToBeRaisedInUSD,
+          fundingStage,
+          blockNumberitWentLive,
+          pastDate,
+          numberOfInvestors,
           fundingDeadline: dueDate,
           ownershipUnits: ownershipUnitsTmp.toString(),
           assetIncome:
@@ -863,37 +871,28 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
           city: assetIdDetails.city,
           country: assetIdDetails.country,
           name: assetIdDetails.name,
-          numberOfInvestors,
           description: assetIdDetails.description,
           details: assetIdDetails.details,
           imageSrc: assetIdDetails.imageSrc,
           partner: assetIdDetails.partner,
-          fundingStage,
           managerPercentage: Number(managerPercentages[index]),
-          pastDate,
           watchListed: alreadyFavorite,
           category: assetIdDetails.category,
           owedToInvestor: owedToInvestor.toString(),
           collateral: assetIdDetails.collateral,
           collateralPercentage: Number(assetIdDetails.collateralPercentage),
-          blockNumberitWentLive,
           funded: fundingStage === FundingStages.FUNDED,
         };
       }));
 
-      // filter for v0.1
+      // remove assets that are not in Airtable
       assetsPlusMoreDetails = assetsPlusMoreDetails
         .filter(asset => asset && asset.amountToBeRaisedInUSD > 0);
-
-      if (process.env.NODE_ENV !== 'development') {
-        // filter for test assets. Only for development
-        assetsPlusMoreDetails = assetsPlusMoreDetails.filter(asset =>
-          asset.description !== 'Coming soon');
-      }
 
       debug(assetsPlusMoreDetails)
       resolve(assetsPlusMoreDetails);
     } catch (error) {
+      debug(error)
       reject(error);
     }
   });

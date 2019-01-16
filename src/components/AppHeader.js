@@ -16,7 +16,7 @@ import '../styles/BancorWidgetButton.css';
 const AppHeader = ({
   user,
   prices,
-  usingServer,
+  readOnlyMode,
 }) => (
   <BancorConsumer>
     {({ initBancor }) => (
@@ -26,7 +26,7 @@ const AppHeader = ({
           <ExchangeRate
             {...prices}
           />
-          {!usingServer && (
+          {!readOnlyMode && (
             <AccountInfo
               {...user}
             />
@@ -46,7 +46,7 @@ const AppHeader = ({
             </Button>
           </div>
         </div>
-        {!usingServer && (
+        {!readOnlyMode && (
           <Address {...user} />
         )}
       </div>
@@ -61,7 +61,7 @@ AppHeader.defaultProps = {
 AppHeader.propTypes = {
   prices: PropTypes.shape({ params: PropTypes.object }),
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  usingServer: PropTypes.bool.isRequired,
+  readOnlyMode: PropTypes.bool.isRequired,
 };
 
 export default AppHeader;

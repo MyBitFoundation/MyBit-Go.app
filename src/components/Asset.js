@@ -58,9 +58,9 @@ const Asset = ({
           </p>
           <BlockchainInfoContext.Consumer>
             {({
-              usingServer,
+              isReadOnlyMode,
             }) =>
-              !usingServer && (
+              !isReadOnlyMode() && (
                 <Watch
                   active={watchListed}
                   handleClick={handleClickedAssetFavorite}

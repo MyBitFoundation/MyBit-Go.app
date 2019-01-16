@@ -2,20 +2,18 @@
 /* eslint-disable  camelcase */
 
 import React from 'react';
+import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import dayjs from 'dayjs';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import * as Brain from '../apis/brain';
 import {
   debug,
   MYBIT_TICKER_COINMARKETCAP,
   ETHEREUM_TICKER_COINMARKETCAP,
-  serverIp,
   ethereumNetwork,
   fetchTransactionHistoryTime,
   loadMetamaskUserDetailsTime,
-  pullAssetsFromServerTime,
   fetchAssetsFromWeb3Time,
   S3_URL,
   AIRTABLE_CATEGORIES_URL,
@@ -34,10 +32,8 @@ class BlockchainInfo extends React.Component {
     this.loadPrices = this.loadPrices.bind(this);
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
-    this.pullAssetsFromServer = this.pullAssetsFromServer.bind(this);
     this.handleAddressChange = this.handleAddressChange.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
-    this.usingServer = this.usingServer.bind(this);
     this.getAssetsFromAirTable = this.getAssetsFromAirTable.bind(this);
     this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
     this.handleListAsset = this.handleListAsset.bind(this);
@@ -49,6 +45,7 @@ class BlockchainInfo extends React.Component {
     this.withdrawCollateral = this.withdrawCollateral.bind(this);
     this.resetNotifications = this.resetNotifications.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
+    this.isReadOnlyMode = this.isReadOnlyMode.bind(this);
 
     this.state = {
       loading: {
@@ -80,6 +77,7 @@ class BlockchainInfo extends React.Component {
       withdrawInvestorProfit: this.withdrawInvestorProfit,
       withdrawCollateral: this.withdrawCollateral,
       withdrawProfitAssetManager: this.withdrawProfitAssetManager,
+      isReadOnlyMode: this.isReadOnlyMode,
       notifications: {},
       isUserContributing: false,
       withdrawingAssetIds: [],
@@ -89,25 +87,26 @@ class BlockchainInfo extends React.Component {
   }
 
   async componentDidMount() {
-    // TODO perhaps we don't need to wait for these here
-    await Promise.all([this.getAssetsFromAirTable(), this.getCategoriesFromAirTable()]);
     try {
-      const usingServer = this.usingServer();
-      if (!usingServer) {
-        // we need the prices and the user details before getting the assets and transactions
-        await Promise.all([this.loadMetamaskUserDetails(), this.loadPrices()]);
-        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-        this.createIntervalsNonServer();
-      } else {
-        await this.loadPrices();
-        this.pullAssetsFromServer();
-        this.intervalAssetsFromServer =
-          setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
+      // TODO perhaps we don't need to wait for these here
+      await Promise.all([
+        this.getAssetsFromAirTable(),
+        this.getCategoriesFromAirTable(),
+        this.loadPrices(),
+      ]);
+
+      if(this.isReadOnlyMode()){
+        window.web3js = new Web3(new Web3.providers.HttpProvider(`https://ropsten.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`))
       }
+
+      // we needthe user details before getting the assets and transactions
+      await Promise.all([this.loadMetamaskUserDetails()]);
+      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+
     } catch (err) {
       debug(err);
     }
-    setInterval(this.loadPrices, 15 * 1000);
+    this.createIntervals();
   }
 
   componentWillReceiveProps(nextProps){
@@ -115,7 +114,7 @@ class BlockchainInfo extends React.Component {
     const loggedIn = this.state.userIsLoggedIn;
     const enabled = this.state.enabled;
     // case where account changes
-    if((nextProps.user.userName && (this.state.user.userName !== nextProps.user.userName)) || (this.state.userIsLoggedIn !== nextProps.isLoggedIn && (this.props.network === ethereumNetwork)) || (enabled !== nextProps.enabled)){
+    if((nextProps.user.userName && (this.state.user.userName !== nextProps.user.userName)) || (this.state.userIsLoggedIn !== nextProps.isLoggedIn) || (enabled !== nextProps.enabled)){
       this.setState({
         user: nextProps.user,
         userIsLoggedIn: nextProps.isLoggedIn,
@@ -142,7 +141,7 @@ class BlockchainInfo extends React.Component {
     this.resetIntervals();
   }
 
-  createIntervalsNonServer(){
+  createIntervals(){
     this.intervalFetchAssets =
       setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
     this.intervalFetchTransactionHistory =
@@ -152,11 +151,20 @@ class BlockchainInfo extends React.Component {
   }
 
   resetIntervals(){
-    clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalFetchAssets);
-    clearInterval(this.intervalAssetsFromServer);
     clearInterval(this.intervalFetchTransactionHistory);
     clearInterval(this.intervalLoadMetamaskUserDetails);
+  }
+
+  isReadOnlyMode(){
+    const {
+      userHasMetamask,
+      userIsLoggedIn,
+      network,
+      enabled,
+    } = this.state;
+
+    return !userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork || !enabled;
   }
 
   async pullFileInfoForAssets(assets){
@@ -471,11 +479,6 @@ class BlockchainInfo extends React.Component {
     return Brain.withdrawFromFaucet(this.state.user);
   }
 
-  usingServer() {
-    const { userHasMetamask, userIsLoggedIn, network, enabled } = this.state;
-    return !userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork || !enabled;
-  }
-
   handleAssetFavorited(assetId) {
     const searchQuery = `mybit_watchlist_${assetId}`;
     const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
@@ -495,59 +498,6 @@ class BlockchainInfo extends React.Component {
     });
   }
 
-  async pullAssetsFromServer() {
-    const { data } = await axios(serverIp);
-    if (!data.assetsLoaded) {
-      return;
-    }
-
-    let assetsToReturn = data.assets.map((asset) => {
-      let watchListed = false;
-
-      if (!this.usingServer()) {
-        const searchQuery = `mybit_watchlist_${asset.assetID}`;
-        watchListed = window.localStorage.getItem(searchQuery) || false;
-      }
-
-      let details = this.state.assetsAirTableById[asset.assetID];
-      // if the asset Id is not on airtable it doens't show up in the platform
-      if (!details) {
-        return undefined;
-      }
-
-      return {
-        ...details,
-        ...asset,
-        fundingDeadline: dayjs(Number(asset.fundingDeadline) * 1000),
-        watchListed,
-      };
-    });
-
-    if (process.env.NODE_ENV !== 'development') {
-      // filter for test assets. Only for development
-      assetsToReturn = assetsToReturn.filter(asset =>
-        asset && asset.description !== 'Coming soon');
-    } else {
-      // returns all assets that were matched to the assets
-      // in Airtable
-      assetsToReturn = assetsToReturn.filter(asset =>
-        asset !== undefined);
-    }
-
-    const updatedAssets = await this.pullFileInfoForAssets(assetsToReturn);
-
-    this.setState({
-      usingServer: true,
-      assets: updatedAssets,
-      transactions: [],
-      loading: {
-        ...this.state.loading,
-        assets: false,
-        transactionHistory: false,
-      },
-    });
-  }
-
   resetNotifications(){
     this.setState({
       notifications: [],
@@ -555,32 +505,20 @@ class BlockchainInfo extends React.Component {
   }
 
   async handleAddressChange(previousAddress, previouslyLoggedIn, previouslyEnabled) {
-    let shouldReloadUI = false;
     const selectedAddress = this.state.user.userName;
     const {
       userIsLoggedIn,
       enabled,
     } = this.state;
 
-    // case where user was not logged in but logged in and opposite case
-    if ((!previouslyLoggedIn && userIsLoggedIn && enabled) || (!previouslyEnabled && enabled) || (previousAddress !== selectedAddress && enabled)) {
-      shouldReloadUI = true;
+    if ((previouslyLoggedIn !== userIsLoggedIn && enabled) || (!previouslyEnabled && enabled) || (previousAddress !== selectedAddress && enabled)) {
       this.loadMetamaskUserDetails();
       this.fetchAssets();
       this.fetchTransactionHistory();
       this.resetIntervals();
-      this.createIntervalsNonServer();
+      this.createIntervals();
       this.resetNotifications();
-    } else if ((previouslyLoggedIn && !userIsLoggedIn) || ( previousAddress && !selectedAddress) || (previouslyEnabled !== enabled)) {
-      shouldReloadUI = true;
-      this.pullAssetsFromServer();
-      this.resetNotifications();
-      this.resetIntervals();
-      this.intervalAssetsFromServer =
-        setInterval(this.pullAssetsFromServer, pullAssetsFromServerTime);
-    }
 
-    if (shouldReloadUI) {
       this.setState({
         assets: [],
         loading: {
@@ -683,7 +621,7 @@ class BlockchainInfo extends React.Component {
     await Brain.loadMetamaskUserDetails()
       .then((response) => {
         this.setState({
-          user: response,
+          user: response || {},
           loading: { ...this.state.loading, user: false },
         });
       })
@@ -696,7 +634,16 @@ class BlockchainInfo extends React.Component {
   }
 
   async fetchTransactionHistory() {
-    await Brain.fetchTransactionHistory(this.state.user)
+    if(!this.state.user.userName){
+      this.setState({
+        loading: {
+          ...this.state.loading,
+          transactionHistory: false,
+        },
+      })
+      return;
+    }
+    await Brain.fetchTransactionHistory(this.state.user.userName)
       .then((response) => {
         this.setState({
           transactions: response,
@@ -722,9 +669,6 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 10000);
       return;
     }
-    this.setState({
-      usingServer: false,
-    });
     await Brain.fetchAssets(user, prices.ether.price, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
