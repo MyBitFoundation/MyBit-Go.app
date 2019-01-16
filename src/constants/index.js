@@ -117,13 +117,13 @@ export const metamaskErrors = (
         {' '}to see how.
       </p>
     );
-  } else if(enabled === false){
-    toRender = (
-      <p><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</p>
-    );
   } else if (userHasMetamask && !userIsLoggedIn) {
     toRender = (
       <p>Please login in MetaMask to be able to contribute.</p>
+    );
+  } else if(enabled === false){
+    toRender = (
+      <p><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</p>
     );
   } else if (network !== ethereumNetwork) {
     toRender = (

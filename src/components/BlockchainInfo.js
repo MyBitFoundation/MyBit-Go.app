@@ -32,7 +32,7 @@ class BlockchainInfo extends React.Component {
     this.loadPrices = this.loadPrices.bind(this);
     this.getMYB = this.getMYB.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
-    this.handleAddressChange = this.handleAddressChange.bind(this);
+    this.handleMetamaskUpdate = this.handleMetamaskUpdate.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
     this.getAssetsFromAirTable = this.getAssetsFromAirTable.bind(this);
     this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
@@ -112,31 +112,31 @@ class BlockchainInfo extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const currentAddress = this.state.user ? this.state.user.userName : undefined;
-    const loggedIn = this.state.userIsLoggedIn;
-    const enabled = this.state.enabled;
+    const currentEnabled = this.state.enabled;
+    const currentUsername = this.state.user.userName;
+    const currentUserIsLoggedIn = this.state.userIsLoggedIn;
+    const currentBalance = this.state.user.balance;
+
+    const newUserAddress = nextProps.user.userName;
+    const newIsUserLoggedIn = nextProps.isLoggedIn;
+    const newEnabled = nextProps.enabled;
+    const newBalance = nextProps.balance;
 
     // case where account changes
-    if((nextProps.user.userName && (this.state.user.userName !== nextProps.user.userName)) || (this.state.userIsLoggedIn !== nextProps.isLoggedIn) || (enabled !== nextProps.enabled)){
+    if((newUserAddress && (currentUsername !== newUserAddress)) || (currentUserIsLoggedIn !== newIsUserLoggedIn) || (currentEnabled !== newEnabled)){
       this.setState({
-        user: !nextProps.isLoggedIn ? {} : nextProps.user,
+        user: nextProps.user,
         userIsLoggedIn: nextProps.isLoggedIn,
         enabled: nextProps.enabled
-      }, () => this.handleAddressChange(currentAddress, loggedIn, enabled));
+      }, () => this.handleMetamaskUpdate());
     }
-    if(nextProps.user.balance && (this.state.user.balance !== nextProps.user.balance)){
+    if(newBalance && (currentBalance !== newBalance)){
       this.setState({
         user: {
           ...this.state.user,
           balance: nextProps.user.balance,
         },
       })
-    }
-    //case where user enables us to access accounts
-    if(!this.state.enabled && nextProps.enabled){
-      this.setState({
-        enabled: true,
-      });
     }
   }
 
@@ -507,30 +507,24 @@ class BlockchainInfo extends React.Component {
     });
   }
 
-  async handleAddressChange(previousAddress, previouslyLoggedIn, previouslyEnabled) {
-    const selectedAddress = this.state.user.userName;
+  async handleMetamaskUpdate() {
     const {
       userIsLoggedIn,
-      enabled,
     } = this.state;
 
-    if ((previouslyLoggedIn !== userIsLoggedIn && enabled) || (!previouslyEnabled && enabled) || (previousAddress !== selectedAddress && enabled)) {
-      this.loadMetamaskUserDetails();
-      this.fetchAssets();
-      this.fetchTransactionHistory();
-      this.resetIntervals();
-      this.createIntervals();
-      this.resetNotifications();
+    this.loadMetamaskUserDetails();
+    this.fetchAssets();
+    this.fetchTransactionHistory();
+    this.resetNotifications();
 
-      this.setState({
-        assets: [],
-        loading: {
-          ...this.state.loading,
-          assets: true,
-          transactionHistory: !userIsLoggedIn ? false : true,
-        },
-      });
-    }
+    this.setState({
+      assets: [],
+      loading: {
+        ...this.state.loading,
+        assets: true,
+        transactionHistory: !userIsLoggedIn ? false : true,
+      },
+    });
   }
 
   async fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {

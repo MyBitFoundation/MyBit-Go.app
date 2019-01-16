@@ -55,6 +55,7 @@ class MetamaskChecker extends Component {
   async getAccount(enabled){
     try{
       const accounts = await window.web3js.eth.getAccounts();
+      const isLoggedIn = await this.checkIfLoggedIn();
       if(accounts && accounts.length > 0){
         let balance;
         while(!balance){
@@ -67,16 +68,16 @@ class MetamaskChecker extends Component {
               userName: accounts[0],
               ethBalance: balance,
             },
-            enabled: true,
-            isLoggedIn: true,
             isInstalled: true,
+            enabled: true,
+            isLoggedIn,
           })
         }
       } else {
         this.setState({
           user: {},
-          isLoggedIn: false,
           isInstalled: true,
+          isLoggedIn,
           enabled,
         })
       }
@@ -92,14 +93,13 @@ class MetamaskChecker extends Component {
 
   async userHasMetamask(enabled) {
     await this.checkNetwork();
-    const isLoggedIn = await this.checkIfLoggedIn()
     window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
     await this.getAccount(enabled);
   }
 
   async handleAddressChanged() {
-    const isLoggedIn = await this.checkIfLoggedIn();
     const enabled = await this.haveAccessToAccounts();
+    console.log(enabled)
     this.getAccount(enabled);
   }
 

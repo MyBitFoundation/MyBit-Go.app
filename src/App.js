@@ -10,7 +10,6 @@ import BancorContainer from './components/UI/BancorContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 import {
-  ethereumNetwork,
   metamaskErrors,
 } from './constants/index';
 
