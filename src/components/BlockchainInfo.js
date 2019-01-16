@@ -669,7 +669,7 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 10000);
       return;
     }
-    await Brain.fetchAssets(user, prices.ether.price, assetsAirTableById, categoriesAirTable)
+    await Brain.fetchAssets(user.userName, prices.ether.price, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
         this.setState({

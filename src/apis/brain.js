@@ -742,7 +742,7 @@ export const getManagerIncomeWithdraw = async (managerAddress, assetID) =>
   });
 
 
-export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
+export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
       // pull asssets from newest contract
@@ -793,7 +793,7 @@ export const fetchAssets = async (user, currentEthInUsd, assetsAirTableById, cat
       const fundingDeadlines = await Promise.all(assets.map(async asset =>
         apiContract.methods.fundingDeadline(asset.assetID).call()));
 
-      const realAddress = user.userName && window.web3js.utils.toChecksumAddress(user.userName);
+      const realAddress = userName && window.web3js.utils.toChecksumAddress(userName);
 
       const ownershipUnits = realAddress && await Promise.all(assets.map(async asset =>
         apiContract.methods.ownershipUnits(asset.assetID, realAddress).call()));
