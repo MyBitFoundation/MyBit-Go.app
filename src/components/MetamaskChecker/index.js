@@ -8,7 +8,7 @@ import {
   METAMASK_FIREFOX,
   METAMASK_CHROME,
   METAMASK_OPERA,
-  PROVIDER_MAINNET,
+  PROVIDER_ROPSTEN,
 } from './constants';
 
 class MetamaskChecker extends Component {
@@ -44,7 +44,7 @@ class MetamaskChecker extends Component {
         window.web3js = new Web3(window.web3.currentProvider);
         await this.userHasMetamask(false);
       } else {
-        window.web3js = new Web3(new Web3.providers.HttpProvider(PROVIDER_MAINNET));
+        window.web3js = new Web3(new Web3.providers.HttpProvider(PROVIDER_ROPSTEN));
         this.isBrowserSupported();
       }
     } catch(err){
@@ -52,7 +52,7 @@ class MetamaskChecker extends Component {
     }
   }
 
-  async getAccount(){
+  async getAccount(enabled){
     try{
       const accounts = await window.web3js.eth.getAccounts();
       if(accounts && accounts.length > 0){
@@ -62,6 +62,7 @@ class MetamaskChecker extends Component {
         }
         balance = window.web3js.utils.fromWei(balance, 'ether');
         if((this.state.user && this.state.user.userName !== accounts[0]) || (this.state.user.balance !== balance) || !this.state.user || !this.state.enabled){
+          console.log("here metamask")
           this.setState({
             user: {
               userName: accounts[0],
@@ -72,6 +73,13 @@ class MetamaskChecker extends Component {
             isInstalled: true,
           })
         }
+      } else {
+        this.setState({
+          user: {},
+          isLoggedIn: false,
+          isInstalled: true,
+          enabled,
+        })
       }
     }catch(err){
       console.log(err)
@@ -86,30 +94,14 @@ class MetamaskChecker extends Component {
   async userHasMetamask(enabled) {
     await this.checkNetwork();
     const isLoggedIn = await this.checkIfLoggedIn()
-    window.web3js.currentProvider.publicConfigStore.on('update', ({selectedAddress}) => this.handleAddressChanged(selectedAddress));
-    if(isLoggedIn){
-      await this.getAccount();
-    }
-
-    this.setState({
-      isInstalled: true,
-      isLoggedIn,
-      enabled,
-    });
+    window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
+    await this.getAccount(enabled);
   }
 
-  async handleAddressChanged(selectedAddress) {
+  async handleAddressChanged() {
     const isLoggedIn = await this.checkIfLoggedIn();
     const enabled = await this.haveAccessToAccounts();
-    if(isLoggedIn || !this.state.enabled){
-      this.getAccount();
-    }
-    if(this.state.isLoggedIn !== isLoggedIn || this.state.enabled !== enabled){
-      this.setState({
-        isLoggedIn,
-        enabled,
-      });
-    }
+    this.getAccount(enabled);
   }
 
   async checkIfLoggedIn() {

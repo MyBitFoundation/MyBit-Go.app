@@ -46,6 +46,7 @@ class BlockchainInfo extends React.Component {
     this.resetNotifications = this.resetNotifications.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
     this.isReadOnlyMode = this.isReadOnlyMode.bind(this);
+    this.backupWeb3 = window.web3js;
 
     this.state = {
       loading: {
@@ -95,11 +96,13 @@ class BlockchainInfo extends React.Component {
         this.loadPrices(),
       ]);
 
-      if(this.isReadOnlyMode()){
+      //case where user has metamask but is connected to the wrong network, we
+      //still need to load the data properly from the correct network
+      if(this.state.userHasMetamask && (this.state.network !== ethereumNetwork)){
         window.web3js = new Web3(new Web3.providers.HttpProvider(`https://ropsten.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`))
       }
 
-      // we needthe user details before getting the assets and transactions
+      // we need the user details before getting the assets and transactions
       await Promise.all([this.loadMetamaskUserDetails()]);
       await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
 
@@ -113,10 +116,21 @@ class BlockchainInfo extends React.Component {
     const currentAddress = this.state.user ? this.state.user.userName : undefined;
     const loggedIn = this.state.userIsLoggedIn;
     const enabled = this.state.enabled;
+
+    console.log("previous logged in: ", loggedIn)
+    console.log("now logged in: ", nextProps.isLoggedIn)
+
+    console.log("previous username : ", this.state.user.userName )
+    console.log("now username: ", nextProps.user.userName)
+
+    console.log("previous enabled : ", enabled )
+    console.log("now enabled: ", nextProps.enabled)
+
     // case where account changes
     if((nextProps.user.userName && (this.state.user.userName !== nextProps.user.userName)) || (this.state.userIsLoggedIn !== nextProps.isLoggedIn) || (enabled !== nextProps.enabled)){
+      console.log("here")
       this.setState({
-        user: nextProps.user,
+        user: !nextProps.isLoggedIn ? {} : nextProps.user,
         userIsLoggedIn: nextProps.isLoggedIn,
         enabled: nextProps.enabled
       }, () => this.handleAddressChange(currentAddress, loggedIn, enabled));
@@ -511,6 +525,15 @@ class BlockchainInfo extends React.Component {
       enabled,
     } = this.state;
 
+    /* when in read only mode we use a different instance of web3
+    * that conects to Infura, once we are no longer in read only mode
+    * we need to restore the correct web3 otherwise we can't access the
+    * user accounts.
+    */
+    if(window.web3js !== this.backupWeb3 && !this.isReadOnlyMode()){
+      window.web3js = this.backupWeb3;
+    }
+
     if ((previouslyLoggedIn !== userIsLoggedIn && enabled) || (!previouslyEnabled && enabled) || (previousAddress !== selectedAddress && enabled)) {
       this.loadMetamaskUserDetails();
       this.fetchAssets();
@@ -524,7 +547,7 @@ class BlockchainInfo extends React.Component {
         loading: {
           ...this.state.loading,
           assets: true,
-          transactionHistory: true,
+          transactionHistory: !userIsLoggedIn ? false : true,
         },
       });
     }
@@ -634,8 +657,11 @@ class BlockchainInfo extends React.Component {
   }
 
   async fetchTransactionHistory() {
+    console.log("fetchTransactionHistory")
+    console.log(this.state.user)
     if(!this.state.user.userName){
       this.setState({
+        transactions: [],
         loading: {
           ...this.state.loading,
           transactionHistory: false,

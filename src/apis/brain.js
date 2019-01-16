@@ -134,6 +134,7 @@ export const loadMetamaskUserDetails = async () =>
   new Promise(async (resolve, reject) => {
     try {
       const accounts = await window.web3js.eth.getAccounts();
+      console.log(accounts)
       if(accounts.length === 0){
         resolve();
       }
