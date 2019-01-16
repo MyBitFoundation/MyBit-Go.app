@@ -55,7 +55,6 @@ class BlockchainInfo extends React.Component {
     this.withdrawCollateral = this.withdrawCollateral.bind(this);
     this.resetNotifications = this.resetNotifications.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
-    this.buildAndUpdateNotification = this.buildAndUpdateNotification.bind(this);
 
     this.state = {
       loading: {
