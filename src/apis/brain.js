@@ -33,6 +33,8 @@ import {
   generateRandomHex,
 } from '../util/helpers'
 
+import ErrorTypes from '../constants/errorTypes';
+
 const IPFS_URL =
   'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
 
@@ -663,9 +665,9 @@ export const fundAsset = async (userName, assetId, amount, onTransactionHash, on
 
 const processErrorType = (error, handleError) => {
   if(error.message.includes("User denied transaction signature")){
-    handleError('metamask');
+    handleError(ErrorTypes.METAMASK);
   } else{
-    handleError('ethereum');
+    handleError(ErrorTypes.ETHEREUM);
   };
 }
 
