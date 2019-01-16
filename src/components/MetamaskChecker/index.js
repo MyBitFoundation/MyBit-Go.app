@@ -99,7 +99,6 @@ class MetamaskChecker extends Component {
 
   async handleAddressChanged() {
     const enabled = await this.haveAccessToAccounts();
-    console.log(enabled)
     this.getAccount(enabled);
   }
 

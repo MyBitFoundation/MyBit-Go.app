@@ -122,7 +122,7 @@ class BlockchainInfo extends React.Component {
     const newEnabled = nextProps.enabled;
     const newBalance = nextProps.balance;
 
-    // case where account changes
+    // case where account, login or enabled variable change
     if((newUserAddress && (currentUsername !== newUserAddress)) || (currentUserIsLoggedIn !== newIsUserLoggedIn) || (currentEnabled !== newEnabled)){
       this.setState({
         user: nextProps.user,
