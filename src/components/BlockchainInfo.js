@@ -46,7 +46,6 @@ class BlockchainInfo extends React.Component {
     this.resetNotifications = this.resetNotifications.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
     this.isReadOnlyMode = this.isReadOnlyMode.bind(this);
-    this.backupWeb3 = window.web3js;
 
     this.state = {
       loading: {
@@ -524,15 +523,6 @@ class BlockchainInfo extends React.Component {
       userIsLoggedIn,
       enabled,
     } = this.state;
-
-    /* when in read only mode we use a different instance of web3
-    * that conects to Infura, once we are no longer in read only mode
-    * we need to restore the correct web3 otherwise we can't access the
-    * user accounts.
-    */
-    if(window.web3js !== this.backupWeb3 && !this.isReadOnlyMode()){
-      window.web3js = this.backupWeb3;
-    }
 
     if ((previouslyLoggedIn !== userIsLoggedIn && enabled) || (!previouslyEnabled && enabled) || (previousAddress !== selectedAddress && enabled)) {
       this.loadMetamaskUserDetails();
