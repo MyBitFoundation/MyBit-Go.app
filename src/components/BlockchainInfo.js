@@ -637,8 +637,6 @@ class BlockchainInfo extends React.Component {
   }
 
   async fetchTransactionHistory() {
-    console.log("fetchTransactionHistory")
-    console.log(this.state.user)
     if(!this.state.user.userName){
       this.setState({
         transactions: [],
