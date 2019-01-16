@@ -62,7 +62,6 @@ class MetamaskChecker extends Component {
         }
         balance = window.web3js.utils.fromWei(balance, 'ether');
         if((this.state.user && this.state.user.userName !== accounts[0]) || (this.state.user.balance !== balance) || !this.state.user || !this.state.enabled){
-          console.log("here metamask")
           this.setState({
             user: {
               userName: accounts[0],

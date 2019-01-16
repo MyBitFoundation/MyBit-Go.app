@@ -116,18 +116,8 @@ class BlockchainInfo extends React.Component {
     const loggedIn = this.state.userIsLoggedIn;
     const enabled = this.state.enabled;
 
-    console.log("previous logged in: ", loggedIn)
-    console.log("now logged in: ", nextProps.isLoggedIn)
-
-    console.log("previous username : ", this.state.user.userName )
-    console.log("now username: ", nextProps.user.userName)
-
-    console.log("previous enabled : ", enabled )
-    console.log("now enabled: ", nextProps.enabled)
-
     // case where account changes
     if((nextProps.user.userName && (this.state.user.userName !== nextProps.user.userName)) || (this.state.userIsLoggedIn !== nextProps.isLoggedIn) || (enabled !== nextProps.enabled)){
-      console.log("here")
       this.setState({
         user: !nextProps.isLoggedIn ? {} : nextProps.user,
         userIsLoggedIn: nextProps.isLoggedIn,
