@@ -101,9 +101,9 @@ class BlockchainInfo extends React.Component {
         window.web3js = new Web3(new Web3.providers.HttpProvider(`https://ropsten.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`))
       }
 
-      // we need the user details before getting the assets and transactions
-      await Promise.all([this.loadMetamaskUserDetails()]);
-      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+      this.loadMetamaskUserDetails();
+      this.fetchAssets();
+      this.fetchTransactionHistory();
 
     } catch (err) {
       debug(err);
