@@ -633,69 +633,41 @@ export const withdrawInvestorProfit = async (user, asset, notificationId, update
     }
   });
 
-export const fundAsset = async (user, assetId, amount, onFailureContributionPopup, onSuccessRefreshData, notificationId, assetName, updateNotification, amountDollars) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      updateNotification(notificationId, {
-        metamaskProps: {
-          assetName: assetName,
-          operationType: 'contribution',
-        },
-        status: 'info',
+export const fundAsset = async (userName, assetId, amount, onTransactionHash, onReceipt, onError) => {
+  try {
+    const fundingHubContract = new window.web3js.eth.Contract(
+      FundingHub.ABI,
+      FundingHub.ADDRESS,
+    );
+    const weiAmount = window.web3js.utils.toWei(amount.toString(), 'ether');
+
+    const fundingResponse = await fundingHubContract.methods
+      .fund(assetId)
+      .send({
+        value: weiAmount,
+        from: userName,
+      })
+      .on('transactionHash', (transactionHash) => {
+        onTransactionHash();
+      })
+      .on('error', (error) => {
+        processErrorType(error, onError);
+      })
+      .then((receipt) => {
+        onReceipt(receipt.status);
       });
+  } catch (error) {
+    processErrorType(error, onError)
+  }
+}
 
-      const fundingHubContract = new window.web3js.eth.Contract(
-        FundingHub.ABI,
-        FundingHub.ADDRESS,
-      );
-      const weiAmount = window.web3js.utils.toWei(amount.toString(), 'ether');
-
-      const fundingResponse = await fundingHubContract.methods
-        .fund(assetId)
-        .send({
-          value: weiAmount,
-          from: user.userName,
-        })
-        .on('transactionHash', (transactionHash) => {
-          updateNotification(notificationId, {
-            fundingProps: {
-              assetName: assetName,
-              amount: amountDollars,
-            },
-            status: 'info',
-          });
-        })
-        .on('error', (error) => {
-          onFailureContributionPopup();
-          updateNotification(notificationId, {
-            metamaskProps: {
-              assetName: assetName,
-              operationType: 'contribution',
-            },
-            status: 'error',
-          });
-          debug(error);
-          resolve(false);
-        })
-        .then((receipt) => {
-          if(receipt.status){
-            onSuccessRefreshData();
-          } else {
-            onFailureContributionPopup();
-            updateNotification(notificationId, {
-              fundingProps: {
-                assetName: assetName,
-                operationType: 'contribution',
-              },
-              status: 'error',
-            });
-          }
-          resolve(receipt.status);
-        });
-    } catch (err) {
-      resolve(false);
-    }
-  });
+const processErrorType = (error, handleError) => {
+  if(error.message.includes("User denied transaction signature")){
+    handleError('metamask');
+  } else{
+    handleError('ethereum');
+  };
+}
 
 export const getManagerIncomeEarned = async (managerAddress, assetID) =>
   new Promise(async (resolve, reject) => {

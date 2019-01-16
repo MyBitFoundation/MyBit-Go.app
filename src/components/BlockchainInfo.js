@@ -25,6 +25,12 @@ import {
   S3_ASSET_FILES_URL,
 } from '../constants';
 
+import {
+  NotificationTypes,
+  NotificationsMetamask,
+  NotificationStatus,
+} from '../constants/notifications';
+
 class BlockchainInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -49,6 +55,7 @@ class BlockchainInfo extends React.Component {
     this.withdrawCollateral = this.withdrawCollateral.bind(this);
     this.resetNotifications = this.resetNotifications.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
+    this.buildAndUpdateNotification = this.buildAndUpdateNotification.bind(this);
 
     this.state = {
       loading: {
@@ -592,36 +599,76 @@ class BlockchainInfo extends React.Component {
     }
   }
 
-  async fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {
+  buildAndUpdateNotification(notificationId, type, status, params){
+    this.updateNotification(notificationId, {
+      [type]: {
+        ...params,
+      },
+      status,
+    });
+  }
+
+  fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {
     try {
       const currentAsset = this.state.assets.find(item => item.assetID === assetId);
       const notificationId = Date.now();
+      const {
+        name : assetName,
+      } = currentAsset;
+
+      this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+        operationType: NotificationsMetamask.FUNDING,
+        assetName,
+      });
+
+      const onTransactionHash = () => {
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
+          assetName,
+          amount: amountDollars,
+        });
+      }
+
+      const onReceipt = (wasSuccessful) => {
+        if(wasSuccessful){
+          onSuccessRefreshData();
+        } else {
+          onFailureContributionPopup();
+          this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.ERROR, {
+            assetName,
+          });
+        }
+      }
+
+      const onError = (type) => {
+        onFailureContributionPopup();
+        if(type === 'metamask'){
+          this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+            operationType: NotificationsMetamask.FUNDING,
+          });
+        } else {
+          this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.ERROR, {
+            assetName,
+          });
+        }
+      }
 
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
         onSuccessConfirmationPopup();
-        this.updateNotification(notificationId, {
-          fundingProps: {
-            assetName: currentAsset.name,
-            amount: amountDollars,
-          },
-          status: 'success',
-        })
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
+          assetName,
+          amount: amountDollars,
+        });
       }
 
-      const result = await Brain.fundAsset(
-        this.state.user,
+      Brain.fundAsset(
+        this.state.user.userName,
         assetId,
         amount,
-        onFailureContributionPopup,
-        onSuccessRefreshData,
-        notificationId,
-        currentAsset.name,
-        this.updateNotification,
-        amountDollars
+        onTransactionHash,
+        onReceipt,
+        onError,
       );
-
-      debug(result);
 
     } catch (err) {
       debug(err);

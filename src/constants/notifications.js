@@ -1,6 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+export const NotificationTypes = {
+  METAMASK: 'metamaskProps',
+  LIST_ASSET: 'listAssetProps',
+  FUNDING: 'fundingProps',
+  WITHDRAW_INVESTOR: 'withdrawInvestorProps',
+  WITHDRAW_COLLATERAL: 'withdrawCollateralProps',
+  WITHDRAW_MANAGER: 'withdrawManagerProps',
+};
+
+export const NotificationsMetamask = {
+  LIST_ASSET: 'list-asset',
+  FUNDING: 'funding',
+  WITHDRAW_INVESTOR: 'withdrawInvestor',
+  WITHDRAW_COLLATERAL: 'withdrawCollateral',
+  WITHDRAW_MANAGER: 'withdrawManager',
+};
+
+export const NotificationStatus = {
+  SUCCESS: 'success',
+  INFO: 'info',
+  ERROR: 'error',
+};
+
 export const getContentForNotification = (obj) => {
   const {
     listAssetProps,
@@ -159,7 +182,7 @@ export const getContentForNotification = (obj) => {
           default:
             return null;
         }
-      case 'contribution':
+      case 'funding':
         switch(status) {
           case 'info':
             return {
