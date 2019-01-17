@@ -23,10 +23,14 @@ import {Chart, Axis, Legend, Geom, Tooltip} from "bizcharts";
 import { formatMonetaryValue } from '../../util/helpers';
 import * as Brain from '../../apis/brain';
 import {
+  InternalLinks,
+} from '../../constants';
+
+import {
   getDayInText,
   getMonthInText,
-  S3_URL,
-} from '../../constants';
+} from '../../util/helpers';
+
 dayjs.extend(isBetween)
 
 const ButtonGroup = Button.Group;
@@ -347,7 +351,7 @@ class PortfolioManagedAssetPage extends React.Component {
       }
       const toReturn = files.map(file => (
         <a
-          href={`${S3_URL}${assetId}:${file}`}
+          href={`${InternalLinks.S3}${assetId}:${file}`}
         >
           {file}
         </a>

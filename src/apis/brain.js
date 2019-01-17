@@ -12,28 +12,19 @@ import * as Asset from '../constants/contracts/Asset';
 import * as AssetCollateral from '../constants/contracts/AssetCollateral';
 import { getCategoryFromAssetTypeHash } from '../util/helpers';
 import {
-  debug,
-  ETHERSCAN_TX_BY_ADDR_ENDPOINT,
-  ETHERSCAN_TX,
-  ETHERSCAN_BALANCE,
-  getAddressForAsset,
-  UPDATE_ASSETS_URL,
-  S3_UPLOAD_URL,
-  BLOCK_NUMBER_CONTRACT_CREATION,
-  MYBIT_API_COLLATERAL,
-} from '../constants';
-
-import {
+  ErrorTypes,
   FundingStages,
   getFundingStage,
-} from '../constants/fundingStages';
+  ExternalLinks,
+  InternalLinks,
+  BLOCK_NUMBER_CONTRACT_CREATION,
+} from '../constants';
 
 import {
   generateAssetId,
   generateRandomHex,
+  debug,
 } from '../util/helpers'
-
-import ErrorTypes from '../constants/errorTypes';
 
 const IPFS_URL =
   'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
@@ -62,7 +53,7 @@ export const fetchTransactionHistory = async userAddress =>
     *  than it is to keep converting it for every iteration
     */
       const userAddressLowerCase = userAddress.toLowerCase();
-      const endpoint = ETHERSCAN_TX_BY_ADDR_ENDPOINT(userAddress);
+      const endpoint = ExternalLinks.ETHERSCAN_TX_BY_ADDR_ENDPOINT(userAddress);
       const result = await fetch(endpoint);
       const jsonResult = await result.json();
       if (
@@ -383,7 +374,7 @@ export const uploadFilesToAWS = async (
     for(const file of fileList){
       data.append('file', file.originFileObj);
     }
-    await axios.post(S3_UPLOAD_URL,
+    await axios.post(InternalLinks.S3_UPLOAD,
       data, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -405,7 +396,7 @@ export const createEntryForNewCollateral = async (
   performInternalAction,
 ) => {
   try{
-    await axios.post(MYBIT_API_COLLATERAL, {
+    await axios.post(InternalLinks.MYBIT_API_COLLATERAL, {
       address,
       escrow,
       assetId,
@@ -427,7 +418,7 @@ export const updateAirTableWithNewAsset = async (
   performInternalAction,
 ) => {
   try{
-    await axios.post(UPDATE_ASSETS_URL, {
+    await axios.post(InternalLinks.UPDATE_ASSETS, {
       assetId,
       assetName,
       country,
@@ -448,7 +439,7 @@ export const checkTransactionConfirmation = async (
   reject,
 ) => {
   try {
-    const endpoint = ETHERSCAN_TX(transactionHash);
+    const endpoint = ExternalLinks.ETHERSCAN_TX(transactionHash);
     const result = await fetch(endpoint);
     const jsronResult = await result.json();
     if (jsronResult.status === '1') {
