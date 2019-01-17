@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-unescaped-entities */
-/* eslint-disabled no-unused-vars */
+/* eslint-disable no-unused-vars */
 
 import React from 'react';
 import PropTypes from 'prop-types';
