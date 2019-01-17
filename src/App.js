@@ -10,7 +10,6 @@ import BancorContainer from './components/UI/BancorContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
 import {
-  ethereumNetwork,
   metamaskErrors,
 } from './constants/index';
 
@@ -63,12 +62,13 @@ class App extends Component {
               isBraveBrowser,
               extensionUrl,
               enabled,
+              isReadOnlyMode,
             }) => (
               <React.Fragment>
                 <AppHeader
                   user={user}
                   prices={prices.mybit}
-                  usingServer={!userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork || !enabled}
+                  readOnlyMode={isReadOnlyMode()}
                 />
                 <NavigationBar
                   currentPath={this.props.location.pathname}

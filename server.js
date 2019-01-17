@@ -8,7 +8,6 @@ const civicSip = require('civic-sip-api');
 const path = require('path');
 const AWS = require('aws-sdk');
 const multer = require('multer');
-const fetchAssets = require('./src/util/serverHelper');
 
 const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
@@ -28,8 +27,6 @@ if (dev) {
   });
 }
 
-let assets = [];
-let assetsLoaded = false;
 let filesByAssetId = {};
 
 const multerStorage = multer.memoryStorage();
@@ -166,13 +163,6 @@ app.post('/api/list-asset/auth', (req, res) => {
     });
 });
 
-app.get('/api/assets', (req, res) => {
-  res.send({
-    assets,
-    assetsLoaded,
-  });
-});
-
 app.get('/api/assets/files', (req, res) => {
   res.json({
     filesByAssetId,
@@ -219,27 +209,10 @@ app.post('/api/files/upload', multipleUpload, (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 
 app.listen(8081);
 
-async function pullAssets() {
-  try {
-    console.log(`${new Date().toString()} - pulling assets`)
-    assets = await fetchAssets();
-    assetsLoaded = true;
-    console.log(`${new Date().toString()} - done pulling assets`)
-  } catch (err) {
-    /* eslint no-console: ["error", { allow: ["log", "error"] }] */
-    console.log(err);
-  }
-}
-
 ProcessFilesForAssets();
-
-pullAssets();
-
-setInterval(pullAssets, 60000);

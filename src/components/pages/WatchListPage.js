@@ -14,6 +14,9 @@ import '../../styles/WatchListPage.css';
 import { getPrettyCategoryName } from '../../util/helpers';
 import LoadingPage from './LoadingPage';
 import Asset from '../Asset';
+import {
+  FundingStages,
+} from '../../constants/fundingStages';
 
 const assetsPerPage = 12;
 
@@ -42,7 +45,7 @@ class WatchListPage extends Component {
 
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      if ((fundingActive && (asset.fundingStage !== 1 || asset.pastDate)) || (!fundingActive && !asset.pastDate) || !asset.watchListed) {
+      if ((fundingActive && (asset.fundingStage !== FundingStages.IN_PROGRESS || asset.pastDate)) || (!fundingActive && !asset.pastDate) || !asset.watchListed) {
         return false;
       }
       return true;
@@ -60,9 +63,9 @@ class WatchListPage extends Component {
         {assetsFiltered.map(asset => (
           <Asset
             key={asset.assetID}
-            id={asset.assetID}
-            funded={asset.amountRaisedInUSD}
-            goal={asset.amountToBeRaisedInUSD}
+            assetID={asset.assetID}
+            amountRaisedInUSD={asset.amountRaisedInUSD}
+            amountToBeRaisedInUSD={asset.amountToBeRaisedInUSD}
             city={asset.city}
             country={asset.country}
             name={asset.name}

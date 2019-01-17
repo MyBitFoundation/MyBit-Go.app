@@ -8,7 +8,7 @@ import {
   METAMASK_FIREFOX,
   METAMASK_CHROME,
   METAMASK_OPERA,
-  PROVIDER_MAINNET,
+  PROVIDER_ROPSTEN,
 } from './constants';
 
 class MetamaskChecker extends Component {
@@ -44,7 +44,7 @@ class MetamaskChecker extends Component {
         window.web3js = new Web3(window.web3.currentProvider);
         await this.userHasMetamask(false);
       } else {
-        window.web3js = new Web3(new Web3.providers.HttpProvider(PROVIDER_MAINNET));
+        window.web3js = new Web3(new Web3.providers.HttpProvider(PROVIDER_ROPSTEN));
         this.isBrowserSupported();
       }
     } catch(err){
@@ -52,9 +52,10 @@ class MetamaskChecker extends Component {
     }
   }
 
-  async getAccount(){
+  async getAccount(enabled){
     try{
       const accounts = await window.web3js.eth.getAccounts();
+      const isLoggedIn = await this.checkIfLoggedIn();
       if(accounts && accounts.length > 0){
         let balance;
         while(!balance){
@@ -67,11 +68,18 @@ class MetamaskChecker extends Component {
               userName: accounts[0],
               ethBalance: balance,
             },
-            enabled: true,
-            isLoggedIn: true,
             isInstalled: true,
+            enabled: true,
+            isLoggedIn,
           })
         }
+      } else {
+        this.setState({
+          user: {},
+          isInstalled: true,
+          isLoggedIn,
+          enabled,
+        })
       }
     }catch(err){
       console.log(err)
@@ -85,31 +93,13 @@ class MetamaskChecker extends Component {
 
   async userHasMetamask(enabled) {
     await this.checkNetwork();
-    const isLoggedIn = await this.checkIfLoggedIn()
-    window.web3js.currentProvider.publicConfigStore.on('update', ({selectedAddress}) => this.handleAddressChanged(selectedAddress));
-    if(isLoggedIn){
-      await this.getAccount();
-    }
-
-    this.setState({
-      isInstalled: true,
-      isLoggedIn,
-      enabled,
-    });
+    window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
+    await this.getAccount(enabled);
   }
 
-  async handleAddressChanged(selectedAddress) {
-    const isLoggedIn = await this.checkIfLoggedIn();
+  async handleAddressChanged() {
     const enabled = await this.haveAccessToAccounts();
-    if(isLoggedIn || !this.state.enabled){
-      this.getAccount();
-    }
-    if(this.state.isLoggedIn !== isLoggedIn || this.state.enabled !== enabled){
-      this.setState({
-        isLoggedIn,
-        enabled,
-      });
-    }
+    this.getAccount(enabled);
   }
 
   async checkIfLoggedIn() {
