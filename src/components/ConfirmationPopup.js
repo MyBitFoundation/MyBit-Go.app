@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-unused-vars */
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -10,10 +11,10 @@ import Checkbox from 'antd/lib/checkbox';
 import 'antd/lib/checkbox/style';
 import '../styles/ConfirmationPopup.css';
 import AlertMessage from './AlertMessage';
+import MetamaskErrors from './MetamaskErrors';
 import {
-  ethereumNetwork,
-  metamaskErrors,
-} from '../constants/index';
+  CORRECT_NETWORK,
+} from '../constants';
 
 class ConfirmationPopup extends React.Component {
   state = {
@@ -140,9 +141,18 @@ class ConfirmationPopup extends React.Component {
 
 
     const shouldShowConfirmAndCancel =
-      (((!isLoading && transactionStatus === '') || (transactionStatus === 1)) && userHasMetamask && userIsLoggedIn && network === ethereumNetwork);
+      (((!isLoading && transactionStatus === '') || (transactionStatus === 1)) && userHasMetamask && userIsLoggedIn && network === CORRECT_NETWORK);
 
-    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network);
+    const metamaskErrorsToRender = (
+      <MetamaskErrors
+        className=""
+        userHasMetamask
+        extensionUrl={extensionUrl}
+        isBraveBrowser
+        userIsLoggedIn
+        network={network}
+      />
+    )
 
     return (
       <Modal

@@ -26,7 +26,10 @@ import {
   formatMonetaryValue,
   shortenAddress,
 } from '../util/helpers';
-import { S3_URL } from '../constants';
+
+import {
+  InternalLinks,
+} from '../constants';
 
 class AssetDetails extends React.Component {
   constructor(props) {
@@ -163,7 +166,7 @@ class AssetDetails extends React.Component {
     }
     const toReturn = files.map(file => (
       <a
-        href={`${S3_URL}${assetId}:${file}`}
+        href={`${InternalLinks.S3}${assetId}:${file}`}
       >
         {file}
       </a>

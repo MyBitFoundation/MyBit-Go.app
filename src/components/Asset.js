@@ -12,7 +12,9 @@ import 'antd/lib/icon/style';
 import '../styles/Asset.css';
 import locationIcon from '../images/Location-icon.png';
 import Watch from './Watch';
-import { debug } from '../constants';
+import {
+  debug,
+} from '../util/helpers';
 import { formatMonetaryValue } from '../util/helpers';
 import BlockchainInfoContext from './BlockchainInfoContext';
 

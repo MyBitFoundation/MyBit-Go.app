@@ -8,28 +8,24 @@ import axios from 'axios';
 import BlockchainInfoContext from './BlockchainInfoContext';
 import * as Brain from '../apis/brain';
 import {
-  debug,
-  MYBIT_TICKER_COINMARKETCAP,
-  ETHEREUM_TICKER_COINMARKETCAP,
-  ethereumNetwork,
-  fetchTransactionHistoryTime,
-  loadMetamaskUserDetailsTime,
-  fetchAssetsFromWeb3Time,
-  S3_URL,
-  AIRTABLE_CATEGORIES_URL,
-  AIRTABLE_ASSETS_URL,
-  AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
-  AIRTABLE_ASSETS_NUMBER_OF_FIELDS,
-  S3_ASSET_FILES_URL,
-} from '../constants';
-
-import {
+  ErrorTypes,
+  InternalLinks,
   NotificationTypes,
   NotificationsMetamask,
   NotificationStatus,
-} from '../constants/notifications';
+  MYBIT_TICKER_COINMARKETCAP,
+  ETHEREUM_TICKER_COINMARKETCAP,
+  CORRECT_NETWORK,
+  FETCH_ASSETS_TIME,
+  LOAD_METAMASK_USER_DETAILS_TIME,
+  FETCH_TRANSACTION_HISTORY_TIME,
+  AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
+  AIRTABLE_ASSETS_NUMBER_OF_FIELDS,
+} from '../constants';
 
-import ErrorTypes from '../constants/errorTypes';
+import {
+  debug,
+} from '../util/helpers';
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -105,7 +101,7 @@ class BlockchainInfo extends React.Component {
 
       //case where user has metamask but is connected to the wrong network, we
       //still need to load the data properly from the correct network
-      if(this.state.userHasMetamask && (this.state.network !== ethereumNetwork)){
+      if(this.state.userHasMetamask && (this.state.network !== CORRECT_NETWORK)){
         window.web3js = new Web3(new Web3.providers.HttpProvider(`https://ropsten.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`))
       }
 
@@ -154,11 +150,11 @@ class BlockchainInfo extends React.Component {
 
   createIntervals(){
     this.intervalFetchAssets =
-      setInterval(this.fetchAssets, fetchAssetsFromWeb3Time);
+      setInterval(this.fetchAssets, FETCH_ASSETS_TIME);
     this.intervalFetchTransactionHistory =
-      setInterval(this.fetchTransactionHistory, fetchTransactionHistoryTime);
+      setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
     this.intervalLoadMetamaskUserDetails =
-      setInterval(this.loadMetamaskUserDetails, loadMetamaskUserDetailsTime);
+      setInterval(this.loadMetamaskUserDetails, LOAD_METAMASK_USER_DETAILS_TIME);
   }
 
   resetIntervals(){
@@ -175,12 +171,12 @@ class BlockchainInfo extends React.Component {
       enabled,
     } = this.state;
 
-    return !userHasMetamask || !userIsLoggedIn || network !== ethereumNetwork || !enabled;
+    return !userHasMetamask || !userIsLoggedIn || network !== CORRECT_NETWORK || !enabled;
   }
 
   async pullFileInfoForAssets(assets){
     try{
-      const response = await axios(S3_ASSET_FILES_URL);
+      const response = await axios(InternalLinks.S3_ASSET_FILES);
 
       const filesByAssetId = response.data.filesByAssetId;
 
@@ -626,7 +622,7 @@ class BlockchainInfo extends React.Component {
       description: fields.Description,
       details: fields.Details,
       partner: fields.Partner,
-      imageSrc: `${S3_URL}assetImages:${fields['Image']}`,
+      imageSrc: `${InternalLinks.S3}assetImages:${fields['Image']}`,
       amountToBeRaisedInUSDAirtable: fields['Funding goal'],
       location,
     };
@@ -678,7 +674,7 @@ class BlockchainInfo extends React.Component {
 
   async getAssetsFromAirTable(){
     try{
-      const request = await fetch(AIRTABLE_ASSETS_URL);
+      const request = await fetch(InternalLinks.AIRTABLE_ASSETS);
       const json = await request.json();
       const { records } = json;
       const assets = records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS).map(this.processAssetsFromAirTable)
@@ -695,7 +691,7 @@ class BlockchainInfo extends React.Component {
 
   async getCategoriesFromAirTable(){
     try{
-      const request = await fetch(AIRTABLE_CATEGORIES_URL);
+      const request = await fetch(InternalLinks.AIRTABLE_CATEGORIES);
       const json = await request.json();
       const { records } = json;
       const categories = this.processCategoriesFromAirTable(records.filter(({ fields })  => Object.keys(fields).length === AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS));
