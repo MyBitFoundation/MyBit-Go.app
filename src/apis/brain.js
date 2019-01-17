@@ -208,84 +208,51 @@ export const remainingEscrow = async assetID =>
     }
   });
 
-export const withdrawAssetManager = async (user, assetID, assetName, notificationId, updateNotification) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const assetContract = new window.web3js.eth.Contract(
-        Asset.ABI,
-        Asset.ADDRESS,
-      );
+export const withdrawAssetManager = async (userName, assetID, onTransactionHash, onReceipt, onError) => {
+  try {
+    const assetContract = new window.web3js.eth.Contract(
+      Asset.ABI,
+      Asset.ADDRESS,
+    );
 
-      const response = await assetContract.methods
-        .withdrawManagerIncome(assetID)
-        .send({ from: user.userName })
-        .on('transactionHash', (transactionHash) => {
-          updateNotification(notificationId, {
-            withdrawManagerProps: {
-              assetName: assetName,
-            },
-            status: 'info',
-          });
-        })
-        .on('error', (error) => {
-          updateNotification(notificationId, {
-            metamaskProps: {
-              operationType: 'withdrawManager',
-            },
-            status: 'error',
-          });
-          debug(error);
-          resolve(1);
-        })
-        .then((receipt) => {
-          debug(receipt)
-          resolve(receipt.status);
-        });
-    } catch (err) {
-      debug(err)
-      resolve(0);
-    }
-  });
+    const response = await assetContract.methods
+      .withdrawManagerIncome(assetID)
+      .send({ from: userName })
+      .on('transactionHash', (transactionHash) => {
+        onTransactionHash();
+      })
+      .on('error', (error) => {
+        processErrorType(error, onError);
+      })
+      .then(receipt => onReceipt(receipt.status));
 
+  } catch (error) {
+    processErrorType(error, onError)
+  }
+}
 
-export const withdrawEscrow = async (user, assetID, assetName, notificationId, updateNotification) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const assetCollateralContract = new window.web3js.eth.Contract(
-        AssetCollateral.ABI,
-        AssetCollateral.ADDRESS,
-      );
+export const withdrawEscrow = async (userName, assetID, onTransactionHash, onReceipt, onError) => {
+  try {
+    const assetCollateralContract = new window.web3js.eth.Contract(
+      AssetCollateral.ABI,
+      AssetCollateral.ADDRESS,
+    );
 
-      const response = await assetCollateralContract.methods
-        .withdrawEscrow(assetID)
-        .send({ from: user.userName })
-        .on('transactionHash', (transactionHash) => {
-          updateNotification(notificationId, {
-            withdrawCollateralProps: {
-              assetName: assetName,
-            },
-            status: 'info',
-          });
-        })
-        .on('error', (error) => {
-          updateNotification(notificationId, {
-            metamaskProps: {
-              operationType: 'withdrawCollateral',
-            },
-            status: 'error',
-          });
-          debug(error);
-          resolve(1);
-        })
-        .then((receipt) => {
-          debug(receipt)
-          resolve(receipt.status);
-        });
-    } catch (err) {
-      debug(err)
-      resolve(0);
-    }
-  });
+    const response = await assetCollateralContract.methods
+      .withdrawEscrow(assetID)
+      .send({ from: userName })
+      .on('transactionHash', (transactionHash) => {
+        onTransactionHash();
+      })
+      .on('error', (error) => {
+        processErrorType(error, onError);
+      })
+      .then(receipt => onReceipt(receipt.status));
+
+  } catch (error) {
+    processErrorType(error, onError)
+  }
+}
 
 export const fetchRevenueLogsByAssetId = async (assetId) =>
   new Promise(async (resolve, reject) => {
@@ -342,128 +309,68 @@ const getNumberOfInvestors = async assetID =>
     }
   });
 
-export const createAsset = async params =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const id = Date.now();
-      const {
-        updateNotification,
-        assetName,
-        onSuccess,
-        onFailure,
-        country,
-        city,
-        fileList,
-        collateralMyb,
-        collateralPercentage,
-        amountToBeRaisedInUSD,
-        userAddress,
-        managerPercentage,
-      } = params;
-      const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
-      debug(collateral)
-      updateNotification(id, {
-        metamaskProps: {
-          assetName: assetName,
-          operationType: 'list-asset',
-        },
-        status: 'info',
-      });
-      const assetCreationContract = new window.web3js.eth.Contract(
-        AssetCreation.ABI,
-        AssetCreation.ADDRESS,
-      );
+export const createAsset = async (onTransactionHash, onReceipt, onError, params) => {
+  try {
+    const {
+      assetName,
+      country,
+      city,
+      fileList,
+      collateralMyb,
+      collateralPercentage,
+      amountToBeRaisedInUSD,
+      userAddress,
+      managerPercentage,
+    } = params;
 
-      const installerId = generateRandomHex(window.web3js);
-      const assetType = params.assetType;
-      const ipfsHash = installerId; // ipfshash doesn't really matter right now
-      const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
+    const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
+    debug(collateral)
 
-      const futureAssetId = generateAssetId(
-        window.web3js,
-        userAddress,
-        managerPercentage,
-        amountToBeRaisedInUSD,
+    const assetCreationContract = new window.web3js.eth.Contract(
+      AssetCreation.ABI,
+      AssetCreation.ADDRESS,
+    );
+
+    const installerId = generateRandomHex(window.web3js);
+    const assetType = params.assetType;
+    const ipfsHash = installerId; // ipfshash doesn't really matter right now
+    const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
+
+    const futureAssetId = generateAssetId(
+      window.web3js,
+      userAddress,
+      managerPercentage,
+      amountToBeRaisedInUSD,
+      installerId,
+      assetType,
+      randomBlockNumber
+    );
+
+    const assetCreationResponse = await assetCreationContract.methods
+      .newAsset(
+        amountToBeRaisedInUSD.toString(),
+        params.managerPercentage.toString(),
+        '0',
         installerId,
         assetType,
-        randomBlockNumber
-      );
+        randomBlockNumber.toString(),
+        ipfsHash,
+      )
+      .send({ from: userAddress })
+      .on('transactionHash', (transactionHash) => {
+        onTransactionHash();
+      })
+      .on('error', (error) => {
+        processErrorType(error, onError);
+      })
+      .then(receipt => onReceipt(receipt.status, futureAssetId));
 
-      const assetCreationResponse = await assetCreationContract.methods
-        .newAsset(
-          amountToBeRaisedInUSD.toString(),
-          params.managerPercentage.toString(),
-          '0',
-          installerId,
-          assetType,
-          randomBlockNumber.toString(),
-          ipfsHash,
-        )
-        .send({ from: userAddress })
-        .on('transactionHash', (transactionHash) => {
-          updateNotification(id, {
-            listAssetProps: {
-              assetName: assetName,
-            },
-            status: 'info',
-          });
-        })
-        .on('error', (error) => {
-          onFailure();
-          updateNotification(id, {
-            metamaskProps: {},
-            status: 'error',
-            operationType: 'list-asset',
-          });
-          resolve(false);
-        })
-        .then( async(receipt) => {
-          if(receipt.status){
-            const numberOfInternalActions = 2;
-            const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
-            const filesUploaded = fileList.length > 0;
-            const requiredCallsToInternalActions = filesUploaded ? numberOfInternalActionsWithFileUpload : numberOfInternalActions;
-            let counterCallsToInternalActions = 0;
+  } catch (error) {
+    processErrorType(error, onError)
+  }
+}
 
-            // we need to perform a few actions before declaring the listing of the asset as successful
-            const performInternalAction = () => {
-              counterCallsToInternalActions++;
-              if(counterCallsToInternalActions === requiredCallsToInternalActions){
-                onSuccess(() => {
-                  updateNotification(id, {
-                    listAssetProps: {
-                      assetName: assetName,
-                      assetId: futureAssetId,
-                    },
-                    status: 'success',
-                  })
-                }, futureAssetId)
-
-                resolve(receipt.status);
-              }
-            }
-
-            updateAirTableWithNewAsset(futureAssetId, assetName, country, city, collateralMyb, collateralPercentage, performInternalAction)
-            createEntryForNewCollateral(userAddress, collateral, futureAssetId, performInternalAction);
-            filesUploaded && uploadFilesToAWS(futureAssetId, fileList, performInternalAction);
-
-          } else {
-            updateNotification(id, {
-              listAssetProps: {
-                assetName: assetName,
-              },
-              status: 'error',
-            });
-            resolve(assetCreationResponse);
-          }
-        });
-
-    } catch (err) {
-      reject(err);
-    }
-  });
-
-const uploadFilesToAWS = async (
+export const uploadFilesToAWS = async (
   assetId,
   fileList,
   performInternalAction,
@@ -489,7 +396,7 @@ const uploadFilesToAWS = async (
   }
 }
 
-const createEntryForNewCollateral = async (
+export const createEntryForNewCollateral = async (
   address,
   escrow,
   assetId,
@@ -508,7 +415,7 @@ const createEntryForNewCollateral = async (
   }
 }
 
-const updateAirTableWithNewAsset = async (
+export const updateAirTableWithNewAsset = async (
   assetId,
   assetName,
   country,
@@ -533,7 +440,7 @@ const updateAirTableWithNewAsset = async (
   }
 }
 
-const checkTransactionConfirmation = async (
+export const checkTransactionConfirmation = async (
   transactionHash,
   resolve,
   reject,
@@ -575,65 +482,29 @@ export const withdrawFromFaucet = async user =>
   });
 
 
-export const withdrawInvestorProfit = async (user, asset, notificationId, updateNotification, onSuccessRefreshData, onFail) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const assetName = asset.name;
-      updateNotification(notificationId, {
-        metamaskProps: {
-          assetName: assetName,
-          operationType: 'withdrawInvestor',
-        },
-        status: 'info',
+export const withdrawInvestorProfit = async (userName, assetID, onTransactionHash, onReceipt, onError) => {
+  try {
+    const AssetContract = new window.web3js.eth.Contract(
+      Asset.ABI,
+      Asset.ADDRESS,
+    );
+
+    const withdrawResponse = await AssetContract.methods
+      .withdraw(assetID)
+      .send({ from: userName })
+      .on('transactionHash', (transactionHash) => {
+        onTransactionHash();
+      })
+      .on('error', (error) => {
+        processErrorType(error, onError);
+      })
+      .then((receipt) => {
+        onReceipt(receipt.status);
       });
-
-      const AssetContract = new window.web3js.eth.Contract(
-        Asset.ABI,
-        Asset.ADDRESS,
-      );
-
-      const withdrawResponse = await AssetContract.methods
-        .withdraw(asset.assetID)
-        .send({ from: user.userName })
-        .on('transactionHash', (transactionHash) => {
-          updateNotification(notificationId, {
-            withdrawInvestorProps: {
-              assetName: assetName,
-            },
-            status: 'info',
-          });
-        })
-        .on('error', (error) => {
-          updateNotification(notificationId, {
-            metamaskProps: {
-              assetName: assetName,
-              operationType: 'withdrawInvestor',
-            },
-            status: 'error',
-          });
-          onFail();
-          debug(error);
-          resolve(false);
-        })
-        .then((receipt) => {
-          if(receipt.status){
-            onSuccessRefreshData();
-          } else {
-            updateNotification(notificationId, {
-              withdrawInvestorProps: {
-                assetName: assetName,
-                operationType: 'contribution',
-              },
-              status: 'error',
-            });
-            onFail();
-          }
-          resolve(receipt.status);
-        });
-    } catch (err) {
-      reject(err);
-    }
-  });
+  } catch (error) {
+    processErrorType(error, onError)
+  }
+}
 
 export const fundAsset = async (userName, assetId, amount, onTransactionHash, onReceipt, onError) => {
   try {

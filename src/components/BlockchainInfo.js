@@ -31,6 +31,8 @@ import {
   NotificationStatus,
 } from '../constants/notifications';
 
+import ErrorTypes from '../constants/errorTypes';
+
 class BlockchainInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -185,20 +187,13 @@ class BlockchainInfo extends React.Component {
     }
   }
 
-  async withdrawProfitAssetManager(asset, amount, onFinished){
-    const notificationId = Date.now();
+  async withdrawProfitAssetManager(asset, amount, updateAssetCollateralPage){
     const {
       assetID,
-      name,
+      name: assetName,
     } = asset;
 
-    this.updateNotification(notificationId, {
-      metamaskProps: {
-        assetName: name,
-        operationType: 'withdrawManager',
-      },
-      status: 'info',
-    });
+    const notificationId = Date.now();
 
     //update state so users can't trigger the withdrawal multiple times
     const withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
@@ -207,13 +202,38 @@ class BlockchainInfo extends React.Component {
       withdrawingAssetManager,
     });
 
-    const result = await Brain.withdrawAssetManager(
-      this.state.user,
-      assetID,
-      name,
-      notificationId,
-      this.updateNotification,
-    );
+    this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+      operationType: NotificationsMetamask.WITHDRAW_MANAGER,
+      assetName,
+    });
+
+    const onTransactionHash = () => {
+      this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.INFO, {
+        assetName,
+      });
+    }
+
+    const onReceipt = (wasSuccessful) => {
+      if(wasSuccessful){
+        onSuccess();
+      } else{
+        onError(ErrorTypes.ETHEREUM);
+      }
+    }
+
+    const onError = (type) => {
+      updatewithdrawingAssetManager();
+      if(type === ErrorTypes.METAMASK){
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+          operationType: NotificationsMetamask.WITHDRAW_MANAGER,
+          assetName,
+        });
+      } else {
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.ERROR, {
+          assetName,
+        });
+      }
+    }
 
     const updatewithdrawingAssetManager = () => {
       let withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
@@ -223,37 +243,31 @@ class BlockchainInfo extends React.Component {
       });
     }
 
-    if(result === true || result === false){
-      onFinished(() => {
+    const onSuccess = () => {
+      updateAssetCollateralPage(() => {
         updatewithdrawingAssetManager();
-        this.updateNotification(notificationId, {
-          withdrawManagerProps: {
-            assetName: name,
-            amount,
-          },
-          status: result ? 'success' : 'error',
-        })
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.SUCCESS, {
+          assetName,
+          amount,
+        });
       })
-    } else {
-      updatewithdrawingAssetManager();
     }
+
+    await Brain.withdrawAssetManager(
+      this.state.user.userName,
+      assetID,
+      onTransactionHash,
+      onReceipt,
+      onError,
+    );
   }
 
-
-  async withdrawCollateral(asset, percentage, amount, onFinished){
-    const notificationId = Date.now();
+  async withdrawCollateral(asset, percentage, amount, updateAssetCollateralPage){
     const {
       assetID,
-      name,
+      name: assetName,
     } = asset;
-
-    this.updateNotification(notificationId, {
-      metamaskProps: {
-        assetName: name,
-        operationType: 'withdrawCollateral',
-      },
-      status: 'info',
-    });
+    const notificationId = Date.now();
 
     //update state so users can't trigger the withdrawal multiple times
     const withdrawingCollateral = this.state.withdrawingCollateral.slice();
@@ -262,13 +276,38 @@ class BlockchainInfo extends React.Component {
       withdrawingCollateral,
     });
 
-    const result = await Brain.withdrawEscrow(
-      this.state.user,
-      assetID,
-      name,
-      notificationId,
-      this.updateNotification,
-    );
+    this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+      operationType: NotificationsMetamask.WITHDRAW_COLLATERAL,
+      assetName,
+    });
+
+    const onTransactionHash = () => {
+      this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.INFO, {
+        assetName,
+      });
+    }
+
+    const onReceipt = (wasSuccessful) => {
+      if(wasSuccessful){
+        onSuccess();
+      } else{
+        onError(ErrorTypes.ETHEREUM);
+      }
+    }
+
+    const onError = (type) => {
+      updateWithdrawingCollateral();
+      if(type === ErrorTypes.METAMASK){
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+          operationType: NotificationsMetamask.WITHDRAW_COLLATERAL,
+          assetName,
+        });
+      } else {
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.ERROR, {
+          assetName,
+        });
+      }
+    }
 
     const updateWithdrawingCollateral = () => {
       let withdrawingCollateral = this.state.withdrawingCollateral.slice();
@@ -278,28 +317,32 @@ class BlockchainInfo extends React.Component {
       });
     }
 
-    if(result === true || result === false){
-      onFinished(() => {
+    const onSuccess = () => {
+      updateAssetCollateralPage(() => {
         updateWithdrawingCollateral();
-        this.updateNotification(notificationId, {
-          withdrawCollateralProps: {
-            assetName: name,
-            amount,
-            percentage,
-          },
-          status: result ? 'success' : 'error',
-        })
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.SUCCESS, {
+          assetName,
+          percentage,
+          amount,
+        });
       })
-    } else {
-      updateWithdrawingCollateral();
     }
+
+    await Brain.withdrawEscrow(
+      this.state.user.userName,
+      assetID,
+      onTransactionHash,
+      onReceipt,
+      onError,
+    );
+
   }
 
   async handleListAsset(formData, setUserListingAsset){
     const {
-      asset,
-      userCountry,
-      userCity,
+      asset: assetName,
+      userCountry: country,
+      userCity: city,
       managementFee,
       category,
       fileList,
@@ -311,29 +354,229 @@ class BlockchainInfo extends React.Component {
       categoriesAirTable,
     } = this.state;
 
-    const onSuccess = async (callback, assetId) => {
-      await this.getAssetsFromAirTable();
-      this.fetchAssets(callback, setUserListingAsset, assetId);
-    }
+    const userAddress =  this.state.user.userName;
+    const notificationId = Date.now();
 
-    const result = await Brain.createAsset({
-      updateNotification: this.updateNotification,
-      userAddress: this.state.user.userName,
-      managerPercentage: managementFee,
-      assetName: asset,
-      country: userCountry,
-      city: userCity,
-      assetType: categoriesAirTable[category].encoded,
-      amountToBeRaisedInUSD: this.getAssetFromAirTableByName(asset).amountToBeRaisedInUSDAirtable,
-      fileList,
-      onSuccess,
-      onFailure: () => setUserListingAsset(false),
-      collateralMyb,
-      collateralPercentage,
+    this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+      operationType: NotificationsMetamask.LIST_ASSET,
+      assetName,
     });
 
-    debug(result);
+    const onTransactionHash = () => {
+      this.buildAndUpdateNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
+        assetName,
+      });
+    }
+
+    const onReceipt = (wasSuccessful, assetId) => {
+      if(wasSuccessful){
+        onSuccess(assetId);
+      } else{
+        onError(ErrorTypes.ETHEREUM);
+      }
+    }
+
+    const onSuccess = async (assetId) => {
+      const numberOfInternalActions = 2;
+      const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
+      const filesUploaded = fileList.length > 0;
+      const requiredCallsToInternalActions = filesUploaded ? numberOfInternalActionsWithFileUpload : numberOfInternalActions;
+      let counterCallsToInternalActions = 0;
+
+      // we need to perform a few actions before declaring the listing of the asset as successful
+      const performInternalAction = async () => {
+        counterCallsToInternalActions++;
+        if(counterCallsToInternalActions === requiredCallsToInternalActions){
+          await this.getAssetsFromAirTable();
+          await this.fetchAssets();
+
+          this.buildAndUpdateNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
+            assetName,
+            assetId,
+          });
+          setUserListingAsset(false, assetId);
+        }
+      }
+
+      const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
+
+      Brain.updateAirTableWithNewAsset(assetId, assetName, country, city, collateralMyb, collateralPercentage, performInternalAction)
+      Brain.createEntryForNewCollateral(userAddress, collateral, assetId, performInternalAction);
+      filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
+    }
+
+    const onError = (type) => {
+      setUserListingAsset(false);
+      if(type === ErrorTypes.METAMASK){
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+          assetName,
+          operationType: NotificationsMetamask.LIST_ASSET,
+        });
+      } else {
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.ERROR, {
+          assetName,
+        });
+      }
+    }
+
+    await Brain.createAsset(onTransactionHash, onReceipt, onError, {
+      managerPercentage: managementFee,
+      assetType: categoriesAirTable[category].encoded,
+      amountToBeRaisedInUSD: this.getAssetFromAirTableByName(assetName).amountToBeRaisedInUSDAirtable,
+      assetName,
+      country,
+      city,
+      fileList,
+      collateralMyb,
+      collateralPercentage,
+      userAddress,
+    });
   }
+
+
+  fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {
+    try {
+      const currentAsset = this.state.assets.find(item => item.assetID === assetId);
+      const notificationId = Date.now();
+      const {
+        name : assetName,
+      } = currentAsset;
+
+      this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+        operationType: NotificationsMetamask.FUNDING,
+        assetName,
+      });
+
+      const onTransactionHash = () => {
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
+          assetName,
+          amount: amountDollars,
+        });
+      }
+
+      const onReceipt = (wasSuccessful) => {
+        if(wasSuccessful){
+          onSuccessRefreshData();
+        } else {
+          onError(ErrorTypes.ETHEREUM)
+        }
+      }
+
+      const onError = (type) => {
+        onFailureContributionPopup();
+        if(type === ErrorTypes.METAMASK){
+          this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+            operationType: NotificationsMetamask.FUNDING,
+          });
+        } else {
+          this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.ERROR, {
+            assetName,
+          });
+        }
+      }
+
+      const onSuccessRefreshData = async () => {
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        onSuccessConfirmationPopup();
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
+          assetName,
+          amount: amountDollars,
+        });
+      }
+
+      Brain.fundAsset(
+        this.state.user.userName,
+        assetId,
+        amount,
+        onTransactionHash,
+        onReceipt,
+        onError,
+      );
+
+    } catch (err) {
+      debug(err);
+    }
+  }
+
+  async withdrawInvestorProfit(assetId, amount) {
+    try {
+      const currentAsset = this.state.assets.find(item => item.assetID === assetId);
+      const{
+        name: assetName,
+      } = currentAsset;
+      const notificationId = Date.now();
+
+      // save the the assetID so the user doesn't trigger twice while we
+      // perform the action
+      const withdrawingAssetIds = this.state.withdrawingAssetIds.slice();
+      withdrawingAssetIds.push(assetId);
+      this.setState({
+        withdrawingAssetIds,
+      })
+
+      this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+        operationType: NotificationsMetamask.WITHDRAW_INVESTOR,
+        assetName,
+      });
+
+      const onTransactionHash = () => {
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.INFO, {
+          assetName,
+          amount,
+        });
+      }
+
+      const onReceipt = (wasSuccessful) => {
+        if(wasSuccessful){
+          onSuccessRefreshData();
+        } else {
+          onError(ErrorTypes.ETHEREUM);
+        }
+      }
+
+      const onError = (type) => {
+        removeAssetIdFromList();
+        if(type === ErrorTypes.METAMASK){
+          this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+            operationType: NotificationsMetamask.WITHDRAW_INVESTOR,
+          });
+        } else {
+          this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.ERROR, {
+            assetName,
+          });
+        }
+      }
+
+      const removeAssetIdFromList = () => {
+        let withdrawingAssetIds = this.state.withdrawingAssetIds.slice();
+        withdrawingAssetIds = withdrawingAssetIds.filter(assetIdTmp => assetIdTmp !== assetId);
+        this.setState({
+          withdrawingAssetIds,
+        })
+      }
+
+      const onSuccessRefreshData = async () => {
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        removeAssetIdFromList();
+        this.buildAndUpdateNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.SUCCESS, {
+          assetName,
+          amount,
+        });
+      }
+
+      await Brain.withdrawInvestorProfit(
+        this.state.user.userName,
+        currentAsset.assetID,
+        onTransactionHash,
+        onReceipt,
+        onError,
+      );
+
+    } catch (err) {
+      debug(err);
+    }
+  }
+
 
   updateNotification(id, data){
     const notifications = Object.assign({}, this.state.notifications);
@@ -607,124 +850,6 @@ class BlockchainInfo extends React.Component {
     });
   }
 
-  fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {
-    try {
-      const currentAsset = this.state.assets.find(item => item.assetID === assetId);
-      const notificationId = Date.now();
-      const {
-        name : assetName,
-      } = currentAsset;
-
-      this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
-        operationType: NotificationsMetamask.FUNDING,
-        assetName,
-      });
-
-      const onTransactionHash = () => {
-        this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
-          assetName,
-          amount: amountDollars,
-        });
-      }
-
-      const onReceipt = (wasSuccessful) => {
-        if(wasSuccessful){
-          onSuccessRefreshData();
-        } else {
-          onFailureContributionPopup();
-          this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.ERROR, {
-            assetName,
-          });
-        }
-      }
-
-      const onError = (type) => {
-        onFailureContributionPopup();
-        if(type === 'metamask'){
-          this.buildAndUpdateNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
-            operationType: NotificationsMetamask.FUNDING,
-          });
-        } else {
-          this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.ERROR, {
-            assetName,
-          });
-        }
-      }
-
-      const onSuccessRefreshData = async () => {
-        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-        onSuccessConfirmationPopup();
-        this.buildAndUpdateNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
-          assetName,
-          amount: amountDollars,
-        });
-      }
-
-      Brain.fundAsset(
-        this.state.user.userName,
-        assetId,
-        amount,
-        onTransactionHash,
-        onReceipt,
-        onError,
-      );
-
-    } catch (err) {
-      debug(err);
-    }
-  }
-
-  async withdrawInvestorProfit(assetId, amount) {
-    try {
-      const currentAsset = this.state.assets.find(item => item.assetID === assetId);
-      const notificationId = Date.now();
-
-      const withdrawingAssetIds = this.state.withdrawingAssetIds.slice();
-      withdrawingAssetIds.push(assetId);
-      this.setState({
-        withdrawingAssetIds,
-      })
-
-      const removeAssetIdFromList = () => {
-        let withdrawingAssetIds = this.state.withdrawingAssetIds.slice();
-        withdrawingAssetIds = withdrawingAssetIds.filter(assetIdTmp => assetIdTmp !== assetId);
-        this.setState({
-          withdrawingAssetIds,
-        })
-      }
-
-      const onSuccessRefreshData = async () => {
-        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-        this.updateNotification(notificationId, {
-          withdrawInvestorProps: {
-            assetName: currentAsset.name,
-            amount: amount,
-          },
-          status: 'success',
-        })
-        removeAssetIdFromList();
-      }
-
-      const onFail = () => {
-        removeAssetIdFromList(assetId);
-      }
-
-      const result = await Brain.withdrawInvestorProfit(
-        this.state.user,
-        currentAsset,
-        notificationId,
-        this.updateNotification,
-        onSuccessRefreshData,
-        onFail,
-      );
-
-      debug(result);
-
-    } catch (err) {
-      debug(err);
-    }
-  }
-
   async loadMetamaskUserDetails() {
     await Brain.loadMetamaskUserDetails()
       .then((response) => {
@@ -757,7 +882,7 @@ class BlockchainInfo extends React.Component {
       });
   }
 
-  async fetchAssets(updateNotification, updateUserListingAsset, assetId) {
+  async fetchAssets(assetId) {
     const {
       assetsAirTableById,
       prices,
@@ -768,22 +893,12 @@ class BlockchainInfo extends React.Component {
       setTimeout(this.fetchAssets, 10000);
       return;
     }
-    this.setState({
-      usingServer: false,
-    });
     await Brain.fetchAssets(user, prices.ether.price, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
         this.setState({
           assets: updatedAssets,
           loading: { ...this.state.loading, assets: false },
-        }, () => {
-          if(updateNotification){
-            updateNotification();
-          }
-          if(updateUserListingAsset){
-            updateUserListingAsset(false, assetId);
-          }
         });
       })
       .catch((err) => {
