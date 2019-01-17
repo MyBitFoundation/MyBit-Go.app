@@ -100,7 +100,7 @@ const AssetPortfolio = ({
           </p>
         </div>
         {type === 'owned' && (
-          <div className={`AssetPortfolio__details ${funded ? 'AssetPortfolio__details--is-three-sections' : undefined}`}>
+          <div className={`AssetPortfolio__details ${!funded ? 'AssetPortfolio__details--is-three-sections' : undefined}`}>
             <div className="AssetPortfolio__details-section AssetPortfolio__details-section--is-unrealised">
               <span>Unrealised profit:</span>
               <span>{fundingStage === FundingStages.IN_PROGRESS ? <span>Funding in progress</span> : `${formatMonetaryValue(unrealizedProfit)}`}</span>
