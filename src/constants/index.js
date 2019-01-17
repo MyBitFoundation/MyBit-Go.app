@@ -21,7 +21,6 @@ const secondHost = `${baseUrl}:${secondPort}`
 
 export const fetchTransactionHistoryTime = 60 * 1000;
 export const loadMetamaskUserDetailsTime = 5 * 1000;
-export const pullAssetsFromServerTime = 30 * 1000;
 export const fetchAssetsFromWeb3Time = 30 * 1000;
 export const checkIfLoggedInTime = 5 * 1000;
 export const S3_URL = 'https://s3.eu-central-1.amazonaws.com/mybit-go/';
@@ -45,7 +44,6 @@ export const ETHERSCAN_TX = txHash =>
 export const ETHERSCAN_BALANCE = address =>
   `https://api-ropsten.etherscan.io/api?module=account&action=balance&address=${address}`;
 
-export const serverIp = process.env.NODE_ENV === 'development' ? `${host}/api/assets` : '/api/assets';
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
 
 export const metamaskErrors = (
@@ -119,13 +117,13 @@ export const metamaskErrors = (
         {' '}to see how.
       </p>
     );
-  } else if(enabled === false){
-    toRender = (
-      <p><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</p>
-    );
   } else if (userHasMetamask && !userIsLoggedIn) {
     toRender = (
       <p>Please login in MetaMask to be able to contribute.</p>
+    );
+  } else if(enabled === false){
+    toRender = (
+      <p><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</p>
     );
   } else if (network !== ethereumNetwork) {
     toRender = (

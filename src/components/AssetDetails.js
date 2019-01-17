@@ -273,10 +273,10 @@ class AssetDetails extends React.Component {
             >
               <BlockchainInfoContext.Consumer>
                 {({
-                  usingServer,
+                  isReadOnlyMode,
                   handleClickedAssetFavorite,
                 }) =>
-                  !usingServer && (
+                  !isReadOnlyMode() && (
                     <Watch
                       active={watchListed}
                       handleClick={handleClickedAssetFavorite}
