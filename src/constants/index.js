@@ -7,4 +7,4 @@ export * from './landingPage';
 export * from './notifications';
 export * from './transactions';
 export * from './fundingStages';
-export * from './airtableRules';
+export * from './airtable';

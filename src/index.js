@@ -6,17 +6,20 @@ import './styles/index.css';
 import App from './App';
 // import registerServiceWorker from './registerServiceWorker';
 import BlockchainInfo from './components/BlockchainInfo';
+import AirtableProvider from './components/Airtable';
 import MetamaskChecker from './components/MetamaskChecker/index';
 import Layout from './components/Layout';
 
 ReactDOM.render(
   <Layout>
     <BrowserRouter>
-      <MetamaskChecker>
-        <BlockchainInfo>
-          <App />
-        </BlockchainInfo>
-      </MetamaskChecker>
+      <AirtableProvider>
+        <MetamaskChecker>
+          <BlockchainInfo>
+            <App />
+          </BlockchainInfo>
+        </MetamaskChecker>
+      </AirtableProvider>
     </BrowserRouter>
   </Layout>,
   document.getElementById('root'),

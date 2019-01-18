@@ -9,7 +9,7 @@ import Notifications from './components/Notifications';
 import BancorContainer from './components/UI/BancorContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
-import MetamaskErrors from './components/MetamaskErrors';
+import metamaskErrors from './util/metamaskErrors';
 
 class App extends Component {
   isFirstVisit() {
@@ -71,15 +71,7 @@ class App extends Component {
                 <NavigationBar
                   currentPath={this.props.location.pathname}
                 />
-                <MetamaskErrors
-                  className="MetaMaskErrors"
-                  userHasMetamask
-                  extensionUrl={extensionUrl}
-                  isBraveBrowser
-                  userIsLoggedIn
-                  network={network}
-                  enabled
-                />
+                {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network, enabled)}
               </React.Fragment>
             )}
           </BlockchainInfoContext.Consumer>

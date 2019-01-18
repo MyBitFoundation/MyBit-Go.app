@@ -11,7 +11,7 @@ import Checkbox from 'antd/lib/checkbox';
 import 'antd/lib/checkbox/style';
 import '../styles/ConfirmationPopup.css';
 import AlertMessage from './AlertMessage';
-import MetamaskErrors from './MetamaskErrors';
+import metamaskErrors from '../util/metamaskErrors';
 import {
   CORRECT_NETWORK,
 } from '../constants';
@@ -129,6 +129,7 @@ class ConfirmationPopup extends React.Component {
       userIsLoggedIn,
       extensionUrl,
       isBraveBrowser,
+      enabled,
     } = this.props;
 
     const {
@@ -143,16 +144,7 @@ class ConfirmationPopup extends React.Component {
     const shouldShowConfirmAndCancel =
       (((!isLoading && transactionStatus === '') || (transactionStatus === 1)) && userHasMetamask && userIsLoggedIn && network === CORRECT_NETWORK);
 
-    const metamaskErrorsToRender = (
-      <MetamaskErrors
-        className=""
-        userHasMetamask
-        extensionUrl={extensionUrl}
-        isBraveBrowser
-        userIsLoggedIn
-        network={network}
-      />
-    )
+    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network, enabled);
 
     return (
       <Modal

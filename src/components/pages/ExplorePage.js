@@ -18,6 +18,7 @@ import Asset from '../Asset';
 import {
   FundingStages,
 } from '../../constants/fundingStages';
+import WithAirtableContext from '../withAirtableContext';
 
 const assetsPerPage = 12;
 
@@ -51,8 +52,12 @@ class ExplorePage extends Component {
     const {
       loading,
        assets,
-       categoriesAirTable
       } = this.props;
+
+    const {
+      categoriesAirTable,
+    } = this.props.airtableContext;
+
     if (loading.assets) {
       return <LoadingPage message="Loading assets" />;
     }
@@ -158,4 +163,4 @@ ExplorePage.propTypes = {
   handleClickedAssetFavorite: PropTypes.func.isRequired,
 };
 
-export default ExplorePage;
+export default WithAirtableContext(ExplorePage);

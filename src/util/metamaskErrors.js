@@ -3,7 +3,7 @@ import {
   CORRECT_NETWORK,
 } from '../constants';
 
-const MetamaskErrors = ({
+const metamaskErrors = (
   className,
   userHasMetamask,
   extensionUrl,
@@ -11,7 +11,7 @@ const MetamaskErrors = ({
   userIsLoggedIn,
   network,
   enabled,
-}) => {
+) => {
   let toRender = null;
   if (!userHasMetamask && extensionUrl && !isBraveBrowser) {
     toRender = (
@@ -90,7 +90,6 @@ const MetamaskErrors = ({
       </p>
     );
   }
-
   return toRender && (
     <div className={className}>
       {toRender}
@@ -98,4 +97,4 @@ const MetamaskErrors = ({
   );
 };
 
-export default MetamaskErrors;
+export default metamaskErrors;

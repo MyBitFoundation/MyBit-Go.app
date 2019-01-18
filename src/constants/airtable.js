@@ -1,3 +1,6 @@
+export const PULL_ASSETS_TIME = 1000 * 60;
+export const PULL_CATEGORIES_TIME = 1000 * 60;
+
 export const AIRTABLE_ASSETS_RULES = [
   'Asset',
   'Category',

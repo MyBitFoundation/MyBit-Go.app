@@ -6,7 +6,9 @@ import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import BlockchainInfoContext from './BlockchainInfoContext';
+import WithAirtableContext from './withAirtableContext';
 import * as Brain from '../apis/brain';
+
 import {
   ErrorTypes,
   InternalLinks,
@@ -24,8 +26,6 @@ import {
 import {
   debug,
 } from '../util/helpers';
-
-import Airtable from '../apis/airtable';
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -46,7 +46,6 @@ class BlockchainInfo extends React.Component {
     this.resetNotifications = this.resetNotifications.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
     this.isReadOnlyMode = this.isReadOnlyMode.bind(this);
-    this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
 
     this.state = {
       loading: {
@@ -71,7 +70,6 @@ class BlockchainInfo extends React.Component {
       enabled: this.props.enabled,
       userIsLoggedIn: this.props.isLoggedIn,
       handleClickedAssetFavorite: this.handleAssetFavorited,
-      getCategoriesForAssets: this.getCategoriesForAssets,
       handleListAsset: this.handleListAsset,
       removeNotification: this.removeNotification,
       updateNotification: this.updateNotification,
@@ -89,12 +87,7 @@ class BlockchainInfo extends React.Component {
 
   async componentDidMount() {
     try {
-      // TODO perhaps we don't need to wait for these here
-      await Promise.all([
-        this.getAssetsFromAirTable(),
-        this.getCategoriesFromAirTable(),
-        this.loadPrices(),
-      ]);
+      await this.loadPrices()
 
       //case where user has metamask but is connected to the wrong network, we
       //still need to load the data properly from the correct network
@@ -356,7 +349,7 @@ class BlockchainInfo extends React.Component {
 
     const {
       categoriesAirTable,
-    } = this.state;
+    } = this.props.airtableContext;
 
     const userAddress =  this.state.user.userName;
     const notificationId = Date.now();
@@ -423,10 +416,15 @@ class BlockchainInfo extends React.Component {
       }
     }
 
+    const {
+      getAssetByName,
+      assetsAirTable,
+    } = this.props.airtableContext;
+
     await Brain.createAsset(onTransactionHash, onReceipt, onError, {
       managerPercentage: managementFee,
       assetType: categoriesAirTable[category].encoded,
-      amountToBeRaisedInUSD: Airtable.getAssetByName(assetName, this.state.assetsAirTable).amountToBeRaisedInUSDAirtable,
+      amountToBeRaisedInUSD: getAssetByName(assetName, assetsAirTable).amountToBeRaisedInUSDAirtable,
       assetName,
       country,
       city,
@@ -592,49 +590,6 @@ class BlockchainInfo extends React.Component {
     this.setState({notifications});
   }
 
-  async getAssetsFromAirTable(){
-    try{
-      const assets = await Airtable.getAssets();
-      this.setState({
-        ...assets,
-      });
-    }catch(err){
-      setTimeout(this.getAssetsFromAirTable, 5000);
-      debug(err);
-    }
-  }
-
-  async getCategoriesFromAirTable(){
-    try{
-      const categoriesAirTable = await Airtable.getCategories();
-      categoriesAirTable && this.setState({
-        categoriesAirTable,
-      })
-    }catch(err){
-      setTimeout(this.getCategoriesFromAirTable, 5000);
-      debug(err);
-    }
-  }
-
-  getCategoriesForAssets(country, city){
-    const {
-      assetsAirTable,
-      categoriesAirTable,
-    } = this.state;
-    let categories = [];
-    for(const asset of assetsAirTable){
-      if(categories.includes(asset.category)){
-        continue;
-      }
-      if(!asset.location){
-        categories.push(categoriesAirTable[asset.category] ? asset.category : undefined);
-      } else if (asset.location && asset.location.country === country && (!asset.location.cities || asset.location.cities.includes(city.toLowerCase()))){
-        categories.push(categoriesAirTable[asset.category] ? asset.category : undefined);
-      }
-    }
-    return categories;
-  }
-
   getMYB() {
     return Brain.withdrawFromFaucet(this.state.user);
   }
@@ -737,11 +692,15 @@ class BlockchainInfo extends React.Component {
 
   async fetchAssets(assetId) {
     const {
-      assetsAirTableById,
       prices,
-      categoriesAirTable,
       user,
     } = this.state;
+
+    const {
+      categoriesAirTable,
+      assetsAirTableById,
+    } = this.props.airtableContext;
+
     if (!prices.ether || !assetsAirTableById || !categoriesAirTable) {
       setTimeout(this.fetchAssets, 10000);
       return;
@@ -820,7 +779,7 @@ class BlockchainInfo extends React.Component {
 
 BlockchainInfo.defaultProps = {
   isBraveBrowser: false,
-  userIsLoggedIn: false,
+  isLoggedIn: false,
   network: undefined,
   isMetamaskInstalled: false,
   extensionUrl: undefined,
@@ -828,11 +787,11 @@ BlockchainInfo.defaultProps = {
 
 BlockchainInfo.propTypes = {
   children: PropTypes.node.isRequired,
-  isMetamaskInstalled: PropTypes.bool,
+  isLoggedIn: PropTypes.bool,
   network: PropTypes.string,
   isBraveBrowser: PropTypes.bool,
   extensionUrl: PropTypes.string,
   userIsLoggedIn: PropTypes.bool,
 };
 
-export default BlockchainInfo;
+export default WithAirtableContext(BlockchainInfo);

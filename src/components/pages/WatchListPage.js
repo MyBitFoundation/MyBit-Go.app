@@ -17,6 +17,7 @@ import Asset from '../Asset';
 import {
   FundingStages,
 } from '../../constants/fundingStages';
+import WithAirtableContext from '../withAirtableContext';
 
 const assetsPerPage = 12;
 
@@ -34,8 +35,12 @@ class WatchListPage extends Component {
     const {
       loading,
       assets,
-      categoriesAirTable
      } = this.props;
+
+     const {
+      categoriesAirTable,
+     } = this.props.airtableContext;
+
     if (loading.assets) {
       return <LoadingPage message="Loading WatchList" />;
     }
@@ -120,4 +125,4 @@ WatchListPage.propTypes = {
   handleClickedAssetFavorite: PropTypes.func.isRequired,
 };
 
-export default WatchListPage;
+export default WithAirtableContext(WatchListPage);
