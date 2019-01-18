@@ -8,7 +8,7 @@ const dev = process.env.NODE_ENV === 'development';
 const path = require('path');
 import * as CivicController from './controllers/civicController';
 import * as AwsController from './controllers/awsController';
-import * as AirTableController from './controllers/AirTableController';
+import * as AirTableController from './controllers/airTableController';
 
 const multipleUpload = multer({
   storage: multerStorage,
