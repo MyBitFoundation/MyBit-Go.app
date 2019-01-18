@@ -19,8 +19,9 @@ import {
   FETCH_ASSETS_TIME,
   LOAD_METAMASK_USER_DETAILS_TIME,
   FETCH_TRANSACTION_HISTORY_TIME,
-  AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
   AIRTABLE_ASSETS_RULES,
+  AIRTABLE_CATEGORIES_RULES,
+  verifyDataAirtable,
 } from '../constants';
 
 import {
@@ -675,14 +676,8 @@ class BlockchainInfo extends React.Component {
       const request = await fetch(InternalLinks.AIRTABLE_ASSETS);
       const json = await request.json();
       const { records } = json;
-      // make sure the data from airtable is correct
-      // and that every required field is filled
-      const filteredAssetsFromAirtable = records.filter(({ fields }, index) =>
-        AIRTABLE_ASSETS_RULES.every(fieldTmp => {
-          const valueOfField = fields[fieldTmp];
-          return Object.keys(fields).includes(fieldTmp) && valueOfField
-        }
-      ))
+
+      const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
 
       let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
       const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
@@ -711,7 +706,10 @@ class BlockchainInfo extends React.Component {
       const request = await fetch(InternalLinks.AIRTABLE_CATEGORIES);
       const json = await request.json();
       const { records } = json;
-      const categories = this.processCategoriesFromAirTable(records.filter(({ fields })  => Object.keys(fields).length === AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS));
+
+      const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
+
+      const categories = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
       this.setState({
         categoriesAirTable: categories,
       })

@@ -26,9 +26,6 @@ import {
   debug,
 } from '../util/helpers'
 
-const IPFS_URL =
-  'https://ipfs.io/ipfs/QmekJbKUnSZRU5CbQZwxWdnFPSvjbdbSkeonBZyPAGXpnd/';
-
 export const fetchPriceFromCoinmarketcap = async ticker =>
   new Promise(async (resolve, reject) => {
     try {

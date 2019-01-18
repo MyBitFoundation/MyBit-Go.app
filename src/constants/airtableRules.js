@@ -8,3 +8,20 @@ export const AIRTABLE_ASSETS_RULES = [
   'Partner',
   'Partner Address',
 ];
+
+export const AIRTABLE_CATEGORIES_RULES = [
+  'Category',
+  'byte32',
+  'Category Contract',
+];
+
+// make sure the data from airtable is correct
+// and that every required field is filled
+export const verifyDataAirtable = (rules, records) => {
+  return records.filter(({ fields }, index) =>
+    rules.every(field => {
+      const valueOfField = fields[field];
+      return Object.keys(fields).includes(field) && valueOfField;
+    }
+  ))
+}
