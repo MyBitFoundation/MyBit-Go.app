@@ -787,11 +787,11 @@ BlockchainInfo.defaultProps = {
 
 BlockchainInfo.propTypes = {
   children: PropTypes.node.isRequired,
-  isLoggedIn: PropTypes.bool,
+  isMetamaskInstalled: PropTypes.bool,
   network: PropTypes.string,
   isBraveBrowser: PropTypes.bool,
   extensionUrl: PropTypes.string,
-  userIsLoggedIn: PropTypes.bool,
+  isLoggedIn: PropTypes.bool,
 };
 
 export default WithAirtableContext(BlockchainInfo);
