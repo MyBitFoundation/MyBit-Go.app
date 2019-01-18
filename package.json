@@ -52,7 +52,7 @@
     "now-start": "npm run compile-server && node lib/index.js",
     "start-dev": "NODE_ENV=development nodemon lib/index.js",
     "lint:fix": "eslint --ignore-path .gitignore --fix .",
-    "compile-server": "rimraf lib/ && babel -d lib/ server/",
+    "compile-server": "rimraf lib/ && babel -d lib/ server/"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
