@@ -709,9 +709,9 @@ class BlockchainInfo extends React.Component {
 
       const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
 
-      const categories = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
+      const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
       this.setState({
-        categoriesAirTable: categories,
+        categoriesAirTable,
       })
     }catch(err){
       setTimeout(this.getCategoriesFromAirTable, 5000);
