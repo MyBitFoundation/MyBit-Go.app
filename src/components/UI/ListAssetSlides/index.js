@@ -18,6 +18,7 @@ import SuccessEarth from "../../../images/list-asset/success-list-asset-earth.sv
 
 import { CivicButton, withCivic } from "../CivicContainer";
 import BlockchainInfoContext from '../../BlockchainInfoContext';
+import { AirtableContext } from '../../Airtable';
 
 const Option = Select.Option;
 
@@ -185,12 +186,13 @@ export const AvailableAssetsSlide = ({
   handleSelectChange,
   formData,
   history,
+  airtableContext,
 }) => {
   const { category, asset } = formData;
   let forbidNext =
     category !== "" && asset !== "" ? false : true;
   return (
-    <BlockchainInfoContext.Consumer>
+    <AirtableContext.Consumer>
        {({ assetsAirTable, getCategoriesForAssets, categoriesAirTable }) => {
         if(!assetsAirTable || !categoriesAirTable){
           return null;
@@ -290,7 +292,7 @@ export const AvailableAssetsSlide = ({
             )}
           </Slide>
         )}}
-    </BlockchainInfoContext.Consumer>
+    </AirtableContext.Consumer>
   );
 };
 
