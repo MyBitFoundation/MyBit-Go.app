@@ -67,3 +67,6 @@ typings/
 
 # storybook
 .out
+
+# compiled server
+lib
