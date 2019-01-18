@@ -73,12 +73,12 @@ class App extends Component {
                 />
                 <MetamaskErrors
                   className="MetaMaskErrors"
-                  userHasMetamask
+                  userHasMetamask={userHasMetamask}
                   extensionUrl={extensionUrl}
-                  isBraveBrowser
-                  userIsLoggedIn
+                  isBraveBrowser={isBraveBrowser}
+                  userIsLoggedIn={userIsLoggedIn}
                   network={network}
-                  enabled
+                  enabled={enabled}
                 />
               </React.Fragment>
             )}

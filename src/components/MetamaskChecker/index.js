@@ -69,7 +69,7 @@ class MetamaskChecker extends Component {
               ethBalance: balance,
             },
             isInstalled: true,
-            enabled: true,
+            enabled,
             isLoggedIn,
           })
         }
