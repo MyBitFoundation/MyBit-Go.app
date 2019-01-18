@@ -20,7 +20,7 @@ import {
   LOAD_METAMASK_USER_DETAILS_TIME,
   FETCH_TRANSACTION_HISTORY_TIME,
   AIRTABLE_CATEGORIES_NUMBER_OF_FIELDS,
-  AIRTABLE_ASSETS_NUMBER_OF_FIELDS,
+  AIRTABLE_ASSETS_RULES,
 } from '../constants';
 
 import {
@@ -440,7 +440,6 @@ class BlockchainInfo extends React.Component {
     });
   }
 
-
   fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {
     try {
       const currentAsset = this.state.assets.find(item => item.assetID === assetId);
@@ -584,13 +583,11 @@ class BlockchainInfo extends React.Component {
     }
   }
 
-
   updateNotification(id, data){
     const notifications = Object.assign({}, this.state.notifications);
     notifications[id] = data;
     this.setState({notifications});
   }
-
 
   removeNotification(id){
     const notifications = Object.assign({}, this.state.notifications);
@@ -622,8 +619,9 @@ class BlockchainInfo extends React.Component {
       description: fields.Description,
       details: fields.Details,
       partner: fields.Partner,
-      imageSrc: `${InternalLinks.S3}assetImages:${fields['Image']}`,
+      imageSrc: `${InternalLinks.S3}assetImages:${fields.Image}`,
       amountToBeRaisedInUSDAirtable: fields['Funding goal'],
+      assetIDs: fields['Asset IDs'],
       location,
     };
   }
@@ -646,13 +644,13 @@ class BlockchainInfo extends React.Component {
     return tmpAsset;
   }
 
-  processAssetsByIdFromAirTable(assetsToProcess, assetsFromAirTable){
+  processAssetsByIdFromAirTable(assetsFromAirTable){
     const assetsAirTableById = {};
     const tmpCache = {};
-    assetsToProcess.forEach(({ fields }) => {
-      let assetIds = fields['Asset IDs'];
+    assetsFromAirTable.forEach(asset => {
+      let assetIds = asset.assetIDs;
       if(assetIds){
-        const assetName = fields['Asset'];
+        const assetName = asset.name;
         const airtableAsset = tmpCache[assetName] || this.getAssetFromAirTableByName(assetName, assetsFromAirTable);
         // add to temporary cache (will help when we have a lot of assets)
         if(airtableAsset && !tmpCache[assetName]){
@@ -677,11 +675,30 @@ class BlockchainInfo extends React.Component {
       const request = await fetch(InternalLinks.AIRTABLE_ASSETS);
       const json = await request.json();
       const { records } = json;
-      const assets = records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS).map(this.processAssetsFromAirTable)
-      const assetsById = this.processAssetsByIdFromAirTable(records.filter(({ fields })  => Object.keys(fields).length >= AIRTABLE_ASSETS_NUMBER_OF_FIELDS), assets);
+      // make sure the data from airtable is correct
+      // and that every required field is filled
+      const filteredAssetsFromAirtable = records.filter(({ fields }, index) =>
+        AIRTABLE_ASSETS_RULES.every(fieldTmp => {
+          const valueOfField = fields[fieldTmp];
+          return Object.keys(fields).includes(fieldTmp) && valueOfField
+        }
+      ))
+
+      let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
+      const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
+
+      // remove assetIDs as they are not required in this object
+      // they were requred before to facilitate the processing by asset ID
+      assetsAirTable = assetsAirTable.map(asset => {
+        delete asset.AssetIDs;
+        return {
+          ...asset,
+        };
+      })
+
       this.setState({
-        assetsAirTable: assets,
-        assetsAirTableById: assetsById,
+        assetsAirTable,
+        assetsAirTableById,
       });
     }catch(err){
       setTimeout(this.getAssetsFromAirTable, 5000);
