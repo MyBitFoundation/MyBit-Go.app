@@ -19,14 +19,13 @@ import {
   FETCH_ASSETS_TIME,
   LOAD_METAMASK_USER_DETAILS_TIME,
   FETCH_TRANSACTION_HISTORY_TIME,
-  AIRTABLE_ASSETS_RULES,
-  AIRTABLE_CATEGORIES_RULES,
-  verifyDataAirtable,
 } from '../constants';
 
 import {
   debug,
 } from '../util/helpers';
+
+import Airtable from '../apis/airtable';
 
 class BlockchainInfo extends React.Component {
   constructor(props) {
@@ -39,18 +38,15 @@ class BlockchainInfo extends React.Component {
     this.fundAsset = this.fundAsset.bind(this);
     this.handleMetamaskUpdate = this.handleMetamaskUpdate.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
-    this.getAssetsFromAirTable = this.getAssetsFromAirTable.bind(this);
-    this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
     this.handleListAsset = this.handleListAsset.bind(this);
-    this.getAssetFromAirTableByName = this.getAssetFromAirTableByName.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
     this.updateNotification = this.updateNotification.bind(this);
-    this.getCategoriesFromAirTable = this.getCategoriesFromAirTable.bind(this);
     this.withdrawInvestorProfit = this.withdrawInvestorProfit.bind(this);
     this.withdrawCollateral = this.withdrawCollateral.bind(this);
     this.resetNotifications = this.resetNotifications.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
     this.isReadOnlyMode = this.isReadOnlyMode.bind(this);
+    this.getCategoriesForAssets = this.getCategoriesForAssets.bind(this);
 
     this.state = {
       loading: {
@@ -430,7 +426,7 @@ class BlockchainInfo extends React.Component {
     await Brain.createAsset(onTransactionHash, onReceipt, onError, {
       managerPercentage: managementFee,
       assetType: categoriesAirTable[category].encoded,
-      amountToBeRaisedInUSD: this.getAssetFromAirTableByName(assetName).amountToBeRaisedInUSDAirtable,
+      amountToBeRaisedInUSD: Airtable.getAssetByName(assetName, this.state.assetsAirTable).amountToBeRaisedInUSDAirtable,
       assetName,
       country,
       city,
@@ -596,104 +592,11 @@ class BlockchainInfo extends React.Component {
     this.setState({notifications});
   }
 
-  processAssetsFromAirTable({ fields }){
-    let location = undefined;
-    if(fields.Location){
-      let countries = fields.Location.split(',');
-      location = {};
-      countries.forEach(country => {
-        country = country.trim();
-        let cities = /\(([^)]+)\)/g.exec(country);
-
-        if(cities){
-          country = country.substring(0, country.indexOf('('))
-          cities = cities[1].split(';');
-          location[country] = cities;
-        } else {
-           location[country] = {};
-        }
-      })
-    }
-    return {
-      name: fields.Asset,
-      category: fields.Category,
-      description: fields.Description,
-      details: fields.Details,
-      partner: fields.Partner,
-      imageSrc: `${InternalLinks.S3}assetImages:${fields.Image}`,
-      amountToBeRaisedInUSDAirtable: fields['Funding goal'],
-      assetIDs: fields['Asset IDs'],
-      location,
-    };
-  }
-
-  processCategoriesFromAirTable(data){
-    const categories = {};
-    data.forEach(({ fields }) => {
-      categories[fields.Category] = {
-        contractName: fields['Category Contract'],
-        encoded: fields['byte32'],
-      }
-    })
-    return categories;
-  }
-
-  getAssetFromAirTableByName(assetName, assetsFromAirTable){
-    assetsFromAirTable = assetsFromAirTable || this.state.assetsAirTable;
-    const tmpAsset = Object.assign({}, assetsFromAirTable.filter(asset => asset.name === assetName)[0]);
-    tmpAsset.location = undefined;
-    return tmpAsset;
-  }
-
-  processAssetsByIdFromAirTable(assetsFromAirTable){
-    const assetsAirTableById = {};
-    const tmpCache = {};
-    assetsFromAirTable.forEach(asset => {
-      let assetIds = asset.assetIDs;
-      if(assetIds){
-        const assetName = asset.name;
-        const airtableAsset = tmpCache[assetName] || this.getAssetFromAirTableByName(assetName, assetsFromAirTable);
-        // add to temporary cache (will help when we have a lot of assets)
-        if(airtableAsset && !tmpCache[assetName]){
-          tmpCache[assetName] = airtableAsset;
-        }
-        assetIds = assetIds.split(',');
-        assetIds.forEach(assetIdInfo => {
-          const [assetId, city, country, collateral, collateralPercentage] = assetIdInfo.split('|');
-          airtableAsset.city = city;
-          airtableAsset.country = country;
-          airtableAsset.collateral = Number(collateral);
-          airtableAsset.collateralPercentage = collateralPercentage;
-          assetsAirTableById[assetId] = airtableAsset;
-        })
-      }
-    })
-    return assetsAirTableById;
-  }
-
   async getAssetsFromAirTable(){
     try{
-      const request = await fetch(InternalLinks.AIRTABLE_ASSETS);
-      const json = await request.json();
-      const { records } = json;
-
-      const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
-
-      let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
-      const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
-
-      // remove assetIDs as they are not required in this object
-      // they were requred before to facilitate the processing by asset ID
-      assetsAirTable = assetsAirTable.map(asset => {
-        delete asset.AssetIDs;
-        return {
-          ...asset,
-        };
-      })
-
+      const assets = await Airtable.getAssets();
       this.setState({
-        assetsAirTable,
-        assetsAirTableById,
+        ...assets,
       });
     }catch(err){
       setTimeout(this.getAssetsFromAirTable, 5000);
@@ -703,14 +606,8 @@ class BlockchainInfo extends React.Component {
 
   async getCategoriesFromAirTable(){
     try{
-      const request = await fetch(InternalLinks.AIRTABLE_CATEGORIES);
-      const json = await request.json();
-      const { records } = json;
-
-      const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
-
-      const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
-      this.setState({
+      const categoriesAirTable = await Airtable.getCategories();
+      categoriesAirTable && this.setState({
         categoriesAirTable,
       })
     }catch(err){
