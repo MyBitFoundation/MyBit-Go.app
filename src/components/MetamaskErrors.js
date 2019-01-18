@@ -85,8 +85,7 @@ const MetamaskErrors = ({
   } else if (network !== CORRECT_NETWORK) {
     toRender = (
       <p>
-        The main Ethereum network is not supported yet,
-        please change to the Ropsten network to contribute.
+        Only the Ropsten network is supported at the moment, please change the network in MetaMask.
       </p>
     );
   }

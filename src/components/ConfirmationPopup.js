@@ -146,10 +146,10 @@ class ConfirmationPopup extends React.Component {
     const metamaskErrorsToRender = (
       <MetamaskErrors
         className=""
-        userHasMetamask
+        userHasMetamask={userHasMetamask}
         extensionUrl={extensionUrl}
-        isBraveBrowser
-        userIsLoggedIn
+        isBraveBrowser={isBraveBrowser}
+        userIsLoggedIn={userIsLoggedIn}
         network={network}
       />
     )

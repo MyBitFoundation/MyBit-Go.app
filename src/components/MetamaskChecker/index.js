@@ -56,6 +56,7 @@ class MetamaskChecker extends Component {
     try{
       const accounts = await window.web3js.eth.getAccounts();
       const isLoggedIn = await this.checkIfLoggedIn();
+      console.log(accounts)
       if(accounts && accounts.length > 0){
         let balance;
         while(!balance){
@@ -109,12 +110,10 @@ class MetamaskChecker extends Component {
     }
     else {
       const accounts = await window.web3js.eth.getAccounts();
-      if (accounts && accounts.length === 0) {
-        return false;
-      } else if (!accounts) {
-        return undefined;
+      if (accounts && accounts.length > 0) {
+        return true;
       }
-      return true;
+      return false;
     }
   }
 
