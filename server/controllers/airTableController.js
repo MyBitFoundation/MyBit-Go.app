@@ -2,20 +2,18 @@ import regeneratorRuntime from "regenerator-runtime";
 import request from 'request';
 require('dotenv').config();
 const Airtable = require('airtable');
-const airtableBaseAssets = 'appnvQb0LqM1nKTTQ';
-const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(airtableBaseAssets);
+const AIRTABLE_BASE_ASSETS = 'appnvQb0LqM1nKTTQ';
+const AIRTABLE_BASE_CATEGORIES = 'applQoSDpfQMllZc6';
+
+const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS);
 
 const getIdAndAssetIdsOfAssetName = async (assetName) => {
-  let records = await base('Imported table').select();
-  records = await records.firstPage();
-  for(let i = 0; i < records.length; i++){
-    if(records[i].get('Asset') === assetName){
-      return {
-        id: records[i].id,
-        assetIds: records[i].get('Asset IDs')
-      }
-    }
-  };
+  const allRecords = await base('Imported table').select();
+  const firstPageOfRecords = await allRecords.firstPage();
+  const selectedRecord = firstPageOfRecords.filter(record => record.get('Asset') === assetName);
+  return selectedRecord ?
+    { id: selectedRecord.id, assetId: selectedRecord.get('Asset IDs') } :
+    { id: -1, assetId: -1 }
 }
 
 const updateAirTableEntry = async (id, currentAssetIds, newAssetId, country, city, collateral, collateralPercentage) => {
@@ -40,7 +38,7 @@ export const addNewAsset = async (data) => {
 }
 
 export const getAssets = () =>
-  request(`https://api.airtable.com/v0/${airtableBaseAssets}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)
+  request(`https://api.airtable.com/v0/${AIRTABLE_BASE_ASSETS}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)
 
 export const getCategories = () =>
-  request(`https://api.airtable.com/v0/applQoSDpfQMllZc6/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)
+  request(`https://api.airtable.com/v0/${AIRTABLE_BASE_CATEGORIES}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)
