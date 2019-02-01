@@ -8,7 +8,17 @@ import {
   verifyDataAirtable,
 } from '../constants';
 
-export const AirtableContext = React.createContext(null);
+const { Provider, Consumer } = React.createContext({});
+
+export const WithAirtableContext = (Component) => {
+    return function WrapperComponent(props) {
+        return (
+            <Consumer>
+                {state => <Component {...props} airtableContext={state} />}
+            </Consumer>
+        );
+    };
+}
 
 class AirtableProvider extends React.Component {
   constructor(props){
@@ -174,9 +184,9 @@ class AirtableProvider extends React.Component {
 
   render(){
     return (
-      <AirtableContext.Provider value={this.state}>
+      <Provider value={this.state}>
         {this.props.children}
-      </AirtableContext.Provider>
+      </Provider>
     )
   }
 };

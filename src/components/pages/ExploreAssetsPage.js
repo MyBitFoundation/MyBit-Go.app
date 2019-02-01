@@ -9,7 +9,7 @@ import 'antd/lib/row/style';
 import '../../styles/ExploreAssetsPage.css';
 import Asset from '../Asset';
 import NotFoundPage from './NotFoundPage';
-import LoadingPage from './LoadingPage';
+import LoadingPage from '../LoadingPage';
 import { getPrettyCategoryName } from '../../util/helpers';
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { formatMonetaryValue } from '../util/helpers';
-import Spin from '../images/spin.svg';
+import Spin from '/static/spin.svg';
 
 const ExchangeRate = ({ price, priceChangePercentage }) => (
   <div className="AppHeader__rate-container">

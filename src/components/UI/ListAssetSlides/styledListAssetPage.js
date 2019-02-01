@@ -8,7 +8,7 @@ export const Slide = styled.div`
     .Slider__header {
         font-family: 'Gilroy';
         font-size: 30px;
-        line-eight: 37px;
+        line-height: 37px;
         font-weight: bold;
         padding: 25px 40px 0px 40px;
         margin: 0px;

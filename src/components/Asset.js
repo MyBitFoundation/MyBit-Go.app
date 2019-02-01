@@ -16,7 +16,6 @@ import {
   debug,
 } from '../util/helpers';
 import { formatMonetaryValue } from '../util/helpers';
-import BlockchainInfoContext from './BlockchainInfoContext';
 
 const Asset = ({
   clickHandler,
@@ -32,6 +31,7 @@ const Asset = ({
   watchListed,
   handleClickedAssetFavorite,
   funded,
+  shouldShowWatchIcon,
 }) => {
   const barWidth = funded ? 100 : Math.ceil((amountRaisedInUSD / amountToBeRaisedInUSD) * 100);
   const goalFormatted = formatMonetaryValue(amountToBeRaisedInUSD);
@@ -58,18 +58,13 @@ const Asset = ({
           <p className="Asset__image-holder-location">
             {city}, <span>{country}</span>
           </p>
-          <BlockchainInfoContext.Consumer>
-            {({
-              isReadOnlyMode,
-            }) =>
-              !isReadOnlyMode() && (
-                <Watch
-                  active={watchListed}
-                  handleClick={handleClickedAssetFavorite}
-                  assetId={assetID}
-                />
-            )}
-          </BlockchainInfoContext.Consumer>
+          {shouldShowWatchIcon && (
+            <Watch
+              active={watchListed}
+              handleClick={handleClickedAssetFavorite}
+              assetId={assetID}
+            />
+          )}
         </div>
         <div className={`Asset__details ${barWidth === 100 && 'Asset__details--is-funded'}`}>
           <p className="Asset__details-funded">

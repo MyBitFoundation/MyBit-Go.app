@@ -1,5 +1,32 @@
 {
-  "plugins": [
-    "inline-react-svg"
-  ]
+  "env": {
+    "test": {
+      "presets": [["next/babel", { "preset-env": { "modules": "commonjs" } }]],
+      "plugins": [
+        ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
+        ["inline-react-svg" ],
+        ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }],
+        ["react-hot-loader/babel"]
+      ]
+    },
+    "development": {
+      "presets": ["next/babel"],
+      "plugins": [
+        ["import", {"libraryName": "antd","style": "less"}],
+        ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
+        ["inline-react-svg" ],
+        ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }],
+        ["react-hot-loader/babel"]
+      ]
+    },
+    "production": {
+      "presets": ["next/babel"],
+      "plugins": [
+        ["import", {"libraryName": "antd","style": "less"}],
+        ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
+        ["inline-react-svg" ],
+        ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }]
+      ]
+    }
+  }
 }

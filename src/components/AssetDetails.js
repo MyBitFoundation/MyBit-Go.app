@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-confusing-arrow */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Slider, Button } from 'antd';
 import dayjs from 'dayjs';

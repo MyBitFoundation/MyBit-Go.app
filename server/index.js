@@ -1,77 +1,104 @@
 import regeneratorRuntime from "regenerator-runtime";
+import cors from 'cors';
 require('dotenv').config();
+const express = require('express');
+const next = require('next')
 const multer = require('multer');
 const multerStorage = multer.memoryStorage();
-const express = require('express');
-const cors = require('cors')
-const dev = process.env.NODE_ENV === 'development';
-const path = require('path');
+const port = process.env.port || 8081;
+const dev = process.env.NODE_ENV !== 'production';
 import * as CivicController from './controllers/civicController';
 import * as AwsController from './controllers/awsController';
 import * as AirTableController from './controllers/airTableController';
+import {
+  redirects,
+} from './constants';
+
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
 const multipleUpload = multer({
   storage: multerStorage,
 }).any(); // TODO: use more specific validation of any()
 
-const app = express();
+app
+.prepare()
+.then(() => {
+  const server = express();
+  server.use(express.json());
+  server.use(cors());
 
-if (dev) {
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
+  redirects.forEach(({ from, to, type = 301, method = 'get' }) => {
+    server[method](from, (req, res) => {
+      res.redirect(type, to)
+    })
+  })
+
+  server.post('/api/airtable/update', async (req, res) => {
+    try{
+      await AirTableController.addNewAsset(req.body);
+      res.sendStatus(200)
+    }catch(error){
+      res.statusCode = 500;
+      res.send(error);
+    }
   });
-}
 
-app.use(express.json())
-app.use(cors())
-
-app.post('/api/airtable/update', async (req, res) => {
-  try{
-    await AirTableController.addNewAsset(req.body);
-    res.sendStatus(200)
-  }catch(err){
-    res.statusCode = 500;
-    res.send(error);
-  }
-});
-
-app.use('/api/airtable/assets', (req, res) => {
-  req.pipe(AirTableController.getAssets()).pipe(res);
-});
-
-app.use('/api/airtable/categories', (req, res) => {
-  req.pipe(AirTableController.getCategories()).pipe(res);
-});
-
-app.post('/api/list-asset/auth', async (req, res) => {
-  try{
-    const jwt = req.header('Authorization').split('Bearer ')[1];
-    const userData = await CivicController.exchangeCode(jwt);
-    res.send({ userData: JSON.stringify(userData, null, 4) });
-  }catch(err){
-    res.statusCode = 500;
-    res.send(error);
-  }
-});
-
-app.get('/api/assets/files', (req, res) => {
-  res.json({
-    filesByAssetId: AwsController.filesByAssetId,
+  server.use('/api/airtable/assets', (req, res) => {
+    try{
+      req.pipe(AirTableController.getAssets()).pipe(res);
+    }catch(err){
+      res.statusCode = 500;
+      res.send(error);
+    }
   });
-});
 
-app.post('/api/files/upload', multipleUpload, async (req, res) => {
-  await AwsController.handleFileUpload(files, assetId, req, res);
-});
+  server.use('/api/airtable/categories', (req, res) => {
+    try{
+      req.pipe(AirTableController.getCategories()).pipe(res);
+    }catch(error){
+      res.statusCode = 500;
+      res.send(error);
+    }
+  });
 
-app.use(express.static(path.join(__dirname, '../build')));
+  server.post('/api/list-asset/auth', async (req, res) => {
+    try{
+      const jwt = req.header('Authorization').split('Bearer ')[1];
+      const userData = await CivicController.exchangeCode(jwt);
+      res.send({ userData: JSON.stringify(userData, null, 4) });
+    }catch(err){
+      res.statusCode = 500;
+      res.send(error);
+    }
+  });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build/index.html'));
-});
+  server.get('/api/assets/files', (req, res) => {
+    res.json({
+      filesByAssetId: AwsController.filesByAssetId,
+    });
+  });
 
-app.listen(8081, () => console.log("started server"));
+  server.post('/api/files/upload', multipleUpload, async (req, res) => {
+    await AwsController.handleFileUpload(files, assetId, req, res);
+  });
+
+  server.get("/asset/:id", (req, res) => {
+    return app.render(req, res, "/asset", { id: req.params.id })
+  })
+
+  server.get('*', (req, res) => {
+      return handle(req, res)
+  })
+
+  server.listen(port, (err) => {
+      if (err) throw err
+      console.log(`> Ready on http://localhost:${port}`)
+  })
+})
+.catch((ex) => {
+  console.error(ex.stack)
+  process.exit(1)
+})
 
 AwsController.ProcessFilesForAssets();

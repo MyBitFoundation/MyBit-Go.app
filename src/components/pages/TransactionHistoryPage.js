@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Table from 'antd/lib/table';
 import 'antd/lib/table/style';
 import '../../styles/TransactionHistory.css';
-import LoadingPage from './LoadingPage';
+import LoadingPage from '../LoadingPage';
 import GetColumns from '../../constants/transactions';
 
 class TransactionHistoryPage extends React.Component {

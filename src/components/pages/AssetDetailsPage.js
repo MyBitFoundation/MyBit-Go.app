@@ -7,7 +7,7 @@ import 'antd/lib/button/style';
 import AssetDetails from '../AssetDetails';
 import '../../styles/AssetDetailsPage.css';
 import NotFoundPage from './NotFoundPage';
-import LoadingPage from './LoadingPage';
+import LoadingPage from '../LoadingPage';
 
 const AssetDetailsPage = ({
   loading, assets, match, ether, user, history,

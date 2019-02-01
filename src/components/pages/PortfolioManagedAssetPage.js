@@ -18,7 +18,7 @@ import LocationIcon from '../../images/Location-blue.svg';
 import PieChart from '../../images/chart-pie.png';
 import LineChart from '../../images/chart-line.png';
 import Fee from '../../images/Fee.png';
-import LoadingPage from './LoadingPage';
+import LoadingPage from '../LoadingPage';
 import {Chart, Axis, Legend, Geom, Tooltip} from "bizcharts";
 import { formatMonetaryValue } from '../../util/helpers';
 import * as Brain from '../../apis/brain';

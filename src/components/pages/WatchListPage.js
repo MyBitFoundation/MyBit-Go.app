@@ -12,12 +12,12 @@ import Icon from 'antd/lib/icon';
 import 'antd/lib/icon/style';
 import '../../styles/WatchListPage.css';
 import { getPrettyCategoryName } from '../../util/helpers';
-import LoadingPage from './LoadingPage';
+import LoadingPage from '../LoadingPage';
 import Asset from '../Asset';
 import {
   FundingStages,
 } from '../../constants/fundingStages';
-import WithAirtableContext from '../withAirtableContext';
+import { WithAirtableContext } from '../Airtable';
 
 const assetsPerPage = 12;
 

@@ -18,7 +18,7 @@ import SuccessEarth from "../../../images/list-asset/success-list-asset-earth.sv
 
 import { CivicButton, withCivic } from "../CivicContainer";
 import BlockchainInfoContext from '../../BlockchainInfoContext';
-import { AirtableContext } from '../../Airtable';
+import { WithAirtableContext } from '../../Airtable';
 
 const Option = Select.Option;
 
@@ -180,7 +180,7 @@ export const LocationSlide = ({
   );
 };
 
-export const AvailableAssetsSlide = ({
+export const AvailableAssetsSlide = WithAirtableContext(({
   next,
   previous,
   handleSelectChange,
@@ -189,112 +189,112 @@ export const AvailableAssetsSlide = ({
   airtableContext,
 }) => {
   const { category, asset } = formData;
-  let forbidNext =
-    category !== "" && asset !== "" ? false : true;
+  const {
+    assetsAirTable,
+    categoriesAirTable,
+    getCategoriesForAssets,
+  } = airtableContext;
+
+  let forbidNext = category !== "" && asset !== "" ? false : true;
+  if(!assetsAirTable || !categoriesAirTable){
+    return null;
+  }
+  const categories = getCategoriesForAssets(formData.userCountry, formData.userCity);
+  const assetValue = !asset ? 0 : assetsAirTable.filter(assetTmp => assetTmp.name === asset)[0].amountToBeRaisedInUSDAirtable;
   return (
-    <AirtableContext.Consumer>
-       {({ assetsAirTable, getCategoriesForAssets, categoriesAirTable }) => {
-        if(!assetsAirTable || !categoriesAirTable){
-          return null;
-        }
-        const categories = getCategoriesForAssets(formData.userCountry, formData.userCity);
-        const assetValue = !asset ? 0 : assetsAirTable.filter(assetTmp => assetTmp.name === asset)[0].amountToBeRaisedInUSDAirtable;
-        return (
-          <Slide>
-            <Tooltip
-              title="More assets will become available in the future."
-              overlayClassName="Slider_overlay-tooltip"
+    <Slide>
+      <Tooltip
+        title="More assets will become available in the future."
+        overlayClassName="Slider_overlay-tooltip"
+      >
+        <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
+      </Tooltip>
+      {categories.length !== 0 ? (
+        <div>
+          <h1 className="Slider__header">Assets available</h1>
+          <p className="Slider__note">
+            Below is the list of assets available to you
+          </p>
+          <div className="Slider__input-container">
+            <Select
+              showSearch
+              style={{ width: "100%", marginTop: "10px" }}
+              placeholder="Asset Category"
+              optionFilterProp="children"
+              onChange={value => handleSelectChange(value, "category")}
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
             >
-              <img className="Slider__tooltip" alt="Tooltip" src={questionTooltip} />
-            </Tooltip>
-            {categories.length !== 0 ? (
-              <div>
-                <h1 className="Slider__header">Assets available</h1>
-                <p className="Slider__note">
-                  Below is the list of assets available to you
-                </p>
-                <div className="Slider__input-container">
-                  <Select
-                    showSearch
-                    style={{ width: "100%", marginTop: "10px" }}
-                    placeholder="Asset Category"
-                    optionFilterProp="children"
-                    onChange={value => handleSelectChange(value, "category")}
-                    filterOption={(input, option) =>
-                      option.props.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {categories.map(cat => (
-                        <Option key={cat} value={cat}>
-                          {cat}
-                        </Option>
-                      ))}
-                  </Select>
-                  <Select
-                    showSearch
-                    style={{ width: "100%", marginTop: "10px" }}
-                    placeholder="Available Assets"
-                    optionFilterProp="children"
-                    onChange={value => handleSelectChange({name: value, assetsAirTable}, "asset")}
-                    filterOption={(input, option) =>
-                      option.props.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {assetsAirTable.filter(asset => asset.category === category).map(asset => {
-                      return (
-                        <Option key={asset.name} value={asset.name}>
-                          {asset.name}
-                        </Option>
-                      )}
-                    )}
-                  </Select>
-                  <div className="Slider__input-label">Selected Asset value: </div>
-                  <InputNumber
-                    disabled
-                    placeholder="Funding Goal"
-                    name="assetValue"
-                    value={assetValue}
-                    formatter={value =>
-                     `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                    onChange={value => handleSelectChange(value, "assetValue")}
-                  />
-                </div>
-                <SlideButtons
-                  nextMessage="Next"
-                  disabledMassage="All fields are required"
-                  previous={previous}
-                  next={next}
-                  forbidNext={forbidNext}
-                />
-              </div>
-            ) : (
-              <div>
-                <h1 className="Slider__header">No assets</h1>
-                <p className="Slider__note">
-                  No assets have been found in your country.
-                </p>
-                <div className="Slider__buttons">
-                  <Button
-                    type="secondary"
-                    className="Slider__buttons-centered"
-                    onClick={() => history.push("/explore")}
-                  >
-                    Go to Explore page
-                  </Button>
-                </div>
-              </div>
-            )}
-          </Slide>
-        )}}
-    </AirtableContext.Consumer>
+              {categories.map(cat => (
+                  <Option key={cat} value={cat}>
+                    {cat}
+                  </Option>
+                ))}
+            </Select>
+            <Select
+              showSearch
+              style={{ width: "100%", marginTop: "10px" }}
+              placeholder="Available Assets"
+              optionFilterProp="children"
+              onChange={value => handleSelectChange({name: value, assetsAirTable}, "asset")}
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {assetsAirTable.filter(asset => asset.category === category).map(asset => {
+                return (
+                  <Option key={asset.name} value={asset.name}>
+                    {asset.name}
+                  </Option>
+                )}
+              )}
+            </Select>
+            <div className="Slider__input-label">Selected Asset value: </div>
+            <InputNumber
+              disabled
+              placeholder="Funding Goal"
+              name="assetValue"
+              value={assetValue}
+              formatter={value =>
+               `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={value => value.replace(/\$\s?|(,*)/g, "")}
+              onChange={value => handleSelectChange(value, "assetValue")}
+            />
+          </div>
+          <SlideButtons
+            nextMessage="Next"
+            disabledMassage="All fields are required"
+            previous={previous}
+            next={next}
+            forbidNext={forbidNext}
+          />
+        </div>
+      ) : (
+        <div>
+          <h1 className="Slider__header">No assets</h1>
+          <p className="Slider__note">
+            No assets have been found in your country.
+          </p>
+          <div className="Slider__buttons">
+            <Button
+              type="secondary"
+              className="Slider__buttons-centered"
+              onClick={() => history.push("/explore")}
+            >
+              Go to Explore page
+            </Button>
+          </div>
+        </div>
+      )}
+    </Slide>
   );
-};
+});
 
 export const AssetLocationSlide = ({
   next,

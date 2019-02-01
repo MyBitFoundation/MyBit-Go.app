@@ -5,7 +5,7 @@ import Row from 'antd/lib/col';
 import Button from 'antd/lib/button';
 import 'antd/lib/row/style';
 import '../../styles/PortfolioPage.css';
-import LoadingPage from './LoadingPage';
+import LoadingPage from '../LoadingPage';
 import PieChart from '../../images/chart-pie.svg';
 import LineChart from '../../images/chart-line.svg';
 import Sliders from '../../images/sliders.svg';
@@ -14,8 +14,6 @@ import { formatMonetaryValue } from '../../util/helpers';
 import ValueDisplay from '../ValueDisplay';
 
 const ButtonGroup = Button.Group;
-
-const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue, 'ether');
 
 const getOwnedAssets = (assets, address) =>
   assets

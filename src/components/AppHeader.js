@@ -19,12 +19,14 @@ const AppHeader = ({
   readOnlyMode,
 }) => (
   <BancorConsumer>
-    {({ initBancor }) => (
+    {({ initBancor }) => {
+      console.log(initBancor)
+      return (
       <div className="AppHeader">
         <div className="AppHeader__logo-and-info">
           <Logo className="AppHeader__logo" />
           <ExchangeRate
-            {...prices}
+            {...prices.mybit}
           />
           {!readOnlyMode && (
             <AccountInfo
@@ -50,7 +52,7 @@ const AppHeader = ({
           <Address {...user} />
         )}
       </div>
-    )}
+    )}}
   </BancorConsumer>
 );
 

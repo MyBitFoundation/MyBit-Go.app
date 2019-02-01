@@ -5,21 +5,24 @@ import 'gridlex/dist/gridlex.min.css';
 import './styles/index.css';
 import App from './App';
 // import registerServiceWorker from './registerServiceWorker';
-import BlockchainInfo from './components/BlockchainInfo';
+import BlockchainProvider from './components/Blockchain';
 import AirtableProvider from './components/Airtable';
+import NotificationsProvider from './components/Notifications';
 import MetamaskChecker from './components/MetamaskChecker/index';
 import Layout from './components/Layout';
 
 ReactDOM.render(
   <Layout>
     <BrowserRouter>
-      <AirtableProvider>
-        <MetamaskChecker>
-          <BlockchainInfo>
-            <App />
-          </BlockchainInfo>
-        </MetamaskChecker>
-      </AirtableProvider>
+      <NotificationsProvider>
+        <AirtableProvider>
+          <MetamaskChecker>
+            <BlockchainProvider>
+              <App />
+            </BlockchainProvider>
+          </MetamaskChecker>
+        </AirtableProvider>
+      </NotificationsProvider>
     </BrowserRouter>
   </Layout>,
   document.getElementById('root'),

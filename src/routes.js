@@ -3,7 +3,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import AssetDetailsPage from './components/pages/AssetDetailsPage';
-import ExplorePage from './components/pages/ExplorePage';
+import Explore from './screens/Explore';
 import NotFoundPage from './components/pages/NotFoundPage';
 import PortfolioPage from './components/pages/PortfolioPage';
 import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
@@ -15,7 +15,6 @@ import OnboardingPage from './components/pages/OnboardingPage';
 import ListAssetPage from './components/pages/ListAssetPage'
 import AssetManagerPage from './components/pages/AssetManagerPage'
 import PortfolioManagedAssetPage from './components/pages/PortfolioManagedAssetPage'
-
 const redirectToOnFirstVisit = '/onboarding';
 const redirectOnFirstListAssetVisit = '/asset-manager';
 
@@ -31,22 +30,10 @@ const routes = [
   }, {
     path: '/explore',
     exact: true,
-    component: ({ isFirstVisit }) => (
-      <BlockchainInfoContext.Consumer>
-        {({ loading, assets, handleClickedAssetFavorite, categoriesAirTable }) =>
-          (isFirstVisit ? (
-            <Redirect to={redirectToOnFirstVisit} />
-          ) : (
-            <ExplorePage
-              loading={loading}
-              assets={assets}
-              handleClickedAssetFavorite={handleClickedAssetFavorite}
-              categoriesAirTable={categoriesAirTable}
-            />
-          ))
-        }
-      </BlockchainInfoContext.Consumer>
-    ),
+    component: ({ isFirstVisit }) =>
+      isFirstVisit ? <Redirect to={redirectToOnFirstVisit} />
+      : <Explore />
+    ,
   }, {
     path: '/watchlist',
     exact: true,
@@ -160,11 +147,8 @@ const routes = [
     path: '/help',
     exact: true,
     component: ({ isFirstVisit }) =>
-    (isFirstVisit ? <Redirect to={redirectToOnFirstVisit} /> : (
-      <BlockchainInfoContext.Consumer>
-        {({ fetchMyBit }) => <HelpPage fetchMyBit={fetchMyBit} />}
-      </BlockchainInfoContext.Consumer>
-    )),
+    isFirstVisit ? <Redirect to={redirectToOnFirstVisit} />
+      : <HelpPage />,
   },
   {
     path: '/onboarding',

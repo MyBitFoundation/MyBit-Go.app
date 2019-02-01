@@ -4,8 +4,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import './styles/App.css';
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
-import BlockchainInfoContext from './components/BlockchainInfoContext';
-import Notifications from './components/Notifications';
+import { WithBlockchainContext } from './components/Blockchain';
 import BancorContainer from './components/UI/BancorContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
@@ -46,47 +45,32 @@ class App extends Component {
   render() {
     const firstVisit = this.isFirstVisit();
     const firstListAssetVisit = this.isFirstListAssetVisit(firstVisit);
+    const {
+      user,
+      prices,
+      userHasMetamask,
+      userIsLoggedIn,
+      network,
+      isBraveBrowser,
+      extensionUrl,
+      enabled,
+      isReadOnlyMode,
+    } = this.props.blockchainContext;
 
     return (
       <CirclesBackgroundWrapper>
         <BancorContainer>
-          <BlockchainInfoContext.Consumer>
-            {({
-              user,
-              prices,
-              userHasMetamask,
-              userIsLoggedIn,
-              network,
-              isBraveBrowser,
-              extensionUrl,
-              enabled,
-              isReadOnlyMode,
-            }) => (
-              <React.Fragment>
-                <AppHeader
-                  user={user}
-                  prices={prices.mybit}
-                  readOnlyMode={isReadOnlyMode()}
-                />
-                <NavigationBar
-                  currentPath={this.props.location.pathname}
-                />
-                {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network, enabled)}
-              </React.Fragment>
-            )}
-          </BlockchainInfoContext.Consumer>
-          <BlockchainInfoContext.Consumer>
-            {({
-              notifications,
-              removeNotification,
-            }) =>
-              <Notifications
-                data={notifications}
-                removeNotification={removeNotification}
-              />
-            }
-          </BlockchainInfoContext.Consumer>
-
+          <React.Fragment>
+            <AppHeader
+              user={user}
+              prices={prices.mybit}
+              readOnlyMode={isReadOnlyMode()}
+            />
+            <NavigationBar
+              currentPath={this.props.location.pathname}
+            />
+            {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network, enabled)}
+          </React.Fragment>
           <div className="page-wrapper">
             <Switch>
               {routes.map(({ path, exact, component: C }) => (
@@ -110,4 +94,4 @@ App.propTypes = {
     .isRequired,
 };
 
-export default withRouter(App);
+export default withRouter(WithBlockchainContext(App));
