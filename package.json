@@ -27,7 +27,7 @@
     "nodemon": "1.18.9",
     "prop-types": "15.6.2",
     "react": "16.7.0",
-    "react-app-rewired": "1.6.2",
+    "react-app-rewired": "2.1.0",
     "react-dom": "16.7.0",
     "react-facebook-pixel": "0.1.1",
     "react-ga": "2.5.6",
