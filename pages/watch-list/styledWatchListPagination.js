@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import Pagination from 'antd/lib/pagination';
-import 'antd/lib/pagination/style/index.css';
+import {
+  Pagination,
+} from 'antd';
 
 const StyledWatchListPagination = styled(Pagination)`
   position: absolute;

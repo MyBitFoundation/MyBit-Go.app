@@ -1,16 +1,14 @@
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
-import Icon from 'antd/lib/icon';
-import 'antd/lib/icon/style/index.css';
-import Progress from 'antd/lib/progress';
-import 'antd/lib/progress/style/index.css';
-
-import { formatMonetaryValue } from '../../../../utils/helpers';
+import {
+  Button,
+  Icon,
+  Progress,
+} from 'antd';
+import { formatMonetaryValue } from 'utils/helpers';
 import {
   FundingStages,
-} from '../../../../constants';
+} from 'constants';
 import StyledAssetPortfolioInvestmentContainer from './styledAssetPortfolioInvestmentContainer';
 import StyledAssetPortfolioInvestmentSection from './styledAssetPortfolioInvestmentSection';
 import StyledAssetPortfolioInvestmentValue from './styledAssetPortfolioInvestmentValue';

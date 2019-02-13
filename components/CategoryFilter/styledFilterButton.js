@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import Button from 'antd/lib/button';
+import {
+  Button,
+} from 'antd';
 
 const StyledFilterButton = styled(Button)`
   text-shadow: none;

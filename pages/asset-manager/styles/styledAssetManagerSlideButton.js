@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
+import {
+  Button,
+} from 'antd';
 
 const StyledAssetManagerSlideButton = styled(Button)`
   ${props => props.isContinue && css`

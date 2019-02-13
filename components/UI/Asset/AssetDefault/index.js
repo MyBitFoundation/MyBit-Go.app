@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import Progress from 'antd/lib/progress';
-import Icon from 'antd/lib/icon';
-import 'antd/lib/icon/style/index.css';
-import 'antd/lib/progress/style/index.css';
+import {
+  Progress,
+  Icon,
+} from 'antd';
 import StyledAssetDefaultDetailsContainer from './styledAssetDefaultDetailsContainer';
 import StyledAssetDefaultFunded from './styledAssetDefaultFunded';
 import StyledAssetDefaultGoal from './styledAssetDefaultGoal';
 import StyledAssetDefaultContributeButton from './styledAssetDefaultContributeButton';
-import { formatMonetaryValue } from '../../../../utils/helpers';
+import { formatMonetaryValue } from 'utils/helpers';
 
 const AssetDefault = ({
   amountRaisedInUSD,

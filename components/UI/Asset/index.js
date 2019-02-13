@@ -1,4 +1,6 @@
-import Col from 'antd/lib/col';
+import {
+  Col,
+} from 'antd';
 import AssetDefault from './AssetDefault';
 import AssetTemplate from './AssetTemplate';
 import AssetPortfolioInvestment from './AssetPortfolioInvestment';

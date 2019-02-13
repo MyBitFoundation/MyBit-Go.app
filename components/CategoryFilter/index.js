@@ -1,16 +1,13 @@
 /* eslint-disable function-paren-newline */
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
-import Checkbox from 'antd/lib/checkbox';
-import 'antd/lib/checkbox/style/index.css';
-import Dropdown from 'antd/lib/dropdown';
-import 'antd/lib/dropdown/style/index.css';
-import Icon from 'antd/lib/icon';
-import 'antd/lib/icon/style/index.css';
-import Menu from 'antd/lib/menu';
-import 'antd/lib/menu/style/index.css';
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Icon,
+  Menu,
+} from 'antd';
 import StyledFilterButton from './styledFilterButton';
 import StyledCategoryFilter from './styledCategoryFilter';
 import StyledCategoryFilterDesktop from './styledCategoryFilterDesktop';

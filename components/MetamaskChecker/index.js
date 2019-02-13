@@ -84,7 +84,7 @@ class MetamaskChecker extends Component {
       }
     }catch(err){
       console.log(err)
-      this.getAccount();
+      this.getAccount(enabled);
     }
   }
 
@@ -171,8 +171,10 @@ class MetamaskChecker extends Component {
 
   render() {
     if (this.state.isInstalled === undefined || this.state.isLoggedIn === undefined) {
+      console.log("returning null")
       return null;
     }
+    console.log("returning comp")
     return React.cloneElement(this.props.children, {
       isMetamaskInstalled: this.state.isInstalled,
       network: this.network,

@@ -1,12 +1,10 @@
 import styled, { css } from 'styled-components';
 
 const StyledAppheader = styled.div`
-  height: 90px;
-  ${props => props.styling && props.styling.colors && css`
-    background-image: ${props.styling.colors.backgroundGradientHorizontal};
-  `}
+  height: 60px;
+  background-image: ${({theme}) => theme.colors.backgroundGradientHorizontal}
   margin: 0px 0px;
-  padding: 0 50px;
+  padding: 0 10px;
   color: white;
   display: flex;
   position: relative;
@@ -14,10 +12,19 @@ const StyledAppheader = styled.div`
   flex-wrap: wrap;
   overflow: hidden;
   font-family: 'Roboto';
+  align-items: center;
 
-  @media (max-width: 600px) {
-    display: none;
-  }
+  transition: all 0.2s;
+
+  ${props => (props.show === false) && css`
+    height: 0px;
+  `}
+
+  ${({theme}) => theme.tablet`
+    transition: all 0.2s;
+    height: 90px;
+    padding: 0 50px;
+  `}
 }`
 
 export default StyledAppheader;

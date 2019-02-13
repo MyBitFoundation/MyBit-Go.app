@@ -5,9 +5,9 @@ import StyledAssetDetailsManagerInfoCivic from './styledAssetDetailsManagerInfoC
 import StyledAssetDetailsManagerInfoAddress from './styledAssetDetailsManagerInfoAddress';
 import StyledAssetDetailsManagerInfoDocuments from './styledAssetDetailsManagerInfoDocuments';
 import StyledAssetDetailsManagerInfoPercentages from './styledAssetDetailsManagerInfoPercentages';
-import ValueDisplay from '../UI/ValueDisplay';
-import MyBitLogo from '../../static/mybit-blue.svg';
-import Sliders from '../../static/sliders.svg';
+import ValueDisplay from 'ui/ValueDisplay';
+import MyBitLogo from 'static/mybit-blue.svg';
+import Sliders from 'static/sliders.svg';
 
 const AssetDetailsManagetInfo = ({
   address,

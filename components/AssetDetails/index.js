@@ -1,26 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
-
-import ContributionPopup from '../ContributionPopup';
-
-import Row from 'antd/lib/row';
-
+import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
+import AssetDetailsInfo from 'components/AssetDetailsInfo';
+import ContributionPopup from 'components/ContributionPopup';
+import AssetState from 'ui/AssetState';
+import AssetFundingDetails from 'ui/AssetFundingDetails';
+import AssetCalculator from 'ui/AssetCalculator';
 import {
   formatMonetaryValue,
   shortenAddress,
   fromWeiToEth,
-} from '../../utils/helpers';
-
+} from 'utils/helpers';
 import {
   InternalLinks,
-} from '../../constants';
-
-import AssetState from '../UI/AssetState';
-import AssetFundingDetails from '../UI/AssetFundingDetails';
-import AssetCalculator from '../UI/AssetCalculator';
-import AssetDetailsManagerInfo from '../AssetDetailsManagerInfo';
-import AssetDetailsInfo from '../AssetDetailsInfo';
+} from 'constants';
 import StyledAssetDetailsContributeButton from './styledAssetDetailsContributeButton';
 import StyledAssetDetailsRightCol from './styledAssetDetailsRightCol';
 import StyledAssetDetailsLeftCol from './styledAssetDetailsLeftCol';

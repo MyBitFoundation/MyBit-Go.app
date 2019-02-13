@@ -9,8 +9,18 @@ const StyleLogo = styled.div`
   svg{
     height: 100%;
     width: 100%;
-    max-width: 90px;
+    max-width: 40px;
+
+    ${({theme}) => theme.tablet`
+      max-width: 50px;
+    `}
   }
+
+  ${({theme}) => theme.tablet`
+    padding-top: 5px;
+    padding-left: 0px;
+  `}
+
 }`
 
 export default StyleLogo;

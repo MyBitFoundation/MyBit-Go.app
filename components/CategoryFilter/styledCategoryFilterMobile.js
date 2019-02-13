@@ -1,24 +1,23 @@
 import styled from 'styled-components';
 
 const StyledCategoryFilterMobile = styled.div`
-  display: none;
-  @media (max-width: ${props => props.breakpoints.categoriesFilterTablet}){
-    display: block;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+
+  button{
+    width: 49%;
   }
 
-  @media(max-width: ${props => props.breakpoints.categoriesFilterMobile}){
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-
-    button{
-      width: 60%;
+  ${({theme}) => theme.categoriesFilterMobile`
+    button:nth-child(1){
+      margin-right: 10px;
     }
+  `}
 
-    button:nth-child(2){
-      margin-right: 20px;
-    }
-  }
+  ${({theme}) => theme.categoriesFilterTablet`
+    display: none;
+  `}
 }`
 
 export default StyledCategoryFilterMobile;

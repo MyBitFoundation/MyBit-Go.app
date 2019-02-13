@@ -1,54 +1,57 @@
-import StyledAssetManagerSlideTitle from '../styles/styledAssetManagerSlideTitle';
-import StyledAssetManagerSlideIntroNote from '../styles/styledAssetManagerSlideIntroNote';
-import StyledAssetManagerSlideList from '../styles/styledAssetManagerSlideList';
-import StyledAssetManagerSlideButtons from '../styles/styledAssetManagerSlideButtons';
-import StyledAssetManagerSlideImgWrapper from '../styles/styledAssetManagerSlideImgWrapper';
-import StyledAssetManagerSlideParagraph from '../styles/styledAssetManagerSlideParagraph';
-import StyledAssetManagerSlideButton from '../styles/styledAssetManagerSlideButton';
-import Tools from '../../../static/asset-manager/tools.png';
+import styled from 'styled-components';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideList,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
+import Tools from 'static/asset-manager/tools.png';
+
+const StyledImage = styled.img`
+  margin: 0px auto;
+  position: relative;
+  margin-top: 30px;
+  display: none !important;
+
+  ${({theme}) => theme.tablet`
+    display: block !important;
+  `}
+`;
 
 const Why = ({
   next,
   previous,
 }) => (
-  <React.Fragment>
-    <StyledAssetManagerSlideTitle>
-      Why is an Asset<br /> Manager needed?
-    </StyledAssetManagerSlideTitle>
-    <StyledAssetManagerSlideImgWrapper
-      isTools
+  <StyledCarouselSlide>
+    <StyledCarouselSlideMainTitle
+      isLong
+      isSmallMobile
     >
-      <img className="Slider__img-tools" alt="Tools" src={Tools} />
-    </StyledAssetManagerSlideImgWrapper>
-    <StyledAssetManagerSlideParagraph
+      <StyledCarouselSlideColoredSpan
+        isBlue
+      >
+        Why
+      </StyledCarouselSlideColoredSpan> is an Asset Manager needed?
+    </StyledCarouselSlideMainTitle>
+    <StyledImage
+      src={Tools}
+      width="190"
+      alt="Tools"
+    />
+    <StyledCarouselSlideParagraph
       hasMarginTop
     >
         In a perfect, futuristic world the MyBit Go ecosystem could be fully automated.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
         So, when an asset has an issue, it could request another
         machine to come and fix it, replenish its funds or inventory, etc.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
         Since we are not yet at that stage, human oversight is required for most assets to function properly.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideButtons>
-      <StyledAssetManagerSlideButton
-        type="primary"
-        onClick={next}
-        isContinue
-      >
-        Next
-      </StyledAssetManagerSlideButton>
-      <StyledAssetManagerSlideButton
-        type="secondary"
-        onClick={previous}
-        isBack
-      >
-        Back
-      </StyledAssetManagerSlideButton>
-    </StyledAssetManagerSlideButtons>
-  </React.Fragment>
+    </StyledCarouselSlideParagraph>
+  </StyledCarouselSlide>
 )
 
 export default Why;

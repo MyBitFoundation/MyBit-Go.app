@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/css';
+import {
+  Button,
+} from 'antd';
 
 const StyledOnboardingButton = styled(Button)`
   font-style: normal;

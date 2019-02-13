@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
 const StyledFiltersSwitch = styled.div`
-  position: relative;
-  margin-right: 10px;
-  margin-bottom: 30px;
-  text-align: right;
-  top: 7px;
+  .ant-switch span{
+    color: white;
+  }
 
+  padding-top: 50px;
+  text-align: left;
+  margin-bottom: 30px;
 
   span{
     font-family: Roboto;
@@ -17,22 +18,17 @@ const StyledFiltersSwitch = styled.div`
     position: relative;
   }
 
-  .ant-switch span{
-    color: white;
-  }
-
-  @media(max-width: ${props => props.breakpoints.categoriesFilterTablet}){
+  ${({ theme }) => theme.categoriesFilterMobile`
+    position: relative;
     padding-top: 0px;
     text-align: right;
-    margin-right: 10px;
     margin-left: 0px;
-  }
+    top: 7px;
+ `}
 
-  @media(max-width: ${props => props.breakpoints.categoriesFilterMobile}){
-    padding-top: 50px;
-    text-align: left;
-    margin-left: 10px;
-  }
+ ${({ theme }) => theme.tablet`
+    margin-right: 10px;
+ `}
 }`
 
 export default StyledFiltersSwitch;

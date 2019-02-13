@@ -25,8 +25,8 @@ export const navbarOptions = (currentPath) => [
   }, {
     name: 'Watch List',
     icon: WatchIcon,
-    selected: currentPath === '/watchlist',
-    url: '/watchlist',
+    selected: currentPath === '/watch-list',
+    url: '/watch-list',
   }, {
     name: 'List Asset',
     icon: ListAssetIcon,

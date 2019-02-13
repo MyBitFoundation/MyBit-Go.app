@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
+import {
+  Button,
+} from 'antd';
 
 const StyledBackButton = styled(Button)`
   margin-left: 10px;

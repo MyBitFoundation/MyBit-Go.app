@@ -1,22 +1,18 @@
 import styled from 'styled-components';
 
 const StyledHelpPageButtons = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
+  display: none;
 
-  & a{
-    margin: 0px 10px;
-    width: max-content;
+  ${({theme}) => theme.tablet`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
 
-    @media(max-width: 670px) {
-       margin: 10px 0px;
+    & a{
+      margin: 0px 10px;
+      width: max-content;
     }
-  }
-
-  @media(max-width: 670px) {
-     flex-direction: column;
-  }
+  `}
 }`
 
 export default StyledHelpPageButtons;

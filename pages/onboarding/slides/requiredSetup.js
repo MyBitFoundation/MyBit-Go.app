@@ -1,44 +1,54 @@
-import RightArrow from '../../../static/onboarding/arrow-right.png';
-import SetupGraphic from '../../../static/onboarding/setup.png';
-import StyledMainTitle from '../styles/styledMainTitle';
-import StyledOnboardingImage from '../styles/styledOnboardingImage';
-import StyledOnboardingParagraph from '../styles/styledOnboardingParagraph';
-import StyledOnboardingButton from '../styles/styledOnboardingButton';
-import StyledOnboardingArrow from '../styles/styledOnboardingArrow';
-import StyledOnboardingColoredSpan from '../styles/styledOnboardingColoredSpan';
+import styled from 'styled-components';
+import SetupGraphic from 'static/onboarding/setup.png';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
+
+const StyledImage = styled.img`
+  position: absolute;
+  top: 165px;
+  right: 10px;
+  width: 77px;
+  display: none !important;
+
+  ${({theme}) => theme.tablet`
+    display: block !important;
+  `}
+}`
 
 import {
   withBancorContext,
 } from '../../../components/UI/BancorContainer';
 
 const RequiredSetup = withBancorContext(({
-  finishOnboarding,
-  previous,
   bancorContext,
 }) => (
-  <React.Fragment>
-    <StyledOnboardingImage
+  <StyledCarouselSlide>
+    <StyledImage
       src={SetupGraphic}
       width="77"
       alt="Setup"
       isSetup
     />
-    <StyledMainTitle>
-      <StyledOnboardingColoredSpan
+    <StyledCarouselSlideMainTitle>
+      <StyledCarouselSlideColoredSpan
         isBlue
       >
         Required
-      </StyledOnboardingColoredSpan>{" "}
+      </StyledCarouselSlideColoredSpan>{" "}
       setup
-    </StyledMainTitle>
-    <StyledOnboardingParagraph
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideParagraph
       isTitle
     >
       Before you are able to use the MyBit Go platform, you will
       need the following:
-    </StyledOnboardingParagraph>
-    <StyledOnboardingParagraph
-      isNoImages
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph
+      isShorter
     >
       MetaMask, a browser extension that turns any ordinary
       browser into one that can interact with blockchain
@@ -50,9 +60,9 @@ const RequiredSetup = withBancorContext(({
       >
       {' '}Get MetaMask
       </a>
-    </StyledOnboardingParagraph>
-    <StyledOnboardingParagraph
-      isNoImages
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph
+      isShorter
     >
       Cryptocurrency, such as Ether or DAI, which are the main
       cryptocurrencies MyBit Go uses to invest in assets; however,
@@ -70,9 +80,9 @@ const RequiredSetup = withBancorContext(({
       >
         Get Ether
       </a>
-    </StyledOnboardingParagraph>
-    <StyledOnboardingParagraph
-      isNoImages
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph
+      isShorter
     >
       MyBit Tokens (MYB), the native token that fuels the <br />
       MyBit Network. Applications such as MyBit Go, which <br />
@@ -86,25 +96,8 @@ const RequiredSetup = withBancorContext(({
       >
         Get MYB
       </a>
-    </StyledOnboardingParagraph>
-    <StyledOnboardingButton
-      type="primary"
-      onClick={finishOnboarding}
-      isNext
-    >
-      Get started and explore{" "}
-      <StyledOnboardingArrow
-        src={RightArrow}
-        alt="Next Button Arrow"
-      />
-    </StyledOnboardingButton>
-    <StyledOnboardingButton
-      onClick={previous}
-      isBack
-    >
-      Back
-    </StyledOnboardingButton>
-  </React.Fragment>
+    </StyledCarouselSlideParagraph>
+  </StyledCarouselSlide>
 ));
 
 export default RequiredSetup;

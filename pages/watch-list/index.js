@@ -1,22 +1,22 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Switch from 'antd/lib/switch';
-import 'antd/lib/switch/style/index.css';
-import Icon from 'antd/lib/icon';
-import 'antd/lib/icon/style/index.css';
-import { getPrettyCategoryName } from '../../utils/helpers';
-import Loading from '../../components/Loading';
-import Asset from '../../components/UI/Asset';
+import {
+  Switch,
+  Icon,
+} from 'antd';
+import { withBlockchainContext } from 'components/Blockchain'
+import Loading from 'components/Loading';
+import Asset from 'components/UI/Asset';
+import { getPrettyCategoryName } from 'utils/helpers';
 import {
   FundingStages,
-} from '../../constants/fundingStages';
-import { withBlockchainContext } from '../../components/Blockchain'
+} from 'constants/fundingStages';
 import StyledWatchList from './styledWatchList';
 import StyledWatchListPagination from './styledWatchListPagination';
 import StyledWatchListFilters from './styledWatchListFilters';
 import StyledWatchListSwitch from './styledWatchListSwitch';
-import StyledNoResults from '../../components/styledNoResults';
+import StyledNoResults from 'components/styledNoResults';
 
 const assetsPerPage = 12;
 

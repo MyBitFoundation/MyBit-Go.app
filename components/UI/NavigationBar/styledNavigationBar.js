@@ -1,8 +1,14 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledNavigationBar = styled.div`
+  display: none;
+
   a{
     text-decoration: none;
+  }
+
+  ul{
+    transition: all 0.2s;
   }
 
   .ant-menu-item-selected svg g,
@@ -14,16 +20,26 @@ const StyledNavigationBar = styled.div`
   .ant-menu-item-active svg path{
     fill: #1890ff;
   }
-  @media(max-width: 600px) {
-    overflow-y: hidden;
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch;
-    .ant-menu-item {
-      display: inline-block !important;
+
+  ${({theme}) => theme.tablet`
+    display: block;
+  `}
+
+  @media (max-width: ${props => props.hideAt}) {
+   ${props => !props.show && css`
+    transition: all 0.2s;
+    height: 0px;
+
+    ul{
+      height: 0px;
+      overflow: hidden;
+      transition: all 0.2s;
     }
-    .ant-menu-submenu {
-      display: none !important;
+
+    .ant-menu{
+      border-bottom: none;
     }
+  `}
   }
 }`
 

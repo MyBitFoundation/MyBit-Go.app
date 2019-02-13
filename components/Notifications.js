@@ -1,6 +1,10 @@
 import React from 'react';
-import { Alert } from 'antd';
-import { getContentForNotification } from '../constants/notifications';
+import {
+  Alert,
+} from 'antd';
+import { 
+  getContentForNotification,
+} from 'constants/notifications';
 
 const { Provider, Consumer } = React.createContext({});
 

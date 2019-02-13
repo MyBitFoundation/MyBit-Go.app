@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
-import Icon from 'antd/lib/icon';
-import 'antd/lib/icon/style/index.css';
-import Progress from 'antd/lib/progress';
-import 'antd/lib/progress/style/index.css';
-import { formatMonetaryValue } from '../../../../utils/helpers';
+import {
+  Button,
+  Icon,
+  Progress,
+} from 'antd';
+import { formatMonetaryValue } from 'utils/helpers';
 import {
   FundingStages,
-} from '../../../../constants';
-import ValueDisplay from '../../ValueDisplay';
+} from 'constants';
+import ValueDisplay from 'ui/ValueDisplay';
 import StyledAssetPortfolioManagedContainer from './styledAssetPortfolioManagedContainer';
 import StyledAssetPortfolioManagedSection from './styledAssetPortfolioManagedSection';
 import StyledAssetPortfolioManagedButtons from './styledAssetPortfolioManagedButtons';
@@ -39,7 +38,7 @@ const AssetPortfolioManaged = ({
 
   const buttonType = 'secondary';
   const text = funded ? 'Manage asset' : 'View asset listing';
-  const url = funded ? `/manage/${assetId}` : `/asset?id=${assetId}`;
+  const url = funded ? `/manage?id=${assetId}` : `/asset?id=${assetId}`;
   const urlAs = funded ? `/manage/${assetId}` : `/asset/${assetId}`;
 
   const button = (

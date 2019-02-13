@@ -52,7 +52,9 @@ const AssetPortfolio = ({
   } else if(type === 'managed' && funded){
     buttonType = 'secondary';
     text = 'Manage asset';
-    url = `/manage/${assetID}`;
+    as={`/manage/${assetId}`}
+    url={`/manage?id=${assetId}`}
+
   } else if(type === 'managed' && fundingStage === FundingStages.IN_PROGRESS){
     text = 'View asset listing';
   }
@@ -60,7 +62,7 @@ const AssetPortfolio = ({
   const withdrawing = withdrawingAssetIds.includes(assetID);
 
   const button = (
-    <Link to={url} href={url} className="AssetPortfolio__details-buttons--is-view">
+    <Link to={url} href={url} as={as} className="AssetPortfolio__details-buttons--is-view">
       <Button
         type={buttonType}
       >

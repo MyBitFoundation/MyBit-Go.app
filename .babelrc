@@ -3,6 +3,16 @@
     "test": {
       "presets": [["next/babel", { "preset-env": { "modules": "commonjs" } }]],
       "plugins": [
+      ["module-resolver", {
+          "root": ["./src"],
+          "alias": {
+            "static": "./static",
+            "components": "./components",
+            "constants": "./constants",
+            "utils": "./utils",
+            "ui": "./components/UI",
+          }
+        }],
         ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
         ["inline-react-svg" ],
         ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }],
@@ -12,6 +22,16 @@
     "development": {
       "presets": ["next/babel"],
       "plugins": [
+        ["module-resolver", {
+          "root": ["./src"],
+          "alias": {
+            "static": "./static",
+            "components": "./components",
+            "constants": "./constants",
+            "utils": "./utils",
+            "ui": "./components/UI",
+          }
+        }],
         ["import", {"libraryName": "antd","style": "less"}],
         ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
         ["inline-react-svg" ],
@@ -22,6 +42,16 @@
     "production": {
       "presets": ["next/babel"],
       "plugins": [
+        ["module-resolver", {
+          "root": ["./src"],
+          "alias": {
+            "static": "./static",
+            "components": "./components",
+            "constants": "./constants",
+            "utils": "./utils",
+            "ui": "./components/UI",
+          }
+        }],
         ["import", {"libraryName": "antd","style": "less"}],
         ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
         ["inline-react-svg" ],

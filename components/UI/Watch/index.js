@@ -2,9 +2,10 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Tooltip from 'antd/lib/tooltip';
-import 'antd/lib/tooltip/style/index.css';
-import WatchIcon from '../../../static/watch.svg';
+import {
+  Tooltip,
+} from 'antd';
+import WatchIcon from 'static/watch.svg';
 import StyledWatch from './styledWatch';
 
 const Watch = ({

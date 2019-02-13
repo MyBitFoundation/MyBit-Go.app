@@ -1,43 +1,53 @@
-import RightArrow from '../../../static/onboarding/arrow-right.png';
-import Globe from '../../../static/onboarding/globe.png';
-import StyledMainTitle from '../styles/styledMainTitle';
-import StyledOnboardingImage from '../styles/styledOnboardingImage';
-import StyledOnboardingParagraph from '../styles/styledOnboardingParagraph';
-import StyledOnboardingButton from '../styles/styledOnboardingButton';
-import StyledOnboardingArrow from '../styles/styledOnboardingArrow';
-import StyledOnboardingColoredSpan from '../styles/styledOnboardingColoredSpan';
-import StyledOnboardingList from '../styles/styledOnboardingList';
+import styled from 'styled-components';
+import Globe from 'static/onboarding/globe.png';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideList,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
 
-const NextGeneration = ({
-  next,
-  previous,
-}) => (
-  <React.Fragment>
-    <StyledOnboardingImage
+const StyledImage = styled.img`
+  position: absolute;
+  top: 52px;
+  right: 80px;
+  width: 110px;
+  display: none !important;
+
+  ${({theme}) => theme.tablet`
+    display: block !important;
+  `}
+}`
+
+const NextGeneration = () => (
+  <StyledCarouselSlide>
+    <StyledImage
       src={Globe}
       width="164"
       alt="MyBit Onboarding Slide 2"
       isGlobe
     />
-    <StyledMainTitle
+    <StyledCarouselSlideMainTitle
       isLong
+      isSmallMobile
     >
       The{" "}
-      <StyledOnboardingColoredSpan
+      <StyledCarouselSlideColoredSpan
         isBlue
       >
         next generation
-      </StyledOnboardingColoredSpan>{" "}
+      </StyledCarouselSlideColoredSpan>{" "}
       <br />
       investment portal
-    </StyledMainTitle>
-    <StyledOnboardingParagraph
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideParagraph
       isTitle
       isBig
     >
       What can you use MyBit Go for?
-    </StyledOnboardingParagraph>
-    <StyledOnboardingList>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideList>
       <li>
         Invest in a variety of assets without a broker or intermediary
       </li>
@@ -59,25 +69,8 @@ const NextGeneration = ({
         Be protected from failure. If MyBit Go ceases to exist, your
         investments will still be safe
       </li>
-    </StyledOnboardingList>
-    <StyledOnboardingButton
-      type="primary"
-      onClick={next}
-      isNext
-    >
-      What it isn't{" "}
-      <StyledOnboardingArrow
-        src={RightArrow}
-        alt="Next Button Arrow"
-      />
-    </StyledOnboardingButton>
-    <StyledOnboardingButton
-      onClick={previous}
-      isBack
-    >
-      Back
-    </StyledOnboardingButton>
-  </React.Fragment>
+    </StyledCarouselSlideList>
+  </StyledCarouselSlide>
 )
 
 export default NextGeneration;

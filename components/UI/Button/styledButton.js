@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import 'antd/lib/button/style/css';
 
 const MyBitButtonStyle = styled.div`
   .ant-btn{

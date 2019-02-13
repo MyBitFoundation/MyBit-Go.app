@@ -1,7 +1,8 @@
 import React from 'react';
-import Slider from 'antd/lib/slider';
-import 'antd/lib/slider/style/index.css';
-import NumericInput from '../NumericInput';
+import {
+  Slider,
+} from 'antd';
+import NumericInput from 'ui/NumericInput';
 import StyledAssetCalculatorTitle from './styledAssetCalculatorTitle';
 import StyledAssetCalculatorEqualsSeparator from './styledAssetCalculatorEqualsSeparator';
 import StyledAssetCalculatorMinLabel from './styledAssetCalculatorMinLabel';

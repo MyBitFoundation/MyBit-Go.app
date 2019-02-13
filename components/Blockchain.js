@@ -6,8 +6,8 @@ import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { withRouter } from 'next/router';
-import { withAirtableContext } from './Airtable';
-import { withNotificationsContext } from './Notifications';
+import { withAirtableContext } from 'components/Airtable';
+import { withNotificationsContext } from 'components/Notifications';
 import * as Brain from '../apis/brain';
 import getConfig from 'next/config';
 
@@ -93,7 +93,7 @@ class BlockchainProvider extends React.Component {
 
   componentDidMount = async () => {
     try {
-        window.addEventListener('hashchange', () => console.log(window.location));
+
       await this.loadPrices()
       const { publicRuntimeConfig } = getConfig();
 
@@ -159,7 +159,10 @@ class BlockchainProvider extends React.Component {
       isUserContributing,
     } = this.state;
 
-    console.log(nextState.userIsLoggedIn)
+    const {
+      router,
+    } = this.props;
+
     if(nextProps.user.ethBalance !== user.ethBalance){
       console.log("\n\nupdated balance\n\n")
       return true;
@@ -187,17 +190,26 @@ class BlockchainProvider extends React.Component {
       console.log("\n\nupdated prices\n\n");
       return true;
     } if(withdrawingAssetIds !== nextState.withdrawingAssetIds){
+      console.log("\n\nupdated withdrawingAssetIds\n\n");
       return true;
     } if(withdrawingCollateral !== nextState.withdrawingCollateral){
+      console.log("\n\nupdated withdrawingCollateral\n\n");
       return true;
     } if(withdrawingAssetManager !== nextState.withdrawingAssetManager){
+      console.log("\n\nupdated withdrawingAssetManager\n\n");
       return true;
     } if(isUserContributing !== nextState.isUserContributing){
+      console.log("\n\nupdated isUserContributing\n\n");
+      return true;
+    } if(router.pathname !== nextProps.router.pathname){
+      console.log("\n\nupdated pathname\n\n");
+      return true;
+    } if(nextProps.children !== this.props.children){
+      console.log("\n\nupdated children\n\n");
       return true;
     }
 
-    console.log("BLOCKCHAIN NOT UPDATING")
-    return true;
+    return false;
   }
 
   componentWillUnmount = () => {
@@ -771,11 +783,10 @@ class BlockchainProvider extends React.Component {
       return;
     }
 
-    console.log("FETCHING ASSETS")
     await Brain.fetchAssets(user.userName, prices.ether.price, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
-        console.log("updating state 4")
+        console.log("updating state with new assets")
         this.setState({
           assets: updatedAssets,
           loading: {
@@ -786,6 +797,8 @@ class BlockchainProvider extends React.Component {
         });
       })
       .catch((err) => {
+        console.log("ERRRRRR")
+        console.log(err)
         debug(err);
         if (this.state.userIsLoggedIn) {
           setTimeout(this.fetchAssets, 5000);

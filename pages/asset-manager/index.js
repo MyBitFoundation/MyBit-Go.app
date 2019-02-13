@@ -3,7 +3,7 @@ import {
   Slides,
 } from './slides';
 
-import CarouselWithNavigation from '../../components/UI/CarouselWithNavigation';
+import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: "KYC" },
@@ -19,7 +19,8 @@ const AssetManager = () => (
       navigationTooltips={SliderNavigationTooltips}
       slides={Slides}
       onFinish={() => Router.push("/list-asset")}
-      minWidthStyle="426px"
+      maxWidthDesktop="550px"
+      nextButtonHasArrow
     />
   </React.Fragment>
 );

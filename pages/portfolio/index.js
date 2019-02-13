@@ -1,19 +1,19 @@
 import React from 'react';
-import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
-import Loading from '../../components/Loading';
-import { withBlockchainContext } from '../../components/Blockchain'
-import PieChart from '../../static/chart-pie.svg';
-import LineChart from '../../static/chart-line.svg';
-import Sliders from '../../static/sliders.svg';
+import {
+  Button,
+} from 'antd';
+import Loading from 'components/Loading';
+import { withBlockchainContext } from 'components/Blockchain'
+import ValueDisplay from 'ui/ValueDisplay';
+import Asset from 'ui/Asset/';
+import PieChart from 'static/chart-pie.svg';
+import LineChart from 'static/chart-line.svg';
+import Sliders from 'static/sliders.svg';
 import {
   formatMonetaryValue,
   fromWeiToEth,
-} from '../../utils/helpers';
-import ValueDisplay from '../../components/UI/ValueDisplay';
-import Asset from '../../components/UI/Asset/';
+} from 'utils/helpers';
 import StyledPortfolioPageValueDisplays from './styledPortfolioPageValueDisplays';
 import StyledPortfolioPageNavButtons from './styledPortfolioPageNavButtons';
 import StyledPortfolioPageExplore from './styledPortfolioPageExplore';
@@ -96,11 +96,15 @@ const getManagerDetailsFromAsset = (asset, currentEthPrice) => {
 
   const totalProfitAssetManager = assetIncome * (managerPercentage / 100);
 
+  console.log(managerTotalIncome.toString())
+  console.log(managerTotalWithdrawn)
+  console.log(asset.assetId)
+
   return {
     ...asset,
     profit,
     totalProfitAssetManager,
-    toWithdraw: (fromWeiToEth(managerTotalIncome.toString()) * currentEthPrice) - (fromWeiToEth(managerTotalWithdrawn.toString()) * currentEthPrice) ,
+    toWithdraw: (fromWeiToEth(managerTotalIncome.toString()) * currentEthPrice) - (0 * currentEthPrice) ,
   };
 }
 

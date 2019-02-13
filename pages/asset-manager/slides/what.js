@@ -1,48 +1,49 @@
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
-import StyledAssetManagerSlideTitle from '../styles/styledAssetManagerSlideTitle';
-import StyledAssetManagerSlideIntroNote from '../styles/styledAssetManagerSlideIntroNote';
-import StyledAssetManagerSlideList from '../styles/styledAssetManagerSlideList';
-import StyledAssetManagerSlideListItem from '../styles/styledAssetManagerSlideListItem';
-import StyledAssetManagerSlideButtons from '../styles/styledAssetManagerSlideButtons';
-import StyledAssetManagerSlideButton from '../styles/styledAssetManagerSlideButton';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideList,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
 
 const What = ({
   next,
 }) => (
-  <React.Fragment>
-    <StyledAssetManagerSlideTitle>
-      What is an Asset Manager?
-    </StyledAssetManagerSlideTitle>
-    <StyledAssetManagerSlideIntroNote>
+  <StyledCarouselSlide>
+    <StyledCarouselSlideMainTitle
+      isLong
+      isSmallMobile
+    >
+      <StyledCarouselSlideColoredSpan
+        isBlue
+      >
+        What{' '}
+      </StyledCarouselSlideColoredSpan>
+      is an Asset Manager?
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideParagraph
+      isIntro
+      isFullWidth
+    >
       Asset Managers are critical to the MyBit Go platform.
       They supervise the assets and are responsible for:
-    </StyledAssetManagerSlideIntroNote>
+    </StyledCarouselSlideParagraph>
 
-    <StyledAssetManagerSlideList>
-      <StyledAssetManagerSlideListItem>
+    <StyledCarouselSlideList>
+      <li>
         Coordinating any local approval required and/or navigating regulations
         (e.g. getting approval from a store owner to place a Crypto ATM in their store).
-      </StyledAssetManagerSlideListItem>
-      <StyledAssetManagerSlideListItem>
+      </li>
+      <li>
         Listing assets: only Asset Managers have the power to initiate new funding campaigns for assets.
-      </StyledAssetManagerSlideListItem>
-      <StyledAssetManagerSlideListItem>
+      </li>
+      <li>
         Oversight and maintenance: the Asset Manager is in charge of overseeing the asset
         and ensuring it functions properly. This may include security, repairs, marketing,
         or replenishing funds in the case of a Crypto ATM.
-      </StyledAssetManagerSlideListItem>
-    </StyledAssetManagerSlideList>
-    <StyledAssetManagerSlideButtons >
-      <StyledAssetManagerSlideButton
-        type="primary"
-        onClick={next}
-        isCentered
-      >
-        Next
-      </StyledAssetManagerSlideButton>
-    </StyledAssetManagerSlideButtons>
-  </React.Fragment>
+      </li>
+    </StyledCarouselSlideList>
+  </StyledCarouselSlide>
 )
 
 export default What;

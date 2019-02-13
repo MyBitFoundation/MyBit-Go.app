@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
 
 const StyledCarouselWithNavigationNavButton = styled(Button)`
   width: 12px;

@@ -1,47 +1,52 @@
-import RightArrow from '../../../static/onboarding/arrow-right.png';
-import Key from '../../../static/onboarding/key.png';
-import StyledMainTitle from '../styles/styledMainTitle';
-import StyledOnboardingImage from '../styles/styledOnboardingImage';
-import StyledOnboardingParagraph from '../styles/styledOnboardingParagraph';
-import StyledOnboardingButton from '../styles/styledOnboardingButton';
-import StyledOnboardingArrow from '../styles/styledOnboardingArrow';
-import StyledOnboardingColoredSpan from '../styles/styledOnboardingColoredSpan';
-import StyledOnboardingList from '../styles/styledOnboardingList';
+import styled from 'styled-components';
+import Key from 'static/onboarding/key.png';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideList,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
 
-const Security = ({
-  next,
-  previous,
-  goToSlide,
-}) => (
-  <React.Fragment>
-    <StyledOnboardingImage
+const StyledImage = styled.img`
+  position: absolute;
+  top: 57px;
+  right: 240px;
+  width: 50px;
+  display: none !important;
+
+  ${({theme}) => theme.tablet`
+    display: block !important;
+  `}
+}`
+
+const Security = () => (
+  <StyledCarouselSlide>
+    <StyledImage
       src={Key}
       width="69"
       alt="Key"
       isKey
     />
-    <StyledMainTitle>
-      <StyledOnboardingColoredSpan
+    <StyledCarouselSlideMainTitle>
+      <StyledCarouselSlideColoredSpan
         isBlue
       >
         Key{' '}
-      </StyledOnboardingColoredSpan>
+      </StyledCarouselSlideColoredSpan>
       security
-    </StyledMainTitle>
-    <StyledOnboardingParagraph
-      isNoImagesFull
-    >
-      All of your investments are linked to your metamask <br />
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideParagraph>
+      All of your investments are linked to your metamask
       account. We have no control over it or ability to restore it.{" "}
-      <br />
       If you lose your private key or password, it is gone forever.
-    </StyledOnboardingParagraph>
-    <StyledOnboardingParagraph
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph
       isTitle
     >
       Follow these steps to avoid loss!
-    </StyledOnboardingParagraph>
-    <StyledOnboardingList
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideList
       isSecurity
     >
       <li>
@@ -70,25 +75,8 @@ const Security = ({
         </a>
         .
       </li>
-    </StyledOnboardingList>
-    <StyledOnboardingButton
-      type="primary"
-      onClick={next}
-      isNext
-    >
-      Next{" "}
-      <StyledOnboardingArrow
-        src={RightArrow}
-        alt="Next Button Arrow"
-      />
-    </StyledOnboardingButton>
-    <StyledOnboardingButton
-      onClick={previous}
-      isBack
-    >
-      Back
-    </StyledOnboardingButton>
-  </React.Fragment>
+    </StyledCarouselSlideList>
+  </StyledCarouselSlide>
 );
 
 export default Security;

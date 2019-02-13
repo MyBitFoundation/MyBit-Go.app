@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { formatMonetaryValue } from '../../utils/helpers';
-import Spin from '../../static/spin.svg';
+import Spin from 'static/spin.svg';
 import StyledExchangeRate from './styledExchangeRate';
 import StyledLabel from './styledLabel';
 import StyledSpin from './styledSpin';
 import StyledPercentage from './styledPercentage';
+import { formatMonetaryValue } from 'utils/helpers';
 
 const ExchangeRate = ({ price, priceChangePercentage }) => {
   const isRed = priceChangePercentage < 0;
@@ -18,7 +18,7 @@ const ExchangeRate = ({ price, priceChangePercentage }) => {
           <StyledPercentage
             isRed={isRed}
           >
-            {' '}({priceChangePercentage}%)
+            {' '}({priceChangePercentage.toFixed(2)}%)
           </StyledPercentage>
         </b>
         ) : (

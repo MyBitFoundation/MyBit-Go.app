@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
 const StyledCategoryFilterDesktop = styled.div`
-  @media (max-width: ${props => props.breakpoints.categoriesFilterTablet}){
-    display: none;
-  }
+  display: none;
+
+  ${({theme}) => theme.categoriesFilterTablet`
+    display: block;
+  `}
 }`
 
 export default StyledCategoryFilterDesktop;

@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import Row from 'antd/lib/row';
+import {
+  Row,
+} from 'antd';
 
 const StyledAssetDetails = styled(Row)`
   margin-bottom: 50px;

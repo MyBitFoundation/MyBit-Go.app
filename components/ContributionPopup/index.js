@@ -3,12 +3,11 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import PropTypes from 'prop-types';
-import AlertMessage from '../UI/AlertMessage';
-import Checkbox from 'antd/lib/checkbox';
-import 'antd/lib/checkbox/style/index.css';
-import Modal from 'antd/lib/modal';
-import 'antd/lib/modal/style/index.css';
-import metamaskErrors from '../../utils/metamaskErrors';
+import AlertMessage from 'ui/AlertMessage';
+import {
+  Checkbox,
+  Modal,
+} from 'antd';
 import StyledContributionPopup from './styledContributionPopup';
 import StyledContributionPopupDescription from './styledContributionPopupDescription';
 import StyledContributionPopupAmount from './styledContributionPopupAmount';
@@ -16,10 +15,10 @@ import StyledContributionPopupToS from './styledContributionPopupToS';
 import StyledContributionPopupTosText from './styledContributionPopupTosText';
 import StyledContributionPopupAlertWrapper from './styledContributionPopupAlertWrapper';
 import StyledContributionPopupEthAmount from './styledContributionPopupEthAmount';
-
 import {
   CORRECT_NETWORK,
-} from '../../constants';
+} from 'constants';
+import metamaskErrors from 'utils/metamaskErrors';
 
 class ContributionPopup extends React.Component {
   state = {

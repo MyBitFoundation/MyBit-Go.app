@@ -1,30 +1,32 @@
-import Router, { withRouter } from 'next/router'
 import Pagination from 'antd/lib/pagination';
-import Switch from 'antd/lib/switch';
-import Row from 'antd/lib/row';
-import Icon from 'antd/lib/icon';
-import { withAirtableContext } from '../../components/Airtable'
-import { withBlockchainContext } from '../../components/Blockchain'
-import { withNotificationsContext } from '../../components/Notifications'
-import AppWrapper from '../../components/AppWrapper';
+import {
+  Switch,
+  Row,
+  Icon,
+} from 'antd';
+import { withAirtableContext } from 'components/Airtable'
+import { withBlockchainContext } from 'components/Blockchain'
+import { withNotificationsContext } from 'components/Notifications'
+import StyledNoResults from 'components/styledNoResults';
+import CategoryFilter from 'components/CategoryFilter';
+import Loading from 'components/Loading';
+import Asset from 'ui/Asset/';
+
 import StyledExplore from './styledExplore';
 import StyledFilters from './styledFilters';
 import StyledFiltersSwitch from './styledFiltersSwitch';
 import StyledPagination from './styledPagination';
-import StyledNoResults from '../../components/styledNoResults';
-import CategoryFilter from '../../components/CategoryFilter';
-import Asset from '../../components/UI/Asset/';
-import Loading from '../../components/Loading';
+
 import {
   FundingStages,
   Categories,
   BREAKPOINTS,
   SORT_BY_ASSETS,
-} from '../../constants';
+} from 'constants';
 
 import {
   getPrettyCategoryName,
-} from '../../utils/helpers';
+} from 'utils/helpers';
 
 const assetsPerPage = 12;
 
@@ -65,10 +67,6 @@ class Explore extends React.Component {
       fundingActive: true,
       ...this.buildState(),
     };
-  }
-
-  componentDidMount = () => {
-    Router.prefetch('/asset');
   }
 
   buildState = () => {

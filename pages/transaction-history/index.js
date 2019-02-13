@@ -2,11 +2,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Table from 'antd/lib/table';
-import 'antd/lib/table/style/index.css';
-import Loading from '../../components/Loading';
-import GetColumns from '../../constants/transactions';
-import { withBlockchainContext } from '../../components/Blockchain'
+import {
+  Table,
+} from 'antd';
+import Loading from 'components/Loading';
+import { withBlockchainContext } from 'components/Blockchain'
+import GetColumns from 'constants/transactions';
 import StyledTransactionsPage from './styledTransactionsPage';
 import StyledTransactionsPageStatusIcon from './styledTransactionsPageStatusIcon';
 

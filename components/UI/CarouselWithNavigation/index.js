@@ -1,12 +1,18 @@
 import Router from 'next/router';
 import Link from 'next/link';
 import Tooltip from 'antd/lib/tooltip';
-import 'antd/lib/tooltip/style/index.css';
+import Icon from 'antd/lib/icon';
 import StyledCarouselWithNavigationWrapper from './styledCarouselWithNavigationWrapper';
 import StyledCarouselWithNavigationSlide from './styledCarouselWithNavigationSlide';
 import StyledCarouselWithNavigationNavButton from './styledCarouselWithNavigationNavButton';
 import StyledCarouselWithNavigationCloseButton from './styledCarouselWithNavigationCloseButton';
+import StyledCarouselWithNavigationNav from './styledCarouselWithNavigationNav';
+import StyledCarouselWithNavigationButtons from './styledCarouselWithNavigationButtons';
+import StyledCarouselWithNavigationButton from './styledCarouselWithNavigationButton';
+import StyledCarouselWithNavigationArrow from './styledCarouselWithNavigationArrow';
 import StyledCarouselWithNavigation from './styledCarouselWithNavigation';
+
+import RightArrow from '../../static/onboarding/arrow-right.png';
 
 class CarouselWithNavigation extends React.Component {
   constructor(props) {
@@ -40,49 +46,71 @@ class CarouselWithNavigation extends React.Component {
       slides,
       navigationTooltips,
       onFinish,
-      minWidthStyle,
+      maxWidthDesktop,
+      desktopAt,
+      nextButtonHasArrow,
     } = this.props;
 
+    const {
+      hasBackButton,
+      hasNextButton,
+      nextButtonText,
+      hasOneButton,
+      nextButtonDisabled,
+      isCivicButton,
+      nextButtonHandler,
+    } = slides[currentSlide].buttons;
+
+    const hasTwoButtons = hasNextButton && hasBackButton;
+
     return (
-      <React.Fragment>
+      <StyledCarouselWithNavigation
+        desktopAt={desktopAt}
+        maxWidthDesktop={maxWidthDesktop}
+      >
+        <StyledCarouselWithNavigationCloseButton>
+          <Link
+            href="/explore"
+          >
+            +
+          </Link>
+        </StyledCarouselWithNavigationCloseButton>
         <StyledCarouselWithNavigationWrapper
-          minWidthStyle={minWidthStyle}
+          desktopAt={desktopAt}
+          maxWidthDesktop={maxWidthDesktop}
           slideNumber={currentSlide}
           ref={(node) => { this.carousel = node; }}
           effect="slide"
           dots={false}
           infinite={false}
-          beforeChange={(from, to) => {
-            return false;
-          }}
-          afterChange={(current) => {
+          swipe={false}
+          afterChange={(to) => {
             this.setState({
-              currentSlide: current,
+              currentSlide: to,
             });
           }}
         >
-        {slides.map((Component, index) => (
-          <StyledCarouselWithNavigationSlide
-            key={index}
-            minWidthStyle={minWidthStyle}
-          >
-            <StyledCarouselWithNavigationCloseButton>
-              <Link
-                href="/explore"
-              >
-                +
-              </Link>
-            </StyledCarouselWithNavigationCloseButton>
-            <Component
-              next={this.next}
-              previous={this.previous}
-              goToSlide={this.goToSlide}
-              onFinish={onFinish}
-            />
-          </StyledCarouselWithNavigationSlide>
-        ))}
+        {slides.map(({Component, toRender}, index) => {
+          return (
+            <StyledCarouselWithNavigationSlide
+              key={index}
+              maxWidthDesktop={maxWidthDesktop}
+              desktopAt={desktopAt}
+            >
+              {Component && (
+                <Component
+                  goToSlide={this.goToSlide}
+                  onFinish={onFinish}
+                />
+              )}
+              {toRender}
+            </StyledCarouselWithNavigationSlide>
+          )}
+        )}
       </StyledCarouselWithNavigationWrapper>
-      <StyledCarouselWithNavigation>
+      <StyledCarouselWithNavigationNav
+        hideAt={desktopAt}
+      >
         {navigationTooltips.map((slideTooltip) => {
           return (
             <Tooltip
@@ -96,8 +124,38 @@ class CarouselWithNavigation extends React.Component {
             </Tooltip>
           );
         })}
-      </StyledCarouselWithNavigation>
-    </React.Fragment>
+      </StyledCarouselWithNavigationNav>
+      <StyledCarouselWithNavigationButtons
+        desktopAt={desktopAt}
+        hasOneButton={!hasTwoButtons}
+        hasTwoButtons={hasTwoButtons}
+      >
+        {hasBackButton && (
+        <StyledCarouselWithNavigationButton
+          key={`${nextButtonText} ${currentSlide} 'back'`}
+          onClick={this.previous}
+          desktopAt={desktopAt}
+          isBack
+        >
+          Back
+        </StyledCarouselWithNavigationButton>
+        )}
+        {hasNextButton && (
+          <StyledCarouselWithNavigationButton
+            key={`${nextButtonText} ${currentSlide} 'next'`}
+            desktopAt={desktopAt}
+            type="primary"
+            onClick={nextButtonHandler ? nextButtonHandler : currentSlide === slides.length - 1 ? onFinish : this.next}
+            disabled={nextButtonDisabled}
+            isCivicButton={isCivicButton}
+            isNext
+          >
+            {nextButtonText}
+            <Icon type="right" />
+          </StyledCarouselWithNavigationButton>
+        )}
+      </StyledCarouselWithNavigationButtons>
+    </StyledCarouselWithNavigation>
   )}
 }
 

@@ -1,17 +1,14 @@
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
-import AssetDetails from '../../components/AssetDetails';
-import { withBlockchainContext } from '../../components/Blockchain'
+import AssetDetails from 'components/AssetDetails';
+import { withBlockchainContext } from 'components/Blockchain'
 
 //import NotFoundPage from './NotFoundPage';
-import Loading from '../../components/Loading';
+import Loading from 'components/Loading';
 import StyledButton from './styledButton';
 
 class AssetPage extends React.Component {
-componentDidMount = () => {
-  Router.prefetch('/explore');
-}
 
 render(){
   const {

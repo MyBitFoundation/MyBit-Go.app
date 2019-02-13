@@ -1,26 +1,36 @@
-import RightArrow from '../../../static/onboarding/arrow-right.png';
-import MyBitDesk from '../../../static/onboarding/desk.png';
-import StyledMainTitle from '../styles/styledMainTitle';
-import StyledOnboardingImage from '../styles/styledOnboardingImage';
-import StyledOnboardingParagraph from '../styles/styledOnboardingParagraph';
-import StyledOnboardingButton from '../styles/styledOnboardingButton';
-import StyledOnboardingArrow from '../styles/styledOnboardingArrow';
+import styled from 'styled-components';
+import MyBitDesk from 'static/onboarding/desk.png';
 import StyledOnboardingColoredSpan from '../styles/styledOnboardingColoredSpan';
-import StyledOnboardingList from '../styles/styledOnboardingList';
-import StyledOnboardingButtonsWrapper from '../styles/styledOnboardingButtonsWrapper';
 
-const InvestmentFund = ({
-  next,
-  previous,
-  goToSlide,
-}) => (
-  <React.Fragment>
-    <StyledOnboardingImage
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideList,
+} from 'components/CarouselSlide/';
+
+const StyledImage = styled.img`
+  position: absolute;
+  top: 45px;
+  right: 102px;
+  width: 100px;
+  display: none !important;
+
+  ${({theme}) => theme.tablet`
+    display: block !important;
+  `}
+}`
+
+const InvestmentFund = () => (
+  <StyledCarouselSlide>
+    <StyledImage
       src={MyBitDesk}
       width="190"
       alt="MyBit Onboarding Slide 3"
     />
-    <StyledMainTitle>
+    <StyledCarouselSlideMainTitle
+      isLong
+      isSmallMobile
+    >
       MyBit Go is&nbsp;
       <StyledOnboardingColoredSpan
         isRed
@@ -30,8 +40,8 @@ const InvestmentFund = ({
       &nbsp;an
       <br />
       investment fund
-    </StyledMainTitle>
-    <StyledOnboardingList>
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideList>
       <li>
         We do not invest on your behalf
       </li>
@@ -50,34 +60,8 @@ const InvestmentFund = ({
       <li>
         We do not guarantee returns
       </li>
-    </StyledOnboardingList>
-    <StyledOnboardingButtonsWrapper>
-      <StyledOnboardingButton
-        onClick={() => goToSlide(7)}
-        isSkip
-      >
-        Skip… I know Blockchain
-      </StyledOnboardingButton>
-      <StyledOnboardingButton
-        type="primary"
-        onClick={next}
-        isNext
-        isStatic
-      >
-        What is blockchain?{" "}
-        <StyledOnboardingArrow
-          src={RightArrow}
-          alt="Next Button Arrow"
-        />
-      </StyledOnboardingButton>
-    </StyledOnboardingButtonsWrapper>
-    <StyledOnboardingButton
-      onClick={previous}
-      isBack
-    >
-      Back
-    </StyledOnboardingButton>
-  </React.Fragment>
+    </StyledCarouselSlideList>
+  </StyledCarouselSlide>
 );
 
 export default InvestmentFund;

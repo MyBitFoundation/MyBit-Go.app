@@ -1,67 +1,49 @@
-import RightArrow from '../../../static/onboarding/arrow-right.png';
-import EthereumGraphic from '../../../static/onboarding/ethereum.png';
-import StyledMainTitle from '../styles/styledMainTitle';
-import StyledOnboardingImage from '../styles/styledOnboardingImage';
-import StyledOnboardingParagraph from '../styles/styledOnboardingParagraph';
-import StyledOnboardingButton from '../styles/styledOnboardingButton';
-import StyledOnboardingArrow from '../styles/styledOnboardingArrow';
-import StyledOnboardingColoredSpan from '../styles/styledOnboardingColoredSpan';
-import StyledOnboardingList from '../styles/styledOnboardingList';
-import StyledOnboardingButtonsWrapper from '../styles/styledOnboardingButtonsWrapper';
+import styled from 'styled-components';
+import EthereumGraphic from 'static/onboarding/ethereum.png';
 
-const Ethereum = ({
-  next,
-  previous,
-  goToSlide,
-}) => (
-  <React.Fragment>
-    <StyledMainTitle>
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideList,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
+
+const StyledImage = styled.img`
+  margin: 0px auto;
+  position: relative;
+  margin-top: 30px;
+  display: none !important;
+
+  ${({theme}) => theme.tablet`
+    display: block !important;
+  `}
+`
+
+const Ethereum = () => (
+  <StyledCarouselSlide>
+    <StyledCarouselSlideMainTitle>
       Ethereum
-    </StyledMainTitle>
-    <StyledOnboardingParagraph
-      isNoImagesSmall
-      hasMarginTop
-    >
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideParagraph>
       Ethereum is a platform based on blockchain technology. Unlike
       Bitcoin, users can builld applications on top of it.
-    </StyledOnboardingParagraph>
-    <StyledOnboardingParagraph
-      isNoImagesSmall
-    >
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       For comparison, you can think of it like this: if Bitcoin is a
       next generation bank, then Ethereum is the software that lets
       anyone build a next generation bank.
-    </StyledOnboardingParagraph>
-    <StyledOnboardingParagraph
-      isNoImagesSmall
-    >
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       The possibilities of what can be built on Ethereum extend to
       nearly every business industry.
-    </StyledOnboardingParagraph>
-    <StyledOnboardingImage
+    </StyledCarouselSlideParagraph>
+    <StyledImage
       src={EthereumGraphic}
       width="230"
       alt="MyBit Globe"
-      isStatic
     />
-    <StyledOnboardingButton
-      type="primary"
-      onClick={next}
-      isNext
-    >
-      Smart contracts{" "}
-      <StyledOnboardingArrow
-        src={RightArrow}
-        alt="Next Button Arrow"
-      />
-    </StyledOnboardingButton>
-    <StyledOnboardingButton
-      onClick={previous}
-      isBack
-    >
-      Back
-    </StyledOnboardingButton>
-  </React.Fragment>
+  </StyledCarouselSlide>
 );
 
 export default Ethereum;

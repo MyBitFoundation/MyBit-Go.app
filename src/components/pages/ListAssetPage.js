@@ -214,7 +214,7 @@ class ListAssetPage extends React.Component {
         <Carousel
           ref={node => (this.carousel = node)}
           infinite={false}
-          effect="slide"
+          effect="fade"
           dots={false}
           swipe={false}
           accessibility={false}

@@ -1,7 +1,7 @@
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
-
 import styled from 'styled-components';
+import {
+  Button,
+} from 'antd';
 
 const StyledAssetDefaultContributeButton = styled(Button)`
   margin-top: 15px;

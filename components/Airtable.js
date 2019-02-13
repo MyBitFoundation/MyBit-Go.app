@@ -5,7 +5,7 @@ import {
   PULL_ASSETS_TIME,
   PULL_CATEGORIES_TIME,
   verifyDataAirtable,
-} from '../constants';
+} from 'constants';
 
 const { Provider, Consumer } = React.createContext({});
 

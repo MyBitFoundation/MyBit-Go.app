@@ -56,6 +56,13 @@ const GlobalStyle = createGlobalStyle`
 
   }
 
+  #outer-container{
+    overflow: visible !important;
+  }
+
+  .bm-burger-button{
+    display: none;
+  }
 
   .MetaMaskErrors{
     background-color: orange;

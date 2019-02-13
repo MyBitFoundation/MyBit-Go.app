@@ -1,15 +1,22 @@
 import React from 'react';
+import { hot } from 'react-hot-loader/root'
 import App, { Container } from 'next/app';
-import { withRouter } from 'next/router'
-import AirtableProvider from '../components/Airtable';
-import BlockchainProvider from '../components/Blockchain';
-import NotificationsProvider from '../components/Notifications';
-import MetamaskChecker from '../components/MetamaskChecker';
-import BancorContainer from '../components/UI/BancorContainer';
-import Head from '../components/Head';
-import GlobalStyle from '../components/globalStyle';
-import AppWrapper from '../components/AppWrapper';
-import './empty.css';
+import Router, { withRouter } from 'next/router'
+import AirtableProvider from 'components/Airtable';
+import BlockchainProvider from 'components/Blockchain';
+import NotificationsProvider from 'components/Notifications';
+import MetamaskChecker from 'components/MetamaskChecker';
+import Head from 'components/Head';
+import GlobalStyle from 'components/globalStyle';
+import AppWrapper from 'components/AppWrapper';
+import Theme from 'components/Theme'
+import MobileMenu from 'components/MobileMenu'
+import BancorContainer from 'ui/BancorContainer';
+
+import {
+  BREAKPOINTS,
+  navbarOptions,
+} from 'constants';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -20,6 +27,10 @@ class MyApp extends App {
     }
 
     return { pageProps }
+  }
+
+  state = {
+    mobileMenuOpen: false,
   }
 
   isFirstVisit = () => {
@@ -60,27 +71,66 @@ class MyApp extends App {
     }
   }
 
+  prefetchPages = () => {
+    Router.prefetch('/asset')
+    Router.prefetch('/transaction-history')
+    Router.prefetch('/explore')
+    Router.prefetch('/portfolio')
+    Router.prefetch('/help')
+    Router.prefetch('/watch-list')
+  }
+
   componentDidMount = () => {
+    this.prefetchPages();
     this.firstVisitMiddleware();
   }
 
-  getPopups = () => {
-
+  handleMobileMenuClicked = (state) => {
+    this.setState({
+      mobileMenuOpen: state,
+    })
   }
 
   render () {
-    const { Component, pageProps, router } = this.props
+    const { Component, pageProps, router } = this.props;
+    const {
+      mobileMenuOpen,
+    } = this.state;
+
+    const isFullScreenPage = ['/onboarding', '/asset-manager', '/list-asset'].includes(router.pathname);
+    let breakPointForFullScreen;
+    if(router.pathname === '/onboarding') {
+      breakPointForFullScreen = BREAKPOINTS.carouselWithNavigationMobile;
+    }
+
     return (
       <Container>
         <GlobalStyle />
         <Head/>
-        <WithProviders>
-        <BancorContainer>
-          <AppWrapper>
-            <Component {...pageProps} currentPath={router.route} />
-          </AppWrapper>
-          </BancorContainer>
-        </WithProviders>
+        <Theme>
+          <WithProviders>
+            <MobileMenu
+              isOpen={mobileMenuOpen}
+              items={navbarOptions}
+              currentPath={router.route}
+              handleMobileMenuState={this.handleMobileMenuClicked}
+            >
+              <BancorContainer>
+                <AppWrapper
+                  isFullScreenPage={isFullScreenPage}
+                  hideAtHeader={breakPointForFullScreen}
+                  handleMobileMenuState={this.handleMobileMenuClicked}
+                >
+                  <Component
+                    {...pageProps}
+                    currentPath={router.route}
+                    carouselWithNavigationMobile={breakPointForFullScreen}
+                  />
+                </AppWrapper>
+              </BancorContainer>
+            </MobileMenu>
+          </WithProviders>
+        </Theme>
       </Container>
     )
   }
@@ -98,4 +148,4 @@ const WithProviders = ({ children }) => (
   </NotificationsProvider>
 );
 
-export default withRouter(MyApp);
+export default hot(withRouter(MyApp));

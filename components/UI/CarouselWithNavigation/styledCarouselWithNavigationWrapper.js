@@ -1,26 +1,47 @@
 import styled, { css } from 'styled-components';
 import Carousel from 'antd/lib/carousel';
-import 'antd/lib/carousel/style/index.css';
 
 const StyledCarouselWithNavigationWrapper = styled(Carousel)`
-  min-height: 600px;
-  width: 100%;
-  max-width: ${props => props.minWidthStyle || 'auto'};
-  margin: 0px auto;
-  overflow: hidden;
-  margin-top: 20px;
-  box-shadow: 1px 5px 15px 2px rgba(0,0,0,0.1);
-  border-radius: 4px;
+  padding: 0px;
+  margin: 0px;
+  box-shadow: none;
+
+  .slick-track{
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: calc(100vh - 113px);
+  }
 
   .slick-slide {
-    padding: 0px 20px;
+    padding: 0px;
+    width: 100vw;
+    min-width: 100vw;
   }
 
-  @media(max-width: 600px){
-    max-height: calc(100vh - 180px);
-    min-height: calc(100vh - 180px);
-    overflow: scroll;
+  .slick-list{
+    transform: none;
+    touch-action: none;
   }
-}`
+
+  @media(min-width: ${props => props.desktopAt || `${props.theme.sizes.tablet}px`}) {
+    margin: 0px auto;
+    margin-top: 20px;
+    box-shadow: 1px 5px 15px 2px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    min-height: 600px;
+
+    .slick-slide {
+      padding: 0px 20px;
+      min-width: inherit;
+    }
+
+    .slick-track{
+      display: inherit;
+      flex-direction: inherit;
+      height: inherit;
+    }
+  }
+`
 
 export default StyledCarouselWithNavigationWrapper;

@@ -3,8 +3,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Input from 'antd/lib/input';
-import 'antd/lib/input/style/index.css';
+import {
+  Input,
+} from 'antd';
 
 class NumericInput extends React.Component {
   constructor(props) {

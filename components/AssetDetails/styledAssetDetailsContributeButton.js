@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
+import {
+  Button,
+} from 'antd';
 
 const StyledAssetDetailsContributeButton = styled(Button)`
   width: 100%;

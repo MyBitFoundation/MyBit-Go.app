@@ -25,15 +25,20 @@ import {
   getCategoryFromAssetTypeHash,
 } from '../utils/helpers'
 
+let fundingHubContract;
+
 export const fetchPriceFromCoinmarketcap = async ticker =>
   new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(`https://api.coinmarketcap.com/v2/ticker/${ticker}/`);
+      const response = await fetch(`https://api.coingecko.com/api/v3/coins/${ticker}?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`);
       const jsonResponse = await response.json();
-      const { price, percent_change_24h } = jsonResponse.data.quotes.USD;
+      const info = jsonResponse["market_data"];
+      const price = Number(info['current_price']['usd']);
+      const priceChangePercentage = Number(info['price_change_percentage_24h']);
+
       resolve({
         price,
-        priceChangePercentage: percent_change_24h,
+        priceChangePercentage,
       });
     } catch (error) {
       reject(error);
@@ -280,10 +285,11 @@ export const fetchRevenueLogsByassetId = async (assetId) =>
 const getNumberOfInvestors = async assetId =>
   new Promise(async (resolve, reject) => {
     try {
-      const fundingHubContract = new window.web3js.eth.Contract(
+      fundingHubContract = fundingHubContract ? fundingHubContract : new window.web3js.eth.Contract(
         FundingHub.ABI,
         FundingHub.ADDRESS,
       );
+
       const assetFundersLog = await fundingHubContract.getPastEvents(
         'LogNewFunder',
         { fromBlock: 0, toBlock: 'latest' },
@@ -555,21 +561,77 @@ export const getManagerIncomeWithdraw = async (managerAddress, assetId) =>
     resolve(withdrawn);
   });
 
+const getAssetLogsStartedAndWentLive = (assetCreationContract, fundingHubContract) => {
+  return Promise.all([
+    assetCreationContract.getPastEvents(
+      'LogAssetFundingStarted',
+      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+    ),
+    fundingHubContract.getPastEvents(
+      'LogAssetPayout',
+      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+    )
+  ])
+}
+
+const getAssetDetails = (assets, apiContract, address) => {
+  return Promise.all([
+    Promise.all(assets.map(asset =>
+      apiContract.methods.assetManager(asset.assetId).call())),
+
+    Promise.all(assets.map(asset =>
+      apiContract.methods.amountToBeRaised(asset.assetId).call())),
+
+    Promise.all(assets.map(asset =>
+      apiContract.methods.amountRaised(asset.assetId).call())),
+
+    Promise.all(assets.map(asset =>
+      apiContract.methods.fundingDeadline(asset.assetId).call())),
+
+    address && Promise.all(assets.map(asset =>
+      apiContract.methods.ownershipUnits(asset.assetId, address).call())),
+
+    Promise.all(assets.map(asset =>
+      apiContract.methods.totalReceived(asset.assetId).call())),
+
+    Promise.all(assets.map(asset =>
+      apiContract.methods.fundingStage(asset.assetId).call())),
+
+    Promise.all(assets.map(asset =>
+      apiContract.methods.managerPercentage(asset.assetId).call())),
+  ]);
+}
+
+const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, asset, realAddress) => {
+  return Promise.all([
+    getNumberOfInvestors(asset.assetId),
+    ownershipUnitsTmp > 0 ? apiContract.methods.getAmountOwed(asset.assetId, realAddress).call() : 0,
+    isAssetManager ? Promise.all([
+          getManagerIncomeEarned(realAddress, asset.assetId),
+          getManagerIncomeWithdraw(realAddress, asset.assetId)
+        ]) : [0, 0],
+    ]);
+}
 
 export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
-      // pull asssets from newest contract
-      let apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
-      let assetCreationContract = new window.web3js.eth.Contract(
+      console.log("Fetching assets")
+      const apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
+      const assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
         AssetCreation.ADDRESS,
       );
 
-      let logAssetFundingStartedEvents = await assetCreationContract.getPastEvents(
-        'LogAssetFundingStarted',
-        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
+      const fundingHubContract = new window.web3js.eth.Contract(
+        FundingHub.ABI,
+        FundingHub.ADDRESS,
       );
+
+      const [
+        logAssetFundingStartedEvents,
+        logAssetsWentLive,
+      ] = await getAssetLogsStartedAndWentLive(assetCreationContract, fundingHubContract);
 
       let assets = logAssetFundingStartedEvents
         .map(({ returnValues }) => returnValues)
@@ -579,100 +641,82 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
           ipfsHash: object._ipfsHash,
         }));
 
-      let fundingHubContract = new window.web3js.eth.Contract(
-        FundingHub.ABI,
-        FundingHub.ADDRESS,
-      );
-
-      let logAssetsWentLive = await fundingHubContract.getPastEvents(
-        'LogAssetPayout',
-        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-      );
-
-      let assetsWentLive = logAssetsWentLive
+      const assetsWentLive = logAssetsWentLive
         .map(object => ({
           assetId: object.returnValues._assetID,
           blockNumber: object.blockNumber,
         }));
 
-      const assetManagers = await Promise.all(assets.map(async asset =>
-        apiContract.methods.assetManager(asset.assetId).call()));
-
-      const amountsToBeRaised = await Promise.all(assets.map(async asset =>
-        apiContract.methods.amountToBeRaised(asset.assetId).call()));
-
-      const amountsRaised = await Promise.all(assets.map(async asset =>
-        apiContract.methods.amountRaised(asset.assetId).call()));
-
-      const fundingDeadlines = await Promise.all(assets.map(async asset =>
-        apiContract.methods.fundingDeadline(asset.assetId).call()));
+      console.log("Assets: ", assets)
+      console.log("Assets went live: ", assetsWentLive)
 
       const realAddress = userName && window.web3js.utils.toChecksumAddress(userName);
 
-      const ownershipUnits = realAddress && await Promise.all(assets.map(async asset =>
-        apiContract.methods.ownershipUnits(asset.assetId, realAddress).call()));
+      console.log("Real Address: ", realAddress)
+      console.log(assetsAirTableById)
+      // if the asset Id is not on airtable it doens't show up in the platform
+      assets =
+        assets
+          .filter(asset => assetsAirTableById[asset.assetId] !== undefined)
+          .map(asset => {
+            return {
+              ...asset,
+              ...assetsAirTableById[asset.assetId],
+              collateralPercentage: Number(assetsAirTableById[asset.assetId].collateralPercentage),
+            }
+          });
 
-      const assetIncomes = await Promise.all(assets.map(async asset =>
-        apiContract.methods.totalReceived(asset.assetId).call()));
+      console.log("Assets filtered by airtable: ", assets);
 
-      const fundingStages = await Promise.all(assets.map(async asset =>
-        apiContract.methods.fundingStage(asset.assetId).call()));
+      const [
+        assetManagers,
+        amountsToBeRaised,
+        amountsRaised,
+        fundingDeadlines,
+        ownershipUnits,
+        assetIncomes,
+        fundingStages,
+        managerPercentages,
+      ] = await getAssetDetails(assets, apiContract, realAddress);
 
-      const managerPercentages = await Promise.all(assets.map(async asset =>
-        apiContract.methods.managerPercentage(asset.assetId).call()));
+      console.log("Got asset details: ", amountsToBeRaised)
 
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
-        let assetIdDetails = assetsAirTableById[asset.assetId];
-
-        // if the asset Id is not on airtable it doens't show up in the platform
-        if (!assetIdDetails) {
-          return undefined;
-        }
-
-        const numberOfInvestors = Number(await getNumberOfInvestors(asset.assetId));
-
         const ownershipUnitsTmp = (realAddress && ownershipUnits[index]) || 0;
-        let owedToInvestor = 0;
-        if(ownershipUnitsTmp > 0){
-          owedToInvestor = await apiContract.methods.getAmountOwed(asset.assetId, realAddress).call();
-        }
+        const isAssetManager = assetManagers[index] === realAddress;
+
+        const [
+          numberOfInvestors,
+          owedToInvestor,
+          managerDetails,
+        ] = await getExtraAssetDetails(ownershipUnitsTmp, isAssetManager, apiContract, asset, realAddress);
+
+        console.log("Got extra asset details: ", numberOfInvestors);
+
+        const [
+          managerTotalIncome,
+          managerTotalWithdrawn,
+        ] = managerDetails;
 
         // determine whether asset has expired
-        let pastDate = false;
         const dueDate = dayjs(Number(fundingDeadlines[index]) * 1000);
-        if (dayjs(new Date()) > dueDate) {
-          pastDate = true;
-        }
-
+        const pastDate = dayjs(new Date()) > dueDate ? true : false;
         const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
         const fundingStageTmp = Number(fundingStages[index]);
         const fundingStage = getFundingStage(fundingStageTmp);
 
-        let blockNumberitWentLive = undefined;
-        let amountRaisedInUSD = 0;
-
-        if(fundingStageTmp === 4){
-          blockNumberitWentLive = assetsWentLive.filter(assetTmp => assetTmp.assetId === asset.assetId)[0].blockNumber;
-        }
+        const blockNumberitWentLive =
+          fundingStageTmp === 4
+            ? assetsWentLive.filter(assetTmp => assetTmp.assetId === asset.assetId)[0].blockNumber
+            : undefined;
 
         // this fixes the issue of price fluctuations
         // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
-        if(fundingStage === FundingStages.FUNDED){
-          amountRaisedInUSD = amountToBeRaisedInUSD;
-        } else {
-          amountRaisedInUSD =
-            Number(window.web3js.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
+        const amountRaisedInUSD =
+          fundingStage === FundingStages.FUNDED
+          ? amountToBeRaisedInUSD
+          : Number(window.web3js.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
               currentEthInUsd;
-        }
-
-        const isAssetManager = assetManagers[index] === realAddress;
-
-        const [managerTotalIncome, managerTotalWithdrawn] = isAssetManager ? await Promise.all([
-          getManagerIncomeEarned(realAddress, asset.assetId),
-          getManagerIncomeWithdraw(realAddress, asset.assetId)
-        ]) : [0, 0];
-
-        console.log(managerTotalIncome)
 
         const searchQuery = `mybit_watchlist_${asset.assetId}`;
         const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
@@ -694,19 +738,9 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
             Number(window.web3js.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
               currentEthInUsd,
           assetManager: assetManagers[index],
-          city: assetIdDetails.city,
-          country: assetIdDetails.country,
-          name: assetIdDetails.name,
-          description: assetIdDetails.description,
-          details: assetIdDetails.details,
-          imageSrc: assetIdDetails.imageSrc,
-          partner: assetIdDetails.partner,
           managerPercentage: Number(managerPercentages[index]),
           watchListed: alreadyFavorite,
-          category: assetIdDetails.category,
           owedToInvestor: owedToInvestor.toString(),
-          collateral: assetIdDetails.collateral,
-          collateralPercentage: Number(assetIdDetails.collateralPercentage),
           funded: fundingStage === FundingStages.FUNDED,
         };
       }));

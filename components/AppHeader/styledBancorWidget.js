@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyleBancorWidget = styled.div`
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
@@ -11,7 +11,13 @@ const StyleBancorWidget = styled.div`
   button{
     width: 140px;
     height: 43px;
+    background-color: ${({theme}) => theme.buttons.primary.blue};
+    color: white;
   }
+
+  ${({theme}) => theme.tablet`
+    display: flex;
+  `}
 }`
 
 export default StyleBancorWidget;

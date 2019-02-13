@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
 import MyBitButtonStyle from './styledButton';
 
 const MyBitButton = ({

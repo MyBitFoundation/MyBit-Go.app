@@ -1,28 +1,35 @@
-import RightArrow from '../../../static/onboarding/arrow-right.png';
-import SafeGraphic from '../../../static/onboarding/safe-graphic.png';
-import StyledMainTitle from '../styles/styledMainTitle';
-import StyledOnboardingImage from '../styles/styledOnboardingImage';
-import StyledOnboardingParagraph from '../styles/styledOnboardingParagraph';
-import StyledOnboardingButton from '../styles/styledOnboardingButton';
-import StyledOnboardingArrow from '../styles/styledOnboardingArrow';
-import StyledOnboardingColoredSpan from '../styles/styledOnboardingColoredSpan';
-import StyledOnboardingList from '../styles/styledOnboardingList';
+import styled from 'styled-components';
+import SafeGraphic from 'static/onboarding/safe-graphic.png';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideList,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
 
-const Benefits = ({
-  next,
-  previous,
-  goToSlide,
-}) => (
-  <React.Fragment>
-    <StyledMainTitle>
+const StyledImage = styled.img`
+  margin: 0px auto;
+  position: relative;
+  margin-top: 20px;
+  display: none !important;
+
+  ${({theme}) => theme.tablet`
+    display: block !important;
+  `}
+}`
+
+const Benefits = () => (
+  <StyledCarouselSlide>
+    <StyledCarouselSlideMainTitle>
       What are the{" "}
-      <StyledOnboardingColoredSpan
+      <StyledCarouselSlideColoredSpan
         isBlue
       >
         benefits?
-      </StyledOnboardingColoredSpan>
-    </StyledMainTitle>
-    <StyledOnboardingList
+      </StyledCarouselSlideColoredSpan>
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideList
       isSmall
     >
       <li>
@@ -42,31 +49,14 @@ const Benefits = ({
         Give ownership back to the people, putting them back in control
         of capital, investments, and value
       </li>
-    </StyledOnboardingList>
-    <StyledOnboardingImage
+    </StyledCarouselSlideList>
+    <StyledImage
       src={SafeGraphic}
       width="113"
       alt="MyBit Safe"
       isStatic
     />
-    <StyledOnboardingButton
-      type="primary"
-      onClick={next}
-      isNext
-    >
-      What is Ethereum?{" "}
-      <StyledOnboardingArrow
-        src={RightArrow}
-        alt="Next Button Arrow"
-      />
-    </StyledOnboardingButton>
-    <StyledOnboardingButton
-      onClick={previous}
-      isBack
-    >
-      Back
-    </StyledOnboardingButton>
-  </React.Fragment>
+  </StyledCarouselSlide>
 );
 
 export default Benefits;

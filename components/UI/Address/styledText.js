@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledText = styled.p`
   font-size: 14px;
@@ -10,6 +10,11 @@ const StyledText = styled.p`
   margin: 0px 0px;
   position: relative;
   margin-left: 15px;
+
+  ${props => props.isMobile && css`
+    margin-left: 10px;
+    font-size: 16px;
+  `}
 }`
 
 export default StyledText;

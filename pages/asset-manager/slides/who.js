@@ -1,54 +1,47 @@
-import StyledAssetManagerSlideTitle from '../styles/styledAssetManagerSlideTitle';
-import StyledAssetManagerSlideButtons from '../styles/styledAssetManagerSlideButtons';
-import StyledAssetManagerSlideButton from '../styles/styledAssetManagerSlideButton';
-import StyledAssetManagerSlideParagraph from '../styles/styledAssetManagerSlideParagraph';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
 
 const Who = ({
   next,
   previous,
 }) => (
-  <React.Fragment>
-    <StyledAssetManagerSlideTitle>
-      Who is qualified to be an Asset Manager?
-    </StyledAssetManagerSlideTitle>
-    <StyledAssetManagerSlideParagraph
+  <StyledCarouselSlide>
+    <StyledCarouselSlideMainTitle
+      isLong
+      isSmallMobile
+    >
+    <StyledCarouselSlideColoredSpan
+      isBlue
+    >
+      Who
+    </StyledCarouselSlideColoredSpan>  is qualified to be an Asset Manager?
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideParagraph
       hasMarginTop
     >
       Anyone who passes identity verification is eligible to be an Asset Manager.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       Once approved, you have the right to be an Asset Manager for life.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       However, this does not guarantee an income for life.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       After being appointed, everything is based on trust.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       That is, the more assets you manage successfully, the better your trust rating.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       If you act badly, you will still be an Asset Manager, but investors may not fund
       your assets. In rare situations, you may be banned from the platform.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideButtons>
-      <StyledAssetManagerSlideButton
-        type="primary"
-        onClick={next}
-        isContinue
-      >
-        Next
-      </StyledAssetManagerSlideButton>
-      <StyledAssetManagerSlideButton
-        type="secondary"
-        onClick={previous}
-        isBack
-      >
-        Back
-      </StyledAssetManagerSlideButton>
-    </StyledAssetManagerSlideButtons>
-  </React.Fragment>
+    </StyledCarouselSlideParagraph>
+  </StyledCarouselSlide>
 )
 
 export default Who;

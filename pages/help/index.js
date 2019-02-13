@@ -2,18 +2,15 @@
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable no-useless-constructor */
 /* eslint-disable react/no-unused-prop-types */
-import Button from 'antd/lib/button';
-import 'antd/lib/button/style/index.css';
-import Collapse from 'antd/lib/collapse';
-import 'antd/lib/collapse/style/index.css';
-import Icon from 'antd/lib/icon';
-import 'antd/lib/icon/style/index.css';
-
+import {
+  Button,
+  Collapse,
+  Icon,
+} from 'antd';
 import {
   FAQ,
   Buttons,
-} from '../../constants/knowledgeBase';
-
+} from 'constants/knowledgeBase';
 import StyledHelpPage from './styledHelpPage';
 import StyledHelpPageButtons from './styledHelpPageButtons';
 import StyledHelpPageQuestion from './styledHelpPageQuestion';

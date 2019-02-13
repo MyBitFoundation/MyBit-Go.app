@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import LocationIcon from '../../../../static/location-icon2.svg';
+import LocationIcon from 'static/location-icon2.svg';
 
 const StyledAssetTemplateLocationIcon = styled(LocationIcon)`
   position: absolute;

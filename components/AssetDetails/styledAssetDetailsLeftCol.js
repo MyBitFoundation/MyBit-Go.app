@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import Col from 'antd/lib/col';
+import {
+  Col,
+} from 'antd';
 
 const StyledAssetDetailsLeftCol = styled(Col)`
   padding: 20px;

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import LogoSvg from '../static/my-bit-go.svg';
+import LogoSvg from 'static/my-bit-go.svg';
 
 const Logo = ({ className }) => (
   <div className="AppHeader__Logo-contaner">

@@ -2,7 +2,8 @@ import regeneratorRuntime from "regenerator-runtime";
 import cors from 'cors';
 require('dotenv').config();
 const express = require('express');
-const next = require('next')
+const compression = require('compression');
+const next = require('next');
 const multer = require('multer');
 const multerStorage = multer.memoryStorage();
 const port = process.env.port || 8081;
@@ -27,6 +28,7 @@ app
   const server = express();
   server.use(express.json());
   server.use(cors());
+  server.use(compression())
 
   redirects.forEach(({ from, to, type = 301, method = 'get' }) => {
     server[method](from, (req, res) => {
@@ -85,6 +87,10 @@ app
 
   server.get("/asset/:id", (req, res) => {
     return app.render(req, res, "/asset", { id: req.params.id })
+  })
+
+  server.get("/manage/:id", (req, res) => {
+    return app.render(req, res, "/manage", { id: req.params.id })
   })
 
   server.get('*', (req, res) => {

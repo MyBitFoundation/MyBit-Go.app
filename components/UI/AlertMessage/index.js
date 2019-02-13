@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import Alert from 'antd/lib/alert';
-import 'antd/lib/alert/style/css';
+import {
+  Alert,
+} from 'antd';
 import StyledAlertMessage from './styledAlertMessage';
 
 const AlertMessage = props => (

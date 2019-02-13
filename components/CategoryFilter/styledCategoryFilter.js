@@ -1,36 +1,29 @@
 import styled from 'styled-components';
 
 const StyledCategoryFilter = styled.div`
-  width: max-content;
   position: relative;
-
-  @media(min-width: 768px){
-    margin-left: 10px;
-  }
+  width: 100%;
 
   button{
-    margin-right: 5px;
-    width: 100px;
-    @media (min-width: 1230px) {
-      width: 140px;
-    }
+    margin-bottom: 10px;
+    width: auto;
   }
 
-  @media(max-width: 1200px){
-    position: relative;
-  }
+  ${({ theme }) => theme.tablet`
+    margin-left: 10px;
+ `}
 
-  @media(max-width: ${props => props.breakpoints.categoriesFilterTablet}){
+ ${({ theme }) => theme.categoriesFilterTablet`
+    width: max-content;
+
     button{
-      margin-right: 10px;
-      margin-bottom: 10px;
-      width: auto;
+      margin-right: 5px;
+      width: 100px;
+      @media (min-width: 1230px) {
+        width: 140px;
+      }
     }
-  }
-
-  @media(max-width: ${props => props.breakpoints.categoriesFilterMobile}){
-    width: 100%;
-  }
+ `}
 }`
 
 export default StyledCategoryFilter;

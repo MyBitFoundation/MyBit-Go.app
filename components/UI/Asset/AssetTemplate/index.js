@@ -1,4 +1,4 @@
-import Watch from '../../Watch';
+import Watch from 'ui/Watch';
 import StyledAssetTemplate from './styledAssetTemplate';
 import StyledAssetTemplateImageHolder from './styledAssetTemplateImageHolder';
 import StyledAssetTemplateGradient from './styledAssetTemplateGradient';

@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames';
 import StyledValueDisplay from './styledValueDisplay';
 import StyledValueDisplayIcon from './styledValueDisplayIcon';
 import StyledValueDisplaySeparator from './styledValueDisplaySeparator';

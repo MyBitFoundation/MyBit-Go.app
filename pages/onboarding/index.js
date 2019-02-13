@@ -1,10 +1,11 @@
 import Router from 'next/router';
-
+import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 import {
   Slides,
 } from './slides';
-
-import CarouselWithNavigation from '../../components/UI/CarouselWithNavigation';
+import {
+  BREAKPOINTS,
+} from 'constants';
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: 'What is MyBit Go?' },
@@ -42,7 +43,8 @@ class OnboardingPage extends React.Component {
           navigationTooltips={SliderNavigationTooltips}
           slides={Slides}
           onFinish={this.finishOnboarding}
-          minWidthStyle="600px"
+          maxWidthDesktop={BREAKPOINTS.carouselWithNavigationOnboardingMinWidth}
+          nextButtonHasArrow
         />
       </React.Fragment>
     )

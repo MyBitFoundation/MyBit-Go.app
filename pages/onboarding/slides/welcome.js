@@ -1,52 +1,66 @@
-import RightArrow from '../../../static/onboarding/arrow-right.png';
-import MyBitGoLogo from '../../../static/onboarding/mybitgo.png';
-import StyledMainTitle from '../styles/styledMainTitle';
-import StyledOnboardingImage from '../styles/styledOnboardingImage';
-import StyledOnboardingParagraph from '../styles/styledOnboardingParagraph';
-import StyledOnboardingButton from '../styles/styledOnboardingButton';
-import StyledOnboardingArrow from '../styles/styledOnboardingArrow';
+import styled from 'styled-components';
+import MyBitGoLogo from 'static/onboarding/mybitgo.png';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+} from 'components/CarouselSlide/';
 
-const Welcome = ({
-  next,
-}) => (
-  <React.Fragment>
-    <StyledOnboardingImage
+const StyledImage = styled.img`
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 72px;
+  display: none !important;
+
+  ${({theme}) => theme.tablet`
+    display: block !important;
+  `}
+}`
+
+const StyledWelcome = styled.div`
+  h1{
+    @media(min-width: 321px) {
+      padding-right: 80px;
+    }
+
+    @media(min-width: 475px) {
+      padding-right: 0px;
+    }
+  }
+`;
+
+const Welcome = () => (
+  <StyledCarouselSlide>
+    <StyledImage
       src={MyBitGoLogo}
       width="90"
       alt="MyBit Onboarding Slide 1"
     />
-    <StyledMainTitle>
-      Welcome to MyBit Go
-    </StyledMainTitle>
-    <StyledOnboardingParagraph
+    <StyledWelcome>
+      <StyledCarouselSlideMainTitle>
+        Welcome to MyBit Go
+      </StyledCarouselSlideMainTitle>
+    </StyledWelcome>
+    <StyledCarouselSlideParagraph
       isIntro
+      isShorter
     >
       <strong>
         MyBit Go brings power and control back to you. Invest without a
         bank, broker, fund or third-party.
       </strong>
-    </StyledOnboardingParagraph>
-    <StyledOnboardingParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       MyBit Go is a secure investment platform available to anyone. It
       enables you to invest in high ROI opportunities and receive
       revenue in real-time.
-    </StyledOnboardingParagraph>
-    <StyledOnboardingParagraph>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       In addition, you actually own and control your investments, unlike
       stocks.
-    </StyledOnboardingParagraph>
-    <StyledOnboardingButton
-      type="primary"
-      onClick={next}
-      isNext
-    >
-      More on MyBit Go{' '}
-      <StyledOnboardingArrow
-        src={RightArrow}
-        alt="Next Button Arrow"
-      />
-    </StyledOnboardingButton>
-  </React.Fragment>
+    </StyledCarouselSlideParagraph>
+  </StyledCarouselSlide>
 )
 
 export default Welcome;

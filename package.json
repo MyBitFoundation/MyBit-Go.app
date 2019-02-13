@@ -2,8 +2,12 @@
   "name": "frontend",
   "version": "0.2.4",
   "private": true,
+  "resolutions": {
+    "terser": "3.14.1"
+  },
   "dependencies": {
     "@antv/data-set": "^0.10.1",
+    "@zeit/next-bundle-analyzer": "^0.1.2",
     "@zeit/next-css": "^1.0.1",
     "airtable": "^0.5.8",
     "antd": "3.11.4",
@@ -14,9 +18,9 @@
     "babel-plugin-styled-components": "^1.10.0",
     "babel-plugin-transform-assets-import-to-string": "^1.2.0",
     "bizcharts": "^3.4.1",
-    "browser-history": "^1.0.1",
     "civic-sip-api": "^1.1.0",
     "classnames": "2.2.6",
+    "compression": "^1.7.3",
     "cors": "^2.8.5",
     "dayjs": "1.7.8",
     "detect-browser": "3.0.1",
@@ -24,7 +28,6 @@
     "dotenv-webpack": "^1.7.0",
     "express": "4.16.4",
     "gridlex": "2.7.1",
-    "include-media": "1.4.9",
     "less": "^3.9.0",
     "lint": "1.1.2",
     "multer": "^1.4.1",
@@ -50,12 +53,16 @@
     "lint": "eslint --ignore-path .gitignore .",
     "lint:fix": "eslint --ignore-path .gitignore --fix .",
     "compile-server": "rimraf lib/ && babel -d lib/ server/",
-    "now-start": "npm run compile-server && npm run start"
+    "now-start": "npm run compile-server && npm run start",
+    "analyze": "BUNDLE_ANALYZE=both next build",
+    "analyze:server": "BUNDLE_ANALYZE=server next build",
+    "analyze:browser": "BUNDLE_ANALYZE=browser next build"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
+    "babel-plugin-module-resolver": "^3.2.0",
     "compression-webpack-plugin": "2.0.0",
     "cross-env": "5.2.0",
     "enzyme": "3.8.0",

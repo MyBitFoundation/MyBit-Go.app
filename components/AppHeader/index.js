@@ -1,64 +1,109 @@
 import React from 'react';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
-import Logo from '../Logo';
-import ExchangeRate from '../ExchangeRate';
-import Balance from '../Balance';
-import Address from '../UI/Address';
-import { Consumer as BancorConsumer } from '../UI/BancorContainer/index';
-import Button from '../UI/Button/index';
-import Theme from '../UI/Theme/index';
+import Logo from 'components/Logo';
+import ExchangeRate from 'components/ExchangeRate';
+import Balance from 'components/Balance';
+import Address from 'ui/Address';
+import { Consumer as BancorConsumer } from 'ui/BancorContainer';
+import {
+  Button,
+} from 'antd';
 import StyledAppheader from './styledAppHeader';
 import StyledLogoAndInfo from './styledLogoAndInfo';
 import StyledLogo from './styledLogo';
 import StyledBancorWidget from './styledBancorWidget';
 import StyledSection from './styledSection';
+import StyledHamburguerButton from './styledHamburguerButton';
+import StyledAppHeaderPageName from './styledAppHeaderPageName';
+import HamburguerIcon from 'static/hamburguer-icon.svg';
 
 const AppHeader = ({
   user,
   prices,
   readOnlyMode,
-}) => (
-  <BancorConsumer>
-    {({ initBancor }) => (
-      <StyledAppheader
-        styling={Theme}
-      >
-        <StyledLogoAndInfo>
-          <StyledLogo>
-            <Logo/>
-          </StyledLogo>
-          <StyledSection>
-            <ExchangeRate
-              {...prices.mybit}
-            />
-          </StyledSection>
-          {!readOnlyMode && (
+  show,
+  hideAt,
+  currentPath,
+  handleMobileMenuState,
+}) => {
+  let pageName;
+  switch (currentPath) {
+    case '/explore':
+      pageName = 'Explore';
+      break;
+    case '/portfolio':
+      pageName = 'Portfolio';
+      break;
+    case '/watch-list':
+      pageName = 'Watch List';
+      break;
+    case '/transaction-history':
+      pageName = 'Transactions';
+      break;
+    case '/help':
+      pageName = 'Help';
+      break;
+    default:
+      pageName = '';
+      break;
+  }
+
+  return (
+    <BancorConsumer>
+      {({ initBancor }) => (
+        <StyledAppheader
+          show={show}
+          hideAt={hideAt}
+        >
+          <StyledLogoAndInfo>
+            <StyledLogo>
+              <Logo onCLick={() => Router.push('/explore')}/>
+            </StyledLogo>
+            <StyledAppHeaderPageName>
+              {pageName}
+            </StyledAppHeaderPageName>
             <StyledSection>
-            <Balance
-              {...user}
-            />
+              <ExchangeRate
+                {...prices.mybit}
+              />
+            </StyledSection>
+            {!readOnlyMode && (
+              <StyledSection>
+              <Balance
+                {...user}
+              />
+              </StyledSection>
+            )}
+          </StyledLogoAndInfo>
+          <StyledBancorWidget>
+            <Button
+              size="large"
+              type="primary"
+              onClick={(e) => {
+                e.preventDefault();
+                initBancor();
+              }}
+            >
+              Get MYB
+            </Button>
+          </StyledBancorWidget>
+          {!readOnlyMode && (
+            <StyledSection
+              noPadding
+              isAddress
+            >
+              <Address {...user} />
             </StyledSection>
           )}
-        </StyledLogoAndInfo>
-        <StyledBancorWidget>
-          <Button
-            styling={Theme.buttons.primary.blue}
-            size="large"
-            onClick={(e) => {
-              e.preventDefault();
-              initBancor();
-            }}
-            >
-            Get MYB
-          </Button>
-        </StyledBancorWidget>
-        {!readOnlyMode && (
-          <Address {...user} />
-        )}
-      </StyledAppheader>
-    )}
-  </BancorConsumer>
-);
+          <StyledHamburguerButton onClick={() => handleMobileMenuState(true)}>
+            <HamburguerIcon />
+          </StyledHamburguerButton>
+        </StyledAppheader>
+      )}
+    </BancorConsumer>
+  )
+};
 
 AppHeader.defaultProps = {
   prices: undefined,
@@ -68,6 +113,7 @@ AppHeader.propTypes = {
   prices: PropTypes.shape({ params: PropTypes.object }),
   user: PropTypes.shape({ params: PropTypes.object }).isRequired,
   readOnlyMode: PropTypes.bool.isRequired,
+  show: PropTypes.bool.isRequired,
 };
 
 export default AppHeader;

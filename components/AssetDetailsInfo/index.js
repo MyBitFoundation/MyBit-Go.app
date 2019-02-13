@@ -4,7 +4,7 @@ import StyledAssetDetailsInfoLocation from './styledAssetDetailsInfoLocation';
 import StyledAssetDetailsInfoImage from './styledAssetDetailsInfoImage';
 import StyledAssetDetailsInfoTitle from './styledAssetDetailsInfoTitle';
 import StyledAssetDetailsInfoDescription from './styledAssetDetailsInfoDescription';
-import Watch from '../UI/Watch';
+import Watch from 'ui/Watch';
 
 const AssetDetailsInfo = ({
   name,

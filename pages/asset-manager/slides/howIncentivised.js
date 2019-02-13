@@ -1,49 +1,40 @@
-import StyledAssetManagerSlideTitle from '../styles/styledAssetManagerSlideTitle';
-import StyledAssetManagerSlideButtons from '../styles/styledAssetManagerSlideButtons';
-import StyledAssetManagerSlideButton from '../styles/styledAssetManagerSlideButton';
-import StyledAssetManagerSlideParagraph from '../styles/styledAssetManagerSlideParagraph';
+import {
+  StyledCarouselSlide,
+  StyledCarouselSlideMainTitle,
+  StyledCarouselSlideParagraph,
+  StyledCarouselSlideColoredSpan,
+} from 'components/CarouselSlide/';
 
-const HowIncentivised = ({
-  next,
-  previous,
-}) => (
-  <React.Fragment>
-    <StyledAssetManagerSlideTitle>
-      How are Asset Managers incentivised?
-    </StyledAssetManagerSlideTitle>
-    <StyledAssetManagerSlideParagraph
+const HowIncentivised = () => (
+  <StyledCarouselSlide>
+    <StyledCarouselSlideMainTitle
+      isLong
+      isSmallMobile
+    >
+      How are Asset Managers
+      <StyledCarouselSlideColoredSpan
+        isBlue
+      >
+      {' '}incentivised
+      </StyledCarouselSlideColoredSpan>
+      ?
+    </StyledCarouselSlideMainTitle>
+    <StyledCarouselSlideParagraph
       hasMarginTop
-      isPadded
     >
       In return for maintaining the asset, Asset Managers receive a portion of the revenue it generates.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph isPadded>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       Since profits are based on an asset’s revenue rather than a fixed amount, it incentivises the
       Asset Manager to ensure the asset generates as much revenue as possible.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph isPadded>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       To follow free market principles, the percentage of revenue is chosen by the Asset Manager.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideParagraph isPadded>
+    </StyledCarouselSlideParagraph>
+    <StyledCarouselSlideParagraph>
       Then, if they request too high a percentage, in theory, investors will not fund the asset.
-    </StyledAssetManagerSlideParagraph>
-    <StyledAssetManagerSlideButtons>
-      <StyledAssetManagerSlideButton
-        type="primary"
-        onClick={next}
-        isContinue
-      >
-        Next
-      </StyledAssetManagerSlideButton>
-      <StyledAssetManagerSlideButton
-        type="secondary"
-        onClick={previous}
-        isBack
-      >
-        Back
-      </StyledAssetManagerSlideButton>
-    </StyledAssetManagerSlideButtons>
-  </React.Fragment>
+    </StyledCarouselSlideParagraph>
+  </StyledCarouselSlide>
 )
 
 export default HowIncentivised;
