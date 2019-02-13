@@ -81,6 +81,7 @@ class MyApp extends App {
   }
 
   componentDidMount = () => {
+    require('utils/disableReactDevTools');
     this.prefetchPages();
     this.firstVisitMiddleware();
   }
