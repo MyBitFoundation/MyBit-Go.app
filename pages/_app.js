@@ -78,6 +78,7 @@ class MyApp extends App {
     Router.prefetch('/portfolio')
     Router.prefetch('/help')
     Router.prefetch('/watch-list')
+    Router.prefetch('/list-asset')
   }
 
   componentDidMount = () => {
