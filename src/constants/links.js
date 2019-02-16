@@ -3,6 +3,7 @@ const port = 8081;
 const secondPort = 8082;
 const host = `${baseUrl}:${port}`
 const secondHost = `${baseUrl}:${secondPort}`
+const apiEndpoint = 'https://api.mybit.io';
 
 export const InternalLinks = {
  S3: 'https://s3.eu-central-1.amazonaws.com/mybit-go/',
@@ -11,7 +12,8 @@ export const InternalLinks = {
  UPDATE_ASSETS: process.env.NODE_ENV === 'development' ? `${host}/api/airtable/update` : '/api/airtable/update',
  S3_UPLOAD: process.env.NODE_ENV === 'development' ? `${host}/api/files/upload` : '/api/files/upload',
  S3_ASSET_FILES: process.env.NODE_ENV === 'development' ? `${host}/api/assets/files` : '/api/assets/files',
- MYBIT_API_COLLATERAL: process.env.NODE_ENV === 'development' ? `${secondHost}/collateral` : 'https://api.mybit.io/collateral',
+ MYBIT_API_COLLATERAL: process.env.NODE_ENV === 'development' ? `${secondHost}/collateral` : `${apiEndpoint}/collateral`,
+ PRICES: process.env.NODE_ENV === 'development' ? `${secondHost}/prices` : `${apiEndpoint}/prices`,
 }
 
 export const ExternalLinks = {
