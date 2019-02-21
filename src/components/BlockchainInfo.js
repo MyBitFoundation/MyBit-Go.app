@@ -13,8 +13,6 @@ import {
   NotificationTypes,
   NotificationsMetamask,
   NotificationStatus,
-  MYBIT_TICKER_COINMARKETCAP,
-  ETHEREUM_TICKER_COINMARKETCAP,
   CORRECT_NETWORK,
   FETCH_ASSETS_TIME,
   LOAD_METAMASK_USER_DETAILS_TIME,
@@ -851,48 +849,32 @@ class BlockchainInfo extends React.Component {
   }
 
   async loadPrices() {
-    let error = false;
-    await Brain.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP)
-      .then((priceInfo) => {
-        this.setState({
-          prices: {
-            ...this.state.prices,
-            mybit: {
-              price: priceInfo.price,
-              priceChangePercentage: priceInfo.priceChangePercentage,
-            },
+    try{
+      const response = await fetch(InternalLinks.PRICES)
+      const jsonResponse = await response.json();
+      const {
+        ethereum,
+        mybit,
+      } = jsonResponse;
+
+      this.setState({
+        prices: {
+          ether: {
+            price: ethereum.price,
+            priceChangePercentage: ethereum.priceChangePercentage
           },
-          loading: {
-            ...this.state.loading,
-            priceMybit: false,
+          mybit: {
+            price: mybit.price,
+            priceChangePercentage: mybit.priceChangePercentage.toFixed(2),
           },
-        });
-      })
-      .catch((err) => {
-        debug(err);
-        error = true;
+        },
+        loading: {
+          priceMybit: false,
+          priceEther: false,
+        },
       });
-    await Brain.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP)
-      .then((priceInfo) => {
-        this.setState({
-          prices: {
-            ...this.state.prices,
-            ether: {
-              price: priceInfo.price,
-              priceChangePercentage: priceInfo.priceChangePercentage,
-            },
-          },
-          loading: {
-            ...this.state.loading,
-            priceEther: false,
-          },
-        });
-      })
-      .catch((err) => {
-        debug(err);
-        error = true;
-      });
-    if (error) {
+    }catch(err){
+      debug(err);
       setTimeout(this.loadPrices, 5000);
     }
   }
