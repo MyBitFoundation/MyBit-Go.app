@@ -157,4 +157,4 @@ AssetPortfolioInvestment.defaultProps = {
   backgroundImage: '',
 };
 
-export default AssetPortfolioInvestment;
+export default React.memo(AssetPortfolioInvestment);

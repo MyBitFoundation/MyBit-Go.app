@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledExchangeRate = styled.div`
+const ExchangeRateContainer = styled.div`
   font-size: 14px;
   padding-right: 30px;
   display: flex;
@@ -15,4 +15,4 @@ const StyledExchangeRate = styled.div`
   }
 }`
 
-export default StyledExchangeRate;
+export default ExchangeRateContainer;

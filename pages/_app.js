@@ -2,7 +2,7 @@ import React from 'react';
 import { hot } from 'react-hot-loader/root'
 import App, { Container } from 'next/app';
 import Router, { withRouter } from 'next/router'
-import AirtableProvider from 'components/Airtable';
+import AirtableProvider, { withAirtableContext } from 'components/Airtable';
 import BlockchainProvider from 'components/Blockchain';
 import NotificationsProvider from 'components/Notifications';
 import MetamaskChecker from 'components/MetamaskChecker';
@@ -117,6 +117,8 @@ class MyApp extends App {
               currentPath={router.route}
               handleMobileMenuState={this.handleMobileMenuClicked}
             >
+              <React.Fragment>
+              <WrappedXado />
               <BancorContainer>
                 <AppWrapper
                   isFullScreenPage={isFullScreenPage}
@@ -130,6 +132,7 @@ class MyApp extends App {
                   />
                 </AppWrapper>
               </BancorContainer>
+              </React.Fragment>
             </MobileMenu>
           </WithProviders>
         </Theme>
@@ -137,6 +140,17 @@ class MyApp extends App {
     )
   }
 }
+
+const Xado = ({
+  airtableContext,
+}) => {
+  console.log("RENDERING P TEST")
+  return (
+    <p>test</p>
+  );
+}
+
+const WrappedXado = withAirtableContext(Xado)
 
 const WithProviders = ({ children }) => (
   <NotificationsProvider>

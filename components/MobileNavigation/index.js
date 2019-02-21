@@ -13,15 +13,16 @@ const MobileNavigation = ({
   <StyledMobileNavigationLink
     selected={item.selected}
     onClick={() => handleMobileMenuState(false)}
+    key={item.name}
   >
     <Icon component={item.icon} />
     <Link
       key={`${item.url}mobileMenu`}
       href={item.url}
     >
-        {item.name}
+      <span>{item.name}</span>
     </Link>
   </StyledMobileNavigationLink>
 )
 
-export default MobileNavigation;
+export default React.memo(MobileNavigation);

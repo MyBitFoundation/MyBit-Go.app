@@ -153,4 +153,4 @@ AssetPortfolioManaged.defaultProps = {
   backgroundImage: '',
 };
 
-export default AssetPortfolioManaged;
+export default React.memo(AssetPortfolioManaged);

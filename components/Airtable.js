@@ -7,6 +7,10 @@ import {
   verifyDataAirtable,
 } from 'constants';
 
+import {
+  fetchWithCache,
+} from 'utils/fetchWithCache';
+
 const { Provider, Consumer } = React.createContext({});
 
 export const withAirtableContext = (Component) => {
@@ -19,20 +23,21 @@ export const withAirtableContext = (Component) => {
   };
 }
 
-class AirtableProvider extends React.Component {
+class AirtableProvider extends React.PureComponent {
   constructor(props){
     super(props);
     this.getCategoriesForAssets = this.getCategoriesForAssets;
     this.state = {
       getCategoriesForAssets: this.getCategoriesForAssets,
     }
+    this.categoriesEtag = '';
+    this.assetsEtag = '';
   }
 
   componentDidMount = () => {
     this.getAssets();
     this.getCategories();
     this.setIntervals();
-
   }
 
   componentWillUnmount = () => {
@@ -40,7 +45,7 @@ class AirtableProvider extends React.Component {
   }
 
   setIntervals = () => {
-    this.intervalPullAssets = setInterval(this.getAssets, PULL_ASSETS_TIME)
+    this.intervalPullAssets = setInterval(this.getAssets, 10000)
     this.intervalPullCategories = setInterval(this.getCategories, PULL_CATEGORIES_TIME)
   }
 
@@ -125,9 +130,13 @@ class AirtableProvider extends React.Component {
   }
 
   getCategories = async () => {
-    const request = await fetch(InternalLinks.AIRTABLE_CATEGORIES);
-    const json = await request.json();
-    const { records } = json;
+    const response = await fetchWithCache(InternalLinks.AIRTABLE_CATEGORIES, 'assetsCategories', this);
+    // avoid processing and setting state if the data hasn't changed
+    if(response.isCached) {
+      return;
+    }
+
+    const { records } = response.data;
 
     const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
 
@@ -138,9 +147,13 @@ class AirtableProvider extends React.Component {
   }
 
   getAssets = async () => {
-    const request = await fetch(InternalLinks.AIRTABLE_ASSETS);
-    const json = await request.json();
-    const { records } = json;
+    const response = await fetchWithCache(InternalLinks.AIRTABLE_ASSETS, 'assetsEtag', this);
+    // avoid processing and setting state if the data hasn't changed
+    if(response.isCached) {
+      return;
+    }
+
+    const { records } = response.data;
 
     const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
 
@@ -158,7 +171,7 @@ class AirtableProvider extends React.Component {
 
     this.setState({
       assetsAirTable,
-      assetsAirTableById
+      assetsAirTableById,
     });
   }
 

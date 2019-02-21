@@ -62,4 +62,4 @@ const AssetDetailsManagetInfo = ({
   </StyledAssetDetailsMananagerInfo>
 );
 
-export default AssetDetailsManagetInfo;
+export default React.memo(AssetDetailsManagetInfo);

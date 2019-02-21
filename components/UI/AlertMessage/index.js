@@ -16,7 +16,7 @@ const AlertMessage = props => (
   </StyledAlertMessage>
 );
 
-export default AlertMessage;
+export default React.memo(AlertMessage);
 
 AlertMessage.defaultProps = {
   className: undefined,

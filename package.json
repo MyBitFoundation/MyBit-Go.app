@@ -46,7 +46,7 @@
     "web3": "1.0.0-beta.37"
   },
   "scripts": {
-    "dev": "NODE_ENV=development node lib/index.js",
+    "dev": "NODE_ENV=development babel-watch --exclude .next server/index.js",
     "build": "next build",
     "export": "next export -o build",
     "start": "NODE_ENV=production node lib/index.js",
@@ -63,6 +63,8 @@
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
     "babel-plugin-module-resolver": "^3.2.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "babel-watch": "^7.0.0",
     "compression-webpack-plugin": "2.0.0",
     "cross-env": "5.2.0",
     "enzyme": "3.8.0",
@@ -72,7 +74,7 @@
     "eslint-plugin-jsx-a11y": "6.1.2",
     "eslint-plugin-react": "7.11.1",
     "extract-text-webpack-plugin": "3.0.2",
-    "react-hot-loader": "^4.6.3",
+    "react-hot-loader": "4.6.3",
     "rimraf": "^2.6.3"
   },
   "browserslist": {

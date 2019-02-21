@@ -51,4 +51,4 @@ const AssetDetailsInfo = ({
   </React.Fragment>
 )
 
-export default AssetDetailsInfo;
+export default React.memo(AssetDetailsInfo);

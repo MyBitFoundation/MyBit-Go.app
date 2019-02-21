@@ -41,7 +41,7 @@ class MobileMenu extends React.Component {
           </StyledMobileCloseButton>
           <StyledMobileSections>
             {Sections.map((Section, index) =>
-              <React.Fragment>
+              <React.Fragment key={`Section--${index}`}>
                 <Section
                   {...this.props}
                   {...blockchainContext}

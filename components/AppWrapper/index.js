@@ -4,7 +4,6 @@ import NavigationBar from 'ui/NavigationBar';
 import Theme from 'ui/Theme';
 import { withBlockchainContext } from 'components/Blockchain'
 import StyledPageWrapper from './styledPageWrapper';
-import MobileMenu from 'components/MobileMenu';
 import {
   navbarOptions,
 } from 'constants';

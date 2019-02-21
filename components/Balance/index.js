@@ -69,4 +69,4 @@ Balance.propTypes = {
   isMobile: PropTypes.boolean,
 };
 
-export default Balance;
+export default React.memo(Balance);

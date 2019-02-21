@@ -647,13 +647,10 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
           blockNumber: object.blockNumber,
         }));
 
-      console.log("Assets: ", assets)
-      console.log("Assets went live: ", assetsWentLive)
-
       const realAddress = userName && window.web3js.utils.toChecksumAddress(userName);
 
       console.log("Real Address: ", realAddress)
-      console.log(assetsAirTableById)
+
       // if the asset Id is not on airtable it doens't show up in the platform
       assets =
         assets
@@ -666,8 +663,6 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
             }
           });
 
-      console.log("Assets filtered by airtable: ", assets);
-
       const [
         assetManagers,
         amountsToBeRaised,
@@ -679,8 +674,6 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
         managerPercentages,
       ] = await getAssetDetails(assets, apiContract, realAddress);
 
-      console.log("Got asset details: ", amountsToBeRaised)
-
       let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
         const ownershipUnitsTmp = (realAddress && ownershipUnits[index]) || 0;
         const isAssetManager = assetManagers[index] === realAddress;
@@ -690,8 +683,6 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
           owedToInvestor,
           managerDetails,
         ] = await getExtraAssetDetails(ownershipUnitsTmp, isAssetManager, apiContract, asset, realAddress);
-
-        console.log("Got extra asset details: ", numberOfInvestors);
 
         const [
           managerTotalIncome,
@@ -749,10 +740,10 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
       assetsPlusMoreDetails = assetsPlusMoreDetails
         .filter(asset => asset && asset.amountToBeRaisedInUSD > 0);
 
-      debug(assetsPlusMoreDetails)
+      console.table(assetsPlusMoreDetails)
       resolve(assetsPlusMoreDetails);
     } catch (error) {
-      debug(error)
+      debug('failed to fetch assets, error: ', error);
       reject(error);
     }
   });

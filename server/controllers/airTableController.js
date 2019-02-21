@@ -38,7 +38,7 @@ export const addNewAsset = async (data) => {
 }
 
 export const getAssets = () =>
-  request(`https://api.airtable.com/v0/${AIRTABLE_BASE_ASSETS}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)
+  request(`https://api.airtable.com/v0/${AIRTABLE_BASE_ASSETS}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`).on('response', (response) => console.log(response.statusCode))
 
 export const getCategories = () =>
   request(`https://api.airtable.com/v0/${AIRTABLE_BASE_CATEGORIES}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)

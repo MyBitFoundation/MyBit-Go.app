@@ -35,4 +35,4 @@ Loading.defaultProps = {
   hasBackButton: false,
 };
 
-export default Loading;
+export default React.memo(Loading);

@@ -30,34 +30,6 @@ import {
 
 const assetsPerPage = 12;
 
-const subFilters = [{
-    name: 'Highest Collateral',
-    compare: (asset) => {
-      return true;
-    },
-  }, {
-    name: 'Most Funded',
-    compare: (asset) => {
-      return true;
-    },
-  }, {
-    name: 'Least Funded',
-    compare: (asset) => {
-      return true;
-    },
-  }, {
-    name: 'Highest Management Fee',
-    compare: (asset) => {
-      return true;
-    },
-  }, {
-    name: 'Lowest Management Fee',
-    compare: (asset) => {
-      return true;
-    },
-  }
-];
-
 class Explore extends React.Component {
   constructor(props) {
     super(props);
@@ -91,10 +63,10 @@ class Explore extends React.Component {
     if (!newState) {
       selectedFilters = selectedFilters.filter(flter => flter !== filterName);
     } else {
-      selectedFilters.push(filterName);
+      selectedFilters = [...selectedFilters, filterName];
     }
     this.setState({
-      selectedFilters,
+      selectedFilters: selectedFilters,
     });
   }
 

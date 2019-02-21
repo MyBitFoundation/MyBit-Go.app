@@ -91,4 +91,4 @@ AssetDefault.defaultProps = {
   backgroundImage: '',
 };
 
-export default AssetDefault;
+export default React.memo(AssetDefault)

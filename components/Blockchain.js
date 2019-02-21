@@ -166,46 +166,34 @@ class BlockchainProvider extends React.Component {
     if(nextProps.user.ethBalance !== user.ethBalance){
       console.log("\n\nupdated balance\n\n")
       return true;
-    }
-    if(nextProps.user.userName !== user.userName){
+    } else if(nextProps.user.userName !== user.userName){
       console.log("\n\nupdated username\n\n")
       return true;
-    }
-     if(nextProps.isMetamaskInstalled !== userHasMetamask){
-      console.log("\n\nupdated metamaskisinstalled\n\n")
-      return true;
-    } if(nextProps.isLoggedIn !== userIsLoggedIn){
+    } else if(nextProps.isLoggedIn !== userIsLoggedIn){
       console.log("\n\nupdated login\n\n")
       return true;
-    } if(nextProps.airtableContext !== airtableContext && this.airtableContextUpdates < 5){
-      this.airtableContextUpdates += 1;
-      console.log(`\n\nupdated airtableContext ${this.airtableContextUpdates} \n\n`)
-      return true;
-    } if(nextProps.enabled !== enabled){
+    } else if(nextProps.enabled !== enabled){
       console.log("\n\nupdated enabled\n\n")
       return true;
-    } if(assets != nextState.assets){
+    } else if(assets != nextState.assets){
       return true;
-    } if((prices.ether && nextState.prices.ether) && (prices.ether.price !== nextState.prices.ether.price)){
+    } else if((prices.ether && nextState.prices.ether) && (prices.ether.price !== nextState.prices.ether.price)){
       console.log("\n\nupdated prices\n\n");
       return true;
-    } if(withdrawingAssetIds !== nextState.withdrawingAssetIds){
+    } else if(withdrawingAssetIds !== nextState.withdrawingAssetIds){
       console.log("\n\nupdated withdrawingAssetIds\n\n");
       return true;
-    } if(withdrawingCollateral !== nextState.withdrawingCollateral){
+    } else if(withdrawingCollateral !== nextState.withdrawingCollateral){
       console.log("\n\nupdated withdrawingCollateral\n\n");
       return true;
-    } if(withdrawingAssetManager !== nextState.withdrawingAssetManager){
+    } else if(withdrawingAssetManager !== nextState.withdrawingAssetManager){
       console.log("\n\nupdated withdrawingAssetManager\n\n");
       return true;
-    } if(isUserContributing !== nextState.isUserContributing){
+    } else if(isUserContributing !== nextState.isUserContributing){
       console.log("\n\nupdated isUserContributing\n\n");
       return true;
-    } if(router.pathname !== nextProps.router.pathname){
+    } else if(router.pathname !== nextProps.router.pathname){
       console.log("\n\nupdated pathname\n\n");
-      return true;
-    } if(nextProps.children !== this.props.children){
-      console.log("\n\nupdated children\n\n");
       return true;
     }
 
