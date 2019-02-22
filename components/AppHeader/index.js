@@ -1,4 +1,5 @@
 import React from 'react';
+import { compose } from 'recompose'
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import Logo from 'components/Logo';
@@ -17,15 +18,27 @@ import AppHeaderSection from './appHeaderSection';
 import AppHeaderHamburguerButton from './appHeaderHamburguerButton';
 import AppHeaderPageName from './appHeaderPageName';
 import HamburguerIcon from 'static/hamburguer-icon.svg';
+import { withBlockchainContext } from 'components/Blockchain'
+import { withMetamaskContext } from 'components/MetamaskChecker'
+import { withTokenPricesContext } from 'components/TokenPrices'
 
 const AppHeader = ({
-  user,
-  prices,
+  metamaskContext,
+  pricesContext,
   readOnlyMode,
   hideOnMobile,
   currentPath,
   handleMobileMenuState,
 }) => {
+  const {
+    user,
+    isReadOnlyMode,
+  } = metamaskContext;
+
+  const {
+    prices,
+  } = pricesContext;
+
   let pageName;
   switch (currentPath) {
     case '/explore':
@@ -66,7 +79,7 @@ const AppHeader = ({
                 {...prices.mybit}
               />
             </AppHeaderSection>
-            {!readOnlyMode && (
+            {!isReadOnlyMode && (
               <AppHeaderSection>
               <Balance
                 {...user.balances}
@@ -86,7 +99,7 @@ const AppHeader = ({
               Get MYB
             </Button>
           </AppHeaderBancorWidget>
-          {!readOnlyMode && (
+          {!isReadOnlyMode && (
             <AppHeaderSection
               noPadding
               isAddress
@@ -114,4 +127,9 @@ AppHeader.propTypes = {
   show: PropTypes.bool.isRequired,
 };
 
-export default AppHeader;
+const enhance = compose(
+  withMetamaskContext,
+  withTokenPricesContext,
+);
+
+export default enhance(AppHeader);

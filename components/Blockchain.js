@@ -9,6 +9,7 @@ import { withRouter } from 'next/router';
 import { withAirtableContext } from 'components/Airtable';
 import { withNotificationsContext } from 'components/Notifications';
 import { withMetamaskContext } from 'components/MetamaskChecker';
+import { withTokenPricesContext } from 'components/TokenPrices';
 import * as Brain from '../apis/brain';
 
 import {
@@ -22,12 +23,11 @@ import {
   FETCH_ASSETS_TIME,
   LOAD_METAMASK_USER_DETAILS_TIME,
   FETCH_TRANSACTION_HISTORY_TIME,
-  LOAD_PRICES_TIME,
-} from '../constants';
+} from 'constants';
 
 import {
   debug,
-} from '../utils/helpers';
+} from 'utils/helpers';
 
 const { Provider, Consumer } = React.createContext({});
 
@@ -43,7 +43,6 @@ class BlockchainProvider extends React.Component {
     super(props);
     this.fetchAssets = this.fetchAssets.bind(this);
     this.fetchTransactionHistory = this.fetchTransactionHistory.bind(this);
-    this.loadPrices = this.loadPrices.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
     this.handleMetamaskUpdate = this.handleMetamaskUpdate.bind(this);
     this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
@@ -55,13 +54,10 @@ class BlockchainProvider extends React.Component {
     this.state = {
       loading: {
         assets: true,
-        priceMybit: true,
-        priceEther: true,
         transactionHistory: true,
       },
       transactions: [],
       assets: [],
-      prices: {},
       fetchAssets: this.fetchAssets,
       fetchTransactionHistory: this.fetchTransactionHistory,
       fundAsset: this.fundAsset,
@@ -80,7 +76,6 @@ class BlockchainProvider extends React.Component {
 
   componentDidMount = async () => {
     try {
-      await this.loadPrices()
       this.fetchAssets();
       this.fetchTransactionHistory();
 
@@ -114,52 +109,6 @@ class BlockchainProvider extends React.Component {
     }
   }
 
-  shouldComponentUpdate = (nextProps, nextState) => {
-    const {
-      assets,
-      prices,
-      airtableContext,
-      withdrawingAssetIds,
-      withdrawingCollateral,
-      withdrawingAssetManager,
-      isUserContributing,
-      loading,
-    } = this.state;
-
-    const {
-      router,
-    } = this.props;
-
-    if(assets != nextState.assets){
-      return true;
-    } else if((prices.ether && nextState.prices.ether) && (prices.ether.price !== nextState.prices.ether.price)){
-      console.log("\n\nupdated prices\n\n");
-      return true;
-    } else if(withdrawingAssetIds !== nextState.withdrawingAssetIds){
-      console.log("\n\nupdated withdrawingAssetIds\n\n");
-      return true;
-    } else if(withdrawingCollateral !== nextState.withdrawingCollateral){
-      console.log("\n\nupdated withdrawingCollateral\n\n");
-      return true;
-    } else if(withdrawingAssetManager !== nextState.withdrawingAssetManager){
-      console.log("\n\nupdated withdrawingAssetManager\n\n");
-      return true;
-    } else if(isUserContributing !== nextState.isUserContributing){
-      console.log("\n\nupdated isUserContributing\n\n");
-      return true;
-    } else if(router.pathname !== nextProps.router.pathname){
-      console.log("\n\nupdated pathname\n\n");
-      return true;
-    } else if(this.props.metamaskContext.user.address !== nextProps.metamaskContext.user.address){
-      return true;
-    } else if(loading.userAssetsInfo !== nextState.loading.userAssetsInfo){
-      console.log("\n\nupdated loading.userAssetsInfo\n\n")
-      return true;
-    }
-
-    return false;
-  }
-
   componentWillUnmount = () => {
     this.resetIntervals();
   }
@@ -169,13 +118,11 @@ class BlockchainProvider extends React.Component {
       setInterval(this.fetchAssets, FETCH_ASSETS_TIME);
     this.intervalFetchTransactionHistory =
       setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
-    this.intervalLoadPrices = setInterval(this.loadPrices, LOAD_PRICES_TIME);
   }
 
   resetIntervals = () => {
     clearInterval(this.intervalFetchAssets);
     clearInterval(this.intervalFetchTransactionHistory);
-    clearInterval(this.intervalLoadPrices);
   }
 
   pullFileInfoForAssets = async (assets) => {
@@ -685,22 +632,31 @@ class BlockchainProvider extends React.Component {
 
   fetchAssets = async () => {
     const {
-      prices,
+      pricesContext,
+      metamaskContext,
+    } = this.props;
+
+    const {
       user,
-    } = this.state;
+      userIsLoggedIn,
+    } = metamaskContext;
+
+    const {
+      prices,
+    } = pricesContext;
 
     const {
       categoriesAirTable,
       assetsAirTableById,
     } = this.props.airtableContext;
 
-    if (!prices.ether || !assetsAirTableById || !categoriesAirTable) {
-      setTimeout(this.fetchAssets, 10000);
+    if (!prices.ethereum.price || !assetsAirTableById || !categoriesAirTable) {
+      setTimeout(this.fetchAssets, 2000);
       return;
     }
 
-    console.log("GOing to fetch assets")
-    await Brain.fetchAssets(this.props.metamaskContext.user.address, prices.ether.price, assetsAirTableById, categoriesAirTable)
+    console.log("Going to fetch assets")
+    await Brain.fetchAssets(user.address, prices.ethereum.price, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
         console.log("updating state with new assets")
@@ -716,38 +672,10 @@ class BlockchainProvider extends React.Component {
       .catch((err) => {
         console.log(err)
         debug(err);
-        if (this.state.userIsLoggedIn) {
+        if (userIsLoggedIn) {
           setTimeout(this.fetchAssets, 5000);
         }
       });
-  }
-
-  loadPrices = async () => {
-    try{
-      const priceInfoMyb = await Brain.fetchPriceFromCoinmarketcap(MYBIT_TICKER_COINMARKETCAP)
-      const priceInfoEther = await Brain.fetchPriceFromCoinmarketcap(ETHEREUM_TICKER_COINMARKETCAP)
-
-      this.setState({
-        prices: {
-          mybit: {
-            price: priceInfoMyb.price,
-            priceChangePercentage: priceInfoMyb.priceChangePercentage,
-          },
-          ether: {
-            price: priceInfoEther.price,
-            priceChangePercentage: priceInfoEther.priceChangePercentage,
-          },
-        },
-        loading: {
-          ...this.state.loading,
-          priceMybit: false,
-          priceEther: false,
-        },
-      });
-    } catch(err) {
-      debug(err);
-      setTimeout(this.loadPrices, 5000);
-    }
   }
 
   render = () => {
@@ -781,6 +709,7 @@ const enhance = compose(
   withRouter,
   withNotificationsContext,
   withMetamaskContext,
+  withTokenPricesContext,
   withAirtableContext,
 );
 

@@ -12,6 +12,7 @@ export const InternalLinks = {
  S3_UPLOAD: process.env.NODE_ENV === 'development' ? `${host}/api/files/upload` : '/api/files/upload',
  S3_ASSET_FILES: process.env.NODE_ENV === 'development' ? `${host}/api/assets/files` : '/api/assets/files',
  MYBIT_API_COLLATERAL: process.env.NODE_ENV === 'development' ? `${secondHost}/collateral` : 'https://api.mybit.io/collateral',
+ PRICES: process.env.NODE_ENV === 'development' ? `${secondHost}/prices` : 'https://api.mybit.io/prices',
 }
 
 export const ExternalLinks = {

@@ -132,47 +132,43 @@ class AirtableProvider extends React.PureComponent {
   getCategories = async () => {
     const response = await fetchWithCache(InternalLinks.AIRTABLE_CATEGORIES, 'assetsCategories', this);
     // avoid processing and setting state if the data hasn't changed
-    if(response.isCached) {
-      return;
+    if(!response.isCached) {
+      const { records } = response.data;
+
+      const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
+
+      const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
+      this.setState({
+        categoriesAirTable
+      });
     }
-
-    const { records } = response.data;
-
-    const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
-
-    const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
-    this.setState({
-      categoriesAirTable
-    });
   }
 
   getAssets = async () => {
     const response = await fetchWithCache(InternalLinks.AIRTABLE_ASSETS, 'assetsEtag', this);
     // avoid processing and setting state if the data hasn't changed
-    if(response.isCached) {
-      return;
+    if(!response.isCached) {
+      const { records } = response.data;
+
+      const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
+
+      let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
+      const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
+
+      // remove assetIDs as they are not required in this object
+      // they were requred before to facilitate the processing by asset ID
+      assetsAirTable = assetsAirTable.map(asset => {
+        delete asset.AssetIDs;
+        return {
+          ...asset,
+        };
+      })
+
+      this.setState({
+        assetsAirTable,
+        assetsAirTableById,
+      });
     }
-
-    const { records } = response.data;
-
-    const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
-
-    let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
-    const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
-
-    // remove assetIDs as they are not required in this object
-    // they were requred before to facilitate the processing by asset ID
-    assetsAirTable = assetsAirTable.map(asset => {
-      delete asset.AssetIDs;
-      return {
-        ...asset,
-      };
-    })
-
-    this.setState({
-      assetsAirTable,
-      assetsAirTableById,
-    });
   }
 
   getCategoriesForAssets = (country, city) => {

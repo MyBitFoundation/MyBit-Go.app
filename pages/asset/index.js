@@ -4,6 +4,7 @@ import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withMetamaskContext } from 'components/MetamaskChecker'
+import { withTokenPricesContext } from 'components/TokenPrices'
 
 //import NotFoundPage from './NotFoundPage';
 import Loading from 'components/Loading';
@@ -15,11 +16,11 @@ render(){
   const {
     blockchainContext,
     metamaskContext,
+    pricesContext,
     router,
   } = this.props;
 
   const {
-    prices,
     assets,
     loading,
     handleAssetFavorited,
@@ -36,7 +37,11 @@ render(){
     privacyModeEnabled,
   } = metamaskContext;
 
-  if (loading.assets || !prices.ether) {
+  const {
+    prices,
+  } = pricesContext;
+
+  if (loading.assets || prices.loading) {
     return (
       <Loading
         message="Loading asset information"
@@ -54,7 +59,7 @@ render(){
   } else {
     toRender = (
       <AssetDetails
-        currentEthInUsd={prices.ether.price}
+        currentEthInUsd={prices.ethereum.price}
         user={user}
         asset={asset}
         handleAssetFavorited={handleAssetFavorited}
@@ -97,6 +102,7 @@ const enhance = compose(
   withRouter,
   withMetamaskContext,
   withBlockchainContext,
+  withTokenPricesContext,
 );
 
 export default enhance(AssetPage);

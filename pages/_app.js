@@ -6,6 +6,7 @@ import getConfig from 'next/config';
 import AirtableProvider, { withAirtableContext } from 'components/Airtable';
 import BlockchainProvider from 'components/Blockchain';
 import NotificationsProvider from 'components/Notifications';
+import TokenPricesProvider from 'components/TokenPrices';
 import MetamaskChecker from 'components/MetamaskChecker';
 import Head from 'components/Head';
 import GlobalStyle from 'components/globalStyle';
@@ -139,14 +140,16 @@ class MyApp extends App {
 const WithProviders = ({ children }) => (
     <NotificationsProvider>
       <AirtableProvider>
-        <MetamaskChecker
-          backupProvider={WEB3_BACKUP_PROVIDER}
-          supportedTokens={SUPPORTED_TOKENS}
-        >
-          <BlockchainProvider>
-            {children}
-          </BlockchainProvider>
-        </MetamaskChecker>
+        <TokenPricesProvider>
+          <MetamaskChecker
+            backupProvider={WEB3_BACKUP_PROVIDER}
+            supportedTokens={SUPPORTED_TOKENS}
+          >
+            <BlockchainProvider>
+              {children}
+            </BlockchainProvider>
+          </MetamaskChecker>
+        </TokenPricesProvider>
       </AirtableProvider>
     </NotificationsProvider>
 );

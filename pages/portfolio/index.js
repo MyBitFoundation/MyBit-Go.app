@@ -7,6 +7,7 @@ import {
 import Loading from 'components/Loading';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withMetamaskContext } from 'components/MetamaskChecker'
+import { withTokenPricesContext } from 'components/TokenPrices'
 import ValueDisplay from 'ui/ValueDisplay';
 import Asset from 'ui/Asset/';
 import PieChart from 'static/chart-pie.svg';
@@ -149,12 +150,12 @@ class PortfolioPage extends React.Component {
     const {
       blockchainContext,
       metamaskContext,
+      pricesContext,
     } = this.props;
 
     const {
       loading,
       assets,
-      prices,
       withdrawInvestorProfit,
       withdrawingAssetIds,
     } = blockchainContext;
@@ -163,15 +164,20 @@ class PortfolioPage extends React.Component {
       user,
     } = metamaskContext;
 
+    const {
+      prices,
+      loading: pricesLoading,
+    } = pricesContext;
+
     const { currentView } = this.state;
 
-    if (loading.assets || !prices.ether || loading.userAssetsInfo) {
+    if (loading.assets || pricesLoading || loading.userAssetsInfo) {
       return <Loading message="Loading portfolio" />;
     }
 
-    const { ether } = prices;
+    const { ethereum } = prices;
     const ownedAssets = getAllUserAssets(assets, user.address);
-    const processedFinantialDetails = getPortfolioAssetDetails(ownedAssets, ether.price);
+    const processedFinantialDetails = getPortfolioAssetDetails(ownedAssets, ethereum.price);
 
     const assetsToRender = currentView === 'portfolioInvestment' ?
       processedFinantialDetails.filter(assetFinantialDetails =>
@@ -257,6 +263,7 @@ PortfolioPage.propTypes = {
 const enhance = compose(
   withMetamaskContext,
   withBlockchainContext,
+  withTokenPricesContext,
 );
 
 export default enhance(PortfolioPage);
