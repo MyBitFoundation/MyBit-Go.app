@@ -1,8 +1,9 @@
 import Router, { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
-
+import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
 import { withBlockchainContext } from 'components/Blockchain'
+import { withMetamaskContext } from 'components/MetamaskChecker'
 
 //import NotFoundPage from './NotFoundPage';
 import Loading from 'components/Loading';
@@ -13,6 +14,7 @@ class AssetPage extends React.Component {
 render(){
   const {
     blockchainContext,
+    metamaskContext,
     router,
   } = this.props;
 
@@ -20,16 +22,19 @@ render(){
     prices,
     assets,
     loading,
-    user,
     handleAssetFavorited,
     fundAsset,
+    updateNotification,
+  } = blockchainContext;
+
+  const {
+    user,
+    extensionUrl,
     userHasMetamask,
     userIsLoggedIn,
     network,
-    extensionUrl,
-    isBraveBrowser,
-    updateNotification,
-  } = blockchainContext;
+    privacyModeEnabled,
+  } = metamaskContext;
 
   if (loading.assets || !prices.ether) {
     return (
@@ -58,9 +63,9 @@ render(){
         userIsLoggedIn={userIsLoggedIn}
         network={network}
         extensionUrl={extensionUrl}
-        isBraveBrowser={isBraveBrowser}
         updateNotification={updateNotification}
         loadingUserInfo={loading.userAssetsInfo}
+        privacyModeEnabled={privacyModeEnabled}
       />
     )
   }
@@ -88,4 +93,10 @@ AssetPage.propTypes = {
   history: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
 
-export default withBlockchainContext(withRouter(AssetPage));
+const enhance = compose(
+  withRouter,
+  withMetamaskContext,
+  withBlockchainContext,
+);
+
+export default enhance(AssetPage);

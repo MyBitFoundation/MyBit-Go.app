@@ -6,20 +6,19 @@ const metamaskErrors = (
   className,
   userHasMetamask,
   extensionUrl,
-  isBraveBrowser,
   userIsLoggedIn,
   network,
-  enabled,
+  privacyModeEnabled,
 ) => {
   let toRender = null;
-  if (!userHasMetamask && extensionUrl && !isBraveBrowser) {
+  if (!userHasMetamask && extensionUrl) {
     toRender = (
       <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a> to be able to fund and create assets.
         You can download the extension via{' '}
         <a href={extensionUrl} target="_blank" rel="noopener noreferrer">this</a> link.
       </p>
     );
-  } else if (!userHasMetamask && !extensionUrl && !isBraveBrowser) {
+  } else if (!userHasMetamask && !extensionUrl) {
     toRender = (
       <div>
         <span>Your browser is not supported. MetaMask supports the following browsers:
@@ -59,25 +58,11 @@ const metamaskErrors = (
         </span>
       </div>
     );
-  } else if (!userHasMetamask && isBraveBrowser) {
-    toRender = (
-      <p>
-        The Brave browser comes pre-installed with MetaMask, please enable it to contribute. Click{' '}
-        <a
-          href="https://brave.com/into-the-blockchain-brave-with-metamask/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-         here
-        </a>
-        {' '}to see how.
-      </p>
-    );
   } else if (userHasMetamask && !userIsLoggedIn) {
     toRender = (
       <p>Please login in MetaMask to be able to contribute.</p>
     );
-  } else if(enabled === false){
+  } else if(privacyModeEnabled === undefined){
     toRender = (
       <p><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</p>
     );

@@ -124,33 +124,6 @@ export const fetchTransactionHistory = async userAddress =>
     }
   });
 
-export const loadMetamaskUserDetails = async () =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const accounts = await window.web3js.eth.getAccounts();
-      if(accounts.length === 0){
-        resolve();
-      }
-      const balance = await window.web3js.eth.getBalance(accounts[0]);
-      const myBitTokenContract = new window.web3js.eth.Contract(
-        MyBitToken.ABI,
-        MyBitToken.ADDRESS,
-      );
-      const myBitBalance = await myBitTokenContract.methods
-        .balanceOf(accounts[0])
-        .call();
-
-      const details = {
-        userName: accounts[0],
-        ethBalance: window.web3js.utils.fromWei(balance, 'ether'),
-        myBitBalance: window.web3js.utils.fromWei(myBitBalance, 'ether'),
-      };
-      resolve(details);
-    } catch (error) {
-      reject(error);
-    }
-  });
-
 const roiEscrow = async assetId =>
   new Promise(async (resolve, reject) => {
     try {

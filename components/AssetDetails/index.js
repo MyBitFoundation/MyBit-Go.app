@@ -221,9 +221,9 @@ class AssetDetails extends React.Component {
       userIsLoggedIn,
       network,
       extensionUrl,
-      isBraveBrowser,
       updateNotification,
       loadingUserInfo,
+      privacyModeEnabled,
     } = this.props;
 
     const {
@@ -298,9 +298,9 @@ class AssetDetails extends React.Component {
             userIsLoggedIn={userIsLoggedIn}
             network={network}
             extensionUrl={extensionUrl}
-            isBraveBrowser={isBraveBrowser}
             updateNotification={updateNotification}
             loadingUserInfo={loadingUserInfo}
+            privacyModeEnabled={privacyModeEnabled}
           />
         )}
         <StyledAssetDetailsLeftCol xs={24} sm={24} md={24} lg={12} xl={12}>

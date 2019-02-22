@@ -52,7 +52,7 @@ class MetamaskChecker extends Component {
     }
   }
 
-  async getAccount(enabled){
+  async getAccount(enabled, network){
     try{
       const accounts = await window.web3js.eth.getAccounts();
       const isLoggedIn = await this.checkIfLoggedIn();
@@ -65,6 +65,7 @@ class MetamaskChecker extends Component {
         balance = window.web3js.utils.fromWei(balance, 'ether');
         if((this.state.user && this.state.user.userName !== accounts[0]) || (this.state.user.balance !== balance) || !this.state.user || !this.state.enabled){
           this.setState({
+            network,
             user: {
               userName: accounts[0],
               ethBalance: balance,
@@ -76,6 +77,7 @@ class MetamaskChecker extends Component {
         }
       } else {
         this.setState({
+          network,
           user: {},
           isInstalled: true,
           isLoggedIn,

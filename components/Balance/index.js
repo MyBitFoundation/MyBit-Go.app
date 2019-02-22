@@ -9,22 +9,20 @@ import StyledBalanceHeader from './styledBalanceHeader';
 import StyledBalanceInfo from './styledBalanceInfo';
 import StyledSpin from './styledSpin';
 
-const Balance = ({
-  myBitBalance,
-  ethBalance,
-  isMobile,
-  noInfo,
-}) => {
-  if(noInfo){
-    myBitBalance = 0;
-    ethBalance = 0;
-  }
+const Balance = (props) => {
+  const {
+    myb,
+    ether,
+    isMobile,
+    noInfo,
+  } = props;
+
   return (
     <StyledBalance>
-      {!isMobile && (
+      {isMobile === false && (
         <StyledBalanceHeader>ACCOUNT BALANCE</StyledBalanceHeader>
       )}
-      {(!ethBalance || !myBitBalance) && !noInfo ? (
+      {(!ether || !myb) && !noInfo ? (
         <StyledSpin>
           <Spin />
         </StyledSpin>
@@ -36,7 +34,7 @@ const Balance = ({
             <MybitIcon />
             <span>
               <b>
-                {parseFloat(Number(myBitBalance).toFixed(4)).toLocaleString()}
+                {parseFloat(Number(myb).toFixed(4)).toLocaleString()}
               </b>
               {' '} MYB
             </span>
@@ -45,7 +43,7 @@ const Balance = ({
             <EthIcon />
             <span>
               <b>
-                {parseFloat(Number(ethBalance).toFixed(4)).toLocaleString()}
+                {parseFloat(Number(ether).toFixed(4)).toLocaleString()}
               </b>
               {' '} ETH
             </span>
@@ -56,15 +54,15 @@ const Balance = ({
 )};
 
 Balance.defaultProps = {
-  myBitBalance: '',
-  ethBalance: '',
+  myb: '',
+  ether: '',
   noInfo: false,
   isMobile: false,
 };
 
 Balance.propTypes = {
-  myBitBalance: PropTypes.string,
-  ethBalance: PropTypes.string,
+  myb: PropTypes.string,
+  ether: PropTypes.string,
   noInfo: PropTypes.boolean,
   isMobile: PropTypes.boolean,
 };

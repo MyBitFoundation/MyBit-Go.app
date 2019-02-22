@@ -3,9 +3,6 @@ import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 import {
   Slides,
 } from './slides';
-import {
-  BREAKPOINTS,
-} from 'constants';
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: 'What is MyBit Go?' },

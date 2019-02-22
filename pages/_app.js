@@ -2,6 +2,7 @@ import React from 'react';
 import { hot } from 'react-hot-loader/root'
 import App, { Container } from 'next/app';
 import Router, { withRouter } from 'next/router'
+import getConfig from 'next/config';
 import AirtableProvider, { withAirtableContext } from 'components/Airtable';
 import BlockchainProvider from 'components/Blockchain';
 import NotificationsProvider from 'components/Notifications';
@@ -14,8 +15,9 @@ import MobileMenu from 'components/MobileMenu'
 import BancorContainer from 'ui/BancorContainer';
 
 import {
-  BREAKPOINTS,
   navbarOptions,
+  WEB3_BACKUP_PROVIDER,
+  SUPPORTED_TOKENS,
 } from 'constants';
 
 class MyApp extends App {
@@ -135,15 +137,18 @@ class MyApp extends App {
 }
 
 const WithProviders = ({ children }) => (
-  <NotificationsProvider>
-    <AirtableProvider>
-      <MetamaskChecker>
-        <BlockchainProvider>
-          {children}
-        </BlockchainProvider>
-      </MetamaskChecker>
-    </AirtableProvider>
-  </NotificationsProvider>
+    <NotificationsProvider>
+      <AirtableProvider>
+        <MetamaskChecker
+          backupProvider={WEB3_BACKUP_PROVIDER}
+          supportedTokens={SUPPORTED_TOKENS}
+        >
+          <BlockchainProvider>
+            {children}
+          </BlockchainProvider>
+        </MetamaskChecker>
+      </AirtableProvider>
+    </NotificationsProvider>
 );
 
 export default hot(withRouter(MyApp));

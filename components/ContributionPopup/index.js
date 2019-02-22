@@ -15,9 +15,6 @@ import StyledContributionPopupToS from './styledContributionPopupToS';
 import StyledContributionPopupTosText from './styledContributionPopupTosText';
 import StyledContributionPopupAlertWrapper from './styledContributionPopupAlertWrapper';
 import StyledContributionPopupEthAmount from './styledContributionPopupEthAmount';
-import {
-  CORRECT_NETWORK,
-} from 'constants';
 import metamaskErrors from 'utils/metamaskErrors';
 
 class ContributionPopup extends React.Component {
@@ -35,6 +32,23 @@ class ContributionPopup extends React.Component {
 
   componentWillUnmount() {
      this.ismounted = false;
+  }
+
+  componentDidUpdate = (prevProps) => {
+    const {
+      privacyModeEnabled: oldPrivacyModeEnabled,
+    } = prevProps;
+
+    const {
+      privacyModeEnabled: newPrivacyModeEnabled,
+    } = this.props;
+
+    if(oldPrivacyModeEnabled === undefined && newPrivacyModeEnabled !== undefined){
+      this.setState({
+        alertType: undefined,
+        alertMessage: undefined,
+      })
+    }
   }
 
   setAcceptedTos = (value) => {
@@ -82,8 +96,7 @@ class ContributionPopup extends React.Component {
       network,
       userIsLoggedIn,
       extensionUrl,
-      isBraveBrowser,
-      enabled,
+      privacyModeEnabled,
     } = this.props;
 
     if (transactionStatus === 1) {
@@ -98,7 +111,7 @@ class ContributionPopup extends React.Component {
       return null;
     }
 
-    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network, enabled);
+    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, userIsLoggedIn, network, privacyModeEnabled);
 
     if(metamaskErrorsToRender){
       this.setState({
@@ -167,7 +180,6 @@ class ContributionPopup extends React.Component {
       alertType,
       alertMessage,
     } = this.state;
-
 
     const shouldShowConfirmAndCancel =
       (!isLoading && transactionStatus === '') || (transactionStatus === 1);

@@ -11,3 +11,5 @@ export * from './airtable';
 export * from './navigationBar';
 export * from './categories';
 export * from './sortByAssets';
+export * from './web3BackupProvider';
+export * from './supportedTokens';

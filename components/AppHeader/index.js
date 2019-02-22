@@ -69,7 +69,7 @@ const AppHeader = ({
             {!readOnlyMode && (
               <AppHeaderSection>
               <Balance
-                {...user}
+                {...user.balances}
               />
               </AppHeaderSection>
             )}

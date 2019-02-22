@@ -5,6 +5,7 @@ import './styles/App.css';
 import AppHeader from './components/AppHeader';
 import NavigationBar from './components/NavigationBar';
 import { WithBlockchainContext } from './components/Blockchain';
+import { WithMetamaskContext } from './components/Blockchain';
 import BancorContainer from './components/UI/BancorContainer';
 import routes from './routes';
 import CirclesBackgroundWrapper from './components/CirclesBackgroundWrapper';
@@ -32,7 +33,7 @@ class App extends Component {
     // let the explore component handle this
     try {
       if (this.props.location.pathname === '/list-asset' && !firstVisit &&
-            localStorage.getItem('first-list-asset-visit') === null) {
+          localStorage.getItem('first-list-asset-visit') === null) {
         localStorage.setItem('first-list-asset-visit', 'true');
         return true;
       }
@@ -45,17 +46,16 @@ class App extends Component {
   render() {
     const firstVisit = this.isFirstVisit();
     const firstListAssetVisit = this.isFirstListAssetVisit(firstVisit);
+
     const {
+      privacyModeEnabled,
       user,
-      prices,
-      userHasMetamask,
       userIsLoggedIn,
       network,
-      isBraveBrowser,
       extensionUrl,
-      enabled,
       isReadOnlyMode,
-    } = this.props.blockchainContext;
+      userHasMetamask,
+    } = this.props.metamaskContext;
 
     return (
       <CirclesBackgroundWrapper>
@@ -63,13 +63,12 @@ class App extends Component {
           <React.Fragment>
             <AppHeader
               user={user}
-              prices={prices.mybit}
               readOnlyMode={isReadOnlyMode()}
             />
             <NavigationBar
               currentPath={this.props.location.pathname}
             />
-            {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network, enabled)}
+            {metamaskErrors('MetaMaskErrors', userHasMetamask, extensionUrl, isBraveBrowser, userIsLoggedIn, network, privacyModeEnabled)}
           </React.Fragment>
           <div className="page-wrapper">
             <Switch>
@@ -94,4 +93,4 @@ App.propTypes = {
     .isRequired,
 };
 
-export default withRouter(WithBlockchainContext(App));
+export default withRouter(WithMetamaskContext(App));

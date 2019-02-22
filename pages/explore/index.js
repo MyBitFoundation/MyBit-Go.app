@@ -1,3 +1,4 @@
+import { compose } from 'recompose'
 import {
   Switch,
   Icon,
@@ -14,7 +15,6 @@ import StyledFiltersSwitch from './styledFiltersSwitch';
 import {
   FundingStages,
   Categories,
-  BREAKPOINTS,
   SORT_BY_ASSETS,
 } from 'constants';
 
@@ -129,4 +129,10 @@ class Explore extends React.Component {
   }
 }
 
-export default withAirtableContext(withBlockchainContext(Explore));
+const enhance = compose(
+  withAirtableContext,
+  withBlockchainContext,
+);
+
+export default enhance(Explore);
+

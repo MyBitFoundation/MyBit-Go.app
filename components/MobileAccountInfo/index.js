@@ -4,11 +4,15 @@ import StyledMobileAccountInfo from './styledMobileAccountInfo';
 import StyledMobileAccountInfoBalance from './styledMobileAccountInfoBalance';
 import StyledMobileAccountInfoNoAccount from './styledMobileAccountInfoNoAccount';
 import StyledMobileAccountCircle from './styledMobileAccountCircle';
+import { withMetamaskContext } from 'components/MetamaskChecker';
 
 const MobileAccountInfo = ({
-  user,
-  isReadOnlyMode,
+  metamaskContext,
 }) =>  {
+  const{
+    user,
+    isReadOnlyMode,
+  } = metamaskContext;
 
   const addressToRender = !isReadOnlyMode ? (
     <Address
@@ -28,7 +32,7 @@ const MobileAccountInfo = ({
       {addressToRender}
       <StyledMobileAccountInfoBalance>
         <Balance
-          {...user}
+          {...user.balances}
           isMobile
           noInfo={isReadOnlyMode}
         />
@@ -37,4 +41,4 @@ const MobileAccountInfo = ({
   )
 }
 
-export default MobileAccountInfo;
+export default withMetamaskContext(MobileAccountInfo);

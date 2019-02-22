@@ -2,12 +2,14 @@ import { withRouter } from 'next/router'
 import AppHeader from 'components/AppHeader';
 import NavigationBar from 'ui/NavigationBar';
 import { withBlockchainContext } from 'components/Blockchain'
+import { withMetamaskContext } from 'components/MetamaskChecker'
 import PageWrapper from './pageWrapper';
 import {
   navbarOptions,
 } from 'constants';
 
-const AppWrapper = ({
+const AppWrapper = React.memo(({
+  metamaskContext,
   blockchainContext,
   children,
   router,
@@ -15,10 +17,13 @@ const AppWrapper = ({
   handleMobileMenuState,
 }) => {
   const {
-    user,
     prices,
-    isReadOnlyMode,
   } = blockchainContext;
+
+  const {
+    isReadOnlyMode,
+    user,
+  } = metamaskContext;
 
   const{
     route: currentPath,
@@ -27,7 +32,7 @@ const AppWrapper = ({
   return (
     <React.Fragment>
       <AppHeader
-        readOnlyMode={isReadOnlyMode()}
+        readOnlyMode={isReadOnlyMode}
         user={user}
         prices={prices}
         hideOnMobile={isFullScreenPage}
@@ -45,6 +50,6 @@ const AppWrapper = ({
       </PageWrapper>
     </React.Fragment>
   )
-};
+});
 
-export default withRouter(withBlockchainContext(AppWrapper));
+export default withRouter(withMetamaskContext(withBlockchainContext(AppWrapper)));

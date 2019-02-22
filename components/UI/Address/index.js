@@ -7,9 +7,9 @@ import StyledLoader from './styledLoader';
 import StyledText from './styledText';
 import StyledJazzicon from './styledJazzicon';
 
-const Address = ({ userName, isLeft, isMobile }) => (
+const Address = ({ address, isLeft, isMobile }) => (
   <StyledAddress>
-    {!userName ? (
+    {!address ? (
       <StyledLoader>
         <Spin style={{ height: '32px', width: '32px' }} />
         <span>Loading account</span>
@@ -19,11 +19,11 @@ const Address = ({ userName, isLeft, isMobile }) => (
         isLeft={isLeft}
         isMobile={isMobile}
       >
-        <Jazzicon diameter={isMobile ? 31 : 39} seed={jsNumberForAddress(userName)} />
+        <Jazzicon diameter={isMobile ? 31 : 39} seed={jsNumberForAddress(address)} />
         <StyledText
           isMobile={isMobile}
         >
-          {userName}
+          {address}
         </StyledText>
       </StyledJazzicon>
     )}
@@ -31,11 +31,11 @@ const Address = ({ userName, isLeft, isMobile }) => (
 );
 
 Address.defaultProps = {
-  userName: undefined,
+  address: undefined,
 };
 
 Address.propTypes = {
-  userName: PropTypes.string,
+  address: PropTypes.string,
 };
 
 export default React.memo(Address);
