@@ -1,5 +1,9 @@
 import { css } from 'styled-components';
 
+/*
+* Keep any custom breakpoints you need here.
+* Please try not to have custom breakpoints.
+*/
 export const Sizes = {
   mobileS: 320,
   mobileM: 375,
@@ -10,8 +14,6 @@ export const Sizes = {
   desktop: 2560,
   categoriesFilterMobile: 500,
   categoriesFilterTablet: 900,
-  carouselWithNavigationOnboardingMinWidth: 600,
-  carouselWithNavigationMobile: 600,
 };
 
 export const MediaQueries = Object.keys(Sizes).reduce((acc, label) => {

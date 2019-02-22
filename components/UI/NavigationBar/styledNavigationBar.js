@@ -24,23 +24,6 @@ const StyledNavigationBar = styled.div`
   ${({theme}) => theme.tablet`
     display: block;
   `}
-
-  @media (max-width: ${props => props.hideAt}) {
-   ${props => !props.show && css`
-    transition: all 0.2s;
-    height: 0px;
-
-    ul{
-      height: 0px;
-      overflow: hidden;
-      transition: all 0.2s;
-    }
-
-    .ant-menu{
-      border-bottom: none;
-    }
-  `}
-  }
 }`
 
 export default StyledNavigationBar;

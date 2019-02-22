@@ -10,5 +10,4 @@ export * from './fundingStages';
 export * from './airtable';
 export * from './navigationBar';
 export * from './categories';
-export * from './breakpoints';
 export * from './sortByAssets';

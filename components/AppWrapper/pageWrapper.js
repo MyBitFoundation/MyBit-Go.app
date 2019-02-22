@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-const StyledPageWrapper = styled.div`
+const PageWrapper = styled.div`
   padding: 0px 20px;
   max-width: 1400px;
   margin: 0 auto;
@@ -22,4 +22,4 @@ const StyledPageWrapper = styled.div`
   `}
 }`
 
-export default StyledPageWrapper;
+export default PageWrapper;

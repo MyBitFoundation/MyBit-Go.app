@@ -126,7 +126,6 @@ class BlockchainProvider extends React.Component {
 
     // case where account, login or enabled variable change
     if((newUserAddress && (currentUsername !== newUserAddress)) || (currentUserIsLoggedIn !== newIsUserLoggedIn) || (currentEnabled !== newEnabled)){
-      console.log("updating state 1")
       this.setState({
         user: nextProps.user,
         userIsLoggedIn: nextProps.isLoggedIn,
@@ -134,7 +133,6 @@ class BlockchainProvider extends React.Component {
       }, () => this.handleMetamaskUpdate());
     }
     if(newBalance && (currentBalance !== newBalance)){
-      console.log("updating state 2")
       this.setState({
         user: {
           ...this.state.user,
@@ -703,7 +701,6 @@ class BlockchainProvider extends React.Component {
     this.fetchTransactionHistory();
     this.resetNotifications();
 
-    console.log("updating state 3")
     this.setState({
       loading: {
         ...this.state.loading,
@@ -785,7 +782,6 @@ class BlockchainProvider extends React.Component {
         });
       })
       .catch((err) => {
-        console.log("ERRRRRR")
         console.log(err)
         debug(err);
         if (this.state.userIsLoggedIn) {
@@ -823,7 +819,7 @@ class BlockchainProvider extends React.Component {
   }
 
   render = () => {
-    console.log("RERENDERING BLOCKCHAIN")
+    console.log("Rerendering blockchain")
     return (
       <Provider value={this.state}>
         {this.props.children}

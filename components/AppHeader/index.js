@@ -9,21 +9,20 @@ import { Consumer as BancorConsumer } from 'ui/BancorContainer';
 import {
   Button,
 } from 'antd';
-import StyledAppheader from './styledAppHeader';
-import StyledLogoAndInfo from './styledLogoAndInfo';
-import StyledLogo from './styledLogo';
-import StyledBancorWidget from './styledBancorWidget';
-import StyledSection from './styledSection';
-import StyledHamburguerButton from './styledHamburguerButton';
-import StyledAppHeaderPageName from './styledAppHeaderPageName';
+import AppHeaderContainer from './appHeaderContainer';
+import AppHeaderLogoAndInfo from './appHeaderLogoAndInfo';
+import AppHeaderLogo from './appHeaderLogo';
+import AppHeaderBancorWidget from './appHeaderBancorWidget';
+import AppHeaderSection from './appHeaderSection';
+import AppHeaderHamburguerButton from './appHeaderHamburguerButton';
+import AppHeaderPageName from './appHeaderPageName';
 import HamburguerIcon from 'static/hamburguer-icon.svg';
 
 const AppHeader = ({
   user,
   prices,
   readOnlyMode,
-  show,
-  hideAt,
+  hideOnMobile,
   currentPath,
   handleMobileMenuState,
 }) => {
@@ -52,31 +51,30 @@ const AppHeader = ({
   return (
     <BancorConsumer>
       {({ initBancor }) => (
-        <StyledAppheader
-          show={show}
-          hideAt={hideAt}
+        <AppHeaderContainer
+          hideOnMobile={hideOnMobile}
         >
-          <StyledLogoAndInfo>
-            <StyledLogo>
+          <AppHeaderLogoAndInfo>
+            <AppHeaderLogo>
               <Logo onCLick={() => Router.push('/explore')}/>
-            </StyledLogo>
-            <StyledAppHeaderPageName>
+            </AppHeaderLogo>
+            <AppHeaderPageName>
               {pageName}
-            </StyledAppHeaderPageName>
-            <StyledSection>
+            </AppHeaderPageName>
+            <AppHeaderSection>
               <ExchangeRate
                 {...prices.mybit}
               />
-            </StyledSection>
+            </AppHeaderSection>
             {!readOnlyMode && (
-              <StyledSection>
+              <AppHeaderSection>
               <Balance
                 {...user}
               />
-              </StyledSection>
+              </AppHeaderSection>
             )}
-          </StyledLogoAndInfo>
-          <StyledBancorWidget>
+          </AppHeaderLogoAndInfo>
+          <AppHeaderBancorWidget>
             <Button
               size="large"
               type="primary"
@@ -87,19 +85,19 @@ const AppHeader = ({
             >
               Get MYB
             </Button>
-          </StyledBancorWidget>
+          </AppHeaderBancorWidget>
           {!readOnlyMode && (
-            <StyledSection
+            <AppHeaderSection
               noPadding
               isAddress
             >
               <Address {...user} />
-            </StyledSection>
+            </AppHeaderSection>
           )}
-          <StyledHamburguerButton onClick={() => handleMobileMenuState(true)}>
+          <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)}>
             <HamburguerIcon />
-          </StyledHamburguerButton>
-        </StyledAppheader>
+          </AppHeaderHamburguerButton>
+        </AppHeaderContainer>
       )}
     </BancorConsumer>
   )

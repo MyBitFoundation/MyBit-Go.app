@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyleBancorWidget = styled.div`
+const AppHeaderBancorWidget = styled.div`
   display: none;
   justify-content: center;
   align-items: center;
@@ -20,4 +20,4 @@ const StyleBancorWidget = styled.div`
   `}
 }`
 
-export default StyleBancorWidget;
+export default AppHeaderBancorWidget;

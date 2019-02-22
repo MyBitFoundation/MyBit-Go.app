@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyleLogo = styled.div`
+const AppHeaderLogo = styled.div`
   padding-top: 10px;
   padding-left: 20px;
   display: inline-block;
@@ -23,4 +23,4 @@ const StyleLogo = styled.div`
 
 }`
 
-export default StyleLogo;
+export default AppHeaderLogo;

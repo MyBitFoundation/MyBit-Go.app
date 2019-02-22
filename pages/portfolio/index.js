@@ -96,10 +96,6 @@ const getManagerDetailsFromAsset = (asset, currentEthPrice) => {
 
   const totalProfitAssetManager = assetIncome * (managerPercentage / 100);
 
-  console.log(managerTotalIncome.toString())
-  console.log(managerTotalWithdrawn)
-  console.log(asset.assetId)
-
   return {
     ...asset,
     profit,
@@ -160,8 +156,6 @@ class PortfolioPage extends React.Component {
       withdrawingAssetIds,
       user,
     } = blockchainContext;
-
-    console.log("withdrawingAssetIds: ", withdrawingAssetIds)
 
     const { currentView } = this.state;
 

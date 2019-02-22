@@ -17,9 +17,7 @@ const AssetTemplate = ({
   country,
   height,
   margin,
-}) => {
-  console.count('AssetTemplate')
-  return (
+}) => (
   <StyledAssetTemplate
     margin={margin}
   >
@@ -43,6 +41,6 @@ const AssetTemplate = ({
     </StyledAssetTemplateImageHolder>
     {children}
   </StyledAssetTemplate>
-)};
+);
 
 export default AssetTemplate;

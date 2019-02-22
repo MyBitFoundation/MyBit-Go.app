@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledAppHeaderPageName = styled.span`
+const AppHeaderPageName = styled.span`
   position: absolute;
   left: 50%;
   transform: translate(-50%,0%);
@@ -15,4 +15,4 @@ const StyledAppHeaderPageName = styled.span`
   `}
 }`
 
-export default StyledAppHeaderPageName;
+export default AppHeaderPageName;

@@ -1,6 +1,9 @@
 import styled from 'styled-components';
+import {
+  Pagination as PaginationAnt,
+} from 'antd';
 
-const StyledPagination = styled.div`
+const Pagination = styled(PaginationAnt)`
   position: relative;
   top: 100%;
 
@@ -9,4 +12,4 @@ const StyledPagination = styled.div`
   }
 }`
 
-export default StyledPagination;
+export default Pagination;

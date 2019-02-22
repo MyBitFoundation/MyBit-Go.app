@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledHamburguerButton = styled.div`
+const AppHeaderHamburguerButton = styled.div`
   margin-right: 10px;
   margin-top: 10px;
   padding: 10px;
@@ -14,4 +14,4 @@ const StyledHamburguerButton = styled.div`
   `}
 }`
 
-export default StyledHamburguerButton;
+export default AppHeaderHamburguerButton;

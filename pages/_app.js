@@ -100,10 +100,6 @@ class MyApp extends App {
     } = this.state;
 
     const isFullScreenPage = ['/onboarding', '/asset-manager', '/list-asset'].includes(router.pathname);
-    let breakPointForFullScreen;
-    if(router.pathname === '/onboarding') {
-      breakPointForFullScreen = BREAKPOINTS.carouselWithNavigationMobile;
-    }
 
     return (
       <Container>
@@ -118,20 +114,17 @@ class MyApp extends App {
               handleMobileMenuState={this.handleMobileMenuClicked}
             >
               <React.Fragment>
-              <WrappedXado />
-              <BancorContainer>
-                <AppWrapper
-                  isFullScreenPage={isFullScreenPage}
-                  hideAtHeader={breakPointForFullScreen}
-                  handleMobileMenuState={this.handleMobileMenuClicked}
-                >
-                  <Component
-                    {...pageProps}
-                    currentPath={router.route}
-                    carouselWithNavigationMobile={breakPointForFullScreen}
-                  />
-                </AppWrapper>
-              </BancorContainer>
+                <BancorContainer>
+                  <AppWrapper
+                    isFullScreenPage={isFullScreenPage}
+                    handleMobileMenuState={this.handleMobileMenuClicked}
+                  >
+                    <Component
+                      {...pageProps}
+                      currentPath={router.route}
+                    />
+                  </AppWrapper>
+                </BancorContainer>
               </React.Fragment>
             </MobileMenu>
           </WithProviders>
@@ -140,17 +133,6 @@ class MyApp extends App {
     )
   }
 }
-
-const Xado = ({
-  airtableContext,
-}) => {
-  console.log("RENDERING P TEST")
-  return (
-    <p>test</p>
-  );
-}
-
-const WrappedXado = withAirtableContext(Xado)
 
 const WithProviders = ({ children }) => (
   <NotificationsProvider>

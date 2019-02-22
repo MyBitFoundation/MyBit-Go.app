@@ -1,9 +1,8 @@
 import { withRouter } from 'next/router'
 import AppHeader from 'components/AppHeader';
 import NavigationBar from 'ui/NavigationBar';
-import Theme from 'ui/Theme';
 import { withBlockchainContext } from 'components/Blockchain'
-import StyledPageWrapper from './styledPageWrapper';
+import PageWrapper from './pageWrapper';
 import {
   navbarOptions,
 } from 'constants';
@@ -13,7 +12,6 @@ const AppWrapper = ({
   children,
   router,
   isFullScreenPage,
-  hideAtHeader,
   handleMobileMenuState,
 }) => {
   const {
@@ -29,26 +27,22 @@ const AppWrapper = ({
   return (
     <React.Fragment>
       <AppHeader
-        styling={Theme}
         readOnlyMode={isReadOnlyMode()}
         user={user}
         prices={prices}
-        show={!isFullScreenPage}
-        hideAt={hideAtHeader}
+        hideOnMobile={isFullScreenPage}
         currentPath={currentPath}
         handleMobileMenuState={handleMobileMenuState}
       />
       <NavigationBar
         items={navbarOptions}
         currentPath={currentPath}
-        show={!isFullScreenPage}
-        hideAt={hideAtHeader}
       />
-      <StyledPageWrapper
+      <PageWrapper
         isFullScreenPage={isFullScreenPage}
       >
         {children}
-      </StyledPageWrapper>
+      </PageWrapper>
     </React.Fragment>
   )
 };

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-const StyledAppheader = styled.div`
+const AppHeaderContainer = styled.div`
   height: 60px;
   background-image: ${({theme}) => theme.colors.backgroundGradientHorizontal}
   margin: 0px 0px;
@@ -16,8 +16,12 @@ const StyledAppheader = styled.div`
 
   transition: all 0.2s;
 
-  ${props => (props.show === false) && css`
+  ${props => props.hideOnMobile && css`
     height: 0px;
+
+    ${({theme}) => theme.tablet`
+      height: 90px;
+    `}
   `}
 
   ${({theme}) => theme.tablet`
@@ -27,4 +31,4 @@ const StyledAppheader = styled.div`
   `}
 }`
 
-export default StyledAppheader;
+export default AppHeaderContainer;

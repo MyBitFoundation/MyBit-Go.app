@@ -9,8 +9,6 @@ import StyledNavigationBar from './styledNavigationBar';
 const NavigationBar = ({
   currentPath,
   items,
-  show,
-  hideAt,
 }) => {
   const navBarOptions = items(currentPath).map(menuItem => (
     <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected && 'ant-menu-item-selected'}>
@@ -26,10 +24,7 @@ const NavigationBar = ({
   ));
 
   return (
-    <StyledNavigationBar
-      show={show}
-      hideAt={hideAt}
-    >
+    <StyledNavigationBar>
       <Menu
         mode="horizontal"
         className="AppNavigationBar"

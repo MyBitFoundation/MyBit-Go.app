@@ -40,7 +40,6 @@ const CategoryFilter = ({
   allFilters,
   selectedFilters,
   setFilterState,
-  breakpoints,
   subFilters,
   sortByFilterSelected,
   handleCheckedSortBy,
@@ -86,19 +85,13 @@ const CategoryFilter = ({
   );
 
   return (
-    <StyledCategoryFilter
-      breakpoints={breakpoints}
-    >
-      <StyledCategoryFilterDesktop
-        breakpoints={breakpoints}
-      >
+    <StyledCategoryFilter>
+      <StyledCategoryFilterDesktop>
         {buttonsToRender}
         {dropdownToRender}
         {subfiltersToRender}
       </StyledCategoryFilterDesktop>
-      <StyledCategoryFilterMobile
-        breakpoints={breakpoints}
-      >
+      <StyledCategoryFilterMobile>
         <Dropdown overlay={menu(mobileDropDownToRender)}>
           <Button>
             Categories <Icon type="down" />

@@ -43,7 +43,7 @@ class OnboardingPage extends React.Component {
           navigationTooltips={SliderNavigationTooltips}
           slides={Slides}
           onFinish={this.finishOnboarding}
-          maxWidthDesktop={BREAKPOINTS.carouselWithNavigationOnboardingMinWidth}
+          maxWidthDesktop="600px"
           nextButtonHasArrow
         />
       </React.Fragment>

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-const StyledSection = styled.div`
+const AppHeaderSection = styled.div`
   height: 100%;
   display: flex;
   padding-top: 25px;
@@ -26,4 +26,4 @@ const StyledSection = styled.div`
   `}
 }`
 
-export default StyledSection;
+export default AppHeaderSection;

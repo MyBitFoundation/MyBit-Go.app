@@ -616,7 +616,6 @@ const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, as
 export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
-      console.log("Fetching assets")
       const apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
       const assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
@@ -648,8 +647,6 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
         }));
 
       const realAddress = userName && window.web3js.utils.toChecksumAddress(userName);
-
-      console.log("Real Address: ", realAddress)
 
       // if the asset Id is not on airtable it doens't show up in the platform
       assets =
@@ -740,7 +737,6 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
       assetsPlusMoreDetails = assetsPlusMoreDetails
         .filter(asset => asset && asset.amountToBeRaisedInUSD > 0);
 
-      console.table(assetsPlusMoreDetails)
       resolve(assetsPlusMoreDetails);
     } catch (error) {
       debug('failed to fetch assets, error: ', error);
