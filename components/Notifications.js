@@ -51,6 +51,7 @@ class NotificationsProvider extends React.Component {
   createOrUpdateNofication = (id, data) => {
     const notifications = Object.assign({}, this.state.notifications);
     notifications[id] = data;
+    console.log("notifications: ", notifications)
     this.setState({notifications});
   };
 
@@ -80,6 +81,9 @@ class NotificationsProvider extends React.Component {
         />
       )
     });
+
+          console.log(toRender)
+
 
     for(const id of toRemove){
       this.removeNotification(id);

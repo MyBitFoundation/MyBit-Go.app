@@ -60,7 +60,7 @@ const metamaskErrors = (
     );
   } else if (userHasMetamask && !userIsLoggedIn) {
     toRender = (
-      <p>Please login in MetaMask to be able to contribute.</p>
+      <p>Please login in MetaMask to perform this action.</p>
     );
   } else if(privacyModeEnabled === undefined){
     toRender = (

@@ -304,7 +304,7 @@ export const createAsset = async (onTransactionHash, onReceipt, onError, params)
     const ipfsHash = installerId; // ipfshash doesn't really matter right now
     const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
 
-    const futureassetId = generateassetId(
+    const futureassetId = generateAssetId(
       window.web3js,
       userAddress,
       managerPercentage,
@@ -485,6 +485,7 @@ export const fundAsset = async (userName, assetId, amount, onTransactionHash, on
 }
 
 const processErrorType = (error, handleError) => {
+  console.log(error)
   if(error.message.includes("User denied transaction signature")){
     handleError(ErrorTypes.METAMASK);
   } else{

@@ -70,4 +70,9 @@ export const StyledCarouselSlideParagraph = styled.p`
     margin-top: 30px;
   `}
 
+  ${props => props.isCentered && css`
+    ${({theme}) => theme.tablet`
+      text-align: center;
+    `}
+  `}
 }`

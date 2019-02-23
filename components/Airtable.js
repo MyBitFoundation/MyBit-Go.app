@@ -26,9 +26,10 @@ export const withAirtableContext = (Component) => {
 class AirtableProvider extends React.PureComponent {
   constructor(props){
     super(props);
-    this.getCategoriesForAssets = this.getCategoriesForAssets;
     this.state = {
       getCategoriesForAssets: this.getCategoriesForAssets,
+      getAssetByName: this.getAssetByName,
+      forceRefresh: this.forceRefresh,
     }
     this.categoriesEtag = '';
     this.assetsEtag = '';
@@ -53,6 +54,8 @@ class AirtableProvider extends React.PureComponent {
     clearInterval(this.intervalPullAssets);
     clearInterval(this.intervalPullCategories);
   }
+
+  forceRefresh = async () => this.getAssets()
 
   processAssetsFromAirTable = ({ fields }) => {
     let location = undefined;

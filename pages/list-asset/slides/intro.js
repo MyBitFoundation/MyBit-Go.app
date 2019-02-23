@@ -2,32 +2,33 @@ import {
   StyledCarouselSlide,
   StyledCarouselSlideMainTitle,
   StyledCarouselSlideParagraph,
-  StyledCarouselSlideColoredSpan,
   StyledCarouselSlideList,
-  StyledCarouselTooltip,
 } from 'components/CarouselSlide/';
 
 
-export const IntroSlide = () => (
-  <StyledCarouselSlide>
-    <StyledCarouselTooltip
-      title="(no preview on figma)"
-    >
-    </StyledCarouselTooltip>
+export const IntroSlide = ({maxWidthDesktop}) => (
+  <StyledCarouselSlide
+    maxWidthDesktop={maxWidthDesktop}
+  >
     <StyledCarouselSlideMainTitle
       isLong
       isSmallMobile
+      isCentered
+      maxWidthDesktop={maxWidthDesktop}
     >
       Ready to list an asset?
     </StyledCarouselSlideMainTitle>
     <StyledCarouselSlideParagraph
       isIntro
       isFullWidth
+      isCentered
+      maxWidthDesktop={maxWidthDesktop}
     >
-      Here is a list of things you’ll need to list your asset.
+      Here is a list of things you’ll need.
     </StyledCarouselSlideParagraph>
     <StyledCarouselSlideList
       hasDescriptions
+      maxWidthDesktop={maxWidthDesktop}
     >
       <li>A Civic account</li>
       <p>

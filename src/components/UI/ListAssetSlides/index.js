@@ -181,11 +181,8 @@ export const LocationSlide = ({
 };
 
 export const AvailableAssetsSlide = WithAirtableContext(({
-  next,
-  previous,
   handleSelectChange,
   formData,
-  history,
   airtableContext,
 }) => {
   const { category, asset } = formData;

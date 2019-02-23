@@ -10,10 +10,11 @@ const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE
 const getIdAndAssetIdsOfAssetName = async (assetName) => {
   const allRecords = await base('Imported table').select();
   const firstPageOfRecords = await allRecords.firstPage();
-  const selectedRecord = firstPageOfRecords.filter(record => record.get('Asset') === assetName);
+  const selectedRecord = firstPageOfRecords.filter(record => record.get('Asset') === assetName)[0];
+
   return selectedRecord ?
-    { id: selectedRecord.id, assetId: selectedRecord.get('Asset IDs') } :
-    { id: -1, assetId: -1 }
+    { id: selectedRecord.id, assetIds: selectedRecord.get('Asset IDs') } :
+    { id: -1, assetIds: -1 }
 }
 
 const updateAirTableEntry = async (id, currentAssetIds, newAssetId, country, city, collateral, collateralPercentage) => {
@@ -25,16 +26,20 @@ const updateAirTableEntry = async (id, currentAssetIds, newAssetId, country, cit
 }
 
 export const addNewAsset = async (data) => {
-  const {
-    assetId,
-    country,
-    city,
-    collateral,
-    collateralPercentage,
-    assetName,
-  } = data;
-  const rowIdAndAssetId = await getIdAndAssetIdsOfAssetName(assetName);
-  return await updateAirTableEntry(rowIdAndAssetId.id, rowIdAndAssetId.assetIds, assetId, country, city, collateral, collateralPercentage);
+  try{
+    const {
+      assetId,
+      country,
+      city,
+      collateral,
+      collateralPercentage,
+      assetName,
+    } = data;
+    const rowIdAndAssetId = await getIdAndAssetIdsOfAssetName(assetName);
+    return await updateAirTableEntry(rowIdAndAssetId.id, rowIdAndAssetId.assetIds, assetId, country, city, collateral, collateralPercentage);
+  } catch(err){
+    console.log(err)
+  }
 }
 
 export const getAssets = () =>

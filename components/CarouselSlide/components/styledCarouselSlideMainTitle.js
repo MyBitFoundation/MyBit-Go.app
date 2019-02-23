@@ -38,4 +38,14 @@ export const StyledCarouselSlideMainTitle = styled.h1`
   ${props => props.isRed && css`
     color: 'red';
   `}
+
+  ${props => props.isCentered && css`
+    ${({theme}) => theme.tablet`
+      text-align: center;
+    `}
+  `}
+
+  ${props => parseInt(props.maxWidthDesktop) <= 500 && css`
+    font-size: 32px;
+  `}
 }`

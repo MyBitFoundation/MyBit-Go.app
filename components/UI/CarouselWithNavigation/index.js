@@ -1,7 +1,9 @@
 import Router from 'next/router';
 import Link from 'next/link';
-import Tooltip from 'antd/lib/tooltip';
-import Icon from 'antd/lib/icon';
+import {
+  Tooltip,
+  Icon,
+} from 'antd';
 import StyledCarouselWithNavigationWrapper from './styledCarouselWithNavigationWrapper';
 import StyledCarouselWithNavigationSlide from './styledCarouselWithNavigationSlide';
 import StyledCarouselWithNavigationNavButton from './styledCarouselWithNavigationNavButton';
@@ -11,7 +13,6 @@ import StyledCarouselWithNavigationButtons from './styledCarouselWithNavigationB
 import StyledCarouselWithNavigationButton from './styledCarouselWithNavigationButton';
 import StyledCarouselWithNavigationArrow from './styledCarouselWithNavigationArrow';
 import StyledCarouselWithNavigation from './styledCarouselWithNavigation';
-
 import RightArrow from '../../static/onboarding/arrow-right.png';
 
 class CarouselWithNavigation extends React.Component {
@@ -59,7 +60,13 @@ class CarouselWithNavigation extends React.Component {
       nextButtonDisabled,
       isCivicButton,
       nextButtonHandler,
+      nextButtonLoading,
     } = slides[currentSlide].buttons;
+
+    const {
+      error,
+      hideButtons,
+    } = slides[currentSlide];
 
     const hasTwoButtons = hasNextButton && hasBackButton;
 
@@ -125,36 +132,39 @@ class CarouselWithNavigation extends React.Component {
           );
         })}
       </StyledCarouselWithNavigationNav>
-      <StyledCarouselWithNavigationButtons
-        desktopAt={desktopAt}
-        hasOneButton={!hasTwoButtons}
-        hasTwoButtons={hasTwoButtons}
-      >
-        {hasBackButton && (
-        <StyledCarouselWithNavigationButton
-          key={`${nextButtonText} ${currentSlide} 'back'`}
-          onClick={this.previous}
+      {(!error && !hideButtons) && (
+        <StyledCarouselWithNavigationButtons
           desktopAt={desktopAt}
-          isBack
+          hasOneButton={!hasTwoButtons}
+          hasTwoButtons={hasTwoButtons}
         >
-          Back
-        </StyledCarouselWithNavigationButton>
-        )}
-        {hasNextButton && (
+          {hasBackButton && (
           <StyledCarouselWithNavigationButton
-            key={`${nextButtonText} ${currentSlide} 'next'`}
+            key={`${nextButtonText} ${currentSlide} 'back'`}
+            onClick={this.previous}
             desktopAt={desktopAt}
-            type="primary"
-            onClick={nextButtonHandler ? nextButtonHandler : currentSlide === slides.length - 1 ? onFinish : this.next}
-            disabled={nextButtonDisabled}
-            isCivicButton={isCivicButton}
-            isNext
+            isBack
           >
-            {nextButtonText}
-            <Icon type="right" />
+            Back
           </StyledCarouselWithNavigationButton>
-        )}
-      </StyledCarouselWithNavigationButtons>
+          )}
+          {hasNextButton && (
+            <StyledCarouselWithNavigationButton
+              key={`${nextButtonText} ${currentSlide} 'next'`}
+              desktopAt={desktopAt}
+              type="primary"
+              onClick={nextButtonHandler ? nextButtonHandler : currentSlide === slides.length - 1 ? onFinish : this.next}
+              disabled={nextButtonDisabled}
+              isCivicButton={isCivicButton}
+              loading={nextButtonLoading}
+              isNext
+            >
+              {(nextButtonDisabled && 'All fields are required') || (nextButtonText || 'Next')}
+              {!nextButtonLoading && <Icon type="right" />}
+            </StyledCarouselWithNavigationButton>
+          )}
+        </StyledCarouselWithNavigationButtons>
+      )}
     </StyledCarouselWithNavigation>
   )}
 }

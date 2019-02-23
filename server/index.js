@@ -38,6 +38,7 @@ app
 
   server.post('/api/airtable/update', async (req, res) => {
     try{
+      console.log(req.body)
       await AirTableController.addNewAsset(req.body);
       res.sendStatus(200)
     }catch(error){

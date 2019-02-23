@@ -348,6 +348,10 @@ class BlockchainProvider extends React.Component {
     }
 
     const onSuccess = async (assetId) => {
+      const {
+        airtableContext,
+      } = this.props;
+      console.log("here0")
       const numberOfInternalActions = 2;
       const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
       const filesUploaded = fileList.length > 0;
@@ -358,9 +362,11 @@ class BlockchainProvider extends React.Component {
       const performInternalAction = async () => {
         counterCallsToInternalActions++;
         if(counterCallsToInternalActions === requiredCallsToInternalActions){
-          await this.getAssetsFromAirTable();
+          console.log("here")
+          await airtableContext.forceRefresh();
+          console.log("here2")
           await this.fetchAssets();
-
+          console.log("here3")
           buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
             assetName,
             assetId,

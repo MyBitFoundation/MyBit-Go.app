@@ -5,23 +5,35 @@ import {
   Carousel,
 } from "antd";
 
+import { withMetamaskContext } from 'components/MetamaskChecker';
+import { withBlockchainContext } from 'components/Blockchain';
 import { withCivic } from "ui/CivicContainer";
 import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
 } from 'constants';
+
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
+
 import {
   IntroSlide,
+  LocationSlide,
+  AvailableAssetsSlide,
+  AssetLocationSlide,
+  DocsSlide,
+  FeesSlide,
+  CollateralSlide,
+  ConfirmSlide,
+  SuccessSlide,
 } from "./slides";
+import metamaskErrors from 'utils/metamaskErrors';
+
+const dev = process.env.NODE_ENV === 'development';
 
 class ListAssetPage extends React.Component {
   constructor(props) {
     super(props);
-    this.next = this.next.bind(this);
-    this.previous = this.previous.bind(this);
-    this.goToSlide = this.goToSlide.bind(this);
     this.setUserListingAsset = this.setUserListingAsset.bind(this);
 
     this.state = {
@@ -78,21 +90,6 @@ class ListAssetPage extends React.Component {
       this.setState({ currentSlide: activeSlide });
     }, 25);
   };
-
-  next() {
-    this.carousel.next();
-    this.getCurrentSlide();
-  }
-
-  previous() {
-    this.carousel.prev();
-    this.getCurrentSlide();
-  }
-
-  goToSlide(number) {
-    this.carousel.goTo(number, false);
-    this.getCurrentSlide();
-  }
 
   handleInputChange = e => {
     this.setState({
@@ -191,9 +188,9 @@ class ListAssetPage extends React.Component {
   render() {
     const {
       civic,
+      metamaskContext,
+      blockchainContext,
     } = this.props;
-
-    console.log("Civic: ", IntroSlide)
 
     const {
       currentSlide,
@@ -214,6 +211,16 @@ class ListAssetPage extends React.Component {
       fileList,
     } = this.state.data;
 
+    const {
+      userHasMetamask,
+      extensionUrl,
+      userIsLoggedIn,
+      network,
+      privacyModeEnabled,
+    } = metamaskContext;
+
+    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, userIsLoggedIn, network, privacyModeEnabled);
+
     return (
       <CarouselWithNavigation
         navigationTooltips={SliderNavigationTooltips}
@@ -222,15 +229,141 @@ class ListAssetPage extends React.Component {
         nextButtonHasArrow
         slides={[{
           toRender: (
-            <IntroSlide />
+            <IntroSlide maxWidthDesktop="500px"/>
           ),
           buttons: {
             hasNextButton: true,
             hasBackButton: false,
-            nextButtonText: !civic.token ? 'Continue with Civic' : 'Next',
-            isCivicButton: !civic.token,
-            nextButtonHandler: !civic.token ? civic.signUp : this.next,
+            nextButtonText: (!dev && !civic.token) && 'Continue with Civic',
+            isCivicButton: !dev && !civic.token,
+            nextButtonHandler: (!dev && !civic.token) && civic.signUp,
           },
+        }, {
+          toRender: (
+            <LocationSlide
+              handleInputChange={this.handleInputChange}
+              handleSelectChange={this.handleSelectChange}
+              formData={data}
+              countries={countries}
+              maxWidthDesktop="500px"
+            />
+          ), buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+            nextButtonDisabled: data.userCity !== "" && data.userCountry !== "" ? false : true,
+          }
+        }, {
+          toRender: (
+            <AvailableAssetsSlide
+              handleInputChange={this.handleInputChange}
+              handleSelectChange={this.handleSelectChange}
+              formData={data}
+              maxWidthDesktop="500px"
+            />
+          ), buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+            nextButtonDisabled: data.category !== "" && data.asset !== "" ? false : true,
+          }
+        }, {
+          toRender: (
+            <AssetLocationSlide
+              handleInputChange={this.handleInputChange}
+              handleSelectChange={this.handleSelectChange}
+              formData={data}
+              countries={countries}
+              maxWidthDesktop="500px"
+            />
+          ), buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+            nextButtonDisabled:
+              data.assetCountry !== "" &&
+              data.assetAddress1 !== "" &&
+              data.assetCity !== "" &&
+              data.assetProvince !== "" &&
+              data.assetPostalCode !== ""
+                ? false
+                : true,
+          }
+        }, {
+          toRender: (
+            <DocsSlide
+              fileList={fileList}
+              handleFileUpload={this.handleFileUpload}
+              maxWidthDesktop="500px"
+            />
+          ), buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+          }
+        }, {
+          toRender: (
+            <FeesSlide
+              handleSelectChange={this.handleSelectChange}
+              managementFee={managementFee}
+              maxWidthDesktop="500px"
+            />
+          ), buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+            nextButtonDisabled: managementFee !== 0 ? false : true,
+          }
+        }, {
+          toRender: (
+            <CollateralSlide
+              handleCollateralChange={this.handleCollateralChange}
+              collateralDollar={
+                typeof collateralDollar === "string" ? 0 : collateralDollar
+              }
+              collateralPercentage={collateralPercentage}
+              collateralMyb={
+                typeof collateralMyb === "string" ? 0 : collateralMyb
+              }
+              constraints={{
+                max_percentage: 100,
+                min_myb: 0,
+                max_myb: assetValue / MYB_PLACEHOLDER,
+                min_dollars: 0,
+                max_dollars: assetValue
+              }}
+              formData={data}
+              maxWidthDesktop="500px"
+            />
+          ), buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+            nextButtonDisabled: collateralMyb !== 0 ? false : true,
+          }
+        }, {
+          toRender: listedAssetId ? (
+            <SuccessSlide
+              formData={data}
+              maxWidthDesktop="500px"
+              error={metamaskErrorsToRender}
+              assetId={listedAssetId}
+            />
+           ) : (
+            <ConfirmSlide
+              formData={data}
+              isUserListingAsset={isUserListingAsset}
+              listedAssetId={listedAssetId}
+              maxWidthDesktop="500px"
+              error={metamaskErrorsToRender}
+            />
+          ),
+          error: metamaskErrorsToRender,
+          hideButtons: listedAssetId ? true : false,
+          buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+            nextButtonText: isUserListingAsset ? 'Confirming listing' : 'Confirm Listing',
+            nextButtonLoading: isUserListingAsset,
+            nextButtonHandler: () => {
+              this.setUserListingAsset(true);
+              blockchainContext.handleListAsset(data, this.setUserListingAsset);
+            },
+          }
         }]}
       />
     );
@@ -239,6 +372,13 @@ class ListAssetPage extends React.Component {
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: "KYC" },
+  { slide: 1, tooltip: "Location" },
+  { slide: 2, tooltip: "Select Asset" },
+  { slide: 3, tooltip: "Asset Location" },
+  { slide: 4, tooltip: "Supporting Documents" },
+  { slide: 5, tooltip: "Management Fee" },
+  { slide: 6, tooltip: "Asset Collateral" },
+  { slide: 7, tooltip: "Confirm Asset" }
 ];
 
-export default withRouter(withCivic(ListAssetPage));
+export default withBlockchainContext(withMetamaskContext(withRouter(withCivic(ListAssetPage))));

@@ -35,6 +35,18 @@ export const StyledCarouselSlideList = styled.ul`
       font-size: 16px;
       margin-left: 18px;
     }
+
+    ${props => parseInt(props.maxWidthDesktop) <= 500 && css`
+      li{
+        font-weight: 500;
+        font-size: 16px;
+      }
+      p{
+        font-size: 15px;
+        margin-left: 18px;
+        margin-bottom: 10px;
+      }
+    `}
   `}
 
   @media(min-width: 600px){

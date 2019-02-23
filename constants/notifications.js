@@ -38,11 +38,12 @@ export const getContentForNotification = (obj) => {
       case NotificationStatus.SUCCESS:
         return {
           title: <span style={{marginRight: '10px'}}>Started crowdsale for {listAsset.assetName} successfully</span>,
-          message: <span>You can find the asset listing
+          message: <span>You can find the asset listing{' '}
             <Link
-              href={`/asset/${listAsset.assetId}`}
+              as={`/asset/${listAsset.assetId}`}
+              href={`/asset?id=${listAsset.assetId}`}
             >
-            {' '}here.
+            here.
             </Link></span>,
         }
       case NotificationStatus.INFO:

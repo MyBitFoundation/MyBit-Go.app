@@ -29,7 +29,7 @@ class MetamaskChecker extends Component {
       userIsLoggedIn: undefined,
       privacyModeEnabled: undefined,
       isReadOnlyMode: undefined,
-      ExtensionUrl: undefined,
+      extensionUrl: undefined,
       user: { balances: {}},
     };
   }
@@ -215,16 +215,16 @@ class MetamaskChecker extends Component {
 
   isBrowserSupported() {
     const browser = this.detect.detect();
-    let metamaskExtensionUrl;
+    let extensionUrl;
     switch (browser.name) {
       case 'chrome':
-        metamaskExtensionUrl = METAMASK_CHROME;
+        extensionUrl = METAMASK_CHROME;
         break;
       case 'opera':
-        metamaskExtensionUrl = METAMASK_OPERA;
+        extensionUrl = METAMASK_OPERA;
         break;
       case 'firefox':
-        metamaskExtensionUrl = METAMASK_FIREFOX;
+        extensionUrl = METAMASK_FIREFOX;
         break;
       default:
         break;
@@ -232,7 +232,7 @@ class MetamaskChecker extends Component {
     this.setState({
       userHasMetamask: false,
       userIsLoggedIn: false,
-      metamaskExtensionUrl,
+      extensionUrl,
     });
   }
 
