@@ -656,7 +656,7 @@ class BlockchainProvider extends React.Component {
       assetsAirTableById,
     } = this.props.airtableContext;
 
-    if (!prices.ethereum.price || !assetsAirTableById || !categoriesAirTable) {
+    if (!prices.ethereum || !assetsAirTableById || !categoriesAirTable) {
       setTimeout(this.fetchAssets, 2000);
       return;
     }
