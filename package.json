@@ -5,7 +5,7 @@
   "dependencies": {
     "@antv/data-set": "^0.10.1",
     "airtable": "^0.5.8",
-    "antd": "3.11.4",
+    "antd": "3.13.6",
     "aws-sdk": "^2.366.0",
     "axios": "0.18.0",
     "bizcharts": "^3.4.1",
