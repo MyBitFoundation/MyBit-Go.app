@@ -4,10 +4,9 @@ const StyledFiltersSwitch = styled.div`
   .ant-switch span{
     color: white;
   }
-
-  padding-top: 50px;
+  margin-top: 10px;
   text-align: left;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 
   span{
     font-family: Roboto;
@@ -24,6 +23,7 @@ const StyledFiltersSwitch = styled.div`
     text-align: right;
     margin-left: 0px;
     top: 7px;
+    margin-bottom: 30px;
  `}
 
  ${({ theme }) => theme.tablet`
