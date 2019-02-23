@@ -20,7 +20,7 @@ const MobileNavigation = ({
       key={`${item.url}mobileMenu`}
       href={item.url}
     >
-      <span>{item.name}</span>
+      <a>{item.name}</a>
     </Link>
   </StyledMobileNavigationLink>
 )

@@ -24,6 +24,10 @@ const StyledCarouselWithNavigationCloseButton = styled.span`
       transition: all .3s cubic-bezier(.645,.045,.355,1);
     }
 
+    &:focus {
+      text-decoration: none;
+    }
+
     @media(min-width: ${props => props.desktopAt || `${props.theme.sizes.tablet}px`}) {
       right: 5px;
       top: 5px;

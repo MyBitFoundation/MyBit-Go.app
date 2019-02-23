@@ -56,7 +56,7 @@ export const SuccessSlide = ({
       <Link
         as={`/asset/${assetId}`}
         href={`/asset?id=${assetId}`}
-      >here</Link>.
+      ><a>here</a></Link>.
     </StyledCarouselSlideParagraph>
     <Checkmark />
     <Earth />

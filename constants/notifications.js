@@ -43,8 +43,8 @@ export const getContentForNotification = (obj) => {
               as={`/asset/${listAsset.assetId}`}
               href={`/asset?id=${listAsset.assetId}`}
             >
-            here.
-            </Link></span>,
+            <a>here</a>
+            </Link>.</span>,
         }
       case NotificationStatus.INFO:
         return {

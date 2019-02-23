@@ -79,7 +79,7 @@ class CarouselWithNavigation extends React.Component {
           <Link
             href="/explore"
           >
-            +
+            <a>+</a>
           </Link>
         </StyledCarouselWithNavigationCloseButton>
         <StyledCarouselWithNavigationWrapper
