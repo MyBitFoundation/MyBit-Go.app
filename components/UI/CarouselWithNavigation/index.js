@@ -50,6 +50,7 @@ class CarouselWithNavigation extends React.Component {
       maxWidthDesktop,
       desktopAt,
       nextButtonHasArrow,
+      redirectOnClose,
     } = this.props;
 
     const {
@@ -77,7 +78,7 @@ class CarouselWithNavigation extends React.Component {
       >
         <StyledCarouselWithNavigationCloseButton>
           <Link
-            href="/explore"
+            href={redirectOnClose}
           >
             <a>+</a>
           </Link>

@@ -223,6 +223,7 @@ class ListAssetPage extends React.Component {
 
     return (
       <CarouselWithNavigation
+        redirectOnClose="/explore"
         navigationTooltips={SliderNavigationTooltips}
         onFinish={() => {}}
         maxWidthDesktop="500px"

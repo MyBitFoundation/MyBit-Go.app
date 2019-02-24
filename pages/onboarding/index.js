@@ -25,18 +25,24 @@ const getFirstLocation = () => {
 
 class OnboardingPage extends React.Component {
 
-  finishOnboarding = () => {
-    const firstLocation = getFirstLocation();
-    if (localStorage.getItem('onboardingFinished') === null) {
-      localStorage.setItem('onboardingFinished', 'true');
+  componentWillMount = () => {
+    if(window){
+      this.firstLocation = getFirstLocation();
+      if (localStorage.getItem('onboardingFinished') === null) {
+        localStorage.setItem('onboardingFinished', 'true');
+      }
+      console.log(this.firstLocation)
     }
-    Router.push(firstLocation);
+  }
+  finishOnboarding = () => {
+    Router.push(this.firstLocation);
   }
 
   render() {
     return (
       <React.Fragment>
         <CarouselWithNavigation
+          redirectOnClose={this.firstLocation}
           navigationTooltips={SliderNavigationTooltips}
           slides={Slides}
           onFinish={this.finishOnboarding}
