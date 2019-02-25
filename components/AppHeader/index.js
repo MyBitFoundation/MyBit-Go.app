@@ -60,8 +60,6 @@ const AppHeader = ({
       break;
   }
 
-  console.log(isReadOnlyMode)
-
   return (
     <BancorConsumer>
       {({ initBancor }) => (

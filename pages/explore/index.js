@@ -1,5 +1,4 @@
 import { compose } from 'recompose'
-import hoistNonReactStatics from 'hoist-non-react-statics';
 import {
   Switch,
   Icon,
