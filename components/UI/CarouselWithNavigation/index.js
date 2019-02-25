@@ -71,6 +71,9 @@ class CarouselWithNavigation extends React.Component {
 
     const hasTwoButtons = hasNextButton && hasBackButton;
 
+    const closeButtonProps = typeof redirectOnClose === 'string' ?
+      { href: redirectOnClose,} : {...redirectOnClose};
+
     return (
       <StyledCarouselWithNavigation
         desktopAt={desktopAt}
@@ -78,7 +81,7 @@ class CarouselWithNavigation extends React.Component {
       >
         <StyledCarouselWithNavigationCloseButton>
           <Link
-            href={redirectOnClose}
+            {...closeButtonProps}
           >
             <a>+</a>
           </Link>

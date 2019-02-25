@@ -16,6 +16,10 @@ const SliderNavigationTooltips = [
 const AssetManager = () => (
   <React.Fragment>
     <CarouselWithNavigation
+      redirectOnClose={{
+        href: 'list-asset',
+        as: 'list-asset',
+      }}
       navigationTooltips={SliderNavigationTooltips}
       slides={Slides}
       onFinish={() => Router.push("/list-asset")}

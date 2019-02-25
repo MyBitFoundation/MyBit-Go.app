@@ -5,7 +5,6 @@ import { compose } from 'recompose'
 import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { withRouter } from 'next/router';
 import { withAirtableContext } from 'components/Airtable';
 import { withNotificationsContext } from 'components/Notifications';
 import { withMetamaskContext } from 'components/MetamaskChecker';
@@ -31,12 +30,23 @@ import {
 
 const { Provider, Consumer } = React.createContext({});
 
-export const withBlockchainContext = (Component) =>
-  (props) => (
-    <Consumer>
-        {state => <Component {...props} blockchainContext={state} />}
-    </Consumer>
-  )
+// Required so we can trigger getInitialProps in our exported pages
+export const withBlockchainContext = (Component) => {
+  return class Higher extends React.Component{
+    static getInitialProps(ctx) {
+      if(Component.getInitialProps)
+        return Component.getInitialProps(ctx);
+      else return {};
+    }
+    render(){
+      return (
+        <Consumer>
+          {state => <Component {...this.props} blockchainContext={state} />}
+        </Consumer>
+      )
+    }
+  }
+}
 
 class BlockchainProvider extends React.Component {
   constructor(props) {
@@ -712,7 +722,6 @@ BlockchainProvider.propTypes = {
 };
 
 const enhance = compose(
-  withRouter,
   withNotificationsContext,
   withMetamaskContext,
   withTokenPricesContext,

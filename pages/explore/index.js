@@ -1,11 +1,11 @@
 import { compose } from 'recompose'
+import hoistNonReactStatics from 'hoist-non-react-statics';
 import {
   Switch,
   Icon,
 } from 'antd';
 import { withAirtableContext } from 'components/Airtable'
 import { withBlockchainContext } from 'components/Blockchain'
-import { withNotificationsContext } from 'components/Notifications'
 import CategoryFilter from 'components/CategoryFilter';
 import Loading from 'components/Loading';
 import AssetDisplayer from 'components/AssetDisplayer';

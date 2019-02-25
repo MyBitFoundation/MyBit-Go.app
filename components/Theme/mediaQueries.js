@@ -14,6 +14,9 @@ export const Sizes = {
   desktop: 2560,
   categoriesFilterMobile: 500,
   categoriesFilterTablet: 900,
+  headerHeightMobile: 50,
+  headerHeightTablet: 90,
+  marginTopPageWrapper: 25,
 };
 
 export const MediaQueries = Object.keys(Sizes).reduce((acc, label) => {

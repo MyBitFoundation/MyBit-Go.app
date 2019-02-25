@@ -1,10 +1,10 @@
-import { withRouter } from "next/router";
+import Router from "next/router";
 import {
   Button,
   Tooltip,
   Carousel,
 } from "antd";
-
+import Cookie from 'js-cookie';
 import { withMetamaskContext } from 'components/MetamaskChecker';
 import { withBlockchainContext } from 'components/Blockchain';
 import { withCivic } from "ui/CivicContainer";
@@ -12,6 +12,7 @@ import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
+  COOKIES,
 } from 'constants';
 
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
@@ -34,8 +35,6 @@ const dev = process.env.NODE_ENV === 'development';
 class ListAssetPage extends React.Component {
   constructor(props) {
     super(props);
-    this.setUserListingAsset = this.setUserListingAsset.bind(this);
-
     this.state = {
       currentSlide: 0,
       maximumAllowedSlide: 1,
@@ -62,15 +61,27 @@ class ListAssetPage extends React.Component {
     };
   }
 
-  componentDidMount(){
+  componentWillMount = () => {
+    try {
+      if (!Cookie.get(COOKIES.LIST_ASSET_VISIT)) {
+        Cookie.set(COOKIES.LIST_ASSET_VISIT, 'true');
+        Router.push('/asset-manager', {
+          href: '/list-asset',
+          as: '/list-asset'
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
     this.ismounted = true;
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
      this.ismounted = false;
   }
 
-  setUserListingAsset(isUserListingAsset, listedAssetId){
+  setUserListingAsset = (isUserListingAsset, listedAssetId) => {
     if(!this.ismounted){
       return;
     }
@@ -382,4 +393,4 @@ const SliderNavigationTooltips = [
   { slide: 7, tooltip: "Confirm Asset" }
 ];
 
-export default withBlockchainContext(withMetamaskContext(withRouter(withCivic(ListAssetPage))));
+export default withBlockchainContext(withMetamaskContext(withCivic(ListAssetPage)));

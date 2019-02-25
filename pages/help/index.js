@@ -56,5 +56,4 @@ const HelpPage = () => (
   </StyledHelpPage>
 );
 
-
 export default HelpPage;

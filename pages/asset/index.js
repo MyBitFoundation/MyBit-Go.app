@@ -1,4 +1,4 @@
-import Router, { withRouter } from 'next/router';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
@@ -11,7 +11,9 @@ import Loading from 'components/Loading';
 import StyledButton from './styledButton';
 
 class AssetPage extends React.Component {
-
+  static async getInitialProps (ctx) {
+      return {assetId: ctx.query.id};
+  }
 render(){
   const {
     blockchainContext,
@@ -50,7 +52,7 @@ render(){
     );
   }
 
-  const asset = assets.find(({ assetId }) => assetId === router.query.id);
+  const asset = assets.find(({ assetId }) => assetId === this.props.assetId);
   let toRender;
   if (!asset) {
     toRender = (
@@ -99,7 +101,6 @@ AssetPage.propTypes = {
 };
 
 const enhance = compose(
-  withRouter,
   withMetamaskContext,
   withBlockchainContext,
   withTokenPricesContext,

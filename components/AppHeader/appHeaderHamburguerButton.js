@@ -1,14 +1,8 @@
+import React from 'react';
 import styled from 'styled-components';
+import HamburguerIcon from 'static/hamburguer-icon.svg';
 
-const AppHeaderHamburguerButton = styled.div`
-  margin-right: 10px;
-  margin-top: 10px;
-  padding: 10px;
-
-  :hover{
-    cursor: pointer;
-  }
-
+const AppHeaderHamburguerButton = styled(HamburguerIcon)`
   ${({theme}) => theme.tablet`
     display: none;
   `}

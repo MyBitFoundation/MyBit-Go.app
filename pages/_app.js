@@ -1,7 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root'
 import App, { Container } from 'next/app';
-import Router, { withRouter } from 'next/router'
 import getConfig from 'next/config';
 import AirtableProvider, { withAirtableContext } from 'components/Airtable';
 import BlockchainProvider from 'components/Blockchain';
@@ -14,67 +13,36 @@ import AppWrapper from 'components/AppWrapper';
 import Theme from 'components/Theme'
 import MobileMenu from 'components/MobileMenu'
 import BancorContainer from 'ui/BancorContainer';
-
+import Cookie from 'js-cookie';
+import Router from 'next/router';
 import {
   navbarOptions,
   WEB3_BACKUP_PROVIDER,
   SUPPORTED_TOKENS,
+  FULL_SCREEN_PAGES,
+  COOKIES,
 } from 'constants';
 
 class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {}
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
-    }
-
-    return { pageProps }
-  }
-
   state = {
     mobileMenuOpen: false,
   }
 
-  isFirstVisit = () => {
+  saveFirstVisit = () => {
     try {
-      if (localStorage.getItem('mybitUser2') === null) {
-        localStorage.setItem('mybitUser2', 'true');
-        localStorage.setItem('onboardingRedirect', this.props.router.route);
+      if (!Cookie.get(COOKIES.NEW_USER)) {
+        Cookie.set(COOKIES.NEW_USER, 'true');
         return true;
       }
       return false;
-    } catch (e) {
+    } catch (err) {
+      console.log(err);
       return false;
-    }
-  }
-
-  isFirstListAssetVisit = (firstVisit, currentRoute) => {
-    // let the explore component handle this
-    try {
-      if (currentRoute === '/list-asset' && !firstVisit &&
-            localStorage.getItem('first-list-asset-visit') === null) {
-        localStorage.setItem('first-list-asset-visit', 'true');
-        return true;
-      }
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  firstVisitMiddleware = () => {
-    const currentRoute = this.props.router.route;
-    const firstVisit = this.isFirstVisit();
-    const firstListAssetVisit = this.isFirstListAssetVisit(firstVisit, currentRoute);
-    if(firstVisit){
-      this.props.router.push('/onboarding');
-    } else if(firstListAssetVisit) {
-      this.props.router.push('/asset-manager');
     }
   }
 
   prefetchPages = () => {
+    Router.prefetch('/onboarding')
     Router.prefetch('/asset')
     Router.prefetch('/transaction-history')
     Router.prefetch('/explore')
@@ -87,7 +55,7 @@ class MyApp extends App {
   componentDidMount = () => {
     require('utils/disableReactDevTools');
     this.prefetchPages();
-    this.firstVisitMiddleware();
+    this.saveFirstVisit()
   }
 
   handleMobileMenuClicked = (state) => {
@@ -102,7 +70,7 @@ class MyApp extends App {
       mobileMenuOpen,
     } = this.state;
 
-    const isFullScreenPage = ['/onboarding', '/asset-manager', '/list-asset'].includes(router.pathname);
+    const isFullScreenPage = FULL_SCREEN_PAGES.includes(router.pathname);
 
     return (
       <Container>
@@ -154,4 +122,4 @@ const WithProviders = ({ children }) => (
     </NotificationsProvider>
 );
 
-export default hot(withRouter(MyApp));
+export default hot(MyApp);

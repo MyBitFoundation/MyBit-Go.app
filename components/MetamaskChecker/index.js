@@ -14,12 +14,23 @@ import {
 
 const { Provider, Consumer } = React.createContext({});
 
-export const withMetamaskContext = (Component) =>
-  (props) => (
-    <Consumer>
-      {state => <Component {...props} metamaskContext={state} />}
-    </Consumer>
-  )
+// Required so we can trigger getInitialProps in our exported pages
+export const withMetamaskContext = (Component) => {
+  return class Higher extends React.Component{
+    static getInitialProps(ctx) {
+      if(Component.getInitialProps)
+        return Component.getInitialProps(ctx);
+      else return {};
+    }
+    render(){
+      return (
+        <Consumer>
+          {state => <Component {...this.props} metamaskContext={state} />}
+        </Consumer>
+      )
+    }
+  }
+}
 
 class MetamaskChecker extends Component {
   constructor(props) {
@@ -230,6 +241,7 @@ class MetamaskChecker extends Component {
         break;
     }
     this.setState({
+      isReadOnlyMode: true,
       userHasMetamask: false,
       userIsLoggedIn: false,
       extensionUrl,

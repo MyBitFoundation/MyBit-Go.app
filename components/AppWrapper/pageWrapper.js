@@ -4,10 +4,14 @@ const PageWrapper = styled.div`
   padding: 0px 20px;
   max-width: 1400px;
   margin: 0 auto;
-  margin-top: 25px;
+  ${({theme}) => css`
+    padding-top: ${`calc(${theme.sizes.marginTopPageWrapper}px + ${theme.sizes.headerHeightMobile}px)`};
+  `}
   position: relative;
 
   ${({theme}) => theme.tablet`
+    margin-top: ${({theme}) => `${theme.sizes.marginTopPageWrapper}px`};
+    padding-top: 0px;
     margin-bottom: 50px;
     min-height: 600px;
   `}

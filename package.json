@@ -28,6 +28,7 @@
     "dotenv-webpack": "1.7.0",
     "express": "4.16.4",
     "gridlex": "2.7.1",
+    "js-cookie": "2.2.0",
     "less": "3.9.0",
     "lint": "1.1.2",
     "multer": "1.4.1",

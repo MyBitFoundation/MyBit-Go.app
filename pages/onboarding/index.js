@@ -1,8 +1,12 @@
-import Router from 'next/router';
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 import {
   Slides,
 } from './slides';
+import {
+  LOCAL_STORAGE,
+} from 'constants';
+
+import Router from 'next/router';
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: 'What is MyBit Go?' },
@@ -17,25 +21,34 @@ const SliderNavigationTooltips = [
   { slide: 9, tooltip: 'Required setup' },
 ];
 
-const getFirstLocation = () => {
-  const onboardingIsFinished = localStorage.getItem('onboardingFinished');
-  const location = onboardingIsFinished ? '/explore' : localStorage.getItem('onboardingRedirect');
-  return location === '/onboarding' ? '/explore' : location;
-}
-
 class OnboardingPage extends React.Component {
-
-  componentWillMount = () => {
-    if(window){
-      this.firstLocation = getFirstLocation();
-      if (localStorage.getItem('onboardingFinished') === null) {
-        localStorage.setItem('onboardingFinished', 'true');
-      }
-      console.log(this.firstLocation)
+  static async getInitialProps (ctx) {
+    if(ctx.req){
+      return {redirectTo: ctx.query.redirectTo};
+    } else {
+      return {};
     }
   }
+
+  componentDidMount = () => {
+    const {
+      redirectTo,
+    } = this.props;
+    // When we redirect to this page on the server the
+    // URL doesn't actually update. We already have
+    // onboarding.js at this point so its inconsequent.
+    // until a fix is found at least.
+    if(window && redirectTo) {
+      Router.push('/onboarding');
+    }
+
+    this.firstLocation = redirectTo || {
+      href:'/explore',
+      as: '/explore',
+    };
+  }
   finishOnboarding = () => {
-    Router.push(this.firstLocation);
+    Router.push(this.firstLocation.href, this.firstLocation.as);
   }
 
   render() {

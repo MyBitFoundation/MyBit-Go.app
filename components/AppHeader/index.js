@@ -17,7 +17,6 @@ import AppHeaderBancorWidget from './appHeaderBancorWidget';
 import AppHeaderSection from './appHeaderSection';
 import AppHeaderHamburguerButton from './appHeaderHamburguerButton';
 import AppHeaderPageName from './appHeaderPageName';
-import HamburguerIcon from 'static/hamburguer-icon.svg';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withMetamaskContext } from 'components/MetamaskChecker'
 import { withTokenPricesContext } from 'components/TokenPrices'
@@ -60,6 +59,8 @@ const AppHeader = ({
       pageName = '';
       break;
   }
+
+  console.log(isReadOnlyMode)
 
   return (
     <BancorConsumer>
@@ -107,9 +108,7 @@ const AppHeader = ({
               <Address {...user} />
             </AppHeaderSection>
           )}
-          <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)}>
-            <HamburguerIcon />
-          </AppHeaderHamburguerButton>
+          <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)} />
         </AppHeaderContainer>
       )}
     </BancorConsumer>

@@ -10,7 +10,7 @@ export const navbarOptions = (currentPath) => [
   {
     name: 'Explore',
     icon: ExploreIcon,
-    selected: currentPath === '/' || currentPath.indexOf('/explore') !== -1 || currentPath.indexOf('/asset') !== -1,
+    selected: currentPath === '/' || currentPath.indexOf('/explore') !== -1,
     url: '/explore',
   }, {
     name: 'Portfolio',

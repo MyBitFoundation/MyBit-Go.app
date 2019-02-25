@@ -9,14 +9,22 @@ import {
 
 const { Provider, Consumer } = React.createContext({});
 
+// Required so we can trigger getInitialProps in our exported pages
 export const withTokenPricesContext = (Component) => {
-  return function WrapperComponent(props) {
-    return (
-      <Consumer>
-        {state => <Component {...props} pricesContext={state} />}
-      </Consumer>
-    );
-  };
+  return class Higher extends React.Component{
+    static getInitialProps(ctx) {
+      if(Component.getInitialProps)
+        return Component.getInitialProps(ctx);
+      else return {};
+    }
+    render(){
+      return (
+        <Consumer>
+          {state => <Component {...this.props} pricesContext={state} />}
+        </Consumer>
+      )
+    }
+  }
 }
 
 class TokenPricesProvider extends React.PureComponent {

@@ -12,8 +12,8 @@ import * as CivicController from './controllers/civicController';
 import * as AwsController from './controllers/awsController';
 import * as AirTableController from './controllers/airTableController';
 import {
-  redirects,
-} from './constants';
+  handleRedirects,
+} from './utils';
 
 const app = next({ dev });
 const handle = app.getRequestHandler();
@@ -30,15 +30,8 @@ app
   server.use(cors());
   server.use(compression())
 
-  redirects.forEach(({ from, to, type = 301, method = 'get' }) => {
-    server[method](from, (req, res) => {
-      res.redirect(type, to)
-    })
-  })
-
   server.post('/api/airtable/update', async (req, res) => {
     try{
-      console.log(req.body)
       await AirTableController.addNewAsset(req.body);
       res.sendStatus(200)
     }catch(error){
@@ -76,6 +69,10 @@ app
     }
   });
 
+  server.get('/', (req, res) => {
+    return app.render(req, res, "/explore");
+  })
+
   server.get('/api/assets/files', (req, res) => {
     res.json({
       filesByAssetId: AwsController.filesByAssetId,
@@ -86,12 +83,21 @@ app
     await AwsController.handleFileUpload(files, assetId, req, res);
   });
 
-  server.get("/asset/:id", (req, res) => {
-    return app.render(req, res, "/asset", { id: req.params.id })
-  })
-
   server.get("/manage/:id", (req, res) => {
     return app.render(req, res, "/manage", { id: req.params.id })
+  })
+
+  server.get("/asset/:id", (req, res) => {
+    /*
+    * Not the most pleasent way to handle this.
+    * Unfortunately if this routing declaration is put
+    * under the '*' pattern then SSR stops working for this route
+    */
+    return handleRedirects(req, res, handle, app, true) || app.render(req, res, "/asset", { id: req.params.id });
+  })
+
+  server.get('*', (req, res) => {
+    return handleRedirects(req, res, handle, app);
   })
 
   server.get('*', (req, res) => {
