@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import Router from 'next/router';
 import {
-  InputNumber
+  InputNumber,
+  Button,
 } from "antd";
 import { withAirtableContext } from 'components/Airtable';
 import {
@@ -25,6 +27,12 @@ const StyledImage = styled.img`
   margin-bottom: 40px;
 }`
 
+const ButtonWrapper = styled(Button)`
+  display: block;
+  margin: 0 auto;
+  margin-top: 50px;
+`
+
 export const AvailableAssetsSlide = withAirtableContext(({
   handleSelectChange,
   formData,
@@ -38,6 +46,9 @@ export const AvailableAssetsSlide = withAirtableContext(({
     categoriesAirTable,
     getCategoriesForAssets,
   } = airtableContext;
+  if(!categoriesAirTable){
+    return null;
+  }
 
   const categories = getCategoriesForAssets(formData.userCountry, formData.userCity);
   const assetsAvailable = category && categories[category];
@@ -126,19 +137,27 @@ export const AvailableAssetsSlide = withAirtableContext(({
         </div>
       ) : (
         <div>
-          <h1 className="Slider__header">No assets</h1>
-          <p className="Slider__note">
+          <StyledCarouselSlideMainTitle
+            isLong
+            isSmallMobile
+            isCentered
+            maxWidthDesktop={maxWidthDesktop}
+          >
+            No assets available
+          </StyledCarouselSlideMainTitle>
+          <StyledCarouselSlideParagraph
+            isCentered
+            maxWidthDesktop={maxWidthDesktop}
+          >
             No assets have been found in your country.
-          </p>
-          <div className="Slider__buttons">
-            <Button
-              type="secondary"
-              className="Slider__buttons-centered"
-              onClick={() => history.push("/explore")}
-            >
-              Go to Explore page
-            </Button>
-          </div>
+          </StyledCarouselSlideParagraph>
+          <ButtonWrapper
+            type="secondary"
+            className="Slider__buttons-centered"
+            onClick={() => Router.push("/explore")}
+          >
+            Go to Explore page
+          </ButtonWrapper>
         </div>
       )}
       </React.Fragment>
