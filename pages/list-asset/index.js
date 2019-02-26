@@ -239,6 +239,7 @@ class ListAssetPage extends React.Component {
         onFinish={() => {}}
         maxWidthDesktop="500px"
         nextButtonHasArrow
+        disableMovingForward
         slides={[{
           toRender: (
             <IntroSlide maxWidthDesktop="500px"/>

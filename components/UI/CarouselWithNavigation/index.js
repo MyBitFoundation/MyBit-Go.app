@@ -51,6 +51,7 @@ class CarouselWithNavigation extends React.Component {
       desktopAt,
       nextButtonHasArrow,
       redirectOnClose,
+      disableMovingForward,
     } = this.props;
 
     const {
@@ -131,6 +132,7 @@ class CarouselWithNavigation extends React.Component {
               <StyledCarouselWithNavigationNavButton
                 isActive={currentSlide === slideTooltip.slide}
                 onClick={() => this.goToSlide(slideTooltip.slide)}
+                disabled={disableMovingForward && slideTooltip.slide > currentSlide}
               />
             </Tooltip>
           );
