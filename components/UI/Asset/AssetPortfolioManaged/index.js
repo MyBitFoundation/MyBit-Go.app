@@ -34,6 +34,7 @@ const AssetPortfolioManaged = ({
   managerPercentage,
   totalProfitAssetManager,
   assetIncome,
+  pastDate,
 }) => {
 
   const buttonType = 'secondary';
@@ -87,7 +88,7 @@ const AssetPortfolioManaged = ({
             isGray={!funded}
             isSmallMobile={!funded}
           >
-            {funded ? formatMonetaryValue(totalProfitAssetManager) : 'Funding in progress'}
+            {funded ? formatMonetaryValue(totalProfitAssetManager) : pastDate ? 'Funding failed' : 'Funding in progress'}
           </StyledAssetPortfolioManagedValue>
         </div>
       </StyledAssetPortfolioManagedSection>
@@ -100,7 +101,7 @@ const AssetPortfolioManaged = ({
             isGray={!funded}
             isSmallMobile={!funded}
           >
-            {funded ? formatMonetaryValue(toWithdraw) : 'Funding in progress'}
+            {funded ? formatMonetaryValue(toWithdraw) : pastDate ? 'Funding failed' : 'Funding in progress'}
           </StyledAssetPortfolioManagedValue>
         </div>
       </StyledAssetPortfolioManagedSection>
@@ -111,7 +112,7 @@ const AssetPortfolioManaged = ({
               Fully funded
             </span>
           )}
-          {fundingStage === FundingStages.IN_PROGRESS && (
+          {(!pastDate && fundingStage === FundingStages.IN_PROGRESS) && (
             <StyledAssetPortfolioManagedFundedLabel>Funded:
               <StyledAssetPortfolioManagedFundedValue>
                 <StyledAssetPortfolioManagedValue>
@@ -119,6 +120,11 @@ const AssetPortfolioManaged = ({
                 </StyledAssetPortfolioManagedValue>/{formatMonetaryValue(amountToBeRaisedInUSD)}
               </StyledAssetPortfolioManagedFundedValue>
             </StyledAssetPortfolioManagedFundedLabel>
+          )}
+          {(pastDate && !funded) && (
+            <span>
+              Funding failed
+            </span>
           )}
         </div>
         <StyledAssetPortfolioManagedButtons>
