@@ -1,4 +1,5 @@
 import Router from "next/router";
+import { compose } from 'recompose'
 import {
   Button,
   Tooltip,
@@ -380,4 +381,10 @@ const SliderNavigationTooltips = [
   { slide: 7, tooltip: "Confirm Asset" }
 ];
 
-export default withBlockchainContext(withMetamaskContext(withCivic(ListAssetPage)));
+const enhance = compose(
+  withBlockchainContext,
+  withMetamaskContext,
+  withCivic,
+);
+
+export default enhance(ListAssetPage);
