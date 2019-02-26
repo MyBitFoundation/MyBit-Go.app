@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import MyBitDesk from 'static/onboarding/desk.png';
 import StyledOnboardingColoredSpan from '../styles/styledOnboardingColoredSpan';
-
+import {
+  Button,
+} from 'antd';
 import {
   StyledCarouselSlide,
   StyledCarouselSlideMainTitle,
@@ -20,7 +22,32 @@ const StyledImage = styled.img`
   `}
 }`
 
-const InvestmentFund = () => (
+const ButtonWrapper = styled(Button)`
+  position: absolute;
+  color: rgb(24, 144, 255);
+  font-style: normal;
+  font-weight: normal;
+  line-height: 22px;
+  font-size: 14px;
+  border-width: initial;
+  border-style: none;
+  border-color: initial;
+  border-image: initial;
+  bottom: 10px;
+  right: 14px;
+
+  ${({theme}) => theme.tablet`
+    top: 100%;
+    transform: translate(0%, -100%);
+    left: 200px;
+    bottom: auto;
+    right: auto;
+  `}
+`
+
+const InvestmentFund = ({
+  goToSlide,
+}) => (
   <StyledCarouselSlide>
     <StyledImage
       src={MyBitDesk}
@@ -61,6 +88,11 @@ const InvestmentFund = () => (
         We do not guarantee returns
       </li>
     </StyledCarouselSlideList>
+    <ButtonWrapper
+      onClick={() => goToSlide(7)}
+    >
+      Skip... I know blockchain
+    </ButtonWrapper>
   </StyledCarouselSlide>
 );
 
