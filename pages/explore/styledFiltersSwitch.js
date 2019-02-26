@@ -9,7 +9,6 @@ const StyledFiltersSwitch = styled.div`
   margin-bottom: 20px;
 
   span{
-    font-family: Roboto;
     font-size: 14px;
     text-align: right;
     color: #4a4a4a;
@@ -18,10 +17,9 @@ const StyledFiltersSwitch = styled.div`
   }
 
   ${({ theme }) => theme.categoriesFilterMobile`
+    margin-top: 0px;
     position: relative;
-    padding-top: 0px;
     text-align: right;
-    margin-left: 0px;
     top: 7px;
     margin-bottom: 30px;
  `}
