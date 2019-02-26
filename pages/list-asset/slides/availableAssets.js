@@ -39,16 +39,13 @@ export const AvailableAssetsSlide = withAirtableContext(({
     getCategoriesForAssets,
   } = airtableContext;
 
-  let forbidNext = category !== "" && asset !== "" ? false : true;
-  if(!assetsAirTable || !categoriesAirTable){
-    return null;
-  }
   const categories = getCategoriesForAssets(formData.userCountry, formData.userCity);
+  const assetsAvailable = category && categories[category];
   const assetValue = !asset ? 0 : assetsAirTable.filter(assetTmp => assetTmp.name === asset)[0].amountToBeRaisedInUSDAirtable;
   return (
     <StyledCarouselSlide>
       <React.Fragment>
-        {categories.length !== 0 ? (
+        {Object.keys(categories).length !== 0 ? (
         <div>
           <StyledCarouselSlideMainTitle
             isLong
@@ -81,7 +78,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
                 .indexOf(input.toLowerCase()) >= 0
             }
           >
-            {categories.map(cat => (
+            {Object.keys(categories).map(cat => (
                 <Option key={cat} value={cat}>
                   {cat}
                 </Option>
@@ -99,7 +96,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
                 .indexOf(input.toLowerCase()) >= 0
             }
           >
-            {assetsAirTable.filter(asset => asset.category === category).map(asset => {
+            {assetsAirTable.filter(asset => assetsAvailable.includes(asset)).map(asset => {
               return (
                 <Option key={asset.name} value={asset.name}>
                   {asset.name}

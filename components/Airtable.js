@@ -182,21 +182,53 @@ class AirtableProvider extends React.PureComponent {
     }
   }
 
-  getCategoriesForAssets = (country, city) => {
+  getAssetsForLocation = (country, city) => {
     const {
       assetsAirTable,
       categoriesAirTable,
     } = this.state;
 
-    let categories = [];
     for(const asset of assetsAirTable){
-      if(categories.includes(asset.category)){
-        continue;
-      }
-      if(!asset.location){
-        categories.push(categoriesAirTable[asset.category] ? asset.category : undefined);
-      } else if (asset.location && asset.location.country === country && (!asset.location.cities || asset.location.cities.includes(city.toLowerCase()))){
-        categories.push(categoriesAirTable[asset.category] ? asset.category : undefined);
+
+    }
+  }
+
+  getCategoriesForAssets = (country, city) => {
+    const {
+      assetsAirTable,
+      categoriesAirTable,
+    } = this.state;
+    const categories = {};
+    for(const asset of assetsAirTable){
+      const {
+        category,
+        location,
+      } = asset;
+      let shouldAdd = false;
+      if(categoriesAirTable[asset.category]){
+        /*
+        * If the asset does not have a specified location
+        * then anyone from anywhere can list it
+        */
+        if(!asset.location){
+          shouldAdd = true;
+
+        }
+        /*
+        * The user's country needs to an allowed location for the asset
+        * and either the city also matches or there are no city specified
+        * which means the user is eligible to list this asset
+        */
+        else if(asset.location[country] && (asset.location[country][city] || Object.keys(asset.location[country]).length === 0)){
+          shouldAdd = true;
+        }
+
+        if(shouldAdd){
+          if(!categories[category]){
+            categories[category] = [];
+          }
+          categories[category].push(asset);
+        }
       }
     }
     return categories;
