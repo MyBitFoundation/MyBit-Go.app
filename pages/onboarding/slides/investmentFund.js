@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import MyBitDesk from 'static/onboarding/desk.png';
-import StyledOnboardingColoredSpan from '../styles/styledOnboardingColoredSpan';
 import {
   Button,
 } from 'antd';
@@ -8,6 +7,7 @@ import {
   StyledCarouselSlide,
   StyledCarouselSlideMainTitle,
   StyledCarouselSlideList,
+  StyledCarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
 const StyledImage = styled.img`
@@ -59,11 +59,11 @@ const InvestmentFund = ({
       isSmallMobile
     >
       MyBit Go is&nbsp;
-      <StyledOnboardingColoredSpan
+      <StyledCarouselSlideColoredSpan
         isRed
       >
         not
-      </StyledOnboardingColoredSpan>
+      </StyledCarouselSlideColoredSpan>
       &nbsp;an
       <br />
       investment fund

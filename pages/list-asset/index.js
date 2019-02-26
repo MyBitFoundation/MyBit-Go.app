@@ -36,8 +36,6 @@ class ListAssetPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentSlide: 0,
-      maximumAllowedSlide: 1,
       data: {
         userCity: '',
         userCountry: '',
@@ -90,17 +88,6 @@ class ListAssetPage extends React.Component {
       listedAssetId,
     })
   }
-
-  getCurrentSlide = () => {
-    setTimeout(() => {
-      let activeSlide = parseInt(
-        document
-          .getElementsByClassName("slick-current")[0]
-          .getAttribute("data-index")
-      );
-      this.setState({ currentSlide: activeSlide });
-    }, 25);
-  };
 
   handleInputChange = e => {
     this.setState({
@@ -204,7 +191,6 @@ class ListAssetPage extends React.Component {
     } = this.props;
 
     const {
-      currentSlide,
       MYB_PLACEHOLDER,
       data,
       countries,
