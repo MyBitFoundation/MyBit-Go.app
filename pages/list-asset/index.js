@@ -8,15 +8,14 @@ import Cookie from 'js-cookie';
 import { withMetamaskContext } from 'components/MetamaskChecker';
 import { withBlockchainContext } from 'components/Blockchain';
 import { withCivic } from "ui/CivicContainer";
+import CarouselWithNavigation from 'ui/CarouselWithNavigation';
+import metamaskErrors from 'utils/metamaskErrors';
 import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
   COOKIES,
 } from 'constants';
-
-import CarouselWithNavigation from 'ui/CarouselWithNavigation';
-
 import {
   IntroSlide,
   LocationSlide,
@@ -28,7 +27,8 @@ import {
   ConfirmSlide,
   SuccessSlide,
 } from "./slides";
-import metamaskErrors from 'utils/metamaskErrors';
+
+const MAX_WIDTH_DESKTOP = "500px";
 
 const dev = process.env.NODE_ENV === 'development';
 
@@ -223,12 +223,12 @@ class ListAssetPage extends React.Component {
         redirectOnClose="/explore"
         navigationTooltips={SliderNavigationTooltips}
         onFinish={() => {}}
-        maxWidthDesktop="500px"
+        maxWidthDesktop={MAX_WIDTH_DESKTOP}
         nextButtonHasArrow
         disableMovingForward
         slides={[{
           toRender: (
-            <IntroSlide maxWidthDesktop="500px"/>
+            <IntroSlide maxWidthDesktop={MAX_WIDTH_DESKTOP}/>
           ),
           buttons: {
             hasNextButton: true,
@@ -244,7 +244,7 @@ class ListAssetPage extends React.Component {
               handleSelectChange={this.handleSelectChange}
               formData={data}
               countries={countries}
-              maxWidthDesktop="500px"
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
             />
           ), buttons: {
             hasNextButton: true,
@@ -257,7 +257,7 @@ class ListAssetPage extends React.Component {
               handleInputChange={this.handleInputChange}
               handleSelectChange={this.handleSelectChange}
               formData={data}
-              maxWidthDesktop="500px"
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
             />
           ), buttons: {
             hasNextButton: true,
@@ -271,7 +271,7 @@ class ListAssetPage extends React.Component {
               handleSelectChange={this.handleSelectChange}
               formData={data}
               countries={countries}
-              maxWidthDesktop="500px"
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
             />
           ), buttons: {
             hasNextButton: true,
@@ -290,7 +290,7 @@ class ListAssetPage extends React.Component {
             <DocsSlide
               fileList={fileList}
               handleFileUpload={this.handleFileUpload}
-              maxWidthDesktop="500px"
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
             />
           ), buttons: {
             hasNextButton: true,
@@ -301,7 +301,7 @@ class ListAssetPage extends React.Component {
             <FeesSlide
               handleSelectChange={this.handleSelectChange}
               managementFee={managementFee}
-              maxWidthDesktop="500px"
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
             />
           ), buttons: {
             hasNextButton: true,
@@ -327,7 +327,7 @@ class ListAssetPage extends React.Component {
                 max_dollars: assetValue
               }}
               formData={data}
-              maxWidthDesktop="500px"
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
             />
           ), buttons: {
             hasNextButton: true,
@@ -338,7 +338,7 @@ class ListAssetPage extends React.Component {
           toRender: listedAssetId ? (
             <SuccessSlide
               formData={data}
-              maxWidthDesktop="500px"
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
               error={metamaskErrorsToRender}
               assetId={listedAssetId}
             />
@@ -347,7 +347,7 @@ class ListAssetPage extends React.Component {
               formData={data}
               isUserListingAsset={isUserListingAsset}
               listedAssetId={listedAssetId}
-              maxWidthDesktop="500px"
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
               error={metamaskErrorsToRender}
             />
           ),
