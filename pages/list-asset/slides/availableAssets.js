@@ -9,7 +9,7 @@ import {
   StyledCarouselSlideParagraph,
   StyledCarouselSlideColoredSpan,
   StyledCarouselSlideList,
-  StyledCarouselTooltip,
+  StyledCarouselSlideTooltip,
   StyledCarouselSlideInput,
   StyledCarouselSlideSelect,
   StyledCarouselSlideInputNumber,
@@ -47,6 +47,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
   const assetValue = !asset ? 0 : assetsAirTable.filter(assetTmp => assetTmp.name === asset)[0].amountToBeRaisedInUSDAirtable;
   return (
     <StyledCarouselSlide>
+      <React.Fragment>
         {categories.length !== 0 ? (
         <div>
           <StyledCarouselSlideMainTitle
@@ -55,7 +56,12 @@ export const AvailableAssetsSlide = withAirtableContext(({
             isCentered
             maxWidthDesktop={maxWidthDesktop}
           >
-            Assets available
+            <React.Fragment>
+              Assets available
+              <StyledCarouselSlideTooltip
+                title="More assets will become available in the future."
+              />
+            </React.Fragment>
           </StyledCarouselSlideMainTitle>
           <StyledCarouselSlideParagraph
             isCentered
@@ -138,6 +144,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
           </div>
         </div>
       )}
+      </React.Fragment>
     </StyledCarouselSlide>
   );
 });

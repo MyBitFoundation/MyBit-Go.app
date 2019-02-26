@@ -9,7 +9,6 @@ import {
   StyledCarouselSlideParagraph,
   StyledCarouselSlideColoredSpan,
   StyledCarouselSlideList,
-  StyledCarouselTooltip,
   StyledCarouselSlideInput,
   StyledCarouselSlideSelect,
 } from 'components/CarouselSlide/';

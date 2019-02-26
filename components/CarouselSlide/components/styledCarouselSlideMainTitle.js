@@ -6,6 +6,7 @@ export const StyledCarouselSlideMainTitle = styled.h1`
   line-height: normal;
   font-size: 40px;
   margin: 20px 0px;
+  position: relative;
 
   @media(max-width: 600px) {
     font-size: 34px;

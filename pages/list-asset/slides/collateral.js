@@ -3,6 +3,7 @@ import {
   StyledCarouselSlide,
   StyledCarouselSlideMainTitle,
   StyledCarouselSlideParagraph,
+  StyledCarouselSlideTooltip,
 } from 'components/CarouselSlide/';
 
 import {
@@ -64,7 +65,12 @@ export const CollateralSlide = withTokenPricesContext(({
       isCentered
       maxWidthDesktop={maxWidthDesktop}
     >
-      Asset collateral
+      <React.Fragment>
+        Asset collateral
+        <StyledCarouselSlideTooltip
+          title="Assets with a high collateral are more likely to get funded."
+        />
+      </React.Fragment>
     </StyledCarouselSlideMainTitle>
     <StyledCarouselSlideParagraph
       isCentered

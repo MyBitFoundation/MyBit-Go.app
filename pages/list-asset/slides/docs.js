@@ -8,7 +8,7 @@ import {
   StyledCarouselSlide,
   StyledCarouselSlideMainTitle,
   StyledCarouselSlideParagraph,
-  StyledCarouselTooltip,
+  StyledCarouselSlideTooltip,
 } from 'components/CarouselSlide/';
 
 export const DocsSlide = ({
@@ -33,7 +33,13 @@ export const DocsSlide = ({
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
-      Supporting docs
+      <React.Fragment>
+        Supporting docs
+        <StyledCarouselSlideTooltip
+          title="Supporting documents build trust with investors, confirming that you have
+                 the required documents to install the asset in its stated location."
+        />
+      </React.Fragment>
     </StyledCarouselSlideMainTitle>
       <StyledCarouselSlideParagraph
         isCentered
