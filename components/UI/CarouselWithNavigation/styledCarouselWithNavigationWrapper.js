@@ -10,7 +10,8 @@ const StyledCarouselWithNavigationWrapper = styled(Carousel)`
     display: flex;
     flex-direction: row;
     width: auto;
-    height: calc(100vh - 113px);
+    // 56px is the height of the fixed nav bar at the bottom
+    height: calc(100vh - 56px);
   }
 
   .slick-slide {

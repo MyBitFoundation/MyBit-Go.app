@@ -7,9 +7,9 @@ const StyledCarouselWithNavigationSlide = styled.div`
   padding-right: 30px;
   padding-top: 30px;
 
-  height: calc(100vh - 113px);
+  // 56px is the height of the fixed nav bar at the bottom
+  height: calc(100vh - 56px);
   overflow: auto;
-
 
   @media(min-width: ${props => props.desktopAt || `${props.theme.sizes.tablet}px`}) {
     max-width: ${props => props.maxWidthDesktop || auto};
