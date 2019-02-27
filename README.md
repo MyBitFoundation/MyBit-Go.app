@@ -60,10 +60,10 @@ The application is built around a series of Contexts (See [React Context](https:
 
 The following Contexts are available: 
 
-- MetamaskChecker
-- Blockchain
-- AIrtable
-- TokenPrices
+- [MetamaskChecker](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/MetamaskChecker/index.js)
+- [Blockchain](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Blockchain.js)
+- [AIrtable](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Airtable.js)
+- [TokenPrices](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/TokenPrices.js)
 
 So if you need any of the information inside these contexts you can use the `with` high order component each of them provides.
 
