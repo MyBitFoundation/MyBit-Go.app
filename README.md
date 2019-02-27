@@ -29,6 +29,14 @@ Note, this is an Alpha version which may not be well tested. Features in this ve
 
 <br/><br/>
 
+## Tools Used
+#### [Now.sh](https://zeit.co/now)
+#### [Next.js](https://nextjs.org/)
+#### [Styled Components](https://www.styled-components.com/)
+#### [Express](https://www.npmjs.com/package/express)
+
+## Read before you contribute
+
 ### Environment Variables
 
 Please create a `.env` file in the root of the project. See [here](https://en.wikipedia.org/wiki/Environment_variable) about environment variables.
