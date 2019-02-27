@@ -75,7 +75,7 @@ So if you need any of the information inside these contexts you can use the `wit
 
 As said previously we use Styled Components but we also use a set of standards and a way to style inside the application. You will notice some of our files don't yet follow these standards, refactoring is gradually being done, these decisions were made recently.
 
-### Theme provider
+#### Theme provider
 We use Styled Components [Theme Provider](https://www.styled-components.com/docs/advanced#theming) component to have access to our own theme properties. See [this](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Theme/index.js) file with the declaration and an example of using it [here](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/MobileMenu/styledMobileMenuWrapper.js).
 
 #### Standards for naming
