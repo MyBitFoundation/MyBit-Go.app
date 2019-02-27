@@ -73,6 +73,15 @@ So if you need any of the information inside these contexts you can use the `wit
 
 ### Server
 
+### Global folders for your convenience
+Using [babel](https://github.com/tleunen/babel-plugin-module-resolver).
+
+The following folders are available from anywhere (but `/server`):
+- static
+- components
+- constants
+- utils 
+- ui
 
 ### User Documentation
 MyBit Go follows user-centered design and documentation.
