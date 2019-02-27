@@ -71,6 +71,40 @@ So if you need any of the information inside these contexts you can use the `wit
 
 ### Patterns
 
+### Styling
+
+As said previously we use Styled Components but we also use a set of standards and a way to style inside the application. You will notice some of our files don't yet follow these standards, refactoring is gradually being done, these decisions were made recently.
+
+### Theme provider
+We use Styled Components [Theme Provider](https://www.styled-components.com/docs/advanced#theming) component to have access to our own theme properties. See [this](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Theme/index.js) file with the declaration and an example of using it [here](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/MobileMenu/styledMobileMenuWrapper.js).
+
+#### Standards for naming
+Each styled component is ideally declared inside its own file and for this reason the name of that file, say you are customising a button and your component is call `Navbar`then this new styled component file would be named `navBarButton.js`. So you keep the name of the Main component attached to each styled component file used inside it. 
+
+In this case the main styled component `Navbar` could be declared in a different file using `navBarWrapper.js` and then used inside `/NavBar/index.js` like so: ´<NavBarWrapper>´.
+  
+So the folder structure would be:
+```
+NavBar/index.js
+NavBar/navBarWrapper.js
+NavBar/navBarButton.js
+```
+<br/>
+
+index.js:
+```
+<NavBarWrapper>
+   <NavBarButton>
+     Hello
+  </NavBarButton>
+</NavBarWrapper>
+```
+
+#### Standards for writing css
+We use a mobile first approach. See more about it [here](https://zellwk.com/blog/how-to-write-mobile-first-css/).
+
+See [this](https://itnext.io/thinking-in-styled-components-e230ea37c52c) document as a good reference on thinking in Styled Components.
+
 ### Server
 
 ### Global folders for your convenience
@@ -86,6 +120,7 @@ The following folders are available from anywhere (but `/server`):
 ### User Documentation
 MyBit Go follows user-centered design and documentation.
 For User Flow docs check [this page](./TESTING.md).
+
 
 
 ## To run
