@@ -29,20 +29,6 @@ Note, this is an Alpha version which may not be well tested. Features in this ve
 
 <br/><br/>
 
-## Tools Used
-
-#### Next.js
-#### Styled Components
-#### Express
-
-### Installing the dependencies with [yarn](https://yarnpkg.com/en/docs/usage)
-```sh
-yarn install
-```
-### Development server
-```sh
-yarn dev
-```
 ### Environment Variables
 
 Please create a `.env` file in the root of the project. See [here](https://en.wikipedia.org/wiki/Environment_variable) about environment variables.
@@ -83,6 +69,24 @@ So if you need any of the information inside these contexts you can use the `wit
 ### User Documentation
 MyBit Go follows user-centered design and documentation.
 For User Flow docs check [this page](./TESTING.md).
+
+
+## To run
+
+### Installing the dependencies with [yarn](https://yarnpkg.com/en/docs/usage)
+```sh
+yarn install
+```
+### Development server
+```sh
+yarn dev
+```
+
+### Production server
+```sh
+yarn build
+yarn now-start
+```
 
 ### Powered with
 <br/>
