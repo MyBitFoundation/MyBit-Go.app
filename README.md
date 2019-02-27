@@ -29,16 +29,39 @@ Note, this is an Alpha version which may not be well tested. Features in this ve
 
 <br/><br/>
 
+## Tools Used
+
+#### Next.js
+#### Styled Components
+#### Express
+
 ### Installing the dependencies with [yarn](https://yarnpkg.com/en/docs/usage)
 ```sh
-yarn
+yarn install
 ```
 ### Development server
 ```sh
-yarn start
+yarn dev
 ```
+### Environment Variables
 
-### MyBit UI components
+### Contexts
+The application is built around a series of Contexts (See [React Context](https://reactjs.org/docs/context.html)) in conjunction with [HOCs](https://reactjs.org/docs/higher-order-components.html) to provide different data to different components across the appliacation.
+
+The following Contexts are available: 
+
+- MetamaskChecker
+- Blockchain
+- AIrtable
+- TokenPrices
+
+So if you need any of the information inside these contexts you can use the `with` high order component each of them provides.
+
+### File Structure
+
+### Patterns
+
+### Server
 
 
 ### User Documentation
