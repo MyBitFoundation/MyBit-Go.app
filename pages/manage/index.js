@@ -1,52 +1,36 @@
-import React from 'react';
-import {
-  Button,
-} from 'antd';
-import Loading from 'components/Loading';
-import { withBlockchainContext } from 'components/Blockchain'
-import PieChart from 'static/chart-pie.svg';
-import LineChart from 'static/chart-line.svg';
-import Sliders from 'static/sliders.svg';
-import {
-  formatMonetaryValue,
-  fromWeiToEth,
-} from 'utils/helpers';
-import ValueDisplay from 'ui/ValueDisplay';
+import ManageAssetModule from 'components/ManageAssetModule';
 
 class ManageAssetPage extends React.Component {
-  constructor(props) {
-    super(props);
+  static async getInitialProps (ctx) {
+    return {assetId: ctx.query.id};
   }
 
   render() {
     const {
-      blockchainContext,
+      assetId,
     } = this.props;
-
-    const {
-      loading,
-      assets,
-      prices,
-      withdrawInvestorProfit,
-      withdrawingAssetIds,
-      user,
-    } = blockchainContext;
-
-    if (loading.assets || !prices.ether) {
-      return (
-        <Loading
-          message="Loading asset information"
-          hasBackButton
-        />
-      );
-    }
-
     return (
-      <div>
-        <p>Manage Pagesssssasdasdadqaqa</p>
-      </div>
+      <ManageAssetModule
+        assetId={assetId}
+      >
+        {({
+          loading,
+          error,
+          daysSinceItWentLive,
+          metamaskError,
+        }) => {
+          return (
+            <div>
+              <p>is loading: {loading.toString()}</p>
+              {error && <p>error: {error.type}</p>}
+              {metamaskError && <p>error: {metamaskError.error}</p>}
+              <p>{daysSinceItWentLive}</p>
+            </div>
+          )
+        }}
+      </ManageAssetModule>
     );
   }
 };
 
-export default withBlockchainContext(ManageAssetPage);
+export default ManageAssetPage;

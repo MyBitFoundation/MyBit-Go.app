@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
 import { withBlockchainContext } from 'components/Blockchain'
-import { withMetamaskContext } from 'components/MetamaskChecker'
 import { withTokenPricesContext } from 'components/TokenPrices'
 
 //import NotFoundPage from './NotFoundPage';
@@ -12,79 +11,64 @@ import StyledButton from './styledButton';
 
 class AssetPage extends React.Component {
   static async getInitialProps (ctx) {
-      return {assetId: ctx.query.id};
+    return {assetId: ctx.query.id};
   }
-render(){
-  const {
-    blockchainContext,
-    metamaskContext,
-    pricesContext,
-    router,
-  } = this.props;
+  render(){
+    const {
+      blockchainContext,
+      pricesContext,
+      router,
+    } = this.props;
 
-  const {
-    assets,
-    loading,
-    handleAssetFavorited,
-    fundAsset,
-    updateNotification,
-  } = blockchainContext;
+    const {
+      assets,
+      loading,
+      handleAssetFavorited,
+      fundAsset,
+      updateNotification,
+    } = blockchainContext;
 
-  const {
-    user,
-    extensionUrl,
-    userHasMetamask,
-    userIsLoggedIn,
-    network,
-    privacyModeEnabled,
-  } = metamaskContext;
+    const {
+      prices,
+    } = pricesContext;
 
-  const {
-    prices,
-  } = pricesContext;
+    if (loading.assets || prices.loading) {
+      return (
+        <Loading
+          message="Loading asset information"
+          hasBackButton
+        />
+      );
+    }
 
-  if (loading.assets || prices.loading) {
-    return (
-      <Loading
-        message="Loading asset information"
-        hasBackButton
-      />
-    );
-  }
+    const asset = assets.find(({ assetId }) => assetId === this.props.assetId);
+    let toRender;
+    if (!asset) {
+      toRender = (
+        <p>not found</p>
+      );
+    } else {
+      toRender = (
+        <AssetDetails
+          currentEthInUsd={prices.ethereum.price}
+          asset={asset}
+          handleAssetFavorited={handleAssetFavorited}
+          fundAsset={fundAsset}
+          updateNotification={updateNotification}
+          loadingUserInfo={loading.userAssetsInfo}
+        />
+      )
+    }
 
-  const asset = assets.find(({ assetId }) => assetId === this.props.assetId);
-  let toRender;
-  if (!asset) {
-    toRender = (
-      <p>not found</p>
-    );
-  } else {
-    toRender = (
-      <AssetDetails
-        currentEthInUsd={prices.ethereum.price}
-        user={user}
-        asset={asset}
-        handleAssetFavorited={handleAssetFavorited}
-        fundAsset={fundAsset}
-        userHasMetamask={userHasMetamask}
-        userIsLoggedIn={userIsLoggedIn}
-        network={network}
-        extensionUrl={extensionUrl}
-        updateNotification={updateNotification}
-        loadingUserInfo={loading.userAssetsInfo}
-        privacyModeEnabled={privacyModeEnabled}
-      />
+    return(
+      <React.Fragment>
+        <StyledButton onClick={() => Router.push('/explore')}>
+          Back
+        </StyledButton>
+        {toRender}
+      </React.Fragment>
     )
   }
-
-  return(
-    <React.Fragment>
-      <StyledButton onClick={() => Router.push('/explore')}>
-        Back
-      </StyledButton>
-      {toRender}
-    </React.Fragment>
-  )}
 }
 
 AssetPage.defaultProps = {
@@ -101,7 +85,6 @@ AssetPage.propTypes = {
 };
 
 const enhance = compose(
-  withMetamaskContext,
   withBlockchainContext,
   withTokenPricesContext,
 );

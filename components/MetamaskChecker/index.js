@@ -10,6 +10,7 @@ import {
   METAMASK_OPERA,
   PROVIDER_ROPSTEN,
   CORRECT_NETWORK,
+  METAMASK_ERRORS,
 } from './constants';
 
 const { Provider, Consumer } = React.createContext({});
@@ -42,10 +43,99 @@ class MetamaskChecker extends Component {
       isReadOnlyMode: undefined,
       extensionUrl: undefined,
       user: { balances: {}},
+      metamaskErrors: this.metamaskErrors,
     };
+  };
+
+ metamaskErrors = className => {
+    const {
+      userHasMetamask,
+      extensionUrl,
+      userIsLoggedIn,
+      network,
+      privacyModeEnabled
+    } = this.state;
+
+    let toRender = null;
+    let error;
+    if (!userHasMetamask && extensionUrl) {
+      error = METAMASK_ERRORS.NO_METAMASK;
+      toRender = (
+        <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a> to be able to fund and create assets.
+          You can download the extension via{' '}
+          <a href={extensionUrl} target="_blank" rel="noopener noreferrer">this</a> link.
+        </p>
+      );
+    } else if (!userHasMetamask && !extensionUrl) {
+      error = METAMASK_ERRORS.NOT_SUPPORTED;
+      toRender = (
+        <div>
+          <span>Your browser is not supported. MetaMask supports the following browsers:
+            <a
+              href="https://www.google.com/chrome/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {' '}
+              Chrome
+            </a>,
+            <a
+              href="https://www.mozilla.org/en-US/firefox/new/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {' '}
+              Firefox
+            </a>,
+            <a
+              href="https://www.opera.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {' '}
+              Opera
+            </a>{' '}
+            or
+            <a
+              href="https://brave.com/download/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {' '}
+              Brave
+            </a>
+          </span>
+        </div>
+      );
+    } else if (userHasMetamask && !userIsLoggedIn) {
+      error = METAMASK_ERRORS.NO_LOGIN;
+      toRender = (
+        <p>Please login in MetaMask to perform this action.</p>
+      );
+    } else if(privacyModeEnabled === undefined){
+      error = NOT_CONNECTED.NO_LOGIN;
+      toRender = (
+        <p><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</p>
+      );
+    } else if (network !== CORRECT_NETWORK) {
+      error = NOT_CONNECTED.NOT_NETWORK;
+      toRender = (
+        <p>
+          Only the Ropsten network is supported at the moment, please change the network in MetaMask.
+        </p>
+      );
+    }
+    return {
+      render: toRender && (
+        <div className={className}>
+          {toRender}
+        </div>
+      ),
+      error,
+    }
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     try{
       if(typeof window !== 'undefined') {
         this.detect = require('detect-browser');

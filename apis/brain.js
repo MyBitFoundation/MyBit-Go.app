@@ -221,7 +221,7 @@ export const withdrawEscrow = async (userName, assetId, onTransactionHash, onRec
   }
 }
 
-export const fetchRevenueLogsByassetId = async (assetId) =>
+export const fetchRevenueLogsByAssetId = async (assetId) =>
   new Promise(async (resolve, reject) => {
     try {
       // pull asssets from newest contract

@@ -213,17 +213,11 @@ class AssetDetails extends React.Component {
 
     const {
       currentEthInUsd,
-      user,
       asset,
       handleAssetFavorited,
       fundAsset,
-      userHasMetamask,
-      userIsLoggedIn,
-      network,
-      extensionUrl,
       updateNotification,
       loadingUserInfo,
-      privacyModeEnabled,
     } = this.props;
 
     const {
@@ -294,13 +288,8 @@ class AssetDetails extends React.Component {
             handlePopupState={val => this.handlePopupState(val)}
             assetId={assetId}
             fundAsset={fundAsset}
-            userHasMetamask={userHasMetamask}
-            userIsLoggedIn={userIsLoggedIn}
-            network={network}
-            extensionUrl={extensionUrl}
             updateNotification={updateNotification}
             loadingUserInfo={loadingUserInfo}
-            privacyModeEnabled={privacyModeEnabled}
           />
         )}
         <StyledAssetDetailsLeftCol xs={24} sm={24} md={24} lg={12} xl={12}>

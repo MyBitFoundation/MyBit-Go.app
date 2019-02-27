@@ -15,7 +15,7 @@ import StyledContributionPopupToS from './styledContributionPopupToS';
 import StyledContributionPopupTosText from './styledContributionPopupTosText';
 import StyledContributionPopupAlertWrapper from './styledContributionPopupAlertWrapper';
 import StyledContributionPopupEthAmount from './styledContributionPopupEthAmount';
-import metamaskErrors from 'utils/metamaskErrors';
+import { withMetamaskContext } from 'components/MetamaskChecker';
 
 class ContributionPopup extends React.Component {
   state = {
@@ -92,12 +92,16 @@ class ContributionPopup extends React.Component {
 
   handleConfirmClicked = (transactionStatus) => {
     const {
+      metamaskContext,
+    } = this.props;
+
+    const {
       userHasMetamask,
       network,
       userIsLoggedIn,
       extensionUrl,
       privacyModeEnabled,
-    } = this.props;
+    } = metamaskContext;
 
     if (transactionStatus === 1) {
       return this.handleCancel();
@@ -111,12 +115,12 @@ class ContributionPopup extends React.Component {
       return null;
     }
 
-    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, userIsLoggedIn, network, privacyModeEnabled);
+    const metamaskErrorsToRender = false || metamaskContext.metamaskErrors('');
 
     if(metamaskErrorsToRender){
       this.setState({
         alertType: 'error',
-        alertMessage: metamaskErrorsToRender,
+        alertMessage: metamaskErrorsToRender.render,
       });
       return null;
     }
@@ -275,4 +279,4 @@ ContributionPopup.propTypes = {
   isBraveBrowser: PropTypes.bool.isRequired,
 };
 
-export default ContributionPopup;
+export default withMetamaskContext(ContributionPopup);

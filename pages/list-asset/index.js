@@ -10,7 +10,6 @@ import { withMetamaskContext } from 'components/MetamaskChecker';
 import { withBlockchainContext } from 'components/Blockchain';
 import { withCivic } from "ui/CivicContainer";
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
-import metamaskErrors from 'utils/metamaskErrors';
 import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
@@ -209,15 +208,11 @@ class ListAssetPage extends React.Component {
       fileList,
     } = this.state.data;
 
-    const {
-      userHasMetamask,
-      extensionUrl,
-      userIsLoggedIn,
-      network,
-      privacyModeEnabled,
-    } = metamaskContext;
+    const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
 
-    const metamaskErrorsToRender = metamaskErrors('', userHasMetamask, extensionUrl, userIsLoggedIn, network, privacyModeEnabled);
+    console.log(metamaskErrorsToRender)
+
+    console.log("render method: ", metamaskErrorsToRender.render)
 
     return (
       <CarouselWithNavigation
@@ -338,9 +333,7 @@ class ListAssetPage extends React.Component {
         }, {
           toRender: listedAssetId ? (
             <SuccessSlide
-              formData={data}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              error={metamaskErrorsToRender}
               assetId={listedAssetId}
             />
            ) : (
@@ -349,10 +342,10 @@ class ListAssetPage extends React.Component {
               isUserListingAsset={isUserListingAsset}
               listedAssetId={listedAssetId}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              error={metamaskErrorsToRender}
+              error={false || metamaskErrorsToRender.render}
             />
           ),
-          error: metamaskErrorsToRender,
+          error: false || metamaskErrorsToRender.render,
           hideButtons: listedAssetId ? true : false,
           buttons: {
             hasNextButton: true,
