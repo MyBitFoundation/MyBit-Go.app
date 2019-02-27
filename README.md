@@ -45,6 +45,22 @@ yarn dev
 ```
 ### Environment Variables
 
+Please create a `.env` file in the root of the project. See [here](https://en.wikipedia.org/wiki/Environment_variable) about environment variables.
+
+Some of these env. variables are required, some aren't. Please read through each of them to understand what to do.
+
+- REACT_APP_CIVIC_APP_ID | CIVIC_PRIVATE_KEY | CIVIC_APP_SECRET
+Not required but civic won't work in a development environment, only once your PR is deployed to our server. Fortunately civic's API is good so you can use the current implementation anywhere you need it and trust it will work. Meanwhile Civic is disabled in dev.
+
+- REACT_APP_INFURA_API_KEY (Prefix `REACT_` so it can be used in react code)
+Free to generate at infura's [website](https://infura.io/). Required.
+
+- BUCKET_REGION | AWS_ACCESS_KEY | BUCKET_NAME | AWS_SECRET_KEY
+Currently the application won't work without these. 
+
+- AIRTABLE_KEY
+Create a free account at [airtable](https://airtable.com) and copy [our table](https://airtable.com/shrpZZvivqhhoUbWn), then use your own [API key](url). Required.
+
 ### Contexts
 The application is built around a series of Contexts (See [React Context](https://reactjs.org/docs/context.html)) in conjunction with [HOCs](https://reactjs.org/docs/higher-order-components.html) to provide different data to different components across the appliacation.
 
