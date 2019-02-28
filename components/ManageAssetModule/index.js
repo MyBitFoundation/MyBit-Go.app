@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { compose } from 'recompose'
 import { withMetamaskContext } from 'components/MetamaskChecker';
 import { withBlockchainContext } from 'components/Blockchain';
+import { withTokenPricesContext } from 'components/TokenPrices';
+import {
+  formatMonetaryValue,
+  fromWeiToEth,
+} from 'utils/helpers';
 import ERRORS from './errors';
 import * as Brain from '../../apis/brain';
 import dayjs from 'dayjs';
@@ -12,14 +17,33 @@ class ManageAssetModule extends React.Component{
     loading: true,
   }
 
-  processAssetInfo = async asset => {
+  processAssetInfo = async (props, asset) => {
+    const {
+      blockchainContext,
+      pricesContext,
+      metamaskContext,
+    } = props;
+
+    const {
+      prices,
+    } = pricesContext;
+
+    const {
+      withdrawingCollateral,
+      withdrawingAssetManager,
+      withdrawCollateral,
+      withdrawProfitAssetManager,
+    } = blockchainContext;
+
     try{
       const {
+        assetId,
         collateral,
         amountToBeRaisedInUSD,
         assetIncome,
         blockNumberitWentLive,
         assetManager,
+        managerPercentage,
       } = asset;
 
       // calculate collateral data to be displayed
@@ -55,8 +79,8 @@ class ManageAssetModule extends React.Component{
 
       // calculate asset manager profits
       const assetManagerProfits = [];
-      const revenueRawData = await Brain.fetchRevenueLogsByAssetId(asset.assetID);
-      const revenueData = revenueRawData.map( revenue => {
+      const revenueRawData = await Brain.fetchRevenueLogsByAssetId(asset.assetId);
+      const revenueData = revenueRawData.map(revenue => {
         return {
           amount: fromWeiToEth(revenue.amount),
           date: dayjs(revenue.timestamp * 1000),
@@ -74,67 +98,86 @@ class ManageAssetModule extends React.Component{
       }
 
       //calculate how much the asset manager can withdraw
-      const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetID), Brain.getManagerIncomeWithdraw(assetManager, asset.assetID)]);
+      const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetId), Brain.getManagerIncomeWithdraw(assetManager, asset.assetId)]);
       //set the state with the calculated data
-      this.setState({
-        loading: false,
-        assetManagerProfits,
-        collateralData,
-        revenueData,
-        daysSinceItWentLive,
-        toWithdraw: totalIncome - totalWithdrawn,
+
+      const mybitPrice = prices.mybit.price;
+      const etherPrice = prices.ethereum.price;
+
+      const profitUSD = assetIncome * (managerPercentage / 100);
+      const profitETH = (profitUSD / etherPrice).toFixed(4);
+
+      let withdrawMax;
+      let percentageMax;
+
+      let alreadyWithdrawn = 0;
+      collateralData.forEach((data, index) => {
+        if(data.paidOut){
+          alreadyWithdrawn += 1;
+        }
+        else if(data.withdrawable){
+          withdrawMax = (collateral / 4) * (index + 1 - alreadyWithdrawn);
+          percentageMax = 25 * (index + 1 - alreadyWithdrawn);
+        }
       })
+
+      const averageProfitUSD = profitUSD / daysSinceItWentLive;
+      const averageProfitETH = (profitETH / daysSinceItWentLive).toFixed(4);
+
+      const toWithdraw = totalIncome - totalWithdrawn;
+      const toWithdrawETH = window.web3js.utils.fromWei(toWithdraw.toString(), 'ether');
+      const toWithdrawUSD = formatMonetaryValue(toWithdrawETH * etherPrice);
+
+      const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
+      const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
+
+      return {
+        userAddress: metamaskContext.user.address,
+        asset: asset,
+        methods: {
+          withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
+          withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, toWithdrawUSD): undefined,
+        },
+        finantialDetails: {
+          assetManagerProfits,
+          collateralData,
+          revenueData,
+          toWithdrawETH,
+          toWithdrawUSD,
+          isWithdrawingCollateral,
+          isWithdrawingAssetManager,
+          profitUSD,
+          profitETH,
+          withdrawMax,
+          percentageMax,
+          averageProfitUSD,
+          averageProfitETH,
+        }
+      };
     }catch(err){
       console.log(err)
     }
   }
 
   componentDidMount = () => {
-    this.getData();
-  }
-
-  componentDidUpdate = (prevProps, prevState, snapshot) => {
-    const {
-      blockchainContext,
-      metamaskContext,
-      assetId,
-    } = this.props;
-
-    const {
-      loading,
-      assets,
-    } = blockchainContext;
-
-    const {
-      user,
-    } = metamaskContext;
-
-    const {
-      blockchainContext: oldBlockchainContext,
-      metamaskContext: oldMetamaskContext,
-    } = prevProps;
-
-    const {
-      loading: oldLoading,
-      assets: oldAssets,
-    } = oldBlockchainContext;
-
-    const {
-      user: oldUser,
-    } = oldMetamaskContext;
-
-    if(user.address !== oldUser.address || loading.assets !== oldLoading.assets ||  oldAssets !== assets){
-      console.log("Refreshing asset manager page");
-      this.getData()
+    if(window){
+      this.getData();
     }
   }
 
-  getData = () => {
+  componentWillReceiveProps = (nextProps) => {
+    console.log("Refreshing asset manager page!");
+    console.log(nextProps.blockchainContext.withdrawingAssetManager)
+    this.getData(nextProps);
+  }
+
+  getData = async (props) => {
     const {
       blockchainContext,
       metamaskContext,
       assetId: requestedAssetId,
-    } = this.props;
+      pricesContext,
+    } = props || this.props;
 
     const {
       loading,
@@ -145,19 +188,19 @@ class ManageAssetModule extends React.Component{
       user,
     } = metamaskContext;
 
-    if(loading.assets){
+    const {
+      loading: loadingPrices,
+      prices,
+    } = pricesContext;
+
+    if(loading.assets || loadingPrices){
       this.setState({
         loading: true,
       })
     } else {
       const asset = assets.find(({ assetId }) => assetId === requestedAssetId);
       let errorType, assetInfo;
-      if(!user.address){
-        const metamaskErrorsToRender = false || metamaskContext.metamaskErrors('');
-        this.setState({
-          metamaskError: metamaskErrorsToRender,
-        })
-      }
+      const metamaskErrorsToRender = false || metamaskContext.metamaskErrors('');
       if(!asset){
         errorType = ERRORS.NO_ASSET;
       } else if (user.address !== asset.assetManager){
@@ -167,19 +210,23 @@ class ManageAssetModule extends React.Component{
       } else if(!asset.funded){
         errorType = ERRORS.ASSET_NOT_FUNDED;
       } else {
-        assetInfo = this.processAssetInfo(asset);
+        assetInfo = await this.processAssetInfo(props || this.props, asset);
       }
       this.setState({
         loading: false,
         error: {
           type: errorType,
         },
+        metamaskError: metamaskErrorsToRender,
         assetInfo,
       })
     }
   }
 
-  render = () => this.props.children(this.state);
+  render = () => this.props.children({
+    ...this.state,
+    prices: this.props.pricesContext.prices,
+  });
  }
 
 ManageAssetModule.propTypes = {
@@ -190,6 +237,7 @@ ManageAssetModule.propTypes = {
 const enhance = compose(
   withMetamaskContext,
   withBlockchainContext,
+  withTokenPricesContext,
 );
 
 export default enhance(ManageAssetModule);;

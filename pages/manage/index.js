@@ -1,36 +1,16 @@
 import ManageAssetModule from 'components/ManageAssetModule';
+import ManageAsset from 'components/ManageAsset';
 
-class ManageAssetPage extends React.Component {
-  static async getInitialProps (ctx) {
-    return {assetId: ctx.query.id};
-  }
+const ManageAssetPage = ({
+  assetId,
+}) => (
+  <ManageAssetModule
+    assetId={assetId}
+  >
+    {props => <ManageAsset {...props}/>}
+  </ManageAssetModule>
+);
 
-  render() {
-    const {
-      assetId,
-    } = this.props;
-    return (
-      <ManageAssetModule
-        assetId={assetId}
-      >
-        {({
-          loading,
-          error,
-          daysSinceItWentLive,
-          metamaskError,
-        }) => {
-          return (
-            <div>
-              <p>is loading: {loading.toString()}</p>
-              {error && <p>error: {error.type}</p>}
-              {metamaskError && <p>error: {metamaskError.error}</p>}
-              <p>{daysSinceItWentLive}</p>
-            </div>
-          )
-        }}
-      </ManageAssetModule>
-    );
-  }
-};
+ManageAssetPage.getInitialProps = ctx => ({assetId: ctx.query.id});
 
 export default ManageAssetPage;

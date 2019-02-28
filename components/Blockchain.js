@@ -155,7 +155,7 @@ class BlockchainProvider extends React.Component {
     }
   }
 
-  withdrawProfitAssetManager = async (asset, amount, updateAssetCollateralPage) => {
+  withdrawProfitAssetManager = async (asset, amount) => {
     const {
       assetId,
       name: assetName,
@@ -216,13 +216,11 @@ class BlockchainProvider extends React.Component {
     }
 
     const onSuccess = () => {
-      updateAssetCollateralPage(() => {
-        updatewithdrawingAssetManager();
-        buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.SUCCESS, {
-          assetName,
-          amount,
-        });
-      })
+      updatewithdrawingAssetManager();
+      buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.SUCCESS, {
+        assetName,
+        amount,
+      });
     }
 
     await Brain.withdrawAssetManager(
@@ -295,14 +293,12 @@ class BlockchainProvider extends React.Component {
     }
 
     const onSuccess = () => {
-      updateAssetCollateralPage(() => {
-        updateWithdrawingCollateral();
-        buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.SUCCESS, {
-          assetName,
-          percentage,
-          amount,
-        });
-      })
+      updateWithdrawingCollateral();
+      buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.SUCCESS, {
+        assetName,
+        percentage,
+        amount,
+      });
     }
 
     await Brain.withdrawEscrow(

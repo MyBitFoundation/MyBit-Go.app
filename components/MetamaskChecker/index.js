@@ -113,12 +113,12 @@ class MetamaskChecker extends Component {
         <p>Please login in MetaMask to perform this action.</p>
       );
     } else if(privacyModeEnabled === undefined){
-      error = NOT_CONNECTED.NO_LOGIN;
+      error = METAMASK_ERRORS.NOT_CONNECTED;
       toRender = (
         <p><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</p>
       );
     } else if (network !== CORRECT_NETWORK) {
-      error = NOT_CONNECTED.NOT_NETWORK;
+      error = METAMASK_ERRORS.NOT_NETWORK;
       toRender = (
         <p>
           Only the Ropsten network is supported at the moment, please change the network in MetaMask.
