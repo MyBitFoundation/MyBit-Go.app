@@ -5,13 +5,16 @@ import {
 
 const StyledAssetDetails = styled(Row)`
   margin-bottom: 50px;
-  margin-top: 20px;
 
   .ant-slider{
     margin: 0px 0px;
     padding: 0px 0px;
     margin-top: 30px;
   }
+
+  ${({theme}) => theme.tablet`
+    margin-top: 20px;
+  `}
 
   .ant-slider-track{
     background-color: #1890ff;
