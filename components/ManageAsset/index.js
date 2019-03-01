@@ -3,6 +3,7 @@ import {
   Button,
 } from 'antd';
 import Link from 'next/link';
+import Router from 'next/router'
 import Loading from 'components/Loading';
 import {
   InternalLinks,
@@ -59,6 +60,7 @@ class ManageAsset extends React.Component {
       <ManageAssetNavButtons>
         <Button
           type="secondary"
+          onClick={() => window.history.length === 2 ? Router.push('/portfolio') : Router.back()}
         >
           Back
         </Button>

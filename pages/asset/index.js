@@ -62,7 +62,7 @@ class AssetPage extends React.Component {
 
     return(
       <React.Fragment>
-        <StyledButton onClick={() => Router.push('/explore')}>
+        <StyledButton onClick={() => window.history.length === 2 ? Router.push('/explore') : Router.back()}>
           Back
         </StyledButton>
         {toRender}
