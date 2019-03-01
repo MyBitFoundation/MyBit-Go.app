@@ -20,6 +20,7 @@ import {
 } from './errorMessages';
 import ErrorPage from 'components/ErrorPage';
 import DocumentsManager from 'components/DocumentsManager';
+import BackButton from 'ui/BackButton';
 
 class ManageAsset extends React.Component {
     constructor(props) {
@@ -58,12 +59,7 @@ class ManageAsset extends React.Component {
 
     getNavBarButtons = (assetId, error) => (
       <ManageAssetNavButtons>
-        <Button
-          type="secondary"
-          onClick={() => window.history.length === 2 ? Router.push('/portfolio') : Router.back()}
-        >
-          Back
-        </Button>
+        <BackButton />
         {!error && (
           <React.Fragment>
             <Link
@@ -97,7 +93,8 @@ class ManageAsset extends React.Component {
         metamaskError,
       } = this.props;
 
-      if(loading) {
+
+      if(true) {
         return(
           <Loading
             message="Loading asset information"

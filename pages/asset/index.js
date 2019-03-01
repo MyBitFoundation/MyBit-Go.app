@@ -4,10 +4,10 @@ import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withTokenPricesContext } from 'components/TokenPrices'
-
-//import NotFoundPage from './NotFoundPage';
+import BackButton from 'ui/BackButton';
 import Loading from 'components/Loading';
 import StyledButton from './styledButton';
+import ErrorPage from 'components/ErrorPage';
 
 class AssetPage extends React.Component {
   static async getInitialProps (ctx) {
@@ -45,7 +45,10 @@ class AssetPage extends React.Component {
     let toRender;
     if (!asset) {
       toRender = (
-        <p>not found</p>
+        <ErrorPage
+          title="Asset not found"
+          description="Perhaps it was deleted. Please remember this is still a developement network. Thank you for testing!"
+        />
       );
     } else {
       toRender = (
@@ -62,9 +65,7 @@ class AssetPage extends React.Component {
 
     return(
       <React.Fragment>
-        <StyledButton onClick={() => window.history.length === 2 ? Router.push('/explore') : Router.back()}>
-          Back
-        </StyledButton>
+        <BackButton />
         {toRender}
       </React.Fragment>
     )

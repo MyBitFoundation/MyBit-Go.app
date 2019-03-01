@@ -2,20 +2,13 @@ import React from 'react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import Spin from 'static/spin.svg';
-import StyledBackButton from './styledBackButton';
+import BackButton from 'ui/BackButton';
 import StyledWrapper from './styledWrapper';
 import StyledMessage from './styledMessage';
 
 const Loading = ({ message, hasBackButton }) => (
   <div>
-    {hasBackButton && (
-      <StyledBackButton
-        type="secondary"
-        onClick={() => window.history.length === 2 ? Router.push('/portfolio') : Router.back()}
-      >
-        Back
-      </StyledBackButton>
-    )}
+    {hasBackButton && <BackButton />}
     <StyledWrapper>
       <Spin style={{ height: '64px', width: '64px' }} />
       <StyledMessage>
@@ -35,4 +28,4 @@ Loading.defaultProps = {
   hasBackButton: false,
 };
 
-export default React.memo(Loading);
+export default Loading;

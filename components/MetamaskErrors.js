@@ -4,6 +4,7 @@ import ErrorPage from 'components/ErrorPage';
 import {
   Button,
 } from 'antd';
+import BackButton from 'ui/BackButton';
 
 export const withMetamaskErrors = (Component, shouldRenderComponent = true, hasBackButton = false) => {
   return class withMetamaskErrors extends React.Component{
@@ -33,14 +34,7 @@ const MetamaskErrors = withMetamaskContext(({
   }
   return (
   <React.Fragment>
-    {hasBackButton && (
-      <Button
-        type="secondary"
-        onClick={() => window.history.length === 2 ? Router.push('/portfolio') : Router.back()}
-      >
-        Back
-      </Button>
-    )}
+    {(metamaskErrors.error && hasBackButton) && <BackButton />}
     {childrenToRender}
     {metamaskErrors.error && (
       <ErrorPage
