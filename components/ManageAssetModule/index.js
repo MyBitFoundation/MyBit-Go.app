@@ -18,6 +18,11 @@ class ManageAssetModule extends React.Component{
   }
 
   processAssetInfo = async (props, asset) => {
+    if(this._processingAssetInfo){
+      return;
+    } else {
+      this._processingAssetInfo = true;
+    }
     const {
       blockchainContext,
       pricesContext,
@@ -45,6 +50,8 @@ class ManageAssetModule extends React.Component{
         assetManager,
         managerPercentage,
       } = asset;
+
+      console.log("Called processAssetInfo")
 
       // calculate collateral data to be displayed
       const remainingEscrow = window.web3js.utils.fromWei(await Brain.remainingEscrow(asset.assetId), 'ether');
@@ -131,6 +138,7 @@ class ManageAssetModule extends React.Component{
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
 
+      console.log("isWithdrawingCollateral: ", isWithdrawingCollateral);
       this.setState({
         loading: false,
         assetInfo: {
@@ -156,8 +164,10 @@ class ManageAssetModule extends React.Component{
             averageProfitETH,
           }
         }
-      });
+      }, () => console.log(this.state));
+      this._processingAssetInfo = false;
     }catch(err){
+      this._processingAssetInfo = false;
       console.log(err)
     }
   }
@@ -170,6 +180,7 @@ class ManageAssetModule extends React.Component{
 
   componentWillReceiveProps = (nextProps) => {
     console.log("Refreshing asset manager page!");
+    console.log("nextprops: ", nextProps);
     this.getData(nextProps);
   }
 
@@ -213,6 +224,9 @@ class ManageAssetModule extends React.Component{
       } else {
         this.processAssetInfo(props || this.props, asset);
       }
+
+      console.log("errors: ", errorType)
+      console.log("Loading: ", loading.assets || loadingPrices)
 
       if(errorType){
         this.setState({

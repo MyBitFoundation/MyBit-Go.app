@@ -94,7 +94,7 @@ class ManageAsset extends React.Component {
       } = this.props;
 
 
-      if(true) {
+      if(loading) {
         return(
           <Loading
             message="Loading asset information"

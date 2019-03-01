@@ -5,6 +5,7 @@ import {
 
 const StyledAssetDetails = styled(Row)`
   margin-bottom: 50px;
+  margin-top: 20px;
 
   .ant-slider{
     margin: 0px 0px;
