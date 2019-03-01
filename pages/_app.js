@@ -4,7 +4,8 @@ import App, { Container } from 'next/app';
 import getConfig from 'next/config';
 import AirtableProvider, { withAirtableContext } from 'components/Airtable';
 import BlockchainProvider from 'components/Blockchain';
-import NotificationsProvider from 'components/Notifications';
+import NotificationsProvider from 'components/NotificationsModule';
+import Notifications from 'components/Notifications';
 import TokenPricesProvider from 'components/TokenPrices';
 import MetamaskChecker from 'components/MetamaskChecker';
 import Head from 'components/Head';
@@ -79,6 +80,7 @@ class MyApp extends App {
         <Head/>
         <Theme>
           <WithProviders>
+            <Notifications />
             <MobileMenu
               isOpen={mobileMenuOpen}
               items={navbarOptions}

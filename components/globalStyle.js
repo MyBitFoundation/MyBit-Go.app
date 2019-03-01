@@ -106,32 +106,6 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
-  .Notifications{
-    position: fixed;
-    z-index: 10;
-    bottom: 0px;
-    right: 0px;
-    display: flex;
-    flex-direction: column-reverse;
-
-
-    .ant-alert-with-description{
-      padding: 15px 35px 15px 64px;
-    }
-
-    .ant-alert{
-      position: relative;
-      z-index: 100000;
-      right: 20px;
-      max-width: 500px;
-      margin-bottom: 20px;
-
-      & a:focus{
-        text-decoration: none;
-      }
-    }
-  }
-
   .christmas.ant-btn-primary:before{
     display: none !important;
   }
@@ -142,13 +116,6 @@ const GlobalStyle = createGlobalStyle`
     &:hover{
       cursor: pointer;
     }
-  }
-
-  .ManagedAsset__error{
-    text-align: center;
-    font-size: 26px;
-    margin-top: 100px;
-    padding: 0px 40px;
   }
 
   .ant-tooltip-content {

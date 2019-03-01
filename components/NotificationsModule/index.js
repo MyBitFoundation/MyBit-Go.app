@@ -1,7 +1,4 @@
 import React from 'react';
-import {
-  Alert,
-} from 'antd';
 import { 
   getContentForNotification,
 } from 'constants/notifications';
@@ -23,7 +20,7 @@ class NotificationsProvider extends React.Component {
     super(props);
     this.state = {
       notifications: {},
-      removeNotification: this.removeNotification,
+      removeNotifications: this.removeNotifications,
       buildNotification: this.buildNotification,
       resetNotifications: this.resetNotifications,
     }
@@ -42,57 +39,38 @@ class NotificationsProvider extends React.Component {
     });
   };
 
-  removeNotification = (id) => {
+  componentDidUpdate = () => {
+    const toRemove = [];
+    const entries = Object.entries(this.state.notifications);
+    entries.map(([id, notification]) => {
+      const details = getContentForNotification(notification);
+      if(!details){
+        toRemove.push(id);
+      }
+    });
+    if(toRemove.length > 0){
+      this.removeNotifications(toRemove);
+    }
+  }
+
+  removeNotifications = (notificationsToRemove) => {
     const notifications = Object.assign({}, this.state.notifications);
-    delete notifications[id];
+    for(const id of notificationsToRemove){
+      delete notifications[id];
+    }
     this.setState({notifications});
   };
 
   createOrUpdateNofication = (id, data) => {
     const notifications = Object.assign({}, this.state.notifications);
     notifications[id] = data;
-    console.log("notifications: ", notifications)
     this.setState({notifications});
   };
 
   render(){
-    const {
-     notifications,
-    } = this.state;
-
-    const entries = Object.entries(notifications);
-    const toRemove = [];
-    const toRender = entries.map(([id, notification], index) => {
-      const details = getContentForNotification(notification);
-      if(!details){
-        toRemove.push(id);
-        return null;
-      }
-      const type = notification.status;
-      return (
-        <Alert
-          message={details.title}
-          description={details.message}
-          type={type}
-          showIcon
-          closable={type === 'success' || type === 'error'}
-          key={id}
-          onClose={() => this.removeNotification(id)}
-        />
-      )
-    });
-
-          console.log(toRender)
-
-
-    for(const id of toRemove){
-      this.removeNotification(id);
-    }
-
     return (
       <Provider value={this.state}>
         {this.props.children}
-        <div className="Notifications">{toRender}</div>
       </Provider>
     )
   }

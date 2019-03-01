@@ -51,8 +51,6 @@ class ManageAssetModule extends React.Component{
         managerPercentage,
       } = asset;
 
-      console.log("Called processAssetInfo")
-
       // calculate collateral data to be displayed
       const remainingEscrow = window.web3js.utils.fromWei(await Brain.remainingEscrow(asset.assetId), 'ether');
       const percentageWithdrawn = remainingEscrow !== collateral ? 100 - ((remainingEscrow * 100) / collateral) : 0;
@@ -138,7 +136,6 @@ class ManageAssetModule extends React.Component{
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
 
-      console.log("isWithdrawingCollateral: ", isWithdrawingCollateral);
       this.setState({
         loading: false,
         assetInfo: {
@@ -179,8 +176,6 @@ class ManageAssetModule extends React.Component{
   }
 
   componentWillReceiveProps = (nextProps) => {
-    console.log("Refreshing asset manager page!");
-    console.log("nextprops: ", nextProps);
     this.getData(nextProps);
   }
 
@@ -224,9 +219,6 @@ class ManageAssetModule extends React.Component{
       } else {
         this.processAssetInfo(props || this.props, asset);
       }
-
-      console.log("errors: ", errorType)
-      console.log("Loading: ", loading.assets || loadingPrices)
 
       if(errorType){
         this.setState({

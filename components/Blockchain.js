@@ -6,7 +6,7 @@ import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { withAirtableContext } from 'components/Airtable';
-import { withNotificationsContext } from 'components/Notifications';
+import { withNotificationsContext } from 'components/NotificationsModule';
 import { withMetamaskContext } from 'components/MetamaskChecker';
 import { withTokenPricesContext } from 'components/TokenPrices';
 import * as Brain from '../apis/brain';
@@ -421,7 +421,7 @@ class BlockchainProvider extends React.Component {
     });
   }
 
-  fundAsset(assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) {
+  fundAsset = (assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) => {
     try {
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
@@ -432,6 +432,10 @@ class BlockchainProvider extends React.Component {
       const {
         buildNotification,
       } = this.props.notificationsContext;
+
+      console.log(buildNotification)
+      console.log(this.props.notificationsContext)
+      console.log(this.props)
 
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.FUNDING,
