@@ -2,14 +2,15 @@ import Router from 'next/router';
 import {
   Button,
 } from 'antd';
+import BackButtonWrapper from './backButtonWrapper';
 
 const BackButton = () => (
-  <Button
+  <BackButtonWrapper
     type="secondary"
     onClick={() => window.history.length === 2 ? Router.push('/portfolio') : Router.back()}
   >
     Back
-  </Button>
+  </BackButtonWrapper>
 )
 
 export default BackButton;
