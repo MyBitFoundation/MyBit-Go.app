@@ -16,6 +16,7 @@ class MobileMenu extends React.PureComponent {
       isOpen,
       handleMobileMenuState,
       children,
+      metamaskContext,
     } = this.props;
 
     return (

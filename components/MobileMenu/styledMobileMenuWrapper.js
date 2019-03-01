@@ -11,6 +11,7 @@ const StyledStyledMobileMenuWrapper = styled.div`
   transition: all 0.3s;
   opacity: 0;
   max-height: 100vh;
+  overflow-y: auto;
 
   ${({theme}) => theme.mobileM `
     padding: 40px;
