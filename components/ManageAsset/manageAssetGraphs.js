@@ -24,7 +24,7 @@ const ButtonGroup = Button.Group;
 
 dayjs.extend(isBetween)
 
-const ManageAssetGraphs = ({
+const ManageAssetGraphs = React.memo(({
   chartBoxView,
   revenueData,
   profitChartView,
@@ -152,36 +152,34 @@ const ManageAssetGraphs = ({
       )}
     </React.Fragment>
   )
-}
+})
 
 export default ManageAssetGraphs;
 
 const getTimeFilteredData = (managerPercentage, etherPrice, revenueData, type) => {
-  let minDate, iterator, subtract;
+  let iterator, typeOfDate;
   switch (type) {
     case 'weekly':
-      subtract= 'day',
+      typeOfDate= 'day',
       iterator = 7;
-      minDate = dayjs().subtract(iterator, 'day').set('hour', 0).set('minute', 0).set('second', 0);
       break;
     case 'monthly':
-      subtract= 'day',
+      typeOfDate= 'day',
       iterator = 30;
-      minDate = dayjs().subtract(iterator, 'day').set('hour', 0).set('minute', 0).set('second', 0);
       break;
     case 'yearly':
-      subtract= 'month',
+      typeOfDate= 'month',
       iterator = 12;
-      minDate = dayjs().subtract(iterator, 'month').set('hour', 0).set('minute', 0).set('second', 0);
       break;
   }
 
+  const minDate = dayjs().subtract(iterator, typeOfDate).set('hour', 0).set('minute', 0).set('second', 0);
   const dataToReturn = [];
   let totalProfit = 0;
-  let currentDay = dayjs();
+  let currentDay = minDate;
   const maxDate = dayjs();
   const revenueFiltered = revenueData.filter(({date}) => date.isBetween(minDate, maxDate));
-  for(let i = iterator; iterator > 0; iterator --){
+  for(let i = 0; i < iterator; i++){
     const revenueFilteredByTime = revenueFiltered
         .filter(({date}) => {
           if(type === 'weekly') {
@@ -197,7 +195,7 @@ const getTimeFilteredData = (managerPercentage, etherPrice, revenueData, type) =
     if(type === 'weekly'){
       data['month'] = getDayInText(currentDay.day());
     } else if(type === 'monthly'){
-      data['month'] = iterator;
+      data['month'] = i + 1;
     } else if(type === 'yearly'){
       data['month'] = `${getMonthInText(currentDay.month())}`;
     }
@@ -217,10 +215,8 @@ const getTimeFilteredData = (managerPercentage, etherPrice, revenueData, type) =
     totalProfit += (managerFee * etherPrice);
 
     dataToReturn.push(data);
-    currentDay = currentDay.subtract(1, subtract);
+    currentDay = currentDay.add(1, typeOfDate);
   }
-
-  dataToReturn.reverse();
 
   return {
     data: dataToReturn,
