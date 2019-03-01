@@ -1,5 +1,6 @@
 import PortfolioModule from 'components/PortfolioModule';
 import Portfolio from 'components/Portfolio';
+import { withMetamaskErrors } from 'components/MetamaskErrors';
 
 const PortfolioPage = () => (
   <PortfolioModule>
@@ -7,4 +8,4 @@ const PortfolioPage = () => (
   </PortfolioModule>
 );
 
-export default PortfolioPage;
+export default withMetamaskErrors(PortfolioPage, false);

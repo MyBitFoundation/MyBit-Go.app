@@ -131,29 +131,32 @@ class ManageAssetModule extends React.Component{
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
 
-      return {
-        userAddress: metamaskContext.user.address,
-        asset: asset,
-        methods: {
-          withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
-          withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, toWithdrawUSD): undefined,
-        },
-        finantialDetails: {
-          assetManagerProfits,
-          collateralData,
-          revenueData,
-          toWithdrawETH,
-          toWithdrawUSD,
-          isWithdrawingCollateral,
-          isWithdrawingAssetManager,
-          profitUSD,
-          profitETH,
-          withdrawMax,
-          percentageMax,
-          averageProfitUSD,
-          averageProfitETH,
+      this.setState({
+        loading: false,
+        assetInfo: {
+          userAddress: metamaskContext.user.address,
+          asset: asset,
+          methods: {
+            withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
+            withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, toWithdrawUSD): undefined,
+          },
+          finantialDetails: {
+            assetManagerProfits,
+            collateralData,
+            revenueData,
+            toWithdrawETH,
+            toWithdrawUSD,
+            isWithdrawingCollateral,
+            isWithdrawingAssetManager,
+            profitUSD,
+            profitETH,
+            withdrawMax,
+            percentageMax,
+            averageProfitUSD,
+            averageProfitETH,
+          }
         }
-      };
+      });
     }catch(err){
       console.log(err)
     }
@@ -167,7 +170,6 @@ class ManageAssetModule extends React.Component{
 
   componentWillReceiveProps = (nextProps) => {
     console.log("Refreshing asset manager page!");
-    console.log(nextProps.blockchainContext.withdrawingAssetManager)
     this.getData(nextProps);
   }
 
@@ -200,7 +202,6 @@ class ManageAssetModule extends React.Component{
     } else {
       const asset = assets.find(({ assetId }) => assetId === requestedAssetId);
       let errorType, assetInfo;
-      const metamaskErrorsToRender = false || metamaskContext.metamaskErrors('');
       if(!asset){
         errorType = ERRORS.NO_ASSET;
       } else if (user.address !== asset.assetManager){
@@ -210,16 +211,23 @@ class ManageAssetModule extends React.Component{
       } else if(!asset.funded){
         errorType = ERRORS.ASSET_NOT_FUNDED;
       } else {
-        assetInfo = await this.processAssetInfo(props || this.props, asset);
+        this.processAssetInfo(props || this.props, asset);
       }
-      this.setState({
-        loading: false,
-        error: {
-          type: errorType,
-        },
-        metamaskError: metamaskErrorsToRender,
-        assetInfo,
-      })
+
+      console.log("Error type: ", errorType)
+      if(errorType){
+        this.setState({
+          loading: false,
+          error: {
+            type: errorType,
+          },
+        })
+      } else if(this.state.error){
+        this.setState({
+          loading: true,
+          error: undefined,
+        })
+      }
     }
   }
 

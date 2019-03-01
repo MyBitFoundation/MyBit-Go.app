@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import {
   Button,
 } from 'antd';
@@ -16,6 +17,8 @@ import StyledPortfolioPageValueDisplays from './styledPortfolioPageValueDisplays
 import StyledPortfolioPageNavButtons from './styledPortfolioPageNavButtons';
 import StyledPortfolioPageExplore from './styledPortfolioPageExplore';
 import Loading from 'components/Loading';
+import NoResults from 'components/NoResults';
+
 const ButtonGroup = Button.Group;
 
 class PortfolioPage extends React.Component {
@@ -121,6 +124,17 @@ class PortfolioPage extends React.Component {
               />
             )}
           </StyledPortfolioPageExplore>
+        )}
+        {assetsToRender.length === 0 && (
+          <NoResults>
+            {currentView === 'portfolioManaged'
+              ? <span>You don't own any assets. Click{' '}
+                  <Link href="/list-asset">
+                    here
+                  </Link>{' '}to list an asset.
+                </span>
+              : `You haven't invested in any assets yet.`}
+          </NoResults>
         )}
       </div>
     );

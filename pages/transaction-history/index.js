@@ -7,9 +7,11 @@ import {
 } from 'antd';
 import Loading from 'components/Loading';
 import { withBlockchainContext } from 'components/Blockchain'
+import { withMetamaskErrors } from 'components/MetamaskErrors';
 import GetColumns from 'constants/transactions';
 import StyledTransactionsPage from './styledTransactionsPage';
 import StyledTransactionsPageStatusIcon from './styledTransactionsPageStatusIcon';
+import ErrorPage from 'components/ErrorPage';
 
 class TransactionHistoryPage extends React.Component {
   state = {
@@ -77,4 +79,4 @@ TransactionHistoryPage.propTypes = {
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default withBlockchainContext(TransactionHistoryPage);
+export default withMetamaskErrors(withBlockchainContext(TransactionHistoryPage), false);;

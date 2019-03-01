@@ -115,9 +115,8 @@ class ContributionPopup extends React.Component {
       return null;
     }
 
-    const metamaskErrorsToRender = false || metamaskContext.metamaskErrors('');
-
-    if(metamaskErrorsToRender){
+    const metamaskErrorsToRender = false || metamaskContext.metamaskErrors();
+    if(metamaskErrorsToRender.error){
       this.setState({
         alertType: 'error',
         alertMessage: metamaskErrorsToRender.render,
