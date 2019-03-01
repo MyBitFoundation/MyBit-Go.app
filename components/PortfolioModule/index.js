@@ -66,7 +66,6 @@ class PortfolioModule extends React.Component {
     getPortfolioAssetDetails(ownedAssets, ethereum.price, (assets) => {
       this.setState({
         loading: false,
-        prices: pricesContext.prices,
         assets,
         withdrawingAssetIds,
       })

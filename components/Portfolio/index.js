@@ -40,7 +40,6 @@ class PortfolioPage extends React.Component {
     const {
       loading,
       assets,
-      prices,
       withdrawInvestorProfit,
       withdrawingAssetIds,
     } = this.props;
@@ -131,7 +130,6 @@ class PortfolioPage extends React.Component {
 PortfolioPage.propTypes = {
   loading: PropTypes.shape({}).isRequired,
   assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  prices: PropTypes.shape({}).isRequired,
 };
 
 export default PortfolioPage;
