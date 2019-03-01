@@ -24,6 +24,10 @@ const NotificationsMobileWrapper = styled.div`
     top: 14px;
   }
 
+  .ant-alert-icon{
+    top: 13px;
+  }
+
   .ant-alert-with-description .ant-alert-close-icon{
     left: 5px;
     right: auto;

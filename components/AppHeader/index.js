@@ -22,6 +22,9 @@ import AppHeaderConnectionStatus from './appHeaderConnectionStatus';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withMetamaskContext } from 'components/MetamaskChecker'
 import { withTokenPricesContext } from 'components/TokenPrices'
+import { withNotificationsContext } from 'components/NotificationsModule';
+import NotificationsMobileCounter from 'components/NotificationsMobile';
+import AppHeaderNotificationCounter from './appHeaderNotificationCounter';
 
 const AppHeader = ({
   metamaskContext,
@@ -30,12 +33,21 @@ const AppHeader = ({
   hideOnMobile,
   currentPath,
   handleMobileMenuState,
+  notificationsContext,
 }) => {
   const {
     user,
     isReadOnlyMode,
     metamaskErrors: getMetamaskErrors,
   } = metamaskContext;
+
+  const {
+    notifications,
+  } = notificationsContext;
+
+  const notificationsNumberToRender = Object.keys(notifications).length;
+  console.log(notificationsNumberToRender)
+  console.log(notificationsContext)
 
   const metamaskErrors = getMetamaskErrors();
 
@@ -117,6 +129,11 @@ const AppHeader = ({
             </AppHeaderSection>
           )}
           <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)} />
+          {notificationsNumberToRender > 0 && (
+            <AppHeaderNotificationCounter>
+              {notificationsNumberToRender}
+            </AppHeaderNotificationCounter>
+          )}
         </AppHeaderContainer>
       )}
     </BancorConsumer>
@@ -137,6 +154,7 @@ AppHeader.propTypes = {
 const enhance = compose(
   withMetamaskContext,
   withTokenPricesContext,
+  withNotificationsContext,
 );
 
 export default enhance(AppHeader);
