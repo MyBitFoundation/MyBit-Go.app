@@ -17,7 +17,7 @@ import StyledPortfolioPageValueDisplays from './styledPortfolioPageValueDisplays
 import StyledPortfolioPageNavButtons from './styledPortfolioPageNavButtons';
 import StyledPortfolioPageExplore from './styledPortfolioPageExplore';
 import Loading from 'components/Loading';
-import NoResults from 'components/NoResults';
+import ErrorPage from 'components/ErrorPage';
 
 const ButtonGroup = Button.Group;
 
@@ -61,6 +61,18 @@ class PortfolioPage extends React.Component {
       ) : assets.filter(assetFinantialDetails =>
         assetFinantialDetails.managerDetails || false
       )
+    const error = assetsToRender.length === 0 && (
+       <ErrorPage
+          title="Empty Portfolio"
+          description={currentView === 'portfolioManaged'
+              ? <span>You don't own any assets. Click{' '}
+                  <Link href="/list-asset">
+                    here
+                  </Link>{' '}to list an asset.
+                </span>
+              : `You haven't invested in any assets yet.`}
+        />
+    )
 
     return (
       <div>
@@ -125,17 +137,7 @@ class PortfolioPage extends React.Component {
             )}
           </StyledPortfolioPageExplore>
         )}
-        {assetsToRender.length === 0 && (
-          <NoResults>
-            {currentView === 'portfolioManaged'
-              ? <span>You don't own any assets. Click{' '}
-                  <Link href="/list-asset">
-                    here
-                  </Link>{' '}to list an asset.
-                </span>
-              : `You haven't invested in any assets yet.`}
-          </NoResults>
-        )}
+        {error && error}
       </div>
     );
   }
