@@ -65,7 +65,7 @@ class PortfolioPage extends React.Component {
        <ErrorPage
           title="Empty Portfolio"
           description={currentView === 'portfolioManaged'
-              ? <span>You don't own any assets. Click{' '}
+              ? <span>You don't manage any assets yet. Click{' '}
                   <Link href="/list-asset">
                     here
                   </Link>{' '}to list an asset.
