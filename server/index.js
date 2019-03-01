@@ -82,6 +82,8 @@ app
   server.post('/api/files/upload', multipleUpload, async (req, res) => {
     const assetId = req.body.assetId;
     const files = req.files;
+        console.log(assetId, files);
+
     await AwsController.handleFileUpload(files, assetId, req, res);
   });
 

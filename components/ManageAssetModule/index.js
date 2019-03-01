@@ -214,7 +214,6 @@ class ManageAssetModule extends React.Component{
         this.processAssetInfo(props || this.props, asset);
       }
 
-      console.log("Error type: ", errorType)
       if(errorType){
         this.setState({
           loading: false,

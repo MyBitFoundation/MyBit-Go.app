@@ -1,7 +1,7 @@
 export const CORRECT_NETWORK = 'ropsten';
 export const MYBIT_TICKER_COINMARKETCAP = 'mybit-token';
 export const ETHEREUM_TICKER_COINMARKETCAP = 'ethereum';
-export const MAX_FILES_UPLOAD = 2;
+export const MAX_FILES_UPLOAD = 5;
 export const MAX_FILE_SIZE = 5000000; //5 MB
 export const BLOCK_NUMBER_CONTRACT_CREATION = 4619384;
 

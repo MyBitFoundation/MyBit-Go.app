@@ -12,11 +12,13 @@ import ManageAssetContentWrapper from './manageAssetContentWrapper';
 import ManageAssetSection from './manageAssetSection';
 import ManageAssetAssetInfo from './manageAssetAssetInfo';
 import ManageAssetGraphs from './manageAssetGraphs';
+import ManageAssetDocsButton from './manageAssetDocsButton';
 import { withMetamaskErrors } from 'components/MetamaskErrors';
 import {
   getErrorMessage,
 } from './errorMessages';
 import ErrorPage from 'components/ErrorPage';
+import DocumentsManager from 'components/DocumentsManager';
 
 class ManageAsset extends React.Component {
     constructor(props) {
@@ -26,6 +28,7 @@ class ManageAsset extends React.Component {
       this.state = {
         chartBoxView: "profit",
         profitChartView: 'weekly',
+        supportingDocuments: false,
       };
     }
 
@@ -71,11 +74,13 @@ class ManageAsset extends React.Component {
                 View Asset Listing
               </Button>
             </Link>
-            <Button
+            <ManageAssetDocsButton
                 type="secondary"
+                selected={this.state.supportingDocuments}
+                onClick={() => this.setState(prevProps => ({supportingDocuments: !prevProps.supportingDocuments}))}
               >
               Supporting Documents
-            </Button>
+            </ManageAssetDocsButton>
           </React.Fragment>
         )}
       </ManageAssetNavButtons>
@@ -144,6 +149,7 @@ class ManageAsset extends React.Component {
         profitChartView,
         toWithdraw,
         chartBoxView,
+        supportingDocuments,
       } = this.state;
 
       const {
@@ -161,8 +167,6 @@ class ManageAsset extends React.Component {
       } = asset;
 
       const assetListingUrl = `/explore/${assetId}`;
-
-      const filesToRender = this.getFilesToRender(files, assetId);
 
       return (
         <div>
@@ -188,25 +192,37 @@ class ManageAsset extends React.Component {
                     withdrawProfitAssetManager={withdrawProfitAssetManager}
                   />
                 </ManageAssetSection>
-                <ManageAssetSection
-                  hasGraphs
-                >
-                  <ManageAssetGraphs
-                    chartBoxView={chartBoxView}
-                    revenueData={revenueData}
-                    profitChartView={profitChartView}
-                    managerPercentage={managerPercentage}
-                    ethereumPrice={ethereum.price}
-                    mybitPrice={mybit.price}
-                    displayProfit={this.displayProfit}
-                    displayCollateral={this.displayCollateral}
-                    collateral={collateral}
-                    collateralData={collateralData}
-                    amountToBeRaisedInUSD={amountToBeRaisedInUSD}
-                    isWithdrawingCollateral={isWithdrawingCollateral}
-                    withdrawCollateral={withdrawCollateral}
-                  />
-                </ManageAssetSection>
+                {!supportingDocuments && (
+                  <ManageAssetSection
+                    hasGraphs
+                  >
+                    <ManageAssetGraphs
+                      chartBoxView={chartBoxView}
+                      revenueData={revenueData}
+                      profitChartView={profitChartView}
+                      managerPercentage={managerPercentage}
+                      ethereumPrice={ethereum.price}
+                      mybitPrice={mybit.price}
+                      displayProfit={this.displayProfit}
+                      displayCollateral={this.displayCollateral}
+                      collateral={collateral}
+                      collateralData={collateralData}
+                      amountToBeRaisedInUSD={amountToBeRaisedInUSD}
+                      isWithdrawingCollateral={isWithdrawingCollateral}
+                      withdrawCollateral={withdrawCollateral}
+                    />
+                  </ManageAssetSection>
+                )}
+                {supportingDocuments && (
+                  <ManageAssetSection
+                    hasShadow
+                  >
+                    <DocumentsManager
+                      assetId={assetId}
+                      files={files}
+                    />
+                  </ManageAssetSection>
+                )}
               </ManageAssetContentWrapper>
             )}
         </div>

@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 const ManageAssetSection = styled.div`
   width: 100%;
+  position: relative;
 
   ${({theme}) => theme.tablet`
     width: 48%;
@@ -17,6 +18,13 @@ const ManageAssetSection = styled.div`
 
   ${({theme}) => theme.laptopL`
     width: 43%;
+  `}
+
+  ${props => props.hasShadow && css`
+    ${({theme}) => theme.tablet`
+      border-radius: 4px;
+      box-shadow: 0 4px 12px 0 rgba(0,0,0,0.1);
+    `}
   `}
 }`
 

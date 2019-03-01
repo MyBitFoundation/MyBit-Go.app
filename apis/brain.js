@@ -347,9 +347,9 @@ export const uploadFilesToAWS = async (
     let data = new FormData();
     data.append('assetId', assetId);
     for(const file of fileList){
-      data.append('file', file.originFileObj);
+      data.append('file', file.originFileObj ? file.originFileObj : file);
     }
-    await axios.post(InternalLinks.S3_UPLOAD,
+    const result = await axios.post(InternalLinks.S3_UPLOAD,
       data, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -357,7 +357,12 @@ export const uploadFilesToAWS = async (
       }
     )
 
-    performInternalAction();
+    if(performInternalAction){
+      performInternalAction();
+    } else {
+      return result;
+    }
+
   } catch(err){
     setTimeout(() => uploadFilesToAWS(assetId, fileList, performInternalAction), 5000);
     debug(err);
