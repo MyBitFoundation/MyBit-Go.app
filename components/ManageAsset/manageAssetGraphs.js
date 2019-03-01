@@ -24,7 +24,7 @@ const ButtonGroup = Button.Group;
 
 dayjs.extend(isBetween)
 
-const ManageAssetGraphs = React.memo(({
+const ManageAssetGraphs = ({
   chartBoxView,
   revenueData,
   profitChartView,
@@ -152,7 +152,7 @@ const ManageAssetGraphs = React.memo(({
       )}
     </React.Fragment>
   )
-})
+}
 
 export default ManageAssetGraphs;
 
