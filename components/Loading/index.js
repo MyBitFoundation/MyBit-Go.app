@@ -11,7 +11,7 @@ const Loading = ({ message, hasBackButton }) => (
     {hasBackButton && (
       <StyledBackButton
         type="secondary"
-        onClick={Router.goBack}
+        onClick={() => window.history.length === 2 ? Router.push('/portfolio') : Router.back()}
       >
         Back
       </StyledBackButton>

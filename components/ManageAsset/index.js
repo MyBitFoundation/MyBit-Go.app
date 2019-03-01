@@ -232,4 +232,4 @@ class ManageAsset extends React.Component {
     }
 }
 
-export default withMetamaskErrors(ManageAsset, false);
+export default withMetamaskErrors(ManageAsset, false, true);
