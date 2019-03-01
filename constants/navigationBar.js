@@ -32,6 +32,7 @@ export const navbarOptions = (currentPath) => [
     icon: ListAssetIcon,
     selected: currentPath === '/list-asset',
     url: '/list-asset',
+    external: true,
   }, {
     name: 'Knowledge Base',
     icon: KnowledgeBaseIcon,

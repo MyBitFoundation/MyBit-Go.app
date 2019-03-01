@@ -10,18 +10,31 @@ const NavigationBar = ({
   currentPath,
   items,
 }) => {
-  const navBarOptions = items(currentPath).map(menuItem => (
+  const navBarOptions = items(currentPath).map(menuItem => {
+    const linkContent = (
+      <div>
+        <Icon component={menuItem.icon} />
+        {menuItem.name}
+      </div>
+    )
+    return (
     <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected && 'ant-menu-item-selected'}>
-      <Link
-        href={menuItem.url || '/'}
-      >
-        <div>
-          <Icon component={menuItem.icon} />
-          {menuItem.name}
-        </div>
-      </Link>
+      {menuItem.external && (
+        <a
+          href={menuItem.url}
+        >
+          {linkContent}
+        </a>
+      )}
+      {!menuItem.external && (
+        <Link
+          href={menuItem.url || '/'}
+        >
+          {linkContent}
+        </Link>
+      )}
     </Menu.Item>
-  ));
+  )});
 
   return (
     <StyledNavigationBar>

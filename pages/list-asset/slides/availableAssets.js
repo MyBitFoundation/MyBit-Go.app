@@ -50,7 +50,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
     return null;
   }
 
-  const categories = getCategoriesForAssets(formData.userCountry, formData.userCity);
+  const categories = (formData.userCountry && formData.userCity) && getCategoriesForAssets(formData.userCountry, formData.userCity);
   const assetsAvailable = category && categories[category];
   const assetValue = !asset ? 0 : assetsAirTable.filter(assetTmp => assetTmp.name === asset)[0].amountToBeRaisedInUSDAirtable;
   return (

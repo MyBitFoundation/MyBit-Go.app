@@ -199,6 +199,9 @@ class AirtableProvider extends React.PureComponent {
       categoriesAirTable,
     } = this.state;
     const categories = {};
+    if(!assetsAirtable){
+      return {};
+    }
     for(const asset of assetsAirTable){
       const {
         category,
