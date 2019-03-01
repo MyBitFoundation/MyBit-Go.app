@@ -101,6 +101,7 @@ const GlobalStyle = createGlobalStyle`
       }
       .ant-tooltip-arrow {
         border-top-color: #ffffff;
+        border-bottom-color: #ffffff;
       }
     }
   }

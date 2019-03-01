@@ -6,6 +6,7 @@ import Logo from 'components/Logo';
 import ExchangeRate from 'components/ExchangeRate';
 import Balance from 'components/Balance';
 import Address from 'ui/Address';
+import ConnectionStatus from 'components/ConnectionStatus';
 import { Consumer as BancorConsumer } from 'ui/BancorContainer';
 import {
   Button,
@@ -17,6 +18,7 @@ import AppHeaderBancorWidget from './appHeaderBancorWidget';
 import AppHeaderSection from './appHeaderSection';
 import AppHeaderHamburguerButton from './appHeaderHamburguerButton';
 import AppHeaderPageName from './appHeaderPageName';
+import AppHeaderConnectionStatus from './appHeaderConnectionStatus';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withMetamaskContext } from 'components/MetamaskChecker'
 import { withTokenPricesContext } from 'components/TokenPrices'
@@ -32,7 +34,10 @@ const AppHeader = ({
   const {
     user,
     isReadOnlyMode,
+    metamaskErrors: getMetamaskErrors,
   } = metamaskContext;
+
+  const metamaskErrors = getMetamaskErrors();
 
   const {
     prices,
@@ -98,6 +103,11 @@ const AppHeader = ({
               Get MYB
             </Button>
           </AppHeaderBancorWidget>
+          <AppHeaderConnectionStatus>
+            <ConnectionStatus
+              metamaskErrors={metamaskErrors}
+            />
+          </AppHeaderConnectionStatus>
           {!isReadOnlyMode && (
             <AppHeaderSection
               noPadding

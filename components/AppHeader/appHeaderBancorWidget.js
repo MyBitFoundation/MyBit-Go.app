@@ -5,7 +5,7 @@ const AppHeaderBancorWidget = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  max-width: 305px;
+  max-width: 150px;
   width: 100%;
 
   button{

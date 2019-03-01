@@ -61,10 +61,10 @@ class MetamaskChecker extends Component {
     if (!userHasMetamask && extensionUrl) {
       error = METAMASK_ERRORS.NO_METAMASK;
       toRender = (
-        <p>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a> to be able to fund and create assets.
+        <span>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a> to be able to fund and create assets.
           You can download the extension via{' '}
           <a href={extensionUrl} target="_blank" rel="noopener noreferrer">this</a> link.
-        </p>
+        </span>
       );
     } else if (!userHasMetamask && !extensionUrl) {
       error = METAMASK_ERRORS.NOT_SUPPORTED;
@@ -110,19 +110,19 @@ class MetamaskChecker extends Component {
     } else if (userHasMetamask && !userIsLoggedIn) {
       error = METAMASK_ERRORS.NO_LOGIN;
       toRender = (
-        <p>Please login in MetaMask to perform this action.</p>
+        <span>Please login in MetaMask.</span>
       );
     } else if(privacyModeEnabled === undefined){
       error = METAMASK_ERRORS.NOT_CONNECTED;
       toRender = (
-        <p><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</p>
+        <span><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</span>
       );
     } else if (network !== CORRECT_NETWORK) {
       error = METAMASK_ERRORS.NOT_NETWORK;
       toRender = (
-        <p>
+        <span>
           Only the Ropsten network is supported at the moment, please change the network in MetaMask.
-        </p>
+        </span>
       );
     }
     return {
