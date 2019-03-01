@@ -43,6 +43,7 @@ class MyApp extends App {
 
   prefetchPages = () => {
     Router.prefetch('/onboarding')
+    Router.prefetch('/manage-asset')
     Router.prefetch('/asset')
     Router.prefetch('/transaction-history')
     Router.prefetch('/explore')
