@@ -20,6 +20,7 @@ import DocumentsManagerList from './documentsManagerList';
 import DocumentsManagerWarning from './documentsManagerWarning';
 import DocumentsManagerWrapper from './documentsManagerWrapper';
 import DocumentsManagerError from './documentsManagerError';
+import DocumentsManagerNoFiles from './documentsManagerNoFiles';
 
 class DocumentsManager extends React.Component{
   constructor(props){
@@ -102,6 +103,8 @@ class DocumentsManager extends React.Component{
       success,
     } = this.state;
 
+    const noFiles = true;
+
     return (
       <DocumentsManagerWrapper>
         <DocumentsManagerTitle>Supporting Documents</DocumentsManagerTitle>
@@ -131,18 +134,23 @@ class DocumentsManager extends React.Component{
             Up to a maximum of 5 files* can be uploaded, a maximum of 5MB each.
           </DocumentsManagerDescription>
         </DocumentsManagerNav>
-        <DocumentsManagerList>
-          {this.state.files.map((file, index) => {
-            return (
-              <DocumentsManagerFile key={`file${index}`}>
-                <div>
-                  <FileImg />
-                  <a href={`${InternalLinks.S3}${this.props.assetId}:${file.name || file}`}>{file.name || file}</a>
-                </div>
-              </DocumentsManagerFile>
-            )
-          })}
-        </DocumentsManagerList>
+        {!noFiles && (
+          <DocumentsManagerList>
+            {this.state.files.map((file, index) => {
+              return (
+                <DocumentsManagerFile key={`file${index}`}>
+                  <div>
+                    <FileImg />
+                    <a href={`${InternalLinks.S3}${this.props.assetId}:${file.name || file}`}>{file.name || file}</a>
+                  </div>
+                </DocumentsManagerFile>
+              )
+            })}
+          </DocumentsManagerList>
+        )}
+        {noFiles && (
+          <DocumentsManagerNoFiles />
+        )}
         {error && (
           <DocumentsManagerError
             color="orange"
