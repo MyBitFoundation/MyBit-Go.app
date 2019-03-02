@@ -103,7 +103,7 @@ class DocumentsManager extends React.Component{
       success,
     } = this.state;
 
-    const noFiles = true;
+    const noFiles = this.state.files.length === 0;
 
     return (
       <DocumentsManagerWrapper>
