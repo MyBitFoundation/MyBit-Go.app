@@ -18,6 +18,7 @@ const Asset = (props) => {
     type,
     withdrawInvestorProfit,
     withdrawing,
+    onClickImg,
   } = props;
 
   let AssetComponent = AssetDefault;
@@ -67,6 +68,7 @@ const Asset = (props) => {
         watchListed={watchListed}
         height={height}
         margin={margin}
+        onClickImg={onClickImg}
       >
         <AssetComponent
           {...props}

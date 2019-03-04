@@ -23,6 +23,10 @@ const StyledAssetTemplateImageHolder = styled.div`
     height: 100%;
     background-image: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent 80px, transparent);
   }
+
+  ${props => props.onClick && css`
+    cursor: pointer;
+  `}
 }`
 
 export default StyledAssetTemplateImageHolder;

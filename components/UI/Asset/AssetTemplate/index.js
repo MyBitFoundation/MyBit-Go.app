@@ -17,6 +17,7 @@ const AssetTemplate = ({
   country,
   height,
   margin,
+  onClickImg,
 }) => (
   <StyledAssetTemplate
     margin={margin}
@@ -24,6 +25,7 @@ const AssetTemplate = ({
     <StyledAssetTemplateImageHolder
       backgroundImage={backgroundImage}
       height={height}
+      onClick={onClickImg}
     >
       {handleAssetFavorited && (
         <Watch

@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import {
   Row,
 } from 'antd';
@@ -22,6 +23,10 @@ class AssetDisplayer extends React.Component{
     }
   }
 
+  handleAssetImageClicked = (assetId) => {
+    Router.push(`/asset?id=${assetId}`, `/asset/${assetId}`)
+  }
+
   render = () => {
     const {
       type,
@@ -37,6 +42,7 @@ class AssetDisplayer extends React.Component{
     const startIndex = currentPage * assetsPerPage;
     const endIndex = (currentPage + 1) * assetsPerPage;
     const assetsToDisplay = assets.slice(startIndex, endIndex);
+    const shouldMakeImgClickable = type === 'default';
 
     return (
       <React.Fragment>
@@ -47,6 +53,7 @@ class AssetDisplayer extends React.Component{
               {...asset}
               key={asset.assetId}
               handleAssetFavorited={handleAssetFavorited}
+              onClickImg={shouldMakeImgClickable ? this.handleAssetImageClicked.bind(this, asset.assetId) : undefined}
             />
           ))}
         </Row>
