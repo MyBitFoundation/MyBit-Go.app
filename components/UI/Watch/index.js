@@ -13,7 +13,10 @@ const Watch = ({
   handleClick,
   assetId,
 }) => (
-  <StyledWatch active={active} onClick={() => handleClick(assetId)}>
+  <StyledWatch active={active} onClick={(e) => {
+    e.stopPropagation();
+    handleClick(assetId);
+  }}>
     <Tooltip
       placement="topRight"
       title={active ? 'Remove from watchlist.' : 'Add to watchlist.'}
