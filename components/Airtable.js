@@ -182,24 +182,15 @@ class AirtableProvider extends React.PureComponent {
     }
   }
 
-  getAssetsForLocation = (country, city) => {
-    const {
-      assetsAirTable,
-      categoriesAirTable,
-    } = this.state;
-
-    for(const asset of assetsAirTable){
-
-    }
-  }
-
   getCategoriesForAssets = (country, city) => {
     const {
       assetsAirTable,
       categoriesAirTable,
     } = this.state;
+
     const categories = {};
-    if(!assetsAirtable){
+
+    if(!assetsAirTable){
       return {};
     }
     for(const asset of assetsAirTable){
@@ -207,6 +198,7 @@ class AirtableProvider extends React.PureComponent {
         category,
         location,
       } = asset;
+
       let shouldAdd = false;
       if(categoriesAirTable[asset.category]){
         /*
