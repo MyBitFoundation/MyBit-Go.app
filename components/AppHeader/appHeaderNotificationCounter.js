@@ -11,6 +11,10 @@ const AppHeaderNotificationCounter = styled.div`
   position: absolute;
   right: 7px;
   top: 7px;
+
+  ${({theme}) => theme.tablet`
+    display: none;
+  `}
 }`
 
 export default AppHeaderNotificationCounter;
