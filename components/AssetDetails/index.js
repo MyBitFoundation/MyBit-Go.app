@@ -139,6 +139,8 @@ class AssetDetails extends React.Component {
     }
     const toReturn = files.map(file => (
       <a
+        target="_blank"
+        rel="noopener noreferrer"
         href={`${InternalLinks.S3}${assetId}:${file}`}
       >
         {file}

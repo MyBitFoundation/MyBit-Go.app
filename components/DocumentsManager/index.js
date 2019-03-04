@@ -141,7 +141,11 @@ class DocumentsManager extends React.Component{
                 <DocumentsManagerFile key={`file${index}`}>
                   <div>
                     <FileImg />
-                    <a href={`${InternalLinks.S3}${this.props.assetId}:${file.name || file}`}>{file.name || file}</a>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`${InternalLinks.S3}${this.props.assetId}:${file.name || file}`}>{file.name || file}
+                    </a>
                   </div>
                 </DocumentsManagerFile>
               )
