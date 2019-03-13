@@ -89,7 +89,7 @@ class PortfolioPage extends React.Component {
           </StyledPortfolioPageNavButtons>
           <ValueDisplay
             text="Total Portfolio Value"
-            value={formatMonetaryValue(assetsToRender.length > 0 ? assetsToRender[assetsToRender.length - 1].totalAssetValue : 0)}
+            value={formatMonetaryValue(assets.length > 0 ? assets[assets.length - 1].totalAssetValue : 0)}
             icon={<PieChart />}
             hasSeparator
             hasIcon

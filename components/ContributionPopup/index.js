@@ -8,6 +8,9 @@ import {
   Checkbox,
   Modal,
 } from 'antd';
+import {
+  DEFAULT_TOKEN,
+} from 'constants';
 import StyledContributionPopup from './styledContributionPopup';
 import StyledContributionPopupDescription from './styledContributionPopupDescription';
 import StyledContributionPopupAmount from './styledContributionPopupAmount';
@@ -130,7 +133,7 @@ class ContributionPopup extends React.Component {
 
     this.props.fundAsset(
       this.props.assetId,
-      this.props.amountEth,
+      this.props.amount,
       this.onSuccess,
       this.onFailure,
       this.props.amountUsd
@@ -205,10 +208,7 @@ class ContributionPopup extends React.Component {
             <StyledContributionPopupDescription>
               Your contribution:{' '}
               <StyledContributionPopupAmount hasMobileFix>
-                {this.props.amountUsd}
-                <StyledContributionPopupEthAmount hasMobileFix>
-                  {this.props.amountEth} ETH
-                </StyledContributionPopupEthAmount>
+                {`${this.props.amountToDisplay} ${DEFAULT_TOKEN}`}
               </StyledContributionPopupAmount>
             </StyledContributionPopupDescription>
             <StyledContributionPopupDescription hasMobileFix>
@@ -222,7 +222,7 @@ class ContributionPopup extends React.Component {
             >
               Total asset costs:{' '}
               <StyledContributionPopupAmount>
-                {this.props.amountUsd}
+                {`${this.props.amountToDisplay} ${DEFAULT_TOKEN}`}
               </StyledContributionPopupAmount>
             </StyledContributionPopupDescription>
             <StyledContributionPopupToS>

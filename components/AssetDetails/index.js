@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
+import BN from 'bignumber.js';
 import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import ContributionPopup from 'components/ContributionPopup';
@@ -11,6 +12,7 @@ import {
   formatMonetaryValue,
   shortenAddress,
   fromWeiToEth,
+  toWei,
 } from 'utils/helpers';
 import {
   InternalLinks,
@@ -19,12 +21,12 @@ import StyledAssetDetailsContributeButton from './styledAssetDetailsContributeBu
 import StyledAssetDetailsRightCol from './styledAssetDetailsRightCol';
 import StyledAssetDetailsLeftCol from './styledAssetDetailsLeftCol';
 import StyledAssetDetails from './styledAssetDetails';
+BN.config({ EXPONENTIAL_AT: 80 });
 
 class AssetDetails extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      selectedAmountUsd: null,
       selectedAmountEth: null,
       selectedOwnership: null,
       daysToGo: 0,
@@ -60,13 +62,13 @@ class AssetDetails extends React.Component {
 
     const {
       fundingDeadline,
-      amountToBeRaisedInUSD,
-      amountRaisedInUSD,
+      fundingGoal,
+      fundingProgress,
       pastDate,
     } = asset;
 
     const maxInvestment =
-      amountToBeRaisedInUSD - amountRaisedInUSD;
+      fundingGoal - fundingProgress;
 
     // funding goal has been reached
     if (maxInvestment === 0 || asset.funded) {
@@ -150,50 +152,34 @@ class AssetDetails extends React.Component {
     return toReturn;
   }
 
-  handleOnChangeEthValue = (number, maxEther, currentEthInUsd, amountToBeRaisedInUSD) => {
-    number > Number(maxEther) ?
+  handleOnChangeEthValue = (number, maxOwnership, fundingGoal) => {
+    number > maxOwnership ?
       this.setState({
-        selectedAmountEth: maxEther,
+        selectedAmountEth: maxOwnership,
       })
       : this.setState({
-          selectedAmountUsd: Number((number * currentEthInUsd).toFixed(2)),
-          selectedAmountEth: number,
-          selectedOwnership: (number * currentEthInUsd) && (
-        (number * currentEthInUsd * 100) /
-        amountToBeRaisedInUSD
-      ).toFixed(2),
+          selectedAmountEth: Number(number).toFixed(2),
+          selectedOwnership: ((number * 100) / fundingGoal).toFixed(2),
     })
   }
 
-  handleOnChangeUsdValue = (number, maxInvestment, currentEthInUsd, amountToBeRaisedInUSD) => {
-    number > Number(maxInvestment)
-      ? this.setState({
-        selectedAmountUsd: maxInvestment,
-      })
-      : this.setState({
-        selectedAmountUsd: number,
-        selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
-        selectedOwnership: number && ((number * 100) / amountToBeRaisedInUSD).toFixed(2),
-      })
-  }
-
-  handleOnChangePercentage = (number, maxOwnership, amountToBeRaisedInUSD, maxEther) => {
+  handleOnChangePercentage = (number, maxOwnership, fundingGoal, maxInvestment) => {
     number > Number(maxOwnership)
       ? this.setState({
           selectedOwnership: maxOwnership,
         })
       : this.setState({
-        selectedAmountUsd: (amountToBeRaisedInUSD / 100) * number,
         selectedOwnership: number,
-        selectedAmountEth: (Number(maxEther) * (number / 100)).toFixed(5),
+        selectedAmountEth: (maxInvestment * (number / 100)).toFixed(2),
       })
   }
 
-  handleOnChangeSlider = (number, currentEthInUsd, amountToBeRaisedInUSD) => {
+  handleOnChangeSlider = (number, fundingGoal) => {
+    console.log(number)
+    console.log(fundingGoal)
     this.setState({
-      selectedAmountUsd: number,
-      selectedAmountEth: Number(number / currentEthInUsd).toFixed(5),
-      selectedOwnership: number && ((number * 100) / amountToBeRaisedInUSD).toFixed(2),
+      selectedAmountEth: number,
+      selectedOwnership: ((number * 100) / fundingGoal).toFixed(2),
     })
   }
 
@@ -226,66 +212,64 @@ class AssetDetails extends React.Component {
       city,
       country,
       assetId,
-      details,
-      description,
       assetManager,
       numberOfInvestors,
       watchListed,
       files,
       managerPercentage,
       collateralPercentage,
-      name,
       amountToBeRaisedInUSD,
       amountRaisedInUSD,
-      imageSrc,
       funded,
       pastDate,
-      ownershipUnits,
+      percentageOwnedByUser,
+      defaultData,
+      fundingGoal,
+      fundingProgress,
     } = asset;
+
+    const {
+      imageSrc,
+      name,
+      details,
+      description,
+    } = defaultData;
 
     const filesToRender = this.getFilesToRender(files, assetId);
 
     const maxInvestment =
       funded || daysToGo < 0
         ? 0
-        : Number((amountToBeRaisedInUSD - amountRaisedInUSD).toFixed(2));
+        : fundingGoal - fundingProgress;
+
+        console.log("maxInvestment: ", maxInvestment)
 
     let minInvestment =
       daysToGo < 0 || maxInvestment === 0 ? 0 : 100;
 
     if (maxInvestment <= 100 && maxInvestment > 0 && daysToGo > 0) {
-      minInvestment = 1;
+      minInvestment = 0.01;
     }
 
-    const goalFormatted = formatMonetaryValue(amountToBeRaisedInUSD);
-
-    const maxEther = Number(maxInvestment / currentEthInUsd).toFixed(5);
     const maxOwnership = maxInvestment && (
-      (maxInvestment * 100) /
-      amountToBeRaisedInUSD
+      (maxInvestment * 100) / fundingGoal
     ).toFixed(2);
 
-    let yourContributionUsd = 0;
-    let yourContributionEth = 0;
+    let yourContribution = 0;
     let yourOwnership = 0;
 
-    if((pastDate || funded) && (ownershipUnits > 0)){
-      const weiInEther = fromWeiToEth(ownershipUnits, 'ether');
-      yourContributionUsd = weiInEther * currentEthInUsd;
-      yourContributionEth = weiInEther;
-      yourOwnership = (((weiInEther * currentEthInUsd) / amountToBeRaisedInUSD) * 100).toFixed(2);
-      if (Number(yourContributionEth) > 100) {
-        yourOwnership = 100;
-      }
+    if((pastDate || funded) && (percentageOwnedByUser > 0)){
+      yourContribution = fundingGoal * (percentageOwnedByUser / 100);
+      yourOwnership = (yourContribution * 100) / fundingGoal;
     }
 
     return (
       <StyledAssetDetails>
         {this.state.isPopupOpen && (
           <ContributionPopup
-            amountUsd={formatMonetaryValue(selectedAmountUsd)}
-            amountEth={this.state.selectedAmountEth}
-            ownership={this.state.selectedOwnership}
+            amount={toWei(selectedAmountEth)}
+            amountToDisplay={selectedAmountEth}
+            ownership={yourOwnership}
             isPopupOpen={() => this.isPopupOpen()}
             handlePopupState={val => this.handlePopupState(val)}
             assetId={assetId}
@@ -312,30 +296,25 @@ class AssetDetails extends React.Component {
             endingAt={this.state.endingAt}
           />
           <AssetFundingDetails
-            amountRaisedInUSD={amountRaisedInUSD}
-            goalFormatted={goalFormatted}
+            fundingGoal={fundingGoal}
+            fundingProgress={fundingProgress}
             numberOfInvestors={numberOfInvestors}
             funded={funded}
             formatMonetaryValue={formatMonetaryValue}
           />
           <AssetCalculator
             handleOnChangeEthValue={this.handleOnChangeEthValue}
-            handleOnChangeUsdValue={this.handleOnChangeUsdValue}
             handleOnChangePercentage={this.handleOnChangePercentage}
             handleOnChangeSlider={this.handleOnChangeSlider}
-            selectedAmountEth={selectedAmountEth}
-            maxEther={maxEther}
-            currentEthInUsd={currentEthInUsd}
-            amountToBeRaisedInUSD={amountToBeRaisedInUSD}
-            selectedAmountUsd={selectedAmountUsd}
+            selectedAmountEth={Number(selectedAmountEth)}
+            fundingGoal={fundingGoal}
             maxInvestment={maxInvestment}
             minInvestment={minInvestment}
-            selectedOwnership={selectedOwnership}
+            selectedOwnership={Number(selectedOwnership)}
             daysToGo={daysToGo}
             formatMonetaryValue={formatMonetaryValue}
             ended={pastDate || funded}
-            yourContributionUsd={yourContributionUsd}
-            yourContributionEth={yourContributionEth}
+            yourContribution={yourContribution}
             yourOwnership={yourOwnership}
             maxOwnership={maxOwnership}
             loadingUserInfo={loadingUserInfo}
@@ -347,7 +326,7 @@ class AssetDetails extends React.Component {
               disabled={
                 daysToGo < 0
                 || maxInvestment === 0
-                || selectedAmountUsd < minInvestment
+                || selectedAmountEth < minInvestment
               }
             >
               Contribute

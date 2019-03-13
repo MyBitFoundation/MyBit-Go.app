@@ -46,7 +46,7 @@ class ManageAssetModule extends React.Component{
         collateral,
         amountToBeRaisedInUSD,
         assetIncome,
-        blockNumberitWentLive,
+        daysSinceItWentLive,
         assetManager,
         managerPercentage,
       } = asset;
@@ -91,16 +91,6 @@ class ManageAssetModule extends React.Component{
           date: dayjs(revenue.timestamp * 1000),
         }
       })
-
-      let daysSinceItWentLive = 1;
-
-      if(blockNumberitWentLive){
-        const blockInfo = await window.web3js.eth.getBlock(blockNumberitWentLive);
-        const timestamp = blockInfo.timestamp;
-
-        daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
-        daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
-      }
 
       //calculate how much the asset manager can withdraw
       const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetId), Brain.getManagerIncomeWithdraw(assetManager, asset.assetId)]);

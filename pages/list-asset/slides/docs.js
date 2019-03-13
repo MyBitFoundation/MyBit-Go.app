@@ -46,7 +46,7 @@ export const DocsSlide = ({
         maxWidthDesktop={maxWidthDesktop}
       >
         While not essential, assets with supporting documents are more likely to
-        get funded. A maximum of two files can be uploaded. Each file can have up to 5MB.
+        get funded. A maximum of five files can be uploaded. Each file can have up to 5MB.
       </StyledCarouselSlideParagraph>
       <Upload.Dragger
         {...props}

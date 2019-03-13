@@ -2,6 +2,7 @@ import { withRouter } from 'next/router'
 import AppHeader from 'components/AppHeader';
 import NavigationBar from 'ui/NavigationBar';
 import PageWrapper from './pageWrapper';
+
 import {
   navbarOptions,
 } from 'constants';

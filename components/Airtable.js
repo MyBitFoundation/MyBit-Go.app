@@ -90,6 +90,7 @@ class AirtableProvider extends React.PureComponent {
       description: fields.Description,
       details: fields.Details,
       partner: fields.Partner,
+      partnerContractAddress: fields['Partner Address'],
       imageSrc: `${InternalLinks.S3}assetImages:${fields.Image}`,
       amountToBeRaisedInUSDAirtable: fields['Funding goal'],
       assetIDs: fields['Asset IDs'],
@@ -109,9 +110,7 @@ class AirtableProvider extends React.PureComponent {
   }
 
   getAssetByName = (assetName, assetsFromAirTable) => {
-    const tmpAsset = Object.assign({}, assetsFromAirTable.filter(asset => asset.name === assetName)[0]);
-    tmpAsset.location = undefined;
-    return tmpAsset;
+    return assetsFromAirTable.filter(asset => asset.name === assetName)[0];
   }
 
   processAssetsByIdFromAirTable = (assetsFromAirTable) => {
@@ -128,13 +127,14 @@ class AirtableProvider extends React.PureComponent {
         }
         assetIds = assetIds.split(',');
         assetIds.forEach(assetIdInfo => {
-          const [assetId, country, city, collateral, collateralPercentage] = assetIdInfo.split('|');
-          airtableAsset.city = city;
-          airtableAsset.country = country;
-          airtableAsset.collateral = Number(collateral);
-          airtableAsset.collateralPercentage = collateralPercentage;
-          assetsAirTableById[assetId] = airtableAsset;
-        })
+          const [assetId, country, city, collateralPercentage] = assetIdInfo.split('|');
+          assetsAirTableById[assetId] = {
+            defaultData: airtableAsset,
+            city,
+            country,
+            collateralPercentage,
+          };
+        });
       }
     })
     return assetsAirTableById;
@@ -165,15 +165,16 @@ class AirtableProvider extends React.PureComponent {
 
       let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
       const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
+      console.log(assetsAirTableById)
 
       // remove assetIDs as they are not required in this object
       // they were requred before to facilitate the processing by asset ID
-      assetsAirTable = assetsAirTable.map(asset => {
-        delete asset.AssetIDs;
-        return {
-          ...asset,
-        };
-      })
+      for(const asset of assetsAirTable){
+        delete asset['assetIDs'];
+      }
+
+      console.log("assetsAirTableById: ", assetsAirTableById)
+      console.log("assetsAirTable: ", assetsAirTable)
 
       this.setState({
         assetsAirTable,

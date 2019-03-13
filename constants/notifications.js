@@ -37,7 +37,7 @@ export const getContentForNotification = (obj) => {
     switch (status) {
       case NotificationStatus.SUCCESS:
         return {
-          title: <span style={{marginRight: '10px'}}>Started crowdsale for {listAsset.assetName} successfully</span>,
+          title: <span style={{marginRight: '10px'}}>Listed {listAsset.assetName} successfully</span>,
           message: <span>You can find the asset listing{' '}
             <Link
               as={`/asset/${listAsset.assetId}`}
@@ -48,7 +48,7 @@ export const getContentForNotification = (obj) => {
         }
       case NotificationStatus.INFO:
         return {
-          title: `Starting the crowdsale for ${listAsset.assetName}`,
+          title: `${listAsset.assetName} is being listed for investors`,
           message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
         }
       case NotificationStatus.ERROR:
@@ -175,8 +175,8 @@ export const getContentForNotification = (obj) => {
         switch(status) {
           case NotificationStatus.INFO:
             return {
-              title: `Creation of crowdsale for ${metamask.assetName}`,
-              message: 'Please confirm the transaction in Metamask to start the crowdsale. Thank you for beta testing the platform.',
+              title: `Listing ${metamask.assetName} for investors`,
+              message: 'Please confirm the transaction in Metamask to list the asset. Thank you for beta testing the platform.',
             }
           case NotificationStatus.ERROR:
             return undefined;

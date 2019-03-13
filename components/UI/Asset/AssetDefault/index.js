@@ -4,6 +4,9 @@ import {
   Progress,
   Icon,
 } from 'antd';
+import{
+  DEFAULT_TOKEN,
+} from 'constants';
 import StyledAssetDefaultDetailsContainer from './styledAssetDefaultDetailsContainer';
 import StyledAssetDefaultFunded from './styledAssetDefaultFunded';
 import StyledAssetDefaultGoal from './styledAssetDefaultGoal';
@@ -11,6 +14,8 @@ import StyledAssetDefaultContributeButton from './styledAssetDefaultContributeBu
 import { formatMonetaryValue } from 'utils/helpers';
 
 const AssetDefault = ({
+  fundingGoal,
+  fundingProgress,
   amountRaisedInUSD,
   amountToBeRaisedInUSD,
   pastDate,
@@ -18,8 +23,9 @@ const AssetDefault = ({
   assetId,
   clickHandler,
 }) => {
-  const barWidth = funded ? 100 : Math.ceil((amountRaisedInUSD / amountToBeRaisedInUSD) * 100);
-  const goalFormatted = formatMonetaryValue(amountToBeRaisedInUSD);
+  const barWidth = funded ? 100 : Math.ceil((fundingProgress * 100) / fundingGoal);
+  const goalFormatted = formatMonetaryValue(fundingGoal);
+  const progressFormatted = formatMonetaryValue(fundingProgress);
   let buttonText = 'Contribute';
   let buttonType = 'primary';
   if (funded || pastDate) {
@@ -33,7 +39,7 @@ const AssetDefault = ({
     >
       <StyledAssetDefaultFunded>
         Funded:{' '}
-        <b>{funded ? goalFormatted : `${formatMonetaryValue(amountRaisedInUSD)}`}</b>
+        <b>{progressFormatted}</b>
       </StyledAssetDefaultFunded>
       <StyledAssetDefaultGoal>
         Goal:{' '}

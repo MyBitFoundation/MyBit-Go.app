@@ -15,3 +15,4 @@ export * from './web3BackupProvider';
 export * from './supportedTokens';
 export * from './fullScreenPages';
 export * from './cookies';
+export * from './sdkContracts';

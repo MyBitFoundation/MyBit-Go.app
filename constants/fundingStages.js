@@ -6,12 +6,11 @@ export const FundingStages = {
 
 export const getFundingStage = (fundingStageNumber) => {
   switch(fundingStageNumber){
-    case 3:
-    case 4:
-      return FundingStages.FUNDED;
     case 0:
+      return FundingStages.FUNDED;
+    case 1:
       return FundingStages.FAILED;
-    default:
+    case 2:
       return FundingStages.IN_PROGRESS;
   }
 }

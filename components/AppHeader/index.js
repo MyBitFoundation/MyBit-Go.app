@@ -3,14 +3,10 @@ import { compose } from 'recompose'
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import Logo from 'components/Logo';
-import ExchangeRate from 'components/ExchangeRate';
 import Balance from 'components/Balance';
 import Address from 'ui/Address';
 import ConnectionStatus from 'components/ConnectionStatus';
 import { Consumer as BancorConsumer } from 'ui/BancorContainer';
-import {
-  Button,
-} from 'antd';
 import AppHeaderContainer from './appHeaderContainer';
 import AppHeaderLogoAndInfo from './appHeaderLogoAndInfo';
 import AppHeaderLogo from './appHeaderLogo';
@@ -21,14 +17,12 @@ import AppHeaderPageName from './appHeaderPageName';
 import AppHeaderConnectionStatus from './appHeaderConnectionStatus';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withMetamaskContext } from 'components/MetamaskChecker'
-import { withTokenPricesContext } from 'components/TokenPrices'
 import { withNotificationsContext } from 'components/NotificationsModule';
 import NotificationsMobileCounter from 'components/NotificationsMobile';
 import AppHeaderNotificationCounter from './appHeaderNotificationCounter';
 
 const AppHeader = ({
   metamaskContext,
-  pricesContext,
   readOnlyMode,
   hideOnMobile,
   currentPath,
@@ -46,14 +40,8 @@ const AppHeader = ({
   } = notificationsContext;
 
   const notificationsNumberToRender = Object.keys(notifications).length;
-  console.log(notificationsNumberToRender)
-  console.log(notificationsContext)
 
   const metamaskErrors = getMetamaskErrors();
-
-  const {
-    prices,
-  } = pricesContext;
 
   let pageName;
   switch (currentPath) {
@@ -90,11 +78,6 @@ const AppHeader = ({
             <AppHeaderPageName>
               {pageName}
             </AppHeaderPageName>
-            <AppHeaderSection>
-              <ExchangeRate
-                {...prices.mybit}
-              />
-            </AppHeaderSection>
             {!isReadOnlyMode && (
               <AppHeaderSection>
               <Balance
@@ -103,18 +86,6 @@ const AppHeader = ({
               </AppHeaderSection>
             )}
           </AppHeaderLogoAndInfo>
-          <AppHeaderBancorWidget>
-            <Button
-              size="large"
-              type="primary"
-              onClick={(e) => {
-                e.preventDefault();
-                initBancor();
-              }}
-            >
-              Get MYB
-            </Button>
-          </AppHeaderBancorWidget>
           <AppHeaderConnectionStatus>
             <ConnectionStatus
               metamaskErrors={metamaskErrors}
@@ -153,7 +124,6 @@ AppHeader.propTypes = {
 
 const enhance = compose(
   withMetamaskContext,
-  withTokenPricesContext,
   withNotificationsContext,
 );
 

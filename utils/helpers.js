@@ -1,12 +1,16 @@
+import {
+  DEFAULT_TOKEN,
+} from 'constants';
+
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
 
-export const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue, 'ether');
+export const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue.toString(), 'ether');
 
-export const formatMonetaryValue = (number, fractionDigits = 0) => {
+export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
+
+export const formatMonetaryValue = (number, fractionDigits = 0, includeToken = true) => {
   try {
     let value = Number(number).toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
       minimumFractionDigits: fractionDigits,
     });
 
@@ -17,7 +21,7 @@ export const formatMonetaryValue = (number, fractionDigits = 0) => {
       value = sliced.length === 2 ? `${value}0` : value;
     }
 
-    return value;
+    return includeToken ? `${value} ${DEFAULT_TOKEN}` : value;
   }catch(err) {
     debug({
       "Function Name: ": "formatMonetaryValue()",
@@ -41,26 +45,14 @@ export const getPrettyCategoryName = (category, categoriesAirTable) => {
   }
 };
 
-export const generateAssetId = (web3, address, managerPercentage, amountToBeRaisedInUSD, installerId, assetType, blockNumber) => {
-  return web3.utils.soliditySha3(
-    address,
-    '0', // escrow is 0 by default
-    managerPercentage.toString(),
-    amountToBeRaisedInUSD.toString(),
-    installerId,
-    assetType,
-    blockNumber.toString(),
-  )
-}
-
-export const generateRandomHex = (web3) => {
+export const generateRandomURI = (web3) => {
   let text = "";
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (var i = 0; i < 5; i++)
+  for (var i = 0; i < 20; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-  return web3.utils.sha3(text);
+  return text;
 }
 
 export const shortenAddress = (address, leftSide=15, rightSide=8) => {

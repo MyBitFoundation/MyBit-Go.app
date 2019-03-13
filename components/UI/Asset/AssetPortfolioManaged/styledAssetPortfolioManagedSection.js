@@ -6,6 +6,7 @@ const StyledAssetPortfolioManagedSection = styled.div`
   font-size: 16px;
   align-items: center;
   margin-bottom: 5px;
+  position: relative;
 
   ${props => props.hasExtraMarginBottom && css`
     margin-bottom: 30px;

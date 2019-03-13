@@ -37,21 +37,23 @@ class ListAssetPage extends React.Component {
     super(props);
     this.state = {
       data: {
-        userCity: '',
-        userCountry: '',
-        category: '',
-        asset: '',
-        assetAddress1: '',
-        assetAddress2: '',
-        assetCity: '',
-        assetCountry: '',
-        assetProvince: '',
-        assetPostalCode: '',
+        userCity: 'Zug',
+        userCountry: 'Switzerland',
+        category: 'Real Estate',
+        asset: 'Co-Working Space',
+        assetValue: 20000,
+        assetAddress1: 'a',
+        assetAddress2: 'a',
+        assetCity: 'a',
+        assetCountry: 'a',
+        assetProvince: 'a',
+        assetPostalCode: 'a',
         fileList: [],
         managementFee: 0,
         collateralPercentage: 0,
         collateralMyb: 0,
-        collateralDollar: 0
+        collateralDollar: 0,
+        partnerContractAddress: '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d',
       },
       countries: COUNTRIES,
       isUserListingAsset: false,
@@ -98,14 +100,20 @@ class ListAssetPage extends React.Component {
   handleSelectChange = (value, name) => {
     if(name === 'asset'){
       const assetName = value.name;
-      const assetValue = value.assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0].amountToBeRaisedInUSDAirtable
+      const asset = value.assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0];
+      const {
+        partnerContractAddress,
+        amountToBeRaisedInUSDAirtable,
+      } = asset;
+
       this.setState({
         data: {
           ...this.state.data,
           asset: assetName,
-          assetValue,
+          assetValue: amountToBeRaisedInUSDAirtable,
+          partnerContractAddress,
         }
-      })
+      }, () => console.log(this.state.data.partnerContractAddress))
     } else {
       this.setState(
         {
@@ -115,7 +123,7 @@ class ListAssetPage extends React.Component {
           switch(name) {
             case 'userCountry': {
               this.setState({
-                data: { ...this.state.data, assetCountry: value, category: '', asset: '' }
+                data: { ...this.state.data, assetCountry: value, category: '', asset: '', assetValue: undefined, }
               });break;
             }
             default: return null;

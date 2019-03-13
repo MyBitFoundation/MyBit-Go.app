@@ -17,8 +17,8 @@ import StyledAssetPortfolioInvestmentButtons from './styledAssetPortfolioInvestm
 import StyledAssetPortfolioManagedContribution from './styledAssetPortfolioManagedContribution';
 
 const AssetPortfolioInvestment = ({
-  amountRaisedInUSD,
-  amountToBeRaisedInUSD,
+  fundingGoal,
+  fundingProgress,
   funded,
   assetId,
   fundingStage,
@@ -105,7 +105,7 @@ const AssetPortfolioInvestment = ({
               Your contribution:
             </StyledAssetPortfolioInvestmentFundingLabel>
             <StyledAssetPortfolioInvestmentValue>
-              {formatMonetaryValue(amountToBeRaisedInUSD)}
+              {formatMonetaryValue(fundingGoal)}
             </StyledAssetPortfolioInvestmentValue>
             </StyledAssetPortfolioManagedContribution>
         ) : (
@@ -114,9 +114,9 @@ const AssetPortfolioInvestment = ({
               Funding:
             </StyledAssetPortfolioInvestmentFundingLabel>
             <span>
-              {formatMonetaryValue(amountRaisedInUSD)}/
+              {formatMonetaryValue(fundingProgress)}/
               <StyledAssetPortfolioInvestmentValue>
-                {formatMonetaryValue(amountToBeRaisedInUSD)}
+                {formatMonetaryValue(fundingGoal)}
               </StyledAssetPortfolioInvestmentValue>
             </span>
           </React.Fragment>

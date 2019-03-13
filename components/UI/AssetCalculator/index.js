@@ -1,7 +1,14 @@
 import React from 'react';
 import {
   Slider,
+  InputNumber,
 } from 'antd';
+import {
+  DEFAULT_TOKEN,
+} from 'constants';
+import {
+  formatMonetaryValue,
+} from 'utils/helpers';
 import NumericInput from 'ui/NumericInput';
 import StyledAssetCalculatorTitle from './styledAssetCalculatorTitle';
 import StyledAssetCalculatorEqualsSeparator from './styledAssetCalculatorEqualsSeparator';
@@ -14,26 +21,30 @@ import StyledAssetCalculatorSpin from './styledAssetCalculatorSpin';
 
 const AssetCalculator = ({
   handleOnChangeEthValue,
-  handleOnChangeUsdValue,
   handleOnChangePercentage,
   handleOnChangeSlider,
   selectedAmountEth,
-  maxEther,
-  currentEthInUsd,
-  amountToBeRaisedInUSD,
-  selectedAmountUsd,
+  fundingGoal,
   maxInvestment,
   minInvestment,
   selectedOwnership,
   daysToGo,
-  formatMonetaryValue,
   ended,
-  yourContributionUsd,
-  yourContributionEth,
+  yourContribution,
   yourOwnership,
   maxOwnership,
   loadingUserInfo,
 }) => {
+  console.log("maxOwnership: ", maxOwnership);
+  console.log("selectedAmountEth: ", selectedAmountEth)
+  console.log("fundingGoal: ", fundingGoal)
+  console.log("yourOwnership: ", yourOwnership);
+  console.log("yourContribution: ", yourContribution);
+  console.log("maxInvestment: ", maxInvestment);
+  console.log("minInvestment: ", minInvestment);
+  console.log("selectedOwnership: ", selectedOwnership)
+  console.log("ended: ", ended);
+  console.log("daysToGo: ", daysToGo);
   return(
     <React.Fragment>
       <StyledAssetCalculatorTitle>
@@ -41,26 +52,13 @@ const AssetCalculator = ({
       </StyledAssetCalculatorTitle>
       {!ended && (
         <React.Fragment>
-          <div>
+          <div style={{display: 'flex'}}>
             <NumericInput
-              style={{ width: '28%' }}
-              placeholdertext="Amount in ETH"
+              placeholdertext={`Amount in ${DEFAULT_TOKEN}`}
               value={selectedAmountEth}
-              label="ETH"
+              label={DEFAULT_TOKEN}
               onChange={number =>
-                handleOnChangeEthValue(number, maxEther, currentEthInUsd, amountToBeRaisedInUSD)}
-              min={0}
-              precision={5}
-            />
-            <StyledAssetCalculatorEqualsSeparator>
-              =
-            </StyledAssetCalculatorEqualsSeparator>
-            <NumericInput
-              style={{ width: '28%' }}
-              placeholdertext="Amount in USD"
-              value={selectedAmountUsd}
-              onChange={number => handleOnChangeUsdValue(number, maxInvestment, currentEthInUsd, amountToBeRaisedInUSD)}
-              label="$"
+                handleOnChangeEthValue(number, maxInvestment, fundingGoal)}
               min={0}
               precision={2}
             />
@@ -68,12 +66,11 @@ const AssetCalculator = ({
               =
             </StyledAssetCalculatorEqualsSeparator>
             <NumericInput
-              style={{ width: '28%' }}
               placeholdertext="Amount %"
               value={selectedOwnership}
               min={0}
               label="%"
-              onChange={number => handleOnChangePercentage(number, maxOwnership, amountToBeRaisedInUSD, maxEther)}
+              onChange={number => handleOnChangePercentage(number, maxOwnership, fundingGoal, maxInvestment)}
               precision={2}
             />
           </div>
@@ -82,20 +79,22 @@ const AssetCalculator = ({
             step={0.01}
             defaultValue={0}
             value={
-              Number(selectedAmountUsd) >= minInvestment
-              ? Number(selectedAmountUsd)
-              : minInvestment
+              selectedAmountEth ?
+                Number(selectedAmountEth) >= minInvestment
+                  ? Number(selectedAmountEth)
+                  : minInvestment
+                : 0
             }
             min={minInvestment}
             max={maxInvestment}
-            onChange={number => handleOnChangeSlider(number, currentEthInUsd, amountToBeRaisedInUSD)}
+            onChange={number => handleOnChangeSlider(number, fundingGoal)}
             disabled={daysToGo < 0 || maxInvestment === 0}
           />
           <StyledAssetCalculatorMinLabel>
-          Min. <b>{formatMonetaryValue(minInvestment).substring(1)} USD</b>
+          Min. <b>{formatMonetaryValue(minInvestment)}</b>
           </StyledAssetCalculatorMinLabel>
           <StyledAssetCalculatorMaxLabel>
-          Max. <b>{formatMonetaryValue(maxInvestment).substring(1)} USD</b>
+          Max. <b>{formatMonetaryValue(maxInvestment)}</b>
           </StyledAssetCalculatorMaxLabel>
         </React.Fragment>
       )}
@@ -105,20 +104,11 @@ const AssetCalculator = ({
       >
         Your contribution:
       </StyledAssetCalculatorLabel>
-      <StyledAssetCalculatorValue
-        paddedRight
-      >
-        {(loadingUserInfo && ended) && (
-          <StyledAssetCalculatorSpin />
-        )}
-        {(loadingUserInfo && ended) ? null : ended ? formatMonetaryValue(yourContributionUsd) : selectedAmountUsd ? formatMonetaryValue(selectedAmountUsd).substring(1) : 0} USD
-      </StyledAssetCalculatorValue>
-      <StyledAssetCalculatorSeparator />
       <StyledAssetCalculatorValue>
         {(loadingUserInfo && ended) && (
           <StyledAssetCalculatorSpin />
         )}
-        {(loadingUserInfo && ended) ? null : ended ? parseFloat(Number(yourContributionEth).toFixed(5)) : selectedAmountUsd ? parseFloat(Number(selectedAmountEth).toFixed(5)) : 0} ETH
+        {(loadingUserInfo && ended) ? null : ended ? formatMonetaryValue(parseFloat(yourContribution)) : selectedAmountEth ? formatMonetaryValue(parseFloat(selectedAmountEth)) : 0}
       </StyledAssetCalculatorValue>
       <div>
         <StyledAssetCalculatorLabel>
@@ -128,7 +118,7 @@ const AssetCalculator = ({
           {(loadingUserInfo && ended) && (
             <StyledAssetCalculatorSpin />
           )}
-          {(loadingUserInfo && ended) ? null : ended ? yourOwnership : selectedAmountUsd ? selectedOwnership : 0}%
+          {(loadingUserInfo && ended) ? null : ended ? yourOwnership : selectedAmountEth ? selectedOwnership : 0}%
         </StyledAssetCalculatorValue>
       </div>
     </React.Fragment>

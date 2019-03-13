@@ -8,10 +8,8 @@ import AssetPortfolioManaged from './AssetPortfolioManaged';
 
 const Asset = (props) => {
   const {
-    imageSrc,
     handleAssetFavorited,
     assetId,
-    name,
     city,
     country,
     watchListed,
@@ -19,6 +17,7 @@ const Asset = (props) => {
     withdrawInvestorProfit,
     withdrawing,
     onClickImg,
+    defaultData,
   } = props;
 
   let AssetComponent = AssetDefault;
@@ -55,6 +54,11 @@ const Asset = (props) => {
     height = '187px';
     margin = '0px 15px 20px 15px';
   }
+
+  const {
+    name,
+    imageSrc,
+  } = defaultData;
 
   return(
     <Col {...colSize} key={`${assetId}-${type}`}>

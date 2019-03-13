@@ -19,8 +19,6 @@ import StyledAssetPortfolioManagedFundedLabel from './styledAssetPortfolioManage
 import StyledAssetPortfolioManagedFundedValue from './styledAssetPortfolioManagedFundedValue';
 
 const AssetPortfolioManaged = ({
-  amountRaisedInUSD,
-  amountToBeRaisedInUSD,
   funded,
   assetId,
   fundingStage,
@@ -35,6 +33,8 @@ const AssetPortfolioManaged = ({
   totalProfitAssetManager,
   assetIncome,
   pastDate,
+  fundingGoal,
+  fundingProgress,
 }) => {
 
   const buttonType = 'secondary';
@@ -60,14 +60,14 @@ const AssetPortfolioManaged = ({
       <StyledAssetPortfolioManagedValueDisplays>
         <ValueDisplay
           text="Value"
-          value={`${formatMonetaryValue(amountToBeRaisedInUSD)}`}
+          value={formatMonetaryValue(fundingGoal)}
           isBlue
           coloredBackground
         />
         {funded && (
           <ValueDisplay
             text="Revenue"
-            value={`${formatMonetaryValue(assetIncome)}`}
+            value={formatMonetaryValue(assetIncome)}
             isGreen
             coloredBackground
           />
@@ -113,13 +113,14 @@ const AssetPortfolioManaged = ({
             </span>
           )}
           {(!pastDate && fundingStage === FundingStages.IN_PROGRESS) && (
-            <StyledAssetPortfolioManagedFundedLabel>Funded:
+            <div>
+              <StyledAssetPortfolioManagedFundedLabel>
+                Funded:
+              </StyledAssetPortfolioManagedFundedLabel>
               <StyledAssetPortfolioManagedFundedValue>
-                <StyledAssetPortfolioManagedValue>
-                  {' '}{formatMonetaryValue(amountRaisedInUSD)}
-                </StyledAssetPortfolioManagedValue>/{formatMonetaryValue(amountToBeRaisedInUSD)}
+                {`${formatMonetaryValue(fundingProgress, 0, false)}/${formatMonetaryValue(fundingGoal)}`}
               </StyledAssetPortfolioManagedFundedValue>
-            </StyledAssetPortfolioManagedFundedLabel>
+            </div>
           )}
           {(pastDate && !funded) && (
             <span>

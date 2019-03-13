@@ -4,6 +4,8 @@ export const ETHEREUM_TICKER_COINMARKETCAP = 'ethereum';
 export const MAX_FILES_UPLOAD = 5;
 export const MAX_FILE_SIZE = 5000000; //5 MB
 export const BLOCK_NUMBER_CONTRACT_CREATION = 4619384;
+export const DEFAULT_TOKEN = 'DAI';
+export const DEFAULT_TOKEN_CONTRACT = '0xad6d458402f60fd3bd25163575031acdce07538d';
 
 export const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
   ,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"

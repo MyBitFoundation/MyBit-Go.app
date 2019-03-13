@@ -106,7 +106,7 @@ export const ConfirmSlide = ({
         <section>
           <b>Asset collateral</b>
           <p>
-            {formData.collateralMyb.toFixed(2)} MYB{" "}
+            {parseFloat(parseFloat(formData.collateralMyb).toFixed(3))} MYB{" "}
             {formData.collateralPercentage}%
           </p>
         </section>

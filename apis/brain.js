@@ -16,16 +16,24 @@ import {
   ExternalLinks,
   InternalLinks,
   BLOCK_NUMBER_CONTRACT_CREATION,
+  SDK_CONTRACTS,
+  DEFAULT_TOKEN_CONTRACT,
 } from '../constants';
 
 import {
-  generateAssetId,
-  generateRandomHex,
+  generateRandomURI,
   debug,
   getCategoryFromAssetTypeHash,
-} from '../utils/helpers'
+  fromWeiToEth,
+  toWei,
+} from '../utils/helpers';
+
+import BN from 'bignumber.js';
+BN.config({ EXPONENTIAL_AT: 80 });
 
 let fundingHubContract;
+
+let Network;
 
 export const fetchPriceFromCoinmarketcap = async ticker =>
   new Promise(async (resolve, reject) => {
@@ -140,7 +148,6 @@ const roiEscrow = async assetId =>
       reject(err);
     }
   });
-
 export const unlockedEscrow = async assetId =>
   new Promise(async (resolve, reject) => {
     try {
@@ -197,7 +204,6 @@ export const withdrawAssetManager = async (userName, assetId, onTransactionHash,
     processErrorType(error, onError)
   }
 }
-
 export const withdrawEscrow = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
   try {
     const assetCollateralContract = new window.web3js.eth.Contract(
@@ -280,38 +286,41 @@ const getNumberOfInvestors = async assetId =>
 export const createAsset = async (onTransactionHash, onReceipt, onError, params) => {
   try {
     const {
-      assetName,
-      country,
-      city,
-      fileList,
-      collateralMyb,
-      collateralPercentage,
-      amountToBeRaisedInUSD,
+      asset,
       userAddress,
       managerPercentage,
+      collateralMyb,
+      partnerContractAddress,
+      amountToBeRaised,
     } = params;
 
-    const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
-    debug(collateral)
+    console.log("PARAMS: ", params)
 
+    const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
+
+    const randomURI = generateRandomURI(window.web3js);
+    const api = await Network.api();
+    const operatorID = await api.getOperatorID(partnerContractAddress);
+    console.log("DEFAULT_TOKEN_CONTRACT: ", DEFAULT_TOKEN_CONTRACT)
+    const response = await Network.createAsset({
+      escrow: toWei(collateralMyb),
+      assetURI: randomURI,
+      assetManager: userAddress,
+      fundingLength: 2592000,
+      startTime: 1551732113,
+      amountToRaise: toWei(0.38),
+      assetManagerPercent: managerPercentage,
+      operatorID,
+      fundingToken: DEFAULT_TOKEN_CONTRACT,
+    })
+
+    console.log(response)
+    onReceipt(true, response.asset);
+
+    /*
     const assetCreationContract = new window.web3js.eth.Contract(
       AssetCreation.ABI,
       AssetCreation.ADDRESS,
-    );
-
-    const installerId = generateRandomHex(window.web3js);
-    const assetType = params.assetType;
-    const ipfsHash = installerId; // ipfshash doesn't really matter right now
-    const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
-
-    const futureassetId = generateAssetId(
-      window.web3js,
-      userAddress,
-      managerPercentage,
-      amountToBeRaisedInUSD,
-      installerId,
-      assetType,
-      randomBlockNumber
     );
 
     const assetCreationResponse = await assetCreationContract.methods
@@ -331,7 +340,7 @@ export const createAsset = async (onTransactionHash, onReceipt, onError, params)
       .on('error', (error) => {
         processErrorType(error, onError);
       })
-      .then(receipt => onReceipt(receipt.status, futureassetId));
+      .then(receipt => onReceipt(receipt.status, futureassetId));*/
 
   } catch (error) {
     processErrorType(error, onError)
@@ -393,22 +402,21 @@ export const updateAirTableWithNewAsset = async (
   assetName,
   country,
   city,
-  collateral,
   collateralPercentage,
   performInternalAction,
 ) => {
+
   try{
     await axios.post(InternalLinks.UPDATE_ASSETS, {
       assetId,
       assetName,
       country,
       city,
-      collateral,
       collateralPercentage,
     });
     performInternalAction();
   } catch(err){
-    setTimeout(() => updateAirTableWithNewAsset(assetId, assetName, country, city, collateral, collateralPercentage, performInternalAction), 5000);
+    setTimeout(() => updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, performInternalAction), 5000);
     debug(err);
   }
 }
@@ -463,6 +471,17 @@ export const withdrawInvestorProfit = async (userName, assetId, onTransactionHas
 
 export const fundAsset = async (userName, assetId, amount, onTransactionHash, onReceipt, onError) => {
   try {
+
+    const response = await Network.fundAsset({
+      asset: assetId,
+      investor: userName,
+      fundingToken: DEFAULT_TOKEN_CONTRACT,
+      amount,
+    })
+
+    onReceipt(true);
+
+    /*
     const fundingHubContract = new window.web3js.eth.Contract(
       FundingHub.ABI,
       FundingHub.ADDRESS,
@@ -483,7 +502,7 @@ export const fundAsset = async (userName, assetId, amount, onTransactionHash, on
       })
       .then((receipt) => {
         onReceipt(receipt.status);
-      });
+      });*/
   } catch (error) {
     processErrorType(error, onError)
   }
@@ -592,10 +611,163 @@ const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, as
     ]);
 }
 
-export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
+export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
-      const apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
+      if(!Network){
+        Network = require('@mybit/network.js')(window.web3js, SDK_CONTRACTS);
+      }
+      const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
+      const realAddressLowerCase = realAddress && realAddress.toLowerCase();
+      console.log("Network: ", Network)
+      const api = await Network.api();
+      console.log("API: ", api)
+      //const operators = await Network.operators();
+      //const events = await Network.events();
+      const database = await Network.database();
+      const events = await Network.events();
+      console.log("events: ", events);
+      console.log("database: ", database)
+      console.log("userAddress: ", userAddress)
+
+      //console.log(database.boolStorage(window.web3js.utils.soliditySha3("operator.acceptsEther", operatorID)))
+
+      let assets = await Network.getTotalAssets();
+      assets =
+        assets
+          .filter(assetContractAddress => assetsAirTableById[assetContractAddress] !== undefined)
+          .map(assetContractAddress => {
+            return {
+              ...assetsAirTableById[assetContractAddress],
+              assetId: assetContractAddress,
+            }
+          });
+
+      const assetDetails = await Promise.all(assets.map(async asset =>  {
+        const {
+          assetId,
+        } = asset;
+        const assetOperator = await Network.getAssetOperator(assetId);
+        const crowdsaleFinalized = await database.boolStorage(window.web3js.utils.soliditySha3("crowdsale.finalized", assetId));
+        const fundingDeadline = await api.getCrowdsaleDeadline(assetId);
+        const fundingGoal = await Network.getFundingGoal(assetId);
+        const assetManager = await Network.getAssetManager(assetId);
+        const assetInvestors = await Network.getAssetInvestors(assetId);
+        const fundingProgress = await Network.getFundingProgress(assetId);
+        const assetManagerFee = await api.getAssetManagerFee(assetId);
+        const escrowId = await api.getAssetManagerEscrowID(assetId, assetManager);
+        const escrow = await api.getAssetManagerEscrow(escrowId);
+        let daysSinceItWentLive = 1;
+        let assetIncome = 0;
+
+        console.log("Asset contract: ", assetId)
+        console.log("Asset operator: ", assetOperator)
+        console.log("Crowdsale finalized: ", crowdsaleFinalized);
+        console.log("Funding Deadline: ", fundingDeadline);
+        console.log("Funding goal: ", fundingGoal);
+        console.log("Asset manager: ", assetManager);
+        console.log("Asset Investors: ", assetInvestors)
+        console.log("Funding Progress: ", fundingProgress)
+        console.log("Manager fee bgn: ", assetManagerFee.toNumber())
+        console.log("Manager Fee: ", (assetManagerFee.toNumber() / (fundingGoal + assetManagerFee.toNumber())) * 100)
+        console.log("Escrow Id: ", escrowId);
+        console.log("Escrow: ", fromWeiToEth(BN(escrow).toString()))
+        console.log("\n\n")
+
+        let percentageOwnedByUser = 0;
+        if(realAddress && assetInvestors.includes(realAddressLowerCase)){
+          const dividendTokenETH = await Network.dividendTokenETH(assetId);
+          const balance = await dividendTokenETH.balanceOf(realAddress);
+          const investment = fromWeiToEth(BN(balance).toString());
+          const totalSupply = await dividendTokenETH.totalSupply();
+          percentageOwnedByUser = (balance * 100) / fundingGoal;
+          if(crowdsaleFinalized){
+            const block = await Network.getBlockOfFunded(assetId)
+            console.log("BLOCK: ", block)
+            daysSinceItWentLive = dayjs().diff(dayjs(block.timestamp * 1000), 'day');
+            daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
+            assetIncome = await dividendTokenETH.assetIncome();
+            assetIncome = fromWeiToEth(BN(assetIncome));
+            console.log("ASSET INCOME: ", assetIncome)
+            //const result = await Network.issueDividends(assetId, '0xBB64ac045539bC0e9FFfd04399347a8459e8282A', toWei(0.01));
+            //console.log("daysSinceItWentLive: ", daysSinceItWentLive);
+          }
+
+          console.log("LOGS: ", logs);
+          console.log("DividendTokenETH: ", dividendTokenETH)
+          console.log("INVESTMENT: ", fromWeiToEth(BN(balance).toString()));
+          console.log("Supply: ", fromWeiToEth(BN(totalSupply).toString()));
+          console.log("Percentage: ", parseFloat(percentageOwnedByUser.toFixed(2)));
+          console.log("\n\n")
+          console.log("\n\n")
+        }
+
+        const searchQuery = `mybit_watchlist_${assetId}`;
+        const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
+
+        // determine whether asset has expired
+        const dueDate = dayjs(fundingDeadline * 1000);
+        const pastDate = dayjs() >= dueDate ? true : false;
+
+        const fundingStageTmp = crowdsaleFinalized ? 0 : (!pastDate && !crowdsaleFinalized) ? 2 : 1;
+        const fundingStage = getFundingStage(fundingStageTmp);
+
+        const isAssetManager = assetManager === realAddressLowerCase;
+
+        const amountToBeRaisedInUSD = fromWeiToEth(fundingGoal) * currentEthInUsd;
+        const amountRaisedInUSD = fromWeiToEth(fundingProgress) * currentEthInUsd;
+
+        return {
+          ...asset,
+          fundingGoal: Number(Number(fromWeiToEth(fundingGoal)).toFixed(2)),
+          fundingProgress: Number(Number(fromWeiToEth(fundingProgress)).toFixed(2)),
+          amountRaisedInUSD,
+          amountToBeRaisedInUSD,
+          fundingStage,
+          pastDate,
+          isAssetManager,
+          assetManager,
+          percentageOwnedByUser,
+          daysSinceItWentLive,
+          assetIncome,
+          fundingDeadline: dueDate,
+          numberOfInvestors: assetInvestors.length,
+          blockNumberitWentLive: 0,
+          managerTotalIncome: 0,
+          managerTotalWithdrawn: 0,
+          managerPercentage: parseFloat((assetManagerFee.toNumber() / (fundingGoal + assetManagerFee.toNumber()) * 100).toFixed(2)),
+          watchListed: alreadyFavorite,
+          owedToInvestor: 0,
+          funded: fundingStage === FundingStages.FUNDED,
+        };
+      }));
+      //console.log("getOpenCrowdsales: ", Network.getOpenCrowdsales())
+      //console.log("OPERATORS: ", operators)
+      //console.log("all events: ", operators.allEvents())
+      //console.log(operatorID)
+      //console.log(events.operator('Operator registered', operatorID, 'The Collective', '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d'))
+      //const x = await Network.acceptEther(operatorID,  '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d')
+      //console.log("RESPONSE: ", x);
+
+
+      // 30 days = 2678400
+      // 3 hours = 10800
+      /*console.log(Network.createAsset({
+        escrow: toWei(2500),
+        assetURI: '0xBB64ac045539bC0e9FFfd04399347a8459e8282A12356791011234567',
+        assetManager: '0xBB64ac045539bC0e9FFfd04399347a8459e8282A',
+        fundingLength: 10800,
+        startTime: 1551732113,
+        amountToRaise: toWei(0.77),
+        assetManagerPercent: 17,
+        operatorID,
+      }));*/
+
+
+      console.log("ALL ASSETS: ", assetDetails)
+      resolve(assetDetails);
+
+      /*const apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
       const assetCreationContract = new window.web3js.eth.Contract(
         AssetCreation.ABI,
         AssetCreation.ADDRESS,
@@ -716,7 +888,7 @@ export const fetchAssets = async (userName, currentEthInUsd, assetsAirTableById,
       assetsPlusMoreDetails = assetsPlusMoreDetails
         .filter(asset => asset && asset.amountToBeRaisedInUSD > 0);
 
-      resolve(assetsPlusMoreDetails);
+      resolve(assetsPlusMoreDetails);*/
     } catch (error) {
       debug('failed to fetch assets, error: ', error);
       reject(error);

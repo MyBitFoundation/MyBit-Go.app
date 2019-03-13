@@ -4,11 +4,14 @@ import StyledFundsGoal from './styledFundsGoal';
 import StyledFundsInvestors from './styledFundsInvestors';
 import StyledFundingDetailsTitle from './styledFundingDetailsTitle';
 import StyledFundingDetailsValue from './styledFundingDetailsValue';
+import {
+  DEFAULT_TOKEN,
+} from 'constants';
 
 const AssetFundingDetails = ({
-  amountRaisedInUSD,
+  fundingGoal,
+  fundingProgress,
   funded,
-  goalFormatted,
   numberOfInvestors,
   formatMonetaryValue,
 }) => (
@@ -20,7 +23,7 @@ const AssetFundingDetails = ({
       <StyledFundingDetailsValue
         funded={funded}
       >
-        {funded ? goalFormatted : `${formatMonetaryValue(amountRaisedInUSD)}`}
+        {funded ? fundingProgress : fundingProgress} {DEFAULT_TOKEN}
       </StyledFundingDetailsValue>
     </StyledFundsRaised>
     <StyledFundsGoal>
@@ -28,7 +31,7 @@ const AssetFundingDetails = ({
         Funding goal
       </StyledFundingDetailsTitle>
       <StyledFundingDetailsValue>
-        {goalFormatted}
+        {`${fundingGoal} ${DEFAULT_TOKEN}`}
       </StyledFundingDetailsValue>
     </StyledFundsGoal>
     <StyledFundsInvestors>

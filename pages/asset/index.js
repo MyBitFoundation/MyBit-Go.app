@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
 import { withBlockchainContext } from 'components/Blockchain'
-import { withTokenPricesContext } from 'components/TokenPrices'
 import BackButton from 'ui/BackButton';
 import Loading from 'components/Loading';
 import StyledButton from './styledButton';
@@ -16,7 +15,6 @@ class AssetPage extends React.Component {
   render(){
     const {
       blockchainContext,
-      pricesContext,
       router,
     } = this.props;
 
@@ -28,11 +26,7 @@ class AssetPage extends React.Component {
       updateNotification,
     } = blockchainContext;
 
-    const {
-      prices,
-    } = pricesContext;
-
-    if (loading.assets || prices.loading) {
+    if (loading.assets) {
       return (
         <Loading
           message="Loading asset information"
@@ -53,7 +47,6 @@ class AssetPage extends React.Component {
     } else {
       toRender = (
         <AssetDetails
-          currentEthInUsd={prices.ethereum.price}
           asset={asset}
           handleAssetFavorited={handleAssetFavorited}
           fundAsset={fundAsset}
@@ -87,7 +80,6 @@ AssetPage.propTypes = {
 
 const enhance = compose(
   withBlockchainContext,
-  withTokenPricesContext,
 );
 
 export default enhance(AssetPage);

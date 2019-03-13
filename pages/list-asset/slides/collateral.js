@@ -94,29 +94,29 @@ export const CollateralSlide = withTokenPricesContext(({
         onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "percentage")}
       />
       <InputNumber
+        defaultValue={collateralPercentage}
+        value={collateralPercentage}
+        step={0.1}
+        precision={2}
+        min={0}
+        max={100}
+        formatter={value => `${value}%`}
+        parser={value => value.replace('%', '')}
+        onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "percentage")}
+      />
+      <span>=</span>
+      <InputNumber
         defaultValue={collateralMyb}
         value={collateralMyb}
         step={0.1}
         precision={2}
         min={constraints.min_myb}
         max={constraints.max_myb}
-        formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-        parser={value => value.replace(/\$\s?|(,*)/g, "")}
-        onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "myb")}
-      />
-      <span>=</span>
-      <InputNumber
-        defaultValue={collateralDollar}
-        value={collateralDollar}
-        step={0.1}
-        precision={2}
-        min={constraints.min_dollars}
-        max={constraints.max_dollars}
         formatter={value =>
-          `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          `MYB ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
         }
-        parser={value => value.replace(/\$\s?|(,*)/g, "")}
-        onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "dollar")}
+        parser={value => value.replace(/MYB\s?|(,*)/g, "")}
+        onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "myb")}
       />
     </InputsWrapper>
   </StyledCarouselSlide>

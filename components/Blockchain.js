@@ -158,8 +158,12 @@ class BlockchainProvider extends React.Component {
   withdrawProfitAssetManager = async (asset, amount) => {
     const {
       assetId,
-      name: assetName,
+      defaultData
     } = asset;
+
+    const {
+      name: assetName,
+    } = defaultData;
 
     const {
       buildNotification,
@@ -235,8 +239,12 @@ class BlockchainProvider extends React.Component {
   withdrawCollateral = async (asset, percentage, amount, updateAssetCollateralPage) => {
     const {
       assetId,
-      name: assetName,
+      defaultData,
     } = asset;
+
+    const {
+      name: assetName,
+    } = defaultData;
 
     const {
       buildNotification,
@@ -313,6 +321,14 @@ class BlockchainProvider extends React.Component {
 
   handleListAsset = async (formData, setUserListingAsset) => {
     const {
+      prices,
+    } = this.props.pricesContext;
+
+    const {
+      ethereum,
+    } = prices;
+
+    const {
       asset: assetName,
       userCountry: country,
       userCity: city,
@@ -320,7 +336,8 @@ class BlockchainProvider extends React.Component {
       category,
       fileList,
       collateralMyb,
-      collateralPercentage
+      collateralPercentage,
+      partnerContractAddress,
     } = formData;
 
     const {
@@ -358,7 +375,7 @@ class BlockchainProvider extends React.Component {
         airtableContext,
       } = this.props;
       console.log("here0")
-      const numberOfInternalActions = 2;
+      const numberOfInternalActions = 1;
       const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
       const filesUploaded = fileList.length > 0;
       const requiredCallsToInternalActions = filesUploaded ? numberOfInternalActionsWithFileUpload : numberOfInternalActions;
@@ -381,10 +398,7 @@ class BlockchainProvider extends React.Component {
         }
       }
 
-      const collateral = window.web3js.utils.toWei(collateralMyb.toString(), 'ether');
-
-      Brain.updateAirTableWithNewAsset(assetId, assetName, country, city, collateralMyb, collateralPercentage, performInternalAction)
-      Brain.createEntryForNewCollateral(userAddress, collateral, assetId, performInternalAction);
+      Brain.updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, performInternalAction)
       filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
 
@@ -409,15 +423,11 @@ class BlockchainProvider extends React.Component {
 
     await Brain.createAsset(onTransactionHash, onReceipt, onError, {
       managerPercentage: managementFee,
-      assetType: categoriesAirTable[category].encoded,
-      amountToBeRaisedInUSD: getAssetByName(assetName, assetsAirTable).amountToBeRaisedInUSDAirtable,
+      amountToBeRaised: getAssetByName(assetName, assetsAirTable).amountToBeRaisedInUSDAirtable / ethereum.price,
       assetName,
-      country,
-      city,
-      fileList,
       collateralMyb,
-      collateralPercentage,
       userAddress,
+      partnerContractAddress,
     });
   }
 
@@ -427,7 +437,7 @@ class BlockchainProvider extends React.Component {
       const notificationId = Date.now();
       const {
         name : assetName,
-      } = currentAsset;
+      } = currentAsset.defaultData;
 
       const {
         buildNotification,
@@ -498,7 +508,7 @@ class BlockchainProvider extends React.Component {
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const{
         name: assetName,
-      } = currentAsset;
+      } = currentAsset.defaultData;
 
       const {
         buildNotification,
