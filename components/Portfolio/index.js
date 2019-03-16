@@ -45,6 +45,8 @@ class PortfolioPage extends React.Component {
       assets,
       withdrawInvestorProfit,
       withdrawingAssetIds,
+      payoutAsset,
+      callingPayout,
     } = this.props;
 
     if(loading){
@@ -133,6 +135,8 @@ class PortfolioPage extends React.Component {
                 key={asset.assetId}
                 withdrawInvestorProfit={withdrawInvestorProfit}
                 withdrawing={withdrawingAssetIds.includes(asset.assetId)}
+                callingPayout={callingPayout.includes(asset.assetId)}
+                payoutAsset={payoutAsset}
               />
             )}
           </StyledPortfolioPageExplore>

@@ -136,7 +136,6 @@ class ContributionPopup extends React.Component {
       this.props.amount,
       this.onSuccess,
       this.onFailure,
-      this.props.amountUsd
     );
 
     this.props.handlePopupState(false);

@@ -7,6 +7,7 @@ export const NotificationTypes = {
   WITHDRAW_INVESTOR: 'withdrawInvestor',
   WITHDRAW_COLLATERAL: 'withdrawCollateral',
   WITHDRAW_MANAGER: 'withdrawManager',
+  ASSET_PAYOUT: 'assetPayout',
 };
 
 export const NotificationsMetamask = {
@@ -15,6 +16,7 @@ export const NotificationsMetamask = {
   WITHDRAW_INVESTOR: 'withdrawInvestor',
   WITHDRAW_COLLATERAL: 'withdrawCollateral',
   WITHDRAW_MANAGER: 'withdrawManager',
+  ASSET_PAYOUT: 'assetPayout',
 };
 
 export const NotificationStatus = {
@@ -31,6 +33,7 @@ export const getContentForNotification = (obj) => {
     withdrawInvestor,
     withdrawCollateral,
     withdrawManager,
+    assetPayout,
     status,
   } = obj;
   if(listAsset){
@@ -168,6 +171,26 @@ export const getContentForNotification = (obj) => {
         default:
           return null;
       }
+  } else if(assetPayout){
+      switch(status){
+        case NotificationStatus.SUCCESS:
+          return {
+            title: <span style={{marginRight: '10px'}}>Funds sent successfuly</span>,
+            message: `The funds generated through the listing of ${assetPayout.assetName} were sent to the operator.`,
+          }
+        case NotificationStatus.INFO:
+          return {
+            title: `Sending funds to Operator for ${assetPayout.assetName}`,
+            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+          }
+        case NotificationStatus.ERROR:
+          return {
+            title: `Failed to send the funds to the Operator`,
+            message: 'Unfortunately your transaction failed. Please try again.',
+          }
+        default:
+          return null;
+      }
   } else if(metamask){
     const { operationType } = metamask;
     switch(operationType){
@@ -231,7 +254,18 @@ export const getContentForNotification = (obj) => {
           default:
             return null;
         }
-
+      case NotificationsMetamask.ASSET_PAYOUT:
+        switch(status) {
+          case NotificationStatus.INFO:
+            return {
+              title: `Sending funds to Operator for ${metamask.assetName}`,
+              message: 'Please confirm the transaction in Metamask to send the crowdsale funds to the Operator. Thank you for beta testing the platform.',
+            }
+          case NotificationStatus.ERROR:
+            return undefined;
+          default:
+            return null;
+        }
       default:
         return null;
     }

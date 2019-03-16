@@ -35,23 +35,36 @@ const AssetPortfolioManaged = ({
   pastDate,
   fundingGoal,
   fundingProgress,
+  managerHasToCallPayout,
+  callingPayout,
+  payoutAsset,
+  defaultData,
 }) => {
 
   const buttonType = 'secondary';
-  const text = funded ? 'Manage asset' : 'View asset listing';
-  const url = funded ? `/manage?id=${assetId}` : `/asset?id=${assetId}`;
-  const urlAs = funded ? `/manage/${assetId}` : `/asset/${assetId}`;
-
+  const text = !funded ? 'View asset listing' : managerHasToCallPayout ? 'Payout' : 'Manage asset';
+  const url = !funded ? `/asset?id=${assetId}` : managerHasToCallPayout ? undefined : `/manage?id=${assetId}`;
+  const urlAs = !funded ? `/asset/${assetId}` : managerHasToCallPayout ? undefined : `/manage/${assetId}`;
   const button = (
+    <Button
+      type={buttonType}
+      onClick={managerHasToCallPayout ? () => payoutAsset({
+        assetId,
+        defaultData,
+      }) : undefined}
+      loading={callingPayout}
+      disabled={callingPayout}
+    >
+      {text}
+    </Button>
+  )
+
+  const buttonWithLink = url && (
     <Link
       as={urlAs}
       href={url}
     >
-      <Button
-        type={buttonType}
-      >
-        {text}
-      </Button>
+      {button}
     </Link>
   );
 
@@ -129,7 +142,7 @@ const AssetPortfolioManaged = ({
           )}
         </div>
         <StyledAssetPortfolioManagedButtons>
-          {button}
+          {buttonWithLink || button}
         </StyledAssetPortfolioManagedButtons>
       </StyledAssetPortfolioManagedSection>
     </StyledAssetPortfolioManagedContainer>

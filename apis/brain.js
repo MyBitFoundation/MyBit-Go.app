@@ -294,56 +294,37 @@ export const createAsset = async (onTransactionHash, onReceipt, onError, params)
       amountToBeRaised,
     } = params;
 
-    console.log("PARAMS: ", params)
-
-    const randomBlockNumber = Math.floor(Math.random() * 1000000) + Math.floor(Math.random() * 10000) + 500;
+    // Checks whether the user needs to approve the burning of MYB
+    const tokenContract = await Network.myBitToken();
+    const currentBurningAllowance = await tokenContract.methods.allowance(userAddress, SDK_CONTRACTS.ERC20Burner).call();
+    if(Number(currentBurningAllowance) === 0){
+      console.log("Going to approve the burning of MYB.")
+      await Network.approveBurn({from: userAddress});
+    }
 
     const randomURI = generateRandomURI(window.web3js);
     const api = await Network.api();
-    const operatorID = await api.getOperatorID(partnerContractAddress);
-    console.log("DEFAULT_TOKEN_CONTRACT: ", DEFAULT_TOKEN_CONTRACT)
+    const operatorID = await api.methods.getOperatorID(partnerContractAddress).call();
     const response = await Network.createAsset({
       escrow: toWei(collateralMyb),
       assetURI: randomURI,
       assetManager: userAddress,
       fundingLength: 2592000,
       startTime: 1551732113,
-      amountToRaise: toWei(0.38),
+      amountToRaise: toWei(10),
       assetManagerPercent: managerPercentage,
       operatorID,
       fundingToken: DEFAULT_TOKEN_CONTRACT,
+      burnToken: SDK_CONTRACTS.MyBitToken,
+      createAsset: {
+        onTransactionHash,
+        onError: error => processErrorType(error, onError),
+      }
     })
 
-    console.log(response)
-    onReceipt(true, response.asset);
-
-    /*
-    const assetCreationContract = new window.web3js.eth.Contract(
-      AssetCreation.ABI,
-      AssetCreation.ADDRESS,
-    );
-
-    const assetCreationResponse = await assetCreationContract.methods
-      .newAsset(
-        amountToBeRaisedInUSD.toString(),
-        params.managerPercentage.toString(),
-        '0',
-        installerId,
-        assetType,
-        randomBlockNumber.toString(),
-        ipfsHash,
-      )
-      .send({ from: userAddress })
-      .on('transactionHash', (transactionHash) => {
-        onTransactionHash();
-      })
-      .on('error', (error) => {
-        processErrorType(error, onError);
-      })
-      .then(receipt => onReceipt(receipt.status, futureassetId));*/
-
+    onReceipt(response.asset);
   } catch (error) {
-    processErrorType(error, onError)
+    debug(error)
   }
 }
 
@@ -445,6 +426,22 @@ export const checkTransactionConfirmation = async (
   }
 };
 
+export const payoutAsset = async ({
+  userAddress,
+  assetId,
+  onTransactionHash,
+  onReceipt,
+  onError,
+}) => {
+  const response = await Network.payout({
+    asset: assetId,
+    from: userAddress,
+    onTransactionHash,
+    onError: error => processErrorType(error, onError),
+    onReceipt,
+  })
+}
+
 export const withdrawInvestorProfit = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
   try {
     const AssetContract = new window.web3js.eth.Contract(
@@ -471,40 +468,19 @@ export const withdrawInvestorProfit = async (userName, assetId, onTransactionHas
 
 export const fundAsset = async (userName, assetId, amount, onTransactionHash, onReceipt, onError) => {
   try {
-
     const response = await Network.fundAsset({
       asset: assetId,
       investor: userName,
-      fundingToken: DEFAULT_TOKEN_CONTRACT,
+      paymentToken: DEFAULT_TOKEN_CONTRACT,
       amount,
+      buyAsset: {
+        onTransactionHash,
+        onError: error => processErrorType(error, onError),
+        onReceipt: (receipt) => onReceipt(receipt.status),
+      }
     })
-
-    onReceipt(true);
-
-    /*
-    const fundingHubContract = new window.web3js.eth.Contract(
-      FundingHub.ABI,
-      FundingHub.ADDRESS,
-    );
-    const weiAmount = window.web3js.utils.toWei(amount.toString(), 'ether');
-
-    const fundingResponse = await fundingHubContract.methods
-      .fund(assetId)
-      .send({
-        value: weiAmount,
-        from: userName,
-      })
-      .on('transactionHash', (transactionHash) => {
-        onTransactionHash();
-      })
-      .on('error', (error) => {
-        processErrorType(error, onError);
-      })
-      .then((receipt) => {
-        onReceipt(receipt.status);
-      });*/
   } catch (error) {
-    processErrorType(error, onError)
+    debug(error);
   }
 }
 
@@ -618,7 +594,6 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         Network = require('@mybit/network.js')(window.web3js, SDK_CONTRACTS);
       }
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
-      const realAddressLowerCase = realAddress && realAddress.toLowerCase();
       console.log("Network: ", Network)
       const api = await Network.api();
       console.log("API: ", api)
@@ -648,17 +623,18 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
           assetId,
         } = asset;
         const assetOperator = await Network.getAssetOperator(assetId);
-        const crowdsaleFinalized = await database.boolStorage(window.web3js.utils.soliditySha3("crowdsale.finalized", assetId));
-        const fundingDeadline = await api.getCrowdsaleDeadline(assetId);
+        const crowdsaleFinalized = await api.methods.crowdsaleFinalized(assetId).call();
+        const fundingDeadline = await api.methods.getCrowdsaleDeadline(assetId).call();
         const fundingGoal = await Network.getFundingGoal(assetId);
         const assetManager = await Network.getAssetManager(assetId);
         const assetInvestors = await Network.getAssetInvestors(assetId);
         const fundingProgress = await Network.getFundingProgress(assetId);
-        const assetManagerFee = await api.getAssetManagerFee(assetId);
-        const escrowId = await api.getAssetManagerEscrowID(assetId, assetManager);
-        const escrow = await api.getAssetManagerEscrow(escrowId);
+        const assetManagerFee = await api.methods.getAssetManagerFee(assetId).call();
+        const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
+        const escrow = await api.methods.getAssetManagerEscrow(escrowId).call();
         let daysSinceItWentLive = 1;
         let assetIncome = 0;
+        let managerHasToCallPayout = false;
 
         console.log("Asset contract: ", assetId)
         console.log("Asset operator: ", assetOperator)
@@ -668,36 +644,39 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         console.log("Asset manager: ", assetManager);
         console.log("Asset Investors: ", assetInvestors)
         console.log("Funding Progress: ", fundingProgress)
-        console.log("Manager fee bgn: ", assetManagerFee.toNumber())
-        console.log("Manager Fee: ", (assetManagerFee.toNumber() / (fundingGoal + assetManagerFee.toNumber())) * 100)
+        console.log("Manager fee bgn: ", assetManagerFee)
+        console.log("Manager Fee: ", (Number(assetManagerFee) / (fundingGoal + Number(assetManagerFee))) * 100);
         console.log("Escrow Id: ", escrowId);
         console.log("Escrow: ", fromWeiToEth(BN(escrow).toString()))
         console.log("\n\n")
 
         let percentageOwnedByUser = 0;
-        if(realAddress && assetInvestors.includes(realAddressLowerCase)){
+        if(realAddress && assetInvestors.includes(realAddress)){
           const dividendTokenETH = await Network.dividendTokenETH(assetId);
-          const balance = await dividendTokenETH.balanceOf(realAddress);
+          const balance = await dividendTokenETH.methods.balanceOf(realAddress).call();
           const investment = fromWeiToEth(BN(balance).toString());
-          const totalSupply = await dividendTokenETH.totalSupply();
-          percentageOwnedByUser = (balance * 100) / fundingGoal;
+          const totalSupply = await dividendTokenETH.methods.totalSupply().call();
+          percentageOwnedByUser = balance / fundingGoal;
           if(crowdsaleFinalized){
-            const block = await Network.getBlockOfFunded(assetId)
-            console.log("BLOCK: ", block)
-            daysSinceItWentLive = dayjs().diff(dayjs(block.timestamp * 1000), 'day');
-            daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
-            assetIncome = await dividendTokenETH.assetIncome();
-            assetIncome = fromWeiToEth(BN(assetIncome));
-            console.log("ASSET INCOME: ", assetIncome)
-            //const result = await Network.issueDividends(assetId, '0xBB64ac045539bC0e9FFfd04399347a8459e8282A', toWei(0.01));
-            //console.log("daysSinceItWentLive: ", daysSinceItWentLive);
+            const timestamp = await Network.getBlockOfFunded(assetId)
+            console.log("BLOCK: ", timestamp)
+            if(timestamp){
+              daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
+              daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
+              assetIncome = await dividendTokenETH.methods.assetIncome().call();
+              assetIncome = fromWeiToEth(BN(assetIncome));
+              console.log("ASSET INCOME: ", assetIncome)
+              //const result = await Network.issueDividends(assetId, '0xBB64ac045539bC0e9FFfd04399347a8459e8282A', toWei(0.01));
+              //console.log("daysSinceItWentLive: ", daysSinceItWentLive);
+            } else {
+              managerHasToCallPayout = true;
+            }
           }
 
-          console.log("LOGS: ", logs);
           console.log("DividendTokenETH: ", dividendTokenETH)
           console.log("INVESTMENT: ", fromWeiToEth(BN(balance).toString()));
           console.log("Supply: ", fromWeiToEth(BN(totalSupply).toString()));
-          console.log("Percentage: ", parseFloat(percentageOwnedByUser.toFixed(2)));
+          console.log("Percentage: ", percentageOwnedByUser);
           console.log("\n\n")
           console.log("\n\n")
         }
@@ -712,13 +691,14 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         const fundingStageTmp = crowdsaleFinalized ? 0 : (!pastDate && !crowdsaleFinalized) ? 2 : 1;
         const fundingStage = getFundingStage(fundingStageTmp);
 
-        const isAssetManager = assetManager === realAddressLowerCase;
+        const isAssetManager = assetManager === realAddress;
 
         const amountToBeRaisedInUSD = fromWeiToEth(fundingGoal) * currentEthInUsd;
         const amountRaisedInUSD = fromWeiToEth(fundingProgress) * currentEthInUsd;
 
         return {
           ...asset,
+          managerHasToCallPayout,
           fundingGoal: Number(Number(fromWeiToEth(fundingGoal)).toFixed(2)),
           fundingProgress: Number(Number(fromWeiToEth(fundingProgress)).toFixed(2)),
           amountRaisedInUSD,
@@ -735,7 +715,7 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
           blockNumberitWentLive: 0,
           managerTotalIncome: 0,
           managerTotalWithdrawn: 0,
-          managerPercentage: parseFloat((assetManagerFee.toNumber() / (fundingGoal + assetManagerFee.toNumber()) * 100).toFixed(2)),
+          managerPercentage: (Number(assetManagerFee) / (fundingGoal + Number(assetManagerFee))) * 100,
           watchListed: alreadyFavorite,
           owedToInvestor: 0,
           funded: fundingStage === FundingStages.FUNDED,
@@ -746,8 +726,12 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
       //console.log("all events: ", operators.allEvents())
       //console.log(operatorID)
       //console.log(events.operator('Operator registered', operatorID, 'The Collective', '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d'))
-      //const x = await Network.acceptEther(operatorID,  '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d')
-      //console.log("RESPONSE: ", x);
+      /*const operatorID = await api.methods.getOperatorID('0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d').call();
+      const x = await Network.acceptERC20Token({
+        id: operatorID,
+        token: DEFAULT_TOKEN_CONTRACT,
+        operator: '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d',
+      });*/
 
 
       // 30 days = 2678400
@@ -762,7 +746,6 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         assetManagerPercent: 17,
         operatorID,
       }));*/
-
 
       console.log("ALL ASSETS: ", assetDetails)
       resolve(assetDetails);

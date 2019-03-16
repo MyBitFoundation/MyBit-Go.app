@@ -91,7 +91,7 @@ const AssetPortfolioInvestment = ({
         <span>Your ownership:</span>
         <div>
           <StyledAssetPortfolioInvestmentValue>
-            {(numberOfInvestors === 1 && funded) ? '100' : ownership.toFixed(2)}%
+            {(numberOfInvestors === 1 && funded) ? '100' : parseFloat((ownership * 100).toFixed(2))}%
           </StyledAssetPortfolioInvestmentValue>
         </div>
       </StyledAssetPortfolioInvestmentSection>

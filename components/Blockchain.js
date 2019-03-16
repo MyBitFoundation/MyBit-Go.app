@@ -26,6 +26,8 @@ import {
 
 import {
   debug,
+  formatMonetaryValue,
+  fromWeiToEth,
 } from 'utils/helpers';
 
 const { Provider, Consumer } = React.createContext({});
@@ -76,9 +78,11 @@ class BlockchainProvider extends React.Component {
       withdrawInvestorProfit: this.withdrawInvestorProfit,
       withdrawCollateral: this.withdrawCollateral,
       withdrawProfitAssetManager: this.withdrawProfitAssetManager,
+      payoutAsset: this.payoutAsset,
       isUserContributing: false,
       withdrawingAssetIds: [],
       withdrawingCollateral: [],
+      callingPayout: [],
       withdrawingAssetManager: [],
       isLoadingUserInfo: false,
     };
@@ -153,6 +157,84 @@ class BlockchainProvider extends React.Component {
       debug(err)
       return assets;
     }
+  }
+
+  payoutAsset = async asset => {
+    const {
+      assetId,
+      defaultData
+    } = asset;
+
+    const {
+      name: assetName,
+    } = defaultData;
+
+    const {
+      buildNotification,
+    } = this.props.notificationsContext;
+
+    const notificationId = Date.now();
+
+    //update state so users can't trigger payout multiple times
+    const callingPayout = this.state.callingPayout.slice();
+    callingPayout.push(assetId);
+    this.setState({
+      callingPayout,
+    });
+
+    buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+      operationType: NotificationsMetamask.ASSET_PAYOUT,
+      assetName,
+    });
+
+    const onTransactionHash = () => {
+      buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.INFO, {
+        assetName,
+      });
+    }
+
+    const onReceipt = (wasSuccessful) => {
+      if(wasSuccessful){
+        onSuccess();
+      } else{
+        onError(ErrorTypes.ETHEREUM);
+      }
+    }
+
+    const onError = (type) => {
+      updateCallingPayout();
+      if(type === ErrorTypes.METAMASK){
+        buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+          operationType: NotificationsMetamask.ASSET_PAYOUT
+        });
+      } else {
+        buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.ERROR);
+      }
+    }
+
+    const updateCallingPayout = () => {
+      let callingPayout = this.state.callingPayout.slice();
+      callingPayout = callingPayout.filter(assetIdTmp => assetIdTmp !== assetId);
+      this.setState({
+        callingPayout,
+      });
+    }
+
+    const onSuccess = async () => {
+      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+      updateCallingPayout();
+      buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.SUCCESS, {
+        assetName,
+      });
+    }
+
+    const response = await Brain.payoutAsset({
+      userAddress: this.props.metamaskContext.user.address,
+      assetId,
+      onTransactionHash,
+      onReceipt: receipt => onReceipt(receipt.status),
+      onError,
+    });
   }
 
   withdrawProfitAssetManager = async (asset, amount) => {
@@ -362,19 +444,14 @@ class BlockchainProvider extends React.Component {
       });
     }
 
-    const onReceipt = (wasSuccessful, assetId) => {
-      if(wasSuccessful){
-        onSuccess(assetId);
-      } else{
-        onError(ErrorTypes.ETHEREUM);
-      }
+    const onReceipt = (assetId) => {
+      onSuccess(assetId);
     }
 
     const onSuccess = async (assetId) => {
       const {
         airtableContext,
       } = this.props;
-      console.log("here0")
       const numberOfInternalActions = 1;
       const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
       const filesUploaded = fileList.length > 0;
@@ -385,11 +462,8 @@ class BlockchainProvider extends React.Component {
       const performInternalAction = async () => {
         counterCallsToInternalActions++;
         if(counterCallsToInternalActions === requiredCallsToInternalActions){
-          console.log("here")
           await airtableContext.forceRefresh();
-          console.log("here2")
           await this.fetchAssets();
-          console.log("here3")
           buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
             assetName,
             assetId,
@@ -431,10 +505,11 @@ class BlockchainProvider extends React.Component {
     });
   }
 
-  fundAsset = (assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup, amountDollars) => {
+  fundAsset = (assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup) => {
     try {
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
+      const amountFormatted = formatMonetaryValue(fromWeiToEth(amount));
       const {
         name : assetName,
       } = currentAsset.defaultData;
@@ -442,10 +517,6 @@ class BlockchainProvider extends React.Component {
       const {
         buildNotification,
       } = this.props.notificationsContext;
-
-      console.log(buildNotification)
-      console.log(this.props.notificationsContext)
-      console.log(this.props)
 
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.FUNDING,
@@ -455,7 +526,7 @@ class BlockchainProvider extends React.Component {
       const onTransactionHash = () => {
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
           assetName,
-          amount: amountDollars,
+          amount: amountFormatted,
         });
       }
 
@@ -485,7 +556,7 @@ class BlockchainProvider extends React.Component {
         onSuccessConfirmationPopup();
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
           assetName,
-          amount: amountDollars,
+          amount: amountFormatted,
         });
       }
 

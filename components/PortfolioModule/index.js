@@ -3,7 +3,6 @@ import { compose } from 'recompose';
 import Loading from 'components/Loading';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withMetamaskContext } from 'components/MetamaskChecker'
-import { withTokenPricesContext } from 'components/TokenPrices'
 
 import {
   getPortfolioAssetDetails,
@@ -36,38 +35,35 @@ class PortfolioModule extends React.Component {
     const {
       blockchainContext,
       metamaskContext,
-      pricesContext,
     } = props;
 
     const {
       loading,
       assets,
       withdrawingAssetIds,
+      payoutAsset,
+      callingPayout,
     } = blockchainContext;
 
     const {
       user,
     } = metamaskContext;
 
-    const {
-      prices,
-      loading: pricesLoading,
-    } = pricesContext;
-
     const { currentView } = this.state;
 
-    if (loading.assets || pricesLoading || loading.userAssetsInfo) {
+    if (loading.assets || loading.userAssetsInfo) {
       this.setState({loading: true});
       return;
     }
 
-    const { ethereum } = prices;
     const ownedAssets = getAllUserAssets(assets, user.address);
-    getPortfolioAssetDetails(ownedAssets, ethereum.price, (assets) => {
+    getPortfolioAssetDetails(ownedAssets, (assets) => {
       this.setState({
         loading: false,
         assets,
         withdrawingAssetIds,
+        payoutAsset,
+        callingPayout,
       })
     });
   }
@@ -82,7 +78,6 @@ class PortfolioModule extends React.Component {
 const enhance = compose(
   withMetamaskContext,
   withBlockchainContext,
-  withTokenPricesContext,
 );
 
 export default enhance(PortfolioModule);

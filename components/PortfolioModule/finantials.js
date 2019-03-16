@@ -2,23 +2,23 @@ import {
   fromWeiToEth,
 } from 'utils/helpers';
 
-export const getAllUserAssets = (assets, address, currentEthPrice) =>
+export const getAllUserAssets = (assets, address) =>
   assets
     .filter(asset => (asset.percentageOwnedByUser !== 0 || asset.isAssetManager))
 
-const calculateAssetValue = (currentValue, asset, currentEthPrice) => {
+const calculateAssetValue = (currentValue, asset) => {
   if(asset.percentageOwnedByUser !== 0){
-    currentValue += (asset.percentageOwnedByUser * asset.amountToBeRaisedInUSD) * currentEthPrice;
+    currentValue += asset.percentageOwnedByUser * asset.fundingGoal;
   }
   // An asset manager can invest in its own asset
   if(asset.isAssetManager){
-    currentValue += asset.amountToBeRaisedInUSD;
+    currentValue += asset.fundingGoal;
   }
   return currentValue;
 }
 
-const calculateAssetRevenue = (currentValue, asset, currentEthPrice) => {
-  const investorRevenue = (asset.percentageOwnedByUser * asset.assetIncome) * currentEthPrice;
+const calculateAssetRevenue = (currentValue, asset) => {
+  const investorRevenue = asset.percentageOwnedByUser * asset.assetIncome;
 
   const assetManagerRevenue = asset.isAssetManager ? (asset.managerPercentage / 100) * asset.assetIncome : 0;
 
@@ -26,12 +26,10 @@ const calculateAssetRevenue = (currentValue, asset, currentEthPrice) => {
   return currentValue + investorRevenue + assetManagerRevenue;
 }
 
-const getInvestmentDetailsFromAsset = (asset, currentEthPrice) => {
+const getInvestmentDetailsFromAsset = (asset) => {
   const { 
     assetId,
     name,
-    amountToBeRaisedInUSD,
-    amountRaisedInUSD,
     owedToInvestor,
     assetIncome,
     percentageOwnedByUser,
@@ -41,7 +39,7 @@ const getInvestmentDetailsFromAsset = (asset, currentEthPrice) => {
     return null;
   }
 
-  const unrealizedProfit = fromWeiToEth(owedToInvestor) * currentEthPrice;
+  const unrealizedProfit = fromWeiToEth(owedToInvestor);
   const totalProfit = (percentageOwnedByUser * assetIncome) / 100 ;
 
   return {
@@ -52,12 +50,11 @@ const getInvestmentDetailsFromAsset = (asset, currentEthPrice) => {
   };
 }
 
-const getManagerDetailsFromAsset = (asset, currentEthPrice) => {
+const getManagerDetailsFromAsset = (asset) => {
   if(!asset.isAssetManager){
     return null;
   }
   const {
-    amountToBeRaisedInUSD,
     managerPercentage,
     managerTotalIncome,
     managerTotalWithdrawn,
@@ -69,22 +66,22 @@ const getManagerDetailsFromAsset = (asset, currentEthPrice) => {
   return {
     ...asset,
     totalProfitAssetManager,
-    toWithdraw: (fromWeiToEth(managerTotalIncome.toString()) * currentEthPrice) - (0 * currentEthPrice),
+    toWithdraw: 0,
   };
 }
 
-export const getPortfolioAssetDetails = (assets, currentEthPrice, cb) => {
+export const getPortfolioAssetDetails = (assets, cb) => {
   let totalAssetRevenue = 0;
   let totalAssetValue = 0;
   let totalManagementProfit = 0;
   const toReturn = assets.map(asset => {
-    totalAssetValue = calculateAssetValue(totalAssetValue, asset, currentEthPrice);
-    totalAssetRevenue = calculateAssetRevenue(totalAssetRevenue, asset, currentEthPrice);
-    const managerDetails = getManagerDetailsFromAsset(asset, currentEthPrice);
+    totalAssetValue = calculateAssetValue(totalAssetValue, asset);
+    totalAssetRevenue = calculateAssetRevenue(totalAssetRevenue, asset);
+    const managerDetails = getManagerDetailsFromAsset(asset);
     totalManagementProfit += asset.isAssetManager ? managerDetails.totalProfitAssetManager : 0;
 
     return {
-      investmentDetails: getInvestmentDetailsFromAsset(asset, currentEthPrice),
+      investmentDetails: getInvestmentDetailsFromAsset(asset),
       managerDetails,
       totalAssetValue,
       totalAssetRevenue,
