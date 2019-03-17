@@ -34,6 +34,7 @@ const AssetCalculator = ({
   yourOwnership,
   maxOwnership,
   loadingUserInfo,
+  userInvestment,
 }) => {
   console.log("maxOwnership: ", maxOwnership);
   console.log("selectedAmountEth: ", selectedAmountEth)
@@ -108,7 +109,7 @@ const AssetCalculator = ({
         {(loadingUserInfo && ended) && (
           <StyledAssetCalculatorSpin />
         )}
-        {(loadingUserInfo && ended) ? null : ended ? formatMonetaryValue(parseFloat(yourContribution)) : selectedAmountEth ? formatMonetaryValue(parseFloat(selectedAmountEth)) : 0}
+        {(loadingUserInfo && ended) ? null : ended ? formatMonetaryValue(parseFloat(userInvestment)) : selectedAmountEth ? formatMonetaryValue(parseFloat(selectedAmountEth)) : 0}
       </StyledAssetCalculatorValue>
       <div>
         <StyledAssetCalculatorLabel>
@@ -118,7 +119,7 @@ const AssetCalculator = ({
           {(loadingUserInfo && ended) && (
             <StyledAssetCalculatorSpin />
           )}
-          {(loadingUserInfo && ended) ? null : ended ? yourOwnership : selectedAmountEth ? selectedOwnership : 0}%
+          {(loadingUserInfo && ended) ? null : ended ? yourOwnership * 100 : selectedAmountEth ? selectedOwnership : 0}%
         </StyledAssetCalculatorValue>
       </div>
     </React.Fragment>

@@ -39,7 +39,7 @@ const AssetDetailsManagetInfo = ({
       <ValueDisplay
         text="Total Management Fee"
         icon={<Sliders />}
-        value={`${managerPercentage}%`}
+        value={`${managerPercentage * 100}%`}
         style={{
           margin: '5px 0',
         }}

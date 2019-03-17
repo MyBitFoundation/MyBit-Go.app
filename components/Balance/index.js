@@ -1,56 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import EthIcon from 'static/eth-icon-small.svg';
-import MybitIcon from 'static/mybit-small.svg';
 import Spin from 'static/spin.svg';
-import StyledAccountInfo from './styledAccountInfo';
-import StyledBalance from './styledBalance';
-import StyledBalanceHeader from './styledBalanceHeader';
-import StyledBalanceInfo from './styledBalanceInfo';
 import StyledSpin from './styledSpin';
+import BalanceLabel from './balanceLabel';
+import BalanceAmount from './balanceAmount';
 
 const Balance = (props) => {
   const {
-    myb,
-    ether,
+    balance,
     isMobile,
     noInfo,
   } = props;
-
   return (
-    <StyledBalance>
-      {isMobile === false && (
-        <StyledBalanceHeader>ACCOUNT BALANCE</StyledBalanceHeader>
-      )}
-      {(!ether || !myb) && !noInfo ? (
+    <div>
+      {!balance && !noInfo ? (
         <StyledSpin>
           <Spin />
         </StyledSpin>
       ) : (
-        <StyledBalanceInfo
-          isMobile={isMobile}
-        >
-          <div>
-            <MybitIcon />
-            <span>
-              <b>
-                {parseFloat(Number(myb).toFixed(4)).toLocaleString()}
-              </b>
-              {' '} MYB
-            </span>
-          </div>
-          <div>
-            <EthIcon />
-            <span>
-              <b>
-                {parseFloat(Number(ether).toFixed(4)).toLocaleString()}
-              </b>
-              {' '} ETH
-            </span>
-          </div>
-        </StyledBalanceInfo>
+        <div>
+          <BalanceLabel
+            isMobile={isMobile}
+          >
+            Account Balance:{' '}
+          </BalanceLabel>
+          <BalanceAmount
+            isMobile={isMobile}
+          >
+            {balance > 0 ? '~' : ''} {balance} {' '} DAI
+          </BalanceAmount>
+        </div>
       )}
-    </StyledBalance>
+    </div>
 )};
 
 Balance.defaultProps = {

@@ -8,10 +8,7 @@ import Address from 'ui/Address';
 import ConnectionStatus from 'components/ConnectionStatus';
 import { Consumer as BancorConsumer } from 'ui/BancorContainer';
 import AppHeaderContainer from './appHeaderContainer';
-import AppHeaderLogoAndInfo from './appHeaderLogoAndInfo';
 import AppHeaderLogo from './appHeaderLogo';
-import AppHeaderBancorWidget from './appHeaderBancorWidget';
-import AppHeaderSection from './appHeaderSection';
 import AppHeaderHamburguerButton from './appHeaderHamburguerButton';
 import AppHeaderPageName from './appHeaderPageName';
 import AppHeaderConnectionStatus from './appHeaderConnectionStatus';
@@ -20,6 +17,8 @@ import { withMetamaskContext } from 'components/MetamaskChecker'
 import { withNotificationsContext } from 'components/NotificationsModule';
 import NotificationsMobileCounter from 'components/NotificationsMobile';
 import AppHeaderNotificationCounter from './appHeaderNotificationCounter';
+import AppHeaderAddress from './appHeaderAddress';
+import AppHeaderBalance from './appHeaderBalance';
 
 const AppHeader = ({
   metamaskContext,
@@ -65,13 +64,15 @@ const AppHeader = ({
       break;
   }
 
+  const balance = user.avgBalance || null;
+
   return (
     <BancorConsumer>
       {({ initBancor }) => (
         <AppHeaderContainer
           hideOnMobile={hideOnMobile}
         >
-          <AppHeaderLogoAndInfo>
+          <div style={{position: 'relative', height: '100%'}}>
             <AppHeaderLogo>
               <Logo onCLick={() => Router.push('/explore')}/>
             </AppHeaderLogo>
@@ -79,32 +80,29 @@ const AppHeader = ({
               {pageName}
             </AppHeaderPageName>
             {!isReadOnlyMode && (
-              <AppHeaderSection>
-              <Balance
-                {...user.balances}
-              />
-              </AppHeaderSection>
+              <AppHeaderBalance>
+                <Balance
+                  balance={balance}
+                />
+              </AppHeaderBalance>
             )}
-          </AppHeaderLogoAndInfo>
-          <AppHeaderConnectionStatus>
-            <ConnectionStatus
-              metamaskErrors={metamaskErrors}
-            />
-          </AppHeaderConnectionStatus>
-          {!isReadOnlyMode && (
-            <AppHeaderSection
-              noPadding
-              isAddress
-            >
-              <Address {...user} />
-            </AppHeaderSection>
-          )}
-          <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)} />
-          {notificationsNumberToRender > 0 && (
-            <AppHeaderNotificationCounter>
-              {notificationsNumberToRender}
-            </AppHeaderNotificationCounter>
-          )}
+            <AppHeaderConnectionStatus>
+              <ConnectionStatus
+                metamaskErrors={metamaskErrors}
+              />
+            </AppHeaderConnectionStatus>
+            {!isReadOnlyMode && (
+              <AppHeaderAddress>
+                <Address {...user} />
+              </AppHeaderAddress>
+            )}
+            <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)} />
+            {notificationsNumberToRender > 0 && (
+              <AppHeaderNotificationCounter>
+                {notificationsNumberToRender}
+              </AppHeaderNotificationCounter>
+            )}
+          </div>
         </AppHeaderContainer>
       )}
     </BancorConsumer>

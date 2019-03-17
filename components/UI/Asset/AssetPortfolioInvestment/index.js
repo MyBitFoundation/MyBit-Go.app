@@ -29,6 +29,7 @@ const AssetPortfolioInvestment = ({
   withdrawInvestorProfit,
   unrealizedProfit,
   totalProfit,
+  userInvestment,
 }) => {
 
   const buttonType = funded ? 'secondary' : 'primary';
@@ -91,7 +92,7 @@ const AssetPortfolioInvestment = ({
         <span>Your ownership:</span>
         <div>
           <StyledAssetPortfolioInvestmentValue>
-            {(numberOfInvestors === 1 && funded) ? '100' : parseFloat((ownership * 100).toFixed(2))}%
+            {parseFloat((ownership * 100).toFixed(2))}%
           </StyledAssetPortfolioInvestmentValue>
         </div>
       </StyledAssetPortfolioInvestmentSection>
@@ -105,7 +106,7 @@ const AssetPortfolioInvestment = ({
               Your contribution:
             </StyledAssetPortfolioInvestmentFundingLabel>
             <StyledAssetPortfolioInvestmentValue>
-              {formatMonetaryValue(fundingGoal)}
+              {formatMonetaryValue(userInvestment)}
             </StyledAssetPortfolioInvestmentValue>
             </StyledAssetPortfolioManagedContribution>
         ) : (

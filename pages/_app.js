@@ -4,6 +4,7 @@ import App, { Container } from 'next/app';
 import getConfig from 'next/config';
 import AirtableProvider, { withAirtableContext } from 'components/Airtable';
 import BlockchainProvider from 'components/Blockchain';
+import KyberProvider from 'components/KyberContext';
 import NotificationsProvider from 'components/NotificationsModule';
 import Notifications from 'components/Notifications';
 import TokenPricesProvider from 'components/TokenPrices';
@@ -19,7 +20,6 @@ import Router from 'next/router';
 import {
   navbarOptions,
   WEB3_BACKUP_PROVIDER,
-  SUPPORTED_TOKENS,
   FULL_SCREEN_PAGES,
   COOKIES,
 } from 'constants';
@@ -112,14 +112,15 @@ const WithProviders = ({ children }) => (
     <NotificationsProvider>
       <AirtableProvider>
         <TokenPricesProvider>
-          <MetamaskChecker
-            backupProvider={WEB3_BACKUP_PROVIDER}
-            supportedTokens={SUPPORTED_TOKENS}
-          >
-            <BlockchainProvider>
-              {children}
-            </BlockchainProvider>
-          </MetamaskChecker>
+          <KyberProvider>
+            <MetamaskChecker
+              backupProvider={WEB3_BACKUP_PROVIDER}
+            >
+              <BlockchainProvider>
+                {children}
+              </BlockchainProvider>
+            </MetamaskChecker>
+          </KyberProvider>
         </TokenPricesProvider>
       </AirtableProvider>
     </NotificationsProvider>

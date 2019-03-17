@@ -24,5 +24,18 @@ module.exports = withBundleAnalyzer(withCss({
   publicRuntimeConfig: {
     REACT_APP_INFURA_API_KEY: process.env.REACT_APP_INFURA_API_KEY,
     REACT_APP_CIVIC_APP_ID: process.env.REACT_APP_CIVIC_APP_ID,
+  },
+  webpack: (config, { dev }) => {
+    // disable sourcemaps of webpack
+    config.devtool = false
+
+    // disable soucemaps of babel-loader
+    for (const r of config.module.rules) {
+      if (r.loader === 'babel-loader') {
+        r.options.sourceMaps = false
+      }
+    }
+
+    return config
   }
 }));

@@ -226,6 +226,7 @@ class AssetDetails extends React.Component {
       defaultData,
       fundingGoal,
       fundingProgress,
+      userInvestment,
     } = asset;
 
     const {
@@ -318,6 +319,7 @@ class AssetDetails extends React.Component {
             yourOwnership={yourOwnership}
             maxOwnership={maxOwnership}
             loadingUserInfo={loadingUserInfo}
+            userInvestment={userInvestment}
           />
           {(!pastDate && !funded) && (
             <StyledAssetDetailsContributeButton

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Web3 from 'web3';
-
+import { withKyberContext } from 'components/KyberContext';
 import {
   METAMASK_FIREFOX,
   METAMASK_CHROME,
@@ -13,6 +13,10 @@ import {
   METAMASK_ERRORS,
 } from './constants';
 
+import {
+  getBalanceOfERC20Token,
+  getBalanceInDai,
+} from './utils';
 const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
@@ -45,6 +49,7 @@ class MetamaskChecker extends Component {
       user: { balances: {}},
       metamaskErrors: this.metamaskErrors,
     };
+    this.hasSetInitialState = false;
   };
 
  metamaskErrors = className => {
@@ -159,6 +164,19 @@ class MetamaskChecker extends Component {
     }
   }
 
+  componentWillReceiveProps = nextProps => {
+    const {
+      supportedTokensInfo,
+    } = this.props;
+    const {
+      user,
+    } = this.state;
+
+    if(nextProps.supportedTokensInfo !== supportedTokensInfo && user.address){
+      getUserInfo(this.state.privacyModeEnabled);
+    }
+  }
+
   queryWeb3ForBalance = async (tokenInfo, userAddress) =>
     new Promise(async (resolve, reject) => {
       try {
@@ -180,19 +198,37 @@ class MetamaskChecker extends Component {
       }
     })
 
-  fetchUserBalances = async (userAddress) => {
-    const balances = await Promise.all(this.props.supportedTokens.map(async token =>this.queryWeb3ForBalance(token, userAddress)));
-    const balancesObj = {};
-    balances.forEach(token => balancesObj[token.name] = token.balance)
+  fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress, cb) => {
+    const updatedTokensWithBalance = {};
+    let sumOfBalances = 0;
+    const balances = await Promise.all(Object.entries(supportedTokensInfo).map(async ([
+      symbol,
+      tokenData,
+    ]) => {
+      let balance = 0;
+      if(symbol === 'ETH'){
+        balance = ethBalance;
+      } else {
+        balance = await getBalanceOfERC20Token(tokenData.contractAddress, tokenData.decimals, userAddress);
+      }
+      // we are only interested in listing balances > 0
+      if(balance > 0){
+        const balanceInDai = getBalanceInDai(supportedTokensInfo, symbol, balance);
+        sumOfBalances += balanceInDai;
+        updatedTokensWithBalance[symbol] = {
+          ...tokenData,
+          balance,
+          balanceInDai,
+        }
+      }
+    }));
     this.setState({
       ...this.state,
       user: {
         ...this.state.user,
-        balances: {
-          ...this.state.user.balances,
-          ...balancesObj,
-        },
-      }
+        balances: updatedTokensWithBalance,
+        avgBalance: Number(sumOfBalances.toFixed(2)),
+      },
     })
   }
 
@@ -208,16 +244,25 @@ class MetamaskChecker extends Component {
       address: oldAddress,
     } = this.state;
 
-    if(oldPrivacyModeEnabled !== privacyModeEnabled || oldNetwork !== network || (!oldUser.balances || oldUser.balances.ether !== ethBalance)){
-      this.fetchUserBalances(address);
+    const supportedTokensInfo = this.props.supportedTokensInfo;
+
+    if(oldPrivacyModeEnabled !== privacyModeEnabled || oldNetwork !== network || (oldUser && (oldUser.address !== address)) || (!oldUser.balances || oldUser.balances['ETH'].balance !== ethBalance)){
+      supportedTokensInfo && this.fetchUserBalances(supportedTokensInfo, ethBalance, address, tokensWithBalances => {
+        this.setState({
+          ...this.state,
+          user: {
+            ...this.state.user,
+            balances: {
+              ...tokensWithBalances,
+            },
+          },
+        })
+      });
       this.setState({
         network,
         user: {
+          ...this.state.user,
           address,
-          balances: {
-            ...this.state.user.balances,
-            ether: ethBalance,
-          }
         },
         userHasMetamask: true,
         privacyModeEnabled,
@@ -256,7 +301,8 @@ class MetamaskChecker extends Component {
         while(!ethBalance){
           ethBalance = await window.web3js.eth.getBalance(accounts[0]);
         }
-        ethBalance = window.web3js.utils.fromWei(ethBalance, 'ether');
+        ethBalance = Number(window.web3js.utils.fromWei(ethBalance, 'ether'));
+
         this.updateStateWithUserInfo(privacyModeEnabled, network, ethBalance, accounts[0], userIsLoggedIn);
       } else {
         this.updateStateNoAccess(privacyModeEnabled, network, userIsLoggedIn);
@@ -355,4 +401,4 @@ MetamaskChecker.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default MetamaskChecker;
+export default withKyberContext(MetamaskChecker);

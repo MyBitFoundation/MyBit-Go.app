@@ -13,6 +13,7 @@ const MobileAccountInfo = ({
     user,
     isReadOnlyMode,
   } = metamaskContext;
+  const balance = user.avgBalance || null;
 
   const addressToRender = (!isReadOnlyMode && user.address) ? (
     <Address
@@ -32,7 +33,7 @@ const MobileAccountInfo = ({
       {addressToRender}
       <StyledMobileAccountInfoBalance>
         <Balance
-          {...user.balances}
+          balance={balance}
           isMobile
           noInfo={isReadOnlyMode || !user.address}
         />

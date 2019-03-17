@@ -628,14 +628,16 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         const fundingGoal = await Network.getFundingGoal(assetId);
         const assetManager = await Network.getAssetManager(assetId);
         const assetInvestors = await Network.getAssetInvestors(assetId);
-        const fundingProgress = await Network.getFundingProgress(assetId);
-        const assetManagerFee = await api.methods.getAssetManagerFee(assetId).call();
+        let fundingProgress = await Network.getFundingProgress(assetId);
+        let assetManagerFee = await api.methods.getAssetManagerFee(assetId).call();
+        assetManagerFee = (Number(assetManagerFee) / (fundingGoal + Number(assetManagerFee)));
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
         const escrow = await api.methods.getAssetManagerEscrow(escrowId).call();
         let daysSinceItWentLive = 1;
         let assetIncome = 0;
         let managerHasToCallPayout = false;
-
+        let totalSupply;
+        let investment = 0;
         console.log("Asset contract: ", assetId)
         console.log("Asset operator: ", assetOperator)
         console.log("Crowdsale finalized: ", crowdsaleFinalized);
@@ -645,7 +647,7 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         console.log("Asset Investors: ", assetInvestors)
         console.log("Funding Progress: ", fundingProgress)
         console.log("Manager fee bgn: ", assetManagerFee)
-        console.log("Manager Fee: ", (Number(assetManagerFee) / (fundingGoal + Number(assetManagerFee))) * 100);
+        console.log("Manager Fee: ", assetManagerFee);
         console.log("Escrow Id: ", escrowId);
         console.log("Escrow: ", fromWeiToEth(BN(escrow).toString()))
         console.log("\n\n")
@@ -653,10 +655,10 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         let percentageOwnedByUser = 0;
         if(realAddress && assetInvestors.includes(realAddress)){
           const dividendTokenETH = await Network.dividendTokenETH(assetId);
-          const balance = await dividendTokenETH.methods.balanceOf(realAddress).call();
-          const investment = fromWeiToEth(BN(balance).toString());
-          const totalSupply = await dividendTokenETH.methods.totalSupply().call();
-          percentageOwnedByUser = balance / fundingGoal;
+          const balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
+          investment = fromWeiToEth(BN(balanceOfUser).toString());
+          totalSupply = await dividendTokenETH.methods.totalSupply().call();
+          percentageOwnedByUser = balanceOfUser / totalSupply;
           if(crowdsaleFinalized){
             const timestamp = await Network.getBlockOfFunded(assetId)
             console.log("BLOCK: ", timestamp)
@@ -665,16 +667,23 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
               assetIncome = fromWeiToEth(BN(assetIncome));
+              if(assetManagerFee > 0){
+                fundingProgress = fundingProgress - (assetManagerFee * fundingProgress)
+              }
               console.log("ASSET INCOME: ", assetIncome)
-              //const result = await Network.issueDividends(assetId, '0xBB64ac045539bC0e9FFfd04399347a8459e8282A', toWei(0.01));
-              //console.log("daysSinceItWentLive: ", daysSinceItWentLive);
+              /*const result = await Network.issueDividends({
+                asset: assetId,
+                account: realAddress,
+                amount: toWei(1),
+              });*/
+              console.log("daysSinceItWentLive: ", daysSinceItWentLive);
             } else {
               managerHasToCallPayout = true;
             }
           }
 
           console.log("DividendTokenETH: ", dividendTokenETH)
-          console.log("INVESTMENT: ", fromWeiToEth(BN(balance).toString()));
+          console.log("INVESTMENT: ", fromWeiToEth(BN(balanceOfUser).toString()));
           console.log("Supply: ", fromWeiToEth(BN(totalSupply).toString()));
           console.log("Percentage: ", percentageOwnedByUser);
           console.log("\n\n")
@@ -710,12 +719,14 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
           percentageOwnedByUser,
           daysSinceItWentLive,
           assetIncome,
+          userInvestment: investment,
+          totalSupply: totalSupply ? fromWeiToEth(BN(totalSupply).toString()) : 0,
+          managerPercentage: assetManagerFee,
           fundingDeadline: dueDate,
           numberOfInvestors: assetInvestors.length,
           blockNumberitWentLive: 0,
           managerTotalIncome: 0,
           managerTotalWithdrawn: 0,
-          managerPercentage: (Number(assetManagerFee) / (fundingGoal + Number(assetManagerFee))) * 100,
           watchListed: alreadyFavorite,
           owedToInvestor: 0,
           funded: fundingStage === FundingStages.FUNDED,
