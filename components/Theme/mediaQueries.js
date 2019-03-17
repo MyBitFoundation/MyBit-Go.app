@@ -15,7 +15,7 @@ export const Sizes = {
   categoriesFilterMobile: 500,
   categoriesFilterTablet: 900,
   headerHeightMobile: 50,
-  headerHeightTablet: 90,
+  headerHeightTablet: 72,
   marginTopPageWrapper: 25,
 };
 
