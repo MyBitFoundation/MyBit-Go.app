@@ -4,7 +4,6 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import Logo from 'components/Logo';
 import Balance from 'components/Balance';
-import Address from 'ui/Address';
 import ConnectionStatus from 'components/ConnectionStatus';
 import { Consumer as BancorConsumer } from 'ui/BancorContainer';
 import AppHeaderContainer from './appHeaderContainer';
@@ -19,6 +18,9 @@ import NotificationsMobileCounter from 'components/NotificationsMobile';
 import AppHeaderNotificationCounter from './appHeaderNotificationCounter';
 import AppHeaderAddress from './appHeaderAddress';
 import AppHeaderBalance from './appHeaderBalance';
+import {
+  shortenAddress,
+} from 'utils/helpers';
 
 const AppHeader = ({
   metamaskContext,
@@ -32,6 +34,7 @@ const AppHeader = ({
     user,
     isReadOnlyMode,
     metamaskErrors: getMetamaskErrors,
+    network,
   } = metamaskContext;
 
   const {
@@ -87,15 +90,19 @@ const AppHeader = ({
               </AppHeaderBalance>
             )}
             <AppHeaderConnectionStatus>
-              <ConnectionStatus
-                metamaskErrors={metamaskErrors}
-              />
+              <React.Fragment>
+                <ConnectionStatus
+                  metamaskErrors={metamaskErrors}
+                />
+                {!isReadOnlyMode && (
+                  <AppHeaderAddress>
+                    <span>{network}</span>
+                    <div/>
+                    <span>{shortenAddress(user.address, 4, 3)}</span>
+                  </AppHeaderAddress>
+                )}
+              </React.Fragment>
             </AppHeaderConnectionStatus>
-            {!isReadOnlyMode && (
-              <AppHeaderAddress>
-                <Address {...user} />
-              </AppHeaderAddress>
-            )}
             <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)} />
             {notificationsNumberToRender > 0 && (
               <AppHeaderNotificationCounter>

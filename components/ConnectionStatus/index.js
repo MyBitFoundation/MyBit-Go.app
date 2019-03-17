@@ -6,6 +6,8 @@ const StyledTooltip = styled(Tooltip)`
   margin-left: 10px;
   width: 15px;
   height: 15px;
+  position: relative;
+  top: -1px;
 `
 const ConnectionStatus = ({
   metamaskErrors,

@@ -1,15 +1,16 @@
 import styled, { css } from 'styled-components';
 
 const BalanceLabel = styled.span`
-  text-transform: uppercase;
-  font-weight: 500;
   font-size: 14px;
-  line-height: 14px;
   text-align: right;
-  letter-spacing: 1px;
+  font-weight: 500;
+
   ${props => !props.isMobile && css`
     color: #FFFFFF;
     opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 14px;
   `}
 }`
 

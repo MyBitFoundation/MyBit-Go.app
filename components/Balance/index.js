@@ -11,6 +11,9 @@ const Balance = (props) => {
     isMobile,
     noInfo,
   } = props;
+
+  const balanceFormatted = `${balance} DAI`;
+
   return (
     <div>
       {!balance && !noInfo ? (
@@ -27,7 +30,7 @@ const Balance = (props) => {
           <BalanceAmount
             isMobile={isMobile}
           >
-            {balance > 0 ? '~' : ''} {balance} {' '} DAI
+            {noInfo ? '0 DAI' : balance > 0 ? `~${balanceFormatted}` : balanceFormatted}
           </BalanceAmount>
         </div>
       )}
