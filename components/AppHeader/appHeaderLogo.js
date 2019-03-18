@@ -8,7 +8,7 @@ const AppHeaderLogo = styled.div`
     top: 0px;
     max-width: 30px;
     ${({theme}) => theme.tablet`
-      max-width: 60px;
+      max-width: 147px;
     `}
   }
 }`

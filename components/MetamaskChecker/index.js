@@ -173,7 +173,7 @@ class MetamaskChecker extends Component {
     } = this.state;
 
     if(nextProps.supportedTokensInfo !== supportedTokensInfo && user.address){
-      getUserInfo(this.state.privacyModeEnabled);
+      this.getUserInfo(this.state.privacyModeEnabled);
     }
   }
 
