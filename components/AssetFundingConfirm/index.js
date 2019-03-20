@@ -70,32 +70,36 @@ class AssetFundingConfirm extends React.Component {
     } = metamaskContext;
 
     const metamaskErrors = metamaskContext.metamaskErrors();
-    const footer = getFooter(metamaskErrors.error, extensionUrl, amount, user.balances, this.props.fundAsset);
+    const footer = getFooter(metamaskErrors.error, extensionUrl, 900, user.balances, this.props.fundAsset);
+    const {
+      buttonProps,
+      messageProps,
+    } = footer;
     const footerButton = (
       <AssetFundingButton
         size="large"
-        type={footer.buttonProps.error ? 'default' : 'primary'}
-        onClick={footer.buttonProps.onClick}
-        disabled={footer.buttonProps.error || !acceptedTos}
-        href={footer.buttonProps.href}
-        target={footer.buttonProps.href ? '_blank' : false}
+        type={buttonProps.error ? 'default' : 'primary'}
+        onClick={buttonProps.onClick}
+        disabled={buttonProps.error || (!acceptedTos && !buttonProps.href)}
+        href={buttonProps.href}
+        target={buttonProps.href ? '_blank' : false}
       >
-        {footer.buttonProps.text}
+        {buttonProps.text}
       </AssetFundingButton>
     )
 
-    let footerMessage = footer.messageProps ?
-      !footer.messageProps.href ? (
+    let footerMessage = messageProps ?
+      !messageProps.href ? (
         <AssetFundingConfirmFooterMessage>
-          {footer.messageProps.text}
+          {messageProps.text}
         </AssetFundingConfirmFooterMessage>
       ) : (
         <AssetFundingConfirmFooterMessageUrl
-          href={footer.messageProps.href}
+          href={messageProps.href}
           target="_blank"
           rel="noreferrer"
         >
-          {footer.messageProps.text}
+          {messageProps.text}
         </AssetFundingConfirmFooterMessageUrl>
       ) : null;
 
@@ -156,7 +160,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmPayWith>
             <TokenSelector
               balances={user.balances}
-              amountToPay={amount}
+              amountToPay={900}
               onChange={this.handleTokenChange}
             />
           </AssetFundingConfirmDropdownButton>
