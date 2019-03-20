@@ -17,6 +17,8 @@ import {
   getBalanceOfERC20Token,
   getBalanceInDai,
 } from './utils';
+import SupportedBrowsers from 'ui/SupportedBrowsers';
+
 const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
@@ -76,39 +78,7 @@ class MetamaskChecker extends Component {
       toRender = (
         <div>
           <span>Your browser is not supported. MetaMask supports the following browsers:
-            <a
-              href="https://www.google.com/chrome/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Chrome
-            </a>,
-            <a
-              href="https://www.mozilla.org/en-US/firefox/new/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Firefox
-            </a>,
-            <a
-              href="https://www.opera.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Opera
-            </a>{' '}
-            or
-            <a
-              href="https://brave.com/download/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Brave
-            </a>
+            <SupportedBrowsers />
           </span>
         </div>
       );
@@ -177,30 +147,10 @@ class MetamaskChecker extends Component {
     }
   }
 
-  queryWeb3ForBalance = async (tokenInfo, userAddress) =>
-    new Promise(async (resolve, reject) => {
-      try {
-        const tokenContract = new window.web3js.eth.Contract(
-          tokenInfo.ABI,
-          tokenInfo.ADDRESS,
-        );
-
-        const balance = await tokenContract.methods
-          .balanceOf(userAddress)
-          .call();
-
-        resolve({
-          name: tokenInfo.name,
-          balance: window.web3js.utils.fromWei(balance, 'ether')
-        });
-      } catch (error) {
-        reject(error);
-      }
-    })
-
   fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress, cb) => {
     const updatedTokensWithBalance = {};
     let sumOfBalances = 0;
+
     const balances = await Promise.all(Object.entries(supportedTokensInfo).map(async ([
       symbol,
       tokenData,
@@ -222,14 +172,15 @@ class MetamaskChecker extends Component {
         }
       }
     }));
+
     this.setState({
       ...this.state,
       user: {
         ...this.state.user,
         balances: updatedTokensWithBalance,
-        avgBalance: Number(sumOfBalances.toFixed(2)),
+        avgBalance: Number(parseFloat(sumOfBalances.toFixed(2))),
       },
-    })
+    }, () => console.log(this.state));
   }
 
   isReadOnlyMode = (userHasMetamask, userIsLoggedIn, network, privacyModeEnabled) => {
@@ -241,17 +192,21 @@ class MetamaskChecker extends Component {
       privacyModeEnabled : oldPrivacyModeEnabled,
       network: oldNetwork,
       user: oldUser,
-      address: oldAddress,
     } = this.state;
+
+    const {
+      address: oldAddress,
+    } = oldUser;
 
     const supportedTokensInfo = this.props.supportedTokensInfo;
 
-    if(oldPrivacyModeEnabled !== privacyModeEnabled || oldNetwork !== network || (oldUser && (oldUser.address !== address)) || (!oldUser.balances || oldUser.balances['ETH'].balance !== ethBalance)){
+    if(oldPrivacyModeEnabled !== privacyModeEnabled || oldNetwork !== network || oldUser.address !== address || (oldUser.balances['ETH'] && oldUser.balances['ETH'].balance !== ethBalance)){
       supportedTokensInfo && this.fetchUserBalances(supportedTokensInfo, ethBalance, address, tokensWithBalances => {
         this.setState({
           ...this.state,
           user: {
             ...this.state.user,
+            address,
             balances: {
               ...tokensWithBalances,
             },

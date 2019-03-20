@@ -594,16 +594,16 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         Network = require('@mybit/network.js')(window.web3js, SDK_CONTRACTS);
       }
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
-      console.log("Network: ", Network)
+      //console.log("Network: ", Network)
       const api = await Network.api();
-      console.log("API: ", api)
+      //console.log("API: ", api)
       //const operators = await Network.operators();
       //const events = await Network.events();
       const database = await Network.database();
       const events = await Network.events();
-      console.log("events: ", events);
-      console.log("database: ", database)
-      console.log("userAddress: ", userAddress)
+      //console.log("events: ", events);
+      //console.log("database: ", database)
+      //console.log("userAddress: ", userAddress)
 
       //console.log(database.boolStorage(window.web3js.utils.soliditySha3("operator.acceptsEther", operatorID)))
 
@@ -638,7 +638,7 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         let managerHasToCallPayout = false;
         let totalSupply;
         let investment = 0;
-        console.log("Asset contract: ", assetId)
+        /*console.log("Asset contract: ", assetId)
         console.log("Asset operator: ", assetOperator)
         console.log("Crowdsale finalized: ", crowdsaleFinalized);
         console.log("Funding Deadline: ", fundingDeadline);
@@ -650,7 +650,7 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         console.log("Manager Fee: ", assetManagerFee);
         console.log("Escrow Id: ", escrowId);
         console.log("Escrow: ", fromWeiToEth(BN(escrow).toString()))
-        console.log("\n\n")
+        console.log("\n\n")*/
 
         let percentageOwnedByUser = 0;
         if(realAddress && assetInvestors.includes(realAddress)){
@@ -661,7 +661,7 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
           percentageOwnedByUser = balanceOfUser / totalSupply;
           if(crowdsaleFinalized){
             const timestamp = await Network.getBlockOfFunded(assetId)
-            console.log("BLOCK: ", timestamp)
+            //console.log("BLOCK: ", timestamp)
             if(timestamp){
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
@@ -670,24 +670,24 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
               if(assetManagerFee > 0){
                 fundingProgress = fundingProgress - (assetManagerFee * fundingProgress)
               }
-              console.log("ASSET INCOME: ", assetIncome)
+              //console.log("ASSET INCOME: ", assetIncome)
               /*const result = await Network.issueDividends({
                 asset: assetId,
                 account: realAddress,
                 amount: toWei(1),
               });*/
-              console.log("daysSinceItWentLive: ", daysSinceItWentLive);
+              //console.log("daysSinceItWentLive: ", daysSinceItWentLive);
             } else {
               managerHasToCallPayout = true;
             }
           }
 
-          console.log("DividendTokenETH: ", dividendTokenETH)
+          /*console.log("DividendTokenETH: ", dividendTokenETH)
           console.log("INVESTMENT: ", fromWeiToEth(BN(balanceOfUser).toString()));
           console.log("Supply: ", fromWeiToEth(BN(totalSupply).toString()));
           console.log("Percentage: ", percentageOwnedByUser);
           console.log("\n\n")
-          console.log("\n\n")
+          console.log("\n\n")*/
         }
 
         const searchQuery = `mybit_watchlist_${assetId}`;

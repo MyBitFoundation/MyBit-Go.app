@@ -67,7 +67,7 @@ const AppHeader = ({
       break;
   }
 
-  const balance = user.avgBalance || null;
+  const balance = user && user.avgBalance;
 
   return (
     <BancorConsumer>

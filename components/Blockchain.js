@@ -28,6 +28,7 @@ import {
   debug,
   formatMonetaryValue,
   fromWeiToEth,
+  toWei,
 } from 'utils/helpers';
 
 const { Provider, Consumer } = React.createContext({});
@@ -505,11 +506,12 @@ class BlockchainProvider extends React.Component {
     });
   }
 
-  fundAsset = (assetId, amount, onSuccessConfirmationPopup, onFailureContributionPopup) => {
+  fundAsset = (assetId, amount) => {
     try {
+      console.log("AMOUNT: ", amount)
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
-      const amountFormatted = formatMonetaryValue(fromWeiToEth(amount));
+      const amountFormatted = formatMonetaryValue(amount);
       const {
         name : assetName,
       } = currentAsset.defaultData;
@@ -539,7 +541,6 @@ class BlockchainProvider extends React.Component {
       }
 
       const onError = (type) => {
-        onFailureContributionPopup();
         if(type === ErrorTypes.METAMASK){
           buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
             operationType: NotificationsMetamask.FUNDING,
@@ -553,7 +554,6 @@ class BlockchainProvider extends React.Component {
 
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
-        onSuccessConfirmationPopup();
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
           assetName,
           amount: amountFormatted,
@@ -563,7 +563,7 @@ class BlockchainProvider extends React.Component {
       Brain.fundAsset(
         this.props.metamaskContext.user.address,
         assetId,
-        amount,
+        toWei(amount),
         onTransactionHash,
         onReceipt,
         onError,

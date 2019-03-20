@@ -8,16 +8,39 @@ import StyledAssetDetailsManagerInfoPercentages from './styledAssetDetailsManage
 import ValueDisplay from 'ui/ValueDisplay';
 import MyBitLogo from 'static/mybit-blue.svg';
 import Sliders from 'static/sliders.svg';
+import {
+  InternalLinks,
+} from 'constants';
 
-const AssetDetailsManagetInfo = ({
+const getFilesToRender = (files, assetId) => {
+  if(!files || files.length === 0){
+    return <span>None</span>;
+  }
+  const toReturn = files.map(file => (
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      href={`${InternalLinks.S3}${assetId}:${file}`}
+    >
+      {file}
+    </a>
+  ))
+
+  return toReturn;
+}
+
+const AssetDetailsManagerInfo = ({
   address,
   addressShortened,
   managerPercentage,
   collateralPercentage,
-  filesToRender,
   image,
+  style,
+  files,
 }) => (
-  <StyledAssetDetailsMananagerInfo>
+  <StyledAssetDetailsMananagerInfo
+    style={style}
+  >
     <div>
       <StyledAssetDetailsManagerInfoTitle>
         Asset Manager
@@ -33,7 +56,7 @@ const AssetDetailsManagetInfo = ({
       <StyledAssetDetailsManagerInfoDocuments>
         Supporting documents
       </StyledAssetDetailsManagerInfoDocuments>
-      {filesToRender}
+      {getFilesToRender(files)}
     </div>
     <StyledAssetDetailsManagerInfoPercentages>
       <ValueDisplay
@@ -62,4 +85,4 @@ const AssetDetailsManagetInfo = ({
   </StyledAssetDetailsMananagerInfo>
 );
 
-export default React.memo(AssetDetailsManagetInfo);
+export default React.memo(AssetDetailsManagerInfo);

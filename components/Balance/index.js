@@ -16,7 +16,7 @@ const Balance = (props) => {
 
   return (
     <div>
-      {!balance && !noInfo ? (
+      {isNaN(balance) && !noInfo ? (
         <StyledSpin>
           <Spin />
         </StyledSpin>

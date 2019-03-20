@@ -8,7 +8,18 @@ export const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue.toS
 
 export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
 
-export const formatMonetaryValue = (number, fractionDigits = 0, includeToken = true) => {
+export const convertTokenAmount = (convertTo, convertFrom, balances, amount) => {
+  if(convertTo === convertFrom){
+    return amount;
+  }
+  const tokenConvertTo = balances[convertTo];
+  const tokenConvertFrom = balances[convertFrom];
+  const amountInEth = amount * tokenConvertFrom.currentPrice;
+  const amountFinal = amountInEth * (tokenConvertTo.currentPrice || 1);
+  return amountFinal;
+}
+
+export const formatMonetaryValue = (number, fractionDigits = 0, includeToken = true, customToken) => {
   try {
     let value = Number(number).toLocaleString('en-US', {
       minimumFractionDigits: fractionDigits,
@@ -21,7 +32,7 @@ export const formatMonetaryValue = (number, fractionDigits = 0, includeToken = t
       value = sliced.length === 2 ? `${value}0` : value;
     }
 
-    return includeToken ? `${value} ${DEFAULT_TOKEN}` : value;
+    return includeToken ? `${value} ${customToken ? customToken : DEFAULT_TOKEN}` : value;
   }catch(err) {
     debug({
       "Function Name: ": "formatMonetaryValue()",

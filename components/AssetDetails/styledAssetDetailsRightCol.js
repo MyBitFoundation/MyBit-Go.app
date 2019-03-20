@@ -4,11 +4,11 @@ import {
 } from 'antd';
 
 const StyledAssetDetailsRighCol = styled(Col)`
-  padding-left: 40px;
+  margin-top: 40px;
 
-  @media(max-width: 991px){
-    padding: 0px;
-    margin-top: 40px;
+  @media(min-width: 991px){
+    padding-left: 10px;
+    margin-top: 0px;
   }
 }`
 

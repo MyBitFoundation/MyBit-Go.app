@@ -1,48 +1,42 @@
-import StyledFundingDetails from './styledFundingDetails';
-import StyledFundsRaised from './styledFundsRaised';
-import StyledFundsGoal from './styledFundsGoal';
-import StyledFundsInvestors from './styledFundsInvestors';
-import StyledFundingDetailsTitle from './styledFundingDetailsTitle';
-import StyledFundingDetailsValue from './styledFundingDetailsValue';
-import {
-  DEFAULT_TOKEN,
-} from 'constants';
+import FundingDetailsWrapper from './fundingDetailsWrapper';
+import FundingDetailsSection from './fundingDetailsSection';
+import FundingDetailsTitle from './fundingDetailsTitle';
+import FundingDetailsValue from './fundingDetailsValue';
 
 const AssetFundingDetails = ({
   fundingGoal,
   fundingProgress,
   funded,
   numberOfInvestors,
-  formatMonetaryValue,
 }) => (
-  <StyledFundingDetails>
-    <StyledFundsRaised>
-      <StyledFundingDetailsTitle>
+  <FundingDetailsWrapper>
+    <FundingDetailsSection>
+      <FundingDetailsTitle>
         Funds raised
-      </StyledFundingDetailsTitle>
-      <StyledFundingDetailsValue
+      </FundingDetailsTitle>
+      <FundingDetailsValue
         funded={funded}
       >
-        {funded ? fundingProgress : fundingProgress} {DEFAULT_TOKEN}
-      </StyledFundingDetailsValue>
-    </StyledFundsRaised>
-    <StyledFundsGoal>
-      <StyledFundingDetailsTitle>
+        {fundingProgress}
+      </FundingDetailsValue>
+    </FundingDetailsSection>
+    <FundingDetailsSection>
+      <FundingDetailsTitle>
         Funding goal
-      </StyledFundingDetailsTitle>
-      <StyledFundingDetailsValue>
-        {`${fundingGoal} ${DEFAULT_TOKEN}`}
-      </StyledFundingDetailsValue>
-    </StyledFundsGoal>
-    <StyledFundsInvestors>
-      <StyledFundingDetailsTitle>
-        Number of investors so far
-      </StyledFundingDetailsTitle>
-      <StyledFundingDetailsValue>
+      </FundingDetailsTitle>
+      <FundingDetailsValue>
+        {fundingGoal}
+      </FundingDetailsValue>
+    </FundingDetailsSection>
+    <FundingDetailsSection>
+      <FundingDetailsTitle>
+        Investors
+      </FundingDetailsTitle>
+      <FundingDetailsValue>
         {numberOfInvestors}
-      </StyledFundingDetailsValue>
-    </StyledFundsInvestors>
-  </StyledFundingDetails>
+      </FundingDetailsValue>
+    </FundingDetailsSection>
+  </FundingDetailsWrapper>
 )
 
 export default AssetFundingDetails;

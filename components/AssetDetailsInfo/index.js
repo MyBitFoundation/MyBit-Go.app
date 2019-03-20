@@ -4,6 +4,7 @@ import StyledAssetDetailsInfoLocation from './styledAssetDetailsInfoLocation';
 import StyledAssetDetailsInfoImage from './styledAssetDetailsInfoImage';
 import StyledAssetDetailsInfoTitle from './styledAssetDetailsInfoTitle';
 import StyledAssetDetailsInfoDescription from './styledAssetDetailsInfoDescription';
+import AssetDetailsInfoWrapper from './assetDetailsInfoWrapper';
 import Watch from 'ui/Watch';
 
 const AssetDetailsInfo = ({
@@ -17,7 +18,7 @@ const AssetDetailsInfo = ({
   handleAssetFavorited,
   assetId,
 }) => (
-  <React.Fragment>
+  <AssetDetailsInfoWrapper>
     <StyledAssetDetailsInfoName>
       {name}
     </StyledAssetDetailsInfoName>
@@ -48,7 +49,7 @@ const AssetDetailsInfo = ({
     <StyledAssetDetailsInfoDescription>
       {description}
     </StyledAssetDetailsInfoDescription>
-  </React.Fragment>
+  </AssetDetailsInfoWrapper>
 )
 
 export default React.memo(AssetDetailsInfo);

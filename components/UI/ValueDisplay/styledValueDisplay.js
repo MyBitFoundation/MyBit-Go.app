@@ -8,6 +8,7 @@ const StyledValueDisplay = styled.div`
   align-items: center;
   width: max-content;
   padding-left: 10px;
+  height: 40px;
 
   ${props => props.hasShadow && css`
     box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
