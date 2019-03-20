@@ -70,7 +70,7 @@ class AssetFundingConfirm extends React.Component {
     } = metamaskContext;
 
     const metamaskErrors = metamaskContext.metamaskErrors();
-    const footer = getFooter(metamaskErrors.error, extensionUrl, 900, user.balances, this.props.fundAsset);
+    const footer = getFooter(metamaskErrors.error, extensionUrl, amount, user.balances, this.props.fundAsset);
     const {
       buttonProps,
       messageProps,
@@ -160,7 +160,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmPayWith>
             <TokenSelector
               balances={user.balances}
-              amountToPay={900}
+              amountToPay={amount}
               onChange={this.handleTokenChange}
             />
           </AssetFundingConfirmDropdownButton>
