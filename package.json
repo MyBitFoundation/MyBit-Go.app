@@ -5,9 +5,6 @@
   "resolutions": {
     "terser": "3.14.1"
   },
-  "engines": {
-    "node": "10"
-  },
   "dependencies": {
     "@antv/data-set": "0.10.1",
     "@mybit/network.js": "0.0.17",
