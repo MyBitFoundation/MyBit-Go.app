@@ -2,6 +2,7 @@ import {
   Button,
 } from 'antd';
 import { withMetamaskContext } from 'components/MetamaskChecker';
+import { withKyberContext } from 'components/KyberContext';
 import Separator from 'ui/Separator';
 import AssetFundingTitle from 'components/AssetFunding/assetFundingTitle';
 import AssetFundingConfirmItem from './assetFundingConfirmItem';
@@ -32,6 +33,9 @@ import {
 } from 'utils/helpers';
 import AssetFundingButton from 'components/AssetFunding/assetFundingButton';
 
+// represented in ETH (at 8 GWEI)
+const AVG_GAS_FUND_TRANSACTION = 0.018767;
+
 const separatorStyleFullWidth = {
   position: 'absolute',
   left: '0px',
@@ -46,6 +50,7 @@ const separatorStyle = {
 class AssetFundingConfirm extends React.Component {
   state = {
     acceptedTos: false,
+    selectedToken: DEFAULT_TOKEN,
   }
 
   setAcceptedTos = (e) => this.setState({acceptedTos: e.target.checked})
@@ -62,6 +67,7 @@ class AssetFundingConfirm extends React.Component {
       metamaskContext,
       selectedOwnership,
       amount,
+      supportedTokensInfo,
     } = this.props;
 
     const {
@@ -103,6 +109,12 @@ class AssetFundingConfirm extends React.Component {
         </AssetFundingConfirmFooterMessageUrl>
       ) : null;
 
+    const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amount : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, amount);
+    const gasInDai = parseFloat(convertTokenAmount(DEFAULT_TOKEN, 'ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
+    const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : convertTokenAmount(selectedToken, 'ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION);
+    const totalToPayInDai = amount + gasInDai;
+    const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, totalToPayInDai);
+
     return (
       <React.Fragment>
         <AssetFundingTitle>
@@ -116,17 +128,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
               <p>{formatMonetaryValue(amount)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(convertTokenAmount(selectedToken, DEFAULT_TOKEN, user.balances, amount), 0, true, selectedToken)}</p>
-            </AssetFundingConfirmItemValue>
-          </AssetFundingConfirmItem>
-          <Separator style={separatorStyle}/>
-          <AssetFundingConfirmItem>
-            <AssetFundingConfirmItemName>
-              MyBit Foundation Fees
-            </AssetFundingConfirmItemName>
-            <AssetFundingConfirmItemValue>
-              <p>120 DAI</p>
-              <p>120 DAI</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(amountInSelectedToken, 3, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -135,8 +137,8 @@ class AssetFundingConfirm extends React.Component {
               Gas Fee
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
-              <p>1 DAI</p>
-              <p>1 DAI</p>
+              <p>~{formatMonetaryValue(gasInDai)}</p>
+              <p>~{!selectedToken ? <span>loading</span> : formatMonetaryValue(gasInSelectedToken, 3, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -150,8 +152,8 @@ class AssetFundingConfirm extends React.Component {
             <AssetFundingConfirmItemValue
               isLarge
             >
-              <p>{formatMonetaryValue(amount)}</p>
-              <p>5,500 DAI</p>
+              <p>{formatMonetaryValue(totalToPayInDai)}</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(totalToPayInSelectedToken, 3, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </div>
           <AssetFundingConfirmDropdownButton>
@@ -180,4 +182,4 @@ class AssetFundingConfirm extends React.Component {
   }
 }
 
-export default withMetamaskContext(AssetFundingConfirm);
+export default withKyberContext(withMetamaskContext(AssetFundingConfirm));

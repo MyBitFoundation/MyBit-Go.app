@@ -14,8 +14,8 @@ export const convertTokenAmount = (convertTo, convertFrom, balances, amount) => 
   }
   const tokenConvertTo = balances[convertTo];
   const tokenConvertFrom = balances[convertFrom];
-  const amountInEth = amount * tokenConvertFrom.currentPrice;
-  const amountFinal = amountInEth * (tokenConvertTo.currentPrice || 1);
+  const amountInEth = amount * (tokenConvertFrom.currentPrice || 1);
+  const amountFinal = amountInEth / (tokenConvertTo.currentPrice || 1);
   return amountFinal;
 }
 
@@ -24,6 +24,8 @@ export const formatMonetaryValue = (number, fractionDigits = 0, includeToken = t
     let value = Number(number).toLocaleString('en-US', {
       minimumFractionDigits: fractionDigits,
     });
+
+    value = parseFloat(value).toString();
 
     const index = value.indexOf('.');
 

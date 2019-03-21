@@ -27,7 +27,7 @@ class AssetFunding extends React.Component {
         selectedAmountEth: maxOwnership,
       })
       : this.setState({
-          selectedAmountEth: number !== '0' ? number : null,
+          selectedAmountEth: number !== '0' ? Number(number) : null,
           selectedOwnership: number !== '0' ? parseFloat(((number * 100) / fundingGoal).toFixed(2)) : null,
     })
   }
@@ -38,7 +38,7 @@ class AssetFunding extends React.Component {
           selectedOwnership: maxOwnership,
         })
       : this.setState({
-        selectedOwnership: number,
+        selectedOwnership: Number(number),
         selectedAmountEth: parseFloat((maxInvestment * (number / 100)).toFixed(2)),
       })
   }

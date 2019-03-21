@@ -23,7 +23,7 @@ const separatorStyle = {
 
 class TokenSelector extends React.Component {
   state = {
-    selectedToken: null,
+    selectedToken: DEFAULT_TOKEN,
   }
 
   componentWillMount = () => {

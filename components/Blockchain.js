@@ -752,11 +752,9 @@ class BlockchainProvider extends React.Component {
       return;
     }
 
-    console.log("Going to fetch assets")
     await Brain.fetchAssets(user.address, prices.ethereum.price, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
-        console.log("updating state with new assets")
         this.setState({
           assets: updatedAssets,
           loading: {
@@ -776,7 +774,6 @@ class BlockchainProvider extends React.Component {
   }
 
   render = () => {
-    console.log("Rerendering blockchain")
     return (
       <Provider value={this.state}>
         {this.props.children}
