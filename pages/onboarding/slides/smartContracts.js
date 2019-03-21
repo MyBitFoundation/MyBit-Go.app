@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import SmartContract from 'static/onboarding/smart_contract.png';
 
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideColoredSpan,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const StyledImage = styled.img`
+const Image = styled.img`
   margin: 0px auto;
   position: relative;
   margin-top: 30px;
@@ -20,38 +20,38 @@ const StyledImage = styled.img`
 }`
 
 const SmartContracts = () => (
-  <StyledCarouselSlide>
-   <StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideColoredSpan
+  <CarouselSlide>
+   <CarouselSlideMainTitle>
+    <CarouselSlideColoredSpan
       isBlue
     >
       Smart
-    </StyledCarouselSlideColoredSpan>{" "}
+    </CarouselSlideColoredSpan>{" "}
       contracts
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph
       isNoImagesFull
     >
       'Smart contracts' is a phrase used to describe computer code that
       automatically executes when specific conditions are met. This is
       extremely useful for the exchange of money, content, property, or
       anything of value.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph
       isNoImagesFull
     >
       With smart contracts, the investor can be assured the contractual
       agreement will execute according to the defined conditions. This
       creates a more secure environment and also leads to lower fees
       because no manual process involving human labour is needed.
-    </StyledCarouselSlideParagraph>
-    <StyledImage
+    </CarouselSlideParagraph>
+    <Image
       src={SmartContract}
       width="199"
       alt="Smart Contract"
       isStatic
     />
-  </StyledCarouselSlide>
+  </CarouselSlide>
 );
 
 export default SmartContracts;

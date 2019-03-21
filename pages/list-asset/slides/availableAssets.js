@@ -6,20 +6,20 @@ import {
 } from "antd";
 import { withAirtableContext } from 'components/Airtable';
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideColoredSpan,
-  StyledCarouselSlideList,
-  StyledCarouselSlideTooltip,
-  StyledCarouselSlideInput,
-  StyledCarouselSlideSelect,
-  StyledCarouselSlideInputNumber,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideColoredSpan,
+  CarouselSlideList,
+  CarouselSlideTooltip,
+  CarouselSlideInput,
+  CarouselSlideSelect,
+  CarouselSlideInputNumber,
 } from 'components/CarouselSlide/';
 
 import Earth from "static/list-asset/assetList_earth.png";
 
-const StyledImage = styled.img`
+const Image = styled.img`
   position: relative;
   margin: 10px auto;
   width: 120px;
@@ -54,11 +54,11 @@ export const AvailableAssetsSlide = withAirtableContext(({
   const assetsAvailable = category && categories[category];
   const assetValue = !asset ? 0 : assetsAirTable.filter(assetTmp => assetTmp.name === asset)[0].amountToBeRaisedInUSDAirtable;
   return (
-    <StyledCarouselSlide>
+    <CarouselSlide>
       <React.Fragment>
         {Object.keys(categories).length !== 0 ? (
         <div>
-          <StyledCarouselSlideMainTitle
+          <CarouselSlideMainTitle
             isLong
             isSmallMobile
             isCentered
@@ -66,18 +66,18 @@ export const AvailableAssetsSlide = withAirtableContext(({
           >
             <React.Fragment>
               Assets available
-              <StyledCarouselSlideTooltip
+              <CarouselSlideTooltip
                 title="More assets will become available in the future."
               />
             </React.Fragment>
-          </StyledCarouselSlideMainTitle>
-          <StyledCarouselSlideParagraph
+          </CarouselSlideMainTitle>
+          <CarouselSlideParagraph
             isCentered
             maxWidthDesktop={maxWidthDesktop}
           >
             Below is the list of assets available to you.
-          </StyledCarouselSlideParagraph>
-          <StyledCarouselSlideSelect
+          </CarouselSlideParagraph>
+          <CarouselSlideSelect
             isCentered
             showSearch
             placeholder="Asset Category"
@@ -94,8 +94,8 @@ export const AvailableAssetsSlide = withAirtableContext(({
                   {cat}
                 </Option>
               ))}
-          </StyledCarouselSlideSelect>
-          <StyledCarouselSlideSelect
+          </CarouselSlideSelect>
+          <CarouselSlideSelect
             isCentered
             showSearch
             placeholder="Available Assets"
@@ -114,15 +114,15 @@ export const AvailableAssetsSlide = withAirtableContext(({
                 </Option>
               )}
             )}
-          </StyledCarouselSlideSelect>
-          <StyledCarouselSlideParagraph
+          </CarouselSlideSelect>
+          <CarouselSlideParagraph
             hasMarginTop
             isCentered
             maxWidthDesktop={maxWidthDesktop}
           >
             Selected Asset value:
-          </StyledCarouselSlideParagraph>
-          <StyledCarouselSlideInputNumber
+          </CarouselSlideParagraph>
+          <CarouselSlideInputNumber
             isCentered
             disabled
             placeholder="Funding Goal"
@@ -137,20 +137,20 @@ export const AvailableAssetsSlide = withAirtableContext(({
         </div>
       ) : (
         <div>
-          <StyledCarouselSlideMainTitle
+          <CarouselSlideMainTitle
             isLong
             isSmallMobile
             isCentered
             maxWidthDesktop={maxWidthDesktop}
           >
             No assets available
-          </StyledCarouselSlideMainTitle>
-          <StyledCarouselSlideParagraph
+          </CarouselSlideMainTitle>
+          <CarouselSlideParagraph
             isCentered
             maxWidthDesktop={maxWidthDesktop}
           >
             No assets have been found in your country.
-          </StyledCarouselSlideParagraph>
+          </CarouselSlideParagraph>
           <ButtonWrapper
             type="secondary"
             className="Slider__buttons-centered"
@@ -161,6 +161,6 @@ export const AvailableAssetsSlide = withAirtableContext(({
         </div>
       )}
       </React.Fragment>
-    </StyledCarouselSlide>
+    </CarouselSlide>
   );
 });

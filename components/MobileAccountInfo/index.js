@@ -1,9 +1,8 @@
 import Address from 'ui/Address';
 import Balance from 'components/Balance';
-import StyledMobileAccountInfo from './styledMobileAccountInfo';
-import StyledMobileAccountInfoBalance from './styledMobileAccountInfoBalance';
-import StyledMobileAccountInfoNoAccount from './styledMobileAccountInfoNoAccount';
-import StyledMobileAccountCircle from './styledMobileAccountCircle';
+import MobileAccountInfoBalance from './mobileAccountInfoBalance';
+import MobileAccountInfoNoAccount from './mobileAccountInfoNoAccount';
+import MobileAccountCircle from './mobileAccountCircle';
 import { withMetamaskContext } from 'components/MetamaskChecker';
 
 const MobileAccountInfo = ({
@@ -22,23 +21,23 @@ const MobileAccountInfo = ({
       isMobile
     />
   ) : (
-    <StyledMobileAccountInfoNoAccount>
-      <StyledMobileAccountCircle />
+    <MobileAccountInfoNoAccount>
+      <MobileAccountCircle />
       <span>No account loaded</span>
-    </StyledMobileAccountInfoNoAccount>
+    </MobileAccountInfoNoAccount>
   )
 
   return (
-    <StyledMobileAccountInfo>
+    <div>
       {addressToRender}
-      <StyledMobileAccountInfoBalance>
+      <MobileAccountInfoBalance>
         <Balance
           balance={balance}
           isMobile
           noInfo={isReadOnlyMode || !user.address}
         />
-      </StyledMobileAccountInfoBalance>
-    </StyledMobileAccountInfo>
+      </MobileAccountInfoBalance>
+    </div>
   )
 }
 

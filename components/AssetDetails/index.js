@@ -8,9 +8,9 @@ import AssetFunding from 'components/AssetFunding';
 import {
   shortenAddress,
 } from 'utils/helpers';
-import StyledAssetDetailsRightCol from './styledAssetDetailsRightCol';
-import StyledAssetDetailsLeftCol from './styledAssetDetailsLeftCol';
-import StyledAssetDetails from './styledAssetDetails';
+import AssetDetailsRightCol from './assetDetailsRightCol';
+import AssetDetailsLeftCol from './assetDetailsLeftCol';
+import AssetDetailsWrapper from './assetDetailsWrapper';
 
 const AssetDetails = ({
   asset,
@@ -48,8 +48,8 @@ const AssetDetails = ({
   } = defaultData;
 
   return (
-    <StyledAssetDetails>
-      <StyledAssetDetailsLeftCol xs={24} sm={24} md={24} lg={12} xl={12}>
+    <AssetDetailsWrapper>
+      <AssetDetailsLeftCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetDetailsInfo
           name={name}
           imageSrc={imageSrc}
@@ -71,16 +71,16 @@ const AssetDetails = ({
             marginTop: '20px',
           }}
         />
-      </StyledAssetDetailsLeftCol>
-      <StyledAssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
+      </AssetDetailsLeftCol>
+      <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetFunding
           asset={asset}
           fundAsset={fundAsset}
           updateNotification={updateNotification}
           loadingUserInfo={loadingUserInfo}
         />
-      </StyledAssetDetailsRightCol>
-    </StyledAssetDetails>
+      </AssetDetailsRightCol>
+    </AssetDetailsWrapper>
   )
 }
 export default AssetDetails;

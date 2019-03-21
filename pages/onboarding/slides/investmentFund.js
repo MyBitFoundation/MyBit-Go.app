@@ -4,13 +4,13 @@ import {
   Button,
 } from 'antd';
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideList,
-  StyledCarouselSlideColoredSpan,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideList,
+  CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const StyledImage = styled.img`
+const Image = styled.img`
   position: absolute;
   top: 45px;
   right: 102px;
@@ -48,27 +48,27 @@ const ButtonWrapper = styled(Button)`
 const InvestmentFund = ({
   goToSlide,
 }) => (
-  <StyledCarouselSlide>
-    <StyledImage
+  <CarouselSlide>
+    <Image
       src={MyBitDesk}
       width="190"
       alt="MyBit Onboarding Slide 3"
     />
-    <StyledCarouselSlideMainTitle
+    <CarouselSlideMainTitle
       isLong
       isSmallMobile
     >
       MyBit Go is&nbsp;
-      <StyledCarouselSlideColoredSpan
+      <CarouselSlideColoredSpan
         isRed
       >
         not
-      </StyledCarouselSlideColoredSpan>
+      </CarouselSlideColoredSpan>
       &nbsp;an
       <br />
       investment fund
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideList>
+    </CarouselSlideMainTitle>
+    <CarouselSlideList>
       <li>
         We do not invest on your behalf
       </li>
@@ -87,13 +87,13 @@ const InvestmentFund = ({
       <li>
         We do not guarantee returns
       </li>
-    </StyledCarouselSlideList>
+    </CarouselSlideList>
     <ButtonWrapper
       onClick={() => goToSlide(7)}
     >
       Skip... I know blockchain
     </ButtonWrapper>
-  </StyledCarouselSlide>
+  </CarouselSlide>
 );
 
 export default InvestmentFund;

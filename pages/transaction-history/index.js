@@ -9,8 +9,8 @@ import Loading from 'components/Loading';
 import { withBlockchainContext } from 'components/Blockchain'
 import { withMetamaskErrors } from 'components/MetamaskErrors';
 import GetColumns from 'constants/transactions';
-import StyledTransactionsPage from './styledTransactionsPage';
-import StyledTransactionsPageStatusIcon from './styledTransactionsPageStatusIcon';
+import TransactionsPageWrapper from './transactionsPageWrapper';
+import TransactionsPageStatusIcon from './transactionsPageStatusIcon';
 import ErrorPage from 'components/ErrorPage';
 
 class TransactionHistoryPage extends React.Component {
@@ -26,7 +26,7 @@ class TransactionHistoryPage extends React.Component {
   getStatusImage = (status, text) => {
     return (
       <div>
-        <StyledTransactionsPageStatusIcon status={status} />
+        <TransactionsPageStatusIcon status={status} />
         {text}
       </div>
     );
@@ -62,14 +62,14 @@ class TransactionHistoryPage extends React.Component {
     const columns = GetColumns(sortedInfo, filteredInfo, this.getStatusImage);
 
     return (
-      <StyledTransactionsPage>
+      <TransactionsPageWrapper>
         <Table
           columns={columns}
           dataSource={transactions}
           pagination={{ pageSize: itemsPerPage }}
           onChange={this.handleChange}
         />
-      </StyledTransactionsPage>
+      </TransactionsPageWrapper>
     );
   }
 }

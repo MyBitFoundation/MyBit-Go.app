@@ -6,14 +6,14 @@ import {
   Tooltip,
 } from 'antd';
 import WatchIcon from 'static/watch.svg';
-import StyledWatch from './styledWatch';
+import WatchWrapper from './watchWrapper';
 
 const Watch = ({
   active,
   handleClick,
   assetId,
 }) => (
-  <StyledWatch active={active} onClick={(e) => {
+  <WatchWrapper active={active} onClick={(e) => {
     e.stopPropagation();
     handleClick(assetId);
   }}>
@@ -25,7 +25,7 @@ const Watch = ({
     >
       <WatchIcon />
     </Tooltip>
-  </StyledWatch>
+  </WatchWrapper>
 );
 
 Watch.propTypes = {

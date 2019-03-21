@@ -1,15 +1,14 @@
 import styled from 'styled-components';
 import EthereumGraphic from 'static/onboarding/ethereum.png';
-
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideList,
-  StyledCarouselSlideColoredSpan,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideList,
+  CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const StyledImage = styled.img`
+const Image = styled.img`
   margin: 0px auto;
   position: relative;
   margin-top: 30px;
@@ -21,29 +20,29 @@ const StyledImage = styled.img`
 `
 
 const Ethereum = () => (
-  <StyledCarouselSlide>
-    <StyledCarouselSlideMainTitle>
+  <CarouselSlide>
+    <CarouselSlideMainTitle>
       Ethereum
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph>
       Ethereum is a platform based on blockchain technology. Unlike
       Bitcoin, users can builld applications on top of it.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph>
       For comparison, you can think of it like this: if Bitcoin is a
       next generation bank, then Ethereum is the software that lets
       anyone build a next generation bank.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph>
       The possibilities of what can be built on Ethereum extend to
       nearly every business industry.
-    </StyledCarouselSlideParagraph>
-    <StyledImage
+    </CarouselSlideParagraph>
+    <Image
       src={EthereumGraphic}
       width="230"
       alt="MyBit Globe"
     />
-  </StyledCarouselSlide>
+  </CarouselSlide>
 );
 
 export default Ethereum;

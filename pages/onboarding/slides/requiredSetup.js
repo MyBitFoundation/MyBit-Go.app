@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import SetupGraphic from 'static/onboarding/setup.png';
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideColoredSpan,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const StyledImage = styled.img`
+const Image = styled.img`
   position: absolute;
   top: 165px;
   right: 10px;
@@ -26,28 +26,28 @@ import {
 const RequiredSetup = withBancorContext(({
   bancorContext,
 }) => (
-  <StyledCarouselSlide>
-    <StyledImage
+  <CarouselSlide>
+    <Image
       src={SetupGraphic}
       width="77"
       alt="Setup"
       isSetup
     />
-    <StyledCarouselSlideMainTitle>
-      <StyledCarouselSlideColoredSpan
+    <CarouselSlideMainTitle>
+      <CarouselSlideColoredSpan
         isBlue
       >
         Required
-      </StyledCarouselSlideColoredSpan>{" "}
+      </CarouselSlideColoredSpan>{" "}
       setup
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph
       isTitle
     >
       Before you are able to use the MyBit Go platform, you will
       need the following:
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph
       isShorter
     >
       MetaMask, a browser extension that turns any ordinary
@@ -60,8 +60,8 @@ const RequiredSetup = withBancorContext(({
       >
       {' '}Get MetaMask
       </a>
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph
       isShorter
     >
       Cryptocurrency, such as Ether or DAI, which are the main
@@ -80,8 +80,8 @@ const RequiredSetup = withBancorContext(({
       >
         Get Ether
       </a>
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph
       isShorter
     >
       MyBit Tokens (MYB), the native token that fuels the <br />
@@ -96,8 +96,8 @@ const RequiredSetup = withBancorContext(({
       >
         Get MYB
       </a>
-    </StyledCarouselSlideParagraph>
-  </StyledCarouselSlide>
+    </CarouselSlideParagraph>
+  </CarouselSlide>
 ));
 
 export default RequiredSetup;

@@ -8,21 +8,21 @@ import {
   Icon,
   Menu,
 } from 'antd';
-import StyledFilterButton from './styledFilterButton';
-import StyledCategoryFilter from './styledCategoryFilter';
-import StyledCategoryFilterDesktop from './styledCategoryFilterDesktop';
-import StyledCategoryFilterMobile from './styledCategoryFilterMobile';
+import CategoryFilterButton from './categoryFilterButton';
+import CategoryFilterWrapper from './categoryFilterWrapper';
+import CategoryFilterDesktop from './categoryFilterDesktop';
+import CategoryFilterMobile from './categoryFilterMobile';
 
 const mainFilters = 4;
 
 const createFilterButton = (key, filterState, setFilterState) => (
-  <StyledFilterButton
+  <CategoryFilterButton
     key={key}
     type={filterState ? 'primary' : ''}
     onClick={() => setFilterState(key, !filterState)}
   >
     {key}
-  </StyledFilterButton>
+  </CategoryFilterButton>
 )
 
 const createCheckbox = (key, filterState, setFilterState) => (
@@ -85,21 +85,21 @@ const CategoryFilter = ({
   );
 
   return (
-    <StyledCategoryFilter>
-      <StyledCategoryFilterDesktop>
+    <CategoryFilterWrapper>
+      <CategoryFilterDesktop>
         {buttonsToRender}
         {dropdownToRender}
         {subfiltersToRender}
-      </StyledCategoryFilterDesktop>
-      <StyledCategoryFilterMobile>
+      </CategoryFilterDesktop>
+      <CategoryFilterMobile>
         <Dropdown overlay={menu(mobileDropDownToRender)}>
           <Button>
             Categories <Icon type="down" />
           </Button>
         </Dropdown>
         {subfiltersToRender}
-      </StyledCategoryFilterMobile>
-    </StyledCategoryFilter>
+      </CategoryFilterMobile>
+    </CategoryFilterWrapper>
   );
 };
 

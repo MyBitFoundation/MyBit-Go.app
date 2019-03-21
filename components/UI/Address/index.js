@@ -2,32 +2,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import Spin from 'static/spin.svg';
-import StyledAddress from './styledAddress';
-import StyledLoader from './styledLoader';
-import StyledText from './styledText';
-import StyledJazzicon from './styledJazzicon';
+import AddressWrapper from './addressWrapper';
+import AddressLoader from './addressLoader';
+import AddressText from './addressText';
+import AddressJazzicon from './addressJazzicon';
 
 const Address = ({ address, isLeft, isMobile }) => (
-  <StyledAddress>
+  <AddressWrapper>
     {!address ? (
-      <StyledLoader>
+      <Loader>
         <Spin style={{ height: '32px', width: '32px' }} />
         <span>Loading account</span>
-      </StyledLoader>
+      </Loader>
     ) : (
-      <StyledJazzicon
+      <Jazzicon
         isLeft={isLeft}
         isMobile={isMobile}
       >
         <Jazzicon diameter={isMobile ? 31 : 39} seed={jsNumberForAddress(address)} />
-        <StyledText
+        <Text
           isMobile={isMobile}
         >
           {address}
-        </StyledText>
-      </StyledJazzicon>
+        </Text>
+      </Jazzicon>
     )}
-  </StyledAddress>
+  </AddressWrapper>
 );
 
 Address.defaultProps = {

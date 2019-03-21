@@ -1,9 +1,9 @@
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideInput,
-  StyledCarouselSlideSelect,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideInput,
+  CarouselSlideSelect,
 } from 'components/CarouselSlide/';
 
 
@@ -18,42 +18,42 @@ export const AssetLocationSlide = ({
   } = formData;
 
   return (
-    <StyledCarouselSlide
+    <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
     >
-      <StyledCarouselSlideMainTitle
+      <CarouselSlideMainTitle
         isLong
         isSmallMobile
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
         Asset location?
-      </StyledCarouselSlideMainTitle>
-      <StyledCarouselSlideParagraph
+      </CarouselSlideMainTitle>
+      <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
         This is where your asset is going to be once fully funded.
-      </StyledCarouselSlideParagraph>
-      <StyledCarouselSlideInput
+      </CarouselSlideParagraph>
+      <CarouselSlideInput
         isCentered
         placeholder="Address Line 1"
         name="assetAddress1"
         onChange={e => handleInputChange(e)}
       />
-      <StyledCarouselSlideInput
+      <CarouselSlideInput
         isCentered
         placeholder="Address Line 2"
         name="assetAddress2"
         onChange={e => handleInputChange(e)}
       />
-      <StyledCarouselSlideInput
+      <CarouselSlideInput
         isCentered
         placeholder="City/Town"
         name="assetCity"
         onChange={e => handleInputChange(e)}
       />
-      <StyledCarouselSlideSelect
+      <CarouselSlideSelect
         isCentered
         showSearch
         value={assetCountry}
@@ -69,19 +69,19 @@ export const AssetLocationSlide = ({
             {country}
           </Option>
         ))}
-      </StyledCarouselSlideSelect>
-      <StyledCarouselSlideInput
+      </CarouselSlideSelect>
+      <CarouselSlideInput
         isCentered
         placeholder="Province/Region"
         name="assetProvince"
         onChange={e => handleInputChange(e)}
       />
-      <StyledCarouselSlideInput
+      <CarouselSlideInput
         isCentered
         placeholder="Postal Code"
         name="assetPostalCode"
         onChange={e => handleInputChange(e)}
       />
-    </StyledCarouselSlide>
+    </CarouselSlide>
   )
 };

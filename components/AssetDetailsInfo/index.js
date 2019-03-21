@@ -1,9 +1,9 @@
-import StyledAssetDetailsInfoName from './styledAssetDetailsInfoName';
-import StyledAssetDetailsInfoLocationIcon from './styledAssetDetailsInfoLocationIcon';
-import StyledAssetDetailsInfoLocation from './styledAssetDetailsInfoLocation';
-import StyledAssetDetailsInfoImage from './styledAssetDetailsInfoImage';
-import StyledAssetDetailsInfoTitle from './styledAssetDetailsInfoTitle';
-import StyledAssetDetailsInfoDescription from './styledAssetDetailsInfoDescription';
+import AssetDetailsInfoName from './assetDetailsInfoName';
+import AssetDetailsInfoLocationIcon from './assetDetailsInfoLocationIcon';
+import AssetDetailsInfoLocation from './assetDetailsInfoLocation';
+import AssetDetailsInfoImage from './assetDetailsInfoImage';
+import AssetDetailsInfoTitle from './assetDetailsInfoTitle';
+import AssetDetailsInfoDescription from './assetDetailsInfoDescription';
 import AssetDetailsInfoWrapper from './assetDetailsInfoWrapper';
 import Watch from 'ui/Watch';
 
@@ -19,15 +19,15 @@ const AssetDetailsInfo = ({
   assetId,
 }) => (
   <AssetDetailsInfoWrapper>
-    <StyledAssetDetailsInfoName>
+    <AssetDetailsInfoName>
       {name}
-    </StyledAssetDetailsInfoName>
-    <StyledAssetDetailsInfoLocationIcon
+    </AssetDetailsInfoName>
+    <AssetDetailsInfoLocationIcon
     />
-    <StyledAssetDetailsInfoLocation>
+    <AssetDetailsInfoLocation>
       {country}, {city}
-    </StyledAssetDetailsInfoLocation>
-    <StyledAssetDetailsInfoImage
+    </AssetDetailsInfoLocation>
+    <AssetDetailsInfoImage
       background={imageSrc}
     >
     <Watch
@@ -35,20 +35,20 @@ const AssetDetailsInfo = ({
       handleClick={handleAssetFavorited}
       assetId={assetId}
     />
-    </StyledAssetDetailsInfoImage>
+    </AssetDetailsInfoImage>
 
-    <StyledAssetDetailsInfoTitle>
+    <AssetDetailsInfoTitle>
       Asset Details
-    </StyledAssetDetailsInfoTitle>
-    <StyledAssetDetailsInfoDescription>
+    </AssetDetailsInfoTitle>
+    <AssetDetailsInfoDescription>
       {details}
-    </StyledAssetDetailsInfoDescription>
-    <StyledAssetDetailsInfoTitle>
+    </AssetDetailsInfoDescription>
+    <AssetDetailsInfoTitle>
       Description
-    </StyledAssetDetailsInfoTitle>
-    <StyledAssetDetailsInfoDescription>
+    </AssetDetailsInfoTitle>
+    <AssetDetailsInfoDescription>
       {description}
-    </StyledAssetDetailsInfoDescription>
+    </AssetDetailsInfoDescription>
   </AssetDetailsInfoWrapper>
 )
 

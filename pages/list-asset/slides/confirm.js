@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
 } from 'components/CarouselSlide/';
 import AlertMessage from 'ui/AlertMessage';
 
@@ -22,7 +22,7 @@ const InformationWrapper = styled.div`
   `}
 `;
 
-const StyledAlertMessage = styled.div`
+const AlertMessageWrapper = styled.div`
   .ant-alert{
     padding: 8px 10px 8px 37px;
   }
@@ -42,21 +42,21 @@ export const ConfirmSlide = ({
   error,
 }) => {
   return (
-    <StyledCarouselSlide>
-      <StyledCarouselSlideMainTitle
+    <CarouselSlide>
+      <CarouselSlideMainTitle
         isLong
         isSmallMobile
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
       Confirm information
-    </StyledCarouselSlideMainTitle>
-      <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+      <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
         Please confirm your asset information below.
-      </StyledCarouselSlideParagraph>
+      </CarouselSlideParagraph>
       <InformationWrapper>
         <section>
           <b>Location</b>
@@ -111,16 +111,16 @@ export const ConfirmSlide = ({
           </p>
         </section>
         {error && (
-          <StyledAlertMessage>
+          <AlertMessageWrapper>
             <AlertMessage
               type="error"
               message={error}
               showIcon
               closable={false}
             />
-          </StyledAlertMessage>
+          </AlertMessageWrapper>
         )}
       </InformationWrapper>
-    </StyledCarouselSlide>
+    </CarouselSlide>
   );
 }

@@ -1,10 +1,10 @@
 import Watch from 'ui/Watch';
-import StyledAssetTemplate from './styledAssetTemplate';
-import StyledAssetTemplateImageHolder from './styledAssetTemplateImageHolder';
-import StyledAssetTemplateGradient from './styledAssetTemplateGradient';
-import StyledAssetTemplateLocationIcon from './styledAssetTemplateLocationIcon';
-import StyledAssetTemplateName from './styledAssetTemplateName';
-import StyledAssetTemplateLocation from './styledAssetTemplateLocation';
+import AssetTemplateWrapper from './assetTemplateWrapper';
+import AssetTemplateImageHolder from './assetTemplateImageHolder';
+import AssetTemplateGradient from './assetTemplateGradient';
+import AssetTemplateLocationIcon from './assetTemplateLocationIcon';
+import AssetTemplateName from './assetTemplateName';
+import AssetTemplateLocation from './assetTemplateLocation';
 
 const AssetTemplate = ({
   children,
@@ -19,10 +19,10 @@ const AssetTemplate = ({
   margin,
   onClickImg,
 }) => (
-  <StyledAssetTemplate
+  <AssetTemplate
     margin={margin}
   >
-    <StyledAssetTemplateImageHolder
+    <AssetTemplateImageHolder
       backgroundImage={backgroundImage}
       height={height}
       onClick={onClickImg}
@@ -34,15 +34,15 @@ const AssetTemplate = ({
           assetId={assetId}
         />
       )}
-      <StyledAssetTemplateGradient />
-      <StyledAssetTemplateLocationIcon />
-      <StyledAssetTemplateName>{name}</StyledAssetTemplateName>
-      <StyledAssetTemplateLocation>
+      <AssetTemplateGradient />
+      <AssetTemplateLocationIcon />
+      <AssetTemplateName>{name}</AssetTemplateName>
+      <AssetTemplateLocation>
         {country}, <span>{city}</span>
-      </StyledAssetTemplateLocation>
-    </StyledAssetTemplateImageHolder>
+      </AssetTemplateLocation>
+    </AssetTemplateImageHolder>
     {children}
-  </StyledAssetTemplate>
+  </AssetTemplate>
 );
 
 export default AssetTemplate;

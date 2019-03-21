@@ -2,19 +2,18 @@ import React from 'react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import Spin from 'static/spin.svg';
-import BackButton from 'ui/BackButton';
-import StyledWrapper from './styledWrapper';
-import StyledMessage from './styledMessage';
+import LoadingWrapper from './loadingWrapper';
+import LoadingMessage from './loadingMessage';
 
 const Loading = ({ message, hasBackButton }) => (
   <div>
     {hasBackButton && <BackButton />}
-    <StyledWrapper>
+    <LoadingWrapper>
       <Spin style={{ height: '64px', width: '64px' }} />
-      <StyledMessage>
+      <LoadingMessage>
         {message}
-      </StyledMessage>
-    </StyledWrapper>
+      </LoadingMessage>
+    </LoadingWrapper>
   </div>
 );
 

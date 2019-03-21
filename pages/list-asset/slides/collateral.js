@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideTooltip,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideTooltip,
 } from 'components/CarouselSlide/';
 
 import {
@@ -15,7 +15,7 @@ import { withTokenPricesContext } from 'components/TokenPrices';
 
 import Myb from "static/list-asset/assetList_myb.png";
 
-const StyledImage = styled.img`
+const Image = styled.img`
   position: relative;
   margin: 40px auto;
   width: 90px;
@@ -56,10 +56,10 @@ export const CollateralSlide = withTokenPricesContext(({
   formData,
   pricesContext,
 }) => (
-  <StyledCarouselSlide
+  <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
   >
-    <StyledCarouselSlideMainTitle
+    <CarouselSlideMainTitle
       isLong
       isSmallMobile
       isCentered
@@ -67,20 +67,20 @@ export const CollateralSlide = withTokenPricesContext(({
     >
       <React.Fragment>
         Asset collateral
-        <StyledCarouselSlideTooltip
+        <CarouselSlideTooltip
           title="Assets with a high collateral are more likely to get funded."
         />
       </React.Fragment>
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph
       isCentered
       maxWidthDesktop={maxWidthDesktop}
     >
       MYB is used as an insurance mechanism, much like a deposit to protect
       investors' funds and incentivise proper behaviour. In this version of Go you are
       not required to deposit MYB but you will still be able to withdraw the collateral.
-    </StyledCarouselSlideParagraph>
-    <StyledImage
+    </CarouselSlideParagraph>
+    <Image
       src={Myb}
       alt="MyBit"
     />
@@ -119,5 +119,5 @@ export const CollateralSlide = withTokenPricesContext(({
         onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "myb")}
       />
     </InputsWrapper>
-  </StyledCarouselSlide>
+  </CarouselSlide>
 ));

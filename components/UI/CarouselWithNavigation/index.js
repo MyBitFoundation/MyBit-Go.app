@@ -4,15 +4,15 @@ import {
   Tooltip,
   Icon,
 } from 'antd';
-import StyledCarouselWithNavigationWrapper from './styledCarouselWithNavigationWrapper';
-import StyledCarouselWithNavigationSlide from './styledCarouselWithNavigationSlide';
-import StyledCarouselWithNavigationNavButton from './styledCarouselWithNavigationNavButton';
-import StyledCarouselWithNavigationCloseButton from './styledCarouselWithNavigationCloseButton';
-import StyledCarouselWithNavigationNav from './styledCarouselWithNavigationNav';
-import StyledCarouselWithNavigationButtons from './styledCarouselWithNavigationButtons';
-import StyledCarouselWithNavigationButton from './styledCarouselWithNavigationButton';
-import StyledCarouselWithNavigationArrow from './styledCarouselWithNavigationArrow';
-import StyledCarouselWithNavigation from './styledCarouselWithNavigation';
+import CarouselWithNavigationContainer from './carouselWithNavigationContainer';
+import CarouselWithNavigationSlide from './carouselWithNavigationSlide';
+import CarouselWithNavigationNavButton from './carouselWithNavigationNavButton';
+import CarouselWithNavigationCloseButton from './carouselWithNavigationCloseButton';
+import CarouselWithNavigationNav from './carouselWithNavigationNav';
+import CarouselWithNavigationButtons from './carouselWithNavigationButtons';
+import CarouselWithNavigationButton from './carouselWithNavigationButton';
+import CarouselWithNavigationArrow from './carouselWithNavigationArrow';
+import CarouselWithNavigationWrapper from './carouselWithNavigationWrapper';
 import RightArrow from '../../static/onboarding/arrow-right.png';
 
 class CarouselWithNavigation extends React.Component {
@@ -76,18 +76,18 @@ class CarouselWithNavigation extends React.Component {
       { href: redirectOnClose,} : {...redirectOnClose};
 
     return (
-      <StyledCarouselWithNavigation
+      <CarouselWithNavigationWrapper
         desktopAt={desktopAt}
         maxWidthDesktop={maxWidthDesktop}
       >
-        <StyledCarouselWithNavigationCloseButton>
+        <CarouselWithNavigationCloseButton>
           <Link
             {...closeButtonProps}
           >
             <a>+</a>
           </Link>
-        </StyledCarouselWithNavigationCloseButton>
-        <StyledCarouselWithNavigationWrapper
+        </CarouselWithNavigationCloseButton>
+        <CarouselWithNavigationContainer
           desktopAt={desktopAt}
           maxWidthDesktop={maxWidthDesktop}
           slideNumber={currentSlide}
@@ -104,7 +104,7 @@ class CarouselWithNavigation extends React.Component {
         >
         {slides.map(({Component, toRender}, index) => {
           return (
-            <StyledCarouselWithNavigationSlide
+            <CarouselWithNavigationSlide
               key={index}
               maxWidthDesktop={maxWidthDesktop}
               desktopAt={desktopAt}
@@ -116,11 +116,11 @@ class CarouselWithNavigation extends React.Component {
                 />
               )}
               {toRender}
-            </StyledCarouselWithNavigationSlide>
+            </CarouselWithNavigationSlide>
           )}
         )}
-      </StyledCarouselWithNavigationWrapper>
-      <StyledCarouselWithNavigationNav
+      </CarouselWithNavigationContainer>
+      <CarouselWithNavigationNav
         hideAt={desktopAt}
       >
         {navigationTooltips.map((slideTooltip) => {
@@ -129,7 +129,7 @@ class CarouselWithNavigation extends React.Component {
               title={slideTooltip.tooltip}
               key={`slideTooltip${slideTooltip.slide}`}
             >
-              <StyledCarouselWithNavigationNavButton
+              <CarouselWithNavigationNavButton
                 isActive={currentSlide === slideTooltip.slide}
                 onClick={() => this.goToSlide(slideTooltip.slide)}
                 disabled={disableMovingForward && slideTooltip.slide > currentSlide}
@@ -137,25 +137,25 @@ class CarouselWithNavigation extends React.Component {
             </Tooltip>
           );
         })}
-      </StyledCarouselWithNavigationNav>
+      </CarouselWithNavigationNav>
       {(!error && !hideButtons) && (
-        <StyledCarouselWithNavigationButtons
+        <CarouselWithNavigationButtons
           desktopAt={desktopAt}
           hasOneButton={!hasTwoButtons}
           hasTwoButtons={hasTwoButtons}
         >
           {hasBackButton && (
-          <StyledCarouselWithNavigationButton
+          <CarouselWithNavigationButton
             key={`${nextButtonText} ${currentSlide} 'back'`}
             onClick={this.previous}
             desktopAt={desktopAt}
             isBack
           >
             Back
-          </StyledCarouselWithNavigationButton>
+          </CarouselWithNavigationButton>
           )}
           {hasNextButton && (
-            <StyledCarouselWithNavigationButton
+            <CarouselWithNavigationButton
               key={`${nextButtonText} ${currentSlide} 'next'`}
               desktopAt={desktopAt}
               type="primary"
@@ -167,11 +167,11 @@ class CarouselWithNavigation extends React.Component {
             >
               {(nextButtonDisabled && 'All fields are required') || (nextButtonText || 'Next')}
               {!nextButtonLoading && <Icon type="right" />}
-            </StyledCarouselWithNavigationButton>
+            </CarouselWithNavigationButton>
           )}
-        </StyledCarouselWithNavigationButtons>
+        </CarouselWithNavigationButtons>
       )}
-    </StyledCarouselWithNavigation>
+    </CarouselWithNavigationWrapper>
   )}
 }
 

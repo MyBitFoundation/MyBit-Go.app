@@ -1,32 +1,32 @@
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideList,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideList,
 } from 'components/CarouselSlide/';
 
 
 export const IntroSlide = ({maxWidthDesktop}) => (
-  <StyledCarouselSlide
+  <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
   >
-    <StyledCarouselSlideMainTitle
+    <CarouselSlideMainTitle
       isLong
       isSmallMobile
       isCentered
       maxWidthDesktop={maxWidthDesktop}
     >
       Ready to list an asset?
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph
       isIntro
       isFullWidth
       isCentered
       maxWidthDesktop={maxWidthDesktop}
     >
       Here is a list of things you’ll need.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideList
+    </CarouselSlideParagraph>
+    <CarouselSlideList
       hasDescriptions
       maxWidthDesktop={maxWidthDesktop}
     >
@@ -63,6 +63,6 @@ export const IntroSlide = ({maxWidthDesktop}) => (
         You’ll need some MyBit tokens to put down as collateral for your asset
         and investors.
       </p>
-    </StyledCarouselSlideList>
-  </StyledCarouselSlide>
+    </CarouselSlideList>
+  </CarouselSlide>
 );

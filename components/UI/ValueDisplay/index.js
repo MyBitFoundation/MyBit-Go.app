@@ -1,8 +1,8 @@
 import React from 'react';
-import StyledValueDisplay from './styledValueDisplay';
-import StyledValueDisplayIcon from './styledValueDisplayIcon';
-import StyledValueDisplaySeparator from './styledValueDisplaySeparator';
-import StyledValueDisplayValue from './styledValueDisplayValue';
+import ValueDisplayWrapper from './valueDisplayWrapper';
+import ValueDisplayIcon from './valueDisplayIcon';
+import ValueDisplaySeparator from './valueDisplaySeparator';
+import ValueDisplayValue from './valueDisplayValue';
 
 const ValueDisplay = ({
   value,
@@ -18,30 +18,30 @@ const ValueDisplay = ({
   style,
 }) => (
   <div className={customClassName}>
-    <StyledValueDisplay
+    <ValueDisplayWrapper
       hasShadow={hasShadow}
       style={style}
     >
       {hasIcon && (
-        <StyledValueDisplayIcon>
+        <ValueDisplayIcon>
           {icon}
-        </StyledValueDisplayIcon>
+        </ValueDisplayIcon>
       )}
       {text}
       {hasSeparator && (
-        <StyledValueDisplaySeparator />
+        <ValueDisplaySeparator />
       )}
       <div>
-        <StyledValueDisplayValue
+        <ValueDisplayValue
           isGreen={isGreen}
           isBlue={isBlue}
           coloredBackground={coloredBackground}
           hasIcon={hasIcon}
         >
           {value}
-        </StyledValueDisplayValue>
+        </ValueDisplayValue>
       </div>
-    </StyledValueDisplay>
+    </ValueDisplayWrapper>
   </div>
 )
 

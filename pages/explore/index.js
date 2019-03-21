@@ -8,8 +8,8 @@ import { withBlockchainContext } from 'components/Blockchain'
 import CategoryFilter from 'components/CategoryFilter';
 import Loading from 'components/Loading';
 import AssetDisplayer from 'components/AssetDisplayer';
-import StyledFilters from './styledFilters';
-import StyledFiltersSwitch from './styledFiltersSwitch';
+import ExploreFilters from './exploreFilters';
+import ExploreFiltersSwitch from './exploreFiltersSwitch';
 
 import {
   FundingStages,
@@ -99,7 +99,7 @@ class Explore extends React.Component {
 
     return(
       <React.Fragment>
-        <StyledFilters>
+        <ExploreFilters>
           <CategoryFilter
             allFilters={Categories}
             selectedFilters={this.state.selectedFilters}
@@ -108,8 +108,8 @@ class Explore extends React.Component {
             sortByFilterSelected={sortByFilterSelected}
             handleCheckedSortBy={this.handleCheckedSortBy}
           />
-        </StyledFilters>
-        <StyledFiltersSwitch>
+        </ExploreFilters>
+        <ExploreFiltersSwitch>
           <span>Funding Active</span>
           <Switch
             onChange={isFundingActive => this.setState({ fundingActive: isFundingActive})}
@@ -117,7 +117,7 @@ class Explore extends React.Component {
             checkedChildren={<Icon type="check" />}
             unCheckedChildren={<Icon type="close" />}
           />
-        </StyledFiltersSwitch>
+        </ExploreFiltersSwitch>
         <AssetDisplayer
           assets={assetsFiltered}
           type="default"

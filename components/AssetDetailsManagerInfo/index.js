@@ -1,10 +1,10 @@
 import React from 'react';
-import StyledAssetDetailsMananagerInfo from './styledAssetDetailsMananagerInfo';
-import StyledAssetDetailsManagerInfoTitle from './styledAssetDetailsManagerInfoTitle';
-import StyledAssetDetailsManagerInfoCivic from './styledAssetDetailsManagerInfoCivic';
-import StyledAssetDetailsManagerInfoAddress from './styledAssetDetailsManagerInfoAddress';
-import StyledAssetDetailsManagerInfoDocuments from './styledAssetDetailsManagerInfoDocuments';
-import StyledAssetDetailsManagerInfoPercentages from './styledAssetDetailsManagerInfoPercentages';
+import AssetDetailsMananagerInfo from './assetDetailsMananagerInfo';
+import AssetDetailsManagerInfoTitle from './assetDetailsManagerInfoTitle';
+import AssetDetailsManagerInfoCivic from './assetDetailsManagerInfoCivic';
+import AssetDetailsManagerInfoAddress from './assetDetailsManagerInfoAddress';
+import AssetDetailsManagerInfoDocuments from './assetDetailsManagerInfoDocuments';
+import AssetDetailsManagerInfoPercentages from './assetDetailsManagerInfoPercentages';
 import ValueDisplay from 'ui/ValueDisplay';
 import MyBitLogo from 'static/mybit-blue.svg';
 import Sliders from 'static/sliders.svg';
@@ -38,27 +38,27 @@ const AssetDetailsManagerInfo = ({
   style,
   files,
 }) => (
-  <StyledAssetDetailsMananagerInfo
+  <AssetDetailsMananagerInfo
     style={style}
   >
     <div>
-      <StyledAssetDetailsManagerInfoTitle>
+      <AssetDetailsManagerInfoTitle>
         Asset Manager
-      </StyledAssetDetailsManagerInfoTitle>
-      <StyledAssetDetailsManagerInfoCivic />
-      <StyledAssetDetailsManagerInfoAddress
+      </AssetDetailsManagerInfoTitle>
+      <AssetDetailsManagerInfoCivic />
+      <AssetDetailsManagerInfoAddress
         href={`https://ropsten.etherscan.io/address/${address}`}
         target="_blank"
         rel="noopener noreferrer"
       >
         {addressShortened}
-      </StyledAssetDetailsManagerInfoAddress>
-      <StyledAssetDetailsManagerInfoDocuments>
+      </AssetDetailsManagerInfoAddress>
+      <AssetDetailsManagerInfoDocuments>
         Supporting documents
-      </StyledAssetDetailsManagerInfoDocuments>
+      </AssetDetailsManagerInfoDocuments>
       {getFilesToRender(files)}
     </div>
-    <StyledAssetDetailsManagerInfoPercentages>
+    <AssetDetailsManagerInfoPercentages>
       <ValueDisplay
         text="Total Management Fee"
         icon={<Sliders />}
@@ -81,8 +81,8 @@ const AssetDetailsManagerInfo = ({
         hasIcon
         isBlue
       />
-    </StyledAssetDetailsManagerInfoPercentages>
-  </StyledAssetDetailsMananagerInfo>
+    </AssetDetailsManagerInfoPercentages>
+  </AssetDetailsMananagerInfo>
 );
 
 export default React.memo(AssetDetailsManagerInfo);

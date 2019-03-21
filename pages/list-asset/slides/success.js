@@ -2,13 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import {
-  Button,
+  Button as ButtonAnt,
 } from 'antd';
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideList,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideList,
 } from 'components/CarouselSlide/';
 
 import SuccessEarth from "static/list-asset/success-list-asset-earth.svg";
@@ -26,7 +26,7 @@ const Checkmark = styled(SuccessCheckmark)`
   margin-top: 20px;
 `
 
-const StyledButton = styled(Button)`
+const Button = styled(ButtonAnt)`
   margin: 0 auto;
   margin-top: 60px;
   display: block;
@@ -37,18 +37,18 @@ export const SuccessSlide = ({
   maxWidthDesktop,
   assetId,
 }) => (
-  <StyledCarouselSlide
+  <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
   >
-    <StyledCarouselSlideMainTitle
+    <CarouselSlideMainTitle
       isLong
       isSmallMobile
       isCentered
       maxWidthDesktop={maxWidthDesktop}
     >
       Listing confirmed
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph
       isCentered
       maxWidthDesktop={maxWidthDesktop}
     >
@@ -57,7 +57,7 @@ export const SuccessSlide = ({
         as={`/asset/${assetId}`}
         href={`/asset?id=${assetId}`}
       ><a>here</a></Link>.
-    </StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
     <Checkmark />
     <Earth />
     <Link
@@ -69,12 +69,12 @@ export const SuccessSlide = ({
         margin: '0 auto',
       }}
     >
-      <StyledButton
+      <Button
         type="primary"
       >
         Go to Explore
-      </StyledButton>
+      </Button>
     </Link>
 
-  </StyledCarouselSlide>
+  </CarouselSlide>
 );

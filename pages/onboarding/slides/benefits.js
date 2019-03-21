@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import SafeGraphic from 'static/onboarding/safe-graphic.png';
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideList,
-  StyledCarouselSlideColoredSpan,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideList,
+  CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const StyledImage = styled.img`
+const Image = styled.img`
   margin: 0px auto;
   position: relative;
   margin-top: 20px;
@@ -20,16 +20,16 @@ const StyledImage = styled.img`
 }`
 
 const Benefits = () => (
-  <StyledCarouselSlide>
-    <StyledCarouselSlideMainTitle>
+  <CarouselSlide>
+    <CarouselSlideMainTitle>
       What are the{" "}
-      <StyledCarouselSlideColoredSpan
+      <CarouselSlideColoredSpan
         isBlue
       >
         benefits?
-      </StyledCarouselSlideColoredSpan>
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideList
+      </CarouselSlideColoredSpan>
+    </CarouselSlideMainTitle>
+    <CarouselSlideList
       isSmall
     >
       <li>
@@ -49,14 +49,14 @@ const Benefits = () => (
         Give ownership back to the people, putting them back in control
         of capital, investments, and value
       </li>
-    </StyledCarouselSlideList>
-    <StyledImage
+    </CarouselSlideList>
+    <Image
       src={SafeGraphic}
       width="113"
       alt="MyBit Safe"
       isStatic
     />
-  </StyledCarouselSlide>
+  </CarouselSlide>
 );
 
 export default Benefits;

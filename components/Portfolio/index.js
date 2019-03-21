@@ -13,9 +13,9 @@ import {
   formatMonetaryValue,
   fromWeiToEth,
 } from 'utils/helpers';
-import StyledPortfolioPageValueDisplays from './styledPortfolioPageValueDisplays';
-import StyledPortfolioPageNavButtons from './styledPortfolioPageNavButtons';
-import StyledPortfolioPageExplore from './styledPortfolioPageExplore';
+import PortfolioPageValueDisplays from './portfolioPageValueDisplays';
+import PortfolioPageNavButtons from './portfolioPageNavButtons';
+import PortfolioPageExplore from './portfolioPageExplore';
 import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
 
@@ -78,17 +78,17 @@ class PortfolioPage extends React.Component {
 
     return (
       <div>
-        <StyledPortfolioPageValueDisplays
+        <PortfolioPageValueDisplays
           isManagedPage={currentView === 'portfolioManaged'}
         >
-          <StyledPortfolioPageNavButtons>
+          <PortfolioPageNavButtons>
             <ButtonGroup size="large">
               <Button onClick={this.displayOwned}
                 type={currentView === "portfolioInvestment" ? "primary" : "secondary"}>Investments</Button>
               <Button onClick={this.displayManaged}
                 type={currentView === "portfolioManaged" ? "primary" : "secondary"}>Managed assets</Button>
             </ButtonGroup>
-          </StyledPortfolioPageNavButtons>
+          </PortfolioPageNavButtons>
           <ValueDisplay
             text="Total Portfolio Value"
             value={formatMonetaryValue(assets.length > 0 ? assets[assets.length - 1].totalAssetValue : 0)}
@@ -124,9 +124,9 @@ class PortfolioPage extends React.Component {
               customClassName="PortfolioPage__ValueDisplay--is-managementProfit"
             />
           )}
-        </StyledPortfolioPageValueDisplays>
+        </PortfolioPageValueDisplays>
         {assetsToRender.length > 0 && (
-          <StyledPortfolioPageExplore>
+          <PortfolioPageExplore>
             {assetsToRender.map(asset =>
               <Asset
                 type={currentView}
@@ -139,7 +139,7 @@ class PortfolioPage extends React.Component {
                 payoutAsset={payoutAsset}
               />
             )}
-          </StyledPortfolioPageExplore>
+          </PortfolioPageExplore>
         )}
         {error && error}
       </div>

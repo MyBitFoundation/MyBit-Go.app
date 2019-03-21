@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LogoSvg from 'static/mybit-logo_v2.svg';
 import LogoSvgMobile from 'static/mybit-logo-mobile.svg';
-import StyledLogo from './styledLogo';
+import LogoWrapper from './logoWrapper';
 
 const Logo = () => (
-  <StyledLogo>
+  <LogoWrapper>
     <LogoSvg/>
     <LogoSvgMobile />
-  </StyledLogo>
+  </LogoWrapper>
 );
 
 export default Logo;

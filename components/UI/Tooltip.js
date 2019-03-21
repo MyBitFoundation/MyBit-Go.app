@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import questionTooltip from "static/list-asset/questionTooltip.png";
 
-const StyledTooltip = styled(TooltipAnt)`
+const TooltipWrapper = styled(TooltipAnt)`
   font-size: 14px;
   transition: all 0.5s ease 0s;
   width: 20px;
@@ -12,9 +12,9 @@ const StyledTooltip = styled(TooltipAnt)`
 `;
 
 const Tooltip = (props) => (
-  <StyledTooltip {...props}>
+  <TooltipWrapper {...props}>
     <img src={questionTooltip} />
-  </StyledTooltip>
+  </TooltipWrapper>
 )
 
 

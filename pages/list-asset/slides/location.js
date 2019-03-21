@@ -4,18 +4,18 @@ import {
 } from "antd";
 
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideColoredSpan,
-  StyledCarouselSlideList,
-  StyledCarouselSlideInput,
-  StyledCarouselSlideSelect,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideColoredSpan,
+  CarouselSlideList,
+  CarouselSlideInput,
+  CarouselSlideSelect,
 } from 'components/CarouselSlide/';
 
 import Earth from "static/list-asset/assetList_earth.png";
 
-const StyledImage = styled.img`
+const Image = styled.img`
   position: relative;
   margin: 10px auto;
   width: 120px;
@@ -30,27 +30,27 @@ export const LocationSlide = ({
   maxWidthDesktop,
 }) => {
   return (
-    <StyledCarouselSlide>
-      <StyledCarouselSlideMainTitle
+    <CarouselSlide>
+      <CarouselSlideMainTitle
         isLong
         isSmallMobile
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
       What’s your location?
-    </StyledCarouselSlideMainTitle>
-      <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+      <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
         Different assets will be available to fund depending on where you are.
-      </StyledCarouselSlideParagraph>
-      <StyledImage
+      </CarouselSlideParagraph>
+      <Image
         src={Earth}
         alt="Earth"
       />
       <div className="Slider__input-container">
-        <StyledCarouselSlideSelect
+        <CarouselSlideSelect
           isCentered
           showSearch
           placeholder="Country"
@@ -66,14 +66,14 @@ export const LocationSlide = ({
               {country}
             </Option>
           ))}
-        </StyledCarouselSlideSelect>
-        <StyledCarouselSlideInput
+        </CarouselSlideSelect>
+        <CarouselSlideInput
           isCentered
           placeholder="City"
           name="userCity"
           onChange={e => handleInputChange(e)}
         />
       </div>
-    </StyledCarouselSlide>
+    </CarouselSlide>
   );
 };

@@ -1,35 +1,35 @@
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideList,
-  StyledCarouselSlideColoredSpan,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideList,
+  CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
 const What = ({
   next,
 }) => (
-  <StyledCarouselSlide>
-    <StyledCarouselSlideMainTitle
+  <CarouselSlide>
+    <CarouselSlideMainTitle
       isLong
       isSmallMobile
     >
-      <StyledCarouselSlideColoredSpan
+      <CarouselSlideColoredSpan
         isBlue
       >
         What{' '}
-      </StyledCarouselSlideColoredSpan>
+      </CarouselSlideColoredSpan>
       is an Asset Manager?
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph
       isIntro
       isFullWidth
     >
       Asset Managers are critical to the MyBit Go platform.
       They supervise the assets and are responsible for:
-    </StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
 
-    <StyledCarouselSlideList>
+    <CarouselSlideList>
       <li>
         Coordinating any local approval required and/or navigating regulations
         (e.g. getting approval from a store owner to place a Crypto ATM in their store).
@@ -42,8 +42,8 @@ const What = ({
         and ensuring it functions properly. This may include security, repairs, marketing,
         or replenishing funds in the case of a Crypto ATM.
       </li>
-    </StyledCarouselSlideList>
-  </StyledCarouselSlide>
+    </CarouselSlideList>
+  </CarouselSlide>
 )
 
 export default What;

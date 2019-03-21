@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'antd/lib/button';
-import MyBitButtonStyle from './styledButton';
+import ButtonWrapper from './buttonWrapper';
 
 const MyBitButton = ({
   size, styling, active, children, onClick,
 }) => (
   <div>
-    <MyBitButtonStyle styling={styling}>
+    <ButtonWrapper styling={styling}>
       <Button
         className={active ? 'ant-btn--is-active' : ''}
         size={size}
@@ -15,7 +15,7 @@ const MyBitButton = ({
       >
         {children}
       </Button>
-    </MyBitButtonStyle>
+    </ButtonWrapper>
   </div>
 );
 

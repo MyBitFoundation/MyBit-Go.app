@@ -11,8 +11,8 @@ import { getPrettyCategoryName } from 'utils/helpers';
 import {
   FundingStages,
 } from 'constants/fundingStages';
-import StyledWatchListFilters from './styledWatchListFilters';
-import StyledWatchListSwitch from './styledWatchListSwitch';
+import WatchListFilters from './watchListFilters';
+import WatchListSwitch from './watchListSwitch';
 import NoResults from 'components/NoResults';
 import AssetDisplayer from 'components/AssetDisplayer';
 
@@ -52,8 +52,8 @@ class WatchListPage extends React.Component {
 
     return (
       <React.Fragment>
-        <StyledWatchListFilters>
-          <StyledWatchListSwitch>
+        <WatchListFilters>
+          <WatchListSwitch>
             <span>Funding Active</span>
             <Switch
               onChange={isFundingActive => this.setState({ fundingActive: isFundingActive })}
@@ -61,8 +61,8 @@ class WatchListPage extends React.Component {
               checkedChildren={<Icon type="check" />}
               unCheckedChildren={<Icon type="close" />}
             />
-          </StyledWatchListSwitch>
-        </StyledWatchListFilters>
+          </WatchListSwitch>
+        </WatchListFilters>
         <AssetDisplayer
           assets={assetsFiltered}
           type="default"

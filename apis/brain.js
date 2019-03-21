@@ -16,7 +16,6 @@ import {
   ExternalLinks,
   InternalLinks,
   BLOCK_NUMBER_CONTRACT_CREATION,
-  SDK_CONTRACTS,
   DEFAULT_TOKEN_CONTRACT,
 } from '../constants';
 
@@ -30,6 +29,8 @@ import {
 
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
+
+const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 
 let fundingHubContract;
 
@@ -294,14 +295,6 @@ export const createAsset = async (onTransactionHash, onReceipt, onError, params)
       amountToBeRaised,
     } = params;
 
-    // Checks whether the user needs to approve the burning of MYB
-    const tokenContract = await Network.myBitToken();
-    const currentBurningAllowance = await tokenContract.methods.allowance(userAddress, SDK_CONTRACTS.ERC20Burner).call();
-    if(Number(currentBurningAllowance) === 0){
-      console.log("Going to approve the burning of MYB.")
-      await Network.approveBurn({from: userAddress});
-    }
-
     const randomURI = generateRandomURI(window.web3js);
     const api = await Network.api();
     const operatorID = await api.methods.getOperatorID(partnerContractAddress).call();
@@ -315,7 +308,7 @@ export const createAsset = async (onTransactionHash, onReceipt, onError, params)
       assetManagerPercent: managerPercentage,
       operatorID,
       fundingToken: DEFAULT_TOKEN_CONTRACT,
-      burnToken: SDK_CONTRACTS.MyBitToken,
+      paymentToken: DEFAULT_TOKEN_CONTRACT,
       createAsset: {
         onTransactionHash,
         onError: error => processErrorType(error, onError),
@@ -596,7 +589,7 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       //console.log("Network: ", Network)
       const api = await Network.api();
-      //console.log("API: ", api)
+      console.log("API: ", api)
       //const operators = await Network.operators();
       //const events = await Network.events();
       const database = await Network.database();
@@ -617,6 +610,8 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
               assetId: assetContractAddress,
             }
           });
+
+      console.log("assets: ", assets)
 
       const assetDetails = await Promise.all(assets.map(async asset =>  {
         const {
@@ -660,7 +655,7 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
           totalSupply = await dividendTokenETH.methods.totalSupply().call();
           percentageOwnedByUser = balanceOfUser / totalSupply;
           if(crowdsaleFinalized){
-            const timestamp = await Network.getBlockOfFunded(assetId)
+            const timestamp = await Network.getTimestampeOfFundedAsset(assetId)
             //console.log("BLOCK: ", timestamp)
             if(timestamp){
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
@@ -736,9 +731,10 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
       //console.log("OPERATORS: ", operators)
       //console.log("all events: ", operators.allEvents())
       //console.log(operatorID)
-      //console.log(events.operator('Operator registered', operatorID, 'The Collective', '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d'))
-      /*const operatorID = await api.methods.getOperatorID('0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d').call();
-      const x = await Network.acceptERC20Token({
+      //console.log("getting operator id...")
+      //const operatorID = await api.methods.getOperatorID('0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d').call();
+
+      /*const x = await Network.acceptERC20Token({
         id: operatorID,
         token: DEFAULT_TOKEN_CONTRACT,
         operator: '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d',

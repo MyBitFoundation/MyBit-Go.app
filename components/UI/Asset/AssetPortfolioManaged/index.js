@@ -10,13 +10,13 @@ import {
   FundingStages,
 } from 'constants';
 import ValueDisplay from 'ui/ValueDisplay';
-import StyledAssetPortfolioManagedContainer from './styledAssetPortfolioManagedContainer';
-import StyledAssetPortfolioManagedSection from './styledAssetPortfolioManagedSection';
-import StyledAssetPortfolioManagedButtons from './styledAssetPortfolioManagedButtons';
-import StyledAssetPortfolioManagedValue from './styledAssetPortfolioManagedValue';
-import StyledAssetPortfolioManagedValueDisplays from './styledAssetPortfolioManagedValueDisplays';
-import StyledAssetPortfolioManagedFundedLabel from './styledAssetPortfolioManagedFundedLabel';
-import StyledAssetPortfolioManagedFundedValue from './styledAssetPortfolioManagedFundedValue';
+import AssetPortfolioManagedContainer from './assetPortfolioManagedContainer';
+import AssetPortfolioManagedSection from './assetPortfolioManagedSection';
+import AssetPortfolioManagedButtons from './assetPortfolioManagedButtons';
+import AssetPortfolioManagedValue from './assetPortfolioManagedValue';
+import AssetPortfolioManagedValueDisplays from './assetPortfolioManagedValueDisplays';
+import AssetPortfolioManagedFundedLabel from './assetPortfolioManagedFundedLabel';
+import AssetPortfolioManagedFundedValue from './assetPortfolioManagedFundedValue';
 
 const AssetPortfolioManaged = ({
   funded,
@@ -69,8 +69,8 @@ const AssetPortfolioManaged = ({
   );
 
   return (
-    <StyledAssetPortfolioManagedContainer>
-      <StyledAssetPortfolioManagedValueDisplays>
+    <AssetPortfolioManagedContainer>
+      <AssetPortfolioManagedValueDisplays>
         <ValueDisplay
           text="Value"
           value={formatMonetaryValue(fundingGoal)}
@@ -85,40 +85,40 @@ const AssetPortfolioManaged = ({
             coloredBackground
           />
         )}
-      </StyledAssetPortfolioManagedValueDisplays>
-      <StyledAssetPortfolioManagedSection>
+      </AssetPortfolioManagedValueDisplays>
+      <AssetPortfolioManagedSection>
         <span>Your management fee:</span>
-        <StyledAssetPortfolioManagedValue>
+        <AssetPortfolioManagedValue>
           {managerPercentage}%
-        </StyledAssetPortfolioManagedValue>
-      </StyledAssetPortfolioManagedSection>
-      <StyledAssetPortfolioManagedSection>
+        </AssetPortfolioManagedValue>
+      </AssetPortfolioManagedSection>
+      <AssetPortfolioManagedSection>
         <span>
           Total profit:
         </span>
         <div>
-          <StyledAssetPortfolioManagedValue
+          <AssetPortfolioManagedValue
             isGray={!funded}
             isSmallMobile={!funded}
           >
             {funded ? formatMonetaryValue(totalProfitAssetManager) : pastDate ? 'Funding failed' : 'Funding in progress'}
-          </StyledAssetPortfolioManagedValue>
+          </AssetPortfolioManagedValue>
         </div>
-      </StyledAssetPortfolioManagedSection>
-      <StyledAssetPortfolioManagedSection
+      </AssetPortfolioManagedSection>
+      <AssetPortfolioManagedSection
         hasExtraMarginBottom
       >
         <span>Available for withdrawal:</span>
         <div>
-          <StyledAssetPortfolioManagedValue
+          <AssetPortfolioManagedValue
             isGray={!funded}
             isSmallMobile={!funded}
           >
             {funded ? formatMonetaryValue(toWithdraw) : pastDate ? 'Funding failed' : 'Funding in progress'}
-          </StyledAssetPortfolioManagedValue>
+          </AssetPortfolioManagedValue>
         </div>
-      </StyledAssetPortfolioManagedSection>
-      <StyledAssetPortfolioManagedSection>
+      </AssetPortfolioManagedSection>
+      <AssetPortfolioManagedSection>
         <div>
           {funded && (
             <span>
@@ -127,12 +127,12 @@ const AssetPortfolioManaged = ({
           )}
           {(!pastDate && fundingStage === FundingStages.IN_PROGRESS) && (
             <div>
-              <StyledAssetPortfolioManagedFundedLabel>
+              <AssetPortfolioManagedFundedLabel>
                 Funded:
-              </StyledAssetPortfolioManagedFundedLabel>
-              <StyledAssetPortfolioManagedFundedValue>
+              </AssetPortfolioManagedFundedLabel>
+              <AssetPortfolioManagedFundedValue>
                 {`${formatMonetaryValue(fundingProgress, 0, false)}/${formatMonetaryValue(fundingGoal)}`}
-              </StyledAssetPortfolioManagedFundedValue>
+              </AssetPortfolioManagedFundedValue>
             </div>
           )}
           {(pastDate && !funded) && (
@@ -141,11 +141,11 @@ const AssetPortfolioManaged = ({
             </span>
           )}
         </div>
-        <StyledAssetPortfolioManagedButtons>
+        <AssetPortfolioManagedButtons>
           {buttonWithLink || button}
-        </StyledAssetPortfolioManagedButtons>
-      </StyledAssetPortfolioManagedSection>
-    </StyledAssetPortfolioManagedContainer>
+        </AssetPortfolioManagedButtons>
+      </AssetPortfolioManagedSection>
+    </AssetPortfolioManagedContainer>
   )
 };
 

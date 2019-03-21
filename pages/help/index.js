@@ -11,19 +11,19 @@ import {
   FAQ,
   Buttons,
 } from 'constants/knowledgeBase';
-import StyledHelpPage from './styledHelpPage';
-import StyledHelpPageButtons from './styledHelpPageButtons';
-import StyledHelpPageQuestion from './styledHelpPageQuestion';
-import StyledHelpPageAnswer from './styledHelpPageAnswer';
-import StyledHelpPageButton from './styledHelpPageButton';
+import HelpPageWrapper from './helpPageWrapper';
+import HelpPageButtons from './helpPageButtons';
+import HelpPageQuestion from './helpPageQuestion';
+import HelpPageAnswer from './helpPageAnswer';
+import HelpPageButton from './helpPageButton';
 
 const { Panel } = Collapse;
 
 const HelpPage = () => (
-  <StyledHelpPage>
-    <StyledHelpPageButtons>
+  <HelpPageWrapper>
+    <HelpPageButtons>
       {Buttons.map(buttonInfo => (
-        <StyledHelpPageButton
+        <HelpPageButton
           key={buttonInfo.url}
           href={buttonInfo.url}
           isTelegram={buttonInfo.isTelegram}
@@ -38,22 +38,22 @@ const HelpPage = () => (
           >
             {buttonInfo.text}
           </Button>
-        </StyledHelpPageButton>
+        </HelpPageButton>
       ))}
-    </StyledHelpPageButtons>
+    </HelpPageButtons>
     <Collapse defaultActiveKey="About MyBit Go" onChange={() => {}} accordion>
       {FAQ.map(section => (
         <Panel header={section.title} key={section.title}>
           {section.content.map(content => (
             <div key={content.question}>
-              <StyledHelpPageQuestion>{content.question}</StyledHelpPageQuestion>
-              <StyledHelpPageAnswer>{content.answer}</StyledHelpPageAnswer>
+              <HelpPageQuestion>{content.question}</HelpPageQuestion>
+              <HelpPageAnswer>{content.answer}</HelpPageAnswer>
             </div>
           ))}
         </Panel>
       ))}
     </Collapse>
-  </StyledHelpPage>
+  </HelpPageWrapper>
 );
 
 export default HelpPage;

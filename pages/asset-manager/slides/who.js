@@ -1,47 +1,47 @@
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideColoredSpan,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
 const Who = ({
   next,
   previous,
 }) => (
-  <StyledCarouselSlide>
-    <StyledCarouselSlideMainTitle
+  <CarouselSlide>
+    <CarouselSlideMainTitle
       isLong
       isSmallMobile
     >
-    <StyledCarouselSlideColoredSpan
+    <CarouselSlideColoredSpan
       isBlue
     >
       Who
-    </StyledCarouselSlideColoredSpan>  is qualified to be an Asset Manager?
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideColoredSpan>  is qualified to be an Asset Manager?
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph
       hasMarginTop
     >
       Anyone who passes identity verification is eligible to be an Asset Manager.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph>
       Once approved, you have the right to be an Asset Manager for life.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph>
       However, this does not guarantee an income for life.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph>
       After being appointed, everything is based on trust.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph>
       That is, the more assets you manage successfully, the better your trust rating.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph>
       If you act badly, you will still be an Asset Manager, but investors may not fund
       your assets. In rare situations, you may be banned from the platform.
-    </StyledCarouselSlideParagraph>
-  </StyledCarouselSlide>
+    </CarouselSlideParagraph>
+  </CarouselSlide>
 )
 
 export default Who;

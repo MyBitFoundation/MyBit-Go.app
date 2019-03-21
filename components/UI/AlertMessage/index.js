@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import {
   Alert,
 } from 'antd';
-import StyledAlertMessage from './styledAlertMessage';
+import AlertMessageWrapper from './alertMessageWrapper';
 
 const AlertMessage = props => (
-  <StyledAlertMessage>
+  <AlertMessageWrapper>
     <Alert
       type={props.type}
       message={props.message}
@@ -13,7 +13,7 @@ const AlertMessage = props => (
       showIcon
       closable={props.closable}
     />
-  </StyledAlertMessage>
+  </AlertMessageWrapper>
 );
 
 export default React.memo(AlertMessage);

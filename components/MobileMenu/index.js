@@ -1,12 +1,11 @@
-import StyledMobileMenu from './styledMobileMenu';
 import {
   Icon,
 } from 'antd';
-import StyledMobileMenuApp from './styledMobileMenuApp';
-import StyledMobileMenuWrapper from './styledMobileMenuWrapper';
-import StyledMobileCloseButton from './styledMobileCloseButton';
-import StyledMobileMenuSection from './styledMobileMenuSection';
-import StyledMobileSections from './styledMobileSections';
+import MobileMenuApp from './mobileMenuApp';
+import MobileMenuWrapper from './mobileMenuWrapper';
+import MobileCloseButton from './mobileCloseButton';
+import MobileMenuSection from './mobileMenuSection';
+import MobileSections from './mobileMenuSections';
 
 import Sections from './mobileMenuComponents';
 
@@ -20,34 +19,34 @@ class MobileMenu extends React.PureComponent {
     } = this.props;
 
     return (
-      <StyledMobileMenu
+      <div
         isOpen={isOpen}
       >
-        <StyledMobileMenuWrapper
+        <MobileMenuWrapper
           isOpen={isOpen}
         >
-          <StyledMobileCloseButton onClick={() => handleMobileMenuState(false)}>
+          <MobileCloseButton onClick={() => handleMobileMenuState(false)}>
             <Icon type="close" />
-          </StyledMobileCloseButton>
-          <StyledMobileSections>
+          </MobileCloseButton>
+          <MobileSections>
             {Sections.map((Section, index) =>
               <React.Fragment key={`Section--${index}`}>
                 <Section
                   {...this.props}
                 />
                 {index !== Sections.length -1 &&
-                  <StyledMobileMenuSection />
+                  <MobileMenuSection />
                 }
               </React.Fragment>
             )}
-          </StyledMobileSections>
-          </StyledMobileMenuWrapper>
-          <StyledMobileMenuApp
+          </MobileSections>
+          </MobileMenuWrapper>
+          <MobileMenuApp
             isOpen={isOpen}
           >
             {children}
-          </StyledMobileMenuApp>
-      </StyledMobileMenu>
+          </MobileMenuApp>
+      </div>
     );
   }
 }

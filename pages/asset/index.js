@@ -5,7 +5,6 @@ import AssetDetails from 'components/AssetDetails';
 import { withBlockchainContext } from 'components/Blockchain'
 import BackButton from 'ui/BackButton';
 import Loading from 'components/Loading';
-import StyledButton from './styledButton';
 import ErrorPage from 'components/ErrorPage';
 
 class AssetPage extends React.Component {

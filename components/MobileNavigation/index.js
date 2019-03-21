@@ -2,15 +2,15 @@ import Link from 'next/link';
 import {
   Icon,
 } from 'antd';
-import StyledMobileNavigationLink from './styledMobileNavigationLink';
-import StyledMobileNavigationText from './styledMobileNavigationText';
+import MobileNavigationLink from './mobileNavigationLink';
+import MobileNavigationText from './mobileNavigationText';
 
 const MobileNavigation = ({
   items,
   currentPath,
   handleMobileMenuState,
 }) => items(currentPath).map(item =>
-  <StyledMobileNavigationLink
+  <MobileNavigationLink
     selected={item.selected}
     onClick={() => handleMobileMenuState(false)}
     key={item.name}
@@ -22,7 +22,7 @@ const MobileNavigation = ({
     >
       <a>{item.name}</a>
     </Link>
-  </StyledMobileNavigationLink>
+  </MobileNavigationLink>
 )
 
 export default React.memo(MobileNavigation);

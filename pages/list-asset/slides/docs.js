@@ -1,14 +1,13 @@
-import styled from 'styled-components';
 import {
   Upload,
   Icon,
 } from "antd";
 
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideTooltip,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideTooltip,
 } from 'components/CarouselSlide/';
 
 export const DocsSlide = ({
@@ -26,8 +25,8 @@ export const DocsSlide = ({
   };
 
   return (
-    <StyledCarouselSlide>
-      <StyledCarouselSlideMainTitle
+    <CarouselSlide>
+      <CarouselSlideMainTitle
         isLong
         isSmallMobile
         isCentered
@@ -35,19 +34,19 @@ export const DocsSlide = ({
       >
       <React.Fragment>
         Supporting docs
-        <StyledCarouselSlideTooltip
+        <CarouselSlideTooltip
           title="Supporting documents build trust with investors, confirming that you have
                  the required documents to install the asset in its stated location."
         />
       </React.Fragment>
-    </StyledCarouselSlideMainTitle>
-      <StyledCarouselSlideParagraph
+    </CarouselSlideMainTitle>
+      <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
         While not essential, assets with supporting documents are more likely to
         get funded. A maximum of five files can be uploaded. Each file can have up to 5MB.
-      </StyledCarouselSlideParagraph>
+      </CarouselSlideParagraph>
       <Upload.Dragger
         {...props}
         className="Slider__upload-content"
@@ -61,6 +60,6 @@ export const DocsSlide = ({
           Format .rar .zip .doc .docx .pdf .jpg...
         </p>
       </Upload.Dragger>
-    </StyledCarouselSlide>
+    </CarouselSlide>
   );
 }

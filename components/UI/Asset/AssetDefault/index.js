@@ -7,10 +7,10 @@ import {
 import{
   DEFAULT_TOKEN,
 } from 'constants';
-import StyledAssetDefaultDetailsContainer from './styledAssetDefaultDetailsContainer';
-import StyledAssetDefaultFunded from './styledAssetDefaultFunded';
-import StyledAssetDefaultGoal from './styledAssetDefaultGoal';
-import StyledAssetDefaultContributeButton from './styledAssetDefaultContributeButton';
+import AssetDefaultDetailsContainer from './assetDefaultDetailsContainer';
+import AssetDefaultFunded from './assetDefaultFunded';
+import AssetDefaultGoal from './assetDefaultGoal';
+import AssetDefaultContributeButton from './assetDefaultContributeButton';
 import { formatMonetaryValue } from 'utils/helpers';
 
 const AssetDefault = ({
@@ -34,17 +34,17 @@ const AssetDefault = ({
   }
 
   return (
-    <StyledAssetDefaultDetailsContainer
+    <AssetDefaultDetailsContainer
       barWidth={barWidth}
     >
-      <StyledAssetDefaultFunded>
+      <AssetDefaultFunded>
         Funded:{' '}
         <b>{progressFormatted}</b>
-      </StyledAssetDefaultFunded>
-      <StyledAssetDefaultGoal>
+      </AssetDefaultFunded>
+      <AssetDefaultGoal>
         Goal:{' '}
         <b>{goalFormatted}</b>
-      </StyledAssetDefaultGoal>
+      </AssetDefaultGoal>
       <div>
         <Progress percent={barWidth} />
         {barWidth === 100 && (
@@ -59,7 +59,7 @@ const AssetDefault = ({
         as={`/asset/${assetId}`}
         href={`/asset?id=${assetId}`}
       >
-        <StyledAssetDefaultContributeButton
+        <AssetDefaultContributeButton
           type={buttonType}
           onClick={
             clickHandler ||
@@ -67,9 +67,9 @@ const AssetDefault = ({
           }
         >
           {buttonText}
-        </StyledAssetDefaultContributeButton>
+        </AssetDefaultContributeButton>
       </Link>
-    </StyledAssetDefaultDetailsContainer>
+    </AssetDefaultDetailsContainer>
   )
 };
 

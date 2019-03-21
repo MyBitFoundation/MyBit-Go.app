@@ -4,7 +4,7 @@ import {
   Menu,
   Icon,
 } from 'antd';
-import StyledNavigationBar from './styledNavigationBar';
+import NavigationBarWrapper from './navigationBarWrapper';
 
 const NavigationBar = ({
   currentPath,
@@ -37,7 +37,7 @@ const NavigationBar = ({
   )});
 
   return (
-    <StyledNavigationBar>
+    <NavigationBarWrapper>
       <Menu
         mode="horizontal"
         className="AppNavigationBar"
@@ -45,7 +45,7 @@ const NavigationBar = ({
       >
         {navBarOptions}
       </Menu>
-    </StyledNavigationBar>
+    </NavigationBarWrapper>
   );
 };
 

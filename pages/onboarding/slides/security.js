@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import Key from 'static/onboarding/key.png';
 import {
-  StyledCarouselSlide,
-  StyledCarouselSlideMainTitle,
-  StyledCarouselSlideParagraph,
-  StyledCarouselSlideList,
-  StyledCarouselSlideColoredSpan,
+  CarouselSlide,
+  CarouselSlideMainTitle,
+  CarouselSlideParagraph,
+  CarouselSlideList,
+  CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const StyledImage = styled.img`
+const Image = styled.img`
   position: absolute;
   top: 57px;
   right: 240px;
@@ -21,32 +21,32 @@ const StyledImage = styled.img`
 }`
 
 const Security = () => (
-  <StyledCarouselSlide>
-    <StyledImage
+  <CarouselSlide>
+    <Image
       src={Key}
       width="69"
       alt="Key"
       isKey
     />
-    <StyledCarouselSlideMainTitle>
-      <StyledCarouselSlideColoredSpan
+    <CarouselSlideMainTitle>
+      <CarouselSlideColoredSpan
         isBlue
       >
         Key{' '}
-      </StyledCarouselSlideColoredSpan>
+      </CarouselSlideColoredSpan>
       security
-    </StyledCarouselSlideMainTitle>
-    <StyledCarouselSlideParagraph>
+    </CarouselSlideMainTitle>
+    <CarouselSlideParagraph>
       All of your investments are linked to your metamask
       account. We have no control over it or ability to restore it.{" "}
       If you lose your private key or password, it is gone forever.
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideParagraph
+    </CarouselSlideParagraph>
+    <CarouselSlideParagraph
       isTitle
     >
       Follow these steps to avoid loss!
-    </StyledCarouselSlideParagraph>
-    <StyledCarouselSlideList
+    </CarouselSlideParagraph>
+    <CarouselSlideList
       isSecurity
     >
       <li>
@@ -75,8 +75,8 @@ const Security = () => (
         </a>
         .
       </li>
-    </StyledCarouselSlideList>
-  </StyledCarouselSlide>
+    </CarouselSlideList>
+  </CarouselSlide>
 );
 
 export default Security;

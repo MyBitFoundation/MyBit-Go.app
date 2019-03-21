@@ -5,9 +5,12 @@
   "resolutions": {
     "terser": "3.14.1"
   },
+  "engines": {
+    "node": "10"
+  },
   "dependencies": {
     "@antv/data-set": "0.10.1",
-    "@mybit/network.js": "0.0.16",
+    "@mybit/network.js": "0.0.17",
     "@zeit/next-bundle-analyzer": "0.1.2",
     "@zeit/next-css": "1.0.1",
     "airtable": "0.5.8",

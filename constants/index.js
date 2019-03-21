@@ -14,4 +14,3 @@ export * from './sortByAssets';
 export * from './web3BackupProvider';
 export * from './fullScreenPages';
 export * from './cookies';
-export * from './sdkContracts';
