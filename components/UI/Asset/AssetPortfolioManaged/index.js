@@ -10,7 +10,7 @@ import {
   FundingStages,
 } from 'constants';
 import ValueDisplay from 'ui/ValueDisplay';
-import AssetPortfolioManagedContainer from './assetPortfolioManagedContainer';
+import AssetPortfolioManagedWrapper from './assetPortfolioManagedWrapper';
 import AssetPortfolioManagedSection from './assetPortfolioManagedSection';
 import AssetPortfolioManagedButtons from './assetPortfolioManagedButtons';
 import AssetPortfolioManagedValue from './assetPortfolioManagedValue';
@@ -69,7 +69,7 @@ const AssetPortfolioManaged = ({
   );
 
   return (
-    <AssetPortfolioManagedContainer>
+    <AssetPortfolioManagedWrapper>
       <AssetPortfolioManagedValueDisplays>
         <ValueDisplay
           text="Value"
@@ -89,7 +89,7 @@ const AssetPortfolioManaged = ({
       <AssetPortfolioManagedSection>
         <span>Your management fee:</span>
         <AssetPortfolioManagedValue>
-          {managerPercentage}%
+          {managerPercentage * 100}%
         </AssetPortfolioManagedValue>
       </AssetPortfolioManagedSection>
       <AssetPortfolioManagedSection>
@@ -145,7 +145,7 @@ const AssetPortfolioManaged = ({
           {buttonWithLink || button}
         </AssetPortfolioManagedButtons>
       </AssetPortfolioManagedSection>
-    </AssetPortfolioManagedContainer>
+    </AssetPortfolioManagedWrapper>
   )
 };
 

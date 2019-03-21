@@ -86,7 +86,7 @@ class AssetFundingConfirm extends React.Component {
         size="large"
         type={buttonProps.error ? 'default' : 'primary'}
         onClick={buttonProps.onClick}
-        disabled={buttonProps.error || (!acceptedTos && !buttonProps.href)}
+        disabled={buttonProps.error || (!acceptedTos && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
         href={buttonProps.href}
         target={buttonProps.href ? '_blank' : false}
       >

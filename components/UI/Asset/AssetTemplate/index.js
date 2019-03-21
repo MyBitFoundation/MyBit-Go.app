@@ -19,7 +19,7 @@ const AssetTemplate = ({
   margin,
   onClickImg,
 }) => (
-  <AssetTemplate
+  <AssetTemplateWrapper
     margin={margin}
   >
     <AssetTemplateImageHolder
@@ -42,7 +42,7 @@ const AssetTemplate = ({
       </AssetTemplateLocation>
     </AssetTemplateImageHolder>
     {children}
-  </AssetTemplate>
+  </AssetTemplateWrapper>
 );
 
 export default AssetTemplate;

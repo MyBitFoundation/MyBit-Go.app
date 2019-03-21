@@ -19,6 +19,13 @@ const getMetamaskErrors = (metamaskError, extensionUrl) => {
           href: 'https://metamask.io/',
         }
       };
+    case METAMASK_ERRORS.NOT_CONNECTED:
+      return {
+        buttonProps: {
+          text: 'Connect MetaMask',
+          onClick: window.ethereum.enable,
+        },
+      };
     case METAMASK_ERRORS.NOT_SUPPORTED:
       return {
         buttonProps: {

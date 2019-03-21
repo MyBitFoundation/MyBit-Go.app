@@ -9,7 +9,7 @@ import { formatMonetaryValue } from 'utils/helpers';
 import {
   FundingStages,
 } from 'constants';
-import AssetPortfolioInvestmentContainer from './assetPortfolioInvestmentContainer';
+import AssetPortfolioInvestmentWrapper from './assetPortfolioInvestmentWrapper';
 import AssetPortfolioInvestmentSection from './assetPortfolioInvestmentSection';
 import AssetPortfolioInvestmentValue from './assetPortfolioInvestmentValue';
 import AssetPortfolioInvestmentFundingLabel from './assetPortfolioInvestmentFundingLabel';
@@ -60,7 +60,7 @@ const AssetPortfolioInvestment = ({
   ) : null;
 
   return (
-    <AssetPortfolioInvestmentContainer>
+    <AssetPortfolioInvestmentWrapper>
       <AssetPortfolioInvestmentSection>
         <span>Unrealised profit:</span>
         {!funded ?
@@ -130,7 +130,7 @@ const AssetPortfolioInvestment = ({
           {button}
         </AssetPortfolioInvestmentButtons>
       </AssetPortfolioInvestmentSection>
-    </AssetPortfolioInvestmentContainer>
+    </AssetPortfolioInvestmentWrapper>
   )
 };
 

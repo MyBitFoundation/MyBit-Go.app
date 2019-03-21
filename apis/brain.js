@@ -589,7 +589,7 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       //console.log("Network: ", Network)
       const api = await Network.api();
-      console.log("API: ", api)
+      //console.log("API: ", api)
       //const operators = await Network.operators();
       //const events = await Network.events();
       const database = await Network.database();
@@ -611,29 +611,42 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
             }
           });
 
-      console.log("assets: ", assets)
+      //console.log("assets: ", assets)
 
       const assetDetails = await Promise.all(assets.map(async asset =>  {
         const {
           assetId,
         } = asset;
+        const dividendTokenETH = await Network.dividendTokenETH(assetId);
+        let platformFee = await api.methods.getAssetPlatformFee(assetId).call();
+        const totalSupply = await dividendTokenETH.methods.totalSupply().call();
         const assetOperator = await Network.getAssetOperator(assetId);
         const crowdsaleFinalized = await api.methods.crowdsaleFinalized(assetId).call();
         const fundingDeadline = await api.methods.getCrowdsaleDeadline(assetId).call();
-        const fundingGoal = await Network.getFundingGoal(assetId);
+        let fundingGoal = await Network.getFundingGoal(assetId);
         const assetManager = await Network.getAssetManager(assetId);
         const assetInvestors = await Network.getAssetInvestors(assetId);
         let fundingProgress = await Network.getFundingProgress(assetId);
         let assetManagerFee = await api.methods.getAssetManagerFee(assetId).call();
-        assetManagerFee = (Number(assetManagerFee) / (fundingGoal + Number(assetManagerFee)));
+
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
         const escrow = await api.methods.getAssetManagerEscrow(escrowId).call();
         let daysSinceItWentLive = 1;
         let assetIncome = 0;
         let managerHasToCallPayout = false;
-        let totalSupply;
         let investment = 0;
-        /*console.log("Asset contract: ", assetId)
+
+        assetManagerFee = BN(assetManagerFee);
+        platformFee = BN(platformFee);
+        fundingGoal = BN(fundingGoal);
+        console.log(fundingGoal)
+        const totalShares = fundingGoal.plus(assetManagerFee).plus(platformFee);
+        assetManagerFee = assetManagerFee.div(totalShares).toNumber();
+        fundingGoal = fundingGoal.toNumber();
+        platformFee = platformFee.toNumber();
+
+        console.log("Total sharest: ", totalShares)
+        console.log("Asset contract: ", assetId)
         console.log("Asset operator: ", assetOperator)
         console.log("Crowdsale finalized: ", crowdsaleFinalized);
         console.log("Funding Deadline: ", fundingDeadline);
@@ -642,18 +655,17 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
         console.log("Asset Investors: ", assetInvestors)
         console.log("Funding Progress: ", fundingProgress)
         console.log("Manager fee bgn: ", assetManagerFee)
-        console.log("Manager Fee: ", assetManagerFee);
+        console.log("Total supply: ", totalSupply)
+        console.log("Platform fee: ", platformFee)
         console.log("Escrow Id: ", escrowId);
         console.log("Escrow: ", fromWeiToEth(BN(escrow).toString()))
-        console.log("\n\n")*/
+        console.log("\n\n")
 
         let percentageOwnedByUser = 0;
         if(realAddress && assetInvestors.includes(realAddress)){
-          const dividendTokenETH = await Network.dividendTokenETH(assetId);
           const balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
           investment = fromWeiToEth(BN(balanceOfUser).toString());
-          totalSupply = await dividendTokenETH.methods.totalSupply().call();
-          percentageOwnedByUser = balanceOfUser / totalSupply;
+          percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
           if(crowdsaleFinalized){
             const timestamp = await Network.getTimestampeOfFundedAsset(assetId)
             //console.log("BLOCK: ", timestamp)
@@ -677,12 +689,12 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
             }
           }
 
-          /*console.log("DividendTokenETH: ", dividendTokenETH)
+          console.log("DividendTokenETH: ", dividendTokenETH)
           console.log("INVESTMENT: ", fromWeiToEth(BN(balanceOfUser).toString()));
           console.log("Supply: ", fromWeiToEth(BN(totalSupply).toString()));
           console.log("Percentage: ", percentageOwnedByUser);
           console.log("\n\n")
-          console.log("\n\n")*/
+          console.log("\n\n")
         }
 
         const searchQuery = `mybit_watchlist_${assetId}`;
@@ -697,16 +709,11 @@ export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableBy
 
         const isAssetManager = assetManager === realAddress;
 
-        const amountToBeRaisedInUSD = fromWeiToEth(fundingGoal) * currentEthInUsd;
-        const amountRaisedInUSD = fromWeiToEth(fundingProgress) * currentEthInUsd;
-
         return {
           ...asset,
           managerHasToCallPayout,
           fundingGoal: Number(Number(fromWeiToEth(fundingGoal)).toFixed(2)),
           fundingProgress: Number(Number(fromWeiToEth(fundingProgress)).toFixed(2)),
-          amountRaisedInUSD,
-          amountToBeRaisedInUSD,
           fundingStage,
           pastDate,
           isAssetManager,
