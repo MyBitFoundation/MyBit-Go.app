@@ -308,7 +308,7 @@ export const createAsset = async (onTransactionHash, onReceipt, onError, params)
       assetManagerPercent: managerPercentage,
       operatorID,
       fundingToken: DEFAULT_TOKEN_CONTRACT,
-      paymentToken: DEFAULT_TOKEN_CONTRACT,
+      paymentToken: SDK_CONTRACTS.MyBitToken,
       createAsset: {
         onTransactionHash,
         onError: error => processErrorType(error, onError),
