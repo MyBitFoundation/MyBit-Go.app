@@ -4,6 +4,9 @@ import Spin from 'static/spin.svg';
 import StyledSpin from './styledSpin';
 import BalanceLabel from './balanceLabel';
 import BalanceAmount from './balanceAmount';
+import {
+  formatMonetaryValue,
+} from 'utils/helpers';
 
 const Balance = (props) => {
   const {
@@ -12,7 +15,7 @@ const Balance = (props) => {
     noInfo,
   } = props;
 
-  const balanceFormatted = `${balance} DAI`;
+  const balanceFormatted = formatMonetaryValue(balance);
 
   return (
     <div>

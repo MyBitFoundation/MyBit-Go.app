@@ -27,11 +27,26 @@ class TokenSelector extends React.Component {
   }
 
   componentWillMount = () => {
+    this.processBalances(this.props, true);
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const {
+      balances,
+      amountToPay,
+    } = this.props;
+
+    if(nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
+      this.processBalances(nextProps, false);
+    }
+  }
+
+  processBalances = (props, callOnChange) => {
     const {
       balances,
       amountToPay,
       onChange,
-    } = this.props;
+    } = props;
 
     let selectedToken;
     const tokensEnum = balances ? Object.entries(balances) : [];
@@ -45,12 +60,15 @@ class TokenSelector extends React.Component {
     }
 
     this.setState({
-      selectedToken,
+      selectedToken: callOnChange ? selectedToken : this.state.selectedToken,
       totalTokens,
       tokensEnum,
       sortedBalances,
     })
-    onChange(selectedToken);
+
+    if(callOnChange) {
+      onChange(selectedToken);
+    }
   }
 
   getSortedBalances = (tokensEnum, amountToPay) => {

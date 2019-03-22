@@ -46,7 +46,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
     categoriesAirTable,
     getCategoriesForAssets,
   } = airtableContext;
-  if(!categoriesAirTable){
+  if(!categoriesAirTable || !assetsAirTable){
     return null;
   }
 

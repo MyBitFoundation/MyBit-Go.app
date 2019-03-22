@@ -10,8 +10,9 @@ export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether
 
 export const convertTokenAmount = (convertTo, convertFrom, balances, amount) => {
   if(convertTo === convertFrom){
-    return amount;
+    return Number(amount);
   }
+
   const tokenConvertTo = balances[convertTo];
   const tokenConvertFrom = balances[convertFrom];
   const amountInEth = amount * (tokenConvertFrom.currentPrice || 1);
@@ -24,15 +25,6 @@ export const formatMonetaryValue = (number, fractionDigits = 0, includeToken = t
     let value = Number(number).toLocaleString('en-US', {
       minimumFractionDigits: fractionDigits,
     });
-
-    value = parseFloat(value).toString();
-
-    const index = value.indexOf('.');
-
-    if (index !== -1) {
-      const sliced = value.substr(index, 3);
-      value = sliced.length === 2 ? `${value}0` : value;
-    }
 
     return includeToken ? `${value} ${customToken ? customToken : DEFAULT_TOKEN}` : value;
   }catch(err) {

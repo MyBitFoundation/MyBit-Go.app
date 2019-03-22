@@ -50,6 +50,7 @@ class MetamaskChecker extends Component {
       extensionUrl: undefined,
       user: { balances: {}},
       metamaskErrors: this.metamaskErrors,
+      loadingBalances: true,
     };
     this.hasSetInitialState = false;
   };
@@ -62,6 +63,8 @@ class MetamaskChecker extends Component {
       network,
       privacyModeEnabled
     } = this.state;
+
+    console.log(this.state)
 
     let toRender = null;
     let error;
@@ -142,9 +145,9 @@ class MetamaskChecker extends Component {
       user,
     } = this.state;
 
-    if(nextProps.supportedTokensInfo !== supportedTokensInfo && user.address){
-      this.getUserInfo(this.state.privacyModeEnabled);
-    }
+    //if(nextProps.supportedTokensInfo !== supportedTokensInfo && user.address){
+      this.getUserInfo(this.state.privacyModeEnabled, this.state.network, nextProps.supportedTokensInfo);
+    //}
   }
 
   fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress, cb) => {
@@ -175,19 +178,20 @@ class MetamaskChecker extends Component {
 
     this.setState({
       ...this.state,
+      loadingBalances: false,
       user: {
         ...this.state.user,
         balances: updatedTokensWithBalance,
         avgBalance: Number(parseFloat(sumOfBalances.toFixed(2))),
       },
-    }, () => console.log(this.state));
+    });
   }
 
   isReadOnlyMode = (userHasMetamask, userIsLoggedIn, network, privacyModeEnabled) => {
     return !userHasMetamask || !userIsLoggedIn || network !== CORRECT_NETWORK || privacyModeEnabled === undefined;
   }
 
-  updateStateWithUserInfo = (privacyModeEnabled, network, ethBalance, address, userIsLoggedIn) => {
+  updateStateWithUserInfo = (privacyModeEnabled, network, ethBalance, address, userIsLoggedIn, supportedTokensInfo) => {
     const {
       privacyModeEnabled : oldPrivacyModeEnabled,
       network: oldNetwork,
@@ -198,21 +202,13 @@ class MetamaskChecker extends Component {
       address: oldAddress,
     } = oldUser;
 
-    const supportedTokensInfo = this.props.supportedTokensInfo;
+    const supportedTokens = supportedTokensInfo || this.props.supportedTokensInfo;
+    //TODO bad. need a way to know when to refresh, we need a more specific flag from the kyberContext component
+    if(supportedTokens){
+      this.fetchUserBalances(supportedTokens, ethBalance, address);
+    }
 
-    if(oldPrivacyModeEnabled !== privacyModeEnabled || oldNetwork !== network || oldUser.address !== address || (oldUser.balances['ETH'] && oldUser.balances['ETH'].balance !== ethBalance)){
-      supportedTokensInfo && this.fetchUserBalances(supportedTokensInfo, ethBalance, address, tokensWithBalances => {
-        this.setState({
-          ...this.state,
-          user: {
-            ...this.state.user,
-            address,
-            balances: {
-              ...tokensWithBalances,
-            },
-          },
-        })
-      });
+    if(oldPrivacyModeEnabled !== privacyModeEnabled || oldNetwork !== network || oldUser.address !== address ){
       this.setState({
         network,
         user: {
@@ -246,7 +242,7 @@ class MetamaskChecker extends Component {
     }
   }
 
-  getUserInfo = async (privacyModeEnabled, network) => {
+  getUserInfo = async (privacyModeEnabled, network, supportedTokensInfo) => {
     try{
       network = network || this.state.network;
       const accounts = await window.web3js.eth.getAccounts();
@@ -258,13 +254,13 @@ class MetamaskChecker extends Component {
         }
         ethBalance = Number(window.web3js.utils.fromWei(ethBalance, 'ether'));
 
-        this.updateStateWithUserInfo(privacyModeEnabled, network, ethBalance, accounts[0], userIsLoggedIn);
+        this.updateStateWithUserInfo(privacyModeEnabled, network, ethBalance, accounts[0], userIsLoggedIn, supportedTokensInfo);
       } else {
         this.updateStateNoAccess(privacyModeEnabled, network, userIsLoggedIn);
       }
     }catch(err){
       console.log(err)
-      this.getUserInfo(privacyModeEnabled, network);
+      this.getUserInfo(privacyModeEnabled, network, supportedTokensInfo);
     }
   }
 
@@ -335,6 +331,7 @@ class MetamaskChecker extends Component {
       isReadOnlyMode: true,
       userHasMetamask: false,
       userIsLoggedIn: false,
+      loadingBalances: false,
       extensionUrl,
     });
   }

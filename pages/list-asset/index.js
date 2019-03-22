@@ -27,6 +27,9 @@ import {
   ConfirmSlide,
   SuccessSlide,
 } from "./slides";
+import {
+  convertTokenAmount,
+} from 'utils/helpers';
 
 const MAX_WIDTH_DESKTOP = "500px";
 
@@ -49,11 +52,14 @@ class ListAssetPage extends React.Component {
         assetProvince: 'a',
         assetPostalCode: 'a',
         fileList: [],
-        managementFee: 0,
+        managementFee: 10,
+        maxCollateralPercentage: 100,
         collateralPercentage: 0,
         collateralMyb: 0,
-        collateralDollar: 0,
+        collateralDai: 0,
+        collateralSelectedToken: 0,
         partnerContractAddress: '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d',
+        selectedToken: 'DAI',
       },
       countries: COUNTRIES,
       isUserListingAsset: false,
@@ -96,6 +102,22 @@ class ListAssetPage extends React.Component {
         data: { ...this.state.data, [e.target.name]: e.target.value }
     });
   };
+
+  handleSelectedTokenChange = selectedToken => {
+    const collateralDai = this.state.data.collateralDai;
+    const balances = this.props.metamaskContext.user.balances;
+
+    const convertedAmount = convertTokenAmount(selectedToken, 'DAI', balances, collateralDai)
+    const collateralSelectedToken = parseFloat(convertedAmount.toFixed(2))
+
+    this.setState({
+      data: {
+        ...this.state.data,
+        selectedToken,
+        collateralSelectedToken,
+      },
+    });
+  }
 
   handleSelectChange = (value, name) => {
     if(name === 'asset'){
@@ -156,37 +178,67 @@ class ListAssetPage extends React.Component {
   };
 
   handleCollateralChange = (value, name) => {
-    let percentage, dollar, myb;
-    const { assetValue } = this.state.data;
+    let percentage, myb, dai, collateralSelectedToken, maxCollateralPercentage;
+
+    const {
+      assetValue,
+      selectedToken,
+    } = this.state.data;
+
     const {
       selectedAmount,
-      mybPrice,
     } = value;
-    switch (name) {
-      case "percentage":
-        percentage = selectedAmount;
-        dollar = (percentage / 100) * assetValue;
-        myb = dollar / mybPrice;
-        break;
-      case "myb":
-        myb = selectedAmount;
-        dollar = mybPrice * myb;
-        percentage = parseInt((dollar / assetValue) * 100);
-        break;
-      case "dollar":
-        dollar = selectedAmount;
-        myb = dollar / mybPrice;
-        percentage = parseInt((dollar / assetValue) * 100);
-        break;
-      default: return null;
+
+    const {
+      metamaskContext,
+    } = this.props;
+
+    const balances = metamaskContext.user.balances;
+
+    const totalTokens = Object.keys(balances).length;
+    if(totalTokens > 0){
+      const selectedTokenInfo = balances[selectedToken];
+      const maxAmountAllowedInDai = !selectedTokenInfo ? 0
+        : selectedTokenInfo.balanceInDai > assetValue
+          ? assetValue
+            : selectedTokenInfo.balanceInDai;
+
+      maxCollateralPercentage = maxAmountAllowedInDai === 0 ? 0 : parseInt((maxAmountAllowedInDai / assetValue) * 100);
+
+      const maxInMyb = maxAmountAllowedInDai === 0 ? 0 : convertTokenAmount('MYB', 'DAI', balances, maxAmountAllowedInDai);
+      const maxCollateralSelectedToken = maxAmountAllowedInDai === 0 ? 0 : parseFloat(convertTokenAmount(selectedToken, 'DAI', balances, maxAmountAllowedInDai).toFixed(2));
+      switch (name) {
+        case "percentage":
+          percentage = selectedAmount;
+          myb = parseFloat(convertTokenAmount('MYB', 'DAI', balances, maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
+          dai = parseFloat((maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
+          collateralSelectedToken = parseFloat(convertTokenAmount(selectedToken, 'DAI', balances, dai).toFixed(2))
+          break;
+        case "myb":
+          myb = selectedAmount > maxInMyb ? parseFloat(maxInMyb.toFixed(2)) : selectedAmount
+          percentage = parseInt((myb / maxInMyb) * 100)
+          dai = (maxAmountAllowedInDai * percentage).toFixed(2)
+          collateralSelectedToken = convertTokenAmount(selectedToken, 'DAI', balances, dai)
+          break;
+        case "selectedToken":
+          collateralSelectedToken = selectedAmount > maxCollateralSelectedToken ? maxCollateralSelectedToken : parseFloat(Number(selectedAmount).toFixed(2))
+          dai = parseFloat(convertTokenAmount('DAI', selectedToken, balances, collateralSelectedToken).toFixed(2))
+          myb = parseFloat(convertTokenAmount('MYB', 'DAI', balances, dai).toFixed(2))
+          percentage = parseInt((dai/maxAmountAllowedInDai) * 100)
+          break;
+        default: return null;
+      }
     }
+
     this.setState(
       {
         data: {
           ...this.state.data,
-          collateralDollar: dollar,
           collateralMyb: myb,
-          collateralPercentage: percentage
+          collateralDai: dai,
+          collateralPercentage: percentage,
+          maxCollateralPercentage,
+          collateralSelectedToken,
         }
       });
   };
@@ -209,18 +261,18 @@ class ListAssetPage extends React.Component {
 
     const {
       managementFee,
-      collateralDollar,
       collateralMyb,
       collateralPercentage,
       assetValue,
       fileList,
+      selectedToken,
+      collateralDai,
+      maxCollateralPercentage,
+      collateralSelectedToken,
     } = this.state.data;
 
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
-
-    console.log(metamaskErrorsToRender)
-
-    console.log("render method: ", metamaskErrorsToRender.render)
+    const loadingBalances = metamaskContext.loadingBalances;
 
     return (
       <CarouselWithNavigation
@@ -313,30 +365,25 @@ class ListAssetPage extends React.Component {
             nextButtonDisabled: managementFee !== 0 ? false : true,
           }
         }, {
-          toRender: (
-            <CollateralSlide
-              handleCollateralChange={this.handleCollateralChange}
-              collateralDollar={
-                typeof collateralDollar === "string" ? 0 : collateralDollar
-              }
-              collateralPercentage={collateralPercentage}
-              collateralMyb={
-                typeof collateralMyb === "string" ? 0 : collateralMyb
-              }
-              constraints={{
-                max_percentage: 100,
-                min_myb: 0,
-                max_myb: assetValue / MYB_PLACEHOLDER,
-                min_dollars: 0,
-                max_dollars: assetValue
-              }}
-              formData={data}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            />
-          ), buttons: {
+          toRender:
+            !loadingBalances && (
+              <CollateralSlide
+                collateralSelectedToken={collateralSelectedToken}
+                collateralDai={collateralDai}
+                selectedToken={selectedToken}
+                handleSelectedTokenChange={this.handleSelectedTokenChange}
+                handleCollateralChange={this.handleCollateralChange}
+                collateralPercentage={collateralPercentage}
+                collateralMyb={collateralMyb}
+                formData={data}
+                maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                balances={metamaskContext.user.balances}
+                maxCollateralPercentage={maxCollateralPercentage}
+              />
+            )
+          , buttons: {
             hasNextButton: true,
             hasBackButton: true,
-            nextButtonDisabled: collateralMyb !== 0 ? false : true,
           }
         }, {
           toRender: listedAssetId ? (

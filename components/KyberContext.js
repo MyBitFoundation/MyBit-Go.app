@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { LOAD_SUPPORTED_TOKENS_TIME } from 'constants/timers';
+const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 import {
   debug,
 } from 'utils/helpers';
@@ -87,6 +88,15 @@ class KyberProvider extends React.Component {
           }
         }
       }
+
+      // TODO Remove once Kyber adds us
+      supportedTokensInfo['MYB'] = {
+        contractAddress: SDK_CONTRACTS.MyBitToken,
+        currentPrice: 0.00005761,
+        decimals: 18,
+        name: "MYB",
+      };
+
       debug("supportedTokensInfo (kyberContext): ", supportedTokensInfo);
       this.setState({
         supportedTokensInfo,
