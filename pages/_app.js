@@ -7,7 +7,6 @@ import BlockchainProvider from 'components/Blockchain';
 import KyberProvider from 'components/KyberContext';
 import NotificationsProvider from 'components/NotificationsModule';
 import Notifications from 'components/Notifications';
-import TokenPricesProvider from 'components/TokenPrices';
 import MetamaskChecker from 'components/MetamaskChecker';
 import Head from 'components/Head';
 import GlobalStyle from 'components/globalStyle';
@@ -17,12 +16,10 @@ import MobileMenu from 'components/MobileMenu'
 import BancorContainer from 'ui/BancorContainer';
 import Cookie from 'js-cookie';
 import Router from 'next/router';
-import {
-  navbarOptions,
-  WEB3_BACKUP_PROVIDER,
-  FULL_SCREEN_PAGES,
-  COOKIES,
-} from 'constants';
+import { navbarOptions } from 'constants/navigationBar';
+import { WEB3_BACKUP_PROVIDER } from 'constants/web3BackupProvider';
+import { FULL_SCREEN_PAGES } from 'constants/fullScreenPages';
+import { COOKIES } from 'constants/cookies';
 
 class MyApp extends App {
   state = {
@@ -111,17 +108,15 @@ class MyApp extends App {
 const WithProviders = ({ children }) => (
     <NotificationsProvider>
       <AirtableProvider>
-        <TokenPricesProvider>
-          <KyberProvider>
-            <MetamaskChecker
-              backupProvider={WEB3_BACKUP_PROVIDER}
-            >
-              <BlockchainProvider>
-                {children}
-              </BlockchainProvider>
-            </MetamaskChecker>
-          </KyberProvider>
-        </TokenPricesProvider>
+        <KyberProvider>
+          <MetamaskChecker
+            backupProvider={WEB3_BACKUP_PROVIDER}
+          >
+            <BlockchainProvider>
+              {children}
+            </BlockchainProvider>
+          </MetamaskChecker>
+        </KyberProvider>
       </AirtableProvider>
     </NotificationsProvider>
 );

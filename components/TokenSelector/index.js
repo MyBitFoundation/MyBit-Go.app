@@ -10,7 +10,7 @@ import {
 } from 'utils/helpers';
 import {
   DEFAULT_TOKEN,
-} from 'constants';
+} from 'constants/app';
 
 import TokenBalanceItem from 'ui/TokenBalanceItem';
 import TokenSelectorSearch from './tokenSelectorSearch';

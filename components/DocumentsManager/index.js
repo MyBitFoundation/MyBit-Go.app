@@ -8,8 +8,8 @@ import UploadButton from 'ui/UploadButton';
 import {
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
-  InternalLinks,
-} from 'constants';
+} from 'constants/app';
+import { InternalLinks } from 'constants/links';
 import FileImg from 'static/file-icon.svg';
 import * as Brain from '../../apis/brain';
 import DocumentsManagerTitle from './documentsManagerTitle';

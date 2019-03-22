@@ -9,15 +9,20 @@ import * as FundingHub from '../constants/contracts/FundingHub';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
 import * as Asset from '../constants/contracts/Asset';
 import * as AssetCollateral from '../constants/contracts/AssetCollateral';
+
+import { ErrorTypes } from 'constants/errorTypes';
 import {
-  ErrorTypes,
-  FundingStages,
-  getFundingStage,
-  ExternalLinks,
   InternalLinks,
+  ExternalLinks,
+} from 'constants/links';
+import {
+  FundingStages,
+  getFundingStage
+} from 'constants/fundingStages';
+import {
   BLOCK_NUMBER_CONTRACT_CREATION,
   DEFAULT_TOKEN_CONTRACT,
-} from '../constants';
+} from 'constants/app';
 
 import {
   generateRandomURI,
@@ -580,7 +585,7 @@ const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, as
     ]);
 }
 
-export const fetchAssets = async (userAddress, currentEthInUsd, assetsAirTableById, categoriesAirTable) =>
+export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
       if(!Network){

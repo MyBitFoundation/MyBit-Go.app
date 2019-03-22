@@ -50,7 +50,7 @@ Not required but civic won't work in a development environment, only once your P
 Free to generate at infura's [website](https://infura.io/). Required.
 
 - BUCKET_REGION | AWS_ACCESS_KEY | BUCKET_NAME | AWS_SECRET_KEY
-Currently the application won't work without these. 
+Currently the application won't work without these.
 
 - AIRTABLE_KEY
 Create a free account at [airtable](https://airtable.com) and copy [our table](https://airtable.com/shrpZZvivqhhoUbWn), then use your own [API key](url). Required.
@@ -58,12 +58,12 @@ Create a free account at [airtable](https://airtable.com) and copy [our table](h
 ### Contexts
 The application is built around a series of Contexts (See [React Context](https://reactjs.org/docs/context.html)) in conjunction with [HOCs](https://reactjs.org/docs/higher-order-components.html) to provide different data to different components across the appliacation.
 
-The following Contexts are available: 
+The following Contexts are available:
 
 - [MetamaskChecker](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/MetamaskChecker/index.js)
 - [Blockchain](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Blockchain.js)
-- [AIrtable](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Airtable.js)
-- [TokenPrices](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/TokenPrices.js)
+- [Airtable](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Airtable.js)
+- [Kyber](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/KyberContext.js)
 
 So if you need any of the information inside these contexts you can use the `with` high order component each of them provides.
 
@@ -79,10 +79,10 @@ As said previously we use Styled Components but we also use a set of standards a
 We use Styled Components [Theme Provider](https://www.styled-components.com/docs/advanced#theming) component to have access to our own theme properties. See [this](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Theme/index.js) file with the declaration and an example of using it [here](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/MobileMenu/styledMobileMenuWrapper.js).
 
 #### Standards for naming
-Each styled component is ideally declared inside its own file and for this reason the name of that file, say you are customising a button and your component is call `Navbar`then this new styled component file would be named `navBarButton.js`. So you keep the name of the Main component attached to each styled component file used inside it. 
+Each styled component is ideally declared inside its own file and for this reason the name of that file, say you are customising a button and your component is call `Navbar`then this new styled component file would be named `navBarButton.js`. So you keep the name of the Main component attached to each styled component file used inside it.
 
 In this case the main styled component `Navbar` could be declared in a different file using `navBarWrapper.js` and then used inside `/NavBar/index.js` like so: ´<NavBarWrapper>´.
-  
+
 So the folder structure would be:
 ```
 NavBar/index.js
@@ -114,7 +114,7 @@ The following folders are available from anywhere (but `/server`):
 - static
 - components
 - constants
-- utils 
+- utils
 - ui
 
 ### User Documentation

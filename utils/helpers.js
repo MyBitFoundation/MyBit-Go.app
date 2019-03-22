@@ -1,6 +1,6 @@
 import {
   DEFAULT_TOKEN,
-} from 'constants';
+} from 'constants/app';
 
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
 

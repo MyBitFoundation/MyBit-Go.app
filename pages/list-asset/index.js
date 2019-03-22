@@ -14,8 +14,8 @@ import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
-  COOKIES,
-} from 'constants';
+} from 'constants/app';
+import { COOKIES } from 'constants/cookies';
 import {
   IntroSlide,
   LocationSlide,

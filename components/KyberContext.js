@@ -1,9 +1,5 @@
 import PropTypes from 'prop-types';
-
-import {
-  LOAD_SUPPORTED_TOKENS_TIME,
-} from 'constants';
-
+import { LOAD_SUPPORTED_TOKENS_TIME } from 'constants/timers';
 import {
   debug,
 } from 'utils/helpers';

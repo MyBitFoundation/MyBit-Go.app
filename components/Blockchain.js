@@ -8,22 +8,20 @@ import axios from 'axios';
 import { withAirtableContext } from 'components/Airtable';
 import { withNotificationsContext } from 'components/NotificationsModule';
 import { withMetamaskContext } from 'components/MetamaskChecker';
-import { withTokenPricesContext } from 'components/TokenPrices';
 import * as Brain from '../apis/brain';
 
+import { ErrorTypes } from 'constants/errorTypes';
+import {InternalLinks } from 'constants/links';
 import {
-  ErrorTypes,
-  InternalLinks,
   NotificationTypes,
   NotificationsMetamask,
   NotificationStatus,
-  MYBIT_TICKER_COINMARKETCAP,
-  ETHEREUM_TICKER_COINMARKETCAP,
+} from 'constants/notifications';
+import {
   FETCH_ASSETS_TIME,
   LOAD_METAMASK_USER_DETAILS_TIME,
   FETCH_TRANSACTION_HISTORY_TIME,
-} from 'constants';
-
+} from 'constants/timers';
 import {
   debug,
   formatMonetaryValue,
@@ -404,14 +402,6 @@ class BlockchainProvider extends React.Component {
 
   handleListAsset = async (formData, setUserListingAsset) => {
     const {
-      prices,
-    } = this.props.pricesContext;
-
-    const {
-      ethereum,
-    } = prices;
-
-    const {
       asset: assetName,
       userCountry: country,
       userCity: city,
@@ -729,7 +719,6 @@ class BlockchainProvider extends React.Component {
 
   fetchAssets = async () => {
     const {
-      pricesContext,
       metamaskContext,
     } = this.props;
 
@@ -739,20 +728,16 @@ class BlockchainProvider extends React.Component {
     } = metamaskContext;
 
     const {
-      prices,
-    } = pricesContext;
-
-    const {
       categoriesAirTable,
       assetsAirTableById,
     } = this.props.airtableContext;
 
-    if (!prices.ethereum || !assetsAirTableById || !categoriesAirTable) {
+    if (!assetsAirTableById || !categoriesAirTable) {
       setTimeout(this.fetchAssets, 2000);
       return;
     }
 
-    await Brain.fetchAssets(user.address, prices.ethereum.price, assetsAirTableById, categoriesAirTable)
+    await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
         this.setState({
@@ -802,7 +787,6 @@ BlockchainProvider.propTypes = {
 const enhance = compose(
   withNotificationsContext,
   withMetamaskContext,
-  withTokenPricesContext,
   withAirtableContext,
 );
 

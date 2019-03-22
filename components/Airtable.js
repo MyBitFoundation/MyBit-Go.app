@@ -1,11 +1,11 @@
+import { InternalLinks } from 'constants/links';
 import {
-  InternalLinks,
   AIRTABLE_ASSETS_RULES,
   AIRTABLE_CATEGORIES_RULES,
+  verifyDataAirtable,
   PULL_ASSETS_TIME,
   PULL_CATEGORIES_TIME,
-  verifyDataAirtable,
-} from 'constants';
+ } from 'constants/airtable';
 
 import {
   fetchWithCache,

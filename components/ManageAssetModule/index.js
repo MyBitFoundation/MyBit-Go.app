@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { compose } from 'recompose'
 import { withMetamaskContext } from 'components/MetamaskChecker';
 import { withBlockchainContext } from 'components/Blockchain';
-import { withTokenPricesContext } from 'components/TokenPrices';
 import {
   formatMonetaryValue,
   fromWeiToEth,
@@ -174,7 +173,6 @@ class ManageAssetModule extends React.Component{
       blockchainContext,
       metamaskContext,
       assetId: requestedAssetId,
-      pricesContext,
     } = props || this.props;
 
     const {
@@ -186,12 +184,7 @@ class ManageAssetModule extends React.Component{
       user,
     } = metamaskContext;
 
-    const {
-      loading: loadingPrices,
-      prices,
-    } = pricesContext;
-
-    if(loading.assets || loadingPrices){
+    if(loading.assets){
       this.setState({
         loading: true,
       })
@@ -226,10 +219,7 @@ class ManageAssetModule extends React.Component{
     }
   }
 
-  render = () => this.props.children({
-    ...this.state,
-    prices: this.props.pricesContext.prices,
-  });
+  render = () => this.props.children(this.state);
  }
 
 ManageAssetModule.propTypes = {
@@ -240,7 +230,6 @@ ManageAssetModule.propTypes = {
 const enhance = compose(
   withMetamaskContext,
   withBlockchainContext,
-  withTokenPricesContext,
 );
 
 export default enhance(ManageAssetModule);;

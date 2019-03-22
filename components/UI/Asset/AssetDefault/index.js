@@ -6,7 +6,7 @@ import {
 } from 'antd';
 import{
   DEFAULT_TOKEN,
-} from 'constants';
+} from 'constants/app';
 import AssetDefaultDetailsContainer from './assetDefaultDetailsContainer';
 import AssetDefaultFunded from './assetDefaultFunded';
 import AssetDefaultGoal from './assetDefaultGoal';

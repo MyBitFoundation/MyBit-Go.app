@@ -8,7 +8,7 @@ import {
 import { formatMonetaryValue } from 'utils/helpers';
 import {
   FundingStages,
-} from 'constants';
+} from 'constants/fundingStages';
 import ValueDisplay from 'ui/ValueDisplay';
 import AssetPortfolioManagedWrapper from './assetPortfolioManagedWrapper';
 import AssetPortfolioManagedSection from './assetPortfolioManagedSection';

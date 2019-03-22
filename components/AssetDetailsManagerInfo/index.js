@@ -10,7 +10,7 @@ import MyBitLogo from 'static/mybit-blue.svg';
 import Sliders from 'static/sliders.svg';
 import {
   InternalLinks,
-} from 'constants';
+} from 'constants/links';
 
 const getFilesToRender = (files, assetId) => {
   if(!files || files.length === 0){

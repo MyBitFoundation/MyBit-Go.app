@@ -11,8 +11,6 @@ import {
   InputNumber,
 } from 'antd';
 
-import { withTokenPricesContext } from 'components/TokenPrices';
-
 import Myb from "static/list-asset/assetList_myb.png";
 
 const Image = styled.img`
@@ -46,7 +44,7 @@ const InputsWrapper = styled.div`
   `}
 `;
 
-export const CollateralSlide = withTokenPricesContext(({
+export const CollateralSlide = ({
   maxWidthDesktop,
   handleCollateralChange,
   collateralPercentage,
@@ -54,7 +52,6 @@ export const CollateralSlide = withTokenPricesContext(({
   collateralDollar,
   constraints,
   formData,
-  pricesContext,
 }) => (
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
@@ -91,7 +88,7 @@ export const CollateralSlide = withTokenPricesContext(({
         max={constraints.max_percentage}
         defaultValue={collateralPercentage}
         value={collateralPercentage}
-        onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "percentage")}
+        onChange={value => handleCollateralChange({selectedAmount: value}, "percentage")}
       />
       <InputNumber
         defaultValue={collateralPercentage}
@@ -102,7 +99,7 @@ export const CollateralSlide = withTokenPricesContext(({
         max={100}
         formatter={value => `${value}%`}
         parser={value => value.replace('%', '')}
-        onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "percentage")}
+        onChange={value => handleCollateralChange({selectedAmount: value}, "percentage")}
       />
       <span>=</span>
       <InputNumber
@@ -116,8 +113,8 @@ export const CollateralSlide = withTokenPricesContext(({
           `MYB ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
         }
         parser={value => value.replace(/MYB\s?|(,*)/g, "")}
-        onChange={value => handleCollateralChange({selectedAmount: value, mybPrice: pricesContext.prices.mybit.price}, "myb")}
+        onChange={value => handleCollateralChange({selectedAmount: value}, "myb")}
       />
     </InputsWrapper>
   </CarouselSlide>
-));
+);

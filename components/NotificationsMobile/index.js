@@ -11,7 +11,7 @@ import Bell from 'static/bell.svg';
 
 import {
    getContentForNotification,
-} from 'constants';
+} from 'constants/notifications';
 
 const NotificationsMobile = ({
   notificationsContext,

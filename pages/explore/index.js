@@ -13,10 +13,9 @@ import ExploreFiltersSwitch from './exploreFiltersSwitch';
 
 import {
   FundingStages,
-  Categories,
-  SORT_BY_ASSETS,
-} from 'constants';
-
+} from 'constants/fundingStages';
+import { Categories } from 'constants/categories';
+import { SORT_BY_ASSETS } from 'constants/sortByAssets';
 import {
   getPrettyCategoryName,
 } from 'utils/helpers';

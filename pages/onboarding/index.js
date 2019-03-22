@@ -2,10 +2,6 @@ import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 import {
   Slides,
 } from './slides';
-import {
-  LOCAL_STORAGE,
-} from 'constants';
-
 import Router from 'next/router';
 
 const SliderNavigationTooltips = [

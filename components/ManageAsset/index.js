@@ -7,7 +7,7 @@ import Router from 'next/router'
 import Loading from 'components/Loading';
 import {
   InternalLinks,
-} from 'constants';
+} from 'constants/links';
 import ManageAssetNavButtons from './manageAssetNavButtons';
 import ManageAssetContentWrapper from './manageAssetContentWrapper';
 import ManageAssetSection from './manageAssetSection';

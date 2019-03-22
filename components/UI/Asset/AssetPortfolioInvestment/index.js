@@ -8,7 +8,7 @@ import {
 import { formatMonetaryValue } from 'utils/helpers';
 import {
   FundingStages,
-} from 'constants';
+} from 'constants/fundingStages';
 import AssetPortfolioInvestmentWrapper from './assetPortfolioInvestmentWrapper';
 import AssetPortfolioInvestmentSection from './assetPortfolioInvestmentSection';
 import AssetPortfolioInvestmentValue from './assetPortfolioInvestmentValue';

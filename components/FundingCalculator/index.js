@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import {
   DEFAULT_TOKEN,
-} from 'constants';
+} from 'constants/app';
 import {
   formatMonetaryValue,
 } from 'utils/helpers';

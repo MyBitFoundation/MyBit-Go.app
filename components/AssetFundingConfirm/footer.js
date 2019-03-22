@@ -3,7 +3,7 @@ import {
 } from 'components/MetamaskChecker/constants';
 import {
   CORRECT_NETWORK,
-} from 'constants';
+} from 'constants/app';
 import SupportedBrowsers from 'ui/SupportedBrowsers';
 
 const getMetamaskErrors = (metamaskError, extensionUrl) => {

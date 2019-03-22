@@ -5,7 +5,7 @@ import PageWrapper from './pageWrapper';
 
 import {
   navbarOptions,
-} from 'constants';
+} from 'constants/navigationBar';
 
 const AppWrapper = React.memo(({
   children,
