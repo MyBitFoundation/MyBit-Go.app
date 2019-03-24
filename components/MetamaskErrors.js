@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { withMetamaskContext } from 'components/MetamaskChecker'
+import { withMetamaskContext } from 'components/MetamaskContext'
 import ErrorPage from 'components/ErrorPage';
 import {
   Button,

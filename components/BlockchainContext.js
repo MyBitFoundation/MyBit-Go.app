@@ -5,9 +5,9 @@ import { compose } from 'recompose'
 import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { withAirtableContext } from 'components/Airtable';
-import { withNotificationsContext } from 'components/NotificationsModule';
-import { withMetamaskContext } from 'components/MetamaskChecker';
+import { withAirtableContext } from 'components/AirtableContext';
+import { withNotificationsContext } from 'components/NotificationsContext';
+import { withMetamaskContext } from 'components/MetamaskContext';
 import * as Brain from '../apis/brain';
 
 import { ErrorTypes } from 'constants/errorTypes';

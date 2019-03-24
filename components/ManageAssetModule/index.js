@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose'
-import { withMetamaskContext } from 'components/MetamaskChecker';
-import { withBlockchainContext } from 'components/Blockchain';
+import { withMetamaskContext } from 'components/MetamaskContext';
+import { withBlockchainContext } from 'components/BlockchainContext';
 import {
   formatMonetaryValue,
   fromWeiToEth,

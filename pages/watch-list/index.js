@@ -5,7 +5,7 @@ import {
   Switch,
   Icon,
 } from 'antd';
-import { withBlockchainContext } from 'components/Blockchain'
+import { withBlockchainContext } from 'components/BlockchainContext'
 import Loading from 'components/Loading';
 import { getPrettyCategoryName } from 'utils/helpers';
 import {

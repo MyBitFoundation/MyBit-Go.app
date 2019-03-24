@@ -3,7 +3,7 @@ import Balance from 'components/Balance';
 import MobileAccountInfoBalance from './mobileAccountInfoBalance';
 import MobileAccountInfoNoAccount from './mobileAccountInfoNoAccount';
 import MobileAccountCircle from './mobileAccountCircle';
-import { withMetamaskContext } from 'components/MetamaskChecker';
+import { withMetamaskContext } from 'components/MetamaskContext';
 
 const MobileAccountInfo = ({
   metamaskContext,

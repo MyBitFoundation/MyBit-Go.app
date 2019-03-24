@@ -6,9 +6,9 @@ import {
   Carousel,
 } from "antd";
 import Cookie from 'js-cookie';
-import { withMetamaskContext } from 'components/MetamaskChecker';
-import { withBlockchainContext } from 'components/Blockchain';
-import { withCivic } from "ui/CivicContainer";
+import { withMetamaskContext } from 'components/MetamaskContext';
+import { withBlockchainContext } from 'components/BlockchainContext';
+import { withCivicContext } from "ui/CivicContext";
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 import {
   COUNTRIES,

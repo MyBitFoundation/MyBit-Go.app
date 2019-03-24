@@ -1,6 +1,6 @@
 import {
   METAMASK_ERRORS,
-} from 'components/MetamaskChecker/constants';
+} from 'components/MetamaskContext/constants';
 import {
   CORRECT_NETWORK,
 } from 'constants/app';

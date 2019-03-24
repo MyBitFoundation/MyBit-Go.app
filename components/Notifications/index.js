@@ -1,7 +1,7 @@
 import {
   Alert,
 } from 'antd';
-import { withNotificationsContext } from 'components/NotificationsModule';
+import { withNotificationsContext } from 'components/NotificationsContext';
 import NotificationsWrapper from './notificationsWrapper';
 import { 
   getContentForNotification,

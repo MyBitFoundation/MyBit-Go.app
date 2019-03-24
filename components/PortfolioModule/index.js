@@ -1,8 +1,8 @@
 import React from 'react';
 import { compose } from 'recompose';
 import Loading from 'components/Loading';
-import { withBlockchainContext } from 'components/Blockchain'
-import { withMetamaskContext } from 'components/MetamaskChecker'
+import { withBlockchainContext } from 'components/BlockchainContext'
+import { withMetamaskContext } from 'components/MetamaskContext'
 
 import {
   getPortfolioAssetDetails,

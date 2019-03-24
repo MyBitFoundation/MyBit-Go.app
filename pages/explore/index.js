@@ -3,8 +3,8 @@ import {
   Switch,
   Icon,
 } from 'antd';
-import { withAirtableContext } from 'components/Airtable'
-import { withBlockchainContext } from 'components/Blockchain'
+import { withAirtableContext } from 'components/AirtableContext'
+import { withBlockchainContext } from 'components/BlockchainContext'
 import CategoryFilter from 'components/CategoryFilter';
 import Loading from 'components/Loading';
 import AssetDisplayer from 'components/AssetDisplayer';

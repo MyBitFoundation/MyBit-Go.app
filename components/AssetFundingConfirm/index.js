@@ -1,7 +1,7 @@
 import {
   Button,
 } from 'antd';
-import { withMetamaskContext } from 'components/MetamaskChecker';
+import { withMetamaskContext } from 'components/MetamaskContext';
 import { withKyberContext } from 'components/KyberContext';
 import Separator from 'ui/Separator';
 import AssetFundingTitle from 'components/AssetFunding/assetFundingTitle';

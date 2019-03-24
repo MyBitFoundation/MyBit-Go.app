@@ -6,7 +6,7 @@ import {
   Table,
 } from 'antd';
 import Loading from 'components/Loading';
-import { withBlockchainContext } from 'components/Blockchain'
+import { withBlockchainContext } from 'components/BlockchainContext'
 import { withMetamaskErrors } from 'components/MetamaskErrors';
 import GetColumns from 'constants/transactions';
 import TransactionsPageWrapper from './transactionsPageWrapper';

@@ -4,7 +4,7 @@ import {
   InputNumber,
   Button,
 } from "antd";
-import { withAirtableContext } from 'components/Airtable';
+import { withAirtableContext } from 'components/AirtableContext';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,

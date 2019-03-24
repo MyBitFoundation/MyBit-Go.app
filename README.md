@@ -60,10 +60,12 @@ The application is built around a series of Contexts (See [React Context](https:
 
 The following Contexts are available:
 
-- [MetamaskChecker](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/MetamaskChecker/index.js)
-- [Blockchain](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Blockchain.js)
-- [Airtable](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/Airtable.js)
-- [Kyber](https://github.com/csmartinsfct/MyBit-Go.app/blob/hotfix/refactoring/components/KyberContext.js)
+- [Metamask](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/MetamaskContext/index.js)
+- [Blockchain](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/BlockchainContext.js)
+- [Airtable](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/Airtable.js)
+- [Kyber](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/KyberContext.js)
+- [Notifications](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/NotificationsContext.js)
+- [Civic](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/UI/CivicContext.js)
 
 So if you need any of the information inside these contexts you can use the `with` high order component each of them provides.
 

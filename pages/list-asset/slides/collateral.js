@@ -13,7 +13,7 @@ import {
   convertTokenAmount,
 } from 'utils/helpers';
 import Myb from "static/list-asset/assetList_myb.png";
-import { withMetamaskContext } from 'components/MetamaskChecker';
+import { withMetamaskContext } from 'components/MetamaskContext';
 import TokenSelector from 'components/TokenSelector';
 import NumericInput from 'ui/NumericInput';
 const Image = styled.img`

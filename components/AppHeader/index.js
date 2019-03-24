@@ -11,9 +11,9 @@ import AppHeaderLogo from './appHeaderLogo';
 import AppHeaderHamburguerButton from './appHeaderHamburguerButton';
 import AppHeaderPageName from './appHeaderPageName';
 import AppHeaderConnectionStatus from './appHeaderConnectionStatus';
-import { withBlockchainContext } from 'components/Blockchain'
-import { withMetamaskContext } from 'components/MetamaskChecker'
-import { withNotificationsContext } from 'components/NotificationsModule';
+import { withBlockchainContext } from 'components/BlockchainContext';
+import { withMetamaskContext } from 'components/MetamaskContext';
+import { withNotificationsContext } from 'components/NotificationsContext';
 import NotificationsMobileCounter from 'components/NotificationsMobile';
 import AppHeaderNotificationCounter from './appHeaderNotificationCounter';
 import AppHeaderAddress from './appHeaderAddress';

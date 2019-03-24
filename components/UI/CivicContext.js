@@ -116,7 +116,7 @@ class Civic extends Component {
   }
 }
 
-export function withCivic(WrappedComponent) {
+export function withCivicContext(WrappedComponent) {
   return props => (
     <Civic>
       <Consumer>

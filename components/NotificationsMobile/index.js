@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Alert,
 } from 'antd';
-import { withNotificationsContext } from 'components/NotificationsModule';
+import { withNotificationsContext } from 'components/NotificationsContext';
 import NotificationsMobileWrapper from './notificationsMobileWrapper';
 import NotificationsMobileTitle from './notificationsMobileTitle';
 import NotificationsMobileContentWrapper from './notificationsMobileContentWrapper';

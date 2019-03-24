@@ -2,12 +2,12 @@ import React from 'react';
 import { hot } from 'react-hot-loader/root'
 import App, { Container } from 'next/app';
 import getConfig from 'next/config';
-import AirtableProvider, { withAirtableContext } from 'components/Airtable';
-import BlockchainProvider from 'components/Blockchain';
+import AirtableProvider, { withAirtableContext } from 'components/AirtableContext';
+import BlockchainProvider from 'components/BlockchainContext';
 import KyberProvider from 'components/KyberContext';
-import NotificationsProvider from 'components/NotificationsModule';
+import NotificationsProvider from 'components/NotificationsContext';
 import Notifications from 'components/Notifications';
-import MetamaskChecker from 'components/MetamaskChecker';
+import MetamaskProvider from 'components/MetamaskContext';
 import Head from 'components/Head';
 import GlobalStyle from 'components/globalStyle';
 import AppWrapper from 'components/AppWrapper';
@@ -109,13 +109,13 @@ const WithProviders = ({ children }) => (
     <NotificationsProvider>
       <AirtableProvider>
         <KyberProvider>
-          <MetamaskChecker
+          <MetamaskProvider
             backupProvider={WEB3_BACKUP_PROVIDER}
           >
             <BlockchainProvider>
               {children}
             </BlockchainProvider>
-          </MetamaskChecker>
+          </MetamaskProvider>
         </KyberProvider>
       </AirtableProvider>
     </NotificationsProvider>

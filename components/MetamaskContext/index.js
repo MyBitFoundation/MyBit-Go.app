@@ -39,7 +39,7 @@ export const withMetamaskContext = (Component) => {
   }
 }
 
-class MetamaskChecker extends Component {
+class MetamaskProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -349,8 +349,8 @@ class MetamaskChecker extends Component {
   }
 }
 
-MetamaskChecker.propTypes = {
+MetamaskProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default withKyberContext(MetamaskChecker);
+export default withKyberContext(MetamaskProvider);
