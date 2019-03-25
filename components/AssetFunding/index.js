@@ -66,6 +66,20 @@ class AssetFunding extends React.Component {
     );
   }
 
+  componentWillReceiveProps = (nextProps) => {
+    const {
+      asset: currentAsset,
+    } = this.props;
+
+    const {
+      asset: newAsset,
+    } = nextProps;
+
+    if(!currentAsset.funded && newAsset.funded){
+      this.changeStep(0);
+    }
+  }
+
   render(){
     const {
       selectedAmountUsd,

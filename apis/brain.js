@@ -474,9 +474,10 @@ export const fundAsset = async (userName, assetId, amount, onTransactionHash, on
       buyAsset: {
         onTransactionHash,
         onError: error => processErrorType(error, onError),
-        onReceipt: (receipt) => onReceipt(receipt.status),
       }
     })
+
+    onReceipt(response.status);
   } catch (error) {
     debug(error);
   }
