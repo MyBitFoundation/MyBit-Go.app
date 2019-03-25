@@ -644,7 +644,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         assetManagerFee = BN(assetManagerFee);
         platformFee = BN(platformFee);
         fundingGoal = BN(fundingGoal);
-        console.log(fundingGoal)
         const totalShares = fundingGoal.plus(assetManagerFee).plus(platformFee);
         assetManagerFee = assetManagerFee.div(totalShares).toNumber();
         fundingGoal = fundingGoal.toNumber();

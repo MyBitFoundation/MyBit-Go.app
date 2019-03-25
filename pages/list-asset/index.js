@@ -218,7 +218,7 @@ class ListAssetPage extends React.Component {
           myb = selectedAmount > maxInMyb ? parseFloat(maxInMyb.toFixed(2)) : selectedAmount
           percentage = parseInt((myb / maxInMyb) * 100)
           dai = (maxAmountAllowedInDai * percentage).toFixed(2)
-          collateralSelectedToken = convertTokenAmount(selectedToken, 'DAI', balances, dai)
+          collateralSelectedToken = convertTokenAmount(selectedToken, 'MYB', balances, myb)
           break;
         case "selectedToken":
           collateralSelectedToken = selectedAmount > maxCollateralSelectedToken ? maxCollateralSelectedToken : parseFloat(Number(selectedAmount).toFixed(2))
@@ -432,7 +432,7 @@ const SliderNavigationTooltips = [
 const enhance = compose(
   withBlockchainContext,
   withMetamaskContext,
-  withCivic,
+  withCivicContext,
 );
 
 export default enhance(ListAssetPage);
