@@ -496,12 +496,11 @@ class BlockchainProvider extends React.Component {
     });
   }
 
-  fundAsset = (assetId, amount) => {
+  fundAsset = (assetId, amountToPay, amountContributed) => {
     try {
-      console.log("AMOUNT: ", amount)
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
-      const amountFormatted = formatMonetaryValue(amount);
+      const amountFormatted = formatMonetaryValue(amountContributed);
       const {
         name : assetName,
       } = currentAsset.defaultData;
@@ -553,7 +552,7 @@ class BlockchainProvider extends React.Component {
       Brain.fundAsset(
         this.props.metamaskContext.user.address,
         assetId,
-        toWei(amount),
+        toWei(amountToPay),
         onTransactionHash,
         onReceipt,
         onError,

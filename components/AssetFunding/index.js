@@ -56,58 +56,13 @@ class AssetFunding extends React.Component {
     console.log("Hit deadline");
   }
 
-  handleConfirmClicked = () => {
-    const {
-      metamaskContext,
-    } = this.props;
-
-    const {
-      userHasMetamask,
-      network,
-      userIsLoggedIn,
-      extensionUrl,
-      privacyModeEnabled,
-    } = metamaskContext;
-
-    if (!this.state.acceptedTos) {
-      this.setState({
-        alertType: 'error',
-        alertMessage: 'Please accept the Terms and Conditions before continuing.',
-      });
-      return null;
-    }
-
-    const metamaskErrorsToRender = false || metamaskContext.metamaskErrors();
-    if(metamaskErrorsToRender.error){
-      this.setState({
-        alertType: 'error',
-        alertMessage: metamaskErrorsToRender.render,
-      });
-      return null;
-    }
-
-    this.setState({
-      isLoading: true,
-    })
-
-    this.props.fundAsset(
-      this.props.assetId,
-      this.props.amount,
-      this.onSuccess,
-      this.onFailure,
-    );
-
-    this.props.handlePopupState(false);
-
-    return null;
-  }
-
-  fundAsset = () => {
+  fundAsset = (amountToPay, amountContributed) => {
     this.changeStep(2);
 
     this.props.fundAsset(
       this.props.asset.assetId,
-      this.state.selectedAmountEth,
+      amountToPay,
+      amountContributed,
     );
   }
 
@@ -158,7 +113,7 @@ class AssetFunding extends React.Component {
     }
 
     // Total fee: manager fee + platform fees (1%)
-    const maxPercentageAfterFees = 100 - (managerPercentage * 100 - 1);
+    const maxPercentageAfterFees = 100 - (managerPercentage * 100 + 1);
     const maxOwnership = ((maxInvestment * maxPercentageAfterFees) / fundingGoal).toFixed(2);
     let yourContribution = 0;
     let yourOwnership = 0;

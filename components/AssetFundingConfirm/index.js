@@ -66,7 +66,7 @@ class AssetFundingConfirm extends React.Component {
     const {
       metamaskContext,
       selectedOwnership,
-      amount,
+      amount: amountContributed,
       supportedTokensInfo,
     } = this.props;
 
@@ -75,8 +75,11 @@ class AssetFundingConfirm extends React.Component {
       extensionUrl,
     } = metamaskContext;
 
+    const mybitPlatformFee = amountContributed * 0.3;
+    let amountToPay = amountContributed + mybitPlatformFee;
+
     const metamaskErrors = metamaskContext.metamaskErrors();
-    const footer = getFooter(metamaskErrors.error, extensionUrl, amount, user.balances, this.props.fundAsset);
+    const footer = getFooter(metamaskErrors.error, extensionUrl, amountToPay, amountContributed, user.balances, this.props.fundAsset);
     const {
       buttonProps,
       messageProps,
@@ -109,11 +112,12 @@ class AssetFundingConfirm extends React.Component {
         </AssetFundingConfirmFooterMessageUrl>
       ) : null;
 
-    const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amount : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, amount);
+    const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountContributed : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, amountContributed);
     const gasInDai = parseFloat(convertTokenAmount(DEFAULT_TOKEN, 'ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
     const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : convertTokenAmount(selectedToken, 'ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION);
-    const totalToPayInDai = amount + gasInDai;
+    const totalToPayInDai = amountToPay + gasInDai;
     const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, totalToPayInDai);
+    const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFee : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, mybitPlatformFee);
 
     return (
       <React.Fragment>
@@ -127,8 +131,18 @@ class AssetFundingConfirm extends React.Component {
               Contribution
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
-              <p>{formatMonetaryValue(amount)}</p>
+              <p>{formatMonetaryValue(amountContributed)}</p>
               <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(amountInSelectedToken, 3, true, selectedToken)}</p>
+            </AssetFundingConfirmItemValue>
+          </AssetFundingConfirmItem>
+          <Separator style={separatorStyle}/>
+          <AssetFundingConfirmItem>
+            <AssetFundingConfirmItemName>
+              MyBit Foundation Fee (3%)
+            </AssetFundingConfirmItemName>
+            <AssetFundingConfirmItemValue>
+              <p>{formatMonetaryValue(mybitPlatformFee)}</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(mybitPlatformFeeSelectedToken, 3, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -162,7 +176,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmPayWith>
             <TokenSelector
               balances={user.balances}
-              amountToPay={amount}
+              amountToPay={amountToPay}
               onChange={this.handleTokenChange}
             />
           </AssetFundingConfirmDropdownButton>
