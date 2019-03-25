@@ -21,32 +21,32 @@ class AssetFunding extends React.Component {
     step: 0,
   };
 
-  handleOnChangeEthValue = (number, maxOwnership, fundingGoal) => {
+  handleOnChangeEthValue = (number, maxOwnership, fundingGoal, maxPercentageAfterFees) => {
     number > maxOwnership ?
       this.setState({
         selectedAmountEth: maxOwnership,
       })
       : this.setState({
           selectedAmountEth: number !== '0' ? Number(number) : null,
-          selectedOwnership: number !== '0' ? parseFloat(((number * 100) / fundingGoal).toFixed(2)) : null,
+          selectedOwnership: number !== '0' ? parseFloat(((number * (maxPercentageAfterFees)) / fundingGoal).toFixed(2)) : null,
     })
   }
 
-  handleOnChangePercentage = (number, maxOwnership, fundingGoal, maxInvestment) => {
+  handleOnChangePercentage = (number, maxOwnership, fundingGoal, maxInvestment, maxPercentageAfterFees) => {
     number > Number(maxOwnership)
       ? this.setState({
           selectedOwnership: maxOwnership,
         })
       : this.setState({
         selectedOwnership: Number(number),
-        selectedAmountEth: parseFloat((maxInvestment * (number / 100)).toFixed(2)),
+        selectedAmountEth: parseFloat((maxInvestment * (number / (maxPercentageAfterFees))).toFixed(2)),
       })
   }
 
-  handleOnChangeSlider = (number, fundingGoal) => {
+  handleOnChangeSlider = (number, fundingGoal, maxPercentageAfterFees) => {
     this.setState({
       selectedAmountEth: number,
-      selectedOwnership: parseFloat(((number * 100) / fundingGoal).toFixed(2)),
+      selectedOwnership: parseFloat(((number * (maxPercentageAfterFees)) / fundingGoal).toFixed(2)),
     })
   }
 
@@ -157,10 +157,9 @@ class AssetFunding extends React.Component {
       minInvestment = 0.01;
     }
 
-    const maxOwnership = maxInvestment && (
-      (maxInvestment * 100) / fundingGoal
-    ).toFixed(2);
-
+    // Total fee: manager fee + platform fees (1%)
+    const maxPercentageAfterFees = 100 - (managerPercentage * 100 - 1);
+    const maxOwnership = ((maxInvestment * maxPercentageAfterFees) / fundingGoal).toFixed(2);
     let yourContribution = 0;
     let yourOwnership = 0;
 
@@ -173,6 +172,7 @@ class AssetFunding extends React.Component {
       <AssetFundingWrapper>
         {step === 0 && (
           <AssetFundingSelector
+            maxPercentageAfterFees={maxPercentageAfterFees}
             asset={asset}
             ended={ended}
             loadingUserInfo={loadingUserInfo}

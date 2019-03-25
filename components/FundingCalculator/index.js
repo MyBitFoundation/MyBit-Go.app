@@ -34,6 +34,7 @@ const FundingCalculator = ({
   maxOwnership,
   loadingUserInfo,
   userInvestment,
+  maxPercentageAfterFees,
 }) => {
   return(
     <React.Fragment>
@@ -48,7 +49,7 @@ const FundingCalculator = ({
               value={selectedAmountEth}
               label={DEFAULT_TOKEN}
               onChange={number =>
-                handleOnChangeEthValue(number, maxInvestment, fundingGoal)}
+                handleOnChangeEthValue(number, maxInvestment, fundingGoal, maxPercentageAfterFees)}
               min={0}
             />
             <FundingCalculatorEqualsSeparator>
@@ -59,7 +60,7 @@ const FundingCalculator = ({
               value={selectedOwnership}
               min={0}
               label="%"
-              onChange={number => handleOnChangePercentage(number, maxOwnership, fundingGoal, maxInvestment)}
+              onChange={number => handleOnChangePercentage(number, maxOwnership, fundingGoal, maxInvestment, maxPercentageAfterFees)}
             />
           </div>
           <Slider
@@ -75,7 +76,7 @@ const FundingCalculator = ({
             }
             min={minInvestment}
             max={maxInvestment}
-            onChange={number => handleOnChangeSlider(number, fundingGoal)}
+            onChange={number => handleOnChangeSlider(number, fundingGoal, maxPercentageAfterFees)}
             disabled={ended}
           />
           <FundingCalculatorGrid

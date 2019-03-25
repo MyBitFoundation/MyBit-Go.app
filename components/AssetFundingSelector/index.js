@@ -32,6 +32,7 @@ const AssetFundingSelector = ({
   handleOnChangeEthValue,
   handleDeadlineHit,
   handleConfirmationClicked,
+  maxPercentageAfterFees,
 }) => (
   <div>
     <AssetDeadline
@@ -51,6 +52,7 @@ const AssetFundingSelector = ({
     <Separator style={separatorStyle}/>
     <FundingCalculator
       {...asset}
+      maxPercentageAfterFees={maxPercentageAfterFees}
       handleOnChangeEthValue={handleOnChangeEthValue}
       handleOnChangePercentage={handleOnChangePercentage}
       handleOnChangeSlider={handleOnChangeSlider}
