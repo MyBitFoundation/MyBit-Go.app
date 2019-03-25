@@ -55,7 +55,7 @@ class MetamaskProvider extends Component {
     this.hasSetInitialState = false;
   };
 
- metamaskErrors = className => {
+  metamaskErrors = className => {
     const {
       userHasMetamask,
       extensionUrl,
@@ -63,8 +63,6 @@ class MetamaskProvider extends Component {
       network,
       privacyModeEnabled
     } = this.state;
-
-    console.log(this.state)
 
     let toRender = null;
     let error;
@@ -137,20 +135,14 @@ class MetamaskProvider extends Component {
     }
   }
 
-  componentWillReceiveProps = nextProps => {
-    const {
-      supportedTokensInfo,
-    } = this.props;
-    const {
-      user,
-    } = this.state;
-
-    //if(nextProps.supportedTokensInfo !== supportedTokensInfo && user.address){
-      this.getUserInfo(this.state.privacyModeEnabled, this.state.network, nextProps.supportedTokensInfo);
-    //}
+  componentWillReceiveProps = (nextProps, nextState) => {
+    this.getUserInfo(this.state.privacyModeEnabled, this.state.network, nextProps.supportedTokensInfo);
   }
 
-  fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress, cb) => {
+  fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress) => {
+    const currentAvgBalance = this.state.user.avgBalance || 0;
+    const currentBalances = this.state.user.balances || {};
+
     const updatedTokensWithBalance = {};
     let sumOfBalances = 0;
 
@@ -176,15 +168,36 @@ class MetamaskProvider extends Component {
       }
     }));
 
-    this.setState({
-      ...this.state,
-      loadingBalances: false,
-      user: {
-        ...this.state.user,
-        balances: updatedTokensWithBalance,
-        avgBalance: Number(parseFloat(sumOfBalances.toFixed(2))),
-      },
-    });
+    const avgBalance = Number(parseFloat(sumOfBalances.toFixed(2)));
+
+    let shouldUpdateState = false;
+    if(avgBalance !== currentAvgBalance || Object.keys(currentBalances).length !== Object.keys(updatedTokensWithBalance).length){
+      shouldUpdateState = true;
+      console.log(`Updating balances state: different avgBalance: ${avgBalance} !== ${currentAvgBalance} || ${Object.keys(currentBalances).length} !== ${Object.keys(updatedTokensWithBalance).length}`)
+    } else {
+      for(const token of Object.entries(updatedTokensWithBalance)){
+        const [
+          symbol,
+          tokenInfo
+        ] = token;
+        if(currentBalances[symbol].balance !== tokenInfo.balance){
+          console.log(`Updating balances state: different balances! ${symbol}: ${currentBalances[symbol].balance} !== ${tokenInfo.balance}`)
+          shouldUpdateState = true;
+        }
+      }
+    }
+
+    if(shouldUpdateState){
+      this.setState({
+        ...this.state,
+        loadingBalances: false,
+        user: {
+          ...this.state.user,
+          balances: updatedTokensWithBalance,
+          avgBalance: Number(parseFloat(sumOfBalances.toFixed(2))),
+        },
+      }, () => console.log("Updated state with new balances: ", this.state));
+    }
   }
 
   isReadOnlyMode = (userHasMetamask, userIsLoggedIn, network, privacyModeEnabled) => {
@@ -203,7 +216,7 @@ class MetamaskProvider extends Component {
     } = oldUser;
 
     const supportedTokens = supportedTokensInfo || this.props.supportedTokensInfo;
-    //TODO bad. need a way to know when to refresh, we need a more specific flag from the kyberContext component
+
     if(supportedTokens){
       this.fetchUserBalances(supportedTokens, ethBalance, address);
     }
@@ -219,7 +232,7 @@ class MetamaskProvider extends Component {
         privacyModeEnabled,
         userIsLoggedIn,
         isReadOnlyMode: this.isReadOnlyMode(true, userIsLoggedIn, network, privacyModeEnabled),
-      })
+      }, () => console.log("updateStateWithUserInfo(): ", this.state))
     }
   }
 
@@ -238,7 +251,7 @@ class MetamaskProvider extends Component {
         userIsLoggedIn,
         privacyModeEnabled,
         isReadOnlyMode: this.isReadOnlyMode(true, userIsLoggedIn, network, privacyModeEnabled),
-      })
+      }, () => console.log("updateStateNoAccess(): ", this.state))
     }
   }
 
@@ -333,7 +346,7 @@ class MetamaskProvider extends Component {
       userIsLoggedIn: false,
       loadingBalances: false,
       extensionUrl,
-    });
+    }, () => console.log("isBrowserSupported(): ", this.state));
   }
 
   render() {
