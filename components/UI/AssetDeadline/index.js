@@ -34,7 +34,7 @@ class AssetDeadline extends React.Component {
     // funding goal has been reached
     if (funded) {
       this.setState({
-        timeToGo: 'Funding goal has been reached',
+        endingAt: 'Funding goal has been reached',
       });
       this.clearInterval();
       return;
