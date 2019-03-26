@@ -75,7 +75,7 @@ class AssetFundingConfirm extends React.Component {
       extensionUrl,
     } = metamaskContext;
 
-    const mybitPlatformFee = amountContributed * 0.3;
+    const mybitPlatformFee = amountContributed * 0.03;
     let amountToPay = amountContributed + mybitPlatformFee;
 
     const metamaskErrors = metamaskContext.metamaskErrors();
