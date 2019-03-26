@@ -442,14 +442,9 @@ export const payoutAsset = async ({
 
 export const withdrawInvestorProfit = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
   try {
-    const AssetContract = new window.web3js.eth.Contract(
-      Asset.ABI,
-      Asset.ADDRESS,
-    );
-
-    const withdrawResponse = await AssetContract.methods
-      .withdraw(assetId)
-      .send({ from: userName })
+    const dividendTokenETH = await Network.dividendTokenETH(assetId);
+    const response = await dividendTokenETH.methods.withdraw()
+      .send({from: userName, gas: '1000000'})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -642,6 +637,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let investment = 0;
         let totalShares = 0;
         let availableShares = 0;
+        let owedToInvestor = 0;
 
         assetManagerFee = BN(assetManagerFee);
         platformFee = BN(platformFee);
@@ -683,8 +679,9 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
-              assetIncome = fromWeiToEth(BN(assetIncome));
+              assetIncome = Number(fromWeiToEth(BN(assetIncome)));
               fundingProgress = fundingProgress - ((assetManagerFee + platformFee) * fundingProgress)
+              owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
               //console.log("ASSET INCOME: ", assetIncome)
               /*const result = await Network.issueDividends({
                 asset: assetId,
@@ -700,6 +697,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           console.log("DividendTokenETH: ", dividendTokenETH)
           console.log("INVESTMENT: ", fromWeiToEth(BN(balanceOfUser).toString()));
           console.log("Percentage: ", percentageOwnedByUser);
+          console.log("owedToInvestor: ", fromWeiToEth(BN(owedToInvestor)));
           console.log("\n\n")
           console.log("\n\n")
         }
@@ -728,6 +726,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           percentageOwnedByUser,
           daysSinceItWentLive,
           assetIncome,
+          owedToInvestor,
           userInvestment: investment,
           totalSupply: Number(fromWeiToEth(totalShares)),
           availableShares: Number(fromWeiToEth(availableShares)),
@@ -738,7 +737,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           managerTotalIncome: 0,
           managerTotalWithdrawn: 0,
           watchListed: alreadyFavorite,
-          owedToInvestor: 0,
           funded: fundingStage === FundingStages.FUNDED,
         };
       }));

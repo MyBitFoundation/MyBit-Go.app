@@ -40,7 +40,7 @@ const getInvestmentDetailsFromAsset = (asset) => {
   }
 
   const unrealizedProfit = fromWeiToEth(owedToInvestor);
-  const totalProfit = (percentageOwnedByUser * assetIncome) / 100 ;
+  const totalProfit = percentageOwnedByUser * assetIncome;
 
   return {
     ...asset,
