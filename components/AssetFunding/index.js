@@ -16,6 +16,8 @@ import {
   MYBIT_FOUNDATION_SHARE,
   MYBIT_FOUNDATION_FEE,
 } from 'constants/platformFees';
+import BN from 'bignumber.js';
+BN.config({ EXPONENTIAL_AT: 80 });
 
 class AssetFunding extends React.Component {
   state = {
@@ -121,7 +123,7 @@ class AssetFunding extends React.Component {
     const maxInvestment =
       ended
         ? 0
-        : fundingGoal - fundingProgress;
+        : BN(fundingGoal).minus(BN(fundingProgress)).toNumber();
 
     let minInvestment =
        maxInvestment === 0 ? 0 : 100;

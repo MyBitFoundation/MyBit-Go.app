@@ -20,10 +20,10 @@ export const convertTokenAmount = (convertTo, convertFrom, balances, amount) => 
   return amountFinal;
 }
 
-export const formatMonetaryValue = (number, fractionDigits = 0, includeToken = true, customToken) => {
+export const formatMonetaryValue = (number, fractionDigits = 2, includeToken = true, customToken) => {
   try {
     let value = Number(number).toLocaleString('en-US', {
-      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
     });
 
     return includeToken ? `${value} ${customToken ? customToken : DEFAULT_TOKEN}` : value;

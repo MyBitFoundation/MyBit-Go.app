@@ -19,7 +19,10 @@ import {
   AssetFundingConfirmFooterMessage,
   AssetFundingConfirmFooterMessageUrl,
 } from './assetFundingConfirmFooterMessage';
-
+import {
+  MAX_DECIMALS_ERC20,
+  MAX_DECIMALS_DEFAULT_TOKEN,
+} from 'constants/numberFormatting';
 import {
   getFooter,
 } from './footer';
@@ -78,7 +81,7 @@ class AssetFundingConfirm extends React.Component {
       extensionUrl,
     } = metamaskContext;
 
-    const mybitPlatformFee = amountContributed * MYBIT_FOUNDATION_FEE;
+    const mybitPlatformFee = (amountContributed / (1 - MYBIT_FOUNDATION_FEE)) - amountContributed;
     let amountToPay = amountContributed + mybitPlatformFee;
 
     const metamaskErrors = metamaskContext.metamaskErrors();
@@ -121,7 +124,7 @@ class AssetFundingConfirm extends React.Component {
     const totalToPayInDai = amountToPay + gasInDai;
     const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, totalToPayInDai);
     const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFee : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, mybitPlatformFee);
-
+    const maxDecimalsErc20 = selectedToken === DEFAULT_TOKEN ? MAX_DECIMALS_DEFAULT_TOKEN : MAX_DECIMALS_ERC20;
     return (
       <React.Fragment>
         <AssetFundingTitle>
@@ -135,7 +138,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
               <p>{formatMonetaryValue(amountContributed)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(amountInSelectedToken, 3, true, selectedToken)}</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(amountInSelectedToken, maxDecimalsErc20, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -145,7 +148,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
               <p>{formatMonetaryValue(mybitPlatformFee)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(mybitPlatformFeeSelectedToken, 3, true, selectedToken)}</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(mybitPlatformFeeSelectedToken, maxDecimalsErc20, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -155,7 +158,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
               <p>~{formatMonetaryValue(gasInDai)}</p>
-              <p>~{!selectedToken ? <span>loading</span> : formatMonetaryValue(gasInSelectedToken, 3, true, selectedToken)}</p>
+              <p>~{!selectedToken ? <span>loading</span> : formatMonetaryValue(gasInSelectedToken, maxDecimalsErc20, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -170,7 +173,7 @@ class AssetFundingConfirm extends React.Component {
               isLarge
             >
               <p>{formatMonetaryValue(totalToPayInDai)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(totalToPayInSelectedToken, 3, true, selectedToken)}</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(totalToPayInSelectedToken, maxDecimalsErc20, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </div>
           <AssetFundingConfirmDropdownButton>
