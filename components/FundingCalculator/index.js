@@ -35,7 +35,9 @@ const FundingCalculator = ({
   loadingUserInfo,
   userInvestment,
   maxPercentageAfterFees,
+  totalSupply,
 }) => {
+  const selectedAmountEthFormatted = selectedAmountEth ? parseFloat(selectedAmountEth.toFixed(2)) : null;
   return(
     <React.Fragment>
       <FundingCalculatorTitle>
@@ -46,10 +48,11 @@ const FundingCalculator = ({
           <div style={{display: 'flex'}}>
             <NumericInput
               placeholdertext={`Amount in ${DEFAULT_TOKEN}`}
-              value={selectedAmountEth}
+              value={selectedAmountEthFormatted}
+              precision={2}
               label={DEFAULT_TOKEN}
               onChange={number =>
-                handleOnChangeEthValue(number, maxInvestment, fundingGoal, maxPercentageAfterFees)}
+                handleOnChangeEthValue(number, maxInvestment, totalSupply, maxPercentageAfterFees)}
               min={0}
             />
             <FundingCalculatorEqualsSeparator>
@@ -60,7 +63,7 @@ const FundingCalculator = ({
               value={selectedOwnership}
               min={0}
               label="%"
-              onChange={number => handleOnChangePercentage(number, maxOwnership, fundingGoal, maxInvestment, maxPercentageAfterFees)}
+              onChange={number => handleOnChangePercentage(number, maxOwnership, fundingGoal, maxInvestment, maxPercentageAfterFees, totalSupply)}
             />
           </div>
           <Slider
@@ -76,7 +79,7 @@ const FundingCalculator = ({
             }
             min={minInvestment}
             max={maxInvestment}
-            onChange={number => handleOnChangeSlider(number, fundingGoal, maxPercentageAfterFees)}
+            onChange={number => handleOnChangeSlider(number, totalSupply, maxPercentageAfterFees)}
             disabled={ended}
           />
           <FundingCalculatorGrid

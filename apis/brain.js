@@ -625,7 +625,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         } = asset;
         const dividendTokenETH = await Network.dividendTokenETH(assetId);
         let platformFee = await api.methods.getAssetPlatformFee(assetId).call();
-        const totalSupply = await dividendTokenETH.methods.totalSupply().call();
         const assetOperator = await Network.getAssetOperator(assetId);
         const crowdsaleFinalized = await api.methods.crowdsaleFinalized(assetId).call();
         const fundingDeadline = await api.methods.getCrowdsaleDeadline(assetId).call();
@@ -641,14 +640,21 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let assetIncome = 0;
         let managerHasToCallPayout = false;
         let investment = 0;
+        let totalShares = 0;
+        let availableShares = 0;
 
         assetManagerFee = BN(assetManagerFee);
         platformFee = BN(platformFee);
         fundingGoal = BN(fundingGoal);
-        const totalShares = fundingGoal.plus(assetManagerFee).plus(platformFee);
+        fundingProgress = BN(fundingProgress);
+        totalShares = fundingGoal.plus(assetManagerFee).plus(platformFee);
+        availableShares = totalShares.minus(assetManagerFee).minus(platformFee).minus(fundingProgress);
         assetManagerFee = assetManagerFee.div(totalShares).toNumber();
+        platformFee = platformFee.div(totalShares).toNumber();
         fundingGoal = fundingGoal.toNumber();
-        platformFee = platformFee.toNumber();
+
+        availableShares = availableShares.toNumber();
+        totalShares = totalShares.toNumber();
 
         console.log("Total sharest: ", totalShares)
         console.log("Asset contract: ", assetId)
@@ -660,7 +666,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         console.log("Asset Investors: ", assetInvestors)
         console.log("Funding Progress: ", fundingProgress)
         console.log("Manager fee bgn: ", assetManagerFee)
-        console.log("Total supply: ", totalSupply)
         console.log("Platform fee: ", platformFee)
         console.log("Escrow Id: ", escrowId);
         console.log("Escrow: ", fromWeiToEth(BN(escrow).toString()))
@@ -679,9 +684,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
               assetIncome = fromWeiToEth(BN(assetIncome));
-              if(assetManagerFee > 0){
-                fundingProgress = fundingProgress - (assetManagerFee * fundingProgress)
-              }
+              fundingProgress = fundingProgress - ((assetManagerFee + platformFee) * fundingProgress)
               //console.log("ASSET INCOME: ", assetIncome)
               /*const result = await Network.issueDividends({
                 asset: assetId,
@@ -696,7 +699,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
 
           console.log("DividendTokenETH: ", dividendTokenETH)
           console.log("INVESTMENT: ", fromWeiToEth(BN(balanceOfUser).toString()));
-          console.log("Supply: ", fromWeiToEth(BN(totalSupply).toString()));
           console.log("Percentage: ", percentageOwnedByUser);
           console.log("\n\n")
           console.log("\n\n")
@@ -727,7 +729,8 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           daysSinceItWentLive,
           assetIncome,
           userInvestment: investment,
-          totalSupply: totalSupply ? fromWeiToEth(BN(totalSupply).toString()) : 0,
+          totalSupply: Number(fromWeiToEth(totalShares)),
+          availableShares: Number(fromWeiToEth(availableShares)),
           managerPercentage: assetManagerFee,
           fundingDeadline: dueDate,
           numberOfInvestors: assetInvestors.length,

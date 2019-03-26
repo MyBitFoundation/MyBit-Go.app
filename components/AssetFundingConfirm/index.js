@@ -38,6 +38,8 @@ import {
   convertTokenAmount,
 } from 'utils/helpers';
 import AssetFundingButton from 'components/AssetFunding/assetFundingButton';
+import BN from 'bignumber.js';
+BN.config({ EXPONENTIAL_AT: 80 });
 
 // represented in ETH (at 8 GWEI)
 const AVG_GAS_FUND_TRANSACTION = 0.018767;
@@ -81,9 +83,12 @@ class AssetFundingConfirm extends React.Component {
       extensionUrl,
     } = metamaskContext;
 
-    const mybitPlatformFee = (amountContributed / (1 - MYBIT_FOUNDATION_FEE)) - amountContributed;
-    let amountToPay = amountContributed + mybitPlatformFee;
+    const amountInBn = BN(amountContributed);
+    const mybitPlatformFee = amountInBn.times(MYBIT_FOUNDATION_FEE).toNumber();
+    let amountToPay = amountInBn.plus(mybitPlatformFee).toNumber();
 
+    console.log("mybitPlatformFee: ", mybitPlatformFee)
+    console.log("amountToPay: ", amountToPay)
     const metamaskErrors = metamaskContext.metamaskErrors();
     const footer = getFooter(metamaskErrors.error, extensionUrl, amountToPay, amountContributed, user.balances, this.props.fundAsset);
     const {

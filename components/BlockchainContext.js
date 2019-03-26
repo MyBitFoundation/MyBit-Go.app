@@ -220,7 +220,7 @@ class BlockchainProvider extends React.Component {
     }
 
     const onSuccess = async () => {
-      await Promise.all([this.fetchAssets, this.fetchTransactionHistory]);
+      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory]);
       updateCallingPayout();
       buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.SUCCESS, {
         assetName,
@@ -542,7 +542,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onSuccessRefreshData = async () => {
-        await Promise.all([this.fetchAssets, this.fetchTransactionHistory]);
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
           assetName,
           amount: amountFormatted,
@@ -626,7 +626,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onSuccessRefreshData = async () => {
-        await Promise.all([this.fetchAssets, this.fetchTransactionHistory]);
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
         removeassetIdFromList();
         buildNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.SUCCESS, {
           assetName,
