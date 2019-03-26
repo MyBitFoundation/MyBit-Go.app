@@ -1,0 +1,2 @@
+export const MYBIT_FOUNDATION_SHARE = 0.01;
+export const MYBIT_FOUNDATION_FEE = 0.03;

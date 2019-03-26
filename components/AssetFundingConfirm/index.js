@@ -26,6 +26,9 @@ import {
 import {
   DEFAULT_TOKEN,
 } from 'constants/app';
+import {
+  MYBIT_FOUNDATION_FEE,
+} from 'constants/platformFees';
 
 import {
   formatMonetaryValue,
@@ -75,7 +78,7 @@ class AssetFundingConfirm extends React.Component {
       extensionUrl,
     } = metamaskContext;
 
-    const mybitPlatformFee = amountContributed * 0.03;
+    const mybitPlatformFee = amountContributed * MYBIT_FOUNDATION_FEE;
     let amountToPay = amountContributed + mybitPlatformFee;
 
     const metamaskErrors = metamaskContext.metamaskErrors();
@@ -138,7 +141,7 @@ class AssetFundingConfirm extends React.Component {
           <Separator style={separatorStyle}/>
           <AssetFundingConfirmItem>
             <AssetFundingConfirmItemName>
-              MyBit Foundation Fee (3%)
+              MyBit Foundation Fee ({MYBIT_FOUNDATION_FEE * 100}%)
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
               <p>{formatMonetaryValue(mybitPlatformFee)}</p>

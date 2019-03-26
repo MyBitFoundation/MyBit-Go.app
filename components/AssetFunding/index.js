@@ -12,6 +12,10 @@ import {
   fromWeiToEth,
   toWei,
 } from 'utils/helpers';
+import {
+  MYBIT_FOUNDATION_SHARE,
+  MYBIT_FOUNDATION_FEE,
+} from 'constants/platformFees';
 
 class AssetFunding extends React.Component {
   state = {
@@ -127,7 +131,7 @@ class AssetFunding extends React.Component {
     }
 
     // Total fee: manager fee + platform fees (1%)
-    const maxPercentageAfterFees = 100 - (managerPercentage * 100 + 1);
+    const maxPercentageAfterFees = 100 - (managerPercentage * 100 + (MYBIT_FOUNDATION_SHARE * 100));
     const maxOwnership = ((maxInvestment * maxPercentageAfterFees) / fundingGoal).toFixed(2);
     let yourContribution = 0;
     let yourOwnership = 0;
