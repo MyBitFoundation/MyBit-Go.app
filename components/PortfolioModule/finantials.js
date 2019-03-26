@@ -59,6 +59,7 @@ const getManagerDetailsFromAsset = (asset) => {
     managerTotalIncome,
     managerTotalWithdrawn,
     assetIncome,
+    owedToAssetManager,
   } = asset;
 
   const totalProfitAssetManager = assetIncome * (managerPercentage / 100);
@@ -66,7 +67,7 @@ const getManagerDetailsFromAsset = (asset) => {
   return {
     ...asset,
     totalProfitAssetManager,
-    toWithdraw: 0,
+    toWithdraw: fromWeiToEth(owedToAssetManager),
   };
 }
 

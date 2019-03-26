@@ -577,6 +577,8 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       //console.log("Network: ", Network)
       const api = await Network.api();
+      const assetManagerFunds = await Network.assetManagerFunds();
+      console.log("assetManagerFunds: ", assetManagerFunds)
       //console.log("API: ", api)
       //const operators = await Network.operators();
       //const events = await Network.events();
@@ -620,7 +622,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
 
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
         const escrow = await api.methods.getAssetManagerEscrow(escrowId).call();
-
+        const isAssetManager = assetManager === realAddress;
         let daysSinceItWentLive = 1;
         let assetIncome = 0;
         let managerHasToCallPayout = false;
@@ -628,6 +630,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let totalShares = 0;
         let availableShares = 0;
         let owedToInvestor = 0;
+        let owedToAssetManager = 0;
 
         assetManagerFee = BN(assetManagerFee);
         platformFee = BN(platformFee);
@@ -672,6 +675,9 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               assetIncome = Number(fromWeiToEth(BN(assetIncome)));
               fundingProgress = fundingProgress - ((assetManagerFee + platformFee) * fundingProgress)
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
+              if(isAssetManager){
+                owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, assetManager).call();
+              }
               //console.log("ASSET INCOME: ", assetIncome)
               /*const result = await Network.issueDividends({
                 asset: assetId,
@@ -702,8 +708,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         const fundingStageTmp = crowdsaleFinalized ? 0 : (!pastDate && !crowdsaleFinalized) ? 2 : 1;
         const fundingStage = getFundingStage(fundingStageTmp);
 
-        const isAssetManager = assetManager === realAddress;
-
         return {
           ...asset,
           managerHasToCallPayout,
@@ -717,6 +721,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           daysSinceItWentLive,
           assetIncome,
           owedToInvestor,
+          owedToAssetManager,
           userInvestment: investment,
           totalSupply: Number(fromWeiToEth(totalShares)),
           availableShares: Number(fromWeiToEth(availableShares)),
@@ -724,7 +729,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           fundingDeadline: dueDate,
           numberOfInvestors: assetInvestors.length,
           blockNumberitWentLive: 0,
-          managerTotalIncome: 0,
           managerTotalWithdrawn: 0,
           watchListed: alreadyFavorite,
           funded: fundingStage === FundingStages.FUNDED,
