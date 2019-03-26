@@ -542,32 +542,19 @@ const getAssetLogsStartedAndWentLive = (assetCreationContract, fundingHubContrac
   ])
 }
 
-const getAssetDetails = (assets, apiContract, address) => {
+const getAssetDetails = (api, assetId) => {
   return Promise.all([
-    Promise.all(assets.map(asset =>
-      apiContract.methods.assetManager(asset.assetId).call())),
-
-    Promise.all(assets.map(asset =>
-      apiContract.methods.amountToBeRaised(asset.assetId).call())),
-
-    Promise.all(assets.map(asset =>
-      apiContract.methods.amountRaised(asset.assetId).call())),
-
-    Promise.all(assets.map(asset =>
-      apiContract.methods.fundingDeadline(asset.assetId).call())),
-
-    address && Promise.all(assets.map(asset =>
-      apiContract.methods.ownershipUnits(asset.assetId, address).call())),
-
-    Promise.all(assets.map(asset =>
-      apiContract.methods.totalReceived(asset.assetId).call())),
-
-    Promise.all(assets.map(asset =>
-      apiContract.methods.fundingStage(asset.assetId).call())),
-
-    Promise.all(assets.map(asset =>
-      apiContract.methods.managerPercentage(asset.assetId).call())),
-  ]);
+      Network.dividendTokenETH(assetId),
+      api.methods.getAssetPlatformFee(assetId).call(),
+      Network.getAssetOperator(assetId),
+      api.methods.crowdsaleFinalized(assetId).call(),
+      api.methods.getCrowdsaleDeadline(assetId).call(),
+      Network.getFundingGoal(assetId),
+      Network.getAssetManager(assetId),
+      Network.getAssetInvestors(assetId),
+      Network.getFundingProgress(assetId),
+      api.methods.getAssetManagerFee(assetId).call(),
+    ]);
 }
 
 const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, asset, realAddress) => {
@@ -618,19 +605,22 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         const {
           assetId,
         } = asset;
-        const dividendTokenETH = await Network.dividendTokenETH(assetId);
-        let platformFee = await api.methods.getAssetPlatformFee(assetId).call();
-        const assetOperator = await Network.getAssetOperator(assetId);
-        const crowdsaleFinalized = await api.methods.crowdsaleFinalized(assetId).call();
-        const fundingDeadline = await api.methods.getCrowdsaleDeadline(assetId).call();
-        let fundingGoal = await Network.getFundingGoal(assetId);
-        const assetManager = await Network.getAssetManager(assetId);
-        const assetInvestors = await Network.getAssetInvestors(assetId);
-        let fundingProgress = await Network.getFundingProgress(assetId);
-        let assetManagerFee = await api.methods.getAssetManagerFee(assetId).call();
+        let [
+          dividendTokenETH,
+          platformFee,
+          assetOperator,
+          crowdsaleFinalized,
+          fundingDeadline,
+          fundingGoal,
+          assetManager,
+          assetInvestors,
+          fundingProgress,
+          assetManagerFee
+        ] = await getAssetDetails(api, assetId);
 
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
         const escrow = await api.methods.getAssetManagerEscrow(escrowId).call();
+
         let daysSinceItWentLive = 1;
         let assetIncome = 0;
         let managerHasToCallPayout = false;
