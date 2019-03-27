@@ -236,35 +236,12 @@ export const withdrawEscrow = async (userName, assetId, onTransactionHash, onRec
 export const fetchRevenueLogsByAssetId = async (assetId) =>
   new Promise(async (resolve, reject) => {
     try {
-      // pull asssets from newest contract
-      let assetContract = new window.web3js.eth.Contract(
-        Asset.ABI,
-        Asset.ADDRESS,
-      );
-
-      let logIncomeReceived = await assetContract.getPastEvents(
-        'LogIncomeReceived',
-        { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-      );
-
-      let revenueIncomeData = await Promise.all(logIncomeReceived
-        .filter(({returnValues}) => returnValues._assetID === assetId)
-        .map(async data => {
-          const blockNumber = data.blockNumber;
-          const blockInfo = await window.web3js.eth.getBlock(blockNumber);
-          const timestamp = blockInfo.timestamp;
-          const amount = data.returnValues._amount;
-          return{
-            amount,
-            timestamp,
-          }
-        }))
-
-        resolve(revenueIncomeData);
-      }catch(err){
-        debug(err);
-        reject(err);
-      }
+      const result = await Network.fetchRevenueLogs(assetId);
+      resolve(result);
+    }catch(err){
+      debug(err);
+      reject(err);
+    }
   })
 
 const getNumberOfInvestors = async assetId =>

@@ -24,13 +24,8 @@ class ManageAssetModule extends React.Component{
     }
     const {
       blockchainContext,
-      pricesContext,
       metamaskContext,
     } = props;
-
-    const {
-      prices,
-    } = pricesContext;
 
     const {
       withdrawingCollateral,
@@ -43,20 +38,20 @@ class ManageAssetModule extends React.Component{
       const {
         assetId,
         collateral,
-        amountToBeRaisedInUSD,
         assetIncome,
         daysSinceItWentLive,
         assetManager,
         managerPercentage,
+        fundingGoal,
       } = asset;
 
       // calculate collateral data to be displayed
       const remainingEscrow = window.web3js.utils.fromWei(await Brain.remainingEscrow(asset.assetId), 'ether');
       const percentageWithdrawn = remainingEscrow !== collateral ? 100 - ((remainingEscrow * 100) / collateral) : 0;
-      const percentageWithdrawableCollateralUsd = ((assetIncome * 100) / amountToBeRaisedInUSD) / 100;
+      const percentageWithdrawableCollateralUsd = ((assetIncome * 100) / fundingGoal) / 100;
       const collateralData = [];
       for(let i = 1; i < 5; i++){
-        const required = (25 * i)/100 * amountToBeRaisedInUSD;
+        const required = (25 * i)/100 * fundingGoal;
 
         if(percentageWithdrawableCollateralUsd >= (25 * i) / 100){
           const withdrawable = ((25 * i) > percentageWithdrawn);
@@ -71,7 +66,7 @@ class ManageAssetModule extends React.Component{
           const minValue = i - 1 === 0 ? 0 : (25 * (i -1))/100;
           const maxValue = (25 * i)/100;
           if(percentageWithdrawableCollateralUsd < maxValue && percentageWithdrawableCollateralUsd > minValue){
-            current = percentageWithdrawableCollateralUsd * amountToBeRaisedInUSD;
+            current = percentageWithdrawableCollateralUsd * fundingGoal;
           }
           collateralData.push({
             withdrawable: false,
@@ -93,13 +88,9 @@ class ManageAssetModule extends React.Component{
 
       //calculate how much the asset manager can withdraw
       const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetId), Brain.getManagerIncomeWithdraw(assetManager, asset.assetId)]);
+
       //set the state with the calculated data
-
-      const mybitPrice = prices.mybit.price;
-      const etherPrice = prices.ethereum.price;
-
-      const profitUSD = assetIncome * (managerPercentage / 100);
-      const profitETH = (profitUSD / etherPrice).toFixed(4);
+      const profit = assetIncome * (managerPercentage / 100);
 
       let withdrawMax;
       let percentageMax;
@@ -115,12 +106,10 @@ class ManageAssetModule extends React.Component{
         }
       })
 
-      const averageProfitUSD = profitUSD / daysSinceItWentLive;
-      const averageProfitETH = (profitETH / daysSinceItWentLive).toFixed(4);
+      const averageProfit = profit / daysSinceItWentLive;
 
-      const toWithdraw = totalIncome - totalWithdrawn;
-      const toWithdrawETH = window.web3js.utils.fromWei(toWithdraw.toString(), 'ether');
-      const toWithdrawUSD = formatMonetaryValue(toWithdrawETH * etherPrice);
+      const toWithdrawWei = totalIncome - totalWithdrawn;
+      const toWithdraw = window.web3js.utils.fromWei(toWithdrawWei.toString(), 'ether');
 
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
@@ -132,22 +121,19 @@ class ManageAssetModule extends React.Component{
           asset: asset,
           methods: {
             withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
-            withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, toWithdrawUSD): undefined,
+            withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, toWithdraw): undefined,
           },
           finantialDetails: {
             assetManagerProfits,
             collateralData,
             revenueData,
-            toWithdrawETH,
-            toWithdrawUSD,
+            toWithdraw,
             isWithdrawingCollateral,
             isWithdrawingAssetManager,
-            profitUSD,
-            profitETH,
+            profit,
             withdrawMax,
             percentageMax,
-            averageProfitUSD,
-            averageProfitETH,
+            averageProfit,
           }
         }
       }, () => console.log(this.state));
