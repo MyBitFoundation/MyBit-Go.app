@@ -182,7 +182,7 @@ export const remainingEscrow = async assetId =>
       const response = await assetCollateralContract.methods
         .remainingEscrow(assetId).call();
 
-      resolve(response);
+      resolve(0);
     } catch (err) {
       reject(err);
     }
@@ -638,41 +638,43 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         console.log("\n\n")
 
         let percentageOwnedByUser = 0;
-        if(realAddress && assetInvestors.includes(realAddress)){
-          const balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
-          investment = fromWeiToEth(BN(balanceOfUser).toString());
-          percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
-          if(crowdsaleFinalized){
-            const timestamp = await Network.getTimestampeOfFundedAsset(assetId)
-            //console.log("BLOCK: ", timestamp)
-            if(timestamp){
+
+        if(crowdsaleFinalized){
+          const timestamp = await Network.getTimestampeOfFundedAsset(assetId)
+          //console.log("BLOCK: ", timestamp)
+          if(timestamp){
+            fundingProgress = fundingProgress - ((assetManagerFee + platformFee) * fundingProgress)
+            if(realAddress && (isAssetManager || assetInvestors.includes(realAddress))){
+              const balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
+              investment = fromWeiToEth(BN(balanceOfUser).toString());
+              percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
               assetIncome = Number(fromWeiToEth(BN(assetIncome)));
-              fundingProgress = fundingProgress - ((assetManagerFee + platformFee) * fundingProgress)
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
-              if(isAssetManager){
-                owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, assetManager).call();
-              }
-              //console.log("ASSET INCOME: ", assetIncome)
-              /*const result = await Network.issueDividends({
-                asset: assetId,
-                account: realAddress,
-                amount: toWei(1),
-              });*/
-              //console.log("daysSinceItWentLive: ", daysSinceItWentLive);
-            } else {
-              managerHasToCallPayout = true;
-            }
-          }
 
-          console.log("DividendTokenETH: ", dividendTokenETH)
-          console.log("INVESTMENT: ", fromWeiToEth(BN(balanceOfUser).toString()));
-          console.log("Percentage: ", percentageOwnedByUser);
-          console.log("owedToInvestor: ", fromWeiToEth(BN(owedToInvestor)));
-          console.log("\n\n")
-          console.log("\n\n")
+              //console.log("DividendTokenETH: ", dividendTokenETH)
+              console.log("INVESTMENT: ", fromWeiToEth(BN(balanceOfUser).toString()));
+              console.log("Percentage: ", percentageOwnedByUser);
+              console.log("owedToInvestor: ", fromWeiToEth(BN(owedToInvestor)));
+              console.log("\n\n")
+              console.log("\n\n")
+            }
+            if(isAssetManager){
+              owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, assetManager).call();
+            }
+
+            //console.log("ASSET INCOME: ", assetIncome)
+            /*const result = await Network.issueDividends({
+              asset: assetId,
+              account: realAddress,
+              amount: toWei(1),
+            });*/
+            //console.log("daysSinceItWentLive: ", daysSinceItWentLive);
+          } else if(isAssetManager) {
+            managerHasToCallPayout = true;
+          }
         }
 
         const searchQuery = `mybit_watchlist_${assetId}`;
