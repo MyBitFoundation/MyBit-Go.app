@@ -227,7 +227,7 @@ class BlockchainProvider extends React.Component {
       });
     }
 
-    const response = await Brain.payoutAsset({
+    Brain.payoutAsset({
       userAddress: this.props.metamaskContext.user.address,
       assetId,
       onTransactionHash,
@@ -308,7 +308,7 @@ class BlockchainProvider extends React.Component {
       });
     }
 
-    await Brain.withdrawAssetManager(
+    Brain.withdrawAssetManager(
       this.props.metamaskContext.user.address,
       assetId,
       onTransactionHash,
@@ -390,7 +390,7 @@ class BlockchainProvider extends React.Component {
       });
     }
 
-    await Brain.withdrawEscrow(
+    Brain.withdrawEscrow(
       this.props.metamaskContext.user.address,
       assetId,
       onTransactionHash,

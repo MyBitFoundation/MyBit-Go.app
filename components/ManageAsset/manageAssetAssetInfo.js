@@ -23,14 +23,11 @@ const ManageAssetAssetInfo = React.memo(({
   name,
   city,
   country,
-  amountToBeRaisedInUSD,
+  fundingGoal,
   assetIncome,
-  profitUSD,
-  profitETH,
-  averageProfitUSD,
-  averageProfitETH,
-  toWithdrawETH,
-  toWithdrawUSD,
+  profit,
+  averageProfit,
+  toWithdraw,
   isWithdrawingAssetManager,
   withdrawProfitAssetManager,
 }) => (
@@ -47,7 +44,7 @@ const ManageAssetAssetInfo = React.memo(({
         <ValueDisplay
           text="Asset Value"
           icon={<PieChart />}
-          value={`$${amountToBeRaisedInUSD}`}
+          value={formatMonetaryValue(fundingGoal)}
           style={{
             margin: '5px 0',
           }}
@@ -78,9 +75,8 @@ const ManageAssetAssetInfo = React.memo(({
             <ManageAssetColoredValue
               isGreen
             >
-              {formatMonetaryValue(profitUSD)}
+              {formatMonetaryValue(profit)}
             </ManageAssetColoredValue>
-            <b>{profitETH}{' '}ETH</b>
           </ManageAssetRectangleContainer>
           <ManageAssetRectangleContainer
             isFontSizeSmall
@@ -89,9 +85,8 @@ const ManageAssetAssetInfo = React.memo(({
             <ManageAssetColoredValue
               isBlue
             >
-             {formatMonetaryValue(averageProfitUSD)}
+             {formatMonetaryValue(averageProfit)}
             </ManageAssetColoredValue>
-            <b>{averageProfitETH}{' '}ETH</b>
             <b>Daily</b>
           </ManageAssetRectangleContainer>
         </ManageAssetCustomRow>
@@ -106,14 +101,13 @@ const ManageAssetAssetInfo = React.memo(({
             <ManageAssetColoredValue
               isBlue
             >
-              {toWithdrawUSD}
+              {formatMonetaryValue(toWithdraw)}
             </ManageAssetColoredValue>
             <br />
-            <b>{Number(toWithdrawETH).toLocaleString('en-US', {maximumFractionDigits: 4})} ETH</b>
           </div>
           <Button
             type="primary"
-            disabled={Number(toWithdrawETH) === 0}
+            disabled={Number(toWithdraw) === 0}
             loading={isWithdrawingAssetManager}
             onClick={withdrawProfitAssetManager}
           >

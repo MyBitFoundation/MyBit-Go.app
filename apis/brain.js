@@ -3,12 +3,7 @@
 /* eslint-disable camelcase */
 import axios from 'axios';
 import dayjs from 'dayjs';
-import * as API from '../constants/contracts/API';
-import * as AssetCreation from '../constants/contracts/AssetCreation';
-import * as FundingHub from '../constants/contracts/FundingHub';
 import * as MyBitToken from '../constants/contracts/MyBitToken';
-import * as Asset from '../constants/contracts/Asset';
-import * as AssetCollateral from '../constants/contracts/AssetCollateral';
 
 import { ErrorTypes } from 'constants/errorTypes';
 import {
@@ -36,8 +31,6 @@ import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
 const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
-
-let fundingHubContract;
 
 let Network;
 
@@ -154,49 +147,12 @@ const roiEscrow = async assetId =>
       reject(err);
     }
   });
-export const unlockedEscrow = async assetId =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const assetCollateralContract = new window.web3js.eth.Contract(
-        AssetCollateral.ABI,
-        AssetCollateral.ADDRESS,
-      );
-
-      const response = await assetCollateralContract.methods
-        .unlockedEscrow(assetId).call();
-
-      resolve(response);
-    } catch (err) {
-      reject(err);
-    }
-  });
-
-export const remainingEscrow = async assetId =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const assetCollateralContract = new window.web3js.eth.Contract(
-        AssetCollateral.ABI,
-        AssetCollateral.ADDRESS,
-      );
-
-      const response = await assetCollateralContract.methods
-        .remainingEscrow(assetId).call();
-
-      resolve(0);
-    } catch (err) {
-      reject(err);
-    }
-  });
 
 export const withdrawAssetManager = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
   try {
-    const assetContract = new window.web3js.eth.Contract(
-      Asset.ABI,
-      Asset.ADDRESS,
-    );
-
-    const response = await assetContract.methods
-      .withdrawManagerIncome(assetId)
+    const assetManagerFunds = await Network.assetManagerFunds();
+    assetManagerFunds.methods.withdraw(assetId, userName)
+      .send({ from: userName, gas: '1000000'})
       .send({ from: userName })
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
@@ -210,16 +166,12 @@ export const withdrawAssetManager = async (userName, assetId, onTransactionHash,
     processErrorType(error, onError)
   }
 }
+
 export const withdrawEscrow = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
   try {
-    const assetCollateralContract = new window.web3js.eth.Contract(
-      AssetCollateral.ABI,
-      AssetCollateral.ADDRESS,
-    );
-
-    const response = await assetCollateralContract.methods
-      .withdrawEscrow(assetId)
-      .send({ from: userName })
+    const assetManagerEscrow = await Network.assetManagerEscrow();
+    assetManagerEscrow.methods.unlockEscrow(assetId, userName)
+      .send({ from: userName, gas: '1000000'})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -227,44 +179,19 @@ export const withdrawEscrow = async (userName, assetId, onTransactionHash, onRec
         processErrorType(error, onError);
       })
       .then(receipt => onReceipt(receipt.status));
-
   } catch (error) {
     processErrorType(error, onError)
   }
 }
 
-export const fetchRevenueLogsByAssetId = async (assetId) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const result = await Network.fetchRevenueLogs(assetId);
-      resolve(result);
-    }catch(err){
-      debug(err);
-      reject(err);
-    }
-  })
-
-const getNumberOfInvestors = async assetId =>
-  new Promise(async (resolve, reject) => {
-    try {
-      fundingHubContract = fundingHubContract ? fundingHubContract : new window.web3js.eth.Contract(
-        FundingHub.ABI,
-        FundingHub.ADDRESS,
-      );
-
-      const assetFundersLog = await fundingHubContract.getPastEvents(
-        'LogNewFunder',
-        { fromBlock: 0, toBlock: 'latest' },
-      );
-
-      const investorsForThisAsset = assetFundersLog
-        .filter(txResult => txResult.returnValues._assetID === assetId);
-
-      resolve(investorsForThisAsset.length);
-    } catch (err) {
-      reject(err);
-    }
-  });
+export const fetchRevenueLogsByAssetId = async assetId => {
+  try{
+    return Network.fetchRevenueLogs(assetId);
+  }catch(err){
+    debug(err);
+    reject(err);
+  }
+}
 
 export const createAsset = async (onTransactionHash, onReceipt, onError, params) => {
   try {
@@ -361,7 +288,6 @@ export const updateAirTableWithNewAsset = async (
   collateralPercentage,
   performInternalAction,
 ) => {
-
   try{
     await axios.post(InternalLinks.UPDATE_ASSETS, {
       assetId,
@@ -377,44 +303,24 @@ export const updateAirTableWithNewAsset = async (
   }
 }
 
-export const checkTransactionConfirmation = async (
-  transactionHash,
-  resolve,
-  reject,
-) => {
-  try {
-    const endpoint = ExternalLinks.ETHERSCAN_TX(transactionHash);
-    const result = await fetch(endpoint);
-    const jsronResult = await result.json();
-    if (jsronResult.status === '1') {
-      resolve(true);
-    } else if (jsronResult.status === '0') {
-      resolve(false);
-    } else {
-      setTimeout(
-        () => checkTransactionConfirmation(transactionHash, resolve, reject),
-        1000,
-      );
-    }
-  } catch (err) {
-    reject(err);
-  }
-};
-
-export const payoutAsset = async ({
+export const payoutAsset = ({
   userAddress,
   assetId,
   onTransactionHash,
   onReceipt,
   onError,
 }) => {
-  const response = await Network.payout({
-    asset: assetId,
-    from: userAddress,
-    onTransactionHash,
-    onError: error => processErrorType(error, onError),
-    onReceipt,
-  })
+  try {
+    Network.payout({
+      asset: assetId,
+      from: userAddress,
+      onTransactionHash,
+      onError: error => processErrorType(error, onError),
+      onReceipt,
+    })
+  } catch(error) {
+    processErrorType(error, onError)
+  }
 }
 
 export const withdrawInvestorProfit = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
@@ -451,7 +357,7 @@ export const fundAsset = async (userName, assetId, amount, onTransactionHash, on
 
     onReceipt(response.status);
   } catch (error) {
-    debug(error);
+    processErrorType(error, onError)
   }
 }
 
@@ -462,61 +368,6 @@ const processErrorType = (error, handleError) => {
   } else{
     handleError(ErrorTypes.ETHEREUM);
   };
-}
-
-export const getManagerIncomeEarned = async (managerAddress, assetId) =>
-  new Promise(async (resolve, reject) => {
-    let assetContract = new window.web3js.eth.Contract(
-      Asset.ABI,
-      Asset.ADDRESS,
-    );
-
-    let logsIncomeEarned = await assetContract.getPastEvents(
-      'LogManagerIncomeEarned',
-      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-    );
-
-    let incomeEarned = logsIncomeEarned
-      .filter(({ returnValues }) => returnValues._manager === managerAddress && returnValues._assetID === assetId)
-      .reduce((accumulator, currentValue) =>
-        (accumulator) + Number(currentValue.returnValues._managerAmount)
-        ,0)
-
-    resolve(incomeEarned);
-  });
-
-export const getManagerIncomeWithdraw = async (managerAddress, assetId) =>
-  new Promise(async (resolve, reject) => {
-    let assetContract = new window.web3js.eth.Contract(
-      Asset.ABI,
-      Asset.ADDRESS,
-    );
-
-    let logsIncomeEarned = await assetContract.getPastEvents(
-      'LogManagerIncomeWithdraw',
-      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-    );
-
-    let withdrawn = logsIncomeEarned
-      .filter(({ returnValues }) => returnValues._manager === managerAddress && returnValues._assetID === assetId)
-      .reduce((accumulator, currentValue) =>
-        (accumulator) + Number(currentValue.returnValues.owed)
-        ,0)
-
-    resolve(withdrawn);
-  });
-
-const getAssetLogsStartedAndWentLive = (assetCreationContract, fundingHubContract) => {
-  return Promise.all([
-    assetCreationContract.getPastEvents(
-      'LogAssetFundingStarted',
-      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-    ),
-    fundingHubContract.getPastEvents(
-      'LogAssetPayout',
-      { fromBlock: BLOCK_NUMBER_CONTRACT_CREATION, toBlock: 'latest' },
-    )
-  ])
 }
 
 const getAssetDetails = (api, assetId) => {
@@ -556,7 +407,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
       const api = await Network.api();
       const assetManagerFunds = await Network.assetManagerFunds();
       console.log("assetManagerFunds: ", assetManagerFunds)
-      //console.log("API: ", api)
+      console.log("API: ", api)
       //const operators = await Network.operators();
       //const events = await Network.events();
       const database = await Network.database();
@@ -608,6 +459,10 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let availableShares = 0;
         let owedToInvestor = 0;
         let owedToAssetManager = 0;
+        let remainingEscrow = 0;
+        let escrowRedeemed = 0;
+        let assetManagerCollateral = 0;
+
 
         assetManagerFee = BN(assetManagerFee);
         platformFee = BN(platformFee);
@@ -651,7 +506,9 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
-              assetIncome = Number(fromWeiToEth(BN(assetIncome)));
+
+              assetIncome = Number(fromWeiToEth(assetIncome)) * (1 - platformFee - assetManagerFee);
+
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
 
               //console.log("DividendTokenETH: ", dividendTokenETH)
@@ -662,7 +519,21 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               console.log("\n\n")
             }
             if(isAssetManager){
-              owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, assetManager).call();
+              owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, realAddress).call();
+              const escrowId = await api.methods.getAssetManagerEscrowID(assetId, realAddress).call();
+              [
+                remainingEscrow,
+                escrowRedeemed,
+                assetManagerCollateral,
+              ] = await Promise.all([
+                api.methods.getAssetManagerEscrowRemaining(escrowId).call(),
+                api.methods.getAssetManagerEscrowRedeemed(escrowId).call(),
+                api.methods.getAssetManagerEscrow(escrowId).call(),
+              ])
+              console.log("Owed to asset manager: ", owedToAssetManager)
+              console.log("Escrow ID: ", escrowId)
+              console.log("remainingEscrow: ", remainingEscrow)
+              console.log("escrowRedeemed: ", escrowRedeemed)
             }
 
             //console.log("ASSET INCOME: ", assetIncome)
@@ -700,7 +571,10 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           daysSinceItWentLive,
           assetIncome,
           owedToInvestor,
-          owedToAssetManager,
+          owedToAssetManager: fromWeiToEth(owedToAssetManager),
+          remainingEscrow: fromWeiToEth(remainingEscrow),
+          assetManagerCollateral: fromWeiToEth(assetManagerCollateral),
+          escrowRedeemed: fromWeiToEth(escrowRedeemed),
           userInvestment: investment,
           totalSupply: Number(fromWeiToEth(totalShares)),
           availableShares: Number(fromWeiToEth(availableShares)),
@@ -742,129 +616,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
 
       console.log("ALL ASSETS: ", assetDetails)
       resolve(assetDetails);
-
-      /*const apiContract = new window.web3js.eth.Contract(API.ABI, API.ADDRESS);
-      const assetCreationContract = new window.web3js.eth.Contract(
-        AssetCreation.ABI,
-        AssetCreation.ADDRESS,
-      );
-
-      const fundingHubContract = new window.web3js.eth.Contract(
-        FundingHub.ABI,
-        FundingHub.ADDRESS,
-      );
-
-      const [
-        logAssetFundingStartedEvents,
-        logAssetsWentLive,
-      ] = await getAssetLogsStartedAndWentLive(assetCreationContract, fundingHubContract);
-
-      let assets = logAssetFundingStartedEvents
-        .map(({ returnValues }) => returnValues)
-        .map(object => ({
-          assetId: object._assetID,
-          assetType: object._assetType,
-          ipfsHash: object._ipfsHash,
-        }));
-
-      const assetsWentLive = logAssetsWentLive
-        .map(object => ({
-          assetId: object.returnValues._assetID,
-          blockNumber: object.blockNumber,
-        }));
-
-      const realAddress = userName && window.web3js.utils.toChecksumAddress(userName);
-
-      // if the asset Id is not on airtable it doens't show up in the platform
-      assets =
-        assets
-          .filter(asset => assetsAirTableById[asset.assetId] !== undefined)
-          .map(asset => {
-            return {
-              ...asset,
-              ...assetsAirTableById[asset.assetId],
-              collateralPercentage: Number(assetsAirTableById[asset.assetId].collateralPercentage),
-            }
-          });
-
-      const [
-        assetManagers,
-        amountsToBeRaised,
-        amountsRaised,
-        fundingDeadlines,
-        ownershipUnits,
-        assetIncomes,
-        fundingStages,
-        managerPercentages,
-      ] = await getAssetDetails(assets, apiContract, realAddress);
-
-      let assetsPlusMoreDetails = await Promise.all(assets.map(async (asset, index) => {
-        const ownershipUnitsTmp = (realAddress && ownershipUnits[index]) || 0;
-        const isAssetManager = assetManagers[index] === realAddress;
-
-        const [
-          numberOfInvestors,
-          owedToInvestor,
-          managerDetails,
-        ] = await getExtraAssetDetails(ownershipUnitsTmp, isAssetManager, apiContract, asset, realAddress);
-
-        const [
-          managerTotalIncome,
-          managerTotalWithdrawn,
-        ] = managerDetails;
-
-        // determine whether asset has expired
-        const dueDate = dayjs(Number(fundingDeadlines[index]) * 1000);
-        const pastDate = dayjs(new Date()) > dueDate ? true : false;
-        const amountToBeRaisedInUSD = Number(amountsToBeRaised[index]);
-        const fundingStageTmp = Number(fundingStages[index]);
-        const fundingStage = getFundingStage(fundingStageTmp);
-
-        const blockNumberitWentLive =
-          fundingStageTmp === 4
-            ? assetsWentLive.filter(assetTmp => assetTmp.assetId === asset.assetId)[0].blockNumber
-            : undefined;
-
-        // this fixes the issue of price fluctuations
-        // a given funded asset can have different "amountRaisedInUSD" and "amountToBeRaisedInUSD"
-        const amountRaisedInUSD =
-          fundingStage === FundingStages.FUNDED
-          ? amountToBeRaisedInUSD
-          : Number(window.web3js.utils.fromWei(amountsRaised[index].toString(), 'ether')) *
-              currentEthInUsd;
-
-        const searchQuery = `mybit_watchlist_${asset.assetId}`;
-        const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
-
-        return {
-          ...asset,
-          amountRaisedInUSD,
-          amountToBeRaisedInUSD,
-          fundingStage,
-          blockNumberitWentLive,
-          pastDate,
-          numberOfInvestors,
-          isAssetManager,
-          managerTotalIncome,
-          managerTotalWithdrawn,
-          fundingDeadline: dueDate,
-          ownershipUnits: ownershipUnitsTmp.toString(),
-          assetIncome:
-            Number(window.web3js.utils.fromWei(assetIncomes[index].toString(), 'ether')) *
-              currentEthInUsd,
-          assetManager: assetManagers[index],
-          managerPercentage: Number(managerPercentages[index]),
-          watchListed: alreadyFavorite,
-          owedToInvestor: owedToInvestor.toString(),
-          funded: fundingStage === FundingStages.FUNDED,
-        };
-      }));
-
-      // remove assets that are not in Airtable
-      assetsPlusMoreDetails = assetsPlusMoreDetails
-        .filter(asset => asset && asset.amountToBeRaisedInUSD > 0);
-
-      resolve(assetsPlusMoreDetails);*/
     } catch (error) {
       debug('failed to fetch assets, error: ', error);
       reject(error);

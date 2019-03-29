@@ -88,7 +88,6 @@ class ManageAsset extends React.Component {
       const {
         assetInfo = {},
         error,
-        prices,
         loading,
         metamaskError,
       } = this.props;
@@ -125,28 +124,19 @@ class ManageAsset extends React.Component {
 
       const {
         assetManagerProfits,
-        averageProfitETH,
-        averageProfitUSD,
+        averageProfit,
         collateralData,
         percentageMax,
         withdrawMax,
-        profitETH,
-        profitUSD,
+        profit,
         revenueData,
-        toWithdrawETH,
-        toWithdrawUSD,
+        toWithdraw,
         isWithdrawingCollateral,
         isWithdrawingAssetManager,
       } = finantialDetails;
 
       const {
-        mybit,
-        ethereum,
-      } = prices;
-
-      const {
         profitChartView,
-        toWithdraw,
         chartBoxView,
         supportingDocuments,
       } = this.state;
@@ -155,7 +145,7 @@ class ManageAsset extends React.Component {
         assetId,
         collateral,
         managerPercentage,
-        amountToBeRaisedInUSD,
+        fundingGoal,
         assetIncome,
         city,
         country,
@@ -163,6 +153,8 @@ class ManageAsset extends React.Component {
         imageSrc,
         partner,
         files,
+        defaultData,
+        assetManagerCollateral,
       } = asset;
 
       const assetListingUrl = `/explore/${assetId}`;
@@ -172,21 +164,18 @@ class ManageAsset extends React.Component {
           {this.getNavBarButtons(assetId, error)}
             {!error && (
               <ManageAssetContentWrapper>
-                <ManageAssetSection>
+                <ManageAssetSection xs={24} sm={24} md={24} lg={12} xl={12}>
                   <ManageAssetAssetInfo
-                    imageSrc={imageSrc}
+                    imageSrc={defaultData.imageSrc}
                     assetId={assetId}
-                    name={name}
+                    name={defaultData.name}
                     city={city}
                     country={country}
-                    amountToBeRaisedInUSD={amountToBeRaisedInUSD}
+                    fundingGoal={fundingGoal}
                     assetIncome={assetIncome}
-                    profitUSD={profitUSD}
-                    profitETH={profitETH}
-                    averageProfitUSD={averageProfitUSD}
-                    averageProfitETH={averageProfitETH}
-                    toWithdrawUSD={toWithdrawUSD}
-                    toWithdrawETH={toWithdrawETH}
+                    profit={profit}
+                    averageProfit={averageProfit}
+                    toWithdraw={toWithdraw}
                     isWithdrawingAssetManager={isWithdrawingAssetManager}
                     withdrawProfitAssetManager={withdrawProfitAssetManager}
                   />
@@ -194,19 +183,18 @@ class ManageAsset extends React.Component {
                 {!supportingDocuments && (
                   <ManageAssetSection
                     hasGraphs
+                    xs={24} sm={24} md={24} lg={12} xl={12}
                   >
                     <ManageAssetGraphs
                       chartBoxView={chartBoxView}
                       revenueData={revenueData}
                       profitChartView={profitChartView}
                       managerPercentage={managerPercentage}
-                      ethereumPrice={ethereum.price}
-                      mybitPrice={mybit.price}
                       displayProfit={this.displayProfit}
                       displayCollateral={this.displayCollateral}
-                      collateral={collateral}
+                      assetManagerCollateral={assetManagerCollateral}
                       collateralData={collateralData}
-                      amountToBeRaisedInUSD={amountToBeRaisedInUSD}
+                      fundingGoal={fundingGoal}
                       isWithdrawingCollateral={isWithdrawingCollateral}
                       withdrawCollateral={withdrawCollateral}
                     />

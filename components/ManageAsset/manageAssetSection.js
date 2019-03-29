@@ -1,25 +1,9 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+import {
+  Col,
+} from 'antd';
 
-const ManageAssetSection = styled.div`
-  width: 100%;
-  position: relative;
-
-  ${({theme}) => theme.tablet`
-    width: 48%;
-
-    ${props => props.hasGraphs && css`
-      width: 56%;
-    `}
-  `}
-
-  ${({theme}) => theme.laptop`
-    width: 45%;
-  `}
-
-  ${({theme}) => theme.laptopL`
-    width: 43%;
-  `}
-
+const ManageAssetSection = styled(Col)`
   ${props => props.hasShadow && css`
     ${({theme}) => theme.tablet`
       border-radius: 4px;
@@ -29,3 +13,4 @@ const ManageAssetSection = styled.div`
 }`
 
 export default ManageAssetSection;
+

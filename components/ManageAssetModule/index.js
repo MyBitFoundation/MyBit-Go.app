@@ -37,17 +37,19 @@ class ManageAssetModule extends React.Component{
     try{
       const {
         assetId,
-        collateral,
         assetIncome,
         daysSinceItWentLive,
         assetManager,
         managerPercentage,
         fundingGoal,
+        escrowRedeemed,
+        remainingEscrow,
+        assetManagerCollateral,
+        owedToAssetManager,
       } = asset;
 
       // calculate collateral data to be displayed
-      const remainingEscrow = window.web3js.utils.fromWei(await Brain.remainingEscrow(asset.assetId), 'ether');
-      const percentageWithdrawn = remainingEscrow !== collateral ? 100 - ((remainingEscrow * 100) / collateral) : 0;
+      const percentageWithdrawn = remainingEscrow !== assetManagerCollateral ? 100 - ((remainingEscrow * 100) / assetManagerCollateral) : 0;
       const percentageWithdrawableCollateralUsd = ((assetIncome * 100) / fundingGoal) / 100;
       const collateralData = [];
       for(let i = 1; i < 5; i++){
@@ -76,6 +78,8 @@ class ManageAssetModule extends React.Component{
         }
       }
 
+      console.log("Collateral data: ", collateralData)
+
       // calculate asset manager profits
       const assetManagerProfits = [];
       const revenueRawData = await Brain.fetchRevenueLogsByAssetId(asset.assetId);
@@ -86,12 +90,17 @@ class ManageAssetModule extends React.Component{
         }
       })
 
+      console.log("Revenue data: ", revenueData)
+
       //calculate how much the asset manager can withdraw
-      const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetId), Brain.getManagerIncomeWithdraw(assetManager, asset.assetId)]);
-
+      //const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetId), Brain.getManagerIncomeWithdraw(assetManager, asset.assetId)]);
+      const totalIncome = assetIncome * managerPercentage;
       //set the state with the calculated data
-      const profit = assetIncome * (managerPercentage / 100);
+      const profit = assetIncome * managerPercentage;
 
+      console.log("totalIncome: ", totalIncome)
+      console.log("profit: ", profit)
+      console.log("escrowRedeemed: ", escrowRedeemed)
       let withdrawMax;
       let percentageMax;
 
@@ -101,18 +110,23 @@ class ManageAssetModule extends React.Component{
           alreadyWithdrawn += 1;
         }
         else if(data.withdrawable){
-          withdrawMax = (collateral / 4) * (index + 1 - alreadyWithdrawn);
+          withdrawMax = (assetManagerCollateral / 4) * (index + 1 - alreadyWithdrawn);
           percentageMax = 25 * (index + 1 - alreadyWithdrawn);
         }
       })
 
+      console.log("withdrawMax: ", withdrawMax)
+      console.log("percentageMax: ", percentageMax)
+
       const averageProfit = profit / daysSinceItWentLive;
 
-      const toWithdrawWei = totalIncome - totalWithdrawn;
-      const toWithdraw = window.web3js.utils.fromWei(toWithdrawWei.toString(), 'ether');
 
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
+
+      console.log("averageProfit: ", averageProfit)
+      console.log("percentageMax: ", percentageMax)
+      console.log("remainingEscrow: ", remainingEscrow)
 
       this.setState({
         loading: false,
@@ -127,7 +141,7 @@ class ManageAssetModule extends React.Component{
             assetManagerProfits,
             collateralData,
             revenueData,
-            toWithdraw,
+            toWithdraw: owedToAssetManager,
             isWithdrawingCollateral,
             isWithdrawingAssetManager,
             profit,

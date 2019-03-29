@@ -29,18 +29,19 @@ const ManageAssetGraphs = ({
   revenueData,
   profitChartView,
   managerPercentage,
-  ethereumPrice,
-  mybitPrice,
   displayProfit,
   displayCollateral,
-  collateral,
+  assetManagerCollateral,
   collateralData,
-  amountToBeRaisedInUSD,
+  fundingGoal,
   isWithdrawingCollateral,
   withdrawCollateral,
 }) => {
 
-  let graphData = getTimeFilteredData(managerPercentage, ethereumPrice, revenueData, profitChartView);
+  let graphData = getTimeFilteredData(managerPercentage, revenueData, profitChartView);
+
+  console.log("Graph data: ", graphData)
+  console.log("Revenue data: ", revenueData);
 
   const ds = new window.DataSet();
   const dv = ds.createView().source(graphData.data);
@@ -66,9 +67,8 @@ const ManageAssetGraphs = ({
           <ManageAssetColoredValue
             isGreen
           >
-            {formatMonetaryValue(graphData.totalProfitUSD)}
+            {formatMonetaryValue(graphData.totalProfit)}
           </ManageAssetColoredValue>
-          <b>{graphData.totalProfitETH}{' '}ETH</b>
           <ButtonGroup size="small">
             <Button
               type={profitChartView === 'weekly' && chartBoxView === "profit" ? 'primary' : undefined}
@@ -98,10 +98,9 @@ const ManageAssetGraphs = ({
             <ManageAssetColoredValue
               isBlue
             >
-              {formatMonetaryValue(collateral * mybitPrice)}
+              {formatMonetaryValue(assetManagerCollateral, 4, true, 'MYB')}
             </ManageAssetColoredValue>
             <br />
-            <b>{Number(collateral).toLocaleString('en-US', {maximumFractionDigits: 4})}{' '}MYB</b>
           </div>
           <Button type="secondary" onClick={displayCollateral}>View</Button>
         </ManageAssetRectangleContainer>
@@ -146,7 +145,7 @@ const ManageAssetGraphs = ({
             collateralData={collateralData}
             isWithdrawingCollateral={isWithdrawingCollateral}
             withdrawCollateral={withdrawCollateral}
-            amountToBeRaisedInUSD={amountToBeRaisedInUSD}
+            fundingGoal={fundingGoal}
           />
         </ManageAssetRectangleContainer>
       )}
@@ -156,7 +155,7 @@ const ManageAssetGraphs = ({
 
 export default ManageAssetGraphs;
 
-const getTimeFilteredData = (managerPercentage, etherPrice, revenueData, type) => {
+const getTimeFilteredData = (managerPercentage, revenueData, type) => {
   let iterator, typeOfDate;
   switch (type) {
     case 'weekly':
@@ -183,7 +182,7 @@ const getTimeFilteredData = (managerPercentage, etherPrice, revenueData, type) =
     const revenueFilteredByTime = revenueFiltered
         .filter(({date}) => {
           if(type === 'weekly') {
-            return date.day() === currentDay;
+            return date.day() === currentDay.day();
           } else if(type === 'monthly'){
             return date.date() === currentDay.date();
           } else if(type === 'yearly'){
@@ -205,14 +204,14 @@ const getTimeFilteredData = (managerPercentage, etherPrice, revenueData, type) =
 
     for(const revenue of revenueFilteredByTime){
       const totalRevenue = Number(revenue.amount);
-      managerFee += totalRevenue * (managerPercentage / 100);
+      managerFee += totalRevenue * managerPercentage;
       assetRevenue += totalRevenue;
     }
 
-    data['Asset Revenue'] = Number((assetRevenue * etherPrice).toFixed(2));
-    data['Manager Fee'] = Number((managerFee * etherPrice).toFixed(2));
+    data['Asset Revenue'] = Number((assetRevenue).toFixed(2));
+    data['Manager Fee'] = Number((managerFee).toFixed(2));
 
-    totalProfit += (managerFee * etherPrice);
+    totalProfit += managerFee;
 
     dataToReturn.push(data);
     currentDay = currentDay.add(1, typeOfDate);
@@ -220,7 +219,6 @@ const getTimeFilteredData = (managerPercentage, etherPrice, revenueData, type) =
 
   return {
     data: dataToReturn,
-    totalProfitUSD: totalProfit,
-    totalProfitETH: (totalProfit / etherPrice).toFixed(4)
+    totalProfit: totalProfit,
   };
 }

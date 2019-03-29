@@ -19,7 +19,7 @@ const WithdrawCollateral = React.memo(({
   collateralData,
   isWithdrawingCollateral,
   withdrawCollateral,
-  amountToBeRaisedInUSD,
+  fundingGoal,
 }) => (
   <WithdrawCollateralWrapper>
     <WithdrawCollateralTitle>Asset collateral</WithdrawCollateralTitle>
@@ -34,15 +34,13 @@ const WithdrawCollateral = React.memo(({
         } = info;
 
         const percentage = 25 * (index + 1);
-        const minValBar = (amountToBeRaisedInUSD / 4) * index;
+        const minValBar = (fundingGoal / 4) * index;
         const barPercentage = ((current-minValBar) * 172) / (required - minValBar);
-        let text = 'Ready to withdraw';
+        let text = `${formatMonetaryValue(current, 2, false)}/${formatMonetaryValue(required)}`;
         if(paidOut){
           text = 'Paid out';
         }
-        else if(current !== required){
-          text = `${formatMonetaryValue(current)}/${formatMonetaryValue(required)}`;
-        }
+
         return(
          <WithdrawCollateralSection key={minValBar}>
             <WithdrawCollateralPercentage>
