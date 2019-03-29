@@ -136,7 +136,21 @@ class MetamaskProvider extends Component {
   }
 
   componentWillReceiveProps = (nextProps, nextState) => {
-    this.getUserInfo(this.state.privacyModeEnabled, this.state.network, nextProps.supportedTokensInfo);
+    const {
+      supportedTokensInfo: oldSupportedTokensInfo,
+    } = this.props;
+
+    const {
+      supportedTokensInfo: newSupportedTokensInfo,
+    } = nextProps;
+
+    /*
+    * Updates when it receives a new object containing the supported tokens
+    * when it didn't have one or when the object is new (kyberContext updated)
+    */
+    if(!oldSupportedTokensInfo && newSupportedTokensInfo || (oldSupportedTokensInfo && (oldSupportedTokensInfo.key !== newSupportedTokensInfo.key))){
+      this.getUserInfo(this.state.privacyModeEnabled, this.state.network, nextProps.supportedTokensInfo);
+    }
   }
 
   fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress) => {
@@ -187,9 +201,26 @@ class MetamaskProvider extends Component {
       }
     }
 
+    /*
+    * Temp fix for a race condition between componentDidMount and componentWillReceiveProps
+    */
+
+    let network = this.state.network;
+    let privacyModeEnabled = this.state.privacyModeEnabled;
+
+    if(!network){
+      network = network = await this.checkNetwork();
+    }
+    if(!privacyModeEnabled){
+      privacyModeEnabled = await this.haveAccessToAccounts() ? true : undefined;
+    }
+
     if(shouldUpdateState){
       this.setState({
         ...this.state,
+        network,
+        privacyModeEnabled,
+        isReadOnlyMode: this.isReadOnlyMode(true, this.state.userIsLoggedIn, network, privacyModeEnabled),
         loadingBalances: false,
         user: {
           ...this.state.user,

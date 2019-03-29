@@ -18,7 +18,7 @@ export const withKyberContext = (Component) => {
     render(){
       return (
         <Consumer>
-          {state => <Component {...this.props} supportedTokensInfo={state.supportedTokensInfo} />}
+          {state => <Component {...this.props} supportedTokensInfo={state && state.supportedTokensInfo} />}
         </Consumer>
       )
     }
@@ -26,14 +26,18 @@ export const withKyberContext = (Component) => {
 }
 
 class KyberProvider extends React.Component {
-  state = {}
+  constructor(props){
+    super(props);
+    this.key = 0;
+  }
+
   componentDidMount = async () => {
     try {
       this.fetchSupportedTokens();
     } catch (err) {
       debug(err);
     }
-    this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, LOAD_SUPPORTED_TOKENS_TIME)
+    this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, 5000)
   }
 
   componentWillUnmount = () => {
@@ -96,6 +100,9 @@ class KyberProvider extends React.Component {
         decimals: 18,
         name: "MYB",
       };
+
+      supportedTokensInfo['key'] = this.key + 1;
+      this.key += 1;
 
       debug("supportedTokensInfo (kyberContext): ", supportedTokensInfo);
       this.setState({
