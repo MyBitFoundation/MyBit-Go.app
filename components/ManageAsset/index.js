@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Button,
+  Col,
 } from 'antd';
 import Link from 'next/link';
 import Router from 'next/router'
@@ -10,7 +11,6 @@ import {
 } from 'constants/links';
 import ManageAssetNavButtons from './manageAssetNavButtons';
 import ManageAssetContentWrapper from './manageAssetContentWrapper';
-import ManageAssetSection from './manageAssetSection';
 import ManageAssetAssetInfo from './manageAssetAssetInfo';
 import ManageAssetGraphs from './manageAssetGraphs';
 import ManageAssetDocsButton from './manageAssetDocsButton';
@@ -21,6 +21,14 @@ import {
 import ErrorPage from 'components/ErrorPage';
 import DocumentsManager from 'components/DocumentsManager';
 import BackButton from 'ui/BackButton';
+
+const COLUMN_SIZE = {
+  xs: 24,
+  sm: 24,
+  md: 24,
+  lg: 12,
+  xl: 12,
+}
 
 class ManageAsset extends React.Component {
     constructor(props) {
@@ -164,7 +172,7 @@ class ManageAsset extends React.Component {
           {this.getNavBarButtons(assetId, error)}
             {!error && (
               <ManageAssetContentWrapper>
-                <ManageAssetSection xs={24} sm={24} md={24} lg={12} xl={12}>
+                <Col {...COLUMN_SIZE}>
                   <ManageAssetAssetInfo
                     imageSrc={defaultData.imageSrc}
                     assetId={assetId}
@@ -179,12 +187,9 @@ class ManageAsset extends React.Component {
                     isWithdrawingAssetManager={isWithdrawingAssetManager}
                     withdrawProfitAssetManager={withdrawProfitAssetManager}
                   />
-                </ManageAssetSection>
+                </Col>
                 {!supportingDocuments && (
-                  <ManageAssetSection
-                    hasGraphs
-                    xs={24} sm={24} md={24} lg={12} xl={12}
-                  >
+                  <Col {...COLUMN_SIZE}>
                     <ManageAssetGraphs
                       chartBoxView={chartBoxView}
                       revenueData={revenueData}
@@ -198,17 +203,15 @@ class ManageAsset extends React.Component {
                       isWithdrawingCollateral={isWithdrawingCollateral}
                       withdrawCollateral={withdrawCollateral}
                     />
-                  </ManageAssetSection>
+                  </Col>
                 )}
                 {supportingDocuments && (
-                  <ManageAssetSection
-                    hasShadow
-                  >
+                  <Col {...COLUMN_SIZE}>
                     <DocumentsManager
                       assetId={assetId}
                       files={files}
                     />
-                  </ManageAssetSection>
+                  </Col>
                 )}
               </ManageAssetContentWrapper>
             )}

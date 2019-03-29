@@ -6,11 +6,10 @@ const DocumentsManagerTitle = styled.span`
   text-align: center;
   color: #383838;
   display: block;
-
-  margin-top: 50px;
+  padding-top: 50px;
 
   ${({theme}) => theme.tablet`
-    margin-top: 20px;
+    padding-top: 20px;
   `}
 }`
 
