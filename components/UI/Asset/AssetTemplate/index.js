@@ -35,14 +35,14 @@ class AssetTemplate extends React.PureComponent {
     return (
       <AssetTemplateWrapper
         margin={margin}
+        onMouseEnter={() => this.setState({hovering: true})}
+        onMouseLeave={() => this.setState({hovering: false})}
       >
         {(hovering && dev) && <RevenueGenerator assetId={assetId}/>}
         <AssetTemplateImageHolder
           backgroundImage={backgroundImage}
           height={height}
           onClick={onClickImg}
-          onMouseEnter={() => this.setState({hovering: true})}
-          onMouseLeave={() => this.setState({hovering: false})}
         >
           {handleAssetFavorited && (
             <Watch

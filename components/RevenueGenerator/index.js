@@ -17,8 +17,6 @@ class RevenueGenerator extends React.PureComponent {
 
   handleInputTriggered = (e) => {
     this.setState({inputActive: true}, () => console.log(this.state));
-    e.stopPropagation();
-    e.preventDefault();
   }
 
   handleValueChanged = currentValue => this.setState({currentValue})
