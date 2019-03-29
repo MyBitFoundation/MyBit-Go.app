@@ -38,6 +38,7 @@ class ManageAssetModule extends React.Component{
       const {
         assetId,
         assetIncome,
+        assetIncomeForCollateral,
         daysSinceItWentLive,
         assetManager,
         managerPercentage,
@@ -50,12 +51,13 @@ class ManageAssetModule extends React.Component{
 
       // calculate collateral data to be displayed
       const percentageWithdrawn = remainingEscrow !== assetManagerCollateral ? 100 - ((remainingEscrow * 100) / assetManagerCollateral) : 0;
-      const percentageWithdrawableCollateralUsd = ((assetIncome * 100) / fundingGoal) / 100;
+      const percentageWithdrawableCollateral = ((assetIncomeForCollateral * 100) / fundingGoal) / 100;
+
       const collateralData = [];
       for(let i = 1; i < 5; i++){
         const required = (25 * i)/100 * fundingGoal;
 
-        if(percentageWithdrawableCollateralUsd >= (25 * i) / 100){
+        if(percentageWithdrawableCollateral >= (25 * i) / 100){
           const withdrawable = ((25 * i) > percentageWithdrawn);
           collateralData.push({
             withdrawable,
@@ -67,8 +69,8 @@ class ManageAssetModule extends React.Component{
           let current = 0;
           const minValue = i - 1 === 0 ? 0 : (25 * (i -1))/100;
           const maxValue = (25 * i)/100;
-          if(percentageWithdrawableCollateralUsd < maxValue && percentageWithdrawableCollateralUsd > minValue){
-            current = percentageWithdrawableCollateralUsd * fundingGoal;
+          if(percentageWithdrawableCollateral < maxValue && percentageWithdrawableCollateral > minValue){
+            current = percentageWithdrawableCollateral * fundingGoal;
           }
           collateralData.push({
             withdrawable: false,

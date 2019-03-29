@@ -462,7 +462,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let remainingEscrow = 0;
         let escrowRedeemed = 0;
         let assetManagerCollateral = 0;
-
+        let assetIncomeForCollateral = 0;
 
         assetManagerFee = BN(assetManagerFee);
         platformFee = BN(platformFee);
@@ -507,8 +507,8 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
 
-              assetIncome = Number(fromWeiToEth(assetIncome)) * (1 - platformFee - assetManagerFee);
-
+              assetIncomeForCollateral = Number(fromWeiToEth(assetIncome)) * (1 - platformFee - assetManagerFee);
+              assetIncome = Number(fromWeiToEth(assetIncome));
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
 
               //console.log("DividendTokenETH: ", dividendTokenETH)
@@ -570,6 +570,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           percentageOwnedByUser,
           daysSinceItWentLive,
           assetIncome,
+          assetIncomeForCollateral,
           owedToInvestor,
           owedToAssetManager: fromWeiToEth(owedToAssetManager),
           remainingEscrow: fromWeiToEth(remainingEscrow),
