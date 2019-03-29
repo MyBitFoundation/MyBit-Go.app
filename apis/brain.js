@@ -148,12 +148,11 @@ const roiEscrow = async assetId =>
     }
   });
 
-export const withdrawAssetManager = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
+export const withdrawAssetManager = async (userAddress, assetId, onTransactionHash, onReceipt, onError) => {
   try {
     const assetManagerFunds = await Network.assetManagerFunds();
-    assetManagerFunds.methods.withdraw(assetId, userName)
-      .send({ from: userName, gas: '1000000'})
-      .send({ from: userName })
+    assetManagerFunds.methods.withdraw(assetId, userAddress)
+      .send({ from: userAddress, gas: '1000000'})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -167,11 +166,11 @@ export const withdrawAssetManager = async (userName, assetId, onTransactionHash,
   }
 }
 
-export const withdrawEscrow = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
+export const withdrawEscrow = async (userAddress, assetId, onTransactionHash, onReceipt, onError) => {
   try {
     const assetManagerEscrow = await Network.assetManagerEscrow();
-    assetManagerEscrow.methods.unlockEscrow(assetId, userName)
-      .send({ from: userName, gas: '1000000'})
+    assetManagerEscrow.methods.unlockEscrow(assetId, userAddress)
+      .send({ from: userAddress, gas: '1000000'})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -186,7 +185,7 @@ export const withdrawEscrow = async (userName, assetId, onTransactionHash, onRec
 
 export const fetchRevenueLogsByAssetId = async assetId => {
   try{
-    return Network.fetchRevenueLogs(assetId);
+    return Network.getAssetIncome(assetId);
   }catch(err){
     debug(err);
     reject(err);
@@ -323,11 +322,11 @@ export const payoutAsset = ({
   }
 }
 
-export const withdrawInvestorProfit = async (userName, assetId, onTransactionHash, onReceipt, onError) => {
+export const withdrawInvestorProfit = async (userAddress, assetId, onTransactionHash, onReceipt, onError) => {
   try {
     const dividendTokenETH = await Network.dividendTokenETH(assetId);
     const response = await dividendTokenETH.methods.withdraw()
-      .send({from: userName, gas: '1000000'})
+      .send({from: userAddress, gas: '1000000'})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -342,11 +341,11 @@ export const withdrawInvestorProfit = async (userName, assetId, onTransactionHas
   }
 }
 
-export const fundAsset = async (userName, assetId, amount, onTransactionHash, onReceipt, onError) => {
+export const fundAsset = async (userAddress, assetId, amount, onTransactionHash, onReceipt, onError) => {
   try {
     const response = await Network.fundAsset({
       asset: assetId,
-      investor: userName,
+      investor: userAddress,
       paymentToken: DEFAULT_TOKEN_CONTRACT,
       amount,
       buyAsset: {

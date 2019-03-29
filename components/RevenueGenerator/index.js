@@ -5,9 +5,6 @@ import RevenueGeneratorWrapper from './revenueGeneratorWrapper';
 import * as Brain from '../../apis/brain';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import InputRevenueGenerator from './inputRevenueGenerator';
-import {
-  toWei,
-} from 'utils/helpers';
 
 class RevenueGenerator extends React.PureComponent {
   state = {
@@ -15,9 +12,7 @@ class RevenueGenerator extends React.PureComponent {
     currentValue: 0,
   }
 
-  handleInputTriggered = (e) => {
-    this.setState({inputActive: true}, () => console.log(this.state));
-  }
+  handleInputTriggered = () => this.setState({inputActive: true});
 
   handleValueChanged = currentValue => this.setState({currentValue})
 
@@ -31,7 +26,7 @@ class RevenueGenerator extends React.PureComponent {
     } = metamaskContext;
 
     if(user.address && !isReadOnlyMode){
-      Brain.issueDividends(toWei(this.state.currentValue), user.address, this.props.assetId)
+      Brain.issueDividends(this.state.currentValue, user.address, this.props.assetId)
       this.handleCancel();
     }
   }

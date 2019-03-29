@@ -87,7 +87,7 @@ class ManageAssetModule extends React.Component{
       const revenueRawData = await Brain.fetchRevenueLogsByAssetId(asset.assetId);
       const revenueData = revenueRawData.map(revenue => {
         return {
-          amount: fromWeiToEth(revenue.amount),
+          amount: fromWeiToEth(revenue.payment),
           date: dayjs(revenue.timestamp * 1000),
         }
       })
