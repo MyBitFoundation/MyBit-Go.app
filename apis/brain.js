@@ -396,6 +396,22 @@ const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, as
     ]);
 }
 
+export const issueDividends = (
+  amount,
+  address,
+  assetId,
+) => {
+  try{
+    Network.issueDividends({
+      asset: assetId,
+      account: address,
+      amount: toWei(amount),
+    })
+  } catch(err){
+    debug(err);
+  }
+}
+
 export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
@@ -535,14 +551,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               console.log("remainingEscrow: ", remainingEscrow)
               console.log("escrowRedeemed: ", escrowRedeemed)
             }
-
-            //console.log("ASSET INCOME: ", assetIncome)
-            /*const result = await Network.issueDividends({
-              asset: assetId,
-              account: realAddress,
-              amount: toWei(1),
-            });*/
-            //console.log("daysSinceItWentLive: ", daysSinceItWentLive);
           } else if(isAssetManager) {
             managerHasToCallPayout = true;
           }
