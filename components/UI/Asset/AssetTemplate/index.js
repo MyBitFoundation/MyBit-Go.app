@@ -36,7 +36,7 @@ class AssetTemplate extends React.PureComponent {
       <AssetTemplateWrapper
         margin={margin}
       >
-        {(true && dev) && <RevenueGenerator assetId={assetId}/>}
+        {(hovering && dev) && <RevenueGenerator assetId={assetId}/>}
         <AssetTemplateImageHolder
           backgroundImage={backgroundImage}
           height={height}
