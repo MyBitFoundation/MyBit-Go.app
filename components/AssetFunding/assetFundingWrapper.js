@@ -5,8 +5,8 @@ const AssetFundingWrapper = styled.div`
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   position: relative;
+  padding: 20px;
   ${({theme}) => theme.tablet`
-    padding: 20px;
     padding-top: 10px;
   `}
 }`

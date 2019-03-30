@@ -99,7 +99,7 @@ const FundingCalculator = ({
       >
         <div>
           <FundingCalculatorLabel>
-            Your contribution:
+            Your contribution
           </FundingCalculatorLabel>
           <FundingCalculatorValue>
             {(loadingUserInfo && ended) && (
@@ -110,7 +110,7 @@ const FundingCalculator = ({
         </div>
         <div>
           <FundingCalculatorLabel>
-            Your ownership:
+            Your ownership
           </FundingCalculatorLabel>
           <FundingCalculatorValue>
             {(loadingUserInfo && ended) && (
