@@ -63,6 +63,7 @@ class PortfolioPage extends React.Component {
       ) : assets.filter(assetFinantialDetails =>
         assetFinantialDetails.managerDetails || false
       )
+
     const error = assetsToRender.length === 0 && (
        <ErrorPage
           title="Empty Portfolio"

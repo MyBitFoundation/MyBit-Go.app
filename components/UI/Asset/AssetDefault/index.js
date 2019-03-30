@@ -16,8 +16,6 @@ import { formatMonetaryValue } from 'utils/helpers';
 const AssetDefault = ({
   fundingGoal,
   fundingProgress,
-  amountRaisedInUSD,
-  amountToBeRaisedInUSD,
   pastDate,
   funded,
   assetId,

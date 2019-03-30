@@ -131,7 +131,7 @@ const AssetPortfolioManaged = ({
                 Funded:
               </AssetPortfolioManagedFundedLabel>
               <AssetPortfolioManagedFundedValue>
-                {`${formatMonetaryValue(fundingProgress, 0, false)}/${formatMonetaryValue(fundingGoal)}`}
+                {`${formatMonetaryValue(fundingProgress, 2, false)}/${formatMonetaryValue(fundingGoal)}`}
               </AssetPortfolioManagedFundedValue>
             </div>
           )}

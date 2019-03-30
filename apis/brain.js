@@ -485,7 +485,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let daysSinceItWentLive = 1;
         let assetIncome = 0;
         let managerHasToCallPayout = false;
-        let investment = 0;
         let totalShares = 0;
         let availableShares = 0;
         let owedToInvestor = 0;
@@ -508,6 +507,8 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         availableShares = availableShares.toNumber();
         totalShares = totalShares.toNumber();
 
+        console.log("ASSET ID: ", assetId)
+        console.log("Asset Investors: ", assetInvestors)
         console.log("Total sharest: ", totalShares)
         console.log("Asset contract: ", assetId)
         console.log("Asset operator: ", assetOperator)
@@ -515,7 +516,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         console.log("Funding Deadline: ", fundingDeadline);
         console.log("Funding goal: ", fundingGoal);
         console.log("Asset manager: ", assetManager);
-        console.log("Asset Investors: ", assetInvestors)
         console.log("Funding Progress: ", fundingProgress)
         console.log("Manager fee bgn: ", assetManagerFee)
         console.log("Platform fee: ", platformFee)
@@ -524,32 +524,31 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         console.log("\n\n")
 
         let percentageOwnedByUser = 0;
+        let balanceOfUser = 0;
+        let investment = 0;
+
+        const isInvestor = realAddress && assetInvestors.includes(realAddress);
+
+        if(isInvestor){
+          balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
+          investment = fromWeiToEth(BN(balanceOfUser).toString());
+          percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
+        }
 
         if(crowdsaleFinalized){
           const timestamp = await Network.getTimestampeOfFundedAsset(assetId)
-          //console.log("BLOCK: ", timestamp)
+          // no timestamp means payout has to be called (asset manager does it)
           if(timestamp){
             fundingProgress = fundingProgress - ((assetManagerFee + platformFee) * fundingProgress)
-            if(realAddress && (isAssetManager || assetInvestors.includes(realAddress))){
-              const balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
-              investment = fromWeiToEth(BN(balanceOfUser).toString());
-              percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
-              daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
-              daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
+            if(isInvestor){
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
-
-              assetIncomeForCollateral = Number(fromWeiToEth(assetIncome)) * (1 - platformFee - assetManagerFee);
-              assetIncome = Number(fromWeiToEth(assetIncome));
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
-
-              //console.log("DividendTokenETH: ", dividendTokenETH)
-              console.log("INVESTMENT: ", fromWeiToEth(BN(balanceOfUser).toString()));
-              console.log("Percentage: ", percentageOwnedByUser);
-              console.log("owedToInvestor: ", fromWeiToEth(BN(owedToInvestor)));
-              console.log("\n\n")
-              console.log("\n\n")
             }
             if(isAssetManager){
+              assetIncome = await dividendTokenETH.methods.assetIncome().call();
+              daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
+              daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
+              assetIncomeForCollateral = Number(fromWeiToEth(assetIncome)) * (1 - platformFee - assetManagerFee);
               owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, realAddress).call();
               const escrowId = await api.methods.getAssetManagerEscrowID(assetId, realAddress).call();
               [
@@ -561,11 +560,11 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
                 api.methods.getAssetManagerEscrowRedeemed(escrowId).call(),
                 api.methods.getAssetManagerEscrow(escrowId).call(),
               ])
-              console.log("Owed to asset manager: ", owedToAssetManager)
-              console.log("Escrow ID: ", escrowId)
               console.log("remainingEscrow: ", remainingEscrow)
               console.log("escrowRedeemed: ", escrowRedeemed)
+              console.log("assetManagerCollateral: ", assetManagerCollateral)
             }
+            assetIncome = Number(fromWeiToEth(assetIncome));
           } else if(isAssetManager) {
             managerHasToCallPayout = true;
           }
