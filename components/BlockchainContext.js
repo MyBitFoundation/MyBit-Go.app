@@ -424,10 +424,17 @@ class BlockchainProvider extends React.Component {
     const userAddress =  this.props.metamaskContext.user.address;
     const notificationId = Date.now();
 
-    buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
-      operationType: NotificationsMetamask.LIST_ASSET,
-      assetName,
-    });
+    if(collateralMyb !== 0) {
+      buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+        operationType: NotificationsMetamask.APPROVE,
+        formattedAmount: formatMonetaryValue(collateralMyb, 3, true, 'MYB'),
+      });
+    } else {
+      buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+        operationType: NotificationsMetamask.LIST_ASSET,
+        assetName,
+      });
+    }
 
     const onTransactionHash = () => {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
@@ -435,8 +442,26 @@ class BlockchainProvider extends React.Component {
       });
     }
 
+    const onTransactionHashApprove = () => {
+      buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
+        formattedAmount: formatMonetaryValue(collateralMyb, 3, true, 'MYB'),
+        type: NotificationTypes.APPROVE,
+      });
+    }
+
     const onReceipt = (assetId) => {
       onSuccess(assetId);
+    }
+
+    const onReceiptApprove = wasSuccessful => {
+      if(wasSuccessful){
+        buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
+          formattedAmount: formatMonetaryValue(collateralMyb, 3, true, 'MYB'),
+          type: NotificationTypes.APPROVE,
+        });
+      } else {
+        onError(ErrorTypes.ETHEREUM)
+      }
     }
 
     const onSuccess = async (assetId) => {
@@ -486,14 +511,23 @@ class BlockchainProvider extends React.Component {
       assetsAirTable,
     } = this.props.airtableContext;
 
-    await Brain.createAsset(onTransactionHash, onReceipt, onError, {
-      managerPercentage: managementFee,
-      amountToBeRaised: getAssetByName(assetName, assetsAirTable).amountToBeRaisedInUSDAirtable / ethereum.price,
-      assetName,
-      collateralMyb,
-      userAddress,
-      partnerContractAddress,
-    });
+    await Brain.createAsset({
+        onTransactionHash,
+        onReceipt,
+        onError,
+      }, {
+        onTransactionHash: onTransactionHashApprove,
+        onReceipt: onReceiptApprove,
+        onError,
+      }, {
+        managerPercentage: managementFee,
+        amountToBeRaised: getAssetByName(assetName, assetsAirTable).amountToBeRaisedInUSDAirtable / ethereum.price,
+        assetName,
+        collateralMyb,
+        userAddress,
+        partnerContractAddress,
+      }
+    );
   }
 
   fundAsset = (assetId, amountToPay, amountContributed) => {
@@ -510,8 +544,8 @@ class BlockchainProvider extends React.Component {
       } = this.props.notificationsContext;
 
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
-        operationType: NotificationsMetamask.FUNDING,
-        assetName,
+        operationType: NotificationsMetamask.APPROVE,
+        formattedAmount: formatMonetaryValue(amountToPay),
       });
 
       const onTransactionHash = () => {
@@ -521,9 +555,27 @@ class BlockchainProvider extends React.Component {
         });
       }
 
+      const onTransactionHashApprove = () => {
+        buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
+          formattedAmount: formatMonetaryValue(amountToPay),
+          type: NotificationTypes.APPROVE,
+        });
+      }
+
       const onReceipt = (wasSuccessful) => {
         if(wasSuccessful){
           onSuccessRefreshData();
+        } else {
+          onError(ErrorTypes.ETHEREUM)
+        }
+      }
+
+      const onReceiptApprove = (wasSuccessful) => {
+        if(wasSuccessful){
+          buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
+            formattedAmount: formatMonetaryValue(amountToPay),
+            type: NotificationTypes.APPROVE,
+          });
         } else {
           onError(ErrorTypes.ETHEREUM)
         }
@@ -549,14 +601,19 @@ class BlockchainProvider extends React.Component {
         });
       }
 
-      Brain.fundAsset(
-        this.props.metamaskContext.user.address,
-        assetId,
-        toWei(amountToPay),
+      Brain.fundAsset({
         onTransactionHash,
         onReceipt,
         onError,
-      );
+      }, {
+        onTransactionHash: onTransactionHashApprove,
+        onReceipt: onReceiptApprove,
+        onError,
+      }, {
+        userAddress: this.props.metamaskContext.user.address,
+        assetId,
+        amount: toWei(amountToPay),
+      });
 
     } catch (err) {
       debug(err);

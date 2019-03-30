@@ -192,7 +192,7 @@ export const fetchRevenueLogsByAssetId = async assetId => {
   }
 }
 
-export const createAsset = async (onTransactionHash, onReceipt, onError, params) => {
+export const createAsset = async (onCreateAsset, onApprove, params) => {
   try {
     const {
       asset,
@@ -218,12 +218,17 @@ export const createAsset = async (onTransactionHash, onReceipt, onError, params)
       fundingToken: DEFAULT_TOKEN_CONTRACT,
       paymentToken: SDK_CONTRACTS.MyBitToken,
       createAsset: {
-        onTransactionHash,
-        onError: error => processErrorType(error, onError),
+        onTransactionHash: onCreateAsset.onTransactionHash,
+        onError: error => processErrorType(error, onCreateAsset.onError),
+      },
+      approve: {
+        onTransactionHash: onApprove.onTransactionHash,
+        onError: error => processErrorType(error, onApprove.onError),
+        onReceipt: receipt => onApprove.onReceipt(receipt.status),
       }
     })
 
-    onReceipt(response.asset);
+    onCreateAsset.onReceipt(response.asset);
   } catch (error) {
     debug(error)
   }
@@ -341,20 +346,31 @@ export const withdrawInvestorProfit = async (userAddress, assetId, onTransaction
   }
 }
 
-export const fundAsset = async (userAddress, assetId, amount, onTransactionHash, onReceipt, onError) => {
+export const fundAsset = async (onFundAsset, onApprove, params) => {
   try {
+    const {
+      userAddress,
+      assetId,
+      amount,
+    } = params;
+
     const response = await Network.fundAsset({
       asset: assetId,
       investor: userAddress,
       paymentToken: DEFAULT_TOKEN_CONTRACT,
       amount,
       buyAsset: {
-        onTransactionHash,
-        onError: error => processErrorType(error, onError),
+        onTransactionHash: onFundAsset.onTransactionHash,
+        onError: error => processErrorType(error, onFundAsset.onError),
+      },
+      approve: {
+        onTransactionHash: onApprove.onTransactionHash,
+        onError: error => processErrorType(error, onFundAsset.onError),
+        onReceipt: receipt => onApprove.onReceipt(receipt.status),
       }
     })
 
-    onReceipt(response.status);
+    onFundAsset.onReceipt(response.status);
   } catch (error) {
     processErrorType(error, onError)
   }

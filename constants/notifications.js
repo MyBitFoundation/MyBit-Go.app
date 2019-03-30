@@ -8,6 +8,7 @@ export const NotificationTypes = {
   WITHDRAW_COLLATERAL: 'withdrawCollateral',
   WITHDRAW_MANAGER: 'withdrawManager',
   ASSET_PAYOUT: 'assetPayout',
+  APPROVE: 'approve',
 };
 
 export const NotificationsMetamask = {
@@ -17,6 +18,7 @@ export const NotificationsMetamask = {
   WITHDRAW_COLLATERAL: 'withdrawCollateral',
   WITHDRAW_MANAGER: 'withdrawManager',
   ASSET_PAYOUT: 'assetPayout',
+  APPROVE: 'approve',
 };
 
 export const NotificationStatus = {
@@ -37,32 +39,83 @@ export const getContentForNotification = (obj) => {
     status,
   } = obj;
   if(listAsset){
-    switch (status) {
-      case NotificationStatus.SUCCESS:
-        return {
-          title: <span style={{marginRight: '10px'}}>Listed {listAsset.assetName} successfully</span>,
-          message: <span>You can find the asset listing{' '}
-            <Link
-              as={`/asset/${listAsset.assetId}`}
-              href={`/asset?id=${listAsset.assetId}`}
-            >
-            <a>here</a>
-            </Link>.</span>,
-        }
-      case NotificationStatus.INFO:
-        return {
-          title: `${listAsset.assetName} is being listed for investors`,
-          message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
-        }
-      case NotificationStatus.ERROR:
-        return {
-          title: `Failed to start the crowdsale for ${listAsset.assetName}`,
-          message: 'Unfortunately your transaction failed. Please try again.',
-        }
-      default:
-        return null;
+    const {
+      type,
+      formattedAmount,
+    } = listAsset;
+    if(type === NotificationTypes.APPROVE){
+      switch (status) {
+        case NotificationStatus.SUCCESS:
+          return {
+            title: <span style={{marginRight: '10px'}}>Approved access to {formattedAmount} successfully</span>,
+            message: 'Please accept the next transaction in MetaMask that will list the asset in the platform.'
+          }
+        case NotificationStatus.INFO:
+          return {
+            title: `Approving access to ${formattedAmount}`,
+            message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
+          }
+        case NotificationStatus.ERROR:
+          return {
+            title: `Failed to approve access to funds`,
+            message: 'Unfortunately your transaction failed. Please try again.',
+          }
+        default:
+          return null;
+      }
+    } else {
+      switch (status) {
+        case NotificationStatus.SUCCESS:
+          return {
+            title: <span style={{marginRight: '10px'}}>Listed {listAsset.assetName} successfully</span>,
+            message: <span>You can find the asset listing{' '}
+              <Link
+                as={`/asset/${listAsset.assetId}`}
+                href={`/asset?id=${listAsset.assetId}`}
+              >
+              <a>here</a>
+              </Link>.</span>,
+          }
+        case NotificationStatus.INFO:
+          return {
+            title: `${listAsset.assetName} is being listed for investors`,
+            message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
+          }
+        case NotificationStatus.ERROR:
+          return {
+            title: `Failed to start the crowdsale for ${listAsset.assetName}`,
+            message: 'Unfortunately your transaction failed. Please try again.',
+          }
+        default:
+          return null;
+      }
     }
   } else if(funding){
+    const {
+      type,
+      formattedAmount,
+    } = funding;
+    if(type === NotificationTypes.APPROVE){
+      switch (status) {
+        case NotificationStatus.SUCCESS:
+          return {
+            title: <span style={{marginRight: '10px'}}>Approved access to {formattedAmount} successfully</span>,
+            message: 'Please accept the next transaction in MetaMask that will send your contribution to the asset.'
+          }
+        case NotificationStatus.INFO:
+          return {
+            title: `Approving access to ${formattedAmount}`,
+            message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
+          }
+        case NotificationStatus.ERROR:
+          return {
+            title: `Failed to approve access to funds`,
+            message: 'Unfortunately your transaction failed. Please try again.',
+          }
+        default:
+          return null;
+      }
+    } else {
       switch(status){
         case NotificationStatus.SUCCESS:
           return {
@@ -98,6 +151,7 @@ export const getContentForNotification = (obj) => {
         default:
           return null;
       }
+    }
   } else if(withdrawInvestor){
       switch(status){
         case NotificationStatus.SUCCESS:
@@ -260,6 +314,18 @@ export const getContentForNotification = (obj) => {
             return {
               title: `Sending funds to Operator for ${metamask.assetName}`,
               message: 'Please confirm the transaction in Metamask to send the crowdsale funds to the Operator. Thank you for beta testing the platform.',
+            }
+          case NotificationStatus.ERROR:
+            return undefined;
+          default:
+            return null;
+        }
+      case NotificationsMetamask.APPROVE:
+        switch(status) {
+          case NotificationStatus.INFO:
+            return {
+              title: `Approving access to ${metamask.formattedAmount}`,
+              message: 'Please confirm the transaction in Metamask to approve access to funds.',
             }
           case NotificationStatus.ERROR:
             return undefined;
