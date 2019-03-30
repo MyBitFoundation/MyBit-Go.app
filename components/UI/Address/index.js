@@ -7,25 +7,22 @@ import AddressLoader from './addressLoader';
 import AddressText from './addressText';
 import AddressJazzicon from './addressJazzicon';
 
-const Address = ({ address, isLeft, isMobile }) => (
+const Address = ({ address, isMobile }) => (
   <AddressWrapper>
     {!address ? (
-      <Loader>
+      <AddressLoader>
         <Spin style={{ height: '32px', width: '32px' }} />
         <span>Loading account</span>
-      </Loader>
+      </AddressLoader>
     ) : (
-      <Jazzicon
-        isLeft={isLeft}
-        isMobile={isMobile}
-      >
+      <AddressJazzicon>
         <Jazzicon diameter={isMobile ? 31 : 39} seed={jsNumberForAddress(address)} />
-        <Text
+        <AddressText
           isMobile={isMobile}
         >
           {address}
-        </Text>
-      </Jazzicon>
+        </AddressText>
+      </AddressJazzicon>
     )}
   </AddressWrapper>
 );
