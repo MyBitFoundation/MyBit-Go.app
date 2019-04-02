@@ -69,6 +69,7 @@ class ListAssetPage extends React.Component {
 
   componentWillMount = () => {
     try {
+      document.addEventListener('keydown', this.handleKeyDown);
       if (!Cookie.get(COOKIES.LIST_ASSET_VISIT)) {
         Cookie.set(COOKIES.LIST_ASSET_VISIT, 'true');
         Router.push('/asset-manager', {
@@ -79,12 +80,12 @@ class ListAssetPage extends React.Component {
     } catch (err) {
       console.log(err);
     }
-
     this.ismounted = true;
   }
 
   componentWillUnmount = () => {
      this.ismounted = false;
+     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   setUserListingAsset = (isUserListingAsset, listedAssetId) => {
@@ -242,6 +243,13 @@ class ListAssetPage extends React.Component {
         }
       });
   };
+
+  handleKeyDown = e => {
+    console.log(e.key)
+    if (e.key === "Tab") {
+      e.preventDefault();
+    }
+  }
 
   render() {
     const {
