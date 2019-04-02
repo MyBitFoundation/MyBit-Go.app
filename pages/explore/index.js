@@ -10,7 +10,7 @@ import Loading from 'components/Loading';
 import AssetDisplayer from 'components/AssetDisplayer';
 import ExploreFilters from './exploreFilters';
 import ExploreFiltersSwitch from './exploreFiltersSwitch';
-
+import { LocalStorageKeys } from 'constants/localStorageKeys';
 import {
   FundingStages,
 } from 'constants/fundingStages';
@@ -18,6 +18,8 @@ import { Categories } from 'constants/categories';
 import { SORT_BY_ASSETS } from 'constants/sortByAssets';
 import {
   getPrettyCategoryName,
+  getValueFromLocalStorage,
+  setValueLocalStorage,
 } from 'utils/helpers';
 
 class Explore extends React.Component {
@@ -25,26 +27,29 @@ class Explore extends React.Component {
     super(props);
     this.props = props;
     this.state = {
-      fundingActive: true,
+      fundingActive: getValueFromLocalStorage(LocalStorageKeys.EXPLORE_PAGE_FUNDING_ACTIVE, true) === 'true',
+      sortByFilterSelected: getValueFromLocalStorage(LocalStorageKeys.EXPLORE_PAGE_SORT_BY),
       ...this.buildState(),
     };
   }
 
   buildState = () => {
-    const selectedFilters = [];
-    Categories.map(category => {
-      selectedFilters.push(category);
-    });
-
+    const selectedFilters = getValueFromLocalStorage(LocalStorageKeys.EXPLORE_PAGE_SELECTED_FILTERS, Categories, true);
     return {
       selectedFilters,
     }
   }
 
   handleCheckedSortBy = (sortByValue, isChecked) => {
+    const value = isChecked && sortByValue;
     this.setState({
-      sortByFilterSelected: isChecked && sortByValue,
+      sortByFilterSelected: value,
     });
+    if(isChecked) {
+      setValueLocalStorage(LocalStorageKeys.EXPLORE_PAGE_SORT_BY, value)
+    } else {
+      localStorage.removeItem(LocalStorageKeys.EXPLORE_PAGE_SORT_BY);
+    }
   }
 
   setFilterState = (filterName, newState) => {
@@ -57,6 +62,7 @@ class Explore extends React.Component {
     this.setState({
       selectedFilters: selectedFilters,
     });
+    setValueLocalStorage(LocalStorageKeys.EXPLORE_PAGE_SELECTED_FILTERS, selectedFilters, true)
   }
 
   render = () => {
@@ -111,7 +117,10 @@ class Explore extends React.Component {
         <ExploreFiltersSwitch>
           <span>Funding Active</span>
           <Switch
-            onChange={isFundingActive => this.setState({ fundingActive: isFundingActive})}
+            onChange={isFundingActive => {
+              this.setState({ fundingActive: isFundingActive})
+              setValueLocalStorage(LocalStorageKeys.EXPLORE_PAGE_FUNDING_ACTIVE, isFundingActive)
+            }}
             checked={fundingActive}
             checkedChildren={<Icon type="check" />}
             unCheckedChildren={<Icon type="close" />}

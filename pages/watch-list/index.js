@@ -7,10 +7,15 @@ import {
 } from 'antd';
 import { withBlockchainContext } from 'components/BlockchainContext'
 import Loading from 'components/Loading';
-import { getPrettyCategoryName } from 'utils/helpers';
+import {
+  getPrettyCategoryName,
+  getValueFromLocalStorage,
+  setValueLocalStorage,
+} from 'utils/helpers';
 import {
   FundingStages,
 } from 'constants/fundingStages';
+import { LocalStorageKeys } from 'constants/localStorageKeys';
 import WatchListFilters from './watchListFilters';
 import WatchListSwitch from './watchListSwitch';
 import NoResults from 'components/NoResults';
@@ -21,7 +26,7 @@ const assetsPerPage = 12;
 class WatchListPage extends React.Component {
   state = {
     currentPage: 0,
-    fundingActive: true,
+    fundingActive: getValueFromLocalStorage(LocalStorageKeys.WATCH_LIST_FUNDING_ACTIVE, true) === 'true',
   };
 
   render = () => {
@@ -56,7 +61,10 @@ class WatchListPage extends React.Component {
           <WatchListSwitch>
             <span>Funding Active</span>
             <Switch
-              onChange={isFundingActive => this.setState({ fundingActive: isFundingActive })}
+              onChange={isFundingActive => {
+                this.setState({ fundingActive: isFundingActive })
+                setValueLocalStorage(LocalStorageKeys.WATCH_LIST_FUNDING_ACTIVE, isFundingActive)
+              }}
               checked={fundingActive}
               checkedChildren={<Icon type="check" />}
               unCheckedChildren={<Icon type="close" />}

@@ -20,6 +20,42 @@ export const convertTokenAmount = (convertTo, convertFrom, tokens, amount) => {
   return amountFinal;
 }
 
+export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {
+  try{
+    if (typeof localStorage !== 'undefined') {
+      let value = localStorage.getItem(key);
+      if(isObject && value){
+        value = JSON.parse(value);
+      }
+      console.log(value)
+      if(!value){
+        valueIfNoExists && setValueLocalStorage(key, valueIfNoExists, isObject);
+        return valueIfNoExists;
+      } else {
+        return value;
+      }
+    }
+  } catch(err){
+    console.log(err)
+  }
+
+  return null;
+}
+
+export const setValueLocalStorage = (key, value, isObject) => {
+  try{
+    if (typeof localStorage !== 'undefined') {
+      if(isObject){
+        localStorage.setItem(key, JSON.stringify(value))
+      } else {
+        localStorage.setItem(key, value);
+      }
+    }
+  } catch(err){
+    console.log(err
+)  }
+}
+
 export const formatMonetaryValue = (number, fractionDigits = 2, includeToken = true, customToken) => {
   try {
     let value = Number(number).toLocaleString('en-US', {
