@@ -154,7 +154,7 @@ class MetamaskProvider extends Component {
   }
 
   fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress) => {
-    const currentAvgBalance = this.state.user.avgBalance || 0;
+    const currentAvgBalance = this.state.user.avgBalance;
     const currentBalances = this.state.user.balances || {};
 
     const updatedTokensWithBalance = {};
