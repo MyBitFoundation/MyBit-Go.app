@@ -71,6 +71,11 @@ class TokenSelector extends React.Component {
     }
   }
 
+  handleSearchInputChanged = (e) => {
+    const searchValue = e.target.value;
+    console.log(searchValue)
+  }
+
   getSortedBalances = (tokensEnum, amountToPay) => {
     const balancesToReturn = tokensEnum.map(([symbol, value]) => {
       const {
@@ -93,12 +98,10 @@ class TokenSelector extends React.Component {
   getMenu = (balances, totalTokens, amountToPay) => {
     return (
       <Menu>
-        <Menu.Item key="search">
-          <TokenSelectorSearch
-            placeholder="Search Token"
-            onSearch={value => console.log(value)}
-          />
-        </Menu.Item>
+        <TokenSelectorSearch
+          placeholder="Search Token"
+          onChange={this.handleSearchInputChanged}
+        />
       {balances.map((value, index) => {
         const {
           balance,
@@ -127,7 +130,10 @@ class TokenSelector extends React.Component {
   }
 
   handleItemClicked = (selectedToken) => {
-    this.setState({selectedToken})
+    this.setState({
+      selectedToken,
+      visible: false,
+    })
     this.props.onChange(selectedToken)
   }
 
@@ -137,6 +143,7 @@ class TokenSelector extends React.Component {
       tokensEnum,
       totalTokens,
       sortedBalances,
+      visible,
     } = this.state;
 
     const {
@@ -151,6 +158,8 @@ class TokenSelector extends React.Component {
         overlay={overlay}
         placement="topRight"
         disabled={totalTokens === 0}
+        visible={visible}
+        onVisibleChange={visible => this.setState({visible})}
       >
         <Button>
           {selectedToken} <Icon type="down" />
