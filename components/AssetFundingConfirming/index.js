@@ -17,7 +17,7 @@ const AssetFundingConfirming = ({
     <React.Fragment>
       <AssetFundingTitle
         text="Confirming on the Blockchain"
-        onClick={this.props.cancel}
+        onClick={cancel}
       />
       <Separator style={separatorStyleFullWidth}/>
       <div style={{padding: '0% 10%'}}>
