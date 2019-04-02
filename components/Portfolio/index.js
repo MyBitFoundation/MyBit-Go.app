@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import Router from 'next/router';
 import {
   Button,
 } from 'antd';
@@ -13,6 +14,10 @@ import {
   formatMonetaryValue,
   fromWeiToEth,
 } from 'utils/helpers';
+import {
+  PortfolioTypes,
+} from 'constants/portfolioTypes';
+
 import PortfolioPageValueDisplays from './portfolioPageValueDisplays';
 import PortfolioPageNavButtons from './portfolioPageNavButtons';
 import PortfolioPageExplore from './portfolioPageExplore';
@@ -21,132 +26,111 @@ import ErrorPage from 'components/ErrorPage';
 
 const ButtonGroup = Button.Group;
 
-class PortfolioPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.displayOwned = this.displayOwned.bind(this);
-    this.displayManaged = this.displayManaged.bind(this);
-    this.state = {
-      currentView: "portfolioManaged",
-    };
+const PortfolioPage = ({
+  loading,
+  assets,
+  withdrawInvestorProfit,
+  withdrawingAssetIds,
+  payoutAsset,
+  callingPayout,
+  type,
+}) => {
+
+  if(loading){
+    return <Loading message="Loading Portfolio" />;
   }
 
-  displayOwned() {
-    this.setState({ currentView: "portfolioInvestment" });
-  }
+  const currentView = type;
 
-  displayManaged() {
-    this.setState({ currentView: "portfolioManaged" });
-  }
-
-  render() {
-    const {
-      loading,
-      assets,
-      withdrawInvestorProfit,
-      withdrawingAssetIds,
-      payoutAsset,
-      callingPayout,
-    } = this.props;
-
-    if(loading){
-      return <Loading message="Loading Portfolio" />;
-    }
-
-    const {
-      currentView,
-    } = this.state;
-
-    const assetsToRender = currentView === 'portfolioInvestment' ?
-      assets.filter(assetFinantialDetails =>
-        assetFinantialDetails.investmentDetails || false
-      ) : assets.filter(assetFinantialDetails =>
-        assetFinantialDetails.managerDetails || false
-      )
-
-    const error = assetsToRender.length === 0 && (
-       <ErrorPage
-          title="Empty Portfolio"
-          description={currentView === 'portfolioManaged'
-              ? <span>You don't manage any assets yet. Click{' '}
-                  <Link href="/list-asset">
-                    here
-                  </Link>{' '}to list an asset.
-                </span>
-              : `You haven't invested in any assets yet.`}
-        />
+  const assetsToRender = currentView === PortfolioTypes.INVESTMENTS ?
+    assets.filter(assetFinantialDetails =>
+      assetFinantialDetails.investmentDetails || false
+    ) : assets.filter(assetFinantialDetails =>
+      assetFinantialDetails.managerDetails || false
     )
 
-    return (
-      <div>
-        <PortfolioPageValueDisplays
-          isManagedPage={currentView === 'portfolioManaged'}
-        >
-          <PortfolioPageNavButtons>
-            <ButtonGroup size="large">
-              <Button onClick={this.displayOwned}
-                type={currentView === "portfolioInvestment" ? "primary" : "secondary"}>Investments</Button>
-              <Button onClick={this.displayManaged}
-                type={currentView === "portfolioManaged" ? "primary" : "secondary"}>Managed assets</Button>
-            </ButtonGroup>
-          </PortfolioPageNavButtons>
+  const error = assetsToRender.length === 0 && (
+     <ErrorPage
+        title="Empty Portfolio"
+        description={currentView === PortfolioTypes.MANAGED_ASSETS
+            ? <span>You don't manage any assets yet. Click{' '}
+                <Link href="/list-asset">
+                  here
+                </Link>{' '}to list an asset.
+              </span>
+            : `You haven't invested in any assets yet.`}
+      />
+  )
+
+  return (
+    <div>
+      <PortfolioPageValueDisplays
+        isManagedPage={currentView === 'managed-assets'}
+      >
+        <PortfolioPageNavButtons>
+          <ButtonGroup size="large">
+            <Button onClick={() => Router.push(`/portfolio?type=${PortfolioTypes.INVESTMENTS}`, `/portfolio/${PortfolioTypes.INVESTMENTS}`)}
+              type={currentView === PortfolioTypes.INVESTMENTS ? 'primary' : 'secondary'}>Investments</Button>
+            <Button onClick={() => Router.push(`/portfolio?type=${PortfolioTypes.MANAGED_ASSETS}`, `/portfolio/${PortfolioTypes.MANAGED_ASSETS}`)}
+              type={currentView === PortfolioTypes.MANAGED_ASSETS ? "primary" : "secondary"}>Managed assets</Button>
+          </ButtonGroup>
+        </PortfolioPageNavButtons>
+        <ValueDisplay
+          text="Total Portfolio Value"
+          value={formatMonetaryValue(assets.length > 0 ? assets[assets.length - 1].totalAssetValue : 0)}
+          icon={<PieChart />}
+          hasSeparator
+          hasIcon
+          hasShadow
+          isBlue
+          coloredBackground
+          customClassName="PortfolioPage__ValueDisplay--is-portfolioRevenue"
+        />
+        <ValueDisplay
+          text="Total Revenue"
+          value={formatMonetaryValue(assetsToRender.length > 0 ? assetsToRender[assetsToRender.length - 1].totalAssetRevenue : 0)}
+          icon={<LineChart />}
+          hasSeparator
+          hasIcon
+          hasShadow
+          isGreen
+          coloredBackground
+          customClassName="PortfolioPage__ValueDisplay--is-totalRevenue"
+        />
+        {currentView === PortfolioTypes.MANAGED_ASSETS && (
           <ValueDisplay
-            text="Total Portfolio Value"
-            value={formatMonetaryValue(assets.length > 0 ? assets[assets.length - 1].totalAssetValue : 0)}
-            icon={<PieChart />}
+            text="Total Management Profit"
+            value={formatMonetaryValue(assetsToRender.length > 0 ? assetsToRender[assetsToRender.length - 1].totalManagementProfit : 0)}
+            icon={<Sliders />}
             hasSeparator
             hasIcon
             hasShadow
             isBlue
             coloredBackground
-            customClassName="PortfolioPage__ValueDisplay--is-portfolioRevenue"
+            customClassName="PortfolioPage__ValueDisplay--is-managementProfit"
           />
-          <ValueDisplay
-            text="Total Revenue"
-            value={formatMonetaryValue(assetsToRender.length > 0 ? assetsToRender[assetsToRender.length - 1].totalAssetRevenue : 0)}
-            icon={<LineChart />}
-            hasSeparator
-            hasIcon
-            hasShadow
-            isGreen
-            coloredBackground
-            customClassName="PortfolioPage__ValueDisplay--is-totalRevenue"
-          />
-          {currentView === 'portfolioManaged' && (
-            <ValueDisplay
-              text="Total Management Profit"
-              value={formatMonetaryValue(assetsToRender.length > 0 ? assetsToRender[assetsToRender.length - 1].totalManagementProfit : 0)}
-              icon={<Sliders />}
-              hasSeparator
-              hasIcon
-              hasShadow
-              isBlue
-              coloredBackground
-              customClassName="PortfolioPage__ValueDisplay--is-managementProfit"
+        )}
+      </PortfolioPageValueDisplays>
+      {assetsToRender.length > 0 && (
+        <PortfolioPageExplore>
+          {assetsToRender.map(asset =>
+            <Asset
+              type={currentView}
+              {...asset.managerDetails}
+              {...asset.investmentDetails}
+              key={asset.assetId}
+              withdrawInvestorProfit={withdrawInvestorProfit}
+              withdrawing={withdrawingAssetIds.includes(asset.assetId)}
+              callingPayout={callingPayout.includes(asset.assetId)}
+              payoutAsset={payoutAsset}
             />
           )}
-        </PortfolioPageValueDisplays>
-        {assetsToRender.length > 0 && (
-          <PortfolioPageExplore>
-            {assetsToRender.map(asset =>
-              <Asset
-                type={currentView}
-                {...asset.managerDetails}
-                {...asset.investmentDetails}
-                key={asset.assetId}
-                withdrawInvestorProfit={withdrawInvestorProfit}
-                withdrawing={withdrawingAssetIds.includes(asset.assetId)}
-                callingPayout={callingPayout.includes(asset.assetId)}
-                payoutAsset={payoutAsset}
-              />
-            )}
-          </PortfolioPageExplore>
-        )}
-        {error && error}
-      </div>
-    );
-  }
-};
+        </PortfolioPageExplore>
+      )}
+      {error && error}
+    </div>
+  );
+}
 
 PortfolioPage.propTypes = {
   loading: PropTypes.shape({}).isRequired,

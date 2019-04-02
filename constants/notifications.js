@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import {
+  PortfolioTypes,
+} from 'constants/portfolioTypes';
 
 export const NotificationTypes = {
   METAMASK: 'metamask',
@@ -128,7 +131,8 @@ export const getContentForNotification = (obj) => {
                       style={{display: 'block', textAlign: 'right'}}
                     >
                       <Link
-                        href={'/portfolio'}
+                        href={`/portfolio?type=${PortfolioTypes.INVESTMENTS}`}
+                        as={`/portfolio/${PortfolioTypes.INVESTMENTS}`}
                       >
                         Go to Portfolio
                       </Link>

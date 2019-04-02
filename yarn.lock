@@ -973,9 +973,9 @@
     web3 "1.0.0-beta.36"
 
 "@types/node@*":
-  version "11.12.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.12.1.tgz#d90123f6c61fdf2f7cddd286ddae891586dd3488"
-  integrity sha512-sKDlqv6COJrR7ar0+GqqhrXQDzQlMcqMnF2iEU6m9hLo8kxozoAGUazwPyELHlRVmjsbvlnGXjnzyptSXVmceA==
+  version "11.13.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.0.tgz#b0df8d6ef9b5001b2be3a94d909ce3c29a80f9e1"
+  integrity sha512-rx29MMkRdVmzunmiA4lzBYJNnXsW/PhG4kMBy2ATsYaDjGGR75dCFEVVROKpNwlVdcUX3xxlghKQOeDPBJobng==
 
 "@types/node@^10.3.2":
   version "10.14.4"
@@ -2761,7 +2761,7 @@ create-react-context@0.2.2:
     fbjs "^0.8.0"
     gud "^1.0.0"
 
-cross-env@5.2.0:
+cross-env@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-5.2.0.tgz#6ecd4c015d5773e614039ee529076669b9d126f2"
   integrity sha512-jtdNFfFW1hB7sMhr/H6rW1Z45LFqyI431m3qU6bFXcQ3Eh7LtBuG3h74o7ohHZ3crrRkkqHlo4jYHFPcjroANg==
@@ -6906,9 +6906,9 @@ p-try@^1.0.0:
   integrity sha1-y8ec26+P1CKOE/Yh8rGiN8GyB7M=
 
 p-try@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.1.0.tgz#c1a0f1030e97de018bb2c718929d2af59463e505"
-  integrity sha512-H2RyIJ7+A3rjkwKC2l5GGtU4H1vkxKCAGsWasNVd0Set+6i4znxbWy6/j16YDPJDWxhsgZiKAstMEP8wCdSpjA==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
+  integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
 package-json@^4.0.0:
   version "4.0.1"
@@ -7627,9 +7627,9 @@ rc-editor-mention@^1.1.7:
     rc-editor-core "~0.8.3"
 
 rc-form@^2.4.0:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/rc-form/-/rc-form-2.4.3.tgz#742ed935ed029c6cd9a98ee6837cb37ab3b51e5d"
-  integrity sha512-59KeQat5TU4YzpfXYpFlyQ1/5uFXm0SV7VokRr+i8bPMhimpKpZl5gt0J7dNiKLTsGnkCqBLSL88d9ufPJ+EQQ==
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/rc-form/-/rc-form-2.4.4.tgz#ac0f3cc643724991c742d5ae6742777fbc0bcfbb"
+  integrity sha512-AHR2GGYJOlKG5jP6ZjqS+PVBrUUXt+kDJFgJeDw17k6RDVIrG1535MxDPgNmRXp2VM4GQij4sVvjaHvwFsUgCA==
   dependencies:
     async-validator "~1.8.5"
     babel-runtime "6.x"
@@ -7735,9 +7735,9 @@ rc-select@^8.6.7:
     warning "^4.0.2"
 
 rc-slider@~8.6.3:
-  version "8.6.7"
-  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-8.6.7.tgz#fa0cbbd0251394c7cda8dd1b62d10bb7e9b1b840"
-  integrity sha512-QIFWMnK1VLc4TtJSZJgjhI6UOhN8eg53EM2La+eRa8rSPZwJT3rIWfZnTZs7OV7zXG/AiLWN4G+oGxuMcEFpsg==
+  version "8.6.8"
+  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-8.6.8.tgz#6b394077b8447627a549a0d82b0e613efa7dfa20"
+  integrity sha512-NOaY04qkr02M9us9gspoJ/cra3PilQ92qmxR2YdOUZvMxnSt4Q+PWylxlXgQ3QLO/NSah7kTOoNop108DRjEdg==
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.5"
@@ -8106,9 +8106,9 @@ readable-stream@1.1.x:
     string_decoder "~0.10.x"
 
 readable-stream@^3.1.1:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.2.0.tgz#de17f229864c120a9f56945756e4f32c4045245d"
-  integrity sha512-RV20kLjdmpZuTF1INEb9IA3L68Nmi+Ri7ppZqo78wj//Pn62fCoJyV9zalccNzDD/OuJpMG4f+pfMl8+L6QdGw==
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.3.0.tgz#cb8011aad002eb717bf040291feba8569c986fb9"
+  integrity sha512-EsI+s3k3XsW+fU8fQACLN59ky34AZ14LoeVZpYwmZvldCFo0r0gnelwF2TcMjLor/BTL5aDJVBMkss0dthToPw==
   dependencies:
     inherits "^2.0.3"
     string_decoder "^1.1.1"
