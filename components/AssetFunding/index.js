@@ -58,6 +58,8 @@ class AssetFunding extends React.Component {
 
   changeStep = (step) => this.setState({step});
 
+  resetStep = () => this.changeStep(0);
+
   handleDeadlineHit = () => {
     console.log("Hit deadline");
   }
@@ -181,10 +183,11 @@ class AssetFunding extends React.Component {
             selectedOwnership={selectedOwnership}
             amount={selectedAmountEth}
             fundAsset={this.fundAsset}
+            cancel={this.resetStep}
           />
         )}
         {step === 2 && (
-          <AssetFundingConfirming />
+          <AssetFundingConfirming cancel={this.resetStep}/>
         )}
       </AssetFundingWrapper>
     );

@@ -10,12 +10,15 @@ const separatorStyleFullWidth = {
   marginTop: '10px',
 }
 
-const AssetFundingConfirming = () => {
+const AssetFundingConfirming = ({
+  cancel,
+}) => {
   return (
     <React.Fragment>
-      <AssetFundingTitle>
-        Confirming on the Blockchain
-      </AssetFundingTitle>
+      <AssetFundingTitle
+        text="Confirming on the Blockchain"
+        onClick={this.props.cancel}
+      />
       <Separator style={separatorStyleFullWidth}/>
       <div style={{padding: '0% 10%'}}>
         <AssetFundingConfirmingMessage>

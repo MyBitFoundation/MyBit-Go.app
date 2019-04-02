@@ -132,9 +132,10 @@ class AssetFundingConfirm extends React.Component {
     const maxDecimalsErc20 = selectedToken === DEFAULT_TOKEN ? MAX_DECIMALS_DEFAULT_TOKEN : MAX_DECIMALS_ERC20;
     return (
       <React.Fragment>
-        <AssetFundingTitle>
-          You will own {selectedOwnership}% of the asset
-        </AssetFundingTitle>
+        <AssetFundingTitle
+          text={`You will own ${selectedOwnership}% of the asset`}
+          onClick={this.props.cancel}
+        />
         <Separator style={separatorStyleFullWidth}/>
         <AssetFundingConfirmListWrapper>
           <AssetFundingConfirmItem>
