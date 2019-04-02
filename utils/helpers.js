@@ -8,13 +8,13 @@ export const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue.toS
 
 export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
 
-export const convertTokenAmount = (convertTo, convertFrom, balances, amount) => {
+export const convertTokenAmount = (convertTo, convertFrom, tokens, amount) => {
   if(convertTo === convertFrom){
     return Number(amount);
   }
 
-  const tokenConvertTo = balances[convertTo];
-  const tokenConvertFrom = balances[convertFrom];
+  const tokenConvertTo = tokens[convertTo];
+  const tokenConvertFrom = tokens[convertFrom];
   const amountInEth = amount * (tokenConvertFrom.currentPrice || 1);
   const amountFinal = amountInEth / (tokenConvertTo.currentPrice || 1);
   return amountFinal;

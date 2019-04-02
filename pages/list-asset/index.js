@@ -8,6 +8,7 @@ import {
 import Cookie from 'js-cookie';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
+import { withKyberContext } from 'components/KyberContext';
 import { withCivicContext } from "ui/CivicContext";
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 import {
@@ -192,6 +193,7 @@ class ListAssetPage extends React.Component {
 
     const {
       metamaskContext,
+      supportedTokensInfo: supportedTokens,
     } = this.props;
 
     const balances = metamaskContext.user.balances;
@@ -206,25 +208,25 @@ class ListAssetPage extends React.Component {
 
       maxCollateralPercentage = maxAmountAllowedInDai === 0 ? 0 : parseInt((maxAmountAllowedInDai / assetValue) * 100);
 
-      const maxInMyb = maxAmountAllowedInDai === 0 ? 0 : convertTokenAmount('MYB', 'DAI', balances, maxAmountAllowedInDai);
-      const maxCollateralSelectedToken = maxAmountAllowedInDai === 0 ? 0 : parseFloat(convertTokenAmount(selectedToken, 'DAI', balances, maxAmountAllowedInDai).toFixed(2));
+      const maxInMyb = maxAmountAllowedInDai === 0 ? 0 : convertTokenAmount('MYB', 'DAI', supportedTokens, maxAmountAllowedInDai);
+      const maxCollateralSelectedToken = maxAmountAllowedInDai === 0 ? 0 : parseFloat(convertTokenAmount(selectedToken, 'DAI', supportedTokens, maxAmountAllowedInDai).toFixed(2));
       switch (name) {
         case "percentage":
           percentage = selectedAmount;
-          myb = parseFloat(convertTokenAmount('MYB', 'DAI', balances, maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
+          myb = parseFloat(convertTokenAmount('MYB', 'DAI', supportedTokens, maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
           dai = parseFloat((maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
-          collateralSelectedToken = parseFloat(convertTokenAmount(selectedToken, 'DAI', balances, dai).toFixed(2))
+          collateralSelectedToken = parseFloat(convertTokenAmount(selectedToken, 'DAI', supportedTokens, dai).toFixed(2))
           break;
         case "myb":
           myb = selectedAmount > maxInMyb ? parseFloat(maxInMyb.toFixed(2)) : selectedAmount
           percentage = parseInt((myb / maxInMyb) * 100)
           dai = (maxAmountAllowedInDai * percentage).toFixed(2)
-          collateralSelectedToken = convertTokenAmount(selectedToken, 'MYB', balances, myb)
+          collateralSelectedToken = convertTokenAmount(selectedToken, 'MYB', supportedTokens, myb)
           break;
         case "selectedToken":
           collateralSelectedToken = selectedAmount > maxCollateralSelectedToken ? maxCollateralSelectedToken : parseFloat(Number(selectedAmount).toFixed(2))
-          dai = parseFloat(convertTokenAmount('DAI', selectedToken, balances, collateralSelectedToken).toFixed(2))
-          myb = parseFloat(convertTokenAmount('MYB', 'DAI', balances, dai).toFixed(2))
+          dai = parseFloat(convertTokenAmount('DAI', selectedToken, supportedTokens, collateralSelectedToken).toFixed(2))
+          myb = parseFloat(convertTokenAmount('MYB', 'DAI', supportedTokens, dai).toFixed(2))
           percentage = parseInt((dai/maxAmountAllowedInDai) * 100)
           break;
         default: return null;
@@ -441,6 +443,7 @@ const enhance = compose(
   withBlockchainContext,
   withMetamaskContext,
   withCivicContext,
+  withKyberContext,
 );
 
 export default enhance(ListAssetPage);
