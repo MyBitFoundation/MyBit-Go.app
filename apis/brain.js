@@ -27,30 +27,16 @@ import {
   toWei,
 } from '../utils/helpers';
 
+import {
+  getExpectedAndSlippage,
+} from 'components/KyberContext';
+
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
 const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 
 let Network;
-
-export const fetchPriceFromCoinmarketcap = async ticker =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const response = await fetch(`https://api.coingecko.com/api/v3/coins/${ticker}?tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`);
-      const jsonResponse = await response.json();
-      const info = jsonResponse["market_data"];
-      const price = Number(info['current_price']['usd']);
-      const priceChangePercentage = Number(info['price_change_percentage_24h']);
-
-      resolve({
-        price,
-        priceChangePercentage,
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
 
 export const fetchTransactionHistory = async userAddress =>
   new Promise(async (resolve, reject) => {
@@ -198,25 +184,25 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       asset,
       userAddress,
       managerPercentage,
-      collateralMyb,
-      partnerContractAddress,
+      collateral,
       amountToBeRaised,
+      paymentTokenAddress,
+      operatorId : operatorID,
     } = params;
 
     const randomURI = generateRandomURI(window.web3js);
     const api = await Network.api();
-    const operatorID = await api.methods.getOperatorID(partnerContractAddress).call();
     const response = await Network.createAsset({
-      escrow: toWei(collateralMyb),
+      escrow: toWei(collateral),
       assetURI: randomURI,
       assetManager: userAddress,
       fundingLength: 2592000,
       startTime: 1551732113,
-      amountToRaise: toWei(10),
+      amountToRaise: toWei(5),
       assetManagerPercent: managerPercentage,
       operatorID,
       fundingToken: DEFAULT_TOKEN_CONTRACT,
-      paymentToken: SDK_CONTRACTS.MyBitToken,
+      paymentToken: paymentTokenAddress,
       createAsset: {
         onTransactionHash: onCreateAsset.onTransactionHash,
         onError: error => processErrorType(error, onCreateAsset.onError),
@@ -357,8 +343,8 @@ export const fundAsset = async (onFundAsset, onApprove, params) => {
     const response = await Network.fundAsset({
       asset: assetId,
       investor: userAddress,
-      paymentToken: DEFAULT_TOKEN_CONTRACT,
-      amount,
+      paymentToken: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      amount: toWei(0.07),
       buyAsset: {
         onTransactionHash: onFundAsset.onTransactionHash,
         onError: error => processErrorType(error, onFundAsset.onError),
@@ -432,6 +418,11 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
     try {
       if(!Network){
         Network = require('@mybit/network.js')(window.web3js, SDK_CONTRACTS);
+        getExpectedAndSlippage(
+          '0x72fd6c7c1397040a66f33c2ecc83a0f71ee46d5c',
+          '0xad6d458402f60fd3bd25163575031acdce07538d',
+          toWei(675),
+        );
       }
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       //console.log("Network: ", Network)
@@ -446,6 +437,14 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
       //console.log("events: ", events);
       //console.log("database: ", database)
       //console.log("userAddress: ", userAddress)
+
+      /*const operatorID = await api.methods.getOperatorID('0x396576A24FDdD9e2AEa0CCfC1aa1F795E8acC98C').call();
+      console.log(operatorID)
+      const x = await Network.acceptERC20Token({
+        id: operatorID,
+        token: DEFAULT_TOKEN_CONTRACT,
+        operator: '0x396576A24FDdD9e2AEa0CCfC1aa1F795E8acC98C',
+      });*/
 
       //console.log(database.boolStorage(window.web3js.utils.soliditySha3("operator.acceptsEther", operatorID)))
 
@@ -489,9 +488,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let availableShares = 0;
         let owedToInvestor = 0;
         let owedToAssetManager = 0;
-        let remainingEscrow = 0;
-        let escrowRedeemed = 0;
-        let assetManagerCollateral = 0;
         let assetIncomeForCollateral = 0;
 
         assetManagerFee = BN(assetManagerFee);
@@ -528,6 +524,19 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let investment = 0;
 
         const isInvestor = realAddress && assetInvestors.includes(realAddress);
+        const [
+          remainingEscrow,
+          escrowRedeemed,
+          assetManagerCollateral,
+        ] = await Promise.all([
+          api.methods.getAssetManagerEscrowRemaining(escrowId).call(),
+          api.methods.getAssetManagerEscrowRedeemed(escrowId).call(),
+          api.methods.getAssetManagerEscrow(escrowId).call(),
+        ])
+
+        console.log("remainingEscrow: ", remainingEscrow)
+        console.log("escrowRedeemed: ", escrowRedeemed)
+        console.log("assetManagerCollateral: ", assetManagerCollateral)
 
         if(isInvestor){
           balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
@@ -545,24 +554,12 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
             }
             if(isAssetManager){
+              console.log("IS ASSET MANAGER")
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
               assetIncomeForCollateral = Number(fromWeiToEth(assetIncome)) * (1 - platformFee - assetManagerFee);
               owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, realAddress).call();
-              const escrowId = await api.methods.getAssetManagerEscrowID(assetId, realAddress).call();
-              [
-                remainingEscrow,
-                escrowRedeemed,
-                assetManagerCollateral,
-              ] = await Promise.all([
-                api.methods.getAssetManagerEscrowRemaining(escrowId).call(),
-                api.methods.getAssetManagerEscrowRedeemed(escrowId).call(),
-                api.methods.getAssetManagerEscrow(escrowId).call(),
-              ])
-              console.log("remainingEscrow: ", remainingEscrow)
-              console.log("escrowRedeemed: ", escrowRedeemed)
-              console.log("assetManagerCollateral: ", assetManagerCollateral)
             }
             assetIncome = Number(fromWeiToEth(assetIncome));
           } else if(isAssetManager) {
@@ -615,13 +612,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
       //console.log("all events: ", operators.allEvents())
       //console.log(operatorID)
       //console.log("getting operator id...")
-      //const operatorID = await api.methods.getOperatorID('0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d').call();
-
-      /*const x = await Network.acceptERC20Token({
-        id: operatorID,
-        token: DEFAULT_TOKEN_CONTRACT,
-        operator: '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d',
-      });*/
 
 
       // 30 days = 2678400

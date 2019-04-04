@@ -15,6 +15,8 @@ import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
+  PLATFORM_TOKEN,
+  DEFAULT_TOKEN,
 } from 'constants/app';
 import { COOKIES } from 'constants/cookies';
 import {
@@ -45,7 +47,7 @@ class ListAssetPage extends React.Component {
         userCountry: 'Switzerland',
         category: 'Real Estate',
         asset: 'Co-Working Space',
-        assetValue: 20000,
+        assetValue: 5,
         assetAddress1: 'a',
         assetAddress2: 'a',
         assetCity: 'a',
@@ -59,8 +61,9 @@ class ListAssetPage extends React.Component {
         collateralMyb: 0,
         collateralDai: 0,
         collateralSelectedToken: 0,
-        partnerContractAddress: '0x4DC8346e7c5EFc0db20f7DC8Bb1BacAF182b077d',
-        selectedToken: 'DAI',
+        partnerContractAddress: '0x794C156557a3742B532427F735A27A874e67c9b9',
+        selectedToken: DEFAULT_TOKEN,
+        convertedAmount: 0,
       },
       countries: COUNTRIES,
       isUserListingAsset: false,
@@ -109,14 +112,25 @@ class ListAssetPage extends React.Component {
     const collateralDai = this.state.data.collateralDai;
     const balances = this.props.metamaskContext.user.balances;
 
-    const convertedAmount = convertTokenAmount(selectedToken, 'DAI', balances, collateralDai)
-    const collateralSelectedToken = parseFloat(convertedAmount.toFixed(2))
+    const {
+      supportedTokensInfo: supportedTokens,
+    } = this.props;
+     console.log(supportedTokens)
+    const paymentTokenAddress = selectedToken ? supportedTokens[selectedToken].contractAddress : undefined;
+
+
+    const convertedAmount = convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokens, collateralDai)
+    const collateralSelectedToken = parseFloat(convertedAmount.toFixed(3))
+    console.log("convertedAmount: ", convertedAmount)
+    console.log("collateralSelectedToken: ", collateralSelectedToken)
 
     this.setState({
       data: {
         ...this.state.data,
         selectedToken,
         collateralSelectedToken,
+        convertedAmount,
+        paymentTokenAddress,
       },
     });
   }
@@ -126,18 +140,18 @@ class ListAssetPage extends React.Component {
       const assetName = value.name;
       const asset = value.assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0];
       const {
-        partnerContractAddress,
-        amountToBeRaisedInUSDAirtable,
+        operatorId,
+        fundingGoal,
       } = asset;
 
       this.setState({
         data: {
           ...this.state.data,
           asset: assetName,
-          assetValue: amountToBeRaisedInUSDAirtable,
-          partnerContractAddress,
+          assetValue: fundingGoal,
+          operatorId,
         }
-      }, () => console.log(this.state.data.partnerContractAddress))
+      }, () => console.log(this.state))
     } else {
       this.setState(
         {
@@ -180,7 +194,7 @@ class ListAssetPage extends React.Component {
   };
 
   handleCollateralChange = (value, name) => {
-    let percentage, myb, dai, collateralSelectedToken, maxCollateralPercentage;
+    let percentage, myb, dai, collateralSelectedToken, maxCollateralPercentage, convertedAmount;
 
     const {
       assetValue,
@@ -208,35 +222,37 @@ class ListAssetPage extends React.Component {
 
       maxCollateralPercentage = maxAmountAllowedInDai === 0 ? 0 : parseInt((maxAmountAllowedInDai / assetValue) * 100);
 
-      const maxInMyb = maxAmountAllowedInDai === 0 ? 0 : convertTokenAmount('MYB', 'DAI', supportedTokens, maxAmountAllowedInDai);
-      const maxCollateralSelectedToken = maxAmountAllowedInDai === 0 ? 0 : parseFloat(convertTokenAmount(selectedToken, 'DAI', supportedTokens, maxAmountAllowedInDai).toFixed(2));
+      const maxInMyb = maxAmountAllowedInDai === 0 ? 0 : convertTokenAmount(PLATFORM_TOKEN, DEFAULT_TOKEN, supportedTokens, maxAmountAllowedInDai);
+      const maxCollateralSelectedToken = maxAmountAllowedInDai === 0 ? 0 : parseFloat(convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokens, maxAmountAllowedInDai).toFixed(2));
       switch (name) {
         case "percentage":
           percentage = selectedAmount;
-          myb = parseFloat(convertTokenAmount('MYB', 'DAI', supportedTokens, maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
+          myb = parseFloat(convertTokenAmount(PLATFORM_TOKEN, DEFAULT_TOKEN, supportedTokens, maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
           dai = parseFloat((maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
-          collateralSelectedToken = parseFloat(convertTokenAmount(selectedToken, 'DAI', supportedTokens, dai).toFixed(2))
+          collateralSelectedToken = parseFloat(convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokens, dai).toFixed(2))
           break;
         case "myb":
           myb = selectedAmount > maxInMyb ? parseFloat(maxInMyb.toFixed(2)) : selectedAmount
           percentage = parseInt((myb / maxInMyb) * 100)
-          dai = (maxAmountAllowedInDai * percentage).toFixed(2)
-          collateralSelectedToken = convertTokenAmount(selectedToken, 'MYB', supportedTokens, myb)
+          dai = (maxAmountAllowedInDai * (percentage / 100)).toFixed(2)
+          collateralSelectedToken = parseFloat(convertTokenAmount(selectedToken, PLATFORM_TOKEN, supportedTokens, myb).toFixed(2))
           break;
         case "selectedToken":
           collateralSelectedToken = selectedAmount > maxCollateralSelectedToken ? maxCollateralSelectedToken : parseFloat(Number(selectedAmount).toFixed(2))
-          dai = parseFloat(convertTokenAmount('DAI', selectedToken, supportedTokens, collateralSelectedToken).toFixed(2))
-          myb = parseFloat(convertTokenAmount('MYB', 'DAI', supportedTokens, dai).toFixed(2))
+          dai = parseFloat(convertTokenAmount(DEFAULT_TOKEN, selectedToken, supportedTokens, collateralSelectedToken).toFixed(2))
+          myb = parseFloat(convertTokenAmount(PLATFORM_TOKEN, DEFAULT_TOKEN, supportedTokens, dai).toFixed(2))
           percentage = parseInt((dai/maxAmountAllowedInDai) * 100)
           break;
         default: return null;
       }
+      convertedAmount = convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokens, collateralSelectedToken);
     }
 
     this.setState(
       {
         data: {
           ...this.state.data,
+          convertedAmount,
           collateralMyb: myb,
           collateralDai: dai,
           collateralPercentage: percentage,

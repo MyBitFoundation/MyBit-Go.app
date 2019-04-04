@@ -408,9 +408,12 @@ class BlockchainProvider extends React.Component {
       managementFee,
       category,
       fileList,
-      collateralMyb,
+      convertedAmount,
       collateralPercentage,
       partnerContractAddress,
+      paymentTokenAddress,
+      selectedToken,
+      assetValue,
     } = formData;
 
     const {
@@ -424,10 +427,10 @@ class BlockchainProvider extends React.Component {
     const userAddress =  this.props.metamaskContext.user.address;
     const notificationId = Date.now();
 
-    if(collateralMyb !== 0) {
+    if(convertedAmount !== 0) {
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.APPROVE,
-        formattedAmount: formatMonetaryValue(collateralMyb, 3, true, 'MYB'),
+        formattedAmount: formatMonetaryValue(convertedAmount, 3, true, selectedToken),
       });
     } else {
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -444,7 +447,7 @@ class BlockchainProvider extends React.Component {
 
     const onTransactionHashApprove = () => {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
-        formattedAmount: formatMonetaryValue(collateralMyb, 3, true, 'MYB'),
+        formattedAmount: formatMonetaryValue(convertedAmount, 3, true, selectedToken),
         type: NotificationTypes.APPROVE,
       });
     }
@@ -456,7 +459,7 @@ class BlockchainProvider extends React.Component {
     const onReceiptApprove = wasSuccessful => {
       if(wasSuccessful){
         buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
-          formattedAmount: formatMonetaryValue(collateralMyb, 3, true, 'MYB'),
+          formattedAmount: formatMonetaryValue(convertedAmount, 3, true, selectedToken),
           type: NotificationTypes.APPROVE,
         });
       } else {
@@ -521,11 +524,12 @@ class BlockchainProvider extends React.Component {
         onError,
       }, {
         managerPercentage: managementFee,
-        amountToBeRaised: getAssetByName(assetName, assetsAirTable).amountToBeRaisedInUSDAirtable / ethereum.price,
+        amountToBeRaised: assetValue,
         assetName,
-        collateralMyb,
+        collateral: convertedAmount,
         userAddress,
         partnerContractAddress,
+        paymentTokenAddress,
       }
     );
   }

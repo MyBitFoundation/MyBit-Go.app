@@ -16,7 +16,9 @@ import {
   CarouselSlideSelect,
   CarouselSlideInputNumber,
 } from 'components/CarouselSlide/';
-
+import {
+  DEFAULT_TOKEN,
+} from 'constants/app';
 import Earth from "static/list-asset/assetList_earth.png";
 
 const Image = styled.img`
@@ -40,7 +42,11 @@ export const AvailableAssetsSlide = withAirtableContext(({
   airtableContext,
   maxWidthDesktop,
 }) => {
-  const { category, asset } = formData;
+  const {
+    category,
+    asset,
+    assetValue
+  } = formData;
   const {
     assetsAirTable,
     categoriesAirTable,
@@ -52,7 +58,6 @@ export const AvailableAssetsSlide = withAirtableContext(({
 
   const categories = (formData.userCountry && formData.userCity) && getCategoriesForAssets(formData.userCountry, formData.userCity);
   const assetsAvailable = category && categories[category];
-  const assetValue = !asset ? 0 : assetsAirTable.filter(assetTmp => assetTmp.name === asset)[0].amountToBeRaisedInUSDAirtable;
   return (
     <CarouselSlide>
       <React.Fragment>
@@ -129,7 +134,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
             name="assetValue"
             value={assetValue}
             formatter={value =>
-             `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+             `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             }
             parser={value => value.replace(/\$\s?|(,*)/g, "")}
             onChange={value => handleSelectChange(value, "assetValue")}

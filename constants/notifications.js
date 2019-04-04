@@ -2,7 +2,9 @@ import Link from 'next/link';
 import {
   PortfolioTypes,
 } from 'constants/portfolioTypes';
-
+import {
+  PLATFORM_TOKEN,
+} from 'constants/app';
 export const NotificationTypes = {
   METAMASK: 'metamask',
   LIST_ASSET: 'listAsset',
@@ -188,7 +190,7 @@ export const getContentForNotification = (obj) => {
             title: <span style={{marginRight: '10px'}}>Withdrew collateral of {withdrawCollateral.assetName} successfuly</span>,
             message: (
                 <React.Fragment>
-                  <span style={{display: 'block'}}>Amount received: <span style={{fontWeight: 600}}>{withdrawCollateral.amount.toLocaleString('en-US')} MYB ({withdrawCollateral.percentage}%)</span></span>
+                  <span style={{display: 'block'}}>Amount received: <span style={{fontWeight: 600}}>){`${withdrawCollateral.amount.toLocaleString('en-US')} ${PLATFORM_TOKEN} (${withdrawCollateral.percentage}%`}</span></span>
                 </React.Fragment>
               )
           }
@@ -238,7 +240,7 @@ export const getContentForNotification = (obj) => {
           }
         case NotificationStatus.INFO:
           return {
-            title: `Sending funds to Operator for ${assetPayout.assetName}`,
+            title: `Sending funds to Operator of ${assetPayout.assetName}`,
             message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
           }
         case NotificationStatus.ERROR:
@@ -316,7 +318,7 @@ export const getContentForNotification = (obj) => {
         switch(status) {
           case NotificationStatus.INFO:
             return {
-              title: `Sending funds to Operator for ${metamask.assetName}`,
+              title: `Sending funds to Operator of ${metamask.assetName}`,
               message: 'Please confirm the transaction in Metamask to send the crowdsale funds to the Operator. Thank you for beta testing the platform.',
             }
           case NotificationStatus.ERROR:

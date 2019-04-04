@@ -5,6 +5,10 @@ export const MAX_FILES_UPLOAD = 5;
 export const MAX_FILE_SIZE = 5000000; //5 MB
 export const BLOCK_NUMBER_CONTRACT_CREATION = 4619384;
 export const DEFAULT_TOKEN = 'DAI';
+export const DEFAULT_TOKEN_MAX_DECIMALS = 2;
+export const ERC20_TOKEN_MAX_DECIMALS = 3;
+export const PLATFORM_TOKEN = 'MANA';
+export const PLATFORM_TOKEN_MAX_DECIMALS = 3;
 export const DEFAULT_TOKEN_CONTRACT = '0xad6d458402f60fd3bd25163575031acdce07538d';
 
 export const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"

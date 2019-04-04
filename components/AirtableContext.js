@@ -91,8 +91,9 @@ class AirtableProvider extends React.PureComponent {
       details: fields.Details,
       partner: fields.Partner,
       partnerContractAddress: fields['Partner Address'],
+      operatorId: fields['Operator ID'],
       imageSrc: `${InternalLinks.S3}assetImages:${fields.Image}`,
-      amountToBeRaisedInUSDAirtable: fields['Funding goal'],
+      fundingGoal: fields['Funding goal'],
       assetIDs: fields['Asset IDs'],
       location,
     };

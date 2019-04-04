@@ -5,6 +5,9 @@ import AssetDefault from './AssetDefault';
 import AssetTemplate from './AssetTemplate';
 import AssetPortfolioInvestment from './AssetPortfolioInvestment';
 import AssetPortfolioManaged from './AssetPortfolioManaged';
+import {
+  PortfolioTypes,
+} from 'constants/portfolioTypes';
 
 const Asset = (props) => {
   const {
@@ -31,7 +34,7 @@ const Asset = (props) => {
   let height = '196px';
   let margin = '0px 10px 20px 10px';
 
-  if(type === "portfolioInvestment"){
+  if(type === PortfolioTypes.INVESTMENTS){
     AssetComponent = AssetPortfolioInvestment;
      colSize = {
       xs: 24,
@@ -42,7 +45,7 @@ const Asset = (props) => {
     };
     height = '187px';
     margin = '0px 15px 20px 15px';
-  } else if(type === 'portfolioManaged'){
+  } else if(type === PortfolioTypes.MANAGED_ASSETS){
     AssetComponent = AssetPortfolioManaged;
      colSize = {
       xs: 24,

@@ -6,12 +6,12 @@ export const SORT_BY_ASSETS = [{
   }, {
     name: 'Most Funded',
     compare: (a, b) => {
-      return (b.amountRaisedInUSD / b.amountToBeRaisedInUSD) - (a.amountRaisedInUSD / a.amountToBeRaisedInUSD);
+      return (b.fundingProgress / b.fundingGoal) - (a.fundingProgress / a.fundingGoal);
     },
   }, {
     name: 'Least Funded',
     compare: (a, b) => {
-      return (a.amountRaisedInUSD / a.amountToBeRaisedInUSD) - (b.amountRaisedInUSD / b.amountToBeRaisedInUSD);
+      return (a.fundingProgress / a.fundingGoal) - (b.fundingProgress / b.fundingGoal);
     },
   }, {
     name: 'Highest Management Fee',

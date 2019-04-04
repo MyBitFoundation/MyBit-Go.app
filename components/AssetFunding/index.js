@@ -90,7 +90,7 @@ class AssetFunding extends React.Component {
 
   render(){
     const {
-      selectedAmountUsd,
+      selectedAmount,
       selectedAmountEth,
       selectedOwnership,
       assetHasExpired,

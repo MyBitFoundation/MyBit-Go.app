@@ -5,7 +5,9 @@ import {
   CarouselSlideParagraph,
 } from 'components/CarouselSlide/';
 import AlertMessage from 'ui/AlertMessage';
-
+import {
+  PLATFORM_TOKEN,
+} from 'constants/app';
 const InformationWrapper = styled.div`
   b{
     font-size: 16px;
@@ -106,8 +108,7 @@ export const ConfirmSlide = ({
         <section>
           <b>Asset collateral</b>
           <p>
-            {parseFloat(parseFloat(formData.collateralMyb).toFixed(3))} MYB{" "}
-            {formData.collateralPercentage}%
+            {`${parseFloat(parseFloat(formData.collateralMyb).toFixed(3))} ${PLATFORM_TOKEN} ${formData.collateralPercentage}%`}
           </p>
         </section>
         {error && (

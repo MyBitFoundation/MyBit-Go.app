@@ -27,7 +27,6 @@ export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {
       if(isObject && value){
         value = JSON.parse(value);
       }
-      console.log(value)
       if(!value){
         valueIfNoExists && setValueLocalStorage(key, valueIfNoExists, isObject);
         return valueIfNoExists;

@@ -3,10 +3,15 @@ import { LOAD_SUPPORTED_TOKENS_TIME } from 'constants/timers';
 const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 import {
   debug,
+  fromWeiToEth,
 } from 'utils/helpers';
+import {
+  ABI,
+  ADDRESS,
+} from './constants';
 
 const { Provider, Consumer } = React.createContext({});
-
+let contract;
 // Required so we can trigger getInitialProps in our exported pages
 export const withKyberContext = (Component) => {
   return class Higher extends React.Component{
@@ -24,6 +29,37 @@ export const withKyberContext = (Component) => {
     }
   }
 }
+
+export const getExpectedAndSlippage = async (src, dest, amount) => {
+    try{
+      if(!contract){
+        contract = new window.web3js.eth.Contract(ABI, ADDRESS);
+      }
+
+      console.time("kyber")
+      const result = await contract.methods.getExpectedRate(src, dest, amount).call();
+      console.timeEnd("kyber")
+      let {
+        expectedRate,
+        slippageRate,
+      } = result;
+
+      if(expectedRate !== '0'){
+        expectedRate = fromWeiToEth(expectedRate);
+        slippageRate = fromWeiToEth(slippageRate);
+        console.log("expectedRate: ", expectedRate)
+        console.log("slippageRate: ", slippageRate)
+
+        return {
+          expectedRate,
+          slippageRate,
+        };
+      }
+    } catch(err) {
+      console.log(err);
+    }
+    return null;
+  }
 
 class KyberProvider extends React.Component {
   constructor(props){
@@ -93,18 +129,10 @@ class KyberProvider extends React.Component {
         }
       }
 
-      // TODO Remove once Kyber adds us
-      supportedTokensInfo['MYB'] = {
-        contractAddress: SDK_CONTRACTS.MyBitToken,
-        currentPrice: 0.00005761,
-        decimals: 18,
-        name: "MYB",
-      };
-
       supportedTokensInfo['key'] = this.key + 1;
       this.key += 1;
 
-      debug("supportedTokensInfo (kyberContext): ", supportedTokensInfo);
+      //debug("supportedTokensInfo (kyberContext): ", supportedTokensInfo);
       this.setState({
         supportedTokensInfo,
       })

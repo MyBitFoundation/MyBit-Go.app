@@ -29,8 +29,6 @@ const AssetDetails = ({
     files,
     managerPercentage,
     collateralPercentage,
-    amountToBeRaisedInUSD,
-    amountRaisedInUSD,
     funded,
     pastDate,
     percentageOwnedByUser,

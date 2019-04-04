@@ -12,6 +12,9 @@ import {
 import {
   convertTokenAmount,
 } from 'utils/helpers';
+import {
+  PLATFORM_TOKEN,
+} from 'constants/app';
 import Myb from "static/list-asset/assetList_myb.png";
 import { withMetamaskContext } from 'components/MetamaskContext';
 import TokenSelector from 'components/TokenSelector';
@@ -129,7 +132,7 @@ export const CollateralSlide = ({
             defaultValue={collateralMyb}
             value={collateralMyb}
             min={0}
-            label="MYB"
+            label={PLATFORM_TOKEN}
             onChange={value => handleCollateralChange({selectedAmount: value}, "myb")}
             precision={2}
           />

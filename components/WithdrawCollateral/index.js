@@ -6,7 +6,9 @@ import {
 import {
   formatMonetaryValue,
 } from 'utils/helpers';
-
+import {
+  PLATFORM_TOKEN,
+} from 'constants/app';
 import WithdrawCollateralWrapper from './withdrawCollateralWrapper';
 import WithdrawCollateralGraphWrapper from './withdrawCollateralGraphWrapper';
 import WithdrawCollateralSection from './withdrawCollateralSection';
@@ -51,7 +53,7 @@ const WithdrawCollateral = React.memo(({
             </WithdrawCollateralColumn>
             <div className="ManagedAsset__collateral-bars-column-status">{text}</div>
             <TooltipAnt
-                title={`Once asset revenue reaches $${required} you can withdraw (${percentage}% of collateral) MYB.`}
+                title={`Once asset revenue reaches $${required} you can withdraw (${percentage}% of collateral) ${PLATFORM_TOKEN}.`}
             >
               <Button
                 loading={isWithdrawingCollateral && withdrawable ? true : false}

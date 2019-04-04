@@ -15,6 +15,10 @@ import {
   formatMonetaryValue,
 } from 'utils/helpers';
 import WithdrawCollateral from 'components/WithdrawCollateral';
+import {
+  PLATFORM_TOKEN,
+  DEFAULT_TOKEN,
+} from 'constants/app';
 let Bizcharts;
 if(typeof window !== 'undefined'){
   Bizcharts = require('bizcharts');
@@ -98,7 +102,7 @@ const ManageAssetGraphs = ({
             <ManageAssetColoredValue
               isBlue
             >
-              {formatMonetaryValue(assetManagerCollateral, 4, true, 'MYB')}
+              {formatMonetaryValue(assetManagerCollateral, 4, true, PLATFORM_TOKEN)}
             </ManageAssetColoredValue>
             <br />
           </div>
