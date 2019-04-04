@@ -89,8 +89,19 @@ class AssetFundingConfirm extends React.Component {
 
     console.log("mybitPlatformFee: ", mybitPlatformFee)
     console.log("amountToPay: ", amountToPay)
+    console.log("selectedToken: ", selectedToken)
+
+    const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountContributed : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, amountContributed);
+    const gasInDai = parseFloat(convertTokenAmount(DEFAULT_TOKEN, 'ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
+    const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : convertTokenAmount(selectedToken, 'ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION);
+    const totalToPayInDai = amountToPay + gasInDai;
+    const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, totalToPayInDai);
+    const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFee : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, mybitPlatformFee);
+    const maxDecimalsErc20 = selectedToken === DEFAULT_TOKEN ? MAX_DECIMALS_DEFAULT_TOKEN : MAX_DECIMALS_ERC20;
+
     const metamaskErrors = metamaskContext.metamaskErrors();
-    const footer = getFooter(metamaskErrors.error, extensionUrl, amountToPay, amountContributed, user.balances, this.props.fundAsset);
+    const footer = getFooter(metamaskErrors.error, extensionUrl, amountToPay, amountContributed, user.balances, this.props.fundAsset, supportedTokensInfo[selectedToken].contractAddress, selectedToken);
+
     const {
       buttonProps,
       messageProps,
@@ -123,13 +134,6 @@ class AssetFundingConfirm extends React.Component {
         </AssetFundingConfirmFooterMessageUrl>
       ) : null;
 
-    const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountContributed : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, amountContributed);
-    const gasInDai = parseFloat(convertTokenAmount(DEFAULT_TOKEN, 'ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
-    const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : convertTokenAmount(selectedToken, 'ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION);
-    const totalToPayInDai = amountToPay + gasInDai;
-    const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, totalToPayInDai);
-    const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFee : convertTokenAmount(selectedToken, DEFAULT_TOKEN, supportedTokensInfo, mybitPlatformFee);
-    const maxDecimalsErc20 = selectedToken === DEFAULT_TOKEN ? MAX_DECIMALS_DEFAULT_TOKEN : MAX_DECIMALS_ERC20;
     return (
       <React.Fragment>
         <AssetFundingTitle

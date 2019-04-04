@@ -77,7 +77,16 @@ const getBalancesError = () => {
     };
   }
 
-export const getFooter = (metamaskError, extensionUrl, amountToPay, amountContributed, balances, handleFundAsset) => {
+export const getFooter = (
+  metamaskError,
+  extensionUrl,
+  amountToPay,
+  amountContributed,
+  balances,
+  handleFundAsset,
+  paymentToken,
+  paymentTokenSymbol
+) => {
   if(metamaskError){
      return getMetamaskErrors(metamaskError, extensionUrl);
   }
@@ -88,7 +97,7 @@ export const getFooter = (metamaskError, extensionUrl, amountToPay, amountContri
     return {
       buttonProps: {
         text: 'Confirm & Pay with MetaMask',
-        onClick: () => handleFundAsset(amountToPay, amountContributed),
+        onClick: () => handleFundAsset(amountToPay, amountContributed, paymentToken, paymentTokenSymbol),
       },
     }
   }

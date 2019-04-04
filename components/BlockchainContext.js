@@ -414,6 +414,7 @@ class BlockchainProvider extends React.Component {
       paymentTokenAddress,
       selectedToken,
       assetValue,
+      operatorId,
     } = formData;
 
     const {
@@ -530,11 +531,12 @@ class BlockchainProvider extends React.Component {
         userAddress,
         partnerContractAddress,
         paymentTokenAddress,
+        operatorID: operatorId
       }
     );
   }
 
-  fundAsset = (assetId, amountToPay, amountContributed) => {
+  fundAsset = (assetId, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
     try {
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
@@ -549,7 +551,7 @@ class BlockchainProvider extends React.Component {
 
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.APPROVE,
-        formattedAmount: formatMonetaryValue(amountToPay),
+        formattedAmount: formatMonetaryValue(amountToPay, 3, true, paymentTokenSymbol),
       });
 
       const onTransactionHash = () => {
@@ -561,7 +563,7 @@ class BlockchainProvider extends React.Component {
 
       const onTransactionHashApprove = () => {
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
-          formattedAmount: formatMonetaryValue(amountToPay),
+          formattedAmount: formatMonetaryValue(amountToPay, 3, true, paymentTokenSymbol),
           type: NotificationTypes.APPROVE,
         });
       }
@@ -577,7 +579,7 @@ class BlockchainProvider extends React.Component {
       const onReceiptApprove = (wasSuccessful) => {
         if(wasSuccessful){
           buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
-            formattedAmount: formatMonetaryValue(amountToPay),
+            formattedAmount: formatMonetaryValue(amountToPay, 3, true, paymentTokenSymbol),
             type: NotificationTypes.APPROVE,
           });
         } else {
@@ -617,6 +619,7 @@ class BlockchainProvider extends React.Component {
         userAddress: this.props.metamaskContext.user.address,
         assetId,
         amount: toWei(amountToPay),
+        paymentToken,
       });
 
     } catch (err) {

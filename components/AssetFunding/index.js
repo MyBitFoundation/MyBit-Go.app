@@ -64,13 +64,15 @@ class AssetFunding extends React.Component {
     console.log("Hit deadline");
   }
 
-  fundAsset = (amountToPay, amountContributed) => {
+  fundAsset = (amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
     this.changeStep(2);
 
     this.props.fundAsset(
       this.props.asset.assetId,
       amountToPay,
       amountContributed,
+      paymentToken,
+      paymentTokenSymbol,
     );
   }
 

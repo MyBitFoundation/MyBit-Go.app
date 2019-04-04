@@ -64,6 +64,7 @@ class ListAssetPage extends React.Component {
         partnerContractAddress: '0x794C156557a3742B532427F735A27A874e67c9b9',
         selectedToken: DEFAULT_TOKEN,
         convertedAmount: 0,
+        operatorId: '0xe00dcc82779989c965d62e31acb45455eda5bf69d7912a661fd6ce80ff4bf05a',
       },
       countries: COUNTRIES,
       isUserListingAsset: false,

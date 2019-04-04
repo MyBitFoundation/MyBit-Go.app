@@ -187,7 +187,7 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       collateral,
       amountToBeRaised,
       paymentTokenAddress,
-      operatorId : operatorID,
+      operatorID,
     } = params;
 
     const randomURI = generateRandomURI(window.web3js);
@@ -338,13 +338,14 @@ export const fundAsset = async (onFundAsset, onApprove, params) => {
       userAddress,
       assetId,
       amount,
+      paymentToken,
     } = params;
 
     const response = await Network.fundAsset({
       asset: assetId,
       investor: userAddress,
-      paymentToken: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-      amount: toWei(0.07),
+      paymentToken,
+      amount: toWei(amount),
       buyAsset: {
         onTransactionHash: onFundAsset.onTransactionHash,
         onError: error => processErrorType(error, onFundAsset.onError),
@@ -358,7 +359,7 @@ export const fundAsset = async (onFundAsset, onApprove, params) => {
 
     onFundAsset.onReceipt(response.status);
   } catch (error) {
-    processErrorType(error, onError)
+    processErrorType(error, onFundAsset.onError)
   }
 }
 
@@ -438,12 +439,12 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
       //console.log("database: ", database)
       //console.log("userAddress: ", userAddress)
 
-      /*const operatorID = await api.methods.getOperatorID('0x396576A24FDdD9e2AEa0CCfC1aa1F795E8acC98C').call();
+      /*const operatorID = await api.methods.getOperatorID('0x794C156557a3742B532427F735A27A874e67c9b9').call();
       console.log(operatorID)
       const x = await Network.acceptERC20Token({
-        id: operatorID,
+        id: "0xe00dcc82779989c965d62e31acb45455eda5bf69d7912a661fd6ce80ff4bf05a",
         token: DEFAULT_TOKEN_CONTRACT,
-        operator: '0x396576A24FDdD9e2AEa0CCfC1aa1F795E8acC98C',
+        operator: '0x794C156557a3742B532427F735A27A874e67c9b9',
       });*/
 
       //console.log(database.boolStorage(window.web3js.utils.soliditySha3("operator.acceptsEther", operatorID)))
@@ -545,7 +546,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         }
 
         if(crowdsaleFinalized){
-          const timestamp = await Network.getTimestampeOfFundedAsset(assetId)
+          const timestamp = await Network.getTimestampOfFundedAsset(assetId)
           // no timestamp means payout has to be called (asset manager does it)
           if(timestamp){
             fundingProgress = fundingProgress - ((assetManagerFee + platformFee) * fundingProgress)
