@@ -19,7 +19,6 @@ const AssetDefault = ({
   pastDate,
   funded,
   assetId,
-  clickHandler,
 }) => {
   const barWidth = funded ? 100 : Math.ceil((fundingProgress * 100) / fundingGoal);
   const goalFormatted = formatMonetaryValue(fundingGoal);
@@ -59,10 +58,6 @@ const AssetDefault = ({
       >
         <AssetDefaultContributeButton
           type={buttonType}
-          onClick={
-            clickHandler ||
-            (() => debug(`Clicked to contribute, asset id: ${assetId}`))
-          }
         >
           {buttonText}
         </AssetDefaultContributeButton>
