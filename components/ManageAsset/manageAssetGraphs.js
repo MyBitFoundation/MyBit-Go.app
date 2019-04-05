@@ -175,18 +175,21 @@ const getTimeFilteredData = (managerPercentage, revenueData, type) => {
       iterator = 12;
       break;
   }
-
-  const minDate = dayjs().subtract(iterator, typeOfDate).set('hour', 0).set('minute', 0).set('second', 0);
+  let minDate = dayjs().subtract(iterator, typeOfDate).set('hour', 24).set('minute', 0).set('second', 0);
+  if(type == 'yearly'){
+    minDate = dayjs().subtract(iterator, typeOfDate).set('month', minDate.month() + 1);
+  }
   const dataToReturn = [];
   let totalProfit = 0;
-  let currentDay = minDate;
   const maxDate = dayjs();
+  let currentDay = minDate;
   const revenueFiltered = revenueData.filter(({date}) => date.isBetween(minDate, maxDate));
   for(let i = 0; i < iterator; i++){
     const revenueFilteredByTime = revenueFiltered
         .filter(({date}) => {
           if(type === 'weekly') {
-            return date.day() === currentDay.day();
+            console.log(currentDay.day())
+            return date.date() === currentDay.date();
           } else if(type === 'monthly'){
             return date.date() === currentDay.date();
           } else if(type === 'yearly'){
