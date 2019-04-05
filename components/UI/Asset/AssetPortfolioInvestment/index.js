@@ -124,7 +124,7 @@ const AssetPortfolioInvestment = ({
         )}
         </div>
         <AssetPortfolioInvestmentButtons
-          hasWithdrawButton
+          hasWithdrawButton={unrealizedProfit > 0}
         >
           {withdrawButton}
           {button}

@@ -17,6 +17,7 @@ const flexAndAddMarginBottom = (hasWithdrawButton) => `
 
 const blockAndAddMarginRight = (hasWithdrawButton) => `
   display: block;
+  margin-right: 10px;
 
   ${hasWithdrawButton && css`
     button:nth-child(1){
@@ -31,7 +32,7 @@ const blockAndAddMarginRight = (hasWithdrawButton) => `
 
 const AssetPortfolioInvestmentButtons = styled.div`
   position: absolute;
-  right: 10px;
+  right: 0px;
   align-items: flex-end;
   flex-direction: column;
 
