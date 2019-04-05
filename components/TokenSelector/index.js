@@ -64,6 +64,7 @@ class TokenSelector extends React.Component {
       totalTokens,
       tokensEnum,
       sortedBalances,
+      sortedBalancesBackup: sortedBalances,
     })
 
     if(callOnChange) {
@@ -72,8 +73,22 @@ class TokenSelector extends React.Component {
   }
 
   handleSearchInputChanged = (e) => {
+    const {
+      sortedBalances,
+      sortedBalancesBackup,
+    } = this.state;
+
     const searchValue = e.target.value;
-    console.log(searchValue)
+    if(searchValue.trim() === ''){
+      this.setState({
+        sortedBalances: sortedBalancesBackup,
+      })
+      return;
+    }
+    const matches = sortedBalancesBackup.filter(balance => balance.symbol.includes(searchValue.toUpperCase()))
+    this.setState({
+      sortedBalances: matches,
+    })
   }
 
   getSortedBalances = (tokensEnum, amountToPay) => {
@@ -97,7 +112,7 @@ class TokenSelector extends React.Component {
 
   getMenu = (balances, totalTokens, amountToPay) => {
     return (
-      <Menu>
+      <Menu style={{minHeight: '250px', minWidth: '284px'}}>
         <TokenSelectorSearch
           placeholder="Search Token"
           onChange={this.handleSearchInputChanged}
