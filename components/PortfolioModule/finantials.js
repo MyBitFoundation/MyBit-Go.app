@@ -20,7 +20,7 @@ const calculateAssetValue = (currentValue, asset) => {
 const calculateAssetRevenue = (currentValue, asset) => {
   const investorRevenue = asset.percentageOwnedByUser * asset.assetIncome;
 
-  const assetManagerRevenue = asset.isAssetManager ? (asset.managerPercentage / 100) * asset.assetIncome : 0;
+  const assetManagerRevenue = asset.isAssetManager ? asset.managerPercentage * asset.assetIncome : 0;
 
   // An asset manager can invest in its own asset
   return currentValue + investorRevenue + assetManagerRevenue;
