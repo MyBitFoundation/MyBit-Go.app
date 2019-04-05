@@ -62,7 +62,7 @@ const getManagerDetailsFromAsset = (asset) => {
     owedToAssetManager,
   } = asset;
 
-  const totalProfitAssetManager = assetIncome * (managerPercentage / 100);
+  const totalProfitAssetManager = assetIncome * managerPercentage;
   return {
     ...asset,
     totalProfitAssetManager,
