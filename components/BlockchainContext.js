@@ -838,23 +838,6 @@ class BlockchainProvider extends React.Component {
   }
 }
 
-BlockchainProvider.defaultProps = {
-  isBraveBrowser: false,
-  isLoggedIn: false,
-  network: undefined,
-  isMetamaskInstalled: false,
-  extensionUrl: undefined,
-};
-
-BlockchainProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-  isMetamaskInstalled: PropTypes.bool,
-  network: PropTypes.string,
-  isBraveBrowser: PropTypes.bool,
-  extensionUrl: PropTypes.string,
-  isLoggedIn: PropTypes.bool,
-};
-
 const enhance = compose(
   withNotificationsContext,
   withMetamaskContext,

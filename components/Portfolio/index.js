@@ -132,9 +132,4 @@ const PortfolioPage = ({
   );
 }
 
-PortfolioPage.propTypes = {
-  loading: PropTypes.shape({}).isRequired,
-  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
 export default PortfolioPage;

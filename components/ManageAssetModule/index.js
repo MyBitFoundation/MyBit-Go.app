@@ -224,11 +224,6 @@ class ManageAssetModule extends React.Component{
   render = () => this.props.children(this.state);
  }
 
-ManageAssetModule.propTypes = {
-  assetId: PropTypes.string.isRequired,
-  children: PropTypes.func.isRequired,
-};
-
 const enhance = compose(
   withMetamaskContext,
   withBlockchainContext,

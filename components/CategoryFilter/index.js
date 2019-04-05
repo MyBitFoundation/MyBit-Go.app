@@ -103,12 +103,4 @@ const CategoryFilter = ({
   );
 };
 
-CategoryFilter.propTypes = {
-  setFilterState: PropTypes.func.isRequired,
-  selectedFilters: PropTypes.shape({
-    params: PropTypes.shape({}),
-  }).isRequired,
-};
-
-
 export default React.memo(CategoryFilter);

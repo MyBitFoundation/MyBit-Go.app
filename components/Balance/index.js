@@ -40,18 +40,4 @@ const Balance = (props) => {
     </div>
 )};
 
-Balance.defaultProps = {
-  myb: '',
-  ether: '',
-  noInfo: false,
-  isMobile: false,
-};
-
-Balance.propTypes = {
-  myb: PropTypes.string,
-  ether: PropTypes.string,
-  noInfo: PropTypes.boolean,
-  isMobile: PropTypes.boolean,
-};
-
 export default React.memo(Balance);

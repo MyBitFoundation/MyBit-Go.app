@@ -18,14 +18,4 @@ const Loading = ({ message, hasBackButton }) => (
   </div>
 );
 
-Loading.propTypes = {
-  message: PropTypes.string.isRequired,
-  hasBackButton: PropTypes.bool,
-  history: PropTypes.shape({ params: PropTypes.object }).isRequired,
-};
-
-Loading.defaultProps = {
-  hasBackButton: false,
-};
-
 export default Loading;

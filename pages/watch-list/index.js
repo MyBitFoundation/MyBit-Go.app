@@ -81,10 +81,4 @@ class WatchListPage extends React.Component {
   }
 }
 
-WatchListPage.propTypes = {
-  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleClickedAssetFavorite: PropTypes.func.isRequired,
-};
-
 export default withBlockchainContext(WatchListPage);

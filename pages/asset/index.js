@@ -64,19 +64,6 @@ class AssetPage extends React.Component {
   }
 }
 
-AssetPage.defaultProps = {
-  ether: undefined,
-};
-
-AssetPage.propTypes = {
-  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  assets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  ether: PropTypes.shape({ params: PropTypes.object }),
-  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  user: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  history: PropTypes.shape({ params: PropTypes.object }).isRequired,
-};
-
 const enhance = compose(
   withBlockchainContext,
 );

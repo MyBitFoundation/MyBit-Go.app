@@ -116,17 +116,6 @@ const AppHeader = ({
   )
 };
 
-AppHeader.defaultProps = {
-  prices: undefined,
-};
-
-AppHeader.propTypes = {
-  prices: PropTypes.shape({ params: PropTypes.object }),
-  user: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  readOnlyMode: PropTypes.bool.isRequired,
-  show: PropTypes.bool.isRequired,
-};
-
 const enhance = compose(
   withMetamaskContext,
   withNotificationsContext,

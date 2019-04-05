@@ -149,28 +149,4 @@ const AssetPortfolioManaged = ({
   )
 };
 
-AssetPortfolioManaged.propTypes = {
-  funded: PropTypes.number.isRequired,
-  goal: PropTypes.number.isRequired,
-  city: PropTypes.string,
-  country: PropTypes.string,
-  name: PropTypes.string,
-  category: PropTypes.string.isRequired,
-  clickHandler: PropTypes.func,
-  AssetDefaultId: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string,
-  fundingStage: PropTypes.string.isRequired,
-  pastDate: PropTypes.bool.isRequired,
-  watchListed: PropTypes.bool.isRequired,
-  handleAssetFavorited: PropTypes.func.isRequired,
-};
-
-AssetPortfolioManaged.defaultProps = {
-  city: '',
-  country: '',
-  name: '',
-  clickHandler: () => {},
-  backgroundImage: '',
-};
-
 export default React.memo(AssetPortfolioManaged);

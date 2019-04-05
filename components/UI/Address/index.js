@@ -27,12 +27,4 @@ const Address = ({ address, isMobile }) => (
   </AddressWrapper>
 );
 
-Address.defaultProps = {
-  address: undefined,
-};
-
-Address.propTypes = {
-  address: PropTypes.string,
-};
-
 export default React.memo(Address);

@@ -74,9 +74,4 @@ class TransactionHistoryPage extends React.Component {
   }
 }
 
-TransactionHistoryPage.propTypes = {
-  loading: PropTypes.shape({ params: PropTypes.object }).isRequired,
-  transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
 export default withMetamaskErrors(withBlockchainContext(TransactionHistoryPage), false);;

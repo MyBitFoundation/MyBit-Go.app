@@ -49,9 +49,4 @@ const NavigationBar = ({
   );
 };
 
-NavigationBar.propTypes = {
-  currentPath: PropTypes.string.isRequired,
-};
-
-
 export default NavigationBar;

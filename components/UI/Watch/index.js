@@ -28,10 +28,4 @@ const Watch = ({
   </WatchWrapper>
 );
 
-Watch.propTypes = {
-  active: PropTypes.bool.isRequired,
-  handleClick: PropTypes.func.isRequired,
-  assetId: PropTypes.string.isRequired,
-};
-
 export default Watch;

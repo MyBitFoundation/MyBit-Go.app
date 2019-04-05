@@ -39,19 +39,4 @@ class NumericInput extends React.Component {
   }
 }
 
-NumericInput.defaultProps = {
-  value: null,
-};
-
-NumericInput.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  placeholdertext: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
-
-
 export default NumericInput;
