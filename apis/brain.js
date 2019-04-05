@@ -194,7 +194,7 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       assetManager: userAddress,
       fundingLength: 2592000,
       startTime: 1551732113,
-      amountToRaise: toWei(5),
+      amountToRaise: toWei(amountToBeRaised),
       assetManagerPercent: managerPercentage,
       operatorID,
       fundingToken: DEFAULT_TOKEN_CONTRACT,
@@ -424,12 +424,10 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
       const database = await Network.database();
       const events = await Network.events();
 
-      /*const operatorID = await api.methods.getOperatorID('0x794C156557a3742B532427F735A27A874e67c9b9').call();
-      console.log(operatorID)
-      const x = await Network.acceptERC20Token({
-        id: "0xe00dcc82779989c965d62e31acb45455eda5bf69d7912a661fd6ce80ff4bf05a",
+      /*const x = await Network.acceptERC20Token({
+        id: "0x3eccf03d236410e626e8000a285b59e17132713a829ada5638ccf8b82a6e7a65",
         token: DEFAULT_TOKEN_CONTRACT,
-        operator: '0x794C156557a3742B532427F735A27A874e67c9b9',
+        operator: '0x15c9C83075b7214308fd4526731db4172299E2a4',
       });*/
 
       let assets = await Network.getTotalAssets();
