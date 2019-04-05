@@ -73,7 +73,7 @@ class CarouselWithNavigation extends React.Component {
     const hasTwoButtons = hasNextButton && hasBackButton;
 
     const closeButtonProps = typeof redirectOnClose === 'string' ?
-      { href: redirectOnClose,} : {...redirectOnClose};
+      { href: redirectOnClose,} : !redirectOnClose ? {href: '/explore'} : redirectOnClose;
 
     return (
       <CarouselWithNavigationWrapper
