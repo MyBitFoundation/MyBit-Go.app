@@ -65,7 +65,7 @@ export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {
     console.log(err)
   }
 
-  return null;
+  return valueIfNoExists;
 }
 
 export const setValueLocalStorage = (key, value, isObject) => {
@@ -76,10 +76,13 @@ export const setValueLocalStorage = (key, value, isObject) => {
       } else {
         localStorage.setItem(key, value);
       }
+      return value;
     }
   } catch(err){
-    console.log(err
-)  }
+    console.log(err)
+  }
+
+  return value;
 }
 
 export const formatMonetaryValue = (number, fractionDigits = 2, includeToken = true, customToken) => {

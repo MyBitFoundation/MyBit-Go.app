@@ -27,10 +27,11 @@ class Explore extends React.Component {
     super(props);
     this.props = props;
     this.state = {
-      fundingActive: getValueFromLocalStorage(LocalStorageKeys.EXPLORE_PAGE_FUNDING_ACTIVE, true) === 'true',
+      fundingActive: getValueFromLocalStorage(LocalStorageKeys.EXPLORE_PAGE_FUNDING_ACTIVE, 'true') === 'true',
       sortByFilterSelected: getValueFromLocalStorage(LocalStorageKeys.EXPLORE_PAGE_SORT_BY),
       ...this.buildState(),
     };
+    console.log(this.state)
   }
 
   buildState = () => {

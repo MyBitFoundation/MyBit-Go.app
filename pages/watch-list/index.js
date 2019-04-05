@@ -26,7 +26,7 @@ const assetsPerPage = 12;
 class WatchListPage extends React.Component {
   state = {
     currentPage: 0,
-    fundingActive: getValueFromLocalStorage(LocalStorageKeys.WATCH_LIST_FUNDING_ACTIVE, true) === 'true',
+    fundingActive: getValueFromLocalStorage(LocalStorageKeys.WATCH_LIST_FUNDING_ACTIVE, 'true') === 'true',
   };
 
   render = () => {
