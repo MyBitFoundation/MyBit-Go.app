@@ -69,7 +69,7 @@ const getBalancesError = () => {
   return {
       buttonProps: {
         text: 'Insufficient Funds',
-        error: false,
+        error: true,
       },
       messageProps: {
         text: 'A bank is worth stealing if the plan is right.',
