@@ -111,9 +111,9 @@ class ListAssetPage extends React.Component {
     const collateralDai = this.state.data.collateralDai;
     const balances = this.props.metamaskContext.user.balances;
 
-    const paymentTokenAddress = selectedToken && balances[selectedToken] && balances[selectedToken].contractAddress;
+    const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
 
-    const convertedAmount = convertFromDefaultToken(selectedToken, balances, collateralDai)
+    const convertedAmount = balances ? convertFromDefaultToken(selectedToken, balances, collateralDai) : 0;
     const collateralSelectedToken = parseFloat(convertedAmount.toFixed(3))
 
     this.setState({

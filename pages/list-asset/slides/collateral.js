@@ -104,7 +104,7 @@ export const CollateralSlide = ({
   collateralSelectedToken,
   kyberLoading,
 }) => {
-  const noBalance = Object.keys(balances).length === 0;
+  const noBalance = !balances || Object.keys(balances).length === 0;
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
