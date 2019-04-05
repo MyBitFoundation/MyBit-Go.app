@@ -116,7 +116,7 @@ const FundingCalculator = ({
             {(loadingUserInfo && ended) && (
               <FundingCalculatorSpin />
             )}
-            {(loadingUserInfo && ended) ? null : ended ? yourOwnership * 100 : selectedAmountEth ? selectedOwnership : 0}%
+            {(loadingUserInfo && ended) ? null : ended ? parseFloat((yourOwnership * 100).toFixed(2)) : selectedAmountEth ? selectedOwnership : 0}%
           </FundingCalculatorValue>
         </div>
       </FundingCalculatorGrid>

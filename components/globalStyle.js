@@ -16,6 +16,7 @@ const GlobalStyle = createGlobalStyle`
     font-weight: normal;
     background-color: #ffffff;
     font-weight: 400;
+    overflow-x: hidden;
   }
 
   [class*='ant'] {

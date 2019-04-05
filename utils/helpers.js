@@ -1,5 +1,6 @@
 import {
   DEFAULT_TOKEN,
+  PLATFORM_TOKEN,
 } from 'constants/app';
 
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
@@ -30,10 +31,20 @@ export const convertFromDefaultToken = (convertTo, tokens, amount) => {
   return amount / tokenConvertTo.exchangeRateDefaultToken.expectedRate;
 }
 
-export const convertFromEthToDefault = (tokens, amount) => {
-  const tokenConvertEth = tokens['ETH'];
+export const convertFromPlatformToken = (convertTo, tokens, amount) => {
+  if(convertTo === PLATFORM_TOKEN){
+    return Number(amount);
+  }
 
-  return amount * tokenConvertEth.exchangeRateDefaultToken.expectedRate;
+  const tokenConvertTo = tokens[convertTo];
+
+  return amount / tokenConvertTo.exchangeRatePlatformToken.expectedRate;
+}
+
+export const convertFromTokenToDefault = (convertFrom, tokens, amount) => {
+  const tokenConvertFrom = tokens[convertFrom];
+
+  return amount * tokenConvertFrom.exchangeRateDefaultToken.expectedRate;
 }
 
 export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {

@@ -7,7 +7,6 @@ const MobileMenuApp = styled.div`
   width: 100vw;
   opacity: 1;
   transition: all 0.3s;
-  padding-bottom: 50px;
 
   ${props => props.isOpen && css`
     opacity: 0;

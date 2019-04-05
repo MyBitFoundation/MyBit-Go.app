@@ -36,7 +36,7 @@ import {
 import {
   formatMonetaryValue,
   convertFromDefaultToken,
-  convertFromEthToDefault,
+  convertFromTokenToDefault,
 } from 'utils/helpers';
 import AssetFundingButton from 'components/AssetFunding/assetFundingButton';
 import BN from 'bignumber.js';
@@ -90,7 +90,7 @@ class AssetFundingConfirm extends React.Component {
     let amountToPay = amountInBn.plus(mybitPlatformFee).toNumber();
 
     const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountContributed : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountContributed);
-    const gasInDai = parseFloat(convertFromEthToDefault(supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
+    const gasInDai = parseFloat(convertFromTokenToDefault('ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
     const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : convertFromDefaultToken(selectedToken, supportedTokensInfo, gasInDai);
     const totalToPayInDai = amountToPay + gasInDai;
     const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDai);
