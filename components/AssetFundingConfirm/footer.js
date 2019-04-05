@@ -69,7 +69,7 @@ const getBalancesError = () => {
   return {
       buttonProps: {
         text: 'Insufficient Funds',
-        error: true,
+        error: false,
       },
       messageProps: {
         text: 'A bank is worth stealing if the plan is right.',
@@ -86,7 +86,16 @@ export const getFooter = (
   handleFundAsset,
   paymentToken,
   paymentTokenSymbol,
+  kyberLoading
 ) => {
+  if(kyberLoading){
+    return {
+      buttonProps: {
+        text: 'Loading data from Kyber',
+        loading: true,
+      }
+    };
+  }
   if(metamaskError){
      return getMetamaskErrors(metamaskError, extensionUrl);
   }

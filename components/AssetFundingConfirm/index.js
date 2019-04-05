@@ -77,6 +77,7 @@ class AssetFundingConfirm extends React.Component {
       selectedOwnership,
       amount: amountContributed,
       supportedTokensInfo,
+      kyberLoading,
     } = this.props;
 
     const {
@@ -90,16 +91,19 @@ class AssetFundingConfirm extends React.Component {
     let amountToPay = amountInBn.plus(mybitPlatformFee).toNumber();
 
     const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountContributed : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountContributed);
-    const gasInDai = parseFloat(convertFromTokenToDefault('ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
-    const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : convertFromDefaultToken(selectedToken, supportedTokensInfo, gasInDai);
+
+    // calculate gas from knowing the cost in ETH
+    const gasInDai = kyberLoading ? 0 : parseFloat(convertFromTokenToDefault('ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
+    const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, gasInDai);
+
     const totalToPayInDai = amountToPay + gasInDai;
-    const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDai);
-    const amountToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountToPay : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountToPay);
-    const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFee : convertFromDefaultToken(selectedToken, supportedTokensInfo, mybitPlatformFee);
+    const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDai);
+    const amountToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountToPay : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountToPay);
+    const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFee : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, mybitPlatformFee);
     const maxDecimalsErc20 = selectedToken === DEFAULT_TOKEN ? MAX_DECIMALS_DEFAULT_TOKEN : MAX_DECIMALS_ERC20;
 
     const metamaskErrors = metamaskContext.metamaskErrors();
-    const footer = getFooter(metamaskErrors.error, extensionUrl, amountToPayInSelectedToken.toFixed(18), amountContributed, user.balances, this.props.fundAsset, supportedTokensInfo[selectedToken].contractAddress, selectedToken);
+    const footer = getFooter(metamaskErrors.error, extensionUrl, amountToPayInSelectedToken.toFixed(18), amountContributed, user.balances, this.props.fundAsset, !kyberLoading && supportedTokensInfo[selectedToken].contractAddress, selectedToken, kyberLoading);
 
     const {
       buttonProps,
@@ -113,6 +117,7 @@ class AssetFundingConfirm extends React.Component {
         disabled={buttonProps.error || (!acceptedTos && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
         href={buttonProps.href}
         target={buttonProps.href && '_blank'}
+        loading={buttonProps.loading}
       >
         {buttonProps.text}
       </AssetFundingButton>
