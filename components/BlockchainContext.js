@@ -26,7 +26,6 @@ import {
   debug,
   formatMonetaryValue,
   fromWeiToEth,
-  toWei,
 } from 'utils/helpers';
 
 const { Provider, Consumer } = React.createContext({});
@@ -549,10 +548,18 @@ class BlockchainProvider extends React.Component {
         buildNotification,
       } = this.props.notificationsContext;
 
-      buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
-        operationType: NotificationsMetamask.APPROVE,
-        formattedAmount: formatMonetaryValue(amountToPay, 3, true, paymentTokenSymbol),
-      });
+      if(paymentTokenSymbol === 'ETH'){
+        buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+          operationType: NotificationsMetamask.FUNDING,
+          assetName,
+        });
+      } else {
+        // will call Approve first
+        buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+          operationType: NotificationsMetamask.APPROVE,
+          formattedAmount: formatMonetaryValue(amountToPay, 3, true, paymentTokenSymbol),
+        });
+      }
 
       const onTransactionHash = () => {
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
@@ -618,7 +625,7 @@ class BlockchainProvider extends React.Component {
       }, {
         userAddress: this.props.metamaskContext.user.address,
         assetId,
-        amount: toWei(amountToPay),
+        amount: amountToPay,
         paymentToken,
       });
 

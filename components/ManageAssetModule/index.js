@@ -137,7 +137,7 @@ class ManageAssetModule extends React.Component{
           asset: asset,
           methods: {
             withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
-            withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, toWithdraw): undefined,
+            withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, owedToAssetManager): undefined,
           },
           finantialDetails: {
             assetManagerProfits,

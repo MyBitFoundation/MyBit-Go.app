@@ -947,10 +947,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.7.3.tgz#6310a047f12d21a1036fb031317219892440416f"
   integrity sha512-4zAPlpDEh2VwXswwr/t8xGNDGg8RQiPxtxZ3qQEXyQsBV39ptTdESCjuBvGze1nLMVrxmTIKmnO/nAV8Tqjjzg==
 
-"@mybit/contracts@0.1.19":
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/@mybit/contracts/-/contracts-0.1.19.tgz#9b78faf24f9501496e33933e23e9b7fdaa497322"
-  integrity sha512-526sQgG/Itt+ngi0o7WcH4kDkPwGmwmTe6Z18b0sf6BGUU42vJeTkcWwQWC49IY+vEVPT6U5BID3VXSPgu37Yg==
+"@mybit/contracts@0.1.20":
+  version "0.1.20"
+  resolved "https://registry.yarnpkg.com/@mybit/contracts/-/contracts-0.1.20.tgz#12c668df954acf2d495ef47dc383621f5038e7a2"
+  integrity sha512-V+3763CB+rFurwQkq4KYy9ZDpclA0sv3m8t3fQ0caE/HU5ebppJ5w/mSZBCyyWaWaIeKWDZdO5VR6UN4DOLkFQ==
   dependencies:
     bignumber.js "^7.2.1"
     ethereumjs-util "^6.0.0"
@@ -963,12 +963,12 @@
     web3-eth-abi "1.0.0-beta.36"
     web3-utils "1.0.0-beta.36"
 
-"@mybit/network.js@0.0.23":
-  version "0.0.23"
-  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.23.tgz#4e0bbe2da1203cca67c1d58ade61469df8a02c48"
-  integrity sha512-lOY7khCsSVNEWIG9zrHTMtEDv6FnasbbrBQ0kHLfQTpRttoqW/QCL6YTAWg8BvHbyXI/vlfpr/Xn1rDX8w0yWg==
+"@mybit/network.js@0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.24.tgz#91c228bf0eb6eacb0fbc518a966e0f48be659eb8"
+  integrity sha512-UiUkajerrudWDa7jw3Hj5X1MKq9leIlbzNqu9R5hq0ejGfcnk2xsABGuqWtbXYB2Knyh6/16sJPcn0OaAvqIwQ==
   dependencies:
-    "@mybit/contracts" "0.1.19"
+    "@mybit/contracts" "0.1.20"
     bignumber.js "^8.0.2"
     web3 "1.0.0-beta.36"
 
@@ -8817,7 +8817,7 @@ simple-statistics@~6.1.0:
   resolved "https://registry.yarnpkg.com/simple-statistics/-/simple-statistics-6.1.1.tgz#e3a0799ffc49914d6f421c5a4ac585f6a13e2bad"
   integrity sha512-zGwn0DDRa9Zel4H4n2pjTFIyGoAGpnpjrGIctreCxj5XWrcx9v7Xy7270FkC967WMmcvuc8ZU7m0ZG+hGN7gAA==
 
-"sjcl@github:civicteam/sjcl":
+sjcl@civicteam/sjcl.git:
   version "1.0.8"
   resolved "https://codeload.github.com/civicteam/sjcl/tar.gz/74fcc71a486a41d39200767d9235f6eac9e51f26"
 
@@ -9573,9 +9573,9 @@ truffle-hdwallet-provider@1.0.2:
     websocket "^1.0.28"
 
 truffle@^5.0.7:
-  version "5.0.10"
-  resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.0.10.tgz#f773522becbed0f66b372c6a9a1f36d233337e1e"
-  integrity sha512-wVp7ruznIm1iX7fTHZwjKZCaOkkQcTR1eWOCi2yTQ85wg1iQITpV7NLDpVandaNcz5Z0e8EdOrH9lFKLgxiAxQ==
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.0.11.tgz#e593674415bf5e4a02eed5b940d736dece5ab447"
+  integrity sha512-LyXKxrvPuWuM31AF0U+d890e3ojYAjt4CeHO1zrjBG+/2ac/Fv31yqZS/cXN8xU09xCVC9uEcJ2Z23j9Q2KhRg==
   dependencies:
     app-module-path "^2.2.0"
     mocha "^4.1.0"

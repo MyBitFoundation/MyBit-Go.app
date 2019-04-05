@@ -12,11 +12,16 @@ import {
   CORRECT_NETWORK,
   METAMASK_ERRORS,
 } from './constants';
+import {
+  DEFAULT_TOKEN_CONTRACT,
+  PLATFORM_TOKEN_CONTRACT,
+} from 'constants/app';
 
 import {
   getBalanceOfERC20Token,
   getBalanceInDai,
 } from './utils';
+
 import SupportedBrowsers from 'ui/SupportedBrowsers';
 
 const { Provider, Consumer } = React.createContext({});
@@ -172,12 +177,14 @@ class MetamaskProvider extends Component {
       }
       // we are only interested in listing balances > 0
       if(balance > 0){
-        const balanceInDai = getBalanceInDai(supportedTokensInfo, symbol, balance);
+        const balanceInDai = tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRateDefaultToken.expectedRate;
+        const balanceInPlatformToken = tokenData.contractAddress === PLATFORM_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRatePlatformToken.expectedRate;
         sumOfBalances += balanceInDai;
         updatedTokensWithBalance[symbol] = {
           ...tokenData,
           balance,
           balanceInDai,
+          balanceInPlatformToken,
         }
       }
     }));

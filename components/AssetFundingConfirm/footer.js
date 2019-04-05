@@ -85,7 +85,7 @@ export const getFooter = (
   balances,
   handleFundAsset,
   paymentToken,
-  paymentTokenSymbol
+  paymentTokenSymbol,
 ) => {
   if(metamaskError){
      return getMetamaskErrors(metamaskError, extensionUrl);

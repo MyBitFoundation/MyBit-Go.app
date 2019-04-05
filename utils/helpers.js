@@ -20,6 +20,22 @@ export const convertTokenAmount = (convertTo, convertFrom, tokens, amount) => {
   return amountFinal;
 }
 
+export const convertFromDefaultToken = (convertTo, tokens, amount) => {
+  if(convertTo === DEFAULT_TOKEN){
+    return Number(amount);
+  }
+
+  const tokenConvertTo = tokens[convertTo];
+
+  return amount / tokenConvertTo.exchangeRateDefaultToken.expectedRate;
+}
+
+export const convertFromEthToDefault = (tokens, amount) => {
+  const tokenConvertEth = tokens['ETH'];
+
+  return amount * tokenConvertEth.exchangeRateDefaultToken.expectedRate;
+}
+
 export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {
   try{
     if (typeof localStorage !== 'undefined') {

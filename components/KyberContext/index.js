@@ -9,6 +9,10 @@ import {
   ABI,
   ADDRESS,
 } from './constants';
+import {
+  DEFAULT_TOKEN_CONTRACT,
+  PLATFORM_TOKEN_CONTRACT,
+} from 'constants/app';
 
 const { Provider, Consumer } = React.createContext({});
 let contract;
@@ -32,23 +36,25 @@ export const withKyberContext = (Component) => {
 
 export const getExpectedAndSlippage = async (src, dest, amount) => {
     try{
+      if(src === dest){
+        return {
+          expectedRate: 1,
+          slippageRate: 1,
+        };
+      }
       if(!contract){
         contract = new window.web3js.eth.Contract(ABI, ADDRESS);
       }
 
-      console.time("kyber")
       const result = await contract.methods.getExpectedRate(src, dest, amount).call();
-      console.timeEnd("kyber")
       let {
         expectedRate,
         slippageRate,
       } = result;
 
       if(expectedRate !== '0'){
-        expectedRate = fromWeiToEth(expectedRate);
-        slippageRate = fromWeiToEth(slippageRate);
-        console.log("expectedRate: ", expectedRate)
-        console.log("slippageRate: ", slippageRate)
+        expectedRate = Number(fromWeiToEth(expectedRate));
+        slippageRate = Number(fromWeiToEth(slippageRate));
 
         return {
           expectedRate,
@@ -56,7 +62,7 @@ export const getExpectedAndSlippage = async (src, dest, amount) => {
         };
       }
     } catch(err) {
-      console.log(err);
+      // Might mean token is under maintenance
     }
     return null;
   }
@@ -73,7 +79,7 @@ class KyberProvider extends React.Component {
     } catch (err) {
       debug(err);
     }
-    this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, 5000)
+    this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, LOAD_SUPPORTED_TOKENS_TIME)
   }
 
   componentWillUnmount = () => {
@@ -99,18 +105,26 @@ class KyberProvider extends React.Component {
       ])
 
       const supportedTokensInfo = {};
-      for(const token of supportedTokensData.data){
-        const {
-          symbol,
-          address: contractAddress,
-          name,
-        } = token;
-
+      await Promise.all(supportedTokensData.data.map(async({
+        symbol,
+        address: contractAddress,
+        name,
+      }) => {
         if(symbol === 'ETH'){
+          const [
+            exchangeRateDefaultToken,
+            exchangeRatePlatformToken,
+          ] = await Promise.all([
+            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
+            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
+          ])
+
           supportedTokensInfo['ETH'] = {
             contractAddress,
             name,
             decimals: 18,
+            exchangeRateDefaultToken,
+            exchangeRatePlatformToken,
           }
         } else {
           const tokenPriceInfo = pricesData[`ETH_${symbol}`];
@@ -119,15 +133,31 @@ class KyberProvider extends React.Component {
               currentPrice,
               decimals,
             } = tokenPriceInfo;
-            supportedTokensInfo[symbol] = {
-              contractAddress,
-              name,
-              currentPrice,
-              decimals,
+
+            const [
+              exchangeRateDefaultToken,
+              exchangeRatePlatformToken,
+            ] = await Promise.all([
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
+            ])
+
+            // This kind of filtering needs to be tested
+            if(exchangeRateDefaultToken && exchangeRatePlatformToken){
+              supportedTokensInfo[symbol] = {
+                contractAddress,
+                name,
+                currentPrice,
+                decimals,
+                exchangeRateDefaultToken,
+                exchangeRatePlatformToken,
+              }
             }
           }
         }
-      }
+      }));
+
+      console.log(supportedTokensInfo)
 
       supportedTokensInfo['key'] = this.key + 1;
       this.key += 1;
