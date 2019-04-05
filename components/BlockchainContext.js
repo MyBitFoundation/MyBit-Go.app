@@ -303,7 +303,7 @@ class BlockchainProvider extends React.Component {
       updatewithdrawingAssetManager();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.SUCCESS, {
         assetName,
-        amount,
+        amount: formatMonetaryValue(amount),
       });
     }
 

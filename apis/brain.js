@@ -27,10 +27,6 @@ import {
   toWei,
 } from '../utils/helpers';
 
-import {
-  getExpectedAndSlippage,
-} from 'components/KyberContext';
-
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
@@ -419,25 +415,14 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
     try {
       if(!Network){
         Network = require('@mybit/network.js')(window.web3js, SDK_CONTRACTS);
-        getExpectedAndSlippage(
-          '0x72fd6c7c1397040a66f33c2ecc83a0f71ee46d5c',
-          '0xad6d458402f60fd3bd25163575031acdce07538d',
-          toWei(675),
-        );
       }
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       //console.log("Network: ", Network)
       const api = await Network.api();
       const assetManagerFunds = await Network.assetManagerFunds();
-      console.log("assetManagerFunds: ", assetManagerFunds)
-      console.log("API: ", api)
-      //const operators = await Network.operators();
-      //const events = await Network.events();
+
       const database = await Network.database();
       const events = await Network.events();
-      //console.log("events: ", events);
-      //console.log("database: ", database)
-      //console.log("userAddress: ", userAddress)
 
       /*const operatorID = await api.methods.getOperatorID('0x794C156557a3742B532427F735A27A874e67c9b9').call();
       console.log(operatorID)
@@ -446,8 +431,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         token: DEFAULT_TOKEN_CONTRACT,
         operator: '0x794C156557a3742B532427F735A27A874e67c9b9',
       });*/
-
-      //console.log(database.boolStorage(window.web3js.utils.soliditySha3("operator.acceptsEther", operatorID)))
 
       let assets = await Network.getTotalAssets();
       assets =
@@ -459,8 +442,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               assetId: assetContractAddress,
             }
           });
-
-      //console.log("assets: ", assets)
 
       const assetDetails = await Promise.all(assets.map(async asset =>  {
         const {
@@ -504,22 +485,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         availableShares = availableShares.toNumber();
         totalShares = totalShares.toNumber();
 
-        console.log("ASSET ID: ", assetId)
-        console.log("Asset Investors: ", assetInvestors)
-        console.log("Total sharest: ", totalShares)
-        console.log("Asset contract: ", assetId)
-        console.log("Asset operator: ", assetOperator)
-        console.log("Crowdsale finalized: ", crowdsaleFinalized);
-        console.log("Funding Deadline: ", fundingDeadline);
-        console.log("Funding goal: ", fundingGoal);
-        console.log("Asset manager: ", assetManager);
-        console.log("Funding Progress: ", fundingProgress)
-        console.log("Manager fee bgn: ", assetManagerFee)
-        console.log("Platform fee: ", platformFee)
-        console.log("Escrow Id: ", escrowId);
-        console.log("Escrow: ", fromWeiToEth(BN(escrow).toString()))
-        console.log("\n\n")
-
         let percentageOwnedByUser = 0;
         let balanceOfUser = 0;
         let investment = 0;
@@ -534,10 +499,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           api.methods.getAssetManagerEscrowRedeemed(escrowId).call(),
           api.methods.getAssetManagerEscrow(escrowId).call(),
         ])
-
-        console.log("remainingEscrow: ", remainingEscrow)
-        console.log("escrowRedeemed: ", escrowRedeemed)
-        console.log("assetManagerCollateral: ", assetManagerCollateral)
 
         if(isInvestor){
           balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
@@ -555,7 +516,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
             }
             if(isAssetManager){
-              console.log("IS ASSET MANAGER")
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
@@ -608,25 +568,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           funded: fundingStage === FundingStages.FUNDED,
         };
       }));
-      //console.log("getOpenCrowdsales: ", Network.getOpenCrowdsales())
-      //console.log("OPERATORS: ", operators)
-      //console.log("all events: ", operators.allEvents())
-      //console.log(operatorID)
-      //console.log("getting operator id...")
-
-
-      // 30 days = 2678400
-      // 3 hours = 10800
-      /*console.log(Network.createAsset({
-        escrow: toWei(2500),
-        assetURI: '0xBB64ac045539bC0e9FFfd04399347a8459e8282A12356791011234567',
-        assetManager: '0xBB64ac045539bC0e9FFfd04399347a8459e8282A',
-        fundingLength: 10800,
-        startTime: 1551732113,
-        amountToRaise: toWei(0.77),
-        assetManagerPercent: 17,
-        operatorID,
-      }));*/
 
       console.log("ALL ASSETS: ", assetDetails)
       resolve(assetDetails);
