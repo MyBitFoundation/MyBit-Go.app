@@ -118,8 +118,6 @@ class ListAssetPage extends React.Component {
 
     const convertedAmount = convertFromDefaultToken(selectedToken, balances, collateralDai)
     const collateralSelectedToken = parseFloat(convertedAmount.toFixed(3))
-    console.log("convertedAmount: ", convertedAmount)
-    console.log("collateralSelectedToken: ", collateralSelectedToken)
 
     this.setState({
       data: {
@@ -260,7 +258,6 @@ class ListAssetPage extends React.Component {
   };
 
   handleKeyDown = e => {
-    console.log(e.key)
     if (e.key === "Tab") {
       e.preventDefault();
     }
