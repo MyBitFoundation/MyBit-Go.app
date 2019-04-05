@@ -110,9 +110,8 @@ export const CollateralSlide = ({
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
-        MYB is used as an insurance mechanism, much like a deposit to protect
-        investors' funds and incentivise proper behaviour. In this version of Go you are
-        not required to deposit MYB but you will still be able to withdraw the collateral.
+        {`${PLATFORM_TOKEN} is used as an insurance mechanism, much like a deposit to protect
+        investors' funds and incentivise proper behaviour.`}
       </CarouselSlideParagraph>
       <Image
         src={Myb}

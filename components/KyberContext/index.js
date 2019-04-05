@@ -71,6 +71,9 @@ class KyberProvider extends React.Component {
   constructor(props){
     super(props);
     this.key = 0;
+    this.state = {
+      loading: true,
+    }
   }
 
   componentDidMount = async () => {
@@ -165,6 +168,7 @@ class KyberProvider extends React.Component {
       //debug("supportedTokensInfo (kyberContext): ", supportedTokensInfo);
       this.setState({
         supportedTokensInfo,
+        loading: false,
       })
     }catch(err){
       debug("kyberContext error: ", err);

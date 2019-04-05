@@ -111,7 +111,7 @@ class ListAssetPage extends React.Component {
     const collateralDai = this.state.data.collateralDai;
     const balances = this.props.metamaskContext.user.balances;
 
-    const paymentTokenAddress = selectedToken ? balances[selectedToken].contractAddress : undefined;
+    const paymentTokenAddress = selectedToken && balances[selectedToken] && balances[selectedToken].contractAddress;
 
     const convertedAmount = convertFromDefaultToken(selectedToken, balances, collateralDai)
     const collateralSelectedToken = parseFloat(convertedAmount.toFixed(3))
@@ -337,6 +337,7 @@ class ListAssetPage extends React.Component {
               handleSelectChange={this.handleSelectChange}
               formData={data}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
+              loadingAssets={blockchainContext.loading.assets}
             />
           ), buttons: {
             hasNextButton: true,
