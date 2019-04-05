@@ -811,14 +811,14 @@ class BlockchainProvider extends React.Component {
     await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
-        /*this.setState({
+        this.setState({
           assets: updatedAssets,
           loading: {
             ...this.state.loading,
             assets: false,
             userAssetsInfo: false,
           },
-        });*/
+        });
       })
       .catch((err) => {
         console.log(err)
