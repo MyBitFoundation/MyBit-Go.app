@@ -3,6 +3,7 @@ import Router from 'next/router';
 import {
   InputNumber,
   Button,
+  Select,
 } from "antd";
 import { withAirtableContext } from 'components/AirtableContext';
 import {
@@ -38,7 +39,6 @@ const ButtonWrapper = styled(Button)`
 export const AvailableAssetsSlide = withAirtableContext(({
   handleSelectChange,
   formData,
-  history,
   airtableContext,
   maxWidthDesktop,
 }) => {
@@ -57,7 +57,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
   }
 
   const categories = (formData.userCountry && formData.userCity) && getCategoriesForAssets(formData.userCountry, formData.userCity);
-  const assetsAvailable = category && categories[category];
+  const assetsAvailable = (category && categories[category]) || [];
   return (
     <CarouselSlide>
       <React.Fragment>
@@ -95,28 +95,23 @@ export const AvailableAssetsSlide = withAirtableContext(({
             }
           >
             {Object.keys(categories).map(cat => (
-                <Option key={cat} value={cat}>
+                <Select.Option key={cat} value={cat}>
                   {cat}
-                </Option>
+                </Select.Option>
               ))}
           </CarouselSlideSelect>
           <CarouselSlideSelect
             isCentered
             showSearch
             placeholder="Available Assets"
-            optionFilterProp="children"
             onChange={value => handleSelectChange({name: value, assetsAirTable}, "asset")}
-            filterOption={(input, option) =>
-              option.props.children
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
-            }
+            value={asset}
           >
-            {assetsAirTable.filter(asset => assetsAvailable.includes(asset)).map(asset => {
+            {assetsAvailable.map(asset => {
               return (
-                <Option key={asset.name} value={asset.name}>
+                <Select.Option key={asset.name} value={asset.name}>
                   {asset.name}
-                </Option>
+                </Select.Option>
               )}
             )}
           </CarouselSlideSelect>
@@ -134,10 +129,9 @@ export const AvailableAssetsSlide = withAirtableContext(({
             name="assetValue"
             value={assetValue}
             formatter={value =>
-             `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+             !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             }
             parser={value => value.replace(/\$\s?|(,*)/g, "")}
-            onChange={value => handleSelectChange(value, "assetValue")}
           />
         </div>
       ) : (

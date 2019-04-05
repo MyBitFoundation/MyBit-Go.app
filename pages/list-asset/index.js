@@ -47,9 +47,6 @@ class ListAssetPage extends React.Component {
       data: {
         userCity: 'Zug',
         userCountry: 'Switzerland',
-        category: 'Real Estate',
-        asset: 'Co-Working Space',
-        assetValue: 5,
         assetAddress1: 'a',
         assetAddress2: 'a',
         assetCity: 'a',
@@ -155,8 +152,13 @@ class ListAssetPage extends React.Component {
           switch(name) {
             case 'userCountry': {
               this.setState({
-                data: { ...this.state.data, assetCountry: value, category: '', asset: '', assetValue: undefined, }
+                data: { ...this.state.data, assetCountry: value, category: '', asset: undefined, assetValue: undefined, }
               });break;
+            }
+            case 'category': {
+              this.setState({
+                data: { ...this.state.data, category: value, asset: undefined, assetValue: undefined, }
+              }, () => console.log(this.state));break;
             }
             default: return null;
           }
@@ -289,6 +291,8 @@ class ListAssetPage extends React.Component {
       collateralDai,
       maxCollateralPercentage,
       collateralSelectedToken,
+      asset,
+      category,
     } = this.state.data;
 
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
@@ -330,7 +334,6 @@ class ListAssetPage extends React.Component {
         }, {
           toRender: (
             <AvailableAssetsSlide
-              handleInputChange={this.handleInputChange}
               handleSelectChange={this.handleSelectChange}
               formData={data}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
@@ -338,7 +341,7 @@ class ListAssetPage extends React.Component {
           ), buttons: {
             hasNextButton: true,
             hasBackButton: true,
-            nextButtonDisabled: data.category !== "" && data.asset !== "" ? false : true,
+            nextButtonDisabled: !category || !asset || !assetValue,
           }
         }, {
           toRender: (
