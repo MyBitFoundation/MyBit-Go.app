@@ -19,9 +19,7 @@ class MobileMenu extends React.PureComponent {
     } = this.props;
 
     return (
-      <div
-        isOpen={isOpen}
-      >
+      <div>
         <MobileMenuWrapper
           isOpen={isOpen}
         >

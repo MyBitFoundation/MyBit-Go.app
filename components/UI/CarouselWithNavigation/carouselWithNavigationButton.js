@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components';
 import Button from 'antd/lib/button';
+import {omit} from 'lodash';
 
-const CarouselWithNavigationButton = styled(Button)`
+const CarouselWithNavigationButton = styled(props => <Button {...omit(props, CarouselWithNavigationButton.OmitProps)}/>)`
   font-style: normal;
   font-weight: normal;
 
@@ -30,19 +31,6 @@ const CarouselWithNavigationButton = styled(Button)`
     }
   `}
 
-  ${props => props.isSkip && css`{
-    border: none;
-    color: #1890ff;
-    line-height: 22px;
-    font-size: 14px;
-    margin-right: 10px;
-    @media(min-width: ${props => props.desktopAt || `${props.theme.sizes.tablet}px`}) {
-      position: static;
-      display: block;
-      margin: 10px auto;
-    }
-  `}
-
   ${props => props.isBack && css`{
     line-height: 22px;
     font-size: 14px;
@@ -58,23 +46,6 @@ const CarouselWithNavigationButton = styled(Button)`
       left: -20px;
       height: 32px;
     }
-  `}
-
-  ${props => props.isGet && css`{
-    border: none;
-    text-decoration: underline;
-    color: #1890ff;
-    display: inline-block;
-    margin-left: 5px;
-    font-size: 18px;
-  `}
-
-  ${props => props.isStatic && css`{
-    position: relative;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
   `}
 
   ${props => props.isCivicButton && css `
@@ -109,5 +80,12 @@ const CarouselWithNavigationButton = styled(Button)`
     }
   `}
 `
+
+CarouselWithNavigationButton.OmitProps = [
+  'isCivicButton',
+  'desktopAt',
+  'isNext',
+  'isBack',
+]
 
 export default CarouselWithNavigationButton;
