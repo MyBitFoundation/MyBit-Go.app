@@ -270,6 +270,7 @@ class ListAssetPage extends React.Component {
       civic,
       metamaskContext,
       blockchainContext,
+      kyberLoading,
     } = this.props;
 
     const {
@@ -296,7 +297,6 @@ class ListAssetPage extends React.Component {
     } = this.state.data;
 
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
-    const loadingBalances = metamaskContext.loadingBalances;
 
     return (
       <CarouselWithNavigation
@@ -390,21 +390,20 @@ class ListAssetPage extends React.Component {
           }
         }, {
           toRender:
-            !loadingBalances && (
-              <CollateralSlide
-                collateralSelectedToken={collateralSelectedToken}
-                collateralDai={collateralDai}
-                selectedToken={selectedToken}
-                handleSelectedTokenChange={this.handleSelectedTokenChange}
-                handleCollateralChange={this.handleCollateralChange}
-                collateralPercentage={collateralPercentage}
-                collateralMyb={collateralMyb}
-                formData={data}
-                maxWidthDesktop={MAX_WIDTH_DESKTOP}
-                balances={metamaskContext.user.balances}
-                maxCollateralPercentage={maxCollateralPercentage}
-              />
-            )
+            <CollateralSlide
+              collateralSelectedToken={collateralSelectedToken}
+              collateralDai={collateralDai}
+              selectedToken={selectedToken}
+              handleSelectedTokenChange={this.handleSelectedTokenChange}
+              handleCollateralChange={this.handleCollateralChange}
+              collateralPercentage={collateralPercentage}
+              collateralMyb={collateralMyb}
+              formData={data}
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
+              balances={metamaskContext.user.balances}
+              maxCollateralPercentage={maxCollateralPercentage}
+              kyberLoading={kyberLoading}
+            />
           , buttons: {
             hasNextButton: true,
             hasBackButton: true,

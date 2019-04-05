@@ -27,7 +27,7 @@ export const withKyberContext = (Component) => {
     render(){
       return (
         <Consumer>
-          {state => <Component {...this.props} supportedTokensInfo={state && state.supportedTokensInfo} />}
+          {state => <Component {...this.props} supportedTokensInfo={state.supportedTokensInfo} kyberLoading={state.loading}/>}
         </Consumer>
       )
     }

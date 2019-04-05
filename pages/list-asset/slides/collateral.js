@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import React from 'react';
+import styled, { css } from 'styled-components';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -19,6 +20,8 @@ import Myb from "static/list-asset/assetList_myb.png";
 import { withMetamaskContext } from 'components/MetamaskContext';
 import TokenSelector from 'components/TokenSelector';
 import NumericInput from 'ui/NumericInput';
+import Spin from 'static/spin.svg';
+
 const Image = styled.img`
   position: relative;
   margin: 40px auto;
@@ -73,7 +76,18 @@ const TokenSelectorWrapper = styled.div`
 
   .ant-input-group-addon{
     padding: 0px 0px;
+    ${props => props.selectorIsDisabled && css`
+      background-color: #f5f5f5;
+      border-color: #d9d9d9;
+    `}
   }
+`
+
+const Loading = styled(Spin)`
+  display: block;
+  margin: 0 auto;
+  height: 32px;
+  width: 32px;
 `
 
 export const CollateralSlide = ({
@@ -88,7 +102,9 @@ export const CollateralSlide = ({
   balances,
   maxCollateralPercentage,
   collateralSelectedToken,
+  kyberLoading,
 }) => {
+  const noBalance = Object.keys(balances).length === 0;
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
@@ -113,47 +129,68 @@ export const CollateralSlide = ({
         {`${PLATFORM_TOKEN} is used as an insurance mechanism, much like a deposit to protect
         investors' funds and incentivise proper behaviour.`}
       </CarouselSlideParagraph>
-      <Image
-        src={Myb}
-        alt="MyBit"
-      />
-      <InputsWrapper>
-        <Slider
-          tipFormatter={formatter}
-          min={0}
-          max={maxCollateralPercentage}
-          defaultValue={collateralPercentage}
-          value={collateralPercentage}
-          onChange={value => handleCollateralChange({selectedAmount: value}, "percentage")}
-        />
-        <MybitInput>
-          <NumericInput
-            defaultValue={collateralMyb}
-            value={collateralMyb}
-            min={0}
-            label={PLATFORM_TOKEN}
-            onChange={value => handleCollateralChange({selectedAmount: value}, "myb")}
-            precision={2}
+      {kyberLoading && (
+        <React.Fragment>
+          <CarouselSlideParagraph
+            isCentered
+            maxWidthDesktop={maxWidthDesktop}
+            style={{marginTop: '60px'}}
+          >
+            Loading data from Kyber
+          </CarouselSlideParagraph>
+           <Loading />
+        </React.Fragment>
+      )}
+      {!kyberLoading && (
+        <React.Fragment>
+          <Image
+            src={Myb}
+            alt="MyBit"
           />
-        </MybitInput>
-        <Separator>=</Separator>
-        <TokenSelectorWrapper>
-          <NumericInput
-            defaultValue={collateralSelectedToken}
-            value={collateralSelectedToken}
-            min={0}
-            precision={2}
-            label={
-              <TokenSelector
-                balances={balances}
-                amountToPay={collateralDai}
-                onChange={handleSelectedTokenChange}
+          <InputsWrapper>
+            <Slider
+              tipFormatter={formatter}
+              min={0}
+              max={maxCollateralPercentage}
+              defaultValue={collateralPercentage}
+              value={collateralPercentage}
+              onChange={value => handleCollateralChange({selectedAmount: value}, "percentage")}
+              disabled={noBalance}
+            />
+            <MybitInput>
+              <NumericInput
+                defaultValue={collateralMyb}
+                value={collateralMyb}
+                min={0}
+                label={PLATFORM_TOKEN}
+                onChange={value => handleCollateralChange({selectedAmount: value}, "myb")}
+                precision={2}
+                disabled={noBalance}
               />
-            }
-            onChange={value => handleCollateralChange({selectedAmount: value}, "selectedToken")}
-          />
+            </MybitInput>
+            <Separator>=</Separator>
+            <TokenSelectorWrapper
+              selectorIsDisabled={noBalance}
+            >
+              <NumericInput
+                defaultValue={collateralSelectedToken}
+                value={collateralSelectedToken}
+                min={0}
+                precision={2}
+                disabled={noBalance}
+                label={
+                  <TokenSelector
+                    balances={balances}
+                    amountToPay={collateralDai}
+                    onChange={handleSelectedTokenChange}
+                  />
+                }
+                onChange={value => handleCollateralChange({selectedAmount: value}, "selectedToken")}
+              />
 
-        </TokenSelectorWrapper>
-      </InputsWrapper>
+            </TokenSelectorWrapper>
+          </InputsWrapper>
+        </React.Fragment>
+      )}
     </CarouselSlide>
   )}
