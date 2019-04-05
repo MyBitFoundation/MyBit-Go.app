@@ -188,7 +188,6 @@ const getTimeFilteredData = (managerPercentage, revenueData, type) => {
     const revenueFilteredByTime = revenueFiltered
         .filter(({date}) => {
           if(type === 'weekly') {
-            console.log(currentDay.day())
             return date.date() === currentDay.date();
           } else if(type === 'monthly'){
             return date.date() === currentDay.date();
