@@ -22,7 +22,6 @@ import {
 import {
   generateRandomURI,
   debug,
-  getCategoryFromAssetTypeHash,
   fromWeiToEth,
   toWei,
 } from '../utils/helpers';

@@ -101,13 +101,6 @@ export const formatMonetaryValue = (number, fractionDigits = 2, includeToken = t
   }
 };
 
-export const getCategoryFromAssetTypeHash = (assetTypeHash, categoriesAirTable) => {
-  for(let entry of Object.entries(categoriesAirTable)){
-    const value = entry[1];
-    if(value.encoded === assetTypeHash) return value.contractName;
-  }
-};
-
 export const getPrettyCategoryName = (category, categoriesAirTable) => {
   for(let entry of Object.entries(categoriesAirTable)){
     const [key, value] = entry;
