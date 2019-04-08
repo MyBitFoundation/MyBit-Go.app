@@ -17,6 +17,7 @@ import {
 import {
   BLOCK_NUMBER_CONTRACT_CREATION,
   DEFAULT_TOKEN_CONTRACT,
+  CROWDSALE_DURATION,
 } from 'constants/app';
 
 import {
@@ -191,7 +192,7 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       escrow: toWei(collateral),
       assetURI: randomURI,
       assetManager: userAddress,
-      fundingLength: 2592000,
+      fundingLength: CROWDSALE_DURATION,
       startTime: 1,
       amountToRaise: toWei(amountToBeRaised),
       assetManagerPercent: managerPercentage,

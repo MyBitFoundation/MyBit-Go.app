@@ -11,7 +11,7 @@ export const PLATFORM_TOKEN = 'MANA';
 export const PLATFORM_TOKEN_MAX_DECIMALS = 3;
 export const DEFAULT_TOKEN_CONTRACT = '0xad6d458402f60fd3bd25163575031acdce07538d';
 export const PLATFORM_TOKEN_CONTRACT = '0x72fd6c7c1397040a66f33c2ecc83a0f71ee46d5c';
-
+export const CROWDSALE_DURATION = 2592000; //30 days in seconds
 export const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
   ,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
   ,"Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica"
