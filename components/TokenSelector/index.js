@@ -16,6 +16,8 @@ import TokenBalanceItem from 'ui/TokenBalanceItem';
 import TokenSelectorSearch from './tokenSelectorSearch';
 import Separator from 'ui/Separator';
 import TokenSelectorSearchWrapper from './tokenSelectorSearchWrapper';
+import TokenSelectorAmount from './tokenSelectorAmount';
+
 const separatorStyle = {
   position: 'relative',
   top: '5px',
@@ -112,7 +114,7 @@ class TokenSelector extends React.Component {
 
   getMenu = (balances, totalTokens, amountToPay) => {
     return (
-      <Menu style={{minHeight: '250px', minWidth: '284px'}}>
+      <Menu style={{minHeight: '268px', minWidth: '284px'}}>
         <TokenSelectorSearchWrapper
           key="search"
         >
@@ -120,6 +122,11 @@ class TokenSelector extends React.Component {
             placeholder="Search Token"
             onChange={this.handleSearchInputChanged}
           />
+          <div>
+            <TokenSelectorAmount>
+              Amount: <span>{formatMonetaryValue(amountToPay)}</span>
+            </TokenSelectorAmount>
+          </div>
         </TokenSelectorSearchWrapper>
       {balances.map((value, index) => {
         const {
