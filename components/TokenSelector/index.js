@@ -26,6 +26,7 @@ const separatorStyle = {
 class TokenSelector extends React.Component {
   state = {
     selectedToken: DEFAULT_TOKEN,
+    hoveringToken: null,
   }
 
   componentWillMount = () => {
@@ -40,6 +41,18 @@ class TokenSelector extends React.Component {
 
     if(nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
       this.processBalances(nextProps, false);
+    }
+  }
+
+  onHover = (hoveringToken) => {
+    if(hoveringToken !== this.state.hoveringToken){
+      this.setState({hoveringToken})
+    }
+  }
+
+  onMouseOut = () => {
+    if(this.state.hoveringToken){
+      this.setState({hoveringToken: undefined})
     }
   }
 
@@ -93,6 +106,14 @@ class TokenSelector extends React.Component {
     })
   }
 
+  getTokenToConvertFrom = () => {
+    const {
+      sortedBalances,
+    } = this.state;
+
+    return sortedBalances.length > 0 && sortedBalances[0].symbol.toLowerCase();
+  }
+
   getSortedBalances = (tokensEnum, amountToPay) => {
     const balancesToReturn = tokensEnum.map(([symbol, value]) => {
       const {
@@ -113,6 +134,12 @@ class TokenSelector extends React.Component {
   }
 
   getMenu = (balances, totalTokens, amountToPay) => {
+    const {
+      hoveringToken,
+    } = this.state;
+
+    const tokenToConvertFrom = hoveringToken && this.getTokenToConvertFrom();
+
     return (
       <Menu style={{minHeight: '268px', minWidth: '284px'}}>
         <TokenSelectorSearchWrapper
@@ -140,12 +167,16 @@ class TokenSelector extends React.Component {
             key={symbol}
             onClick={() => this.handleItemClicked(symbol)}
             disabled={!enoughFunds}
+            onMouseOver={!enoughFunds ? this.onHover.bind(this, symbol) : undefined}
+            onMouseOut={!enoughFunds ? this.onMouseOut.bind(this, symbol) : undefined}
           >
             <TokenBalanceItem
               name={symbol}
               balance={formatMonetaryValue(balance, 0, false)}
               balanceInDai={formatMonetaryValue(balanceInDai)}
               enoughFunds={enoughFunds}
+              hovering={hoveringToken === symbol}
+              tokenToConvertFrom={tokenToConvertFrom}
             />
             {(index !== totalTokens - 1) && <Separator style={separatorStyle}/>}
           </Menu.Item>

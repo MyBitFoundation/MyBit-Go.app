@@ -3,7 +3,9 @@ import TokenBalanceItemWrapper from './tokenBalanceItemWrapper';
 import TokenBalanceItemCircle from './tokenBalanceItemCircle';
 import TokenBalanceItemName from './tokenBalanceItemName';
 import TokenBalanceItemValue from './tokenBalanceItemValue';
-
+import {
+  ExternalLinks,
+} from 'constants/links';
 const colorHash = new ColorHash({lightness: 0.5});
 
 const TokenBalanceItem = ({
@@ -11,6 +13,8 @@ const TokenBalanceItem = ({
   balance,
   balanceInDai,
   enoughFunds,
+  hovering,
+  tokenToConvertFrom,
 }) => (
   <TokenBalanceItemWrapper
     enoughFunds={enoughFunds}
@@ -22,10 +26,23 @@ const TokenBalanceItem = ({
       </TokenBalanceItemName>
     </div>
     <TokenBalanceItemValue
-      enoughFunds={enoughFunds}
+      hasError={!enoughFunds && !hovering}
     >
       <p>{balance}</p>
-      <p>{enoughFunds ? balanceInDai : `Insufficient ${balanceInDai}`}</p>
+      {!hovering && (
+        <p>{enoughFunds ? balanceInDai : `Insufficient ${balanceInDai}`}</p>
+      )}
+      {hovering && (
+        <p>Get more at
+          <a
+            href={ExternalLinks.kyberSwapRopsten(tokenToConvertFrom, name.toLowerCase())}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+          {' '}Kyber
+          </a>
+        </p>
+      )}
     </TokenBalanceItemValue>
   </TokenBalanceItemWrapper>
 )

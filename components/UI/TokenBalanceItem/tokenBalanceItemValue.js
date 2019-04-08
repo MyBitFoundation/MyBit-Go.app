@@ -18,7 +18,7 @@ const TokenBalanceItemValue = styled.div`
     text-align: right;
     color: ${({theme}) => theme.colors.black3};
 
-    ${props => !props.enoughFunds && css`
+    ${props => props.hasError && css`
       color: #EE0000;
     `}
   }
