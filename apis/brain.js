@@ -536,11 +536,14 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         const fundingStageTmp = crowdsaleFinalized ? 0 : (!pastDate && !crowdsaleFinalized) ? 2 : 1;
         const fundingStage = getFundingStage(fundingStageTmp);
 
+        const fundingProgressFormatted = Number(Number(fromWeiToEth(fundingProgress)).toFixed(2));
+        const availableSharesFormatted = Number(fromWeiToEth(availableShares));
+
         return {
           ...asset,
           managerHasToCallPayout,
           fundingGoal: Number(Number(fromWeiToEth(fundingGoal)).toFixed(2)),
-          fundingProgress: Number(Number(fromWeiToEth(fundingProgress)).toFixed(2)),
+          fundingProgress: (availableSharesFormatted < 0.01 && availableSharesFormatted > 0 && !crowdsaleFinalized) ? fundingProgressFormatted - 0.01 : fundingProgressFormatted,
           fundingStage,
           pastDate,
           isAssetManager,
@@ -556,7 +559,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           escrowRedeemed: fromWeiToEth(escrowRedeemed),
           userInvestment: investment,
           totalSupply: Number(fromWeiToEth(totalShares)),
-          availableShares: Number(fromWeiToEth(availableShares)),
+          availableShares: availableSharesFormatted,
           managerPercentage: assetManagerFee,
           fundingDeadline: dueDate,
           numberOfInvestors: assetInvestors.length,

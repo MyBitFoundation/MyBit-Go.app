@@ -25,35 +25,48 @@ class AssetFunding extends React.Component {
     selectedOwnership: null,
     assetHasExpired: this.props.asset.pastDate,
     step: 0,
+    selectedMaxValue: false,
   };
 
-  handleOnChangeEthValue = (number, maxOwnership, totalSupply, maxPercentageAfterFees) => {
-    number > maxOwnership ?
+  handleOnChangeEthValue = (number, maxInvestment, totalSupply, maxPercentageAfterFees) => {
+    // detect whether the user selected the mass,
+    // in that case we pass the availableShares as the contribution amount later
+    if(number >= maxInvestment.toFixed(2)){
       this.setState({
-        selectedAmountEth: maxOwnership,
+        selectedAmountEth: maxInvestment.toFixed(2),
+        selectedMaxValue: true,
       })
-      : this.setState({
-          selectedAmountEth: number !== '0' ? Number(number) : null,
-          selectedOwnership: number !== '0' ? parseFloat(((number / totalSupply) * 100).toFixed(2)) : null,
-    })
+    } else {
+      this.setState({
+        selectedAmountEth: number !== '' ? Number(number) : null,
+        selectedOwnership: number !== '' ? parseFloat(((number / totalSupply) * 100).toFixed(2)) : null,
+        selectedMaxValue: false,
+      })
+    }
   }
 
   handleOnChangePercentage = (number, maxOwnership, fundingGoal, maxInvestment, maxPercentageAfterFees, totalSupply) => {
-    number > Number(maxOwnership)
-      ? this.setState({
-          selectedOwnership: maxOwnership,
-        })
-      : this.setState({
-        selectedOwnership: Number(number),
-        selectedAmountEth: totalSupply * (number / 100),
+    if(number >= Number(maxOwnership)){
+      this.setState({
+        selectedOwnership: maxOwnership,
+        selectedMaxValue: true,
       })
+
+    } else {
+      this.setState({
+        selectedMaxValue: false,
+        selectedOwnership: number !== '' ? Number(number) : null,
+        selectedAmountEth: number !== '' ? parseFloat((totalSupply * (number / 100)).toFixed(2)) : null,
+      })
+    }
   }
 
-  handleOnChangeSlider = (number, totalSupply, maxPercentageAfterFees) => {
+  handleOnChangeSlider = (number, totalSupply, maxPercentageAfterFees, maxInvestment) => {
     this.setState({
       selectedAmountEth: number,
       selectedOwnership: parseFloat(((number / totalSupply) * 100).toFixed(2)),
-    }, () => console.log(this.state))
+      selectedMaxValue: number >= maxInvestment.toFixed(2) ? true : false,
+    })
   }
 
   changeStep = (step) => this.setState({step});
@@ -97,6 +110,7 @@ class AssetFunding extends React.Component {
       selectedOwnership,
       assetHasExpired,
       step,
+      selectedMaxValue,
     } = this.state;
 
     const {
@@ -129,9 +143,7 @@ class AssetFunding extends React.Component {
     const maxInvestment =
       ended
         ? 0
-        : Number(availableShares.toFixed(2));
-
-    console.log("maxInvestment: ", maxInvestment)
+        : Number(availableShares);
 
     let minInvestment =
        maxInvestment === 0 ? 0 : 100;
@@ -140,20 +152,16 @@ class AssetFunding extends React.Component {
       minInvestment = 0.01;
     }
 
+
     // Total fee: manager fee + platform fees (1%)
     const maxPercentageAfterFees = 100 - (managerPercentage * 100 + (MYBIT_FOUNDATION_SHARE * 100));
-    console.log("maxPercentageAfterFees: ", maxPercentageAfterFees)
     const maxOwnership = ((maxInvestment * maxPercentageAfterFees) / fundingGoal).toFixed(2);
-    console.log("maxOwnership:", maxOwnership)
-    console.log("maxInvestment:", maxInvestment)
     let yourContribution = 0;
     let yourOwnership = 0;
 
     if(ended && (percentageOwnedByUser > 0)){
       yourContribution = fundingGoal * (percentageOwnedByUser / 100);
-      console.log("yourContribution: ", yourContribution)
       yourOwnership = percentageOwnedByUser;
-      console.log("yourOwnership: ", yourOwnership)
     }
 
     return (
@@ -169,23 +177,25 @@ class AssetFunding extends React.Component {
             yourContribution={yourContribution}
             formatMonetaryValue={formatMonetaryValue}
             selectedOwnership={selectedOwnership}
-            minInvestment={minInvestment}
-            maxInvestment={maxInvestment}
-            selectedAmountEth={selectedAmountEth}
+            minInvestment={maxInvestment < 0.01 ? 0 : 0.1}
+            maxInvestment={maxInvestment < 0.01 ? 0.01 : maxInvestment}
+            selectedAmountEth={maxInvestment < 0.01 ? 0.01 : selectedAmountEth}
             totalSupply={totalSupply}
             handleOnChangeSlider={this.handleOnChangeSlider}
             handleOnChangePercentage={this.handleOnChangePercentage}
             handleOnChangeEthValue={this.handleOnChangeEthValue}
             handleDeadlineHit={this.handleDeadlineHit}
             handleConfirmationClicked={() => this.changeStep(1)}
+            selectedMaxValue={selectedMaxValue}
           />
         )}
         {step === 1 && (
           <AssetFundingConfirm
             selectedOwnership={selectedOwnership}
-            amount={selectedAmountEth}
+            amount={maxInvestment < 0.01 ? 0.01 : selectedMaxValue ? maxInvestment : selectedAmountEth}
             fundAsset={this.fundAsset}
             cancel={this.resetStep}
+            selectedMaxValue={selectedMaxValue}
           />
         )}
         {step === 2 && (

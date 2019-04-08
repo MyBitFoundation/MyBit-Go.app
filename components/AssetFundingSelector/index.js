@@ -33,6 +33,7 @@ const AssetFundingSelector = ({
   handleDeadlineHit,
   handleConfirmationClicked,
   maxPercentageAfterFees,
+  selectedMaxValue,
 }) => (
   <div>
     <AssetDeadline
