@@ -105,6 +105,7 @@ export const CollateralSlide = ({
   kyberLoading,
 }) => {
   const noBalance = !balances || Object.keys(balances).length === 0;
+  const collateralSelectedTokenFormatted = parseFloat(collateralSelectedToken.toFixed(3));
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
@@ -173,10 +174,10 @@ export const CollateralSlide = ({
               selectorIsDisabled={noBalance}
             >
               <NumericInput
-                defaultValue={collateralSelectedToken}
-                value={collateralSelectedToken}
+                defaultValue={collateralSelectedTokenFormatted}
+                value={collateralSelectedTokenFormatted}
                 min={0}
-                precision={2}
+                precision={3}
                 disabled={noBalance}
                 label={
                   <TokenSelector

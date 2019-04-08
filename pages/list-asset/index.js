@@ -226,16 +226,16 @@ class ListAssetPage extends React.Component {
           percentage = selectedAmount;
           myb = parseFloat(convertFromDefaultToken(PLATFORM_TOKEN, supportedTokens, maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
           dai = parseFloat((maxAmountAllowedInDai * (selectedAmount / 100)).toFixed(2))
-          collateralSelectedToken = parseFloat(convertFromDefaultToken(selectedToken, supportedTokens, dai).toFixed(2))
+          collateralSelectedToken = convertFromDefaultToken(selectedToken, supportedTokens, dai)
           break;
         case "myb":
           myb = selectedAmount > maxInMyb ? parseFloat(maxInMyb.toFixed(2)) : selectedAmount
           percentage = parseInt((myb / maxInMyb) * 100)
           dai = (maxAmountAllowedInDai * (percentage / 100)).toFixed(2)
-          collateralSelectedToken = parseFloat(convertFromPlatformToken(selectedToken, supportedTokens, myb).toFixed(2))
+          collateralSelectedToken = convertFromPlatformToken(selectedToken, supportedTokens, myb)
           break;
         case "selectedToken":
-          collateralSelectedToken = selectedAmount > maxCollateralSelectedToken ? maxCollateralSelectedToken : parseFloat(Number(selectedAmount).toFixed(2))
+          collateralSelectedToken = selectedAmount > maxCollateralSelectedToken ? maxCollateralSelectedToken : Number(selectedAmount)
 
           dai = parseFloat(convertFromTokenToDefault(selectedToken, supportedTokens, collateralSelectedToken).toFixed(2))
 
