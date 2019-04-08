@@ -17,6 +17,7 @@ import TokenSelectorSearch from './tokenSelectorSearch';
 import Separator from 'ui/Separator';
 import TokenSelectorSearchWrapper from './tokenSelectorSearchWrapper';
 import TokenSelectorAmount from './tokenSelectorAmount';
+import TokenSelectorNoResults from './tokenSelectorNoResults';
 
 const separatorStyle = {
   position: 'relative',
@@ -136,6 +137,7 @@ class TokenSelector extends React.Component {
   getMenu = (balances, totalTokens, amountToPay) => {
     const {
       hoveringToken,
+      sortedBalancesBackup,
     } = this.state;
 
     const tokenToConvertFrom = hoveringToken && this.getTokenToConvertFrom();
@@ -154,6 +156,11 @@ class TokenSelector extends React.Component {
               Amount: <span>{formatMonetaryValue(amountToPay)}</span>
             </TokenSelectorAmount>
           </div>
+          {(balances.length === 0 && sortedBalancesBackup.length > 0) && (
+            <TokenSelectorNoResults>
+              No results
+            </TokenSelectorNoResults>
+          )}
         </TokenSelectorSearchWrapper>
       {balances.map((value, index) => {
         const {
