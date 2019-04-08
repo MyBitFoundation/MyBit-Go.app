@@ -57,7 +57,6 @@ const getManagerDetailsFromAsset = (asset) => {
   const {
     managerPercentage,
     managerTotalIncome,
-    managerTotalWithdrawn,
     assetIncome,
     owedToAssetManager,
   } = asset;

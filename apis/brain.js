@@ -193,7 +193,7 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       assetURI: randomURI,
       assetManager: userAddress,
       fundingLength: 2592000,
-      startTime: 1551732113,
+      startTime: 1,
       amountToRaise: toWei(amountToBeRaised),
       assetManagerPercent: managerPercentage,
       operatorID,
@@ -455,7 +455,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           assetManager,
           assetInvestors,
           fundingProgress,
-          assetManagerFee
+          managerPercentage
         ] = await getAssetDetails(api, assetId);
 
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
@@ -470,13 +470,13 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         let owedToAssetManager = 0;
         let assetIncomeForCollateral = 0;
 
-        assetManagerFee = BN(assetManagerFee);
+        managerPercentage = BN(managerPercentage);
         platformFee = BN(platformFee);
         fundingGoal = BN(fundingGoal);
         fundingProgress = BN(fundingProgress);
-        totalShares = fundingGoal.plus(assetManagerFee).plus(platformFee);
-        availableShares = totalShares.minus(assetManagerFee).minus(platformFee).minus(fundingProgress);
-        assetManagerFee = assetManagerFee.div(totalShares).toNumber();
+        totalShares = fundingGoal.plus(managerPercentage).plus(platformFee);
+        availableShares = totalShares.minus(managerPercentage).minus(platformFee).minus(fundingProgress);
+        managerPercentage = managerPercentage.div(totalShares).toNumber();
         platformFee = platformFee.div(totalShares).toNumber();
         fundingGoal = fundingGoal.toNumber();
 
@@ -485,7 +485,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
 
         let percentageOwnedByUser = 0;
         let balanceOfUser = 0;
-        let investment = 0;
+        let userInvestment = 0;
 
         const isInvestor = realAddress && assetInvestors.includes(realAddress);
         const [
@@ -500,7 +500,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
 
         if(isInvestor){
           balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
-          investment = fromWeiToEth(BN(balanceOfUser).toString());
+          userInvestment = fromWeiToEth(BN(balanceOfUser).toString());
           percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
         }
 
@@ -508,7 +508,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           const timestamp = await Network.getTimestampOfFundedAsset(assetId)
           // no timestamp means payout has to be called (asset manager does it)
           if(timestamp){
-            fundingProgress = fundingProgress - ((assetManagerFee + platformFee) * fundingProgress)
+            fundingProgress = fundingProgress - ((managerPercentage + platformFee) * fundingProgress)
             if(isInvestor){
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
@@ -517,17 +517,17 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
-              assetIncomeForCollateral = Number(fromWeiToEth(assetIncome)) * (1 - platformFee - assetManagerFee);
+              assetIncomeForCollateral = fromWeiToEth(assetIncome) * (1 - platformFee - managerPercentage);
               owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, realAddress).call();
             }
-            assetIncome = Number(fromWeiToEth(assetIncome));
+
           } else if(isAssetManager) {
             managerHasToCallPayout = true;
           }
         }
 
         const searchQuery = `mybit_watchlist_${assetId}`;
-        const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
+        const watchListed = window.localStorage.getItem(searchQuery) === 'true';
 
         // determine whether asset has expired
         const dueDate = dayjs(fundingDeadline * 1000);
@@ -536,36 +536,34 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         const fundingStageTmp = crowdsaleFinalized ? 0 : (!pastDate && !crowdsaleFinalized) ? 2 : 1;
         const fundingStage = getFundingStage(fundingStageTmp);
 
-        const fundingProgressFormatted = Number(Number(fromWeiToEth(fundingProgress)).toFixed(2));
-        const availableSharesFormatted = Number(fromWeiToEth(availableShares));
-
+        const fundingProgressFormatted = fromWeiToEth(fundingProgress);
+        const availableSharesFormatted = fromWeiToEth(availableShares);
+        assetIncome = fromWeiToEth(assetIncome);
         return {
           ...asset,
           managerHasToCallPayout,
-          fundingGoal: Number(Number(fromWeiToEth(fundingGoal)).toFixed(2)),
-          fundingProgress: (availableSharesFormatted < 0.01 && availableSharesFormatted > 0 && !crowdsaleFinalized) ? fundingProgressFormatted - 0.01 : fundingProgressFormatted,
           fundingStage,
           pastDate,
           isAssetManager,
           assetManager,
           percentageOwnedByUser,
           daysSinceItWentLive,
-          assetIncome,
           assetIncomeForCollateral,
           owedToInvestor,
+          watchListed,
+          userInvestment,
+          managerPercentage,
+          fundingGoal: fromWeiToEth(fundingGoal),
+          fundingProgress: (availableSharesFormatted < 0.01 && availableSharesFormatted > 0 && !crowdsaleFinalized) ? fundingProgressFormatted - 0.01 : fromWeiToEth(fundingProgress),
+          assetIncome: fromWeiToEth(assetIncome),
           owedToAssetManager: fromWeiToEth(owedToAssetManager),
           remainingEscrow: fromWeiToEth(remainingEscrow),
           assetManagerCollateral: fromWeiToEth(assetManagerCollateral),
           escrowRedeemed: fromWeiToEth(escrowRedeemed),
-          userInvestment: investment,
-          totalSupply: Number(fromWeiToEth(totalShares)),
+          totalSupply: fromWeiToEth(totalShares),
           availableShares: availableSharesFormatted,
-          managerPercentage: assetManagerFee,
           fundingDeadline: dueDate,
           numberOfInvestors: assetInvestors.length,
-          blockNumberitWentLive: 0,
-          managerTotalWithdrawn: 0,
-          watchListed: alreadyFavorite,
           funded: fundingStage === FundingStages.FUNDED,
         };
       }));

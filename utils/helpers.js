@@ -5,7 +5,7 @@ import {
 
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
 
-export const fromWeiToEth = weiValue => window.web3js.utils.fromWei(weiValue.toString(), 'ether');
+export const fromWeiToEth = weiValue => Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
 
 export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
 

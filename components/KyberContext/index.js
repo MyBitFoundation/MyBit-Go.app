@@ -53,8 +53,8 @@ export const getExpectedAndSlippage = async (src, dest, amount) => {
       } = result;
 
       if(expectedRate !== '0'){
-        expectedRate = Number(fromWeiToEth(expectedRate));
-        slippageRate = Number(fromWeiToEth(slippageRate));
+        expectedRate = fromWeiToEth(expectedRate);
+        slippageRate = fromWeiToEth(slippageRate);
 
         return {
           expectedRate,
