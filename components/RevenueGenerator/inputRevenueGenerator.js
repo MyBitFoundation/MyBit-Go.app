@@ -55,7 +55,7 @@ const InputRevenueGenerator = ({
       <InputRevenueGeneratorLabel>
         Amount to generate (DAI) :
       </InputRevenueGeneratorLabel>
-      <InputRevenueGeneratorNumber min={1} max={10} defaultValue={3} onChange={onValueChange} value={currentValue}/>
+      <InputRevenueGeneratorNumber min={1} defaultValue={3} onChange={onValueChange} value={currentValue}/>
     </Modal>
   </InputRevenueGeneratorWrapper>
 );

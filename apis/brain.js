@@ -417,18 +417,11 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         Network = require('@mybit/network.js')(window.web3js, SDK_CONTRACTS);
       }
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
-      //console.log("Network: ", Network)
       const api = await Network.api();
       const assetManagerFunds = await Network.assetManagerFunds();
 
       const database = await Network.database();
       const events = await Network.events();
-
-      /*const x = await Network.acceptERC20Token({
-        id: "0x3eccf03d236410e626e8000a285b59e17132713a829ada5638ccf8b82a6e7a65",
-        token: DEFAULT_TOKEN_CONTRACT,
-        operator: '0x15c9C83075b7214308fd4526731db4172299E2a4',
-      });*/
 
       let assets = await Network.getTotalAssets();
       assets =
@@ -538,7 +531,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
 
         const fundingProgressFormatted = fromWeiToEth(fundingProgress);
         const availableSharesFormatted = fromWeiToEth(availableShares);
-        assetIncome = fromWeiToEth(assetIncome);
         return {
           ...asset,
           managerHasToCallPayout,
