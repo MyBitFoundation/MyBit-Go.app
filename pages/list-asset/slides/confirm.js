@@ -8,6 +8,10 @@ import AlertMessage from 'ui/AlertMessage';
 import {
   PLATFORM_TOKEN,
 } from 'constants/app';
+import {
+  formatValueForToken,
+} from 'utils/helpers';
+
 const InformationWrapper = styled.div`
   b{
     font-size: 16px;
@@ -43,6 +47,7 @@ export const ConfirmSlide = ({
   maxWidthDesktop,
   error,
 }) => {
+  const formattedCollateral = formatValueForToken(formData.collateralMyb, PLATFORM_TOKEN);
   return (
     <CarouselSlide>
       <CarouselSlideMainTitle
@@ -108,7 +113,7 @@ export const ConfirmSlide = ({
         <section>
           <b>Asset collateral</b>
           <p>
-            {`${parseFloat(parseFloat(formData.collateralMyb).toFixed(3))} ${PLATFORM_TOKEN} ${formData.collateralPercentage}%`}
+            {`${formattedCollateral} ${PLATFORM_TOKEN} ${formData.collateralPercentage}%`}
           </p>
         </section>
         {error && (

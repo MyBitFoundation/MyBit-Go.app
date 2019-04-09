@@ -2,6 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import {omit} from 'lodash';
 
 import {
   Input,
@@ -14,9 +15,15 @@ class NumericInput extends React.Component {
   }
 
   onChange(e) {
+    const {
+      decimalPlaces = 2,
+    } = this.props;
     const { value } = e.target;
-    const reg = /^\d*(\.\d{0,2})?$/;
-    if ((!Number.isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+    const reg = new RegExp(`\\d+(\\.\\d{0,${decimalPlaces}})?`, 'g');
+    const matches = reg.test(value);
+    const isNumber = !Number.isNaN(value)
+
+    if ((isNumber && matches) || value === '' || value === '-') {
       this.props.onChange(value);
     }
   }
@@ -25,18 +32,23 @@ class NumericInput extends React.Component {
     const {
       value, placeholdertext, label,
     } = this.props;
+
     return (
       <Input
-        {...this.props}
+        {...omit(this.props, NumericInput.OmitProps)}
         value={value}
         onChange={this.onChange}
         placeholder={placeholdertext}
-        maxLength="25"
         addonAfter={label}
         type="number"
       />
     );
   }
 }
+
+
+NumericInput.OmitProps = [
+  'decimalPlaces',
+]
 
 export default NumericInput;

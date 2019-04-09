@@ -20,10 +20,6 @@ import {
   AssetFundingConfirmFooterMessageUrl,
 } from './assetFundingConfirmFooterMessage';
 import {
-  MAX_DECIMALS_ERC20,
-  MAX_DECIMALS_DEFAULT_TOKEN,
-} from 'constants/numberFormatting';
-import {
   getFooter,
 } from './footer';
 import {
@@ -37,6 +33,7 @@ import {
   formatMonetaryValue,
   convertFromDefaultToken,
   convertFromTokenToDefault,
+  getDecimalsForToken,
 } from 'utils/helpers';
 import AssetFundingButton from 'components/AssetFunding/assetFundingButton';
 import BN from 'bignumber.js';
@@ -100,7 +97,7 @@ class AssetFundingConfirm extends React.Component {
     const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDai);
     const amountToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountToPay : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountToPay);
     const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFee : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, mybitPlatformFee);
-    const maxDecimalsErc20 = selectedToken === DEFAULT_TOKEN ? MAX_DECIMALS_DEFAULT_TOKEN : MAX_DECIMALS_ERC20;
+    const maxDecimalsErc20 = getDecimalsForToken(selectedToken);
 
     const metamaskErrors = metamaskContext.metamaskErrors();
     const footer = getFooter(metamaskErrors.error, extensionUrl, amountToPayInSelectedToken.toFixed(18), amountContributed, user.balances, this.props.fundAsset, !kyberLoading && supportedTokensInfo[selectedToken].contractAddress, selectedToken, kyberLoading);
@@ -152,7 +149,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
               <p>{formatMonetaryValue(amountContributed)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(amountInSelectedToken, maxDecimalsErc20, true, selectedToken)}</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(amountInSelectedToken, maxDecimalsErc20.decimals, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -162,7 +159,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
               <p>{formatMonetaryValue(mybitPlatformFee)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(mybitPlatformFeeSelectedToken, maxDecimalsErc20, true, selectedToken)}</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(mybitPlatformFeeSelectedToken, maxDecimalsErc20.decimals, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -172,7 +169,7 @@ class AssetFundingConfirm extends React.Component {
             </AssetFundingConfirmItemName>
             <AssetFundingConfirmItemValue>
               <p>~{formatMonetaryValue(gasInDai)}</p>
-              <p>~{!selectedToken ? <span>loading</span> : formatMonetaryValue(gasInSelectedToken, maxDecimalsErc20, true, selectedToken)}</p>
+              <p>~{!selectedToken ? <span>loading</span> : formatMonetaryValue(gasInSelectedToken, maxDecimalsErc20.decimals, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </AssetFundingConfirmItem>
           <Separator style={separatorStyle}/>
@@ -187,7 +184,7 @@ class AssetFundingConfirm extends React.Component {
               isLarge
             >
               <p>{formatMonetaryValue(totalToPayInDai)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(totalToPayInSelectedToken, maxDecimalsErc20, true, selectedToken)}</p>
+              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(totalToPayInSelectedToken, maxDecimalsErc20.decimals, true, selectedToken)}</p>
             </AssetFundingConfirmItemValue>
           </div>
           <AssetFundingConfirmDropdownButton>

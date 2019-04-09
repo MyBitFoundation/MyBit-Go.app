@@ -8,6 +8,7 @@ import {
 } from 'constants/app';
 import {
   formatMonetaryValue,
+  getDecimalsForToken,
 } from 'utils/helpers';
 import NumericInput from 'ui/NumericInput';
 import FundingCalculatorTitle from './fundingCalculatorTitle';
@@ -18,6 +19,8 @@ import FundingCalculatorValue from './fundingCalculatorValue';
 import FundingCalculatorSpin from './fundingCalculatorSpin';
 import FundingCalculatorGrid from './fundingCalculatorGrid';
 import FundingCalculatorSliderLabel from './fundingCalculatorSliderLabel';
+
+const decimalsForDefaultToken = getDecimalsForToken(DEFAULT_TOKEN);
 
 const FundingCalculator = ({
   handleOnChangeEthValue,
@@ -48,12 +51,12 @@ const FundingCalculator = ({
             <NumericInput
               placeholdertext={`Amount in ${DEFAULT_TOKEN}`}
               value={selectedAmountEth}
-              precision={2}
               label={DEFAULT_TOKEN}
               onChange={number =>
                 handleOnChangeEthValue(number, maxInvestment, totalSupply, maxPercentageAfterFees)}
               min={0}
-              step={0.01}
+              decimalPlaces={decimalsForDefaultToken.decimals}
+              step={decimalsForDefaultToken.step}
             />
             <FundingCalculatorEqualsSeparator>
               =
@@ -63,13 +66,14 @@ const FundingCalculator = ({
               value={selectedOwnership}
               min={0}
               label="%"
+              decimalPlaces={2}
               step={0.01}
               onChange={number => handleOnChangePercentage(number, maxOwnership, fundingGoal, maxInvestment, maxPercentageAfterFees, totalSupply)}
             />
           </div>
           <Slider
             id="slider"
-            step={0.01}
+            step={decimalsForDefaultToken.step}
             defaultValue={0}
             value={
               selectedAmountEth ?

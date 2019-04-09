@@ -29,7 +29,7 @@ class AssetFunding extends React.Component {
   };
 
   handleOnChangeEthValue = (number, maxInvestment, totalSupply, maxPercentageAfterFees) => {
-    // detect whether the user selected the mass,
+    // detect whether the user selected the max,
     // in that case we pass the availableShares as the contribution amount later
     if(number >= maxInvestment.toFixed(2)){
       this.setState({

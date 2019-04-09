@@ -8,10 +8,11 @@ import {
 } from 'components/CarouselSlide/';
 import {
   Slider,
-  InputNumber,
 } from 'antd';
 import {
   convertTokenAmount,
+  getDecimalsForToken,
+  formatValueForToken,
 } from 'utils/helpers';
 import {
   PLATFORM_TOKEN,
@@ -45,7 +46,7 @@ const InputsWrapper = styled.div`
   }
 
   ${({theme}) => theme.tablet`
-    width: 90%;
+    width: 95%;
   `}
 `;
 
@@ -105,7 +106,10 @@ export const CollateralSlide = ({
   kyberLoading,
 }) => {
   const noBalance = !balances || Object.keys(balances).length === 0;
-  const collateralSelectedTokenFormatted = parseFloat(collateralSelectedToken.toFixed(3));
+  const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
+  const decimalsOfPlatformToken = getDecimalsForToken(PLATFORM_TOKEN);
+  const collateralSelectedTokenFormatted = formatValueForToken(collateralSelectedToken, selectedToken);
+  const collateralPlatformTokenFormatted = formatValueForToken(collateralMyb, PLATFORM_TOKEN);
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
@@ -160,12 +164,13 @@ export const CollateralSlide = ({
             />
             <MybitInput>
               <NumericInput
-                defaultValue={collateralMyb}
-                value={collateralMyb}
+                defaultValue={collateralPlatformTokenFormatted}
+                value={collateralPlatformTokenFormatted}
                 min={0}
                 label={PLATFORM_TOKEN}
                 onChange={value => handleCollateralChange({selectedAmount: value}, "myb")}
-                precision={2}
+                decimalPlaces={decimalsOfPlatformToken.decimals}
+                step={decimalsOfPlatformToken.step}
                 disabled={noBalance}
               />
             </MybitInput>
@@ -177,8 +182,9 @@ export const CollateralSlide = ({
                 defaultValue={collateralSelectedTokenFormatted}
                 value={collateralSelectedTokenFormatted}
                 min={0}
-                precision={3}
                 disabled={noBalance}
+                step={decimalsOfSelectedTokens.step}
+                decimalPlaces={decimalsOfSelectedTokens.decimals}
                 label={
                   <TokenSelector
                     balances={balances}

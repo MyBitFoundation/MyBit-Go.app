@@ -1,6 +1,9 @@
 import {
   DEFAULT_TOKEN,
   PLATFORM_TOKEN,
+  PLATFORM_TOKEN_MAX_DECIMALS,
+  ERC20_TOKEN_MAX_DECIMALS,
+  DEFAULT_TOKEN_MAX_DECIMALS,
 } from 'constants/app';
 
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
@@ -8,6 +11,43 @@ export const debug = process.env.NODE_ENV === 'development' ? console.log : () =
 export const fromWeiToEth = weiValue => Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
 
 export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
+
+export const formatValueForToken = (value, symbol) => {
+  const decimalsForToken = getDecimalsForToken(symbol)
+  return value.toFixed(decimalsForToken.decimals);
+}
+
+export const getDecimalsForToken = symbol => {
+  switch(symbol){
+    case PLATFORM_TOKEN: return {
+      decimals: PLATFORM_TOKEN_MAX_DECIMALS,
+      step: getStepsFromDecimals(PLATFORM_TOKEN_MAX_DECIMALS),
+    }
+    case DEFAULT_TOKEN: return {
+      decimals: DEFAULT_TOKEN_MAX_DECIMALS,
+      step: getStepsFromDecimals(DEFAULT_TOKEN_MAX_DECIMALS),
+    }
+    default: return {
+      decimals: ERC20_TOKEN_MAX_DECIMALS,
+      step: getStepsFromDecimals(ERC20_TOKEN_MAX_DECIMALS),
+    }
+  }
+}
+
+const getStepsFromDecimals = decimals => {
+  if(decimals <= 0 ){
+    return 1;
+  } else {
+    let step = '0.';
+    for(let i = 0; i < decimals - 1; i++){
+      step = `${step}0`;
+    }
+    step = `${step}1`;
+    return Number(step);
+  }
+}
+
+export const getNumberOfDecimals = value => value.toString().split(".")[1].length;
 
 export const convertTokenAmount = (convertTo, convertFrom, tokens, amount) => {
   if(convertTo === convertFrom){
@@ -44,7 +84,7 @@ export const convertFromPlatformToken = (convertTo, tokens, amount) => {
 export const convertFromTokenToDefault = (convertFrom, tokens, amount) => {
   const tokenConvertFrom = tokens[convertFrom];
 
-  return amount * tokenConvertFrom.exchangeRateDefaultToken.expectedRate;
+  return Number(amount) * tokenConvertFrom.exchangeRateDefaultToken.expectedRate;
 }
 
 export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {
