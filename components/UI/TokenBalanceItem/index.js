@@ -15,36 +15,39 @@ const TokenBalanceItem = ({
   enoughFunds,
   hovering,
   tokenToConvertFrom,
-}) => (
-  <TokenBalanceItemWrapper
-    enoughFunds={enoughFunds}
-  >
-    <div>
-      <TokenBalanceItemCircle color={colorHash.hex(name)}/>
-      <TokenBalanceItemName>
-        {name}
-      </TokenBalanceItemName>
-    </div>
-    <TokenBalanceItemValue
-      hasError={!enoughFunds && !hovering}
+}) => {
+  const showKyber = hovering && tokenToConvertFrom;
+  return (
+    <TokenBalanceItemWrapper
+      enoughFunds={enoughFunds}
     >
-      <p>{balance}</p>
-      {!hovering && (
-        <p>{enoughFunds ? balanceInDai : `Insufficient ${balanceInDai}`}</p>
-      )}
-      {hovering && (
-        <p>Get more at
-          <a
-            href={ExternalLinks.kyberSwapRopsten(tokenToConvertFrom, name.toLowerCase())}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-          {' '}Kyber
-          </a>
-        </p>
-      )}
-    </TokenBalanceItemValue>
-  </TokenBalanceItemWrapper>
-)
+      <div>
+        <TokenBalanceItemCircle color={colorHash.hex(name)}/>
+        <TokenBalanceItemName>
+          {name}
+        </TokenBalanceItemName>
+      </div>
+      <TokenBalanceItemValue
+        hasError={!showKyber && !enoughFunds}
+      >
+        <p>{balance}</p>
+        {!showKyber && (
+          <p>{enoughFunds ? balanceInDai : `Insufficient ${balanceInDai}`}</p>
+        )}
+        {showKyber && (
+          <p>Get more at
+            <a
+              href={ExternalLinks.kyberSwapRopsten(tokenToConvertFrom, name.toLowerCase())}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+            {' '}Kyber
+            </a>
+          </p>
+        )}
+      </TokenBalanceItemValue>
+    </TokenBalanceItemWrapper>
+  )
+}
 
 export default TokenBalanceItem;
