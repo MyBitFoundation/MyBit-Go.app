@@ -38,7 +38,7 @@ const WithdrawCollateral = React.memo(({
         const percentage = 25 * (index + 1);
         const minValBar = (fundingGoal / 4) * index;
         const barPercentage = ((current-minValBar) * 172) / (required - minValBar);
-        let text = `${formatMonetaryValue(current, 2, false)}/${formatMonetaryValue(required)}`;
+        let text = `${formatMonetaryValue(current, undefined, false)}/${formatMonetaryValue(required)}`;
         if(paidOut){
           text = 'Paid out';
         }

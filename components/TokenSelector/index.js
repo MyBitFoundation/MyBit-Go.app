@@ -179,7 +179,7 @@ class TokenSelector extends React.Component {
           >
             <TokenBalanceItem
               name={symbol}
-              balance={formatMonetaryValue(balance, 0, false)}
+              balance={formatMonetaryValue(balance, symbol, false)}
               balanceInDai={formatMonetaryValue(balanceInDai)}
               enoughFunds={enoughFunds}
               hovering={hoveringToken === symbol}

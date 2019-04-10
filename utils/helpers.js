@@ -125,13 +125,14 @@ export const setValueLocalStorage = (key, value, isObject) => {
   return value;
 }
 
-export const formatMonetaryValue = (number, fractionDigits = 2, includeToken = true, customToken) => {
+export const formatMonetaryValue = (number, symbol = DEFAULT_TOKEN, includeToken = true) => {
   try {
+    const decimalsForToken = getDecimalsForToken(symbol)
     let value = Number(number).toLocaleString('en-US', {
-      maximumFractionDigits: fractionDigits,
+      maximumFractionDigits: decimalsForToken.decimals,
     });
 
-    return includeToken ? `${value} ${customToken ? customToken : DEFAULT_TOKEN}` : value;
+    return includeToken ? `${value} ${symbol}` : value;
   }catch(err) {
     debug({
       "Function Name: ": "formatMonetaryValue()",

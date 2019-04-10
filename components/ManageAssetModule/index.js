@@ -117,18 +117,10 @@ class ManageAssetModule extends React.Component{
         }
       })
 
-      console.log("withdrawMax: ", withdrawMax)
-      console.log("percentageMax: ", percentageMax)
-
       const averageProfit = profit / daysSinceItWentLive;
-
 
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
-
-      console.log("averageProfit: ", averageProfit)
-      console.log("percentageMax: ", percentageMax)
-      console.log("remainingEscrow: ", remainingEscrow)
 
       this.setState({
         loading: false,

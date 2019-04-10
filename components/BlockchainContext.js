@@ -431,7 +431,7 @@ class BlockchainProvider extends React.Component {
       // Going to call Approve
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.APPROVE,
-        formattedAmount: formatMonetaryValue(collateralSelectedToken, 3, true, selectedToken),
+        formattedAmount: formatMonetaryValue(collateralSelectedToken, selectedToken),
       });
     } else {
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -448,7 +448,7 @@ class BlockchainProvider extends React.Component {
 
     const onTransactionHashApprove = () => {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
-        formattedAmount: formatMonetaryValue(collateralSelectedToken, 3, true, selectedToken),
+        formattedAmount: formatMonetaryValue(collateralSelectedToken, selectedToken),
         type: NotificationTypes.APPROVE,
       });
     }
@@ -460,7 +460,7 @@ class BlockchainProvider extends React.Component {
     const onReceiptApprove = wasSuccessful => {
       if(wasSuccessful){
         buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
-          formattedAmount: formatMonetaryValue(collateralSelectedToken, 3, true, selectedToken),
+          formattedAmount: formatMonetaryValue(collateralSelectedToken, selectedToken),
           type: NotificationTypes.APPROVE,
         });
       } else {
@@ -558,7 +558,7 @@ class BlockchainProvider extends React.Component {
         // will call Approve first
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
           operationType: NotificationsMetamask.APPROVE,
-          formattedAmount: formatMonetaryValue(amountToPay, 3, true, paymentTokenSymbol),
+          formattedAmount: formatMonetaryValue(amountToPay, paymentTokenSymbol),
         });
       }
 
@@ -571,7 +571,7 @@ class BlockchainProvider extends React.Component {
 
       const onTransactionHashApprove = () => {
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
-          formattedAmount: formatMonetaryValue(amountToPay, 3, true, paymentTokenSymbol),
+          formattedAmount: formatMonetaryValue(amountToPay, paymentTokenSymbol),
           type: NotificationTypes.APPROVE,
         });
       }
@@ -587,7 +587,7 @@ class BlockchainProvider extends React.Component {
       const onReceiptApprove = (wasSuccessful) => {
         if(wasSuccessful){
           buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
-            formattedAmount: formatMonetaryValue(amountToPay, 3, true, paymentTokenSymbol),
+            formattedAmount: formatMonetaryValue(amountToPay, paymentTokenSymbol),
             type: NotificationTypes.APPROVE,
           });
         } else {

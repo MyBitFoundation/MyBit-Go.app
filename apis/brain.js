@@ -546,7 +546,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           userInvestment,
           managerPercentage,
           fundingGoal: fromWeiToEth(fundingGoal),
-          fundingProgress: (availableSharesFormatted < 0.01 && availableSharesFormatted > 0 && !crowdsaleFinalized) ? fundingProgressFormatted - 0.01 : fromWeiToEth(fundingProgress),
+          fundingProgress: (availableSharesFormatted < 0.01 && availableSharesFormatted > 0 && !crowdsaleFinalized) ? fundingProgressFormatted - 0.01 : fundingProgressFormatted,
           assetIncome: fromWeiToEth(assetIncome),
           owedToAssetManager: fromWeiToEth(owedToAssetManager),
           remainingEscrow: fromWeiToEth(remainingEscrow),

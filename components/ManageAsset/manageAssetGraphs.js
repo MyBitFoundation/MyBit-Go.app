@@ -102,7 +102,7 @@ const ManageAssetGraphs = ({
             <ManageAssetColoredValue
               isBlue
             >
-              {formatMonetaryValue(assetManagerCollateral, 4, true, PLATFORM_TOKEN)}
+              {formatMonetaryValue(assetManagerCollateral, PLATFORM_TOKEN)}
             </ManageAssetColoredValue>
             <br />
           </div>
