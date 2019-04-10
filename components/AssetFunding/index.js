@@ -16,6 +16,10 @@ import {
   MYBIT_FOUNDATION_SHARE,
   MYBIT_FOUNDATION_FEE,
 } from 'constants/platformFees';
+import {
+  DEFAULT_TOKEN_MAX_DECIMALS,
+} from 'constants/app';
+
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
@@ -31,9 +35,9 @@ class AssetFunding extends React.Component {
   handleOnChangeEthValue = (number, maxInvestment, totalSupply, maxPercentageAfterFees) => {
     // detect whether the user selected the max,
     // in that case we pass the availableShares as the contribution amount later
-    if(number >= maxInvestment.toFixed(2)){
+    if(number >= maxInvestment.toFixed(DEFAULT_TOKEN_MAX_DECIMALS)){
       this.setState({
-        selectedAmountEth: maxInvestment.toFixed(2),
+        selectedAmountEth: maxInvestment.toFixed(DEFAULT_TOKEN_MAX_DECIMALS),
         selectedMaxValue: true,
       })
     } else {
@@ -56,7 +60,7 @@ class AssetFunding extends React.Component {
       this.setState({
         selectedMaxValue: false,
         selectedOwnership: number !== '' ? Number(number) : null,
-        selectedAmountEth: number !== '' ? parseFloat((totalSupply * (number / 100)).toFixed(2)) : null,
+        selectedAmountEth: number !== '' ? parseFloat((totalSupply * (number / 100)).toFixed(DEFAULT_TOKEN_MAX_DECIMALS)) : null,
       })
     }
   }
@@ -65,7 +69,7 @@ class AssetFunding extends React.Component {
     this.setState({
       selectedAmountEth: number,
       selectedOwnership: parseFloat(((number / totalSupply) * 100).toFixed(2)),
-      selectedMaxValue: number >= maxInvestment.toFixed(2) ? true : false,
+      selectedMaxValue: number >= maxInvestment.toFixed(DEFAULT_TOKEN_MAX_DECIMALS) ? true : false,
     })
   }
 

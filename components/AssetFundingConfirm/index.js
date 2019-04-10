@@ -24,6 +24,7 @@ import {
 } from './footer';
 import {
   DEFAULT_TOKEN,
+  DEFAULT_TOKEN_MAX_DECIMALS,
 } from 'constants/app';
 import {
   MYBIT_FOUNDATION_FEE,
@@ -90,7 +91,7 @@ class AssetFundingConfirm extends React.Component {
     const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountContributed : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountContributed);
 
     // calculate gas from knowing the cost in ETH
-    const gasInDai = kyberLoading ? 0 : parseFloat(convertFromTokenToDefault('ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(2));
+    const gasInDai = kyberLoading ? 0 : parseFloat(convertFromTokenToDefault('ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(DEFAULT_TOKEN_MAX_DECIMALS));
     const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, gasInDai);
 
     const totalToPayInDai = amountToPay + gasInDai;

@@ -18,6 +18,7 @@ import WithdrawCollateral from 'components/WithdrawCollateral';
 import {
   PLATFORM_TOKEN,
   DEFAULT_TOKEN,
+  DEFAULT_TOKEN_MAX_DECIMALS,
 } from 'constants/app';
 let Bizcharts;
 if(typeof window !== 'undefined'){
@@ -214,8 +215,8 @@ const getTimeFilteredData = (managerPercentage, revenueData, type) => {
       assetRevenue += totalRevenue;
     }
 
-    data['Asset Revenue'] = Number((assetRevenue).toFixed(2));
-    data['Manager Fee'] = Number((managerFee).toFixed(2));
+    data['Asset Revenue'] = Number((assetRevenue).toFixed(DEFAULT_TOKEN_MAX_DECIMALS));
+    data['Manager Fee'] = Number((managerFee).toFixed(DEFAULT_TOKEN_MAX_DECIMALS));
 
     totalProfit += managerFee;
 
