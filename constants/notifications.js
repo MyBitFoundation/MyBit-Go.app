@@ -190,7 +190,7 @@ export const getContentForNotification = (obj) => {
             title: <span style={{marginRight: '10px'}}>Withdrew collateral of {withdrawCollateral.assetName} successfuly</span>,
             message: (
                 <React.Fragment>
-                  <span style={{display: 'block'}}>Amount received: <span style={{fontWeight: 600}}>{`${withdrawCollateral.amount.toLocaleString('en-US')} ${PLATFORM_TOKEN} (${withdrawCollateral.percentage}%)`}</span></span>
+                  <span style={{display: 'block'}}>Amount received: <span style={{fontWeight: 600}}>{`${amount} (${withdrawCollateral.percentage}%)`}</span></span>
                 </React.Fragment>
               )
           }

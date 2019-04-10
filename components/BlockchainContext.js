@@ -27,6 +27,9 @@ import {
   formatMonetaryValue,
   fromWeiToEth,
 } from 'utils/helpers';
+import {
+  PLATFORM_TOKEN,
+} from 'constants/app';
 
 const { Provider, Consumer } = React.createContext({});
 
@@ -331,6 +334,7 @@ class BlockchainProvider extends React.Component {
     } = this.props.notificationsContext;
 
     const notificationId = Date.now();
+    const formattedAmount = formatMonetaryValue(amount, PLATFORM_TOKEN);
 
     //update state so users can't trigger the withdrawal multiple times
     const withdrawingCollateral = this.state.withdrawingCollateral.slice();
@@ -385,7 +389,7 @@ class BlockchainProvider extends React.Component {
       buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.SUCCESS, {
         assetName,
         percentage,
-        amount,
+        amount: formattedAmount,
       });
     }
 
