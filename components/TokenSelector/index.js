@@ -41,7 +41,13 @@ class TokenSelector extends React.Component {
     } = this.props;
 
     if(nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
-      this.processBalances(nextProps, false);
+      // Due to the async nature of the app, the balances object may be empty initially,
+      // in which case we want to call onChange
+      if(Object.keys(nextProps.balances).length > 0 && Object.keys(balances).length === 0){
+        this.processBalances(nextProps, true);
+      } else {
+        this.processBalances(nextProps, false);
+      }
     }
   }
 

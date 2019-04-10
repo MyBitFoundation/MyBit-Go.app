@@ -45,24 +45,24 @@ class ListAssetPage extends React.Component {
     super(props);
     this.state = {
       data: {
-        userCity: 'Zug',
-        userCountry: 'Switzerland',
-        assetAddress1: 'a',
-        assetAddress2: 'a',
-        assetCity: 'a',
-        assetCountry: 'a',
-        assetProvince: 'a',
-        assetPostalCode: 'a',
+        userCity: '',
+        userCountry: '',
+        assetAddress1: '',
+        assetAddress2: '',
+        assetCity: '',
+        assetCountry: '',
+        assetProvince: '',
+        assetPostalCode: '',
         fileList: [],
-        managementFee: 10,
+        managementFee: 0,
         maxCollateralPercentage: 100,
         collateralPercentage: 0,
         collateralMyb: 0,
         collateralDai: 0,
         collateralSelectedToken: 0,
-        partnerContractAddress: '0x794C156557a3742B532427F735A27A874e67c9b9',
-        selectedToken: DEFAULT_TOKEN,
-        operatorId: '0xe00dcc82779989c965d62e31acb45455eda5bf69d7912a661fd6ce80ff4bf05a',
+        partnerContractAddress: '',
+        selectedToken: '',
+        operatorId: '',
       },
       countries: COUNTRIES,
       isUserListingAsset: false,
@@ -112,7 +112,6 @@ class ListAssetPage extends React.Component {
     const balances = this.props.metamaskContext.user.balances;
 
     const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
-
     const collateralSelectedToken = balances ? convertFromDefaultToken(selectedToken, balances, collateralDai) : 0;
 
     this.setState({
