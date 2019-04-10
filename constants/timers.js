@@ -1,0 +1,6 @@
+export const FETCH_TRANSACTION_HISTORY_TIME = 60 * 1000;
+export const LOAD_METAMASK_USER_DETAILS_TIME = 5 * 1000;
+export const FETCH_ASSETS_TIME = 30 * 1000;
+export const CHECK_LOGIN_TIME = 5 * 1000;
+export const LOAD_PRICES_TIME = 1000 * 60 * 10;
+export const LOAD_SUPPORTED_TOKENS_TIME = 1000 * 60 * 30;

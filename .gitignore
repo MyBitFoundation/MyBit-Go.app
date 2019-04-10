@@ -70,3 +70,7 @@ typings/
 
 # compiled server
 lib
+
+.next
+
+bundles

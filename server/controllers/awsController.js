@@ -14,10 +14,10 @@ const s3bucket = new AWS.S3({
   Bucket: bucketName,
 });
 
-export const handleFileUpload = (file, assetId) => {
+export const handleFileUpload = (files, assetId) => {
   new Promise(async (resolve, reject) => {
     const responseData = [];
-    file.map((item) => {
+    files.map((item) => {
       const params = {
         Bucket: bucketName,
         Key: `${assetId}:${item.originalname}`,
@@ -29,7 +29,7 @@ export const handleFileUpload = (file, assetId) => {
           reject();
         } else {
           responseData.push(data);
-          if (responseData.length === file.length) {
+          if (responseData.length === files.length) {
             ProcessFilesForAssets();
             console.log("Uploaded file(s) successfuly.")
             resolve(responseData);
