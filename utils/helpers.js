@@ -14,7 +14,7 @@ export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether
 
 export const formatValueForToken = (value, symbol) => {
   const decimalsForToken = getDecimalsForToken(symbol)
-  return value.toFixed(decimalsForToken.decimals);
+  return Number(value).toFixed(decimalsForToken.decimals);
 }
 
 export const getDecimalsForToken = symbol => {

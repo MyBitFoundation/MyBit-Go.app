@@ -112,8 +112,6 @@ class TokenSelector extends React.Component {
       sortedBalances,
     } = this.state;
 
-    console.log(sortedBalances)
-
     return sortedBalances.length > 0 && sortedBalances[0].enoughFunds && sortedBalances[0].symbol.toLowerCase();
   }
 
