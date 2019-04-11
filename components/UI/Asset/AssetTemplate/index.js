@@ -6,7 +6,7 @@ import AssetTemplateLocationIcon from './assetTemplateLocationIcon';
 import AssetTemplateName from './assetTemplateName';
 import AssetTemplateLocation from './assetTemplateLocation';
 import RevenueGenerator from 'components/RevenueGenerator';
-const dev = process.env.NODE_ENV !== 'production';
+const dev = true;
 
 class AssetTemplate extends React.PureComponent {
   state = {
