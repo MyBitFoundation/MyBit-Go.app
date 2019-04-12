@@ -107,8 +107,8 @@ const ManageAssetAssetInfo = React.memo(({
           </div>
           <Button
             type="primary"
-            disabled={Number(toWithdraw) === 0}
-            loading={isWithdrawingAssetManager}
+            disabled={toWithdraw === 0}
+            loading={isWithdrawingAssetManager && toWithdraw !== 0}
             onClick={withdrawProfitAssetManager}
           >
             {isWithdrawingAssetManager ? 'Withdrawing' : 'Withdraw'}
