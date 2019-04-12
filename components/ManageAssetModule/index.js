@@ -10,6 +10,8 @@ import {
 import ERRORS from './errors';
 import * as Brain from '../../apis/brain';
 import dayjs from 'dayjs';
+import BN from 'bignumber.js';
+BN.config({ EXPONENTIAL_AT: 80 });
 
 class ManageAssetModule extends React.Component{
   state = {
@@ -50,7 +52,7 @@ class ManageAssetModule extends React.Component{
       } = asset;
 
       // calculate collateral data to be displayed
-      const percentageWithdrawn = remainingEscrow !== assetManagerCollateral ? 100 - ((remainingEscrow * 100) / assetManagerCollateral) : 0;
+      const percentageWithdrawn = remainingEscrow !== assetManagerCollateral ? BN(100).minus(BN(remainingEscrow).times(100).div(assetManagerCollateral).toNumber()).toNumber() : 0;
       const percentageWithdrawableCollateral = ((assetIncomeForCollateral * 100) / fundingGoal) / 100;
 
       const collateralData = [];
