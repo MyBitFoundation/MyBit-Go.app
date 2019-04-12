@@ -302,7 +302,8 @@ class BlockchainProvider extends React.Component {
       });
     }
 
-    const onSuccess = () => {
+    const onSuccess = async () => {
+      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
       updatewithdrawingAssetManager();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.SUCCESS, {
         assetName,
@@ -384,7 +385,8 @@ class BlockchainProvider extends React.Component {
       });
     }
 
-    const onSuccess = () => {
+    const onSuccess = async () => {
+      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
       updateWithdrawingCollateral();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.SUCCESS, {
         assetName,

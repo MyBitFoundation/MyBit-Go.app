@@ -158,7 +158,7 @@ class ManageAssetModule extends React.Component{
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     this.getData(nextProps);
   }
 
