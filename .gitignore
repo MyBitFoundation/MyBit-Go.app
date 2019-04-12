@@ -67,3 +67,10 @@ typings/
 
 # storybook
 .out
+
+# compiled server
+lib
+
+.next
+
+bundles
