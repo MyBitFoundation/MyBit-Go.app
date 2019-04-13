@@ -42,7 +42,7 @@ class PortfolioPage extends React.Component{
   render = () => {
     const {
       loading,
-      assets,
+      portfolioData,
       withdrawInvestorProfit,
       withdrawingAssetIds,
       payoutAsset,
@@ -57,6 +57,20 @@ class PortfolioPage extends React.Component{
     if(loading){
       return <Loading message="Loading Portfolio" />;
     }
+
+    const {
+      assets,
+      stats,
+    } = portfolioData;
+
+    const {
+      unrealisedProfitInvestor,
+      unrealisedProfitManager,
+      realisedProfitInvestor,
+      realisedProfitManager,
+      totalAssetValue,
+      totalAssetRevenue,
+    } = stats;
 
     const currentView = type;
 
@@ -99,40 +113,39 @@ class PortfolioPage extends React.Component{
             </ButtonGroup>
           </PortfolioPageNavButtons>
           <ValueDisplay
-            text="Total Portfolio Value"
-            value={formatMonetaryValue(assets.length > 0 ? assets[assets.length - 1].totalAssetValue : 0)}
+            text={currentView === PortfolioTypes.MANAGED_ASSETS ? 'Total Portfolio Revenue' : 'Total Portfolio Value'}
+            value={formatMonetaryValue(currentView === PortfolioTypes.MANAGED_ASSETS ? stats.totalAssetRevenue : stats.totalAssetValue)}
+            icon={currentView === PortfolioTypes.MANAGED_ASSETS ? <LineChart /> : <PieChart />}
+            hasSeparator
+            hasIcon
+            hasShadow
+            isBlue={currentView === PortfolioTypes.INVESTMENTS}
+            isGreen={currentView === PortfolioTypes.MANAGED_ASSETS}
+            coloredBackground
+            customClassName="PortfolioPage__ValueDisplay--is-1"
+          />
+          <ValueDisplay
+            text="Unrealised Profit"
+            value={formatMonetaryValue(currentView === PortfolioTypes.MANAGED_ASSETS ? unrealisedProfitManager : unrealisedProfitInvestor)}
             icon={<PieChart />}
             hasSeparator
             hasIcon
             hasShadow
             isBlue
             coloredBackground
-            customClassName="PortfolioPage__ValueDisplay--is-portfolioRevenue"
+            customClassName="PortfolioPage__ValueDisplay--is-2"
           />
           <ValueDisplay
-            text="Total Revenue"
-            value={formatMonetaryValue(assetsToRender.length > 0 ? assetsToRender[assetsToRender.length - 1].totalAssetRevenue : 0)}
+            text="Realised Profit"
+            value={formatMonetaryValue(currentView === PortfolioTypes.MANAGED_ASSETS ? realisedProfitManager : realisedProfitInvestor)}
             icon={<LineChart />}
             hasSeparator
             hasIcon
             hasShadow
             isGreen
             coloredBackground
-            customClassName="PortfolioPage__ValueDisplay--is-totalRevenue"
+            customClassName="PortfolioPage__ValueDisplay--is-3"
           />
-          {currentView === PortfolioTypes.MANAGED_ASSETS && (
-            <ValueDisplay
-              text="Total Management Profit"
-              value={formatMonetaryValue(assetsToRender.length > 0 ? assetsToRender[assetsToRender.length - 1].totalManagementProfit : 0)}
-              icon={<Sliders />}
-              hasSeparator
-              hasIcon
-              hasShadow
-              isBlue
-              coloredBackground
-              customClassName="PortfolioPage__ValueDisplay--is-managementProfit"
-            />
-          )}
         </PortfolioPageValueDisplays>
         {assetsToDisplay.length > 0 && (
           <React.Fragment>
