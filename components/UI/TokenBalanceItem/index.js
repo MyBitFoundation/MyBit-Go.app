@@ -21,7 +21,7 @@ const TokenBalanceItem = ({
     <TokenBalanceItemWrapper
       enoughFunds={enoughFunds}
     >
-      <div>
+      <div style={{display: 'flex'}}>
         <TokenBalanceItemCircle color={colorHash.hex(name)}/>
         <TokenBalanceItemName>
           {name}

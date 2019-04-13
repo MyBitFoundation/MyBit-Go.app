@@ -8,7 +8,6 @@ const TokenBalanceItemName = styled.span`
   text-transform: uppercase;
   color: ${({theme}) => theme.colors.black2};
   position: relative;
-  top: -6px;
   margin-left: 5px;
 }`
 
