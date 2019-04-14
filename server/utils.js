@@ -16,7 +16,6 @@ export const handleRedirects = (req, res, handle, app, isAssetPage) => {
   // Case where its asset page
   const assetRegex = assetPageRegex.exec(req.path);
   const isAssetUrl = assetRegex && assetRegex.length > 0;
-
   // Should redirect
   if((routes.includes(req.path) || isAssetUrl) && (!haveCookies || req.headers.cookie.indexOf('mybit_new_user') === -1)){
     const redirectTo = {
@@ -42,6 +41,8 @@ export const handleRedirects = (req, res, handle, app, isAssetPage) => {
     * router handler handle it.
     */
     return null;
+  } else if(req.path === '/'){
+    return app.render(req, res, "/explore");
   } else {
     return handle(req, res)
   }
