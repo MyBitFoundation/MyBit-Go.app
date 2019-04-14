@@ -34,6 +34,7 @@ import {
   convertFromPlatformToken,
   convertFromDefaultToken,
   convertFromTokenToDefault,
+  formatValueForToken,
 } from 'utils/helpers';
 
 const MAX_WIDTH_DESKTOP = "500px";
@@ -221,7 +222,7 @@ class ListAssetPage extends React.Component {
           percentage = selectedAmount;
           myb = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokens, assetValue * (selectedAmount / 100))
           dai = assetValue * (selectedAmount / 100)
-          collateralSelectedToken = convertFromDefaultToken(selectedToken, supportedTokens, dai)
+          collateralSelectedToken = formatValueForToken(convertFromDefaultToken(selectedToken, supportedTokens, dai), selectedToken)
           break;
         case "myb":
           myb = selectedAmount > maxInMyb ? maxInMyb : selectedAmount

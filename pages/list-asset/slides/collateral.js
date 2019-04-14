@@ -117,7 +117,7 @@ export const CollateralSlide = ({
   const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
   const decimalsOfPlatformToken = getDecimalsForToken(PLATFORM_TOKEN);
   const collateralSelectedTokenFormatted = formatValueForToken(collateralSelectedToken, selectedToken);
-  const collateralPlatformTokenFormatted = formatValueForToken(collateralMyb, PLATFORM_TOKEN);
+
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
@@ -190,8 +190,8 @@ export const CollateralSlide = ({
             >
               <Label>Currency you pay in</Label>
               <NumericInput
-                defaultValue={collateralSelectedTokenFormatted}
-                value={collateralSelectedTokenFormatted}
+                defaultValue={collateralSelectedToken}
+                value={collateralSelectedToken}
                 min={0}
                 disabled={noBalance}
                 step={decimalsOfSelectedTokens.step}
