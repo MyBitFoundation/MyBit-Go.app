@@ -214,15 +214,13 @@ class ListAssetPage extends React.Component {
             : selectedTokenInfo.balanceInDai;
 
       maxCollateralPercentage = maxAmountAllowedInDai === 0 ? 0 : parseInt((maxAmountAllowedInDai / assetValue) * 100);
-
       const maxInMyb = maxAmountAllowedInDai === 0 ? 0 : convertFromDefaultToken(PLATFORM_TOKEN, supportedTokens, maxAmountAllowedInDai);
       const maxCollateralSelectedToken = maxAmountAllowedInDai === 0 ? 0 : convertFromDefaultToken(selectedToken, supportedTokens, maxAmountAllowedInDai);
-
       switch (name) {
         case "percentage":
           percentage = selectedAmount;
-          myb = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokens, maxAmountAllowedInDai * (selectedAmount / 100))
-          dai = maxAmountAllowedInDai * (selectedAmount / 100)
+          myb = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokens, assetValue * (selectedAmount / 100))
+          dai = assetValue * (selectedAmount / 100)
           collateralSelectedToken = convertFromDefaultToken(selectedToken, supportedTokens, dai)
           break;
         case "myb":
