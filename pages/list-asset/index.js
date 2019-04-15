@@ -310,6 +310,7 @@ class ListAssetPage extends React.Component {
             nextButtonText: (!dev && !civic.token) && 'Continue with Civic',
             isCivicButton: !dev && !civic.token,
             nextButtonHandler: (!dev && !civic.token) && civic.signUp,
+            onSuccessMoveToNextSlide: true,
           },
         }, {
           toRender: (

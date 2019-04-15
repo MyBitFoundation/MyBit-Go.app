@@ -79,10 +79,12 @@ class Civic extends Component {
   }
 
   signUp(onSuccess, onReadCallback, onErrorCallback) {
-    console.log('civic signup')
     this.civicSip.signup({
       style: 'popup',
       scopeRequest: this.civicSip.ScopeRequests.BASIC_SIGNUP,
+    });
+    this.civicSip.on('auth-code-received', event => {
+      onSuccess();
     });
   }
 

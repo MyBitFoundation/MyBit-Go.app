@@ -63,6 +63,7 @@ class CarouselWithNavigation extends React.Component {
       isCivicButton,
       nextButtonHandler,
       nextButtonLoading,
+      onSuccessMoveToNextSlide,
     } = slides[currentSlide].buttons;
 
     const {
@@ -159,7 +160,7 @@ class CarouselWithNavigation extends React.Component {
               key={`${nextButtonText} ${currentSlide} 'next'`}
               desktopAt={desktopAt}
               type="primary"
-              onClick={nextButtonHandler ? nextButtonHandler : currentSlide === slides.length - 1 ? onFinish : this.next}
+              onClick={nextButtonHandler ? onSuccessMoveToNextSlide ? () => nextButtonHandler(this.next) : nextButtonHandler : currentSlide === slides.length - 1 ? onFinish : this.next}
               disabled={nextButtonDisabled}
               isCivicButton={isCivicButton}
               loading={nextButtonLoading}
