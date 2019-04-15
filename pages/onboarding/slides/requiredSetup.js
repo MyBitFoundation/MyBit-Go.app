@@ -9,9 +9,9 @@ import {
 
 const Image = styled.img`
   position: absolute;
-  top: 165px;
   right: 10px;
-  width: 77px;
+  width: 68px;
+  top: 141px;
   display: none !important;
 
   ${({theme}) => theme.tablet`
@@ -79,22 +79,6 @@ const RequiredSetup = withBancorContext(({
         }}
       >
         Get Ether
-      </a>
-    </CarouselSlideParagraph>
-    <CarouselSlideParagraph
-      isShorter
-    >
-      MyBit Tokens (MYB), the native token that fuels the <br />
-      MyBit Network. Applications such as MyBit Go, which <br />
-      run on the Network, require MYB to use.{" "}
-      <a
-        href="/bankor"
-        onClick={(e) => {
-          e.preventDefault();
-          bancorContext.initBancor();
-        }}
-      >
-        Get MYB
       </a>
     </CarouselSlideParagraph>
   </CarouselSlide>
