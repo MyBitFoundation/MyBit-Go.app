@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Dropdown,
   Menu,
@@ -18,6 +19,9 @@ import Separator from 'ui/Separator';
 import TokenSelectorSearchWrapper from './tokenSelectorSearchWrapper';
 import TokenSelectorAmount from './tokenSelectorAmount';
 import TokenSelectorNoResults from './tokenSelectorNoResults';
+import ThinkingIcon from 'static/ic_thinking.svg';
+import TokenSelectorLabel from './tokenSelectorLabel';
+import TokenSelectorValue from './tokenSelectorValue';
 
 const separatorStyle = {
   position: 'relative',
@@ -104,12 +108,14 @@ class TokenSelector extends React.Component {
     if(searchValue.trim() === ''){
       this.setState({
         sortedBalances: sortedBalancesBackup,
+        searchValue,
       })
       return;
     }
     const matches = sortedBalancesBackup.filter(balance => balance.symbol.includes(searchValue.toUpperCase()))
     this.setState({
       sortedBalances: matches,
+      searchValue,
     })
   }
 
@@ -140,7 +146,7 @@ class TokenSelector extends React.Component {
     return balancesToReturn;
   }
 
-  getMenu = (balances, totalTokens, amountToPay) => {
+  getMenu = (balances, totalTokens, amountToPay, searchValue) => {
     const {
       hoveringToken,
       sortedBalancesBackup,
@@ -149,22 +155,29 @@ class TokenSelector extends React.Component {
     const tokenToConvertFrom = hoveringToken && this.getTokenToConvertFrom();
 
     return (
-      <Menu style={{minHeight: '268px', minWidth: '284px'}}>
+      <Menu style={{height: '268px', width: '284px'}}>
         <TokenSelectorSearchWrapper
           key="search"
         >
           <TokenSelectorSearch
             placeholder="Search Token"
             onChange={this.handleSearchInputChanged}
+            maxlength={10}
           />
           <div>
             <TokenSelectorAmount>
-              Amount: <span>{formatMonetaryValue(amountToPay)}</span>
+              <div>Amount to pay:</div>
+              <div>
+                <span>{formatMonetaryValue(amountToPay)}</span>
+              </div>
             </TokenSelectorAmount>
+            <Separator style={separatorStyle}/>
           </div>
           {(balances.length === 0 && sortedBalancesBackup.length > 0) && (
             <TokenSelectorNoResults>
-              No results
+              <ThinkingIcon />
+              <TokenSelectorValue>{searchValue}?</TokenSelectorValue>
+              <TokenSelectorLabel>Looks like Kyber doesn't have this token. Try searching a different one.</TokenSelectorLabel>
             </TokenSelectorNoResults>
           )}
         </TokenSelectorSearchWrapper>
@@ -214,6 +227,7 @@ class TokenSelector extends React.Component {
       totalTokens,
       sortedBalances,
       visible,
+      searchValue,
     } = this.state;
 
     const {
@@ -221,7 +235,7 @@ class TokenSelector extends React.Component {
       balances,
     } = this.props;
 
-    const overlay = this.getMenu(sortedBalances, totalTokens, amountToPay);
+    const overlay = this.getMenu(sortedBalances, totalTokens, amountToPay, searchValue);
 
     return (
       <Dropdown

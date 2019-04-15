@@ -5,6 +5,7 @@ const TokenBalanceItemWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0px 10px;
 
   ${props => !props.enoughFunds && css`
     opacity: 0.7;
