@@ -189,7 +189,8 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
     const randomURI = generateRandomURI(window.web3js);
     const api = await Network.api();
     const response = await Network.createAsset({
-      escrow: toWei(collateral),
+      // in case collateral turns out to have more than 18 decimals, force a max.
+      escrow: toWei(collateral.toFixed(18)),
       assetURI: randomURI,
       assetManager: userAddress,
       fundingLength: CROWDSALE_DURATION,

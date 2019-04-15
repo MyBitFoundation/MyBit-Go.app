@@ -84,6 +84,14 @@ const TokenSelectorWrapper = styled.div`
   }
 `
 
+const Label = styled.div`
+  margin-left: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: ${({theme}) => theme.colors.grayBase};
+`
+
 const Loading = styled(Spin)`
   display: block;
   margin: 0 auto;
@@ -109,7 +117,7 @@ export const CollateralSlide = ({
   const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
   const decimalsOfPlatformToken = getDecimalsForToken(PLATFORM_TOKEN);
   const collateralSelectedTokenFormatted = formatValueForToken(collateralSelectedToken, selectedToken);
-  const collateralPlatformTokenFormatted = formatValueForToken(collateralMyb, PLATFORM_TOKEN);
+
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
@@ -163,14 +171,16 @@ export const CollateralSlide = ({
               disabled={noBalance}
             />
             <MybitInput>
+              <Label>Collateral in {PLATFORM_TOKEN}</Label>
               <NumericInput
-                defaultValue={collateralPlatformTokenFormatted}
-                value={collateralPlatformTokenFormatted}
+                defaultValue={collateralPercentage}
+                value={collateralPercentage}
                 min={0}
-                label={PLATFORM_TOKEN}
-                onChange={value => handleCollateralChange({selectedAmount: value}, "myb")}
-                decimalPlaces={decimalsOfPlatformToken.decimals}
-                step={decimalsOfPlatformToken.step}
+                label="%"
+                max={maxCollateralPercentage}
+                onChange={value => handleCollateralChange({selectedAmount: value}, "percentage")}
+                decimalPlaces={2}
+                step={1}
                 disabled={noBalance}
               />
             </MybitInput>
@@ -178,9 +188,10 @@ export const CollateralSlide = ({
             <TokenSelectorWrapper
               selectorIsDisabled={noBalance}
             >
+              <Label>Currency you pay in</Label>
               <NumericInput
-                defaultValue={collateralSelectedTokenFormatted}
-                value={collateralSelectedTokenFormatted}
+                defaultValue={collateralSelectedToken}
+                value={collateralSelectedToken}
                 min={0}
                 disabled={noBalance}
                 step={decimalsOfSelectedTokens.step}
