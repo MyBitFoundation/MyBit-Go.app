@@ -69,10 +69,6 @@ app
     }
   });
 
-  server.get('/', (req, res) => {
-    return app.render(req, res, "/explore");
-  })
-
   server.get('/api/assets/files', (req, res) => {
     res.json({
       filesByAssetId: AwsController.filesByAssetId,
