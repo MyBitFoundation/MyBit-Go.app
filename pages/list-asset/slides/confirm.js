@@ -68,7 +68,7 @@ export const ConfirmSlide = ({
         <section>
           <b>Location</b>
           <p>
-            {formData.userCity === "" ? "[city missing]" : formData.userCity}/
+            {formData.userCity === "" ? "[city missing]" : formData.assetCity}/
             {formData.userCountry === ""
               ? "[country missing]"
               : formData.userCountry}

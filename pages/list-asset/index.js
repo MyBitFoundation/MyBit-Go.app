@@ -196,6 +196,25 @@ class ListAssetPage extends React.Component {
     })
   }
 
+  handleSelectSuggest = suggest => {
+    const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1']);
+    const {
+      locality,
+      route,
+      postal_code,
+      administrative_area_level_1,
+    } = locationData;
+    this.setState({
+      data: {
+        ...this.state.data,
+        assetAddress1: route,
+        assetCity: administrative_area_level_1,
+        assetProvince: locality,
+        assetPostalCode: postal_code
+      }
+    })
+  }
+
   handleFileUpload = filesObject => {
     // so that we get no loading animation in the UI next to the file name
     filesObject.file.status = 'success';
@@ -382,12 +401,13 @@ class ListAssetPage extends React.Component {
               formData={data}
               countries={countries}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
+              handleSelectSuggest={this.handleSelectSuggest}
             />
           ), buttons: {
             hasNextButton: true,
             hasBackButton: true,
             nextButtonDisabled:
-              data.assetCountry !== "" &&
+              data.userCountry !== "" &&
               data.assetAddress1 !== "" &&
               data.assetCity !== "" &&
               data.assetProvince !== "" &&
