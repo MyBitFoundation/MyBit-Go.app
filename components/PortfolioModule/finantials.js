@@ -1,3 +1,5 @@
+import BN from 'bignumber.js';
+BN.config({ EXPONENTIAL_AT: 80 });
 import {
   fromWeiToEth,
 } from 'utils/helpers';
@@ -6,27 +8,18 @@ export const getAllUserAssets = (assets, address) =>
   assets
     .filter(asset => (asset.percentageOwnedByUser !== 0 || asset.isAssetManager))
 
-const calculateAssetValue = (currentValue, asset) => {
+const calculateAssetValue = (asset, toCalculate) => {
   if(asset.percentageOwnedByUser !== 0){
-    currentValue += asset.percentageOwnedByUser * asset.fundingGoal;
+    toCalculate.totalAssetValue = BN(toCalculate.totalAssetValue).plus(BN(asset.percentageOwnedByUser).times(asset.fundingGoal).toNumber());
   }
-  // An asset manager can invest in its own asset
-  if(asset.isAssetManager){
-    currentValue += asset.fundingGoal;
-  }
-  return currentValue;
 }
 
-const calculateAssetRevenue = (currentValue, asset) => {
-  const investorRevenue = asset.percentageOwnedByUser * asset.assetIncome;
-
-  const assetManagerRevenue = asset.isAssetManager ? asset.managerPercentage * asset.assetIncome : 0;
-
-  // An asset manager can invest in its own asset
-  return currentValue + investorRevenue + assetManagerRevenue;
+const calculateAssetRevenue = (asset, toCalculate) => {
+  const assetManagerRevenue = asset.isAssetManager ? asset.assetIncome : 0;
+  toCalculate.totalAssetRevenue = BN(toCalculate.totalAssetRevenue).plus(assetManagerRevenue).toNumber();
 }
 
-const getInvestmentDetailsFromAsset = (asset) => {
+const getInvestmentDetailsFromAsset = (asset, toCalculate) => {
   const { 
     assetId,
     name,
@@ -40,7 +33,9 @@ const getInvestmentDetailsFromAsset = (asset) => {
   }
 
   const unrealizedProfit = fromWeiToEth(owedToInvestor);
-  const totalProfit = percentageOwnedByUser * assetIncome;
+  const totalProfit = BN(percentageOwnedByUser).times(assetIncome).toNumber();
+  toCalculate.realisedProfitInvestor = BN(toCalculate.realisedProfitInvestor).plus(BN(totalProfit).minus(unrealizedProfit).toNumber()).toNumber();
+  toCalculate.unrealisedProfitInvestor = BN(toCalculate.unrealisedProfitInvestor).plus(unrealizedProfit).toNumber();
 
   return {
     ...asset,
@@ -50,7 +45,7 @@ const getInvestmentDetailsFromAsset = (asset) => {
   };
 }
 
-const getManagerDetailsFromAsset = (asset) => {
+const getManagerDetailsFromAsset = (asset, toCalculate) => {
   if(!asset.isAssetManager){
     return null;
   }
@@ -61,7 +56,10 @@ const getManagerDetailsFromAsset = (asset) => {
     owedToAssetManager,
   } = asset;
 
-  const totalProfitAssetManager = assetIncome * managerPercentage;
+  const totalProfitAssetManager = BN(assetIncome).times(managerPercentage).toNumber();
+  toCalculate.realisedProfitManager = BN(toCalculate.realisedProfitManager).plus(BN(totalProfitAssetManager).minus(owedToAssetManager).toNumber()).toNumber();
+  toCalculate.unrealisedProfitManager = BN(toCalculate.unrealisedProfitManager).plus(owedToAssetManager).toNumber();
+
   return {
     ...asset,
     totalProfitAssetManager,
@@ -70,24 +68,33 @@ const getManagerDetailsFromAsset = (asset) => {
 }
 
 export const getPortfolioAssetDetails = (assets, cb) => {
-  let totalAssetRevenue = 0;
-  let totalAssetValue = 0;
-  let totalManagementProfit = 0;
-  const toReturn = assets.map(asset => {
-    totalAssetValue = calculateAssetValue(totalAssetValue, asset);
-    totalAssetRevenue = calculateAssetRevenue(totalAssetRevenue, asset);
-    const managerDetails = getManagerDetailsFromAsset(asset);
-    totalManagementProfit += asset.isAssetManager ? managerDetails.totalProfitAssetManager : 0;
+  const toCalculate = {
+    unrealisedProfitInvestor: 0,
+    unrealisedProfitManager: 0,
+    realisedProfitInvestor: 0,
+    realisedProfitManager: 0,
+    totalAssetValue: 0,
+    totalAssetRevenue: 0,
+  };
+  const assetData = assets.map(asset => {
+    calculateAssetValue(asset, toCalculate);
+    calculateAssetRevenue(asset, toCalculate);
+    const managerDetails = getManagerDetailsFromAsset(asset, toCalculate);
+    const investmentDetails = getInvestmentDetailsFromAsset(asset, toCalculate);
 
     return {
-      investmentDetails: getInvestmentDetailsFromAsset(asset),
+      investmentDetails,
       managerDetails,
-      totalAssetValue,
-      totalAssetRevenue,
-      totalManagementProfit,
       assetId: asset.assetId,
     }
   })
+
+  const toReturn = {
+    stats: {
+      ...toCalculate,
+    },
+    assets: assetData,
+  }
 
   return cb ? cb(toReturn) : toReturn;
 }

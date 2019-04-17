@@ -11,6 +11,8 @@ const dev = process.env.NODE_ENV !== 'production';
 import * as CivicController from './controllers/civicController';
 import * as AwsController from './controllers/awsController';
 import * as AirTableController from './controllers/airTableController';
+import * as AssetsController from './controllers/assetsController';
+
 import {
   handleRedirects,
 } from './utils';
@@ -73,6 +75,15 @@ app
     res.json({
       filesByAssetId: AwsController.filesByAssetId,
     });
+  });
+
+  server.use('/api/assets', (req, res) => {
+    try{
+      res.json(AssetsController.assets);
+    }catch(err){
+      res.statusCode = 500;
+      res.send(error);
+    }
   });
 
   server.post('/api/files/upload', multipleUpload, async (req, res) => {

@@ -57,10 +57,10 @@ class PortfolioModule extends React.Component {
     }
 
     const ownedAssets = getAllUserAssets(assets, user.address);
-    getPortfolioAssetDetails(ownedAssets, (assets) => {
+    getPortfolioAssetDetails(ownedAssets, portfolioData => {
       this.setState({
         loading: false,
-        assets,
+        portfolioData,
         withdrawingAssetIds,
         payoutAsset,
         callingPayout,
@@ -68,12 +68,8 @@ class PortfolioModule extends React.Component {
     });
   }
 
-  render = () => {
-    console.count('portfolio module')
-    return this.props.children(this.state);
-  }
-};
-
+  render = () => this.props.children(this.state)
+}
 
 const enhance = compose(
   withMetamaskContext,
