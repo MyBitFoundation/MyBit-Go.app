@@ -1,3 +1,4 @@
+import Geocode from "react-geocode";
 import styled from 'styled-components';
 import {
   Select,
@@ -22,6 +23,26 @@ const Image = styled.img`
   height: 120px;
   margin-bottom: 40px;
 }`
+
+if(typeof window !== 'undefined'){
+  Geocode.setApiKey("AIzaSyDA7e9ZbkASeRppui8FUWU-jDNeEYOXjt8");
+
+  navigator.geolocation.getCurrentPosition(location => {
+    console.log(location)
+    const {
+      latitude,
+      longitude,
+    } = location.coords;
+    Geocode.fromLatLng(47.167377, 8.516875).then(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  })
+}
 
 export const LocationSlide = ({
   handleInputChange,
