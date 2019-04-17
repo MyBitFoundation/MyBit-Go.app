@@ -9,10 +9,6 @@ jobs:
     steps:
       - checkout
 
-      - run: yarn install
-
-      - run: yarn build
-
       - deploy:
           name: Deploy to Now
           command: |
