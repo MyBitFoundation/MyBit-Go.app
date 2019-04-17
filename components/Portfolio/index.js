@@ -124,7 +124,7 @@ class PortfolioPage extends React.Component{
             isBlue={currentView === PortfolioTypes.INVESTMENTS}
             isGreen={currentView === PortfolioTypes.MANAGED_ASSETS}
             coloredBackground
-            customClassName="PortfolioPage__ValueDisplay--is-1"
+            customClassName="PortfolioPage__ValueDisplay--is-valueOrRevenue"
           />
           <ValueDisplay
             text="Unrealised Profit"
@@ -135,7 +135,7 @@ class PortfolioPage extends React.Component{
             hasShadow
             isBlue
             coloredBackground
-            customClassName="PortfolioPage__ValueDisplay--is-2"
+            customClassName="PortfolioPage__ValueDisplay--is-unrealisedProfit"
           />
           <ValueDisplay
             text="Realised Profit"
@@ -146,7 +146,7 @@ class PortfolioPage extends React.Component{
             hasShadow
             isGreen
             coloredBackground
-            customClassName="PortfolioPage__ValueDisplay--is-3"
+            customClassName="PortfolioPage__ValueDisplay--is-realisedProfit"
           />
         </PortfolioPageValueDisplays>
         {assetsToDisplay.length > 0 && (
