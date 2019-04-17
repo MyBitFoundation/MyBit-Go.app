@@ -91,27 +91,16 @@ class KyberProvider extends React.Component {
 
   fetchSupportedTokens = async () => {
     try{
-      const [
-        supportedTokens,
-        prices,
-      ] = await Promise.all([
-        fetch('https://ropsten-api.kyber.network/currencies'),
-        fetch('https://tracker.kyber.network/api/tokens/pairs'),
-      ])
+      const supportedTokens = await fetch('https://ropsten-api.kyber.network/currencies');
 
-      const [
-        supportedTokensData,
-        pricesData,
-      ] = await Promise.all([
-        supportedTokens.json(),
-        prices.json(),
-      ])
+      const supportedTokensData = await supportedTokens.json();
 
       const supportedTokensInfo = {};
       await Promise.all(supportedTokensData.data.map(async({
         symbol,
         address: contractAddress,
         name,
+        decimals,
       }) => {
         if(symbol === 'ETH'){
           const [
@@ -130,31 +119,22 @@ class KyberProvider extends React.Component {
             exchangeRatePlatformToken,
           }
         } else {
-          const tokenPriceInfo = pricesData[`ETH_${symbol}`];
-          if(tokenPriceInfo){
-            const {
-              currentPrice,
-              decimals,
-            } = tokenPriceInfo;
+          const [
+            exchangeRateDefaultToken,
+            exchangeRatePlatformToken,
+          ] = await Promise.all([
+            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
+            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
+          ])
 
-            const [
+          // This kind of filtering needs to be tested
+          if(exchangeRateDefaultToken && exchangeRatePlatformToken){
+            supportedTokensInfo[symbol] = {
+              contractAddress,
+              name,
+              decimals,
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
-            ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
-            ])
-
-            // This kind of filtering needs to be tested
-            if(exchangeRateDefaultToken && exchangeRatePlatformToken){
-              supportedTokensInfo[symbol] = {
-                contractAddress,
-                name,
-                currentPrice,
-                decimals,
-                exchangeRateDefaultToken,
-                exchangeRatePlatformToken,
-              }
             }
           }
         }
