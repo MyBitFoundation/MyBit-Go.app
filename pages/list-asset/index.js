@@ -1,4 +1,5 @@
 import Router from "next/router";
+import Media from 'react-media';
 import { compose } from 'recompose'
 import {
   Button,
@@ -293,145 +294,155 @@ class ListAssetPage extends React.Component {
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
 
     return (
-      <CarouselWithNavigation
-        redirectOnClose="/explore"
-        navigationTooltips={SliderNavigationTooltips}
-        onFinish={() => {}}
-        maxWidthDesktop={MAX_WIDTH_DESKTOP}
-        nextButtonHasArrow
-        disableMovingForward
-        slides={[{
-          toRender: (
-            <IntroSlide maxWidthDesktop={MAX_WIDTH_DESKTOP}/>
-          ),
-          buttons: {
-            hasNextButton: true,
-            hasBackButton: false,
-            nextButtonText: (!dev && !civic.token) && 'Continue with Civic',
-            isCivicButton: !dev && !civic.token,
-            nextButtonHandler: (!dev && !civic.token) && civic.signUp,
-            onSuccessMoveToNextSlide: true,
-          },
-        }, {
-          toRender: (
-            <LocationSlide
-              handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange}
-              formData={data}
-              countries={countries}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonDisabled: data.userCity !== "" && data.userCountry !== "" ? false : true,
+      <div>
+        <Media query="(min-width: 768px)">
+          {matches =>
+            matches ? (
+              <p>Desktop.</p>
+            ) : (
+              <CarouselWithNavigation
+                redirectOnClose="/explore"
+                navigationTooltips={SliderNavigationTooltips}
+                onFinish={() => {}}
+                maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                nextButtonHasArrow
+                disableMovingForward
+                slides={[{
+                  toRender: (
+                    <IntroSlide maxWidthDesktop={MAX_WIDTH_DESKTOP}/>
+                  ),
+                  buttons: {
+                    hasNextButton: true,
+                    hasBackButton: false,
+                    nextButtonText: (!dev && !civic.token) && 'Continue with Civic',
+                    isCivicButton: !dev && !civic.token,
+                    nextButtonHandler: (!dev && !civic.token) && civic.signUp,
+                    onSuccessMoveToNextSlide: true,
+                  },
+                }, {
+                  toRender: (
+                    <LocationSlide
+                      handleInputChange={this.handleInputChange}
+                      handleSelectChange={this.handleSelectChange}
+                      formData={data}
+                      countries={countries}
+                      maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                    />
+                  ), buttons: {
+                    hasNextButton: true,
+                    hasBackButton: true,
+                    nextButtonDisabled: data.userCity !== "" && data.userCountry !== "" ? false : true,
+                  }
+                }, {
+                  toRender: (
+                    <AvailableAssetsSlide
+                      handleSelectChange={this.handleSelectChange}
+                      formData={data}
+                      maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                      loadingAssets={blockchainContext.loading.assets}
+                    />
+                  ), buttons: {
+                    hasNextButton: true,
+                    hasBackButton: true,
+                    nextButtonDisabled: !category || !asset || !assetValue,
+                  }
+                }, {
+                  toRender: (
+                    <AssetLocationSlide
+                      handleInputChange={this.handleInputChange}
+                      handleSelectChange={this.handleSelectChange}
+                      formData={data}
+                      countries={countries}
+                      maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                    />
+                  ), buttons: {
+                    hasNextButton: true,
+                    hasBackButton: true,
+                    nextButtonDisabled:
+                      data.assetCountry !== "" &&
+                      data.assetAddress1 !== "" &&
+                      data.assetCity !== "" &&
+                      data.assetProvince !== "" &&
+                      data.assetPostalCode !== ""
+                        ? false
+                        : true,
+                  }
+                }, {
+                  toRender: (
+                    <DocsSlide
+                      fileList={fileList}
+                      handleFileUpload={this.handleFileUpload}
+                      maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                    />
+                  ), buttons: {
+                    hasNextButton: true,
+                    hasBackButton: true,
+                  }
+                }, {
+                  toRender: (
+                    <FeesSlide
+                      handleSelectChange={this.handleSelectChange}
+                      managementFee={managementFee}
+                      maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                    />
+                  ), buttons: {
+                    hasNextButton: true,
+                    hasBackButton: true,
+                    nextButtonDisabled: managementFee !== 0 ? false : true,
+                  }
+                }, {
+                  toRender:
+                    <CollateralSlide
+                      collateralSelectedToken={collateralSelectedToken}
+                      collateralDai={collateralDai}
+                      selectedToken={selectedToken}
+                      handleSelectedTokenChange={this.handleSelectedTokenChange}
+                      handleCollateralChange={this.handleCollateralChange}
+                      collateralPercentage={collateralPercentage}
+                      collateralMyb={collateralMyb}
+                      formData={data}
+                      maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                      balances={metamaskContext.user.balances}
+                      maxCollateralPercentage={maxCollateralPercentage}
+                      kyberLoading={kyberLoading}
+                    />
+                  , buttons: {
+                    hasNextButton: true,
+                    hasBackButton: true,
+                  }
+                }, {
+                  toRender: listedAssetId ? (
+                    <SuccessSlide
+                      maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                      assetId={listedAssetId}
+                    />
+                   ) : (
+                    <ConfirmSlide
+                      formData={data}
+                      isUserListingAsset={isUserListingAsset}
+                      listedAssetId={listedAssetId}
+                      maxWidthDesktop={MAX_WIDTH_DESKTOP}
+                      error={false || metamaskErrorsToRender.render}
+                    />
+                  ),
+                  error: false || metamaskErrorsToRender.render,
+                  hideButtons: listedAssetId ? true : false,
+                  buttons: {
+                    hasNextButton: true,
+                    hasBackButton: true,
+                    nextButtonText: isUserListingAsset ? 'Confirming listing' : 'Confirm Listing',
+                    nextButtonLoading: isUserListingAsset,
+                    nextButtonHandler: () => {
+                      this.setUserListingAsset(true);
+                      blockchainContext.handleListAsset(data, this.setUserListingAsset);
+                    },
+                  }
+                }]}
+              />
+            )
           }
-        }, {
-          toRender: (
-            <AvailableAssetsSlide
-              handleSelectChange={this.handleSelectChange}
-              formData={data}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              loadingAssets={blockchainContext.loading.assets}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonDisabled: !category || !asset || !assetValue,
-          }
-        }, {
-          toRender: (
-            <AssetLocationSlide
-              handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange}
-              formData={data}
-              countries={countries}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonDisabled:
-              data.assetCountry !== "" &&
-              data.assetAddress1 !== "" &&
-              data.assetCity !== "" &&
-              data.assetProvince !== "" &&
-              data.assetPostalCode !== ""
-                ? false
-                : true,
-          }
-        }, {
-          toRender: (
-            <DocsSlide
-              fileList={fileList}
-              handleFileUpload={this.handleFileUpload}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-          }
-        }, {
-          toRender: (
-            <FeesSlide
-              handleSelectChange={this.handleSelectChange}
-              managementFee={managementFee}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonDisabled: managementFee !== 0 ? false : true,
-          }
-        }, {
-          toRender:
-            <CollateralSlide
-              collateralSelectedToken={collateralSelectedToken}
-              collateralDai={collateralDai}
-              selectedToken={selectedToken}
-              handleSelectedTokenChange={this.handleSelectedTokenChange}
-              handleCollateralChange={this.handleCollateralChange}
-              collateralPercentage={collateralPercentage}
-              collateralMyb={collateralMyb}
-              formData={data}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              balances={metamaskContext.user.balances}
-              maxCollateralPercentage={maxCollateralPercentage}
-              kyberLoading={kyberLoading}
-            />
-          , buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-          }
-        }, {
-          toRender: listedAssetId ? (
-            <SuccessSlide
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              assetId={listedAssetId}
-            />
-           ) : (
-            <ConfirmSlide
-              formData={data}
-              isUserListingAsset={isUserListingAsset}
-              listedAssetId={listedAssetId}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              error={false || metamaskErrorsToRender.render}
-            />
-          ),
-          error: false || metamaskErrorsToRender.render,
-          hideButtons: listedAssetId ? true : false,
-          buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonText: isUserListingAsset ? 'Confirming listing' : 'Confirm Listing',
-            nextButtonLoading: isUserListingAsset,
-            nextButtonHandler: () => {
-              this.setUserListingAsset(true);
-              blockchainContext.handleListAsset(data, this.setUserListingAsset);
-            },
-          }
-        }]}
-      />
+        </Media>
+      </div>
     );
   }
 }
