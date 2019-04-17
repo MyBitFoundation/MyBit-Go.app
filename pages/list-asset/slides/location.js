@@ -1,4 +1,3 @@
-import Geocode from "react-geocode";
 import styled from 'styled-components';
 import {
   Select,
@@ -21,34 +20,29 @@ const Image = styled.img`
   margin: 10px auto;
   width: 120px;
   height: 120px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }`
 
-if(typeof window !== 'undefined'){
-  Geocode.setApiKey("AIzaSyDA7e9ZbkASeRppui8FUWU-jDNeEYOXjt8");
-
-  navigator.geolocation.getCurrentPosition(location => {
-    console.log(location)
-    const {
-      latitude,
-      longitude,
-    } = location.coords;
-    Geocode.fromLatLng(47.167377, 8.516875).then(
-      response => {
-        console.log(response);
-      },
-      error => {
-        console.error(error);
-      }
-    );
-  })
-}
+const DetectLocation = styled.p`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  color: ${({theme}) => theme.colors.blueMain};
+  cursor: pointer;
+  width: max-content;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+`
 
 export const LocationSlide = ({
   handleInputChange,
   handleSelectChange,
   countries,
   maxWidthDesktop,
+  handleDetectLocationClicked,
+  userCity,
+  userCountry,
 }) => {
   return (
     <CarouselSlide>
@@ -70,6 +64,7 @@ export const LocationSlide = ({
         src={Earth}
         alt="Earth"
       />
+      <DetectLocation onClick={handleDetectLocationClicked}>Detect Your Location</DetectLocation>
       <div className="Slider__input-container">
         <CarouselSlideSelect
           isCentered
@@ -81,6 +76,7 @@ export const LocationSlide = ({
             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
             0
           }
+          value={userCountry}
         >
           {countries.map(country => (
             <Option key={country} value={country}>
@@ -93,6 +89,7 @@ export const LocationSlide = ({
           placeholder="City"
           name="userCity"
           onChange={e => handleInputChange(e)}
+          value={userCity}
         />
       </div>
     </CarouselSlide>
