@@ -6,13 +6,13 @@ const PortfolioPageValueDisplays = styled.div`
     margin: 0px 15px;
   `}
 
-  .PortfolioPage__ValueDisplay--is-2, .PortfolioPage__ValueDisplay--is-3 {
+  .PortfolioPage__ValueDisplay--is-unrealisedProfit, .PortfolioPage__ValueDisplay--is-realisedProfit {
     margin-top: 10px;
     display: block;
   }
 
   @media(min-width: 950px){
-    .PortfolioPage__ValueDisplay--is-2, .PortfolioPage__ValueDisplay--is-1{
+    .PortfolioPage__ValueDisplay--is-unrealisedProfit, .PortfolioPage__ValueDisplay--is-valueOrRevenue{
       display: inline-flex;
       margin-top: 0px;
       margin-right: 10px;
@@ -20,7 +20,7 @@ const PortfolioPageValueDisplays = styled.div`
   }
 
   @media(min-width: 1250px){
-    .PortfolioPage__ValueDisplay--is-3{
+    .PortfolioPage__ValueDisplay--is-realisedProfit{
       display: inline-flex;
       margin-top: 0px;
       margin-right: 10px;
