@@ -10,6 +10,8 @@ import Asset from 'ui/Asset/';
 import PieChart from 'static/chart-pie.svg';
 import LineChart from 'static/chart-line.svg';
 import Sliders from 'static/sliders.svg';
+import RealisedProfit from 'static/realised-profit.svg';
+import UnrealisedProfit from 'static/unrealised-profit.svg';
 import {
   formatMonetaryValue,
   fromWeiToEth,
@@ -127,7 +129,7 @@ class PortfolioPage extends React.Component{
           <ValueDisplay
             text="Unrealised Profit"
             value={formatMonetaryValue(currentView === PortfolioTypes.MANAGED_ASSETS ? unrealisedProfitManager : unrealisedProfitInvestor)}
-            icon={<PieChart />}
+            icon={<UnrealisedProfit />}
             hasSeparator
             hasIcon
             hasShadow
@@ -138,7 +140,7 @@ class PortfolioPage extends React.Component{
           <ValueDisplay
             text="Realised Profit"
             value={formatMonetaryValue(currentView === PortfolioTypes.MANAGED_ASSETS ? realisedProfitManager : realisedProfitInvestor)}
-            icon={<LineChart />}
+            icon={<RealisedProfit />}
             hasSeparator
             hasIcon
             hasShadow
