@@ -23,6 +23,7 @@ class AssetPage extends React.Component {
       handleAssetFavorited,
       fundAsset,
       updateNotification,
+      gasPrice,
     } = blockchainContext;
 
     if (loading.assets) {
@@ -51,6 +52,7 @@ class AssetPage extends React.Component {
           fundAsset={fundAsset}
           updateNotification={updateNotification}
           loadingUserInfo={loading.userAssetsInfo}
+          gasPrice={gasPrice}
         />
       )
     }

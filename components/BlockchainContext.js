@@ -5,6 +5,7 @@ import { compose } from 'recompose'
 import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import BN from 'bignumber.js';
 import { withAirtableContext } from 'components/AirtableContext';
 import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
@@ -21,6 +22,7 @@ import {
   FETCH_ASSETS_TIME,
   LOAD_METAMASK_USER_DETAILS_TIME,
   FETCH_TRANSACTION_HISTORY_TIME,
+  FETCH_GAS_PRICE,
 } from 'constants/timers';
 import {
   debug,
@@ -30,6 +32,7 @@ import {
 import {
   PLATFORM_TOKEN,
 } from 'constants/app';
+BN.config({ EXPONENTIAL_AT: 80 });
 
 const { Provider, Consumer } = React.createContext({});
 
@@ -86,6 +89,7 @@ class BlockchainProvider extends React.Component {
       callingPayout: [],
       withdrawingAssetManager: [],
       isLoadingUserInfo: false,
+      gasPrice: '10000000000', //10 GWEI
     };
   }
 
@@ -93,6 +97,7 @@ class BlockchainProvider extends React.Component {
     try {
       this.fetchAssets();
       this.fetchTransactionHistory();
+      this.fetGasPrice();
 
     } catch (err) {
       debug(err);
@@ -133,11 +138,37 @@ class BlockchainProvider extends React.Component {
       setInterval(this.fetchAssets, FETCH_ASSETS_TIME);
     this.intervalFetchTransactionHistory =
       setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
+    this.intervalFetchGasPrice =
+      setInterval(this.fetGasPrice, FETCH_GAS_PRICE);
   }
 
   resetIntervals = () => {
     clearInterval(this.intervalFetchAssets);
     clearInterval(this.intervalFetchTransactionHistory);
+    clearInterval(this.intervalFetchGasPrice);
+  }
+
+  fetGasPrice = async () => {
+    let {
+      gasPrice,
+    } = this.state;
+
+    try{
+      const response = await axios(InternalLinks.GAS_PRICE);
+      if(response.data){
+        const {
+          fast,
+        } = response.data;
+
+        gasPrice = BN(((fast / 10) * 1000000000)).toString(); //converts to WEI, from GWEI
+      }
+    }catch(err){
+      debug("Error pulling gas price");
+      debug(err)
+    }
+    this.setState({
+      gasPrice,
+    })
   }
 
   pullFileInfoForAssets = async (assets) => {
@@ -161,6 +192,10 @@ class BlockchainProvider extends React.Component {
   }
 
   payoutAsset = async asset => {
+    const {
+      gasPrice,
+    } = this.state;
+
     const {
       assetId,
       defaultData
@@ -235,10 +270,15 @@ class BlockchainProvider extends React.Component {
       onTransactionHash,
       onReceipt: receipt => onReceipt(receipt.status),
       onError,
+      gasPrice,
     });
   }
 
   withdrawProfitAssetManager = async (asset, amount) => {
+    const {
+      gasPrice,
+    } = this.state;
+
     const {
       assetId,
       defaultData
@@ -317,10 +357,15 @@ class BlockchainProvider extends React.Component {
       onTransactionHash,
       onReceipt,
       onError,
+      gasPrice,
     );
   }
 
   withdrawCollateral = async (asset, percentage, amount, updateAssetCollateralPage) => {
+    const {
+      gasPrice,
+    } = this.state;
+
     const {
       assetId,
       defaultData,
@@ -401,11 +446,16 @@ class BlockchainProvider extends React.Component {
       onTransactionHash,
       onReceipt,
       onError,
+      gasPrice,
     );
 
   }
 
   handleListAsset = async (formData, setUserListingAsset) => {
+    const {
+      gasPrice,
+    } = this.state;
+
     const {
       asset: assetName,
       userCountry: country,
@@ -537,13 +587,17 @@ class BlockchainProvider extends React.Component {
         userAddress,
         partnerContractAddress,
         paymentTokenAddress,
-        operatorID: operatorId
+        operatorID: operatorId,
+        gasPrice,
       }
     );
   }
 
   fundAsset = (assetId, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
     try {
+      const {
+        gasPrice,
+      } = this.state;
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
       const amountFormatted = formatMonetaryValue(amountContributed);
@@ -634,6 +688,7 @@ class BlockchainProvider extends React.Component {
         assetId,
         amount: amountToPay,
         paymentToken,
+        gasPrice,
       });
 
     } catch (err) {
@@ -643,6 +698,10 @@ class BlockchainProvider extends React.Component {
 
   withdrawInvestorProfit = async (assetId, amount) => {
     try {
+      const {
+        gasPrice,
+      } = this.state;
+
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const{
         name: assetName,
@@ -718,6 +777,7 @@ class BlockchainProvider extends React.Component {
         onTransactionHash,
         onReceipt,
         onError,
+        gasPrice,
       );
 
     } catch (err) {

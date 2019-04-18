@@ -162,7 +162,7 @@ class TokenSelector extends React.Component {
           <TokenSelectorSearch
             placeholder="Search Token"
             onChange={this.handleSearchInputChanged}
-            maxlength={10}
+            maxLength={10}
           />
           <div>
             <TokenSelectorAmount>
