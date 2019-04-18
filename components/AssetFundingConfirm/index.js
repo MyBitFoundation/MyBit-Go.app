@@ -35,13 +35,14 @@ import {
   convertFromDefaultToken,
   convertFromTokenToDefault,
   getDecimalsForToken,
+  fromWeiToEth,
 } from 'utils/helpers';
 import AssetFundingButton from 'components/AssetFunding/assetFundingButton';
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
-// represented in ETH (at 8 GWEI)
-const AVG_GAS_FUND_TRANSACTION = 0.018767;
+const GAS_FUNDING = require("@mybit/network.js/gas").buyAssetOrderERC20;
+const GAS_APPROVE = require("@mybit/network.js/gas").approve;
 
 const separatorStyleFullWidth = {
   position: 'absolute',
@@ -76,12 +77,22 @@ class AssetFundingConfirm extends React.Component {
       amount: amountContributed,
       supportedTokensInfo,
       kyberLoading,
+      gasPrice,
     } = this.props;
 
     const {
       user,
       extensionUrl,
     } = metamaskContext;
+
+    /*
+    * Calculate total gas. Note that we may or not call approve
+    * so we need to account for that when estimating the total gas cost
+    */
+    const gasPriceInEth = fromWeiToEth(gasPrice);
+    const approveGastCost = selectedToken === 'ETH' ? 0 : gasPriceInEth * GAS_APPROVE;
+    const transactionGasCost =  gasPriceInEth * GAS_FUNDING;
+    const totalGas = approveGastCost + transactionGasCost;
 
     const balances = user.balances;
     const amountInBn = BN(amountContributed);
@@ -91,7 +102,7 @@ class AssetFundingConfirm extends React.Component {
     const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountContributed : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountContributed);
 
     // calculate gas from knowing the cost in ETH
-    const gasInDai = kyberLoading ? 0 : parseFloat(convertFromTokenToDefault('ETH', supportedTokensInfo, AVG_GAS_FUND_TRANSACTION).toFixed(DEFAULT_TOKEN_MAX_DECIMALS));
+    const gasInDai = kyberLoading ? 0 : parseFloat(convertFromTokenToDefault('ETH', supportedTokensInfo, totalGas).toFixed(DEFAULT_TOKEN_MAX_DECIMALS));
     const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, gasInDai);
 
     const totalToPayInDai = amountToPay + gasInDai;

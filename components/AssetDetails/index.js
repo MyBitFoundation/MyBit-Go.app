@@ -18,6 +18,7 @@ const AssetDetails = ({
   fundAsset,
   updateNotification,
   loadingUserInfo,
+  gasPrice,
 }) => {
   const {
     city,
@@ -76,6 +77,7 @@ const AssetDetails = ({
           fundAsset={fundAsset}
           updateNotification={updateNotification}
           loadingUserInfo={loadingUserInfo}
+          gasPrice={gasPrice}
         />
       </AssetDetailsRightCol>
     </AssetDetailsWrapper>

@@ -124,29 +124,31 @@ class ManageAssetModule extends React.Component{
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
 
-      this.setState({
-        loading: false,
-        assetInfo: {
-          userAddress: metamaskContext.user.address,
-          asset: asset,
-          methods: {
-            withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
-            withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, owedToAssetManager): undefined,
-          },
-          finantialDetails: {
-            assetManagerProfits,
-            collateralData,
-            revenueData,
-            toWithdraw: owedToAssetManager,
-            isWithdrawingCollateral,
-            isWithdrawingAssetManager,
-            profit,
-            withdrawMax,
-            percentageMax,
-            averageProfit,
+      if(this._mounted !== false){
+        this.setState({
+          loading: false,
+          assetInfo: {
+            userAddress: metamaskContext.user.address,
+            asset: asset,
+            methods: {
+              withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
+              withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, owedToAssetManager): undefined,
+            },
+            finantialDetails: {
+              assetManagerProfits,
+              collateralData,
+              revenueData,
+              toWithdraw: owedToAssetManager,
+              isWithdrawingCollateral,
+              isWithdrawingAssetManager,
+              profit,
+              withdrawMax,
+              percentageMax,
+              averageProfit,
+            }
           }
-        }
-      }, () => console.log(this.state));
+        }, () => console.log(this.state));
+      }
       this._processingAssetInfo = false;
     }catch(err){
       this._processingAssetInfo = false;
@@ -158,6 +160,10 @@ class ManageAssetModule extends React.Component{
     if(window){
       this.getData();
     }
+  }
+
+  componentWillUnmount = () => {
+    this._mounted = false;
   }
 
   componentWillReceiveProps = nextProps => {

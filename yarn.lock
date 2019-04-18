@@ -963,10 +963,10 @@
     web3-eth-abi "1.0.0-beta.36"
     web3-utils "1.0.0-beta.36"
 
-"@mybit/network.js@0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.25.tgz#6daefeddd5d0e4b3782eba8702888dc1af422253"
-  integrity sha512-Df87hn7TLzJHB1MXAU8T+W/a4+6I+RhydkLw1YQHoZxNogz5PmjTV9vvrvrPmyLbL2qH/celn8y/d5HK++JYgA==
+"@mybit/network.js@0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.28.tgz#3feca4fa2ad6ef9b0397a5d0a6fff9625724f235"
+  integrity sha512-hz+8bI5YqdJyAqbkOgGSpF8vfaOWXzX2HJ3C95FsAif62wtXIYcnLLW9RzAM5Uh5h04lIhGid4Jyd1HuEYOAog==
   dependencies:
     "@mybit/contracts" "0.1.21"
     bignumber.js "^8.0.2"
@@ -8847,7 +8847,7 @@ simple-statistics@~6.1.0:
   resolved "https://registry.yarnpkg.com/simple-statistics/-/simple-statistics-6.1.1.tgz#e3a0799ffc49914d6f421c5a4ac585f6a13e2bad"
   integrity sha512-zGwn0DDRa9Zel4H4n2pjTFIyGoAGpnpjrGIctreCxj5XWrcx9v7Xy7270FkC967WMmcvuc8ZU7m0ZG+hGN7gAA==
 
-"sjcl@github:civicteam/sjcl":
+sjcl@civicteam/sjcl.git:
   version "1.0.8"
   resolved "https://codeload.github.com/civicteam/sjcl/tar.gz/74fcc71a486a41d39200767d9235f6eac9e51f26"
 
