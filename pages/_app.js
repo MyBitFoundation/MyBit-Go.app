@@ -1,7 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root'
 import App, { Container } from 'next/app';
-import getConfig from 'next/config';
 import AirtableProvider, { withAirtableContext } from 'components/AirtableContext';
 import BlockchainProvider from 'components/BlockchainContext';
 import KyberProvider from 'components/KyberContext';
