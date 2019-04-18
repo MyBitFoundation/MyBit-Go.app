@@ -40,7 +40,7 @@ export const CivicButton = (props) => (
   </CivicButtonWrapper>
 )
 
-class Civic extends Component {
+class CivicProvider extends Component {
   constructor(props) {
     super(props);
     this.civicSip = null;
@@ -118,14 +118,22 @@ class Civic extends Component {
   }
 }
 
-export function withCivicContext(WrappedComponent) {
-  return props => (
-    <Civic>
-      <Consumer>
-        {(civic) => <WrappedComponent {...props} civic={civic} />}
-      </Consumer>
-    </Civic>
-  );
+// Required so we can trigger getInitialProps in our exported pages
+export const withCivicContext = (Component) => {
+  return class Higher extends React.Component{
+    static getInitialProps(ctx) {
+      if(Component.getInitialProps)
+        return Component.getInitialProps(ctx);
+      else return {};
+    }
+    render(){
+      return (
+        <Consumer>
+          {state => <Component {...this.props} civic={state} />}
+        </Consumer>
+      )
+    }
+  }
 }
 
-export default Civic;
+export default CivicProvider;
