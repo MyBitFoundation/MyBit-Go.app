@@ -963,10 +963,10 @@
     web3-eth-abi "1.0.0-beta.36"
     web3-utils "1.0.0-beta.36"
 
-"@mybit/network.js@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.29.tgz#cccafb44604b127986f47b5f608c314661b66098"
-  integrity sha512-5NS9XKhBzOg+sUL4Gy0oQdrkOZlVlJPVgnTB2r7pdfyBEDAVI5xFwSFJV2dxAET2ewOXWGyyzqopcOf3q5xd5g==
+"@mybit/network.js@0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.30.tgz#843401449e65c036aaf03176fedf1a58aa607a77"
+  integrity sha512-LkiiJY+MurL0iAHBN0KQAxhPajnc6BNpN1bFafYmceAPGnbFbWUyC7hdX8vaRyNoF3cPNMk14/JoXVfwaQzSyQ==
   dependencies:
     "@mybit/contracts" "0.1.21"
     bignumber.js "^8.0.2"
