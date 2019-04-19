@@ -210,9 +210,7 @@ class ListAssetPage extends React.Component {
   }
 
   handleSelectSuggest = suggest => {
-    console.log(suggest)
     const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1', "street_number"]);
-    console.log(locationData)
     const {
       locality,
       route,
