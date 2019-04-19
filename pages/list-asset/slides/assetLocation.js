@@ -18,6 +18,13 @@ export const AssetLocationSlide = ({
 }) => {
   const {
     assetCountry,
+    searchAddress1,
+    assetAddress1,
+    assetAddress2,
+    assetCity,
+    userCountry,
+    assetProvince,
+    assetPostalCode,
   } = formData;
 
   return (
@@ -46,7 +53,7 @@ export const AssetLocationSlide = ({
         render={googleMaps =>
           googleMaps && (
             <ReactGooglePlacesSuggest
-              autocompletionRequest={{input: formData.assetAddress1}}
+              autocompletionRequest={{input: searchAddress1}}
               googleMaps={googleMaps}
               onSelectSuggest={handleSelectSuggest}
             >
@@ -55,7 +62,7 @@ export const AssetLocationSlide = ({
                 placeholder="Address Line 1"
                 name="assetAddress1"
                 onChange={e => handleInputChange(e)}
-                value={formData.assetAddress1}
+                value={assetAddress1}
               />
             </ReactGooglePlacesSuggest>
           )}
@@ -65,18 +72,19 @@ export const AssetLocationSlide = ({
         placeholder="Address Line 2"
         name="assetAddress2"
         onChange={e => handleInputChange(e)}
+        value={assetAddress2}
       />
       <CarouselSlideInput
         isCentered
         placeholder="City/Town"
         name="assetCity"
         onChange={e => handleInputChange(e)}
-        value={formData.assetCity}
+        value={assetCity}
       />
       <CarouselSlideSelect
         isCentered
         showSearch
-        value={formData.userCountry}
+        value={userCountry}
         disabled={true}
         optionFilterProp="children"
         filterOption={(input, option) =>
@@ -95,14 +103,14 @@ export const AssetLocationSlide = ({
         placeholder="Province/Region"
         name="assetProvince"
         onChange={e => handleInputChange(e)}
-        value={formData.assetProvince}
+        value={assetProvince}
       />
       <CarouselSlideInput
         isCentered
         placeholder="Postal Code"
         name="assetPostalCode"
         onChange={e => handleInputChange(e)}
-        value={formData.assetPostalCode}
+        value={assetPostalCode}
       />
     </CarouselSlide>
   )

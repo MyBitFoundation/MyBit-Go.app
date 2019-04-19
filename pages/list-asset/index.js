@@ -52,6 +52,7 @@ class ListAssetPage extends React.Component {
     super(props);
     this.state = {
       data: {
+        searchAddress1: '',
         assetAddress1: '',
         assetAddress2: '',
         assetCity: '',
@@ -107,9 +108,21 @@ class ListAssetPage extends React.Component {
   }
 
   handleInputChange = e => {
-    this.setState({
-        data: { ...this.state.data, [e.target.name]: e.target.value }
-    });
+    const {
+      name,
+      value,
+    } = e.target;
+
+    if(name === 'assetAddress1'){
+      this.setState({
+        data: { ...this.state.data, assetAddress1: value, searchAddress1: value, }
+      });
+    }
+    else {
+      this.setState({
+        data: { ...this.state.data, [name]: value }
+      });
+    }
   };
 
   handleSelectedTokenChange = selectedToken => {
@@ -197,20 +210,23 @@ class ListAssetPage extends React.Component {
   }
 
   handleSelectSuggest = suggest => {
-    const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1']);
+    const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1', "street_number"]);
     const {
       locality,
       route,
       postal_code,
       administrative_area_level_1,
+      street_number,
     } = locationData;
     this.setState({
       data: {
         ...this.state.data,
         assetAddress1: route,
+        assetAddress2: street_number,
         assetCity: administrative_area_level_1,
         assetProvince: locality,
-        assetPostalCode: postal_code
+        assetPostalCode: postal_code,
+        searchAddress1: '',
       }
     })
   }
