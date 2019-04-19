@@ -48,6 +48,7 @@ export const ConfirmSlide = ({
   error,
 }) => {
   const formattedCollateral = formatValueForToken(formData.collateralMyb, PLATFORM_TOKEN);
+  console.log(formData.assetAddress2)
   return (
     <CarouselSlide>
       <CarouselSlideMainTitle
@@ -86,7 +87,7 @@ export const ConfirmSlide = ({
             {formData.assetAddress1 === ""
               ? "[address missing]"
               : formData.assetAddress1}
-            {formData.assetAddress2 === "" ? "" : `,${formData.assetAddress2}`}
+            {(!formData.assetAddress2 || formData.assetAddress2 === "") ? "" : `,${formData.assetAddress2}`}
           </p>
         </section>
         <section>
