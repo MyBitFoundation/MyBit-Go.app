@@ -210,17 +210,21 @@ class ListAssetPage extends React.Component {
   }
 
   handleSelectSuggest = suggest => {
-    const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1']);
+    console.log(suggest)
+    const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1', "street_number"]);
+    console.log(locationData)
     const {
       locality,
       route,
       postal_code,
       administrative_area_level_1,
+      street_number,
     } = locationData;
     this.setState({
       data: {
         ...this.state.data,
         assetAddress1: route,
+        assetAddress2: street_number,
         assetCity: administrative_area_level_1,
         assetProvince: locality,
         assetPostalCode: postal_code,
