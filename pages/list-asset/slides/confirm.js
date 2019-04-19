@@ -48,7 +48,6 @@ export const ConfirmSlide = ({
   error,
 }) => {
   const formattedCollateral = formatValueForToken(formData.collateralMyb, PLATFORM_TOKEN);
-  console.log(formData.assetAddress2)
   return (
     <CarouselSlide>
       <CarouselSlideMainTitle
