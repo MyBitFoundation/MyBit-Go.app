@@ -46,7 +46,7 @@ export const AssetLocationSlide = ({
         render={googleMaps =>
           googleMaps && (
             <ReactGooglePlacesSuggest
-              autocompletionRequest={{input: formData.assetAddress1}}
+              autocompletionRequest={{input: formData.searchAddress1}}
               googleMaps={googleMaps}
               onSelectSuggest={handleSelectSuggest}
             >
