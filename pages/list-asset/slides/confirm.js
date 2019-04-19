@@ -86,7 +86,7 @@ export const ConfirmSlide = ({
             {formData.assetAddress1 === ""
               ? "[address missing]"
               : formData.assetAddress1}
-            {formData.assetAddress2 === "" ? "" : `,${formData.assetAddress2}`}
+            {(!formData.assetAddress2 || formData.assetAddress2 === "") ? "" : `,${formData.assetAddress2}`}
           </p>
         </section>
         <section>
