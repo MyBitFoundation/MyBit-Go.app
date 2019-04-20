@@ -1,13 +1,13 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root'
 import App, { Container } from 'next/app';
-import getConfig from 'next/config';
 import AirtableProvider, { withAirtableContext } from 'components/AirtableContext';
 import BlockchainProvider from 'components/BlockchainContext';
 import KyberProvider from 'components/KyberContext';
 import NotificationsProvider from 'components/NotificationsContext';
 import Notifications from 'components/Notifications';
 import MetamaskProvider from 'components/MetamaskContext';
+import CivicProvider from "ui/CivicContext";
 import Head from 'components/Head';
 import GlobalStyle from 'components/globalStyle';
 import AppWrapper from 'components/AppWrapper';
@@ -113,7 +113,9 @@ const WithProviders = ({ children }) => (
             backupProvider={WEB3_BACKUP_PROVIDER}
           >
             <BlockchainProvider>
-              {children}
+              <CivicProvider>
+                {children}
+              </CivicProvider>
             </BlockchainProvider>
           </MetamaskProvider>
         </KyberProvider>

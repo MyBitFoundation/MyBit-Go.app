@@ -24,6 +24,7 @@ module.exports = withBundleAnalyzer(withCss({
   publicRuntimeConfig: {
     REACT_APP_INFURA_API_KEY: process.env.REACT_APP_INFURA_API_KEY,
     REACT_APP_CIVIC_APP_ID: process.env.REACT_APP_CIVIC_APP_ID,
+    GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
   },
   webpack: (config, { dev }) => {
     // disable sourcemaps of webpack

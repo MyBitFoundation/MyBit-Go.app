@@ -31,6 +31,7 @@ import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
 const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
+const GAS = require("@mybit/network.js/gas");
 
 let Network;
 
@@ -130,11 +131,18 @@ const roiEscrow = async assetId =>
     }
   });
 
-export const withdrawAssetManager = async (userAddress, assetId, onTransactionHash, onReceipt, onError) => {
+export const withdrawAssetManager = async (
+  userAddress,
+  assetId,
+  onTransactionHash,
+  onReceipt,
+  onError,
+  gasPrice,
+) => {
   try {
     const assetManagerFunds = await Network.assetManagerFunds();
     assetManagerFunds.methods.withdraw(assetId, userAddress)
-      .send({ from: userAddress, gas: '1000000'})
+      .send({ from: userAddress, gas: '200000', gasPrice})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -148,11 +156,18 @@ export const withdrawAssetManager = async (userAddress, assetId, onTransactionHa
   }
 }
 
-export const withdrawEscrow = async (userAddress, assetId, onTransactionHash, onReceipt, onError) => {
+export const withdrawEscrow = async (
+  userAddress,
+  assetId,
+  onTransactionHash,
+  onReceipt,
+  onError,
+  gasPrice,
+) => {
   try {
     const assetManagerEscrow = await Network.assetManagerEscrow();
     assetManagerEscrow.methods.unlockEscrow(assetId, userAddress)
-      .send({ from: userAddress, gas: '1000000'})
+      .send({ from: userAddress, gas: '200000', gasPrice})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -184,6 +199,7 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       amountToBeRaised,
       paymentTokenAddress,
       operatorID,
+      gasPrice,
     } = params;
 
     const randomURI = generateRandomURI(window.web3js);
@@ -200,6 +216,7 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       operatorID,
       fundingToken: DEFAULT_TOKEN_CONTRACT,
       paymentToken: paymentTokenAddress,
+      gasPrice,
       createAsset: {
         onTransactionHash: onCreateAsset.onTransactionHash,
         onError: error => processErrorType(error, onCreateAsset.onError),
@@ -248,25 +265,6 @@ export const uploadFilesToAWS = async (
   }
 }
 
-export const createEntryForNewCollateral = async (
-  address,
-  escrow,
-  assetId,
-  performInternalAction,
-) => {
-  try{
-    await axios.post(InternalLinks.MYBIT_API_COLLATERAL, {
-      address,
-      escrow,
-      assetId,
-    })
-    performInternalAction();
-  } catch(err){
-    setTimeout(() => createEntryForNewCollateral(address, escrow, assetId, performInternalAction), 5000);
-    debug(err);
-  }
-}
-
 export const updateAirTableWithNewAsset = async (
   assetId,
   assetName,
@@ -296,6 +294,7 @@ export const payoutAsset = ({
   onTransactionHash,
   onReceipt,
   onError,
+  gasPrice,
 }) => {
   try {
     Network.payout({
@@ -304,17 +303,25 @@ export const payoutAsset = ({
       onTransactionHash,
       onError: error => processErrorType(error, onError),
       onReceipt,
+      gasPrice,
     })
   } catch(error) {
     processErrorType(error, onError)
   }
 }
 
-export const withdrawInvestorProfit = async (userAddress, assetId, onTransactionHash, onReceipt, onError) => {
+export const withdrawInvestorProfit = async (
+  userAddress,
+  assetId,
+  onTransactionHash,
+  onReceipt,
+  onError,
+  gasPrice,
+) => {
   try {
     const dividendTokenETH = await Network.dividendTokenETH(assetId);
     const response = await dividendTokenETH.methods.withdraw()
-      .send({from: userAddress, gas: '1000000'})
+      .send({from: userAddress, gas: '200000', gasPrice})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -336,6 +343,7 @@ export const fundAsset = async (onFundAsset, onApprove, params) => {
       assetId,
       amount,
       paymentToken,
+      gasPrice,
     } = params;
 
     const response = await Network.fundAsset({
@@ -343,6 +351,7 @@ export const fundAsset = async (onFundAsset, onApprove, params) => {
       investor: userAddress,
       paymentToken,
       amount: toWei(amount),
+      gasPrice,
       buyAsset: {
         onTransactionHash: onFundAsset.onTransactionHash,
         onError: error => processErrorType(error, onFundAsset.onError),

@@ -5,7 +5,9 @@ import {
   Tooltip,
   Carousel,
 } from "antd";
+import getConfig from 'next/config';
 import Cookie from 'js-cookie';
+import Geocode from "react-geocode";
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
@@ -36,18 +38,21 @@ import {
   convertFromTokenToDefault,
   formatValueForToken,
 } from 'utils/helpers';
+import {
+  processLocationData,
+} from 'utils/locationData';
 
 const MAX_WIDTH_DESKTOP = "500px";
 
 const dev = process.env.NODE_ENV === 'development';
+const { publicRuntimeConfig } = getConfig();
 
 class ListAssetPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       data: {
-        userCity: '',
-        userCountry: '',
+        searchAddress1: '',
         assetAddress1: '',
         assetAddress2: '',
         assetCity: '',
@@ -103,9 +108,21 @@ class ListAssetPage extends React.Component {
   }
 
   handleInputChange = e => {
-    this.setState({
-        data: { ...this.state.data, [e.target.name]: e.target.value }
-    });
+    const {
+      name,
+      value,
+    } = e.target;
+
+    if(name === 'assetAddress1'){
+      this.setState({
+        data: { ...this.state.data, assetAddress1: value, searchAddress1: value, }
+      });
+    }
+    else {
+      this.setState({
+        data: { ...this.state.data, [name]: value }
+      });
+    }
   };
 
   handleSelectedTokenChange = selectedToken => {
@@ -165,6 +182,54 @@ class ListAssetPage extends React.Component {
       );
     }
   };
+
+  handleDetectLocationClicked = () => {
+    Geocode.setApiKey(publicRuntimeConfig.GOOGLE_PLACES_API_KEY);
+
+    navigator.geolocation.getCurrentPosition(location => {
+      const {
+        latitude,
+        longitude,
+      } = location.coords;
+      Geocode.fromLatLng(latitude, longitude).then(
+        response => {
+          const locationData = processLocationData(response.results, ['country', 'locality']);
+          const {
+            locality,
+            country,
+          } = locationData;
+          this.setState({
+            data: { ...this.state.data, userCity: locality, userCountry: country }
+          })
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    })
+  }
+
+  handleSelectSuggest = suggest => {
+    const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1', "street_number"]);
+    const {
+      locality,
+      route,
+      postal_code,
+      administrative_area_level_1,
+      street_number,
+    } = locationData;
+    this.setState({
+      data: {
+        ...this.state.data,
+        assetAddress1: route,
+        assetAddress2: street_number,
+        assetCity: administrative_area_level_1,
+        assetProvince: locality,
+        assetPostalCode: postal_code,
+        searchAddress1: '',
+      }
+    })
+  }
 
   handleFileUpload = filesObject => {
     // so that we get no loading animation in the UI next to the file name
@@ -288,6 +353,8 @@ class ListAssetPage extends React.Component {
       collateralSelectedToken,
       asset,
       category,
+      userCity,
+      userCountry,
     } = this.state.data;
 
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
@@ -320,6 +387,9 @@ class ListAssetPage extends React.Component {
               formData={data}
               countries={countries}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
+              handleDetectLocationClicked={this.handleDetectLocationClicked}
+              userCity={userCity}
+              userCountry={userCountry}
             />
           ), buttons: {
             hasNextButton: true,
@@ -347,12 +417,13 @@ class ListAssetPage extends React.Component {
               formData={data}
               countries={countries}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
+              handleSelectSuggest={this.handleSelectSuggest}
             />
           ), buttons: {
             hasNextButton: true,
             hasBackButton: true,
             nextButtonDisabled:
-              data.assetCountry !== "" &&
+              data.userCountry !== "" &&
               data.assetAddress1 !== "" &&
               data.assetCity !== "" &&
               data.assetProvince !== "" &&
