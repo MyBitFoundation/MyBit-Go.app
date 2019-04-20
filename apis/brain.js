@@ -321,7 +321,7 @@ export const withdrawInvestorProfit = async (
   try {
     const dividendTokenETH = await Network.dividendTokenETH(assetId);
     const response = await dividendTokenETH.methods.withdraw()
-      .send({from: userAddress, gas: '100000', gasPrice})
+      .send({from: userAddress, gas: '200000', gasPrice})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
