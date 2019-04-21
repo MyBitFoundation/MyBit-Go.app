@@ -62,7 +62,9 @@ export const AvailableAssetsSlide = withAirtableContext(({
     getCategoriesForAssets,
   } = airtableContext;
 
-  const categories = !loadingAssets ? (formData.userCountry && formData.userCity) && getCategoriesForAssets(formData.userCountry, formData.userCity) : {};
+
+  const categories = !loadingAssets ? (formData.userCountry && formData.userCity) ? getCategoriesForAssets(formData.userCountry, formData.userCity) : {} : {};
+  console.log(categories)
   const assetsAvailable = (category && categories[category]) || [];
   return (
     <CarouselSlide>

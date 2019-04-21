@@ -10,7 +10,8 @@
     "BUCKET_NAME": "@bucket-name",
     "AWS_SECRET_KEY": "@aws-secret-key",
     "AWS_ACCESS_KEY": "@aws-access-key",
-    "REACT_APP_INFURA_API_KEY": "@infura-api-key"
+    "REACT_APP_INFURA_API_KEY": "@infura-api-key",
+    "GOOGLE_PLACES_API_KEY": "@google-places-api-key"
   },
   "version": 1
 }

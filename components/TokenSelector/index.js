@@ -44,10 +44,10 @@ class TokenSelector extends React.Component {
       amountToPay,
     } = this.props;
 
-    if(nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
+    if(nextProps.balances && nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
       // Due to the async nature of the app, the balances object may be empty initially,
       // in which case we want to call onChange
-      if(Object.keys(nextProps.balances).length > 0 && Object.keys(balances).length === 0){
+      if(Object.keys(nextProps.balances).length > 0 && (!balances || Object.keys(balances).length === 0)){
         this.processBalances(nextProps, true);
       } else {
         this.processBalances(nextProps, false);
@@ -162,7 +162,7 @@ class TokenSelector extends React.Component {
           <TokenSelectorSearch
             placeholder="Search Token"
             onChange={this.handleSearchInputChanged}
-            maxlength={10}
+            maxLength={10}
           />
           <div>
             <TokenSelectorAmount>

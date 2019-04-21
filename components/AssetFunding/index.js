@@ -123,6 +123,7 @@ class AssetFunding extends React.Component {
       fundAsset,
       updateNotification,
       loadingUserInfo,
+      gasPrice,
     } = this.props;
 
     const {
@@ -200,6 +201,7 @@ class AssetFunding extends React.Component {
             fundAsset={this.fundAsset}
             cancel={this.resetStep}
             selectedMaxValue={selectedMaxValue}
+            gasPrice={gasPrice}
           />
         )}
         {step === 2 && (
