@@ -41,6 +41,7 @@ import {
 import {
   processLocationData,
 } from 'utils/locationData';
+import getCountry from 'utils/countryCodes';
 
 const MAX_WIDTH_DESKTOP = "500px";
 
@@ -52,6 +53,7 @@ class ListAssetPage extends React.Component {
     super(props);
     this.state = {
       data: {
+        searchCity: '',
         searchAddress1: '',
         assetAddress1: '',
         assetAddress2: '',
@@ -69,6 +71,7 @@ class ListAssetPage extends React.Component {
         partnerContractAddress: '',
         selectedToken: '',
         operatorId: '',
+        countryCode: '',
       },
       countries: COUNTRIES,
       isUserListingAsset: false,
@@ -116,6 +119,10 @@ class ListAssetPage extends React.Component {
     if(name === 'assetAddress1'){
       this.setState({
         data: { ...this.state.data, assetAddress1: value, searchAddress1: value, }
+      });
+    } else if(name === 'userCity'){
+      this.setState({
+        data: { ...this.state.data, searchCity: value, userCity: value, }
       });
     }
     else {
@@ -167,8 +174,11 @@ class ListAssetPage extends React.Component {
         () => {
           switch(name) {
             case 'userCountry': {
+              const countryData = getCountry(value);
+              const countryCode = countryData ? countryData.iso2.toLowerCase() : '';
+
               this.setState({
-                data: { ...this.state.data, assetCountry: value, category: '', asset: undefined, assetValue: undefined, }
+                data: { ...this.state.data, assetCountry: value, category: '', asset: undefined, assetValue: undefined, countryCode}
               });break;
             }
             case 'category': {
@@ -198,8 +208,11 @@ class ListAssetPage extends React.Component {
             locality,
             country,
           } = locationData;
+          const countryData = getCountry(country);
+          const countryCode = countryData ? countryData.iso2.toLowerCase() : '';
+
           this.setState({
-            data: { ...this.state.data, userCity: locality, userCountry: country }
+            data: { ...this.state.data, userCity: locality, userCountry: country, countryCode, }
           })
         },
         error => {
@@ -227,6 +240,20 @@ class ListAssetPage extends React.Component {
         assetProvince: locality,
         assetPostalCode: postal_code,
         searchAddress1: '',
+      }
+    })
+  }
+
+  handleCitySuggest = suggest => {
+    const locationData = processLocationData(suggest.address_components, ['locality']);
+    const {
+      locality,
+    } = locationData;
+    this.setState({
+      data: {
+        ...this.state.data,
+        userCity: locality,
+        searchCity: '',
       }
     })
   }
@@ -381,28 +408,15 @@ class ListAssetPage extends React.Component {
           },
         }, {
           toRender: (
-            <LocationSlide
-              handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange}
-              formData={data}
-              countries={countries}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              handleDetectLocationClicked={this.handleDetectLocationClicked}
-              userCity={userCity}
-              userCountry={userCountry}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonDisabled: data.userCity !== "" && data.userCountry !== "" ? false : true,
-          }
-        }, {
-          toRender: (
             <AvailableAssetsSlide
               handleSelectChange={this.handleSelectChange}
               formData={data}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
               loadingAssets={blockchainContext.loading.assets}
+              handleInputChange={this.handleInputChange}
+              countries={countries}
+              handleDetectLocationClicked={this.handleDetectLocationClicked}
+              handleCitySuggest={this.handleCitySuggest}
             />
           ), buttons: {
             hasNextButton: true,
@@ -509,13 +523,12 @@ class ListAssetPage extends React.Component {
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: "KYC" },
-  { slide: 1, tooltip: "Location" },
-  { slide: 2, tooltip: "Select Asset" },
-  { slide: 3, tooltip: "Asset Location" },
-  { slide: 4, tooltip: "Supporting Documents" },
-  { slide: 5, tooltip: "Management Fee" },
-  { slide: 6, tooltip: "Asset Collateral" },
-  { slide: 7, tooltip: "Confirm Asset" }
+  { slide: 1, tooltip: "Select Asset" },
+  { slide: 2, tooltip: "Asset Location" },
+  { slide: 3, tooltip: "Supporting Documents" },
+  { slide: 4, tooltip: "Management Fee" },
+  { slide: 5, tooltip: "Asset Collateral" },
+  { slide: 6, tooltip: "Confirm Asset" }
 ];
 
 const enhance = compose(

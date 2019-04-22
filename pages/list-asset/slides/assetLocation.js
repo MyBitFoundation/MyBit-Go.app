@@ -9,6 +9,7 @@ import {
   CarouselSlideSelect,
 } from 'components/CarouselSlide/';
 const { publicRuntimeConfig } = getConfig();
+
 export const AssetLocationSlide = ({
   maxWidthDesktop,
   handleInputChange,
@@ -17,16 +18,15 @@ export const AssetLocationSlide = ({
   handleSelectSuggest,
 }) => {
   const {
-    assetCountry,
+    userCountry,
     searchAddress1,
     assetAddress1,
     assetAddress2,
     assetCity,
-    userCountry,
     assetProvince,
     assetPostalCode,
+    countryCode,
   } = formData;
-
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
@@ -53,7 +53,12 @@ export const AssetLocationSlide = ({
         render={googleMaps =>
           googleMaps && (
             <ReactGooglePlacesSuggest
-              autocompletionRequest={{input: searchAddress1}}
+              autocompletionRequest={{
+                input: searchAddress1,
+                componentRestrictions: {
+                  country: countryCode,
+                }
+              }}
               googleMaps={googleMaps}
               onSelectSuggest={handleSelectSuggest}
             >

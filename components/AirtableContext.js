@@ -73,7 +73,6 @@ class AirtableProvider extends React.PureComponent {
       countries.forEach(country => {
         country = country.trim();
         let cities = /\(([^)]+)\)/g.exec(country);
-
         if(cities){
           country = country.substring(0, country.indexOf('('))
           cities = cities[1].split(';');
@@ -216,7 +215,7 @@ class AirtableProvider extends React.PureComponent {
         * and either the city also matches or there are no city specified
         * which means the user is eligible to list this asset
         */
-        else if(asset.location[country] && (asset.location[country][city] || Object.keys(asset.location[country]).length === 0)){
+        else if(asset.location[country] && (asset.location[country][city.toLowerCase()] || Object.keys(asset.location[country]).length === 0)){
           shouldAdd = true;
         }
 
