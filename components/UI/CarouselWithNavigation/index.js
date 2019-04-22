@@ -45,7 +45,7 @@ class CarouselWithNavigation extends React.Component {
 
     const {
       slides,
-      navigationTooltips,
+      navigationTooltips = [],
       onFinish,
       maxWidthDesktop,
       desktopAt,
@@ -121,24 +121,6 @@ class CarouselWithNavigation extends React.Component {
           )}
         )}
       </CarouselWithNavigationContainer>
-      <CarouselWithNavigationNav
-        hideAt={desktopAt}
-      >
-        {navigationTooltips.map((slideTooltip) => {
-          return (
-            <Tooltip
-              title={slideTooltip.tooltip}
-              key={`slideTooltip${slideTooltip.slide}`}
-            >
-              <CarouselWithNavigationNavButton
-                isActive={currentSlide === slideTooltip.slide}
-                onClick={() => this.goToSlide(slideTooltip.slide)}
-                disabled={disableMovingForward && slideTooltip.slide > currentSlide}
-              />
-            </Tooltip>
-          );
-        })}
-      </CarouselWithNavigationNav>
       {(!error && !hideButtons) && (
         <CarouselWithNavigationButtons
           desktopAt={desktopAt}
@@ -172,6 +154,24 @@ class CarouselWithNavigation extends React.Component {
           )}
         </CarouselWithNavigationButtons>
       )}
+      <CarouselWithNavigationNav
+        hideAt={desktopAt}
+      >
+        {navigationTooltips.map((slideTooltip) => {
+          return (
+            <Tooltip
+              title={slideTooltip.tooltip}
+              key={`slideTooltip${slideTooltip.slide}`}
+            >
+              <CarouselWithNavigationNavButton
+                isActive={currentSlide === slideTooltip.slide}
+                onClick={() => this.goToSlide(slideTooltip.slide)}
+                disabled={disableMovingForward && slideTooltip.slide > currentSlide}
+              />
+            </Tooltip>
+          );
+        })}
+      </CarouselWithNavigationNav>
     </CarouselWithNavigationWrapper>
   )}
 }
