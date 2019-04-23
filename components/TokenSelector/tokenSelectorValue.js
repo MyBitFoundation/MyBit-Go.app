@@ -5,7 +5,7 @@ const TokenSelectorValue = styled.span`
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 1px;
-  color: #333333;
+  color: ${({theme}) => theme.colors.blackish};
 }`
 
 export default TokenSelectorValue;

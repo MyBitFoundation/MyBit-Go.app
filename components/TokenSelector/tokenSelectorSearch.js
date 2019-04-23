@@ -5,7 +5,7 @@ import {
 const Search = Input.Search;
 
 const TokenSelectorSearch = styled(Search)`
-  color: #333333;
+  color: ${({theme}) => theme.colors.blackish};
   width: calc(100% - 20px);
   margin: 0 auto;
   display: block;

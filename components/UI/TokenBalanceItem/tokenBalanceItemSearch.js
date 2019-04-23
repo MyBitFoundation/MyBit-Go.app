@@ -6,7 +6,7 @@ const Search = Input.Search;
 
 const TokenBalanceItemSearch = styled(Search)`
   background-color: #F5F5F5;
-  color: #333333;
+  color: ${({theme}) => theme.colors.blackish};
 }`
 
 export default TokenBalanceItemSearch;
