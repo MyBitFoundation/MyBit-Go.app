@@ -18,3 +18,5 @@ const getCountry = param => {
 };
 
 export default getCountry;
+
+//see: https://github.com/sca88/country-codes

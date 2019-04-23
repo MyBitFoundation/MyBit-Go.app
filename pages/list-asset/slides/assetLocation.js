@@ -1,5 +1,3 @@
-import ReactGoogleMapLoader from "react-google-maps-loader";
-import ReactGooglePlacesSuggest from "react-google-places-suggest";
 import getConfig from 'next/config';
 import {
   CarouselSlide,
@@ -8,6 +6,7 @@ import {
   CarouselSlideInput,
   CarouselSlideSelect,
 } from 'components/CarouselSlide/';
+import GoogleAutoComplete from 'ui/GoogleAutoComplete';
 const { publicRuntimeConfig } = getConfig();
 
 export const AssetLocationSlide = ({
@@ -45,33 +44,20 @@ export const AssetLocationSlide = ({
       >
         This is where your asset is going to be once fully funded.
       </CarouselSlideParagraph>
-      <ReactGoogleMapLoader
-        params={{
-          key: publicRuntimeConfig.GOOGLE_PLACES_API_KEY,
-          libraries: "places,geocode",
-        }}
-        render={googleMaps =>
-          googleMaps && (
-            <ReactGooglePlacesSuggest
-              autocompletionRequest={{
-                input: searchAddress1,
-                componentRestrictions: {
-                  country: countryCode,
-                }
-              }}
-              googleMaps={googleMaps}
-              onSelectSuggest={handleSelectSuggest}
-            >
-              <CarouselSlideInput
-                isCentered
-                placeholder="Address Line 1"
-                name="assetAddress1"
-                onChange={e => handleInputChange(e)}
-                value={assetAddress1}
-              />
-            </ReactGooglePlacesSuggest>
-          )}
-      />
+      <GoogleAutoComplete
+        key={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
+        input={searchAddress1}
+        countryCode={countryCode}
+        onSelectSuggest={handleSelectSuggest}
+      >
+        <CarouselSlideInput
+          isCentered
+          placeholder="Address Line 1"
+          name="assetAddress1"
+          onChange={e => handleInputChange(e)}
+          value={assetAddress1}
+        />
+      </GoogleAutoComplete>
       <CarouselSlideInput
         isCentered
         placeholder="Address Line 2"

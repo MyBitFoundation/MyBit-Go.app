@@ -6,11 +6,9 @@ import {
   Button,
   Select,
 } from "antd";
-import ReactGoogleMapLoader from "react-google-maps-loader";
-import ReactGooglePlacesSuggest from "react-google-places-suggest";
 import { withAirtableContext } from 'components/AirtableContext';
 import getConfig from 'next/config';
-
+import GoogleAutoComplete from 'ui/GoogleAutoComplete';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -161,36 +159,21 @@ export const AvailableAssetsSlide = withAirtableContext(({
                     </Option>
                   ))}
                 </CarouselSlideSelect>
-
-                <ReactGoogleMapLoader
-                  params={{
-                    key: publicRuntimeConfig.GOOGLE_PLACES_API_KEY,
-                    libraries: "places,geocode",
-                  }}
-                  render={googleMaps =>
-                    googleMaps && (
-                      <ReactGooglePlacesSuggest
-                        autocompletionRequest={{
-                          input: searchCity,
-                          componentRestrictions: {
-                            country: countryCode,
-                          }
-                        }}
-                        googleMaps={googleMaps}
-                        onSelectSuggest={handleCitySuggest}
-                      >
-                        <CarouselSlideInput
-                          isCentered
-                          placeholder="City"
-                          name="userCity"
-                          onChange={e => handleInputChange(e)}
-                          value={userCity}
-                          disabled={!userCountry}
-                        />
-                      </ReactGooglePlacesSuggest>
-                  )
-                }
-              />
+                <GoogleAutoComplete
+                  key={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
+                  input={searchCity}
+                  countryCode={countryCode}
+                  onSelectSuggest={handleCitySuggest}
+                >
+                  <CarouselSlideInput
+                    isCentered
+                    placeholder="City"
+                    name="userCity"
+                    onChange={e => handleInputChange(e)}
+                    value={userCity}
+                    disabled={!userCountry}
+                  />
+                </GoogleAutoComplete>
               </div>
               <p style={{textAlign: 'center'}}>
                 {(!userCountry || !userCity)
