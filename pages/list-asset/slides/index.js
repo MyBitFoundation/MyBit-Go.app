@@ -1,5 +1,4 @@
 export * from './intro';
-export * from './location';
 export * from './availableAssets';
 export * from './assetLocation';
 export * from './docs';

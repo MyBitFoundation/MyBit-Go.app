@@ -23,7 +23,7 @@ const CarouselWithNavigationButtons = styled.div`
 
   @media(min-width: ${props => props.desktopAt || `${props.theme.sizes.tablet}px`}) {
     position: relative;
-    top: -40px;
+    top: 10px;
     left: 20px;
     margin: 0px 10px;
     width: auto;
