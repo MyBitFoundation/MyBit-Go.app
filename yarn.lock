@@ -973,9 +973,9 @@
     web3 "1.0.0-beta.36"
 
 "@types/node@*":
-  version "11.13.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.6.tgz#37ec75690830acb0d74ce3c6c43caab787081e85"
-  integrity sha512-Xoo/EBzEe8HxTSwaZNLZjaW6M6tA/+GmD3/DZ6uo8qSaolE/9Oarko0oV1fVfrLqOz0tx0nXJB4rdD5c+vixLw==
+  version "11.13.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.7.tgz#85dbb71c510442d00c0631f99dae957ce44fd104"
+  integrity sha512-suFHr6hcA9mp8vFrZTgrmqW2ZU3mbWsryQtQlY/QvwTISCw7nw/j+bCQPPohqmskhmqa5wLNuMHTTsc+xf1MQg==
 
 "@types/node@^10.3.2":
   version "10.14.5"
@@ -6252,9 +6252,9 @@ mocha@^4.1.0:
     supports-color "4.4.0"
 
 mock-fs@^4.1.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.8.0.tgz#eb0784ceba4b34c91a924a5112eeb36e1b5a9e29"
-  integrity sha512-Gwj4KnJOW15YeTJKO5frFd/WDO5Mc0zxXqL9oHx3+e9rBqW8EVARqQHSaIXznUdljrD6pvbNGW2ZGXKPEfYJfw==
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.9.0.tgz#7fc0c2f82965050b2776f8eb4eb63ca53a92ff86"
+  integrity sha512-aUj0qIniTNxzGqAC61Bvro7YD37tIBnMw3wpClucUVgNBS7r6YQn/M4wuoH7SGteKz4SvC1OBeDsfpG0MYC+1Q==
 
 moment@2.x, moment@^2.22.2:
   version "2.24.0"
