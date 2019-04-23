@@ -178,7 +178,7 @@ class ListAssetPage extends React.Component {
               const countryCode = countryData ? countryData.iso2.toLowerCase() : '';
 
               this.setState({
-                data: { ...this.state.data, assetCountry: value, category: '', asset: undefined, assetValue: undefined, countryCode}
+                data: { ...this.state.data, assetCountry: value, category: '', asset: undefined, assetValue: undefined, countryCode, userCity: undefined}
               });break;
             }
             case 'category': {
