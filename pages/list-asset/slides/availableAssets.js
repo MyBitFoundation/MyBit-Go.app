@@ -78,7 +78,7 @@ const NoResults = styled.div`
   p:nth-child(2){
     margin: 0px;
     font-size: 16px;
-    color: #333333;
+    color: ${({theme}) => theme.colors.blackish};
     font-weight: 500;
   }
 `

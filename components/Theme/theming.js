@@ -6,6 +6,7 @@ const blueDark = '#001358';
 const black = '#111111';
 const black2 = '#383838';
 const black3 = '#575757';
+const blackish = '#333333';
 const antBase = 'rgba(0, 0, 0, 0.65)';
 const grayBase = '#6C6C6C';
 const gray2 = '#868686';
