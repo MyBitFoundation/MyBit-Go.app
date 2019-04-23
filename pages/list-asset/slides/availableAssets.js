@@ -160,7 +160,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
                   ))}
                 </CarouselSlideSelect>
                 <GoogleAutoComplete
-                  key={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
+                  apiKey={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
                   input={searchCity}
                   countryCode={countryCode}
                   onSelectSuggest={handleCitySuggest}

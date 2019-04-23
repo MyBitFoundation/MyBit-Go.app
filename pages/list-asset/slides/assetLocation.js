@@ -45,7 +45,7 @@ export const AssetLocationSlide = ({
         This is where your asset is going to be once fully funded.
       </CarouselSlideParagraph>
       <GoogleAutoComplete
-        key={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
+        apiKey={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
         input={searchAddress1}
         countryCode={countryCode}
         onSelectSuggest={handleSelectSuggest}

@@ -2,7 +2,7 @@ import ReactGoogleMapLoader from "react-google-maps-loader";
 import ReactGooglePlacesSuggest from "react-google-places-suggest";
 
 const GoogleAutoComplete = ({
-  key,
+  apiKey,
   input,
   countryCode = '',
   onSelectSuggest,
@@ -10,7 +10,7 @@ const GoogleAutoComplete = ({
 }) => (
     <ReactGoogleMapLoader
       params={{
-        key,
+        key: apiKey,
         libraries: "places,geocode",
       }}
       render={googleMaps =>
