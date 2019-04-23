@@ -209,14 +209,13 @@ class AirtableProvider extends React.PureComponent {
         */
         if(!asset.location){
           shouldAdd = true;
-
         }
         /*
         * The user's country needs to an allowed location for the asset
         * and either the city also matches or there are no city specified
         * which means the user is eligible to list this asset
         */
-        else if((asset.location[country] && Array.isArray(asset.location[country]) && (asset.location[country].includes(city.toLowerCase())) || Object.keys(asset.location[country]).length === 0)){
+        else if((asset.location[country] && Array.isArray(asset.location[country]) && (asset.location[country].includes(city.toLowerCase())) || (asset.location[country] && Object.keys(asset.location[country]).length === 0))){
           shouldAdd = true;
         }
 

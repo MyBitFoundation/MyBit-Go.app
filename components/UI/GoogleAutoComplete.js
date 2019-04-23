@@ -24,6 +24,7 @@ const GoogleAutoComplete = ({
             }}
             googleMaps={googleMaps}
             onSelectSuggest={onSelectSuggest}
+            textNoResults=""
           >
             {children}
           </ReactGooglePlacesSuggest>
