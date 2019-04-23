@@ -66,6 +66,23 @@ const SelectedAssetValueLabel = styled.p`
   margin-bottom: 10px;
 `
 
+const NoResults = styled.div`
+  text-align: center;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 50px;
+
+  p:nth-child(2){
+    margin: 0px;
+    font-size: 16px;
+    color: #333333;
+    font-weight: 500;
+  }
+`
+
 export const AvailableAssetsSlide = withAirtableContext(({
   handleSelectChange,
   formData,
@@ -233,9 +250,11 @@ export const AvailableAssetsSlide = withAirtableContext(({
                 </React.Fragment>
               )}
               {!areAssetsAvailable && (
-                <div>
+                <NoResults>
                   <ThinkingIcon />
-                </div>
+                  <p>No Assets Available Yet</p>
+                  <p>Looks like your region is not yet available</p>
+                </NoResults>
               )}
             </React.Fragment>
           )}
