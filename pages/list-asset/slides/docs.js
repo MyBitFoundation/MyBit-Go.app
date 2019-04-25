@@ -8,12 +8,15 @@ import {
   CarouselSlideMainTitle,
   CarouselSlideParagraph,
   CarouselSlideTooltip,
+  CarouselNextButton,
 } from 'components/CarouselSlide/';
 
 export const DocsSlide = ({
   fileList,
   handleFileUpload,
   maxWidthDesktop,
+  desktopMode,
+  onClick,
 }) => {
   const props = {
     name: "file",
@@ -25,7 +28,10 @@ export const DocsSlide = ({
   };
 
   return (
-    <CarouselSlide>
+    <CarouselSlide
+      maxWidthDesktop={maxWidthDesktop}
+      hasBoxShadow={desktopMode}
+    >
       <CarouselSlideMainTitle
         isLong
         isSmallMobile
@@ -60,6 +66,12 @@ export const DocsSlide = ({
           Format .rar .zip .doc .docx .pdf .jpg...
         </p>
       </Upload.Dragger>
+      {desktopMode && (
+        <CarouselNextButton
+          onClick={onClick}
+          style={{marginTop: '40px'}}
+        />
+      )}
     </CarouselSlide>
   );
 }

@@ -5,6 +5,7 @@ import {
   CarouselSlideMainTitle,
   CarouselSlideParagraph,
   CarouselSlideTooltip,
+  CarouselNextButton,
 } from 'components/CarouselSlide/';
 import {
   Slider,
@@ -28,6 +29,7 @@ const Image = styled.img`
   margin: 40px auto;
   width: 90px;
   heght: 65px;
+  display: block;
 }`
 
 const formatter = (value) => {
@@ -112,6 +114,9 @@ export const CollateralSlide = ({
   maxCollateralPercentage,
   collateralSelectedToken,
   kyberLoading,
+  desktopMode,
+  onClick,
+  nextButtonDisabled,
 }) => {
   const noBalance = !balances || Object.keys(balances).length === 0;
   const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
@@ -121,6 +126,7 @@ export const CollateralSlide = ({
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
+      hasBoxShadow={desktopMode}
     >
       <CarouselSlideMainTitle
         isLong
@@ -208,6 +214,15 @@ export const CollateralSlide = ({
 
             </TokenSelectorWrapper>
           </InputsWrapper>
+          {desktopMode && (
+            <CarouselNextButton
+              onClick={onClick}
+              disabled={nextButtonDisabled}
+              style={{
+                marginTop: '40px',
+              }}
+            />
+          )}
         </React.Fragment>
       )}
     </CarouselSlide>

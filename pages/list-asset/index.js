@@ -14,6 +14,7 @@ import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withCivicContext } from "ui/CivicContext";
 import ListAssetMobile from './listAssetMobile';
+import ListAssetDesktop from './listAssetDesktop';
 import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
@@ -64,6 +65,7 @@ class ListAssetPage extends React.Component {
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
+      step: props.civic.token ? 1 : 0,
     };
   }
 
@@ -153,7 +155,7 @@ class ListAssetPage extends React.Component {
           assetValue: fundingGoal,
           operatorId,
         }
-      }, () => console.log(this.state))
+      })
     } else {
       this.setState(
         {
@@ -172,7 +174,7 @@ class ListAssetPage extends React.Component {
             case 'category': {
               this.setState({
                 data: { ...this.state.data, category: value, asset: undefined, assetValue: undefined, }
-              }, () => console.log(this.state));break;
+              });break;
             }
             default: return null;
           }
@@ -339,6 +341,10 @@ class ListAssetPage extends React.Component {
     }
   }
 
+  goToNextStep = () => {
+    this.setState({step: this.state.step + 1});
+  }
+
   render() {
     const {
       civic,
@@ -360,6 +366,7 @@ class ListAssetPage extends React.Component {
       data,
       isUserListingAsset,
       listedAssetId,
+      step,
      } = this.state;
 
     const {
@@ -385,7 +392,30 @@ class ListAssetPage extends React.Component {
         <Media query="(min-width: 768px)">
           {matches =>
             matches ? (
-              <p>Desktop.</p>
+              <ListAssetDesktop
+                dev={dev}
+                step={step}
+                civic={civic}
+                handleSelectChange={this.handleSelectChange}
+                handleInputChange={this.handleInputChange}
+                handleCitySuggest={this.handleCitySuggest}
+                handleSelectedTokenChange={this.handleSelectedTokenChange}
+                handleCollateralChange={this.handleCollateralChange}
+                handleFileUpload={this.handleFileUpload}
+                setUserListingAsset={this.setUserListingAsset}
+                handleDetectLocationClicked={this.handleDetectLocationClicked}
+                handleSelectSuggest={this.handleSelectSuggest}
+                goToNextStep={this.goToNextStep}
+                countries={COUNTRIES}
+                loadingAssets={loadingAssets}
+                formData={data}
+                balances={user.balances}
+                kyberLoading={kyberLoading}
+                listedAssetId={listedAssetId}
+                isUserListingAsset={isUserListingAsset}
+                handleListAsset={handleListAsset}
+                metamaskErrorsToRender={metamaskErrorsToRender}
+              />
             ) : (
               <ListAssetMobile
                 dev={dev}

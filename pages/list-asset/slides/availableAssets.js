@@ -19,6 +19,7 @@ import {
   CarouselSlideInput,
   CarouselSlideSelect,
   CarouselSlideInputNumber,
+  CarouselNextButton,
 } from 'components/CarouselSlide/';
 import {
   DEFAULT_TOKEN,
@@ -93,6 +94,9 @@ export const AvailableAssetsSlide = withAirtableContext(({
   countries,
   handleInputChange,
   handleCitySuggest,
+  desktopMode,
+  onClick,
+  nextButtonDisabled,
 }) => {
   const {
     category,
@@ -120,7 +124,10 @@ export const AvailableAssetsSlide = withAirtableContext(({
   }
 
   return (
-    <CarouselSlide>
+    <CarouselSlide
+      maxWidthDesktop={maxWidthDesktop}
+      hasBoxShadow={desktopMode}
+    >
       <React.Fragment>
         <div>
           <CarouselSlideMainTitle
@@ -247,6 +254,12 @@ export const AvailableAssetsSlide = withAirtableContext(({
                     }
                     parser={value => value.replace(/\$\s?|(,*)/g, "")}
                   />
+                  {desktopMode && (
+                    <CarouselNextButton
+                      onClick={onClick}
+                      disabled={nextButtonDisabled}
+                    />
+                  )}
                 </React.Fragment>
               )}
               {!areAssetsAvailable && (
