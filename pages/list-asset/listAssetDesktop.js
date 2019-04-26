@@ -7,7 +7,7 @@ import {
   DocsSlide,
   FeesSlide,
   CollateralSlide,
-  ConfirmSlide,
+  ConfirmSlideDesktop,
   SuccessSlide,
 } from "./slides";
 import CustomTimeline from './customTimeline';
@@ -15,10 +15,11 @@ import CustomTimeline from './customTimeline';
 const MAX_WIDTH_DESKTOP = "450px";
 
 const ListAssetDesktopWrapper = styled.div`
+  position: relative;
   display: flex;
   justify-content: space-around;
   margin: 0px auto;
-  margin-top: 100px;
+  margin-top: 90px;
   max-width: 850px;
 
   & > ul{
@@ -27,7 +28,7 @@ const ListAssetDesktopWrapper = styled.div`
   }
 
   & > div{
-    width: 50%;
+    width: 60%;
   }
 
   ${({theme}) => theme.laptop`
@@ -36,10 +37,20 @@ const ListAssetDesktopWrapper = styled.div`
      margin-right: 50px;
      width: 40%;
     }
+  `}
+`
 
-    & > div{
-      width: auto;
-    }
+const PageTitle = styled.div`
+  font-family: Gilroy;
+  font-size: 32px;
+  line-height: 40px;
+  color: ${({theme}) => theme.colors.black};
+  position: absolute;
+  left: 10px;
+  top: -70px;
+
+  ${({theme}) => theme.laptop`
+    left: -5px;
   `}
 `
 
@@ -66,6 +77,7 @@ const ListAssetDesktop = ({
   metamaskErrorsToRender,
   handleSelectSuggest,
   goToNextStep,
+  goToStep,
 }) => {
   const {
     category,
@@ -99,9 +111,12 @@ const ListAssetDesktop = ({
   }
   return (
     <ListAssetDesktopWrapper>
+      <PageTitle>List an Asset</PageTitle>
       <CustomTimeline
         step={step}
         formData={formData}
+        goToStep={goToStep}
+        listedAssetId={listedAssetId}
       />
       {step === 1 && (
         <AvailableAssetsSlide
@@ -184,13 +199,16 @@ const ListAssetDesktop = ({
         />
        )}
        {step === 6 && !listedAssetId && (
-        <ConfirmSlide
+        <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}
           listedAssetId={listedAssetId}
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           error={false || metamaskErrorsToRender.render}
-          desktopMode
+          onClick={() => {
+            setUserListingAsset(true);
+            handleListAsset(formData, setUserListingAsset);
+          }}
         />
       )}
     </ListAssetDesktopWrapper>

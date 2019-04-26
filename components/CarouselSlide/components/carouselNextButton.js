@@ -17,6 +17,6 @@ export const CarouselNextButton = props => (
     size="large"
     {...props}
   >
-    Next
+    {props.children ? props.children : 'Next'}
   </CarouselNextButtonWrapper>
 )

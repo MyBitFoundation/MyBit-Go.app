@@ -38,6 +38,7 @@ export const FeesSlide = ({
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
     hasBoxShadow={desktopMode}
+    desktopMode={desktopMode}
   >
     <CarouselSlideMainTitle
       isLong

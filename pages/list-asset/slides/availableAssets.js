@@ -127,6 +127,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
       hasBoxShadow={desktopMode}
+      desktopMode={desktopMode}
     >
       <React.Fragment>
         <div>

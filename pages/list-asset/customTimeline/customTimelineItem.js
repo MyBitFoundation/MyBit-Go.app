@@ -1,7 +1,6 @@
 import React from 'react';
 import { Timeline } from 'antd';
 import styled, { css } from 'styled-components';
-import Check from 'static/list-asset/check.svg';
 
 const CustomDot = styled.div`
   width: 24px;
@@ -18,6 +17,25 @@ const CustomDot = styled.div`
     color: white;
     background-color: ${({theme}) => theme.colors.blueMain};
     border: none;
+  `}
+
+  ${(props) => props.completed && css`
+    color: #52C41A;
+    background-color: #52C41A;
+    border: none;
+
+    &::after{
+      content: ' ';
+      display: block;
+      width: 14px;
+      height: 11px;
+      background-image: url(static/list-asset/checkmark.svg);
+      background-repeat: no-repeat;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      left: 50%;
+      position: absolute;
+    }
   `}
 `
 
@@ -49,17 +67,25 @@ const CustomContent = styled.div`
   `}
 `
 
+const TimelineItemWrapper = styled(Timeline.Item)`
+  ${props => props.onClick && css `
+    cursor: pointer;
+  `}
+`
+
 const CustomTimelineItem = ({
   step,
   title,
   content,
   currentStep,
+  goToStep,
 }) => {
   const current = currentStep === step - 1;
   const completed = currentStep > step - 1;
   return (
-    <Timeline.Item
-      dot={completed ? <Check /> : <CustomDot current={current}>{step}</CustomDot>}
+    <TimelineItemWrapper
+      dot={<CustomDot current={current} completed={completed}>{step}</CustomDot>}
+      onClick={goToStep ? () => goToStep(step - 1) : undefined}
     >
       <CustomTitle
         completed={completed}
@@ -73,7 +99,7 @@ const CustomTimelineItem = ({
       >
         {content}
       </CustomContent>
-    </Timeline.Item>
+    </TimelineItemWrapper>
   )
 }
 

@@ -11,6 +11,10 @@ export const CarouselSlide = styled.div`
     padding: 30px;
   }
 
+  ${props => props.desktopMode && css`
+    padding-top: 10px !important;
+  `}
+
   ${props => props.maxWidthDesktop && css`
     max-width: ${props => props.maxWidthDesktop};
     margin: 0 auto;

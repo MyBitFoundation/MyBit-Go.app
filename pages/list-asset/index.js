@@ -335,14 +335,12 @@ class ListAssetPage extends React.Component {
       });
   };
 
-  handleKeyDown = e => {
-    if (e.key === "Tab") {
-      e.preventDefault();
-    }
-  }
-
   goToNextStep = () => {
     this.setState({step: this.state.step + 1});
+  }
+
+  goToStep = step => {
+    this.setState({step});
   }
 
   render() {
@@ -406,6 +404,7 @@ class ListAssetPage extends React.Component {
                 handleDetectLocationClicked={this.handleDetectLocationClicked}
                 handleSelectSuggest={this.handleSelectSuggest}
                 goToNextStep={this.goToNextStep}
+                goToStep={this.goToStep}
                 countries={COUNTRIES}
                 loadingAssets={loadingAssets}
                 formData={data}

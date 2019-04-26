@@ -20,6 +20,7 @@ export const IntroSlide = ({
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
     hasBoxShadow={desktopMode}
+    desktopMode={desktopMode}
   >
     <CarouselSlideMainTitle
       isLong

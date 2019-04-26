@@ -31,6 +31,7 @@ export const DocsSlide = ({
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
       hasBoxShadow={desktopMode}
+      desktopMode={desktopMode}
     >
       <CarouselSlideMainTitle
         isLong

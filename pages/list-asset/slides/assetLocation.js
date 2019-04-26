@@ -34,6 +34,7 @@ export const AssetLocationSlide = ({
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
       hasBoxShadow={desktopMode}
+      desktopMode={desktopMode}
     >
       <CarouselSlideMainTitle
         isLong
