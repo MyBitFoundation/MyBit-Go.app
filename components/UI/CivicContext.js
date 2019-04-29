@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styled from 'styled-components';
 import getConfig from 'next/config';
-
+import axios from 'axios';
 export const { Provider, Consumer } = React.createContext({});
 
 const CivicButtonWrapper = styled.button`
@@ -85,8 +85,19 @@ class CivicProvider extends Component {
     });
     this.civicSip.on('auth-code-received', event => {
       console.log("Civic event: ", event)
+      const jwtToken = event.response;
+      this.sendAuthCode(jwtToken);
       onSuccess();
     });
+  }
+
+  sendAuthCode = jwtToken => {
+    axios
+    .post('/api/list-asset/auth', { headers: {"Authorization" : `Bearer ${jwtToken}`} })
+    .then(res => {
+       console.log('profile is:', res.data);
+      })
+      .catch(error => console.log(error))
   }
 
   logout() {
