@@ -6,3 +6,4 @@ export * from './fees';
 export * from './collateral';
 export * from './confirm';
 export * from './success';
+export * from './confirmDesktop';

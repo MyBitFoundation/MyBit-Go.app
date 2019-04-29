@@ -143,6 +143,10 @@ const GlobalStyle = createGlobalStyle`
     border-top-color: #ffffff !important;
   }
 
+  .ant-upload {
+    height: auto !important;
+  }
+
 `
 
 export default GlobalStyle;

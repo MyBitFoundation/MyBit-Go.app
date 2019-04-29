@@ -6,6 +6,7 @@ import {
   CarouselSlideInputNumber,
   CarouselSlideSlider,
   CarouselSlideTooltip,
+  CarouselNextButton,
 } from 'components/CarouselSlide/';
 
 import {
@@ -19,6 +20,7 @@ const Image = styled.img`
   margin: 40px auto;
   width: 83px;
   height: 100px;
+  display: block;
 }`
 
 const formatter = (value) => {
@@ -29,9 +31,14 @@ export const FeesSlide = ({
   maxWidthDesktop,
   handleSelectChange,
   managementFee,
+  desktopMode,
+  onClick,
+  nextButtonDisabled,
 }) => (
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
+    hasBoxShadow={desktopMode}
+    desktopMode={desktopMode}
   >
     <CarouselSlideMainTitle
       isLong
@@ -77,6 +84,11 @@ export const FeesSlide = ({
       parser={value => value.replace("%", "")}
       onChange={value => handleSelectChange(value, "managementFee")}
     />
-
+    {desktopMode && (
+      <CarouselNextButton
+        onClick={onClick}
+        disabled={nextButtonDisabled}
+      />
+    )}
   </CarouselSlide>
 );

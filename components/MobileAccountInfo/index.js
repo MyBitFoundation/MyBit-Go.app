@@ -17,7 +17,6 @@ const MobileAccountInfo = ({
   const addressToRender = (!isReadOnlyMode && user.address) ? (
     <Address
       {...user}
-      isLeft
       isMobile
     />
   ) : (
