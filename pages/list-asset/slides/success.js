@@ -36,9 +36,12 @@ const Button = styled(ButtonAnt)`
 export const SuccessSlide = ({
   maxWidthDesktop,
   assetId,
+  desktopMode,
 }) => (
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
+    hasBoxShadow={desktopMode}
+    desktopMode={desktopMode}
   >
     <CarouselSlideMainTitle
       isLong

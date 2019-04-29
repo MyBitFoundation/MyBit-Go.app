@@ -5,6 +5,7 @@ import {
   CarouselSlideParagraph,
   CarouselSlideInput,
   CarouselSlideSelect,
+  CarouselNextButton,
 } from 'components/CarouselSlide/';
 import GoogleAutoComplete from 'ui/GoogleAutoComplete';
 const { publicRuntimeConfig } = getConfig();
@@ -15,6 +16,9 @@ export const AssetLocationSlide = ({
   formData,
   countries,
   handleSelectSuggest,
+  desktopMode,
+  onClick,
+  nextButtonDisabled,
 }) => {
   const {
     userCountry,
@@ -29,6 +33,8 @@ export const AssetLocationSlide = ({
   return (
     <CarouselSlide
       maxWidthDesktop={maxWidthDesktop}
+      hasBoxShadow={desktopMode}
+      desktopMode={desktopMode}
     >
       <CarouselSlideMainTitle
         isLong
@@ -103,6 +109,12 @@ export const AssetLocationSlide = ({
         onChange={e => handleInputChange(e)}
         value={assetPostalCode}
       />
+      {desktopMode && (
+        <CarouselNextButton
+          onClick={onClick}
+          disabled={nextButtonDisabled}
+        />
+      )}
     </CarouselSlide>
   )
 };

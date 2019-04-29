@@ -1,4 +1,5 @@
 import Router from "next/router";
+import Media from 'react-media';
 import { compose } from 'recompose'
 import {
   Button,
@@ -12,7 +13,8 @@ import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withCivicContext } from "ui/CivicContext";
-import CarouselWithNavigation from 'ui/CarouselWithNavigation';
+import ListAssetMobile from './listAssetMobile';
+import ListAssetDesktop from './listAssetDesktop';
 import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
@@ -21,17 +23,7 @@ import {
   DEFAULT_TOKEN,
 } from 'constants/app';
 import { COOKIES } from 'constants/cookies';
-import {
-  IntroSlide,
-  LocationSlide,
-  AvailableAssetsSlide,
-  AssetLocationSlide,
-  DocsSlide,
-  FeesSlide,
-  CollateralSlide,
-  ConfirmSlide,
-  SuccessSlide,
-} from "./slides";
+
 import {
   convertFromPlatformToken,
   convertFromDefaultToken,
@@ -42,8 +34,6 @@ import {
   processLocationData,
 } from 'utils/locationData';
 import getCountry from 'utils/countryCodes';
-
-const MAX_WIDTH_DESKTOP = "500px";
 
 const dev = process.env.NODE_ENV === 'development';
 const { publicRuntimeConfig } = getConfig();
@@ -73,9 +63,9 @@ class ListAssetPage extends React.Component {
         operatorId: '',
         countryCode: '',
       },
-      countries: COUNTRIES,
       isUserListingAsset: false,
       listedAssetId: undefined,
+      step: props.civic.token ? 1 : 0,
     };
   }
 
@@ -165,7 +155,7 @@ class ListAssetPage extends React.Component {
           assetValue: fundingGoal,
           operatorId,
         }
-      }, () => console.log(this.state))
+      })
     } else {
       this.setState(
         {
@@ -184,7 +174,7 @@ class ListAssetPage extends React.Component {
             case 'category': {
               this.setState({
                 data: { ...this.state.data, category: value, asset: undefined, assetValue: undefined, }
-              }, () => console.log(this.state));break;
+              });break;
             }
             default: return null;
           }
@@ -345,10 +335,12 @@ class ListAssetPage extends React.Component {
       });
   };
 
-  handleKeyDown = e => {
-    if (e.key === "Tab") {
-      e.preventDefault();
-    }
+  goToNextStep = () => {
+    this.setState({step: this.state.step + 1});
+  }
+
+  goToStep = step => {
+    this.setState({step});
   }
 
   render() {
@@ -360,12 +352,19 @@ class ListAssetPage extends React.Component {
     } = this.props;
 
     const {
-      MYB_PLACEHOLDER,
+      handleListAsset,
+      loadingAssets,
+    } = blockchainContext;
+
+    const {
+      user,
+    } = metamaskContext;
+
+    const {
       data,
-      countries,
-      categories,
       isUserListingAsset,
       listedAssetId,
+      step,
      } = this.state;
 
     const {
@@ -387,149 +386,65 @@ class ListAssetPage extends React.Component {
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
 
     return (
-      <CarouselWithNavigation
-        redirectOnClose="/explore"
-        navigationTooltips={SliderNavigationTooltips}
-        onFinish={() => {}}
-        maxWidthDesktop={MAX_WIDTH_DESKTOP}
-        nextButtonHasArrow
-        disableMovingForward
-        slides={[{
-          toRender: (
-            <IntroSlide maxWidthDesktop={MAX_WIDTH_DESKTOP}/>
-          ),
-          buttons: {
-            hasNextButton: true,
-            hasBackButton: false,
-            nextButtonText: (!dev && !civic.token) && 'Continue with Civic',
-            isCivicButton: !dev && !civic.token,
-            nextButtonHandler: (!dev && !civic.token) && civic.signUp,
-            onSuccessMoveToNextSlide: true,
-          },
-        }, {
-          toRender: (
-            <AvailableAssetsSlide
-              handleSelectChange={this.handleSelectChange}
-              formData={data}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              loadingAssets={blockchainContext.loading.assets}
-              handleInputChange={this.handleInputChange}
-              countries={countries}
-              handleDetectLocationClicked={this.handleDetectLocationClicked}
-              handleCitySuggest={this.handleCitySuggest}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonDisabled: !category || !asset || !assetValue,
+      <div>
+        <Media query="(min-width: 768px)">
+          {matches =>
+            matches ? (
+              <ListAssetDesktop
+                dev={dev}
+                step={step}
+                civic={civic}
+                handleSelectChange={this.handleSelectChange}
+                handleInputChange={this.handleInputChange}
+                handleCitySuggest={this.handleCitySuggest}
+                handleSelectedTokenChange={this.handleSelectedTokenChange}
+                handleCollateralChange={this.handleCollateralChange}
+                handleFileUpload={this.handleFileUpload}
+                setUserListingAsset={this.setUserListingAsset}
+                handleDetectLocationClicked={this.handleDetectLocationClicked}
+                handleSelectSuggest={this.handleSelectSuggest}
+                goToNextStep={this.goToNextStep}
+                goToStep={this.goToStep}
+                countries={COUNTRIES}
+                loadingAssets={loadingAssets}
+                formData={data}
+                balances={user.balances}
+                kyberLoading={kyberLoading}
+                listedAssetId={listedAssetId}
+                isUserListingAsset={isUserListingAsset}
+                handleListAsset={handleListAsset}
+                metamaskErrorsToRender={metamaskErrorsToRender}
+              />
+            ) : (
+              <ListAssetMobile
+                dev={dev}
+                civic={civic}
+                handleSelectChange={this.handleSelectChange}
+                handleInputChange={this.handleInputChange}
+                handleCitySuggest={this.handleCitySuggest}
+                handleSelectedTokenChange={this.handleSelectedTokenChange}
+                handleCollateralChange={this.handleCollateralChange}
+                handleFileUpload={this.handleFileUpload}
+                setUserListingAsset={this.setUserListingAsset}
+                handleDetectLocationClicked={this.handleDetectLocationClicked}
+                handleSelectSuggest={this.handleSelectSuggest}
+                countries={COUNTRIES}
+                loadingAssets={loadingAssets}
+                formData={data}
+                balances={user.balances}
+                kyberLoading={kyberLoading}
+                listedAssetId={listedAssetId}
+                isUserListingAsset={isUserListingAsset}
+                handleListAsset={handleListAsset}
+                metamaskErrorsToRender={metamaskErrorsToRender}
+              />
+            )
           }
-        }, {
-          toRender: (
-            <AssetLocationSlide
-              handleInputChange={this.handleInputChange}
-              handleSelectChange={this.handleSelectChange}
-              formData={data}
-              countries={countries}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              handleSelectSuggest={this.handleSelectSuggest}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonDisabled:
-              data.userCountry !== "" &&
-              data.assetAddress1 !== "" &&
-              data.assetCity !== "" &&
-              data.assetProvince !== "" &&
-              data.assetPostalCode !== ""
-                ? false
-                : true,
-          }
-        }, {
-          toRender: (
-            <DocsSlide
-              fileList={fileList}
-              handleFileUpload={this.handleFileUpload}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-          }
-        }, {
-          toRender: (
-            <FeesSlide
-              handleSelectChange={this.handleSelectChange}
-              managementFee={managementFee}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            />
-          ), buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonDisabled: managementFee !== 0 ? false : true,
-          }
-        }, {
-          toRender:
-            <CollateralSlide
-              collateralSelectedToken={collateralSelectedToken}
-              collateralDai={collateralDai}
-              selectedToken={selectedToken}
-              handleSelectedTokenChange={this.handleSelectedTokenChange}
-              handleCollateralChange={this.handleCollateralChange}
-              collateralPercentage={collateralPercentage}
-              collateralMyb={collateralMyb}
-              formData={data}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              balances={metamaskContext.user.balances}
-              maxCollateralPercentage={maxCollateralPercentage}
-              kyberLoading={kyberLoading}
-            />
-          , buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-          }
-        }, {
-          toRender: listedAssetId ? (
-            <SuccessSlide
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              assetId={listedAssetId}
-            />
-           ) : (
-            <ConfirmSlide
-              formData={data}
-              isUserListingAsset={isUserListingAsset}
-              listedAssetId={listedAssetId}
-              maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              error={false || metamaskErrorsToRender.render}
-            />
-          ),
-          error: false || metamaskErrorsToRender.render,
-          hideButtons: listedAssetId ? true : false,
-          buttons: {
-            hasNextButton: true,
-            hasBackButton: true,
-            nextButtonText: isUserListingAsset ? 'Confirming listing' : 'Confirm Listing',
-            nextButtonLoading: isUserListingAsset,
-            nextButtonHandler: () => {
-              this.setUserListingAsset(true);
-              blockchainContext.handleListAsset(data, this.setUserListingAsset);
-            },
-          }
-        }]}
-      />
-    );
+        </Media>
+      </div>
+    )
   }
 }
-
-const SliderNavigationTooltips = [
-  { slide: 0, tooltip: "KYC" },
-  { slide: 1, tooltip: "Select Asset" },
-  { slide: 2, tooltip: "Asset Location" },
-  { slide: 3, tooltip: "Supporting Documents" },
-  { slide: 4, tooltip: "Management Fee" },
-  { slide: 5, tooltip: "Asset Collateral" },
-  { slide: 6, tooltip: "Confirm Asset" }
-];
 
 const enhance = compose(
   withBlockchainContext,

@@ -24,7 +24,6 @@ const AppHeaderContainer = styled.div`
   ${({theme}) => theme.tablet`
     transition: all 0.2s;
     height: ${({theme}) => theme.sizes.headerHeightTablet}px;
-    padding: 0 50px;
     position: relative;
   `}
 }`

@@ -3,12 +3,24 @@ import {
   CarouselSlideMainTitle,
   CarouselSlideParagraph,
   CarouselSlideList,
+  CarouselNextButton,
 } from 'components/CarouselSlide/';
 
+import {
+  CivicButton,
+} from 'ui/CivicContext';
 
-export const IntroSlide = ({maxWidthDesktop}) => (
+export const IntroSlide = ({
+  maxWidthDesktop,
+  desktopMode,
+  onClick,
+  dev,
+  civic,
+}) => (
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
+    hasBoxShadow={desktopMode}
+    desktopMode={desktopMode}
   >
     <CarouselSlideMainTitle
       isLong
@@ -64,5 +76,19 @@ export const IntroSlide = ({maxWidthDesktop}) => (
         and investors.
       </p>
     </CarouselSlideList>
+    {desktopMode && dev && (
+      <CarouselNextButton
+        onClick={onClick}
+      />
+    )}
+    {desktopMode && !dev && (
+      <CivicButton
+        style={{
+          display: 'block',
+          margin: '0 auto',
+        }}
+        onClick={() => civic.signUp(onClick)}
+      />
+    )}
   </CarouselSlide>
 );
