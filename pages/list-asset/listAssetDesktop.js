@@ -117,6 +117,8 @@ const ListAssetDesktop = ({
         formData={formData}
         goToStep={goToStep}
         listedAssetId={listedAssetId}
+        dev={dev}
+        civic={civic}
       />
       {step === 1 && (
         <AvailableAssetsSlide

@@ -60,14 +60,14 @@ app
     }
   });
 
-  server.post('/api/list-asset/auth', async (req, res) => {
+  server.get('/api/list-asset/auth', async (req, res) => {
     try{
       const jwt = req.header('Authorization').split('Bearer ')[1];
       const userData = await CivicController.exchangeCode(jwt);
-      res.send({ userData: JSON.stringify(userData, null, 4) });
+      res.send(userData);
     }catch(err){
       res.statusCode = 500;
-      res.send(error);
+      res.send(err);
     }
   });
 

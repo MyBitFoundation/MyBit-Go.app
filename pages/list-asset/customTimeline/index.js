@@ -31,6 +31,8 @@ const CustomTimeline = React.memo(({
   formData,
   goToStep,
   listedAssetId,
+  dev,
+  civic,
 }) => {
   console.log(formData)
   const{
@@ -61,7 +63,7 @@ const CustomTimeline = React.memo(({
     <CustomTimelineWrapper>
       <CustomTimelineItem
         title="Civic Account"
-        content="dev@mybit.io"
+        content={dev ? 'dev@mybit.io' : civic.email}
         step={1}
         currentStep={step}
       />
@@ -73,7 +75,7 @@ const CustomTimeline = React.memo(({
             <br />
             <span>{asset}, Value: {formatMonetaryValue(assetValue)}</span>
           </React.Fragment>
-        ) : "Different assets will be available to fund depending on where you are"}
+        ) : "Pick the asset you will be managing."}
         step={2}
         currentStep={step}
         goToStep={maxStep > 1 ? goToStep : undefined}

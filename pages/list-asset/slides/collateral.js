@@ -28,7 +28,7 @@ const Image = styled.img`
   position: relative;
   margin: 40px auto;
   width: 90px;
-  heght: 65px;
+  height: 65px;
   display: block;
 }`
 

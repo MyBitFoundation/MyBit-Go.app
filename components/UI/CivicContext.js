@@ -86,25 +86,26 @@ class CivicProvider extends Component {
     this.civicSip.on('auth-code-received', event => {
       console.log("Civic event: ", event)
       const jwtToken = event.response;
-      this.sendAuthCode(jwtToken);
-      onSuccess();
+      this.sendAuthCode(jwtToken, onSuccess);
     });
   }
 
-  sendAuthCode = jwtToken => {
+  sendAuthCode = (jwtToken, cb) => {
     axios
-    .post('/api/list-asset/auth', { headers: {"Authorization" : `Bearer ${jwtToken}`} })
+    .get('/api/list-asset/auth', { headers: {"Authorization" : `Bearer ${jwtToken}`} })
     .then(res => {
-       console.log('profile is:', res.data);
+        if(res.data && res.data.data && Array.isArray(res.data.data) && res.data.data.length > 0 && res.data.data[0].value){
+          this.setState({email: res.data.data[0].value}, () => cb && cb());
+        }
       })
-      .catch(error => console.log(error))
+    .catch(error => console.log(error))
   }
 
   logout() {
     this.setState({
       token: null
     });
-  }
+   }
 
   handleCodeReceived(event) {
     this.setState({
