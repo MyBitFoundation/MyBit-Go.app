@@ -271,6 +271,7 @@ export const updateAirTableWithNewAsset = async (
   country,
   city,
   collateralPercentage,
+  assetManagerEmail,
   performInternalAction,
 ) => {
   try{
@@ -280,10 +281,11 @@ export const updateAirTableWithNewAsset = async (
       country,
       city,
       collateralPercentage,
+      assetManagerEmail,
     });
     performInternalAction();
   } catch(err){
-    setTimeout(() => updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, performInternalAction), 5000);
+    setTimeout(() => updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, assetManagerEmail, performInternalAction), 5000);
     debug(err);
   }
 }
