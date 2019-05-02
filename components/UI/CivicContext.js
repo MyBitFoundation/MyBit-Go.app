@@ -84,7 +84,6 @@ class CivicProvider extends Component {
       scopeRequest: this.civicSip.ScopeRequests.BASIC_SIGNUP,
     });
     this.civicSip.on('auth-code-received', event => {
-      console.log("Civic event: ", event)
       const jwtToken = event.response;
       this.sendAuthCode(jwtToken, onSuccess);
     });

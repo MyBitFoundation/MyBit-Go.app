@@ -451,7 +451,7 @@ class BlockchainProvider extends React.Component {
 
   }
 
-  handleListAsset = async (formData, setUserListingAsset) => {
+  handleListAsset = async (formData, setUserListingAsset, assetManagerEmail) => {
     const {
       gasPrice,
     } = this.state;
@@ -548,7 +548,7 @@ class BlockchainProvider extends React.Component {
         }
       }
 
-      Brain.updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, performInternalAction)
+      Brain.updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, assetManagerEmail, performInternalAction)
       filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
 
