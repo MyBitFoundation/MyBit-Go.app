@@ -209,7 +209,7 @@ const ListAssetDesktop = ({
           error={false || metamaskErrorsToRender.render}
           onClick={() => {
             setUserListingAsset(true);
-            handleListAsset(formData, setUserListingAsset);
+            handleListAsset(formData, setUserListingAsset, civic.email);
           }}
         />
       )}

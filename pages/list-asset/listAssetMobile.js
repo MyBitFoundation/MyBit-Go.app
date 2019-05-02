@@ -179,7 +179,7 @@ const ListAssetMobile = ({
           nextButtonLoading: isUserListingAsset,
           nextButtonHandler: () => {
             setUserListingAsset(true);
-            handleListAsset(formData, setUserListingAsset);
+            handleListAsset(formData, setUserListingAsset, civic.email);
           },
         }
       }]}

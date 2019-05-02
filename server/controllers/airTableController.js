@@ -79,9 +79,15 @@ const getIdAndAssetIdsOfAssetName = async (assetName) => {
     { id: -1, assetIds: -1 }
 }
 
-const updateAirTableEntry = async (id, currentAssetIds, newAssetId, country, city, collateralPercentage) => {
+const updateAirTableEntry = async (id, currentAssetIds, newAssetId, country, city, collateralPercentage, assetManagerEmail) => {
   const formatedString = `${newAssetId}|${country}|${city}|${collateralPercentage}`
   const newAssetIds = currentAssetIds ? currentAssetIds +  `,${formatedString}`: formatedString;
+
+  await base('Asset Managers').create({
+    'Asset ID': newAssetId,
+    'Email': assetManagerEmail,
+  });
+
   return await base('Imported table').update(id, {
     "Asset IDs": newAssetIds
   });
@@ -95,9 +101,10 @@ export const addNewAsset = async (data) => {
       city,
       collateralPercentage,
       assetName,
+      assetManagerEmail,
     } = data;
     const rowIdAndAssetId = await getIdAndAssetIdsOfAssetName(assetName);
-    await updateAirTableEntry(rowIdAndAssetId.id, rowIdAndAssetId.assetIds, assetId, country, city, collateralPercentage);
+    await updateAirTableEntry(rowIdAndAssetId.id, rowIdAndAssetId.assetIds, assetId, country, city, collateralPercentage, assetManagerEmail);
     // force refresh assets in the server
     getAllAssetsById(true);
   } catch(err){
