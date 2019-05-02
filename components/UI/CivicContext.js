@@ -81,7 +81,7 @@ class CivicProvider extends Component {
   signUp(onSuccess, onReadCallback, onErrorCallback) {
     this.civicSip.signup({
       style: 'popup',
-      scopeRequest: this.civicSip.ScopeRequests.BASIC_SIGNUP,
+      scopeRequest: this.civicSip.ScopeRequests.PROOF_OF_IDENTITY,
     });
     this.civicSip.on('auth-code-received', event => {
       const jwtToken = event.response;
@@ -93,8 +93,8 @@ class CivicProvider extends Component {
     axios
     .get('/api/list-asset/auth', { headers: {"Authorization" : `Bearer ${jwtToken}`} })
     .then(res => {
-        if(res.data && res.data.data && Array.isArray(res.data.data) && res.data.data.length > 0 && res.data.data[0].value){
-          this.setState({email: res.data.data[0].value}, () => cb && cb());
+        if(res.data && res.data.data && Array.isArray(res.data.data) && res.data.data.length === 11 && res.data.data[9].value){
+          this.setState({email: res.data.data[9].value}, () => cb && cb());
         }
       })
     .catch(error => console.log(error))
