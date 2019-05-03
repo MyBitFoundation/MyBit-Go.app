@@ -8,8 +8,6 @@ import {
   METAMASK_FIREFOX,
   METAMASK_CHROME,
   METAMASK_OPERA,
-  PROVIDER_ROPSTEN,
-  CORRECT_NETWORK,
   METAMASK_ERRORS,
 } from './constants';
 import {
@@ -69,6 +67,10 @@ class MetamaskProvider extends Component {
       privacyModeEnabled
     } = this.state;
 
+    const {
+      supportedNetworks,
+    } = this.props;
+
     let toRender = null;
     let error;
     if (!userHasMetamask && extensionUrl) {
@@ -98,11 +100,14 @@ class MetamaskProvider extends Component {
       toRender = (
         <span><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</span>
       );
-    } else if (network !== CORRECT_NETWORK) {
+    } else if (!supportedNetworks.includes(network)) {
       error = METAMASK_ERRORS.NOT_NETWORK;
       toRender = (
         <span>
-          Only the Ropsten network is supported at the moment, please change the network in MetaMask.
+          The selected network is not supported at the moment, please use MetaMask to change to one of the following networks:
+          <span style={{display: 'block'}}>
+            {supportedNetworks.map((network, index) => index === supportedNetworks.length - 1 ? network : `${network}, `)}
+          </span>
         </span>
       );
     }
@@ -125,6 +130,8 @@ class MetamaskProvider extends Component {
       if (window.ethereum) {
         const { ethereum } = window;
         window.web3js = new Web3(ethereum);
+        // don't auto refresh
+        ethereum.autoRefreshOnNetworkChange = false;
         const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
         await this.userHasMetamask(accessToAccounts);
 
@@ -132,7 +139,7 @@ class MetamaskProvider extends Component {
         window.web3js = new Web3(window.web3.currentProvider);
         await this.userHasMetamask(false);
       } else {
-        window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider || PROVIDER_ROPSTEN));
+        window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider));
         this.isBrowserSupported();
       }
     } catch(err){
@@ -239,7 +246,7 @@ class MetamaskProvider extends Component {
   }
 
   isReadOnlyMode = (userHasMetamask, userIsLoggedIn, network, privacyModeEnabled) => {
-    return !userHasMetamask || !userIsLoggedIn || network !== CORRECT_NETWORK || privacyModeEnabled === undefined;
+    return !userHasMetamask || !userIsLoggedIn || !this.props.supportedNetworks.includes(network) || privacyModeEnabled === undefined;
   }
 
   updateStateWithUserInfo = (privacyModeEnabled, network, ethBalance, address, userIsLoggedIn, supportedTokensInfo) => {
@@ -330,18 +337,31 @@ class MetamaskProvider extends Component {
     //subscribe to metamask updates
     window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
 
-    //case where user has metamask but is connected to the wrong network, we
-    //still need to load the data properly from the correct network
-    if(network !== CORRECT_NETWORK){
-      window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider))
-    }
+    this.shouldUseBackupProvider(network);
 
     await this.getUserInfo(privacyModeEnabled, network);
   }
 
+  shouldUseBackupProvider = network => {
+    const {
+      supportedNetworks,
+      backupProvider,
+    } = this.props;
+    //case where user has metamask but is connected to the wrong network, we
+    //still need to load the data properly from the correct network
+    if(!supportedNetworks.includes(network)){
+      window.web3js = new Web3(new Web3.providers.HttpProvider(backupProvider))
+    }
+  }
+
   async handleAddressChanged() {
     const privacyModeEnabled = await this.haveAccessToAccounts() ? true : undefined;
-    this.getUserInfo(privacyModeEnabled);
+    const network = await this.checkNetwork();
+    console.log("Network: ", network)
+    if(this.state.network !== network){
+      this.shouldUseBackupProvider(network);
+    }
+    this.getUserInfo(privacyModeEnabled, network);
   }
 
   async checkIfLoggedIn() {

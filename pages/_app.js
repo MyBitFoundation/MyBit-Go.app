@@ -20,6 +20,7 @@ import { navbarOptions } from 'constants/navigationBar';
 import { WEB3_BACKUP_PROVIDER } from 'constants/web3BackupProvider';
 import { FULL_SCREEN_PAGES } from 'constants/fullScreenPages';
 import { COOKIES } from 'constants/cookies';
+import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
 
 class MyApp extends App {
   state = {
@@ -111,8 +112,11 @@ const WithProviders = ({ children }) => (
         <KyberProvider>
           <MetamaskProvider
             backupProvider={WEB3_BACKUP_PROVIDER}
+            supportedNetworks={SUPPORTED_NETWORKS}
           >
-            <BlockchainProvider>
+            <BlockchainProvider
+              supportedNetworks={SUPPORTED_NETWORKS}
+            >
               <CivicProvider>
                 {children}
               </CivicProvider>

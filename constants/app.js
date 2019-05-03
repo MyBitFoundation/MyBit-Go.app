@@ -1,4 +1,3 @@
-export const CORRECT_NETWORK = 'ropsten';
 export const MYBIT_TICKER_COINMARKETCAP = 'mybit-token';
 export const ETHEREUM_TICKER_COINMARKETCAP = 'ethereum';
 export const MAX_FILES_UPLOAD = 5;

@@ -32,6 +32,12 @@ import {
 import {
   PLATFORM_TOKEN,
 } from 'constants/app';
+import {
+  SUPPORTED_NETWORKS,
+  FALLBACK_NETWORK,
+  CONTRACTS_PATH,
+} from 'constants/supportedNetworks';
+
 BN.config({ EXPONENTIAL_AT: 80 });
 
 const { Provider, Consumer } = React.createContext({});
@@ -91,6 +97,10 @@ class BlockchainProvider extends React.Component {
       isLoadingUserInfo: false,
       gasPrice: '10000000000', //10 GWEI
     };
+
+    const network = this.props.metamaskContext.network;
+
+    Brain.initialiseSDK(SUPPORTED_NETWORKS.includes(network) ? CONTRACTS_PATH[network] : CONTRACTS_PATH['default']);
   }
 
   componentDidMount = async () => {

@@ -19,21 +19,23 @@ import {
   DEFAULT_TOKEN_CONTRACT,
   CROWDSALE_DURATION,
 } from 'constants/app';
-
 import {
   generateRandomURI,
   debug,
   fromWeiToEth,
   toWei,
 } from '../utils/helpers';
+import { CONTRACTS } from 'constants/supportedNetworks';
 
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
-const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 const GAS = require("@mybit/network.js/gas");
 
 let Network;
+
+export const initialiseSDK = contractAddresses =>
+  Network = require('@mybit/network.js')(window.web3js, contractAddresses);
 
 export const fetchTransactionHistory = async userAddress =>
   new Promise(async (resolve, reject) => {
@@ -425,9 +427,6 @@ export const issueDividends = (
 export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
-      if(!Network){
-        Network = require('@mybit/network.js')(window.web3js, SDK_CONTRACTS);
-      }
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       const api = await Network.api();
       const assetManagerFunds = await Network.assetManagerFunds();
