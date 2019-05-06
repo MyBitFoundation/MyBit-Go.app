@@ -9,10 +9,11 @@ import {
   METAMASK_CHROME,
   METAMASK_OPERA,
   METAMASK_ERRORS,
+  NETWORKS,
 } from './constants';
 import {
-  DEFAULT_TOKEN_CONTRACT,
-  PLATFORM_TOKEN_CONTRACT,
+  getDefaultTokenContract,
+  getPlatformTokenContract,
 } from 'constants/app';
 
 import {
@@ -132,13 +133,23 @@ class MetamaskProvider extends Component {
         window.web3js = new Web3(ethereum);
         // don't auto refresh
         ethereum.autoRefreshOnNetworkChange = false;
+        ethereum.on('networkChanged', network => {
+          network = NETWORKS[network];
+          const {
+            setNetwork,
+          } = this.props;
+
+          if(setNetwork){
+            setNetwork(network);
+          }
+        })
         const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
         await this.userHasMetamask(accessToAccounts);
 
       } else if (window.web3) {
         window.web3js = new Web3(window.web3.currentProvider);
         await this.userHasMetamask(false);
-      } else {
+      } else if(this.props.backupProvider) {
         window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider));
         this.isBrowserSupported();
       }
@@ -166,11 +177,23 @@ class MetamaskProvider extends Component {
   }
 
   fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress) => {
-    const currentAvgBalance = this.state.user.avgBalance;
-    const currentBalances = this.state.user.balances || {};
+    const {
+      user,
+    } = this.state;
+
+    let { network } = this.state;
+
+    if(!network){
+      network = network = await this.checkNetwork();
+    }
+
+    const currentAvgBalance = user.avgBalance;
+    const currentBalances = user.balances || {};
 
     const updatedTokensWithBalance = {};
     let sumOfBalances = 0;
+    const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+    const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
 
     const balances = await Promise.all(Object.entries(supportedTokensInfo).map(async ([
       symbol,
@@ -219,12 +242,8 @@ class MetamaskProvider extends Component {
     * Temp fix for a race condition between componentDidMount and componentWillReceiveProps
     */
 
-    let network = this.state.network;
     let privacyModeEnabled = this.state.privacyModeEnabled;
 
-    if(!network){
-      network = network = await this.checkNetwork();
-    }
     if(!privacyModeEnabled){
       privacyModeEnabled = await this.haveAccessToAccounts() ? true : undefined;
     }
@@ -333,34 +352,20 @@ class MetamaskProvider extends Component {
 
   async userHasMetamask(privacyModeEnabled) {
     const network = await this.checkNetwork();
-
+    const { setNetwork } = this.props;
+    const { network: stateNetwork } = this.state;
+    if(!stateNetwork && network && setNetwork){
+      setNetwork(network);
+    }
     //subscribe to metamask updates
     window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
 
-    this.shouldUseBackupProvider(network);
-
     await this.getUserInfo(privacyModeEnabled, network);
-  }
-
-  shouldUseBackupProvider = network => {
-    const {
-      supportedNetworks,
-      backupProvider,
-    } = this.props;
-    //case where user has metamask but is connected to the wrong network, we
-    //still need to load the data properly from the correct network
-    if(!supportedNetworks.includes(network)){
-      window.web3js = new Web3(new Web3.providers.HttpProvider(backupProvider))
-    }
   }
 
   async handleAddressChanged() {
     const privacyModeEnabled = await this.haveAccessToAccounts() ? true : undefined;
     const network = await this.checkNetwork();
-    console.log("Network: ", network)
-    if(this.state.network !== network){
-      this.shouldUseBackupProvider(network);
-    }
     this.getUserInfo(privacyModeEnabled, network);
   }
 

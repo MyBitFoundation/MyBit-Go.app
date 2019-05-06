@@ -5,6 +5,8 @@ import {
 } from 'antd';
 import { withAirtableContext } from 'components/AirtableContext'
 import { withBlockchainContext } from 'components/BlockchainContext'
+import { withMetamaskContext } from 'components/MetamaskContext';
+import { METAMASK_ERRORS } from 'components/MetamaskContext/constants';
 import CategoryFilter from 'components/CategoryFilter';
 import Loading from 'components/Loading';
 import AssetDisplayer from 'components/AssetDisplayer';
@@ -21,6 +23,7 @@ import {
   getValueFromLocalStorage,
   setValueLocalStorage,
 } from 'utils/helpers';
+import MetamaskErrors from 'components/MetamaskErrors';
 
 class Explore extends React.Component {
   constructor(props) {
@@ -31,7 +34,6 @@ class Explore extends React.Component {
       sortByFilterSelected: getValueFromLocalStorage(LocalStorageKeys.EXPLORE_PAGE_SORT_BY),
       ...this.buildState(),
     };
-    console.log(this.state)
   }
 
   buildState = () => {
@@ -68,14 +70,22 @@ class Explore extends React.Component {
 
   render = () => {
     const {
+      metamaskContext,
+      blockchainContext,
+      airtableContext,
+    } = this.props;
+
+    const {
        loading,
        assets,
        handleAssetFavorited,
-    } = this.props.blockchainContext;
+    } = blockchainContext;
 
     const {
       categoriesAirTable,
-    } = this.props.airtableContext;
+    } = airtableContext;
+
+    const hasMetamaskErrors = metamaskContext.metamaskErrors();
 
     if (loading.assets) {
       return <Loading message="Loading assets" />;
@@ -127,11 +137,18 @@ class Explore extends React.Component {
             unCheckedChildren={<Icon type="close" />}
           />
         </ExploreFiltersSwitch>
-        <AssetDisplayer
-          assets={assetsFiltered}
-          type="default"
-          handleAssetFavorited={handleAssetFavorited}
-        />
+        {(!hasMetamaskErrors.error || (hasMetamaskErrors.error === METAMASK_ERRORS.NO_METAMASK)) && (
+         <AssetDisplayer
+            assets={assetsFiltered}
+            type="default"
+            handleAssetFavorited={handleAssetFavorited}
+          />
+        )}
+        {(hasMetamaskErrors.error !== METAMASK_ERRORS.NO_METAMASK) && (
+          <MetamaskErrors
+            shouldRenderComponent={false}
+          />
+        )}
       </React.Fragment>
     )
   }
@@ -140,6 +157,7 @@ class Explore extends React.Component {
 const enhance = compose(
   withAirtableContext,
   withBlockchainContext,
+  withMetamaskContext,
 );
 
 export default enhance(Explore);

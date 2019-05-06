@@ -49,3 +49,5 @@ const MetamaskErrors = withMetamaskContext(({
     )}
   </React.Fragment>
 )})
+
+export default MetamaskErrors;

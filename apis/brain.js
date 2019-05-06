@@ -16,7 +16,7 @@ import {
 } from 'constants/fundingStages';
 import {
   BLOCK_NUMBER_CONTRACT_CREATION,
-  DEFAULT_TOKEN_CONTRACT,
+  getDefaultTokenContract,
   CROWDSALE_DURATION,
 } from 'constants/app';
 import {
@@ -191,7 +191,7 @@ export const fetchRevenueLogsByAssetId = async assetId => {
   }
 }
 
-export const createAsset = async (onCreateAsset, onApprove, params) => {
+export const createAsset = async (onCreateAsset, onApprove, params, network) => {
   try {
     const {
       asset,
@@ -216,7 +216,7 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       amountToRaise: toWei(amountToBeRaised),
       assetManagerPercent: managerPercentage,
       operatorID,
-      fundingToken: DEFAULT_TOKEN_CONTRACT,
+      fundingToken: getDefaultTokenContract(network),
       paymentToken: paymentTokenAddress,
       gasPrice,
       createAsset: {

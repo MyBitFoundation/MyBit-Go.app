@@ -25,6 +25,7 @@ import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
 class MyApp extends App {
   state = {
     mobileMenuOpen: false,
+    network: undefined,
   }
 
   saveFirstVisit = () => {
@@ -39,6 +40,8 @@ class MyApp extends App {
       return false;
     }
   }
+
+  setNetwork = network => this.setState({network}, () => console.log("set the network..", network))
 
   prefetchPages = () => {
     Router.prefetch('/onboarding')
@@ -68,6 +71,7 @@ class MyApp extends App {
     const { Component, pageProps, router } = this.props;
     const {
       mobileMenuOpen,
+      network,
     } = this.state;
 
     const isFullScreenPage = FULL_SCREEN_PAGES.includes(router.pathname);
@@ -77,7 +81,10 @@ class MyApp extends App {
         <GlobalStyle />
         <Head/>
         <Theme>
-          <WithProviders>
+          <WithProviders
+            setNetwork={this.setNetwork}
+            network={network}
+          >
             <Notifications />
             <MobileMenu
               isOpen={mobileMenuOpen}
@@ -106,13 +113,18 @@ class MyApp extends App {
   }
 }
 
-const WithProviders = ({ children }) => (
+const WithProviders = ({ children, setNetwork, network }) => (
     <NotificationsProvider>
-      <AirtableProvider>
-        <KyberProvider>
+        <AirtableProvider
+          network={network}
+        >
+          <KyberProvider
+            network={network}
+          >
           <MetamaskProvider
             backupProvider={WEB3_BACKUP_PROVIDER}
             supportedNetworks={SUPPORTED_NETWORKS}
+            setNetwork={setNetwork}
           >
             <BlockchainProvider
               supportedNetworks={SUPPORTED_NETWORKS}
@@ -121,9 +133,10 @@ const WithProviders = ({ children }) => (
                 {children}
               </CivicProvider>
             </BlockchainProvider>
-          </MetamaskProvider>
-        </KyberProvider>
-      </AirtableProvider>
+            </MetamaskProvider>
+          </KyberProvider>
+        </AirtableProvider>
+
     </NotificationsProvider>
 );
 

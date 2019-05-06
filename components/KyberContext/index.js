@@ -8,10 +8,11 @@ import {
 import {
   ABI,
   ADDRESS,
+  getSupportedTokensUrl,
 } from './constants';
 import {
-  DEFAULT_TOKEN_CONTRACT,
-  PLATFORM_TOKEN_CONTRACT,
+  getDefaultTokenContract,
+  getPlatformTokenContract,
 } from 'constants/app';
 
 const { Provider, Consumer } = React.createContext({});
@@ -34,16 +35,13 @@ export const withKyberContext = (Component) => {
   }
 }
 
-export const getExpectedAndSlippage = async (src, dest, amount) => {
+export const getExpectedAndSlippage = async (src, dest, amount, network, contract) => {
     try{
       if(src === dest){
         return {
           expectedRate: 1,
           slippageRate: 1,
         };
-      }
-      if(!contract){
-        contract = new window.web3js.eth.Contract(ABI, ADDRESS);
       }
 
       const result = await contract.methods.getExpectedRate(src, dest, amount).call();
@@ -78,7 +76,12 @@ class KyberProvider extends React.Component {
 
   componentDidMount = async () => {
     try {
-      this.fetchSupportedTokens();
+      const {
+        network,
+      } = this.props;
+      if(network){
+        this.fetchSupportedTokens(network);
+      }
     } catch (err) {
       debug(err);
     }
@@ -89,13 +92,34 @@ class KyberProvider extends React.Component {
     clearInterval(this.intervalSupportedTokens);
   }
 
-  fetchSupportedTokens = async () => {
-    try{
-      const supportedTokens = await fetch('https://ropsten-api.kyber.network/currencies');
+  componentWillReceiveProps = nextProps => {
+    const {
+      network: oldNetwork,
+    } = this.props;
 
+    const {
+      network: newNetwork,
+    } = nextProps;
+
+    if(oldNetwork !== newNetwork){
+      this.setState({loading: true});
+      this.fetchSupportedTokens(newNetwork);
+    }
+  }
+
+  fetchSupportedTokens = async network => {
+    try{
+      if(!network){
+        return;
+      }
+      const supportedTokens = await fetch(getSupportedTokensUrl(network));
       const supportedTokensData = await supportedTokens.json();
 
       const supportedTokensInfo = {};
+      const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
+      const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+      const kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
+
       await Promise.all(supportedTokensData.data.map(async({
         symbol,
         address: contractAddress,
@@ -107,8 +131,8 @@ class KyberProvider extends React.Component {
             exchangeRateDefaultToken,
             exchangeRatePlatformToken,
           ] = await Promise.all([
-            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
-            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
+            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
+            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
           ])
 
           supportedTokensInfo['ETH'] = {
@@ -123,8 +147,8 @@ class KyberProvider extends React.Component {
             exchangeRateDefaultToken,
             exchangeRatePlatformToken,
           ] = await Promise.all([
-            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
-            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
+            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
+            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
           ])
 
           // This kind of filtering needs to be tested

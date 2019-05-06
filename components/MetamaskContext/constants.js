@@ -8,3 +8,11 @@ export const METAMASK_ERRORS = {
   'NOT_CONNECTED': 'not_connected',
   'NOT_NETWORK': 'not_network',
 };
+
+export const NETWORKS = {
+  1: 'main',
+  2: 'morden',
+  3: 'ropsten',
+  4: 'rinkby',
+  42: 'kovan',
+};

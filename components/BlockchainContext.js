@@ -467,6 +467,12 @@ class BlockchainProvider extends React.Component {
     } = this.state;
 
     const {
+      metamaskContext,
+      airtableContext,
+      notificationsContext,
+    } = this.props;
+
+    const {
       asset: assetName,
       userCountry: country,
       userCity: city,
@@ -482,15 +488,16 @@ class BlockchainProvider extends React.Component {
       operatorId,
     } = formData;
 
-    const {
-      categoriesAirTable,
-    } = this.props.airtableContext;
+    const { categoriesAirTable } = airtableContext;
+
+    const { buildNotification } = notificationsContext;
 
     const {
-      buildNotification,
-    } = this.props.notificationsContext;
+      user,
+      network,
+    } = metamaskContext;
 
-    const userAddress =  this.props.metamaskContext.user.address;
+    const userAddress =  user.address;
     const notificationId = Date.now();
 
     if(selectedToken !== 'ETH') {
@@ -599,7 +606,8 @@ class BlockchainProvider extends React.Component {
         paymentTokenAddress,
         operatorID: operatorId,
         gasPrice,
-      }
+      },
+      network,
     );
   }
 
