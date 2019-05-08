@@ -146,6 +146,7 @@ class BlockchainProvider extends React.Component {
           transactionHistory: true,
         }
       })
+      Brain.initialiseSDK(SUPPORTED_NETWORKS.includes(newNetwork) ? CONTRACTS_PATH[newNetwork] : CONTRACTS_PATH['default']);
       this.fetchAssets();
       this.fetchTransactionHistory();
     }
