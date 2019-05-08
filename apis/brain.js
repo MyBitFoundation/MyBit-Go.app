@@ -3,8 +3,6 @@
 /* eslint-disable camelcase */
 import axios from 'axios';
 import dayjs from 'dayjs';
-import * as MyBitToken from '../constants/contracts/MyBitToken';
-
 import { ErrorTypes } from 'constants/errorTypes';
 import {
   InternalLinks,
@@ -79,38 +77,7 @@ export const fetchTransactionHistory = async userAddress =>
           };
         });
 
-      // Pull MYB transactions from event log
-      const myBitTokenContract = new window.web3js.eth.Contract(
-        MyBitToken.ABI,
-        MyBitToken.ADDRESS,
-      );
-      const logTransactions = await myBitTokenContract.getPastEvents(
-        'Transfer',
-        { fromBlock: 0, toBlock: 'latest' },
-      );
-
-      const mybTransactionHistory = await Promise.all(logTransactions
-        .filter(txResult =>
-          txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
-        .map(async (txResult, index) => {
-          const blockInfo = await window.web3js.eth.getBlock(txResult.blockNumber);
-          const multiplier =
-            txResult.returnValues.from === userAddress ? -1 : 1;
-
-          return {
-            amount: window.web3js.utils.fromWei(txResult.returnValues[2], 'ether') * multiplier,
-            type: 'MYB',
-            txId: txResult.transactionHash,
-            status: 'Confirmed',
-            date: blockInfo.timestamp * 1000,
-            key: `${txResult.transactionHash} ${index}`,
-          };
-        }));
-
-      const mixedEthAndMybitTransactions =
-        ethTransactionHistory.concat(mybTransactionHistory);
-
-      resolve(mixedEthAndMybitTransactions);
+      resolve(ethTransactionHistory);
     } catch (error) {
       reject(error);
     }
