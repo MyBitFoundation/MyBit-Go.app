@@ -181,11 +181,7 @@ class MetamaskProvider extends Component {
       user,
     } = this.state;
 
-    let { network } = this.state;
-
-    if(!network){
-      network = network = await this.checkNetwork();
-    }
+    const network = await this.checkNetwork();
 
     const currentAvgBalance = user.avgBalance;
     const currentBalances = user.balances || {};
