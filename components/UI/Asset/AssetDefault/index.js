@@ -20,7 +20,7 @@ const AssetDefault = ({
   funded,
   assetId,
 }) => {
-  const barWidth = funded ? 100 : Math.ceil((fundingProgress * 100) / fundingGoal);
+  const barWidth = funded ? 100 : parseFloat(((fundingProgress * 100) / fundingGoal).toFixed(2));
   const goalFormatted = formatMonetaryValue(fundingGoal);
   const progressFormatted = formatMonetaryValue(fundingProgress);
   let buttonText = 'Contribute';
