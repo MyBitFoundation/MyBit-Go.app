@@ -41,7 +41,7 @@
     "react": "16.7.0",
     "react-dom": "16.7.0",
     "react-facebook-pixel": "0.1.1",
-    "react-ga": "2.5.6",
+    "react-ga": "2.5.7",
     "react-geocode": "^0.1.2",
     "react-google-maps-loader": "^4.2.5",
     "react-google-places-suggest": "^3.7.1",
