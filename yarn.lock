@@ -8002,10 +8002,9 @@ react-facebook-pixel@0.1.2:
   resolved "https://registry.yarnpkg.com/react-facebook-pixel/-/react-facebook-pixel-0.1.2.tgz#a1519f215611eb136802d78542aface547972827"
   integrity sha512-6ObMnP8U42m/r2nCft0VqVG8xPk2JEsA4tDK+sRovTXhIaA/UmH2CywmC2lh/0yXY3Sq9I2MQmBBUMjZ6/rfbg==
 
-react-ga@2.5.6:
-  version "2.5.6"
-  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.5.6.tgz#5a2e2fa78ae298e5b0a4498210eeec631ef1b562"
-  integrity sha512-g04dz6zrbdHRxVaURPWT3RUbjLflh74sS6dCuhGeZupj7ii+UEt9lwTjALb2ST2w+7wAmzG1YqYlNX4yvRXe1g==
+react-ga@2.5.7:
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.5.7.tgz#1c80a289004bf84f84c26d46f3a6a6513081bf2e"
 
 react-geocode@0.1.2:
   version "0.1.2"
