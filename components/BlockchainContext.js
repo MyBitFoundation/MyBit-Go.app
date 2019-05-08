@@ -94,7 +94,6 @@ class BlockchainProvider extends React.Component {
       withdrawingCollateral: [],
       callingPayout: [],
       withdrawingAssetManager: [],
-      isLoadingUserInfo: false,
       gasPrice: '10000000000', //10 GWEI
     };
 
@@ -128,14 +127,27 @@ class BlockchainProvider extends React.Component {
     const oldEnabled = oldProps.privacyModeEnabled;
     const oldUsername = oldProps.user.address;
     const oldUserIsLoggedIn = oldProps.userIsLoggedIn;
+    const oldNetwork = oldProps.network;
 
     const newUserAddress = newProps.user.address;
     const newIsUserLoggedIn = newProps.userIsLoggedIn;
     const newEnabled = newProps.privacyModeEnabled;
+    const newNetwork = newProps.network;
 
     if((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)){
       console.log("Updating assets due to a change in: address or login or privacy mode")
       this.handleMetamaskUpdate();
+    } else if(newNetwork !== oldNetwork){
+      this.setState({
+        loading: {
+          ...this.state.loading,
+          assets: true,
+          userAssetsInfo: true,
+          transactionHistory: true,
+        }
+      })
+      this.fetchAssets();
+      this.fetchTransactionHistory();
     }
   }
 

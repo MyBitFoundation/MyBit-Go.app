@@ -57,7 +57,7 @@ class AirtableProvider extends React.PureComponent {
   }
 
 
-componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps = nextProps => {
     const {
       network: oldNetwork,
     } = this.props;
@@ -71,7 +71,6 @@ componentWillReceiveProps = nextProps => {
       this.getCategories(newNetwork);
     }
   }
-
 
   setIntervals = () => {
     this.intervalPullAssets = setInterval(this.getAssets, 10000)
