@@ -42,18 +42,20 @@ app
     }
   });
 
-  server.use('/api/airtable/assets', (req, res) => {
+  server.get('/api/airtable/assets/:network', (req, res) => {
     try{
-      req.pipe(AirTableController.getAssets()).pipe(res);
+      const network = req.params.network;
+      req.pipe(AirTableController.getAssets(network)).pipe(res);
     }catch(err){
       res.statusCode = 500;
       res.send(error);
     }
   });
 
-  server.use('/api/airtable/categories', (req, res) => {
+  server.get('/api/airtable/categories/:network', (req, res) => {
     try{
-      req.pipe(AirTableController.getCategories()).pipe(res);
+      const network = req.params.network;
+      req.pipe(AirTableController.getCategories(network)).pipe(res);
     }catch(error){
       res.statusCode = 500;
       res.send(error);
@@ -89,7 +91,6 @@ app
   server.post('/api/files/upload', multipleUpload, async (req, res) => {
     const assetId = req.body.assetId;
     const files = req.files;
-        console.log(assetId, files);
 
     await AwsController.handleFileUpload(files, assetId, req, res);
   });

@@ -4,10 +4,13 @@ import { fetchAssets } from '../utils';
 import * as AssetsController from './assetsController';
 require('dotenv').config();
 const Airtable = require('airtable');
-const AIRTABLE_BASE_ASSETS = 'appk5LSH6lItoapCN';
-const AIRTABLE_BASE_CATEGORIES = 'applQoSDpfQMllZc6';
+const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appk5LSH6lItoapCN';
+const AIRTABLE_BASE_CATEGORIES_ROPSTEN = 'applQoSDpfQMllZc6';
+const AIRTABLE_BASE_ASSETS_MAINNET = 'appINwEcikPPBfzbT';
+const AIRTABLE_BASE_CATEGORIES_MAINNET = 'appBrZW4QHoY343Os';
 export let assetsById;
-const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS);
+// TODO Change to AIRTABLE_BASE_ASSETS_MAINNET once live on mainnet
+const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS_ROPSTEN);
 
 const processAssetsFromAirTable = record => {
   const fundingGoal = record.get('Funding goal');
@@ -112,10 +115,10 @@ export const addNewAsset = async (data) => {
   }
 }
 
-export const getAssets = () =>
-  request(`https://api.airtable.com/v0/${AIRTABLE_BASE_ASSETS}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`).on('response', (response) => console.log(response.statusCode))
+export const getAssets = network =>
+  request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)
 
-export const getCategories = () =>
-  request(`https://api.airtable.com/v0/${AIRTABLE_BASE_CATEGORIES}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)
+export const getCategories = network =>
+  request(`https://api.airtable.com/v0/${network === 'ropsten' ?  AIRTABLE_BASE_CATEGORIES_ROPSTEN : AIRTABLE_BASE_CATEGORIES_MAINNET}/Imported%20table?api_key=${process.env.AIRTABLE_KEY}`)
 
 getAllAssetsById();

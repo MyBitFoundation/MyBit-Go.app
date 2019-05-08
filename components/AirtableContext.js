@@ -44,14 +44,34 @@ class AirtableProvider extends React.PureComponent {
   }
 
   componentDidMount = () => {
-    this.getAssets();
-    this.getCategories();
+    const { network } = this.props;
+    if(network){
+      this.getAssets(network);
+      this.getCategories(network);
+    }
     this.setIntervals();
   }
 
   componentWillUnmount = () => {
     this.resetIntervals();
   }
+
+
+componentWillReceiveProps = nextProps => {
+    const {
+      network: oldNetwork,
+    } = this.props;
+
+    const {
+      network: newNetwork,
+    } = nextProps;
+
+    if(oldNetwork !== newNetwork){
+      this.getAssets(newNetwork);
+      this.getCategories(newNetwork);
+    }
+  }
+
 
   setIntervals = () => {
     this.intervalPullAssets = setInterval(this.getAssets, 10000)
@@ -140,46 +160,51 @@ class AirtableProvider extends React.PureComponent {
     return assetsAirTableById;
   }
 
-  getCategories = async () => {
-    const response = await fetchWithCache(InternalLinks.AIRTABLE_CATEGORIES, 'assetsCategories', this);
-    // avoid processing and setting state if the data hasn't changed
-    if(!response.isCached) {
-      const { records } = response.data;
+  getCategories = async network => {
+    network = network || this.props.network;
+    if(network){
+      const response = await fetchWithCache(InternalLinks.getAirtableCategoriesUrl(network), 'assetsCategories', this);
+      // avoid processing and setting state if the data hasn't changed
+      if(!response.isCached) {
+        const { records } = response.data;
 
-      const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
+        const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
 
-      const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
-      this.setState({
-        categoriesAirTable
-      });
+        const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
+        this.setState({
+          categoriesAirTable
+        });
+      }
     }
   }
 
-  getAssets = async () => {
-    const response = await fetchWithCache(InternalLinks.AIRTABLE_ASSETS, 'assetsEtag', this);
-    // avoid processing and setting state if the data hasn't changed
-    if(!response.isCached) {
-      const { records } = response.data;
+  getAssets = async network => {
+    network = network || this.props.network;
+    if(network){
+      const response = await fetchWithCache(InternalLinks.getAirtableAssetsUrl(network), 'assetsEtag', this);
+      // avoid processing and setting state if the data hasn't changed
+      if(!response.isCached) {
+        const { records } = response.data;
 
-      const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
+        const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
 
-      let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
-      const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
-      console.log(assetsAirTableById)
+        let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
+        const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
 
-      // remove assetIDs as they are not required in this object
-      // they were requred before to facilitate the processing by asset ID
-      for(const asset of assetsAirTable){
-        delete asset['assetIDs'];
+        // remove assetIDs as they are not required in this object
+        // they were requred before to facilitate the processing by asset ID
+        for(const asset of assetsAirTable){
+          delete asset['assetIDs'];
+        }
+
+        console.log("assetsAirTableById: ", assetsAirTableById)
+        console.log("assetsAirTable: ", assetsAirTable)
+
+        this.setState({
+          assetsAirTable,
+          assetsAirTableById,
+        });
       }
-
-      console.log("assetsAirTableById: ", assetsAirTableById)
-      console.log("assetsAirTable: ", assetsAirTable)
-
-      this.setState({
-        assetsAirTable,
-        assetsAirTableById,
-      });
     }
   }
 

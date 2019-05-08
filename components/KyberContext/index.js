@@ -109,6 +109,7 @@ class KyberProvider extends React.Component {
 
   fetchSupportedTokens = async network => {
     try{
+      network = network || this.props.network;
       if(!network){
         return;
       }
