@@ -41,7 +41,7 @@ class MyApp extends App {
     }
   }
 
-  setNetwork = network => this.setState({network}, () => console.log("set the network..", network))
+  setNetwork = network => this.setState({network})
 
   prefetchPages = () => {
     Router.prefetch('/onboarding')
