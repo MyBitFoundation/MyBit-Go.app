@@ -145,18 +145,17 @@ class AssetFunding extends React.Component {
 
     const ended = pastDate || funded || assetHasExpired;
 
-    const maxInvestment =
-      ended
-        ? 0
-        : Number(availableShares);
+    let maxInvestment = Number(availableShares.toFixed(2));
 
-    let minInvestment =
-       maxInvestment === 0 ? 0 : 100;
+    let minInvestment = 0.01;
 
-    if (maxInvestment <= 100 && maxInvestment > 0) {
+    if(ended){
+      minInvestment = 0;
+      maxInvestment = 0;
+    } else if (maxInvestment < 0.01) {
       minInvestment = 0.01;
+      maxInvestment = 0.01;
     }
-
 
     // Total fee: manager fee + platform fees (1%)
     const maxPercentageAfterFees = 100 - (managerPercentage * 100 + (MYBIT_FOUNDATION_SHARE * 100));
@@ -182,9 +181,9 @@ class AssetFunding extends React.Component {
             yourContribution={yourContribution}
             formatMonetaryValue={formatMonetaryValue}
             selectedOwnership={selectedOwnership}
-            minInvestment={maxInvestment < 0.01 ? 0 : 0.1}
-            maxInvestment={maxInvestment < 0.01 ? 0.01 : maxInvestment}
-            selectedAmountEth={maxInvestment < 0.01 ? 0.01 : selectedAmountEth}
+            minInvestment={minInvestment}
+            maxInvestment={maxInvestment}
+            selectedAmountEth={maxInvestment ===  0.01 && minInvestment === 0.01 ? 0.01 : selectedAmountEth}
             totalSupply={totalSupply}
             handleOnChangeSlider={this.handleOnChangeSlider}
             handleOnChangePercentage={this.handleOnChangePercentage}
