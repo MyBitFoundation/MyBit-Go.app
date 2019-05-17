@@ -9,6 +9,7 @@ import {
   CollateralSlide,
   ConfirmSlideDesktop,
   SuccessSlide,
+  TermsOfServiceSlide,
 } from "./slides";
 import CustomTimeline from './customTimeline';
 
@@ -78,6 +79,8 @@ const ListAssetDesktop = ({
   handleSelectSuggest,
   goToNextStep,
   goToStep,
+  readTOS,
+  setReadTOS,
 }) => {
   const {
     category,
@@ -119,6 +122,7 @@ const ListAssetDesktop = ({
         listedAssetId={listedAssetId}
         dev={dev}
         civic={civic}
+        readTOS={readTOS}
       />
       {step === 1 && (
         <AvailableAssetsSlide
@@ -192,15 +196,21 @@ const ListAssetDesktop = ({
           desktopMode
           nextButtonDisabled={managementFee !== 0 ? false : true}
         />
+      )}{step === 6 && !readTOS && (
+        <TermsOfServiceSlide
+          maxWidthDesktop={MAX_WIDTH_DESKTOP}
+          desktopMode
+          onClick={setReadTOS}
+        />
       )}
-      {step === 6 && listedAssetId && (
+      {(step === 6 && listedAssetId && readTOS) && (
         <SuccessSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           assetId={listedAssetId}
           desktopMode
         />
        )}
-       {step === 6 && !listedAssetId && (
+       {(step === 6 && !listedAssetId && readTOS) && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}

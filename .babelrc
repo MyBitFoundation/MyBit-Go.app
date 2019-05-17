@@ -11,6 +11,7 @@
             "constants": "./constants",
             "utils": "./utils",
             "ui": "./components/UI",
+            "hooks": "./hooks",
           }
         }],
         ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
@@ -30,6 +31,7 @@
             "constants": "./constants",
             "utils": "./utils",
             "ui": "./components/UI",
+            "hooks": "./hooks",
           }
         }],
         ["import", {"libraryName": "antd","style": "less"}],
@@ -50,6 +52,7 @@
             "constants": "./constants",
             "utils": "./utils",
             "ui": "./components/UI",
+            "hooks": "./hooks",
           }
         }],
         ["import", {"libraryName": "antd","style": "less"}],

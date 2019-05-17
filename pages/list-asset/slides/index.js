@@ -7,3 +7,4 @@ export * from './collateral';
 export * from './confirm';
 export * from './success';
 export * from './confirmDesktop';
+export * from './termsOfService';

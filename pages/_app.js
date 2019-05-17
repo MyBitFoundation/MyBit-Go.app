@@ -5,6 +5,7 @@ import AirtableProvider, { withAirtableContext } from 'components/AirtableContex
 import BlockchainProvider from 'components/BlockchainContext';
 import KyberProvider from 'components/KyberContext';
 import NotificationsProvider from 'components/NotificationsContext';
+import TermsOfServiceProvider from 'components/TermsOfServiceContext';
 import Notifications from 'components/Notifications';
 import MetamaskProvider from 'components/MetamaskContext';
 import CivicProvider from "ui/CivicContext";
@@ -114,7 +115,9 @@ const WithProviders = ({ children }) => (
           >
             <BlockchainProvider>
               <CivicProvider>
-                {children}
+                <TermsOfServiceProvider>
+                  {children}
+                </TermsOfServiceProvider>
               </CivicProvider>
             </BlockchainProvider>
           </MetamaskProvider>

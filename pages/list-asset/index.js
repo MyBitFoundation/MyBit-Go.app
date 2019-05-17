@@ -12,6 +12,7 @@ import Geocode from "react-geocode";
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
+import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
 import { withCivicContext } from "ui/CivicContext";
 import ListAssetMobile from './listAssetMobile';
 import ListAssetDesktop from './listAssetDesktop';
@@ -34,7 +35,6 @@ import {
   processLocationData,
 } from 'utils/locationData';
 import getCountry from 'utils/countryCodes';
-
 const dev = process.env.NODE_ENV === 'development';
 const { publicRuntimeConfig } = getConfig();
 
@@ -349,6 +349,7 @@ class ListAssetPage extends React.Component {
       metamaskContext,
       blockchainContext,
       kyberLoading,
+      TOSContext,
     } = this.props;
 
     const {
@@ -359,6 +360,12 @@ class ListAssetPage extends React.Component {
     const {
       user,
     } = metamaskContext;
+
+    const {
+      readTOS,
+      setReadTOS,
+      TOS_VERSION,
+    } = TOSContext;
 
     const {
       data,
@@ -384,60 +391,41 @@ class ListAssetPage extends React.Component {
     } = this.state.data;
 
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
-
+    const propsToPass = {
+      dev,
+      step,
+      civic,
+      loadingAssets,
+      kyberLoading,
+      listedAssetId,
+      isUserListingAsset,
+      handleListAsset,
+      metamaskErrorsToRender,
+      handleSelectChange: this.handleSelectChange,
+      handleInputChange: this.handleInputChange,
+      handleCitySuggest: this.handleCitySuggest,
+      handleSelectedTokenChange: this.handleSelectedTokenChange,
+      handleCollateralChange: this.handleCollateralChange,
+      handleFileUpload: this.handleFileUpload,
+      setUserListingAsset: this.setUserListingAsset,
+      handleDetectLocationClicked: this.handleDetectLocationClicked,
+      handleSelectSuggest: this.handleSelectSuggest,
+      goToNextStep: this.goToNextStep,
+      goToStep: this.goToStep,
+      countries: COUNTRIES,
+      formData: data,
+      balances: user.balances,
+      readTOS: readTOS === TOS_VERSION,
+      setReadTOS: () => setReadTOS(TOS_VERSION),
+    }
     return (
       <div>
         <Media query="(min-width: 768px)">
           {matches =>
             matches ? (
-              <ListAssetDesktop
-                dev={dev}
-                step={step}
-                civic={civic}
-                handleSelectChange={this.handleSelectChange}
-                handleInputChange={this.handleInputChange}
-                handleCitySuggest={this.handleCitySuggest}
-                handleSelectedTokenChange={this.handleSelectedTokenChange}
-                handleCollateralChange={this.handleCollateralChange}
-                handleFileUpload={this.handleFileUpload}
-                setUserListingAsset={this.setUserListingAsset}
-                handleDetectLocationClicked={this.handleDetectLocationClicked}
-                handleSelectSuggest={this.handleSelectSuggest}
-                goToNextStep={this.goToNextStep}
-                goToStep={this.goToStep}
-                countries={COUNTRIES}
-                loadingAssets={loadingAssets}
-                formData={data}
-                balances={user.balances}
-                kyberLoading={kyberLoading}
-                listedAssetId={listedAssetId}
-                isUserListingAsset={isUserListingAsset}
-                handleListAsset={handleListAsset}
-                metamaskErrorsToRender={metamaskErrorsToRender}
-              />
+              <ListAssetDesktop {...propsToPass}/>
             ) : (
-              <ListAssetMobile
-                dev={dev}
-                civic={civic}
-                handleSelectChange={this.handleSelectChange}
-                handleInputChange={this.handleInputChange}
-                handleCitySuggest={this.handleCitySuggest}
-                handleSelectedTokenChange={this.handleSelectedTokenChange}
-                handleCollateralChange={this.handleCollateralChange}
-                handleFileUpload={this.handleFileUpload}
-                setUserListingAsset={this.setUserListingAsset}
-                handleDetectLocationClicked={this.handleDetectLocationClicked}
-                handleSelectSuggest={this.handleSelectSuggest}
-                countries={COUNTRIES}
-                loadingAssets={loadingAssets}
-                formData={data}
-                balances={user.balances}
-                kyberLoading={kyberLoading}
-                listedAssetId={listedAssetId}
-                isUserListingAsset={isUserListingAsset}
-                handleListAsset={handleListAsset}
-                metamaskErrorsToRender={metamaskErrorsToRender}
-              />
+              <ListAssetMobile {...propsToPass} />
             )
           }
         </Media>
@@ -451,6 +439,7 @@ const enhance = compose(
   withMetamaskContext,
   withCivicContext,
   withKyberContext,
+  withTermsOfServiceContext,
 );
 
 export default enhance(ListAssetPage);

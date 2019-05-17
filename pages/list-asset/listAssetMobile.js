@@ -9,6 +9,7 @@ import {
   CollateralSlide,
   ConfirmSlide,
   SuccessSlide,
+  TermsOfServiceSlide,
 } from "./slides";
 
 const MAX_WIDTH_DESKTOP = "500px";
@@ -34,6 +35,8 @@ const ListAssetMobile = ({
   handleListAsset,
   metamaskErrorsToRender,
   handleSelectSuggest,
+  setReadTOS,
+  readTOS,
 }) => {
   const {
     category,
@@ -155,34 +158,51 @@ const ListAssetMobile = ({
           hasNextButton: true,
           hasBackButton: true,
         }
-      }, {
-        toRender: listedAssetId ? (
-          <SuccessSlide
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            assetId={listedAssetId}
-          />
-         ) : (
-          <ConfirmSlide
-            formData={formData}
-            isUserListingAsset={isUserListingAsset}
-            listedAssetId={listedAssetId}
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            error={false || metamaskErrorsToRender.render}
-          />
-        ),
-        error: false || metamaskErrorsToRender.render,
-        hideButtons: listedAssetId ? true : false,
-        buttons: {
-          hasNextButton: true,
-          hasBackButton: true,
-          nextButtonText: isUserListingAsset ? 'Confirming listing' : 'Confirm Listing',
-          nextButtonLoading: isUserListingAsset,
-          nextButtonHandler: () => {
-            setUserListingAsset(true);
-            handleListAsset(formData, setUserListingAsset, civic.email);
-          },
+      },
+        !readTOS ? {
+          toRender: (
+            <TermsOfServiceSlide
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
+              onClick={setReadTOS}
+            />
+          ),
+          buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+            nextButtonText: 'I agree',
+            nextButtonHandler: () => {
+              setReadTOS();
+            },
+          }
+        } : {
+          toRender: listedAssetId ? (
+            <SuccessSlide
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
+              assetId={listedAssetId}
+            />
+           ) : (
+            <ConfirmSlide
+              formData={formData}
+              isUserListingAsset={isUserListingAsset}
+              listedAssetId={listedAssetId}
+              maxWidthDesktop={MAX_WIDTH_DESKTOP}
+              error={false || metamaskErrorsToRender.render}
+            />
+          ),
+          error: false || metamaskErrorsToRender.render,
+          hideButtons: listedAssetId ? true : false,
+          buttons: {
+            hasNextButton: true,
+            hasBackButton: true,
+            nextButtonText: isUserListingAsset ? 'Confirming listing' : 'Confirm Listing',
+            nextButtonLoading: isUserListingAsset,
+            nextButtonHandler: () => {
+              setUserListingAsset(true);
+              handleListAsset(formData, setUserListingAsset, civic.email);
+            },
+          }
         }
-      }]}
+      ]}
     />
   )
 }
