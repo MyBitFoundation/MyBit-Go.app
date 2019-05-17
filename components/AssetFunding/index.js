@@ -94,8 +94,6 @@ class AssetFunding extends React.Component {
       TOS_VERSION,
    } = this.props.TOSContext;
 
-   console.log("TOS_VERSION: ", TOS_VERSION)
-
     const handleUIUpdate = () => {
       this.changeStep(2);
 
