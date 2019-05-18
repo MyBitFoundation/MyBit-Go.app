@@ -37,6 +37,9 @@ const ListAssetMobile = ({
   handleSelectSuggest,
   setReadToS,
   readToS,
+  shouldShowToSCheckmark,
+  setCheckedToS,
+  checkedToS,
 }) => {
   const {
     category,
@@ -187,6 +190,9 @@ const ListAssetMobile = ({
               listedAssetId={listedAssetId}
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
               error={false || metamaskErrorsToRender.render}
+              shouldShowToSCheckmark={shouldShowToSCheckmark}
+              checkedToS={checkedToS}
+              setCheckedToS={setCheckedToS}
             />
           ),
           error: false || metamaskErrorsToRender.render,
@@ -196,6 +202,7 @@ const ListAssetMobile = ({
             hasBackButton: true,
             nextButtonText: isUserListingAsset ? 'Confirming listing' : 'Confirm Listing',
             nextButtonLoading: isUserListingAsset,
+            nextButtonDisabled: (!checkedToS && readToS),
             nextButtonHandler: () => {
               setUserListingAsset(true);
               handleListAsset(formData, setUserListingAsset, civic.email);
