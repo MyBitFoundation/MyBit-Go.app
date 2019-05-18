@@ -227,6 +227,7 @@ const ListAssetDesktop = ({
           checkedToS={checkedToS}
           shouldShowToSCheckmark={shouldShowToSCheckmark}
           setCheckedToS={setCheckedToS}
+          readTOS={readTOS}
         />
       )}
     </ListAssetDesktopWrapper>

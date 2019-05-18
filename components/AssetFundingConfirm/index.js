@@ -141,6 +141,7 @@ class AssetFundingConfirm extends React.Component {
       buttonProps,
       messageProps,
     } = footer;
+
     const footerButton = (
       <AssetFundingButton
         size="large"
