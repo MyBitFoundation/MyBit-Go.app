@@ -6,6 +6,7 @@ import {
   CarouselNextButton,
 } from 'components/CarouselSlide/';
 import AlertMessage from 'ui/AlertMessage';
+import TermsAndConditions from 'ui/TermsAndConditions';
 
 const InformationWrapper = styled.div`
   b{
@@ -43,47 +44,52 @@ export const ConfirmSlideDesktop = ({
   error,
   onClick,
   nextButtonDisabled,
-}) => {
-  return (
-    <CarouselSlide
+  checkedToS,
+  shouldShowToSCheckmark,
+  setCheckedToS,
+}) => (
+  <CarouselSlide
+    maxWidthDesktop={maxWidthDesktop}
+    hasBoxShadow
+    desktopMode
+  >
+    <CarouselSlideMainTitle
+      isLong
+      isSmallMobile
+      isCentered
       maxWidthDesktop={maxWidthDesktop}
-      hasBoxShadow
-      desktopMode
     >
-      <CarouselSlideMainTitle
-        isLong
-        isSmallMobile
-        isCentered
-        maxWidthDesktop={maxWidthDesktop}
+      Confirm with MetaMask
+    </CarouselSlideMainTitle>
+    <InformationWrapper>
+      <p>Check if all the information is correct. Afterwards, confirm the payment in MetaMask.</p>
+      <p>Click on the steps if you want to change any information.</p>
+      <p>We use Kyber for handling token conversions.</p>
+      <p>Please note you are required to have some Ethereum to cover the gas costs.</p>
+      {error && (
+        <AlertMessageWrapper>
+          <AlertMessage
+            type="error"
+            message={error}
+            showIcon
+            closable={false}
+          />
+        </AlertMessageWrapper>
+      )}
+      {shouldShowToSCheckmark && (
+        <TermsAndConditions
+          checked={checkedToS}
+          onChange={event => setCheckedToS(event.target.checked)}
+          style={{marginTop: '141px'}}
+        />
+      )}
+      <CarouselNextButton
+        onClick={onClick}
+        disabled={nextButtonDisabled || error || !checkedToS}
+        loading={isUserListingAsset}
       >
-        Confirm with MetaMask
-      </CarouselSlideMainTitle>
-      <InformationWrapper>
-        <p>Check if all the information is correct. Afterwards, confirm the payment in MetaMask.</p>
-        <p>Click on the steps if you want to change any information.</p>
-        <p>We use Kyber for handling token conversions.</p>
-        <p>Please note you are required to have some Ethereum to cover the gas costs.</p>
-        {error && (
-          <AlertMessageWrapper>
-            <AlertMessage
-              type="error"
-              message={error}
-              showIcon
-              closable={false}
-            />
-          </AlertMessageWrapper>
-        )}
-        <CarouselNextButton
-          onClick={onClick}
-          disabled={nextButtonDisabled || error}
-          loading={isUserListingAsset}
-          style={{
-            marginTop: '176px',
-          }}
-        >
-          Confirm & List Asset
-        </CarouselNextButton>
-      </InformationWrapper>
-    </CarouselSlide>
-  );
-}
+        Confirm & List Asset
+      </CarouselNextButton>
+    </InformationWrapper>
+  </CarouselSlide>
+)

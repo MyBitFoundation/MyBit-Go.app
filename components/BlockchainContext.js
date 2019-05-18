@@ -160,7 +160,7 @@ class BlockchainProvider extends React.Component {
           fast,
         } = response.data;
 
-        gasPrice = BN(((fast / 10) * 1000000000)).toString(); //converts to WEI, from GWEI
+        gasPrice = BN(fast).dividedBy(10).times(1000000000).toString(); //converts to WEI, from GWEI
       }
     }catch(err){
       debug("Error pulling gas price");

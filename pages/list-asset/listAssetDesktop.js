@@ -81,6 +81,9 @@ const ListAssetDesktop = ({
   goToStep,
   readTOS,
   setReadTOS,
+  checkedToS,
+  shouldShowToSCheckmark,
+  setCheckedToS,
 }) => {
   const {
     category,
@@ -221,6 +224,9 @@ const ListAssetDesktop = ({
             setUserListingAsset(true);
             handleListAsset(formData, setUserListingAsset, civic.email);
           }}
+          checkedToS={checkedToS}
+          shouldShowToSCheckmark={shouldShowToSCheckmark}
+          setCheckedToS={setCheckedToS}
         />
       )}
     </ListAssetDesktopWrapper>

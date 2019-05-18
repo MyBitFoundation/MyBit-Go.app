@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Button,
 } from 'antd';
@@ -55,19 +56,41 @@ const separatorStyle = {
   marginBottom: '10px',
 };
 
-class AssetFundingConfirm extends React.Component {
-  state = {
-    acceptedTos: false,
-    selectedToken: DEFAULT_TOKEN,
+const withHooks = Component => props => {
+  const WrapperComponent = props => {
+    const [acceptedTos, setAcceptedTos] = useState(false);
+    return (
+      <Component
+        {...props}
+        acceptedTos={acceptedTos}
+        setAcceptedTos={setAcceptedTos}
+      />
+    )
   }
 
-  setAcceptedTos = (e) => this.setState({acceptedTos: e.target.checked})
+  WrapperComponent.getInitialProps = ctx => {
+    if(Component.getInitialProps)
+      return Component.getInitialProps(ctx);
+    else return {};
+  }
+
+  return <WrapperComponent {...props} />;
+}
+
+class AssetFundingConfirm extends React.Component {
+  state = {
+    selectedToken: DEFAULT_TOKEN,
+  }
 
   handleTokenChange = selectedToken => this.setState({selectedToken});
 
   render(){
     const {
       acceptedTos,
+      setAcceptedTos,
+    } = this.props;
+
+    const {
       selectedToken,
     } = this.state;
 
@@ -78,6 +101,7 @@ class AssetFundingConfirm extends React.Component {
       supportedTokensInfo,
       kyberLoading,
       gasPrice,
+      readTOS,
     } = this.props;
 
     const {
@@ -122,7 +146,7 @@ class AssetFundingConfirm extends React.Component {
         size="large"
         type={buttonProps.error ? 'default' : 'primary'}
         onClick={buttonProps.onClick}
-        disabled={buttonProps.error || (!acceptedTos && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
+        disabled={buttonProps.error || ((!acceptedTos && readTOS) && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
         href={buttonProps.href}
         target={buttonProps.href && '_blank'}
         loading={buttonProps.loading}
@@ -210,11 +234,10 @@ class AssetFundingConfirm extends React.Component {
           </AssetFundingConfirmDropdownButton>
           <Separator style={separatorStyleFullWidth}/>
           <AssetFundingFooter>
-            <TermsAndConditions
+            {readTOS && <TermsAndConditions
               checked={acceptedTos}
-              disabled={false}
-              onChange={this.setAcceptedTos}
-            />
+              onChange={event => setAcceptedTos(event.target.checked)}
+            />}
             {footerButton}
             {footerMessage}
           </AssetFundingFooter>
@@ -224,4 +247,4 @@ class AssetFundingConfirm extends React.Component {
   }
 }
 
-export default withKyberContext(withMetamaskContext(AssetFundingConfirm));
+export default withKyberContext(withMetamaskContext(withHooks(AssetFundingConfirm)));

@@ -15,8 +15,12 @@ export const withTermsOfServiceContext = (Component) => {
 }
 
 const TermsOfServiceProvider = ({ children }) => {
-  const [readTOS, setReadTOS] = useLocalStorage(LocalStorageKeys.ACCEPTED_TOS_AND_POLICY_DATA);
-  const value = {readTOS, setReadTOS, TOS_VERSION};
+  const [readTOS, setReadTOS] = useLocalStorage(LocalStorageKeys.ACCEPTED_TOS);
+  const setReadTosWrapper = () => setReadTOS(TOS_VERSION);
+  const value = {
+    readTOS: Array.isArray(readTOS) ? false : true,
+    setReadTOS: setReadTosWrapper,
+  };
   return (
     <Provider value={value}>
       {children}

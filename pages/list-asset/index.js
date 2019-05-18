@@ -66,7 +66,9 @@ class ListAssetPage extends React.Component {
       isUserListingAsset: false,
       listedAssetId: undefined,
       step: props.civic.token ? 1 : 0,
+      checkedToS: false,
     };
+    this.readTermsOfService = props.TOSContext.readTOS;
   }
 
   componentWillMount = () => {
@@ -343,6 +345,8 @@ class ListAssetPage extends React.Component {
     this.setState({step});
   }
 
+  setCheckedToS = () => this.setState(prevState => ({checkedToS: !prevState.checkedToS}));
+
   render() {
     const {
       civic,
@@ -364,7 +368,6 @@ class ListAssetPage extends React.Component {
     const {
       readTOS,
       setReadTOS,
-      TOS_VERSION,
     } = TOSContext;
 
     const {
@@ -372,6 +375,7 @@ class ListAssetPage extends React.Component {
       isUserListingAsset,
       listedAssetId,
       step,
+      checkedToS,
      } = this.state;
 
     const {
@@ -401,6 +405,10 @@ class ListAssetPage extends React.Component {
       isUserListingAsset,
       handleListAsset,
       metamaskErrorsToRender,
+      readTOS,
+      setReadTOS,
+      checkedToS,
+      setCheckedToS: this.setCheckedToS,
       handleSelectChange: this.handleSelectChange,
       handleInputChange: this.handleInputChange,
       handleCitySuggest: this.handleCitySuggest,
@@ -415,8 +423,7 @@ class ListAssetPage extends React.Component {
       countries: COUNTRIES,
       formData: data,
       balances: user.balances,
-      readTOS: readTOS === TOS_VERSION,
-      setReadTOS: () => setReadTOS(TOS_VERSION),
+      shouldShowToSCheckmark: this.readTermsOfService,
     }
     return (
       <div>
