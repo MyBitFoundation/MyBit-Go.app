@@ -101,7 +101,7 @@ class AssetFundingConfirm extends React.Component {
       supportedTokensInfo,
       kyberLoading,
       gasPrice,
-      readTOS,
+      readToS,
     } = this.props;
 
     const {
@@ -147,7 +147,7 @@ class AssetFundingConfirm extends React.Component {
         size="large"
         type={buttonProps.error ? 'default' : 'primary'}
         onClick={buttonProps.onClick}
-        disabled={buttonProps.error || ((!acceptedTos && readTOS) && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
+        disabled={buttonProps.error || ((!acceptedTos && readToS) && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
         href={buttonProps.href}
         target={buttonProps.href && '_blank'}
         loading={buttonProps.loading}
@@ -235,7 +235,7 @@ class AssetFundingConfirm extends React.Component {
           </AssetFundingConfirmDropdownButton>
           <Separator style={separatorStyleFullWidth}/>
           <AssetFundingFooter>
-            {readTOS && <TermsAndConditions
+            {readToS && <TermsAndConditions
               checked={acceptedTos}
               onChange={event => setAcceptedTos(event.target.checked)}
             />}

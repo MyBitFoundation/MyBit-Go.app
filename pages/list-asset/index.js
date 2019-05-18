@@ -68,7 +68,7 @@ class ListAssetPage extends React.Component {
       step: props.civic.token ? 1 : 0,
       checkedToS: false,
     };
-    this.readTermsOfService = props.TOSContext.readTOS;
+    this.readTermsOfService = props.ToSContext.readToS;
   }
 
   componentWillMount = () => {
@@ -353,7 +353,7 @@ class ListAssetPage extends React.Component {
       metamaskContext,
       blockchainContext,
       kyberLoading,
-      TOSContext,
+      ToSContext,
     } = this.props;
 
     const {
@@ -366,9 +366,9 @@ class ListAssetPage extends React.Component {
     } = metamaskContext;
 
     const {
-      readTOS,
-      setReadTOS,
-    } = TOSContext;
+      readToS,
+      setReadToS,
+    } = ToSContext;
 
     const {
       data,
@@ -405,8 +405,8 @@ class ListAssetPage extends React.Component {
       isUserListingAsset,
       handleListAsset,
       metamaskErrorsToRender,
-      readTOS,
-      setReadTOS,
+      readToS,
+      setReadToS,
       checkedToS,
       setCheckedToS: this.setCheckedToS,
       handleSelectChange: this.handleSelectChange,

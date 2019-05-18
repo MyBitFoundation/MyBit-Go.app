@@ -33,7 +33,7 @@ const CustomTimeline = React.memo(({
   listedAssetId,
   dev,
   civic,
-  readTOS,
+  readToS,
 }) => {
   const{
     category,
@@ -124,7 +124,7 @@ const CustomTimeline = React.memo(({
         currentStep={step}
         goToStep={maxStep > 5 ? goToStep : undefined}
       />
-      {!readTOS && (
+      {!readToS && (
         <CustomTimelineItem
           title="Terms and Conditions"
           content="Read the risks and understand the high degree of risk associated with MyBit Go"
@@ -136,9 +136,9 @@ const CustomTimeline = React.memo(({
       <CustomTimelineItem
         title="Confirm with MetaMask"
         content={listedAssetId ? "Asset Listed successfuly" : "Check if everything is right, confirm and deposit collateral with MetaMask."}
-        step={!readTOS ? 8 : 7}
-        currentStep={listedAssetId ? (!readTOS ? 7 : 6) : step}
-        goToStep={maxStep > (!readTOS ? 7 : 6) ? goToStep : undefined}
+        step={!readToS ? 8 : 7}
+        currentStep={listedAssetId ? (!readToS ? 7 : 6) : step}
+        goToStep={maxStep > (!readToS ? 7 : 6) ? goToStep : undefined}
       />
     </CustomTimelineWrapper>
   )

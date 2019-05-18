@@ -79,8 +79,8 @@ const ListAssetDesktop = ({
   handleSelectSuggest,
   goToNextStep,
   goToStep,
-  readTOS,
-  setReadTOS,
+  readToS,
+  setReadToS,
   checkedToS,
   shouldShowToSCheckmark,
   setCheckedToS,
@@ -125,7 +125,7 @@ const ListAssetDesktop = ({
         listedAssetId={listedAssetId}
         dev={dev}
         civic={civic}
-        readTOS={readTOS}
+        readToS={readToS}
       />
       {step === 1 && (
         <AvailableAssetsSlide
@@ -199,21 +199,21 @@ const ListAssetDesktop = ({
           desktopMode
           nextButtonDisabled={managementFee !== 0 ? false : true}
         />
-      )}{step === 6 && !readTOS && (
+      )}{step === 6 && !readToS && (
         <TermsOfServiceSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
-          onClick={setReadTOS}
+          onClick={setReadToS}
         />
       )}
-      {(step === 6 && listedAssetId && readTOS) && (
+      {(step === 6 && listedAssetId && readToS) && (
         <SuccessSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           assetId={listedAssetId}
           desktopMode
         />
        )}
-       {(step === 6 && !listedAssetId && readTOS) && (
+       {(step === 6 && !listedAssetId && readToS) && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}
@@ -227,7 +227,7 @@ const ListAssetDesktop = ({
           checkedToS={checkedToS}
           shouldShowToSCheckmark={shouldShowToSCheckmark}
           setCheckedToS={setCheckedToS}
-          readTOS={readTOS}
+          readToS={readToS}
         />
       )}
     </ListAssetDesktopWrapper>

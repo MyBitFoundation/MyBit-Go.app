@@ -35,8 +35,8 @@ const ListAssetMobile = ({
   handleListAsset,
   metamaskErrorsToRender,
   handleSelectSuggest,
-  setReadTOS,
-  readTOS,
+  setReadToS,
+  readToS,
 }) => {
   const {
     category,
@@ -159,11 +159,11 @@ const ListAssetMobile = ({
           hasBackButton: true,
         }
       },
-        !readTOS ? {
+        !readToS ? {
           toRender: (
             <TermsOfServiceSlide
               maxWidthDesktop={MAX_WIDTH_DESKTOP}
-              onClick={setReadTOS}
+              onClick={setReadToS}
             />
           ),
           buttons: {
@@ -171,7 +171,7 @@ const ListAssetMobile = ({
             hasBackButton: true,
             nextButtonText: 'I agree',
             nextButtonHandler: () => {
-              setReadTOS();
+              setReadToS();
             },
           }
         } : {

@@ -89,9 +89,9 @@ class AssetFunding extends React.Component {
 
   fundAsset = (amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
     const {
-      readTOS,
-      setReadTOS,
-   } = this.props.TOSContext;
+      readToS,
+      setReadToS,
+   } = this.props.ToSContext;
 
     const handleUIUpdate = () => {
       this.changeStep(2);
@@ -105,7 +105,7 @@ class AssetFunding extends React.Component {
       );
     }
 
-    if(!readTOS){
+    if(!readToS){
       this.setState({
         renderToS: (
           <Modal
@@ -118,7 +118,7 @@ class AssetFunding extends React.Component {
             onOk={() => {
               this.setState({renderToS: undefined});
               handleUIUpdate(),
-              setReadTOS();
+              setReadToS();
             }}
             onCancel={() => this.setState({renderToS: undefined})}
             title={`Terms of Service`}
@@ -164,7 +164,7 @@ class AssetFunding extends React.Component {
       updateNotification,
       loadingUserInfo,
       gasPrice,
-      TOSContext,
+      ToSContext,
     } = this.props;
 
     const {
@@ -180,7 +180,7 @@ class AssetFunding extends React.Component {
       totalSupply,
     } = asset;
 
-    const { readTOS } = TOSContext;
+    const { readToS } = ToSContext;
 
     const {
       name,
@@ -246,7 +246,7 @@ class AssetFunding extends React.Component {
             cancel={this.resetStep}
             selectedMaxValue={selectedMaxValue}
             gasPrice={gasPrice}
-            readTOS={readTOS}
+            readToS={readToS}
           />
         )}
         {step === 2 && (

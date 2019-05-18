@@ -8,18 +8,18 @@ export const withTermsOfServiceContext = (Component) => {
   return function WrapperComponent(props) {
     return (
       <Consumer>
-        {state => <Component {...props} TOSContext={state} />}
+        {state => <Component {...props} ToSContext={state} />}
       </Consumer>
     );
   };
 }
 
 const TermsOfServiceProvider = ({ children }) => {
-  const [readTOS, setReadTOS] = useLocalStorage(LocalStorageKeys.ACCEPTED_TOS);
-  const setReadTosWrapper = () => setReadTOS(TOS_VERSION);
+  const [readToS, setReadToS] = useLocalStorage(LocalStorageKeys.ACCEPTED_TOS);
+  const setReadToSWrapper = () => setReadToS(TOS_VERSION);
   const value = {
-    readTOS: Array.isArray(readTOS) ? false : true,
-    setReadTOS: setReadTosWrapper,
+    readToS: Array.isArray(readToS) ? false : true,
+    setReadToS: setReadToSWrapper,
   };
   return (
     <Provider value={value}>
