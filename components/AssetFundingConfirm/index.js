@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Button,
 } from 'antd';
@@ -56,42 +55,22 @@ const separatorStyle = {
   marginBottom: '10px',
 };
 
-const withHooks = Component => props => {
-  const WrapperComponent = props => {
-    const [acceptedTos, setAcceptedTos] = useState(false);
-    return (
-      <Component
-        {...props}
-        acceptedTos={acceptedTos}
-        setAcceptedTos={setAcceptedTos}
-      />
-    )
-  }
-
-  WrapperComponent.getInitialProps = ctx => {
-    if(Component.getInitialProps)
-      return Component.getInitialProps(ctx);
-    else return {};
-  }
-
-  return <WrapperComponent {...props} />;
-}
-
 class AssetFundingConfirm extends React.Component {
   state = {
     selectedToken: DEFAULT_TOKEN,
+    acceptedToS: false,
+    setAcceptedToS: this.setAcceptedToS,
   }
+
+  setAcceptedToS = acceptedToS => this.setState({acceptedToS})
 
   handleTokenChange = selectedToken => this.setState({selectedToken});
 
   render(){
     const {
-      acceptedTos,
-      setAcceptedTos,
-    } = this.props;
-
-    const {
       selectedToken,
+      acceptedToS,
+      setAcceptedToS,
     } = this.state;
 
     const {
@@ -147,7 +126,7 @@ class AssetFundingConfirm extends React.Component {
         size="large"
         type={buttonProps.error ? 'default' : 'primary'}
         onClick={buttonProps.onClick}
-        disabled={buttonProps.error || ((!acceptedTos && readToS) && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
+        disabled={buttonProps.error || ((!acceptedToS && readToS) && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
         href={buttonProps.href}
         target={buttonProps.href && '_blank'}
         loading={buttonProps.loading}
@@ -236,8 +215,8 @@ class AssetFundingConfirm extends React.Component {
           <Separator style={separatorStyleFullWidth}/>
           <AssetFundingFooter>
             {readToS && <TermsAndConditions
-              checked={acceptedTos}
-              onChange={event => setAcceptedTos(event.target.checked)}
+              checked={acceptedToS}
+              onChange={event => this.setAcceptedToS(event.target.checked)}
             />}
             {footerButton}
             {footerMessage}
@@ -248,4 +227,4 @@ class AssetFundingConfirm extends React.Component {
   }
 }
 
-export default withKyberContext(withMetamaskContext(withHooks(AssetFundingConfirm)));
+export default withKyberContext(withMetamaskContext(AssetFundingConfirm));
