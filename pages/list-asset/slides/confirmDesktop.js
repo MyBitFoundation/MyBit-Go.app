@@ -47,7 +47,7 @@ export const ConfirmSlideDesktop = ({
   checkedToS,
   shouldShowToSCheckmark,
   setCheckedToS,
-  readTOS,
+  readToS,
   hadNotReadToS,
 }) => (
   <CarouselSlide
@@ -87,7 +87,7 @@ export const ConfirmSlideDesktop = ({
       )}
       <CarouselNextButton
         onClick={onClick}
-        disabled={nextButtonDisabled || error || (!checkedToS && (shouldShowToSCheckmark && readTOS))}
+        disabled={nextButtonDisabled || error || (!checkedToS && shouldShowToSCheckmark && readToS)}
         loading={isUserListingAsset}
         style={shouldShowToSCheckmark ? {} : {marginTop: '176px'}}
       >
