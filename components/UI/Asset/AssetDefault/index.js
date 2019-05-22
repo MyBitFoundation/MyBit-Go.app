@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
@@ -16,11 +17,18 @@ import {
   formatMonetaryValue,
   shortenAddress,
 } from 'utils/helpers';
+import UserIcon from 'static/user.svg';
 
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`
+
+const UserIconWrapper = styled(UserIcon)`
+  position: relative;
+  top: 2px;
+  margin-right: 5px;
 `
 
 const AssetDefault = ({
@@ -64,13 +72,15 @@ const AssetDefault = ({
       </div>
 
       <Container>
-        <Link
-          as={`/asset-managers/${assetManager}`}
-          href={`/asset-managers?id=${assetManager}`}
-        >
-          {shortenAddress(assetManager, 7, 4)}
-        </Link>
-
+        <div>
+          <UserIconWrapper />
+          <Link
+            as={`/asset-managers/${assetManager}`}
+            href={`/asset-managers?id=${assetManager}`}
+          >
+            {shortenAddress(assetManager, 6, 4)}
+          </Link>
+        </div>
         <Link
           as={`/asset/${assetId}`}
           href={`/asset?id=${assetId}`}
