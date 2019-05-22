@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import {
@@ -11,7 +12,16 @@ import AssetDefaultDetailsContainer from './assetDefaultDetailsContainer';
 import AssetDefaultFunded from './assetDefaultFunded';
 import AssetDefaultGoal from './assetDefaultGoal';
 import AssetDefaultContributeButton from './assetDefaultContributeButton';
-import { formatMonetaryValue } from 'utils/helpers';
+import {
+  formatMonetaryValue,
+  shortenAddress,
+} from 'utils/helpers';
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
 
 const AssetDefault = ({
   fundingGoal,
@@ -19,6 +29,7 @@ const AssetDefault = ({
   pastDate,
   funded,
   assetId,
+  assetManager,
 }) => {
   const barWidth = funded ? 100 : parseFloat(((fundingProgress * 100) / fundingGoal).toFixed(2));
   const goalFormatted = formatMonetaryValue(fundingGoal);
@@ -52,16 +63,25 @@ const AssetDefault = ({
         )}
       </div>
 
-      <Link
-        as={`/asset/${assetId}`}
-        href={`/asset?id=${assetId}`}
-      >
-        <AssetDefaultContributeButton
-          type={buttonType}
+      <Container>
+        <Link
+          as={`/asset-managers/${assetManager}`}
+          href={`/asset-managers?id=${assetManager}`}
         >
-          {buttonText}
-        </AssetDefaultContributeButton>
-      </Link>
+          {shortenAddress(assetManager, 7, 4)}
+        </Link>
+
+        <Link
+          as={`/asset/${assetId}`}
+          href={`/asset?id=${assetId}`}
+        >
+          <AssetDefaultContributeButton
+            type={buttonType}
+          >
+            {buttonText}
+          </AssetDefaultContributeButton>
+        </Link>
+      </Container>
     </AssetDefaultDetailsContainer>
   )
 };
