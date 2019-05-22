@@ -57,18 +57,20 @@ const separatorStyle = {
 
 class AssetFundingConfirm extends React.Component {
   state = {
-    acceptedTos: false,
     selectedToken: DEFAULT_TOKEN,
+    acceptedToS: false,
+    setAcceptedToS: this.setAcceptedToS,
   }
 
-  setAcceptedTos = (e) => this.setState({acceptedTos: e.target.checked})
+  setAcceptedToS = acceptedToS => this.setState({acceptedToS})
 
   handleTokenChange = selectedToken => this.setState({selectedToken});
 
   render(){
     const {
-      acceptedTos,
       selectedToken,
+      acceptedToS,
+      setAcceptedToS,
     } = this.state;
 
     const {
@@ -78,6 +80,7 @@ class AssetFundingConfirm extends React.Component {
       supportedTokensInfo,
       kyberLoading,
       gasPrice,
+      readToS,
     } = this.props;
 
     const {
@@ -117,12 +120,13 @@ class AssetFundingConfirm extends React.Component {
       buttonProps,
       messageProps,
     } = footer;
+
     const footerButton = (
       <AssetFundingButton
         size="large"
         type={buttonProps.error ? 'default' : 'primary'}
         onClick={buttonProps.onClick}
-        disabled={buttonProps.error || (!acceptedTos && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
+        disabled={buttonProps.error || ((!acceptedToS && readToS) && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
         href={buttonProps.href}
         target={buttonProps.href && '_blank'}
         loading={buttonProps.loading}
@@ -210,11 +214,10 @@ class AssetFundingConfirm extends React.Component {
           </AssetFundingConfirmDropdownButton>
           <Separator style={separatorStyleFullWidth}/>
           <AssetFundingFooter>
-            <TermsAndConditions
-              checked={acceptedTos}
-              disabled={false}
-              onChange={this.setAcceptedTos}
-            />
+            {readToS && <TermsAndConditions
+              checked={acceptedToS}
+              onChange={event => this.setAcceptedToS(event.target.checked)}
+            />}
             {footerButton}
             {footerMessage}
           </AssetFundingFooter>

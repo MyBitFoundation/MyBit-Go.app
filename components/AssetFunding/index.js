@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  Modal,
+} from 'antd';
 import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import AssetFundingSelector from 'components/AssetFundingSelector';
@@ -20,6 +23,8 @@ import {
   DEFAULT_TOKEN_MAX_DECIMALS,
 } from 'constants/app';
 
+import { TERMS_OF_SERVICE } from 'constants/termsOfService';
+import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
@@ -30,6 +35,7 @@ class AssetFunding extends React.Component {
     assetHasExpired: this.props.asset.pastDate,
     step: 0,
     selectedMaxValue: false,
+    renderToS: false,
   };
 
   handleOnChangeEthValue = (number, maxInvestment, totalSupply, maxPercentageAfterFees) => {
@@ -82,15 +88,48 @@ class AssetFunding extends React.Component {
   }
 
   fundAsset = (amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
-    this.changeStep(2);
+    const {
+      readToS,
+      setReadToS,
+   } = this.props.ToSContext;
 
-    this.props.fundAsset(
-      this.props.asset.assetId,
-      amountToPay,
-      amountContributed,
-      paymentToken,
-      paymentTokenSymbol,
-    );
+    const handleUIUpdate = () => {
+      this.changeStep(2);
+
+      this.props.fundAsset(
+        this.props.asset.assetId,
+        amountToPay,
+        amountContributed,
+        paymentToken,
+        paymentTokenSymbol,
+      );
+    }
+
+    if(!readToS){
+      this.setState({
+        renderToS: (
+          <Modal
+            visible={true}
+            okButtonProps={{
+              type: 'primary',
+              text: 'Confirm',
+            }}
+            okText="I Agree"
+            onOk={() => {
+              this.setState({renderToS: undefined});
+              handleUIUpdate(),
+              setReadToS();
+            }}
+            onCancel={() => this.setState({renderToS: undefined})}
+            title={`Terms of Service`}
+          >
+            {TERMS_OF_SERVICE}
+          </Modal>
+        ),
+      })
+    } else {
+      handleUIUpdate();
+    }
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -115,6 +154,7 @@ class AssetFunding extends React.Component {
       assetHasExpired,
       step,
       selectedMaxValue,
+      renderToS,
     } = this.state;
 
     const {
@@ -124,6 +164,7 @@ class AssetFunding extends React.Component {
       updateNotification,
       loadingUserInfo,
       gasPrice,
+      ToSContext,
     } = this.props;
 
     const {
@@ -138,6 +179,8 @@ class AssetFunding extends React.Component {
       availableShares,
       totalSupply,
     } = asset;
+
+    const { readToS } = ToSContext;
 
     const {
       name,
@@ -168,8 +211,10 @@ class AssetFunding extends React.Component {
       yourOwnership = percentageOwnedByUser;
     }
 
+
     return (
       <AssetFundingWrapper>
+        {renderToS || null}
         {step === 0 && (
           <AssetFundingSelector
             maxPercentageAfterFees={maxPercentageAfterFees}
@@ -201,6 +246,7 @@ class AssetFunding extends React.Component {
             cancel={this.resetStep}
             selectedMaxValue={selectedMaxValue}
             gasPrice={gasPrice}
+            readToS={readToS}
           />
         )}
         {step === 2 && (
@@ -212,4 +258,4 @@ class AssetFunding extends React.Component {
 }
 
 
-export default AssetFunding;
+export default withTermsOfServiceContext(AssetFunding);
