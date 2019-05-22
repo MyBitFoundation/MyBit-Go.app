@@ -20,8 +20,11 @@ const TermsAndConditions = ({
   onChange,
   checked,
   disabled,
+  style,
 }) => (
-  <TermsAndConditionsWrapper>
+  <TermsAndConditionsWrapper
+    style={style}
+  >
     <Checkbox
       onChange={onChange}
       checked={checked}

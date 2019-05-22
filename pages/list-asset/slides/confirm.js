@@ -11,6 +11,7 @@ import {
 import {
   formatValueForToken,
 } from 'utils/helpers';
+import TermsAndConditions from 'ui/TermsAndConditions';
 
 const InformationWrapper = styled.div`
   b{
@@ -46,6 +47,9 @@ export const ConfirmSlide = ({
   listedAssetId,
   maxWidthDesktop,
   error,
+  shouldShowToSCheckmark,
+  checkedToS,
+  setCheckedToS,
 }) => {
   const formattedCollateral = formatValueForToken(formData.collateralMyb, PLATFORM_TOKEN);
   return (
@@ -116,6 +120,13 @@ export const ConfirmSlide = ({
             {`${formattedCollateral} ${PLATFORM_TOKEN} ${formData.collateralPercentage}%`}
           </p>
         </section>
+        {shouldShowToSCheckmark && (
+          <TermsAndConditions
+            checked={checkedToS}
+            onChange={event => setCheckedToS(event.target.checked)}
+            style={{marginTop: '50px'}}
+          />
+        )}
         {error && (
           <AlertMessageWrapper>
             <AlertMessage
