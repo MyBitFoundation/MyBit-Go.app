@@ -90,6 +90,7 @@ class BlockchainProvider extends React.Component {
       withdrawingAssetManager: [],
       isLoadingUserInfo: false,
       gasPrice: '10000000000', //10 GWEI
+      assetManagers: {},
     };
   }
 
@@ -874,11 +875,32 @@ class BlockchainProvider extends React.Component {
       return;
     }
 
+    const assetManagers = {};
     await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssets = await this.pullFileInfoForAssets(response);
+        updatedAssets.forEach(asset => {
+          const {
+            assetManager,
+            listingDate,
+            assetIncome,
+          } = asset;
+
+          if(!assetManagers[assetManager]){
+            assetManagers[assetManager] = {
+              startDate: listingDate,
+              totalAssets: 1,
+              totalRevenue: assetIncome,
+            }
+          } else {
+            assetManagers[assetManager].totalAssets += 1;
+            assetManagers[assetManager].totalRevenue += assetIncome;
+          }
+        })
+
         this.setState({
           assets: updatedAssets,
+          assetManagers,
           loading: {
             ...this.state.loading,
             assets: false,
