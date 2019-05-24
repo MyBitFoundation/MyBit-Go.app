@@ -5,26 +5,29 @@ import {
   Tooltip,
 } from 'antd';
 import Civic from 'static/civic_v2.svg';
+import CheckMark from 'static/ic_unreal.svg';
 
-const TooltipWrapper = styled(Tooltip)`
+const AssetManagerTooltipWrapper = styled(Tooltip)`
   .svg{
     width: 30px;
     height: 30px;
   }
 `
 
-const MainWrapper = styled.div`
-`
-
 const GlobalStyle = createGlobalStyle`
   .AssetManagerTooltip .ant-tooltip-inner{
     max-width: unset !important;
-    width: 460px !important;
-    height: 130px !important;
     background-color: rgba(17, 17, 17, 0.95) !important;
+    height: auto !important;
+    width: auto !important;
     color: #FFFFFF !important;
     font-size: 14px !important;
-    line-height: 22px !important;
+    line-height: 22px !important
+
+    ${({theme}) => theme.tablet`
+      width: 460px !important;
+      height: 130px !important;
+    `}
   }
 
   .AssetManagerTooltip .ant-tooltip-arrow{
@@ -37,14 +40,10 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-import CheckMark from 'static/ic_unreal.svg';
-
 const CivicVerificationWrapper = styled.span`
   align-items: center;
   display: inline-flex;
 `
-
-const CivicVerificationText = styled
 
 const CivicVerification =  ({
   text,
@@ -67,7 +66,6 @@ const DataWrapper = styled.div`
   }
 `
 
-
 const Data = ({
   text,
   value,
@@ -88,6 +86,12 @@ const PoweredBy = styled.p`
   }
 `
 
+const AssetManagerTooltipDataWrapper = styled.div`
+  ${({theme}) => theme.tablet`
+    display: flex;
+  `}
+`
+
 const AssetManagerTooltip = ({
   children,
   numberOfAssets,
@@ -97,43 +101,43 @@ const AssetManagerTooltip = ({
 
   return (
     <span>
-    <GlobalStyle />
-    <TooltipWrapper
-      overlayClassName="AssetManagerTooltip"
-      arrowPointAtCenter
-      placement="bottom"
-      destroyTooltipOnHide
-      title={
-        <MainWrapper>
-          <PoweredBy>Identity proved by <Civic /> Civic</PoweredBy>
-          <CivicVerification text="Email Verified" />
-          <CivicVerification text="ID Verified" />
-          <CivicVerification text="Phone Verified" />
-          <Divider style={{
-            margin: '5px 0px',
-            backgroundColor: '#D9D9D9',
-            opacity: 0.2,
+      <GlobalStyle />
+      <AssetManagerTooltipWrapper
+        overlayClassName="AssetManagerTooltip"
+        arrowPointAtCenter
+        placement="bottom"
+        destroyTooltipOnHide
+        title={
+          <React.Fragment>
+            <PoweredBy>Identity proved by <Civic /> Civic</PoweredBy>
+            <CivicVerification text="Email Verified" />
+            <CivicVerification text="ID Verified" />
+            <CivicVerification text="Phone Verified" />
+            <Divider style={{
+              margin: '5px 0px',
+              backgroundColor: '#D9D9D9',
+              opacity: 0.2,
 
-          }}/>
-          <div style={{display: 'flex'}}>
-          <Data
-            text="Managing Assets"
-            value={numberOfAssets}
-          />
-          <Data
-            text="Started as Asset Manager"
-            value={startDate.format('DD-MM-YY')}
-          />
-          <Data
-            text="Total Revenue"
-            value={totalRevenue}
-          />
-          </div>
-        </MainWrapper>
-      }
-    >
-      {children}
-    </TooltipWrapper>
+            }}/>
+            <AssetManagerTooltipDataWrapper>
+              <Data
+                text="Managing Assets"
+                value={numberOfAssets}
+              />
+              <Data
+                text="Started as Asset Manager"
+                value={startDate.format('DD-MM-YY')}
+              />
+              <Data
+                text="Total Revenue"
+                value={totalRevenue}
+              />
+            </AssetManagerTooltipDataWrapper>
+          </React.Fragment>
+        }
+      >
+        {children}
+      </AssetManagerTooltipWrapper>
     </span>
   )
 };
