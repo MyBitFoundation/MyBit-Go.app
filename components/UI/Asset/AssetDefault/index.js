@@ -18,6 +18,7 @@ import {
   shortenAddress,
 } from 'utils/helpers';
 import UserIcon from 'static/user.svg';
+import AssetManagerTooltip from 'ui/AssetManagerTooltip';
 
 const Container = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ const UserIconWrapper = styled(UserIcon)`
   position: relative;
   top: 2px;
   margin-right: 5px;
+  margin-left: 0px;
 `
 
 const AssetDefault = ({
@@ -38,7 +40,13 @@ const AssetDefault = ({
   funded,
   assetId,
   assetManager,
+  assetManagerData,
 }) => {
+  const {
+    totalRevenue,
+    totalAssets,
+    startDate,
+  } = assetManagerData;
   const barWidth = funded ? 100 : parseFloat(((fundingProgress * 100) / fundingGoal).toFixed(2));
   const goalFormatted = formatMonetaryValue(fundingGoal);
   const progressFormatted = formatMonetaryValue(fundingProgress);
@@ -73,7 +81,13 @@ const AssetDefault = ({
 
       <Container>
         <div>
-          <UserIconWrapper />
+          <AssetManagerTooltip
+            numberOfAssets={totalAssets}
+            startDate={startDate}
+            totalRevenue={formatMonetaryValue(totalRevenue)}
+          >
+            <UserIconWrapper />
+          </AssetManagerTooltip>
           <Link
             as={`/asset-managers/${assetManager}`}
             href={`/asset-managers?id=${assetManager}`}

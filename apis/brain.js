@@ -472,7 +472,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         const listingDate = dayjs(blockInfo.timestamp * 1000);
 
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
-        const escrow = await api.methods.getAssetManagerEscrow(escrowId).call();
         const isAssetManager = assetManager === realAddress;
 
         let daysSinceItWentLive = 1;
@@ -559,7 +558,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           fundingStage,
           pastDate,
           isAssetManager,
-          assetManager,
           percentageOwnedByUser,
           daysSinceItWentLive,
           assetIncomeForCollateral,

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Civic from 'static/civic.svg';
+import Civic from 'static/civic_v2.svg';
 
 const AssetDetailsManagerInfoCivic = styled(Civic)`
   position: relative;

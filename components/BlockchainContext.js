@@ -878,8 +878,8 @@ class BlockchainProvider extends React.Component {
     const assetManagers = {};
     await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
-        const updatedAssets = await this.pullFileInfoForAssets(response);
-        updatedAssets.forEach(asset => {
+        const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
+        const updatedAssetsWithManagerData = updatedAssetsWithData.map(asset => {
           const {
             assetManager,
             listingDate,
@@ -896,10 +896,14 @@ class BlockchainProvider extends React.Component {
             assetManagers[assetManager].totalAssets += 1;
             assetManagers[assetManager].totalRevenue += assetIncome;
           }
+          return {
+            ...asset,
+            assetManagerData: assetManagers[assetManager],
+          }
         })
 
         this.setState({
-          assets: updatedAssets,
+          assets: updatedAssetsWithManagerData,
           assetManagers,
           loading: {
             ...this.state.loading,
