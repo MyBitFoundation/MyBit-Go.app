@@ -16,17 +16,17 @@ const AssetManagerTooltipWrapper = styled(Tooltip)`
 
 const GlobalStyle = createGlobalStyle`
   .AssetManagerTooltip .ant-tooltip-inner{
-    max-width: unset !important;
-    background-color: rgba(17, 17, 17, 0.95) !important;
-    height: auto !important;
-    width: auto !important;
-    color: #FFFFFF !important;
-    font-size: 14px !important;
-    line-height: 22px !important
+    max-width: unset;
+    background-color: rgba(17, 17, 17, 0.95);
+    height: auto;
+    width: auto;
+    color: #FFFFFF;
+    font-size: 14px;
+    line-height: 22px
 
     ${({theme}) => theme.tablet`
-      width: 460px !important;
-      height: 130px !important;
+      width: 460px;
+      height: 130px;
     `}
   }
 
