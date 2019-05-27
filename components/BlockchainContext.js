@@ -855,6 +855,31 @@ class BlockchainProvider extends React.Component {
       });
   }
 
+  updateAssetsWithAssetManagerData = (assets, assetManagers) => {
+    return assets.map(asset => {
+      const {
+        assetManager,
+        listingDate,
+        assetIncome,
+      } = asset;
+
+      if(!assetManagers[assetManager]){
+        assetManagers[assetManager] = {
+          startDate: listingDate,
+          totalAssets: 1,
+          totalRevenue: assetIncome,
+        }
+      } else {
+        assetManagers[assetManager].totalAssets += 1;
+        assetManagers[assetManager].totalRevenue += assetIncome;
+      }
+      return {
+        ...asset,
+        assetManagerData: assetManagers[assetManager],
+      }
+    })
+  }
+
   fetchAssets = async () => {
     const {
       metamaskContext,
@@ -879,29 +904,7 @@ class BlockchainProvider extends React.Component {
     await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
-        const updatedAssetsWithManagerData = updatedAssetsWithData.map(asset => {
-          const {
-            assetManager,
-            listingDate,
-            assetIncome,
-          } = asset;
-
-          if(!assetManagers[assetManager]){
-            assetManagers[assetManager] = {
-              startDate: listingDate,
-              totalAssets: 1,
-              totalRevenue: assetIncome,
-            }
-          } else {
-            assetManagers[assetManager].totalAssets += 1;
-            assetManagers[assetManager].totalRevenue += assetIncome;
-          }
-          return {
-            ...asset,
-            assetManagerData: assetManagers[assetManager],
-          }
-        })
-
+        const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
         this.setState({
           assets: updatedAssetsWithManagerData,
           assetManagers,
