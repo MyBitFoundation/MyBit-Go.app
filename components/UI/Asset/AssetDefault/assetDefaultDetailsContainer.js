@@ -5,7 +5,7 @@ const AssetDefaultDetailsContainer = styled.div`
     padding: 5px 10px 0px 10px;
 
     ${props => props.barWidth === 100 && css`
-      svg{
+      i > svg{
         fill: #52c41a;
         margin-left: 8px;
       }

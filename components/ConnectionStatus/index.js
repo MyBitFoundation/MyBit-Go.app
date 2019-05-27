@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import ConnectionStatusWrapper from './connectionStatusWrapper';
-import Tooltip from 'ui/Tooltip';
+import TooltipWithQuestionMark from 'ui/TooltipWithQuestionMark';
 
-const StyledTooltip = styled(Tooltip)`
+const StyledTooltip = styled(TooltipWithQuestionMark)`
   margin-left: 10px;
   width: 15px;
   height: 15px;
@@ -22,7 +22,9 @@ const ConnectionStatus = ({
         {connected ? 'Connected' : 'Not connected'}
         {!connected && (
           <StyledTooltip
-            placement="bottomLeft"
+            tooltipProps={{
+              placement: 'bottomLeft',
+            }}
             title={metamaskErrors.render}
           />
         )}

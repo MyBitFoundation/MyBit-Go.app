@@ -380,19 +380,19 @@ const processErrorType = (error, handleError) => {
   };
 }
 
-const getAssetDetails = (api, assetId) => {
+const getAssetDetails = (api, assetId, blockNumber) => {
   return Promise.all([
-      Network.dividendTokenETH(assetId),
-      api.methods.getAssetPlatformFee(assetId).call(),
-      Network.getAssetOperator(assetId),
-      api.methods.crowdsaleFinalized(assetId).call(),
-      api.methods.getCrowdsaleDeadline(assetId).call(),
-      Network.getFundingGoal(assetId),
-      Network.getAssetManager(assetId),
-      Network.getAssetInvestors(assetId),
-      Network.getFundingProgress(assetId),
-      api.methods.getAssetManagerFee(assetId).call(),
-    ]);
+    Network.dividendTokenETH(assetId),
+    api.methods.getAssetPlatformFee(assetId).call(),
+    Network.getAssetOperator(assetId),
+    api.methods.crowdsaleFinalized(assetId).call(),
+    api.methods.getCrowdsaleDeadline(assetId).call(),
+    Network.getFundingGoal(assetId),
+    Network.getAssetInvestors(assetId),
+    Network.getFundingProgress(assetId),
+    api.methods.getAssetManagerFee(assetId).call(),
+    window.web3js.eth.getBlock(blockNumber),
+  ]);
 }
 
 const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, asset, realAddress) => {
@@ -431,24 +431,31 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       const api = await Network.api();
       const assetManagerFunds = await Network.assetManagerFunds();
-
       const database = await Network.database();
       const events = await Network.events();
 
       let assets = await Network.getTotalAssets();
       assets =
         assets
-          .filter(assetContractAddress => assetsAirTableById[assetContractAddress] !== undefined)
-          .map(assetContractAddress => {
+          .filter(({ address }) => assetsAirTableById[address] !== undefined)
+          .map(({
+            address,
+            blockNumber,
+            manager,
+          })=> {
             return {
-              ...assetsAirTableById[assetContractAddress],
-              assetId: assetContractAddress,
+              ...assetsAirTableById[address],
+              assetId: address,
+              assetManager: manager,
+              blockNumber,
             }
           });
 
       const assetDetails = await Promise.all(assets.map(async asset =>  {
         const {
           assetId,
+          assetManager,
+          blockNumber,
         } = asset;
         let [
           dividendTokenETH,
@@ -457,15 +464,16 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           crowdsaleFinalized,
           fundingDeadline,
           fundingGoal,
-          assetManager,
           assetInvestors,
           fundingProgress,
-          managerPercentage
-        ] = await getAssetDetails(api, assetId);
+          managerPercentage,
+          blockInfo,
+        ] = await getAssetDetails(api, assetId, blockNumber);
+        const listingDate = dayjs(blockInfo.timestamp * 1000);
 
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
-        const escrow = await api.methods.getAssetManagerEscrow(escrowId).call();
         const isAssetManager = assetManager === realAddress;
+
         let daysSinceItWentLive = 1;
         let assetIncome = 0;
         let managerHasToCallPayout = false;
@@ -518,8 +526,9 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
               assetIncome = await dividendTokenETH.methods.assetIncome().call();
               owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
             }
+
+            assetIncome = await dividendTokenETH.methods.assetIncome().call();
             if(isAssetManager){
-              assetIncome = await dividendTokenETH.methods.assetIncome().call();
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
               assetIncomeForCollateral = fromWeiToEth(assetIncome) * (1 - platformFee - managerPercentage);
@@ -549,7 +558,6 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           fundingStage,
           pastDate,
           isAssetManager,
-          assetManager,
           percentageOwnedByUser,
           daysSinceItWentLive,
           assetIncomeForCollateral,
@@ -569,6 +577,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           fundingDeadline: dueDate,
           numberOfInvestors: assetInvestors.length,
           funded: fundingStage === FundingStages.FUNDED,
+          listingDate,
         };
       }));
 
