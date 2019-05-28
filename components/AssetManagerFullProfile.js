@@ -8,7 +8,7 @@ import {
 } from 'constants/links';
 import Divider from 'ui/Divider';
 import GoBackTextAndArrow from 'components/GoBackTextAndArrow';
-
+import { formatMonetaryValue } from 'utils/helpers';
 const Colors = Theming.colors;
 
 const ProfileWrapper = styled.div`
@@ -83,6 +83,7 @@ const AssetManagerFullProfile = ({
         <Divider />
         <AssetManagerProfile
           {...assetManager}
+          totalRevenue={formatMonetaryValue(assetManager.totalRevenue)}
           styling={{
             labelColor: Colors.grayBase,
             valueColor: Colors.black,
