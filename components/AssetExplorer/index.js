@@ -15,7 +15,6 @@ import {
 } from 'constants/fundingStages';
 import { SORT_BY_ASSETS } from 'constants/sortByAssets';
 import {
-  getPrettyCategoryName,
   getValueFromLocalStorage,
   setValueLocalStorage,
 } from 'utils/helpers';
