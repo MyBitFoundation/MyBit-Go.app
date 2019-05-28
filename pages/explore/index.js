@@ -14,10 +14,13 @@ const Explore = withBlockchainContext(({
     handleAssetFavorited,
   } = blockchainContext;
 
+  if (loading.assets) {
+    return <Loading message="Loading assets" />;
+  }
+
   return (
     <AssetExplorer
       assets={assets}
-      loading={loading}
       handleAssetFavorited={handleAssetFavorited}
       EXPLORE_PAGE_FUNDING_ACTIVE={LocalStorageKeys.EXPLORE_PAGE_FUNDING_ACTIVE}
       EXPLORE_PAGE_SORT_BY={LocalStorageKeys.EXPLORE_PAGE_SORT_BY}

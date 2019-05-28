@@ -82,7 +82,7 @@ const AssetDefault = ({
       <Container>
         <div>
           <AssetManagerTooltip
-            numberOfAssets={totalAssets}
+            totalAssets={totalAssets}
             startDate={startDate}
             totalRevenue={formatMonetaryValue(totalRevenue)}
           >

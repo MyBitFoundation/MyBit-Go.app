@@ -44,7 +44,7 @@ class AssetExplorer extends React.Component {
     } else {
       this.state = {
         fundingActive: props.fundingActive || true,
-        sortByFilterSelected: props.sortByFilterSelected || true,
+        sortByFilterSelected: props.sortByFilterSelected || '',
         ...this.buildState(useLocalStorage),
       };
     }
@@ -108,7 +108,6 @@ class AssetExplorer extends React.Component {
   render = () => {
     const {
       assets,
-      loading,
       handleAssetFavorited,
       EXPLORE_PAGE_FUNDING_ACTIVE,
       useLocalStorage,
@@ -117,10 +116,6 @@ class AssetExplorer extends React.Component {
     const {
       categoriesAirTable,
     } = this.props.airtableContext;
-
-    if (loading.assets) {
-      return <Loading message="Loading assets" />;
-    }
 
     const { fundingActive } = this.state;
     let assetsFiltered = assets.slice();

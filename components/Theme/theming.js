@@ -36,6 +36,8 @@ const Theming = {
     gray2,
     grayLight,
     grayUltraLight,
+    blackish,
+    blueHover,
   },
   spin: {
     color: blueMain,
