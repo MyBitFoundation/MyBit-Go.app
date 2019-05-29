@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Media from 'react-media';
 import AssetExplorer from 'components/AssetExplorer';
 import Loading from 'components/Loading';
 import AssetManagerProfile from 'ui/AssetManagerProfile';
@@ -6,16 +7,24 @@ import Theming from 'components/Theme/theming';
 import {
   ExternalLinks,
 } from 'constants/links';
+import { Sizes } from 'components/Theme/mediaQueries';
 import Divider from 'ui/Divider';
 import GoBackTextAndArrow from 'components/GoBackTextAndArrow';
-import { formatMonetaryValue } from 'utils/helpers';
+import { 
+  formatMonetaryValue,
+  shortenAddress,
+} from 'utils/helpers';
+import ErrorPage from 'components/ErrorPage';
+
 const Colors = Theming.colors;
 
 const ProfileWrapper = styled.div`
   background-color: #FFFFFF;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12), 0px 2px 8px rgba(0, 0, 0, 0.08);
   border-radius: 0px 0px 4px 4px;
-  width: 650px;
+  ${({theme}) => theme.tablet`
+    width: 650px;
+  `}
   margin: 0 auto;
   padding: 10px;
 `
@@ -56,14 +65,20 @@ const AssetManagerFullProfile = ({
 
   const assetManager = assetManagers[managerAddress];
   if(!assetManager){
-    return <p>this manager doesnt exist.</p>
+    return (
+      <ErrorPage
+        title="Asset Manager not found"
+        description={`No assets have ever been listed by an Asset Manager with the provided address: ${managerAddress}`}
+        href="/asset-managers"
+        hasBackButton
+      />
+    )
   }
 
   const assetsByManager = assets.filter(asset => asset.assetManager === managerAddress)
   return (
     <div>
       <GoBackTextAndArrow
-        text="Back to All Managers"
         href="/asset-managers"
         style={{
           margin: 'auto',
@@ -73,7 +88,11 @@ const AssetManagerFullProfile = ({
       <ProfileWrapper>
         <Title>Asset manager</Title>
         <AddressWrapper>
-          {managerAddress}
+          <Media query={`(min-width: ${Sizes.tablet}px`}>
+            {matches =>
+              matches ? managerAddress : shortenAddress(managerAddress, 6, 4)
+            }
+          </Media>
           <a
             href={ExternalLinks.getEtherscanAddressURL(network, managerAddress)}
             target="_blank"

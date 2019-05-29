@@ -18,7 +18,6 @@ const GlobalStyle = createGlobalStyle`
 
     ${({theme}) => theme.tablet`
       width: 460px;
-      height: 130px;
     `}
   }
 

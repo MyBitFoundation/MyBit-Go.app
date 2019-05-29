@@ -1,10 +1,7 @@
 import React from 'react';
+import Router from 'next/router';
 import styled from 'styled-components'
-import Link from 'next/link'
 import BackArrow from 'static/back-arrow.svg'
-
-// Workaround to style <Link />
-// see: https://github.com/zeit/next.js/issues/1942
 
 const GoBackTextAndArrowWrapper = styled.a`
   cursor: pointer;
@@ -33,7 +30,6 @@ const GoBackTextAndArrowWrapper = styled.a`
 
 const GoBackTextAndArrow = ({
   children,
-  text,
   color,
   hoverColor,
   style,
@@ -41,19 +37,14 @@ const GoBackTextAndArrow = ({
   as,
 }) => {
   return (
-    <Link
-      href={href}
-      as={as}
-      passHref
+    <GoBackTextAndArrowWrapper
+      color={color}
+      hoverColor={hoverColor}
+      style={style}
+      onClick={() => window.history.length === 1 ? Router.push(href, as) : Router.back()}
     >
-      <GoBackTextAndArrowWrapper
-        color={color}
-        hoverColor={hoverColor}
-        style={style}
-      >
-        <BackArrow /> {children || text}
-      </GoBackTextAndArrowWrapper>
-    </Link>
+      <BackArrow /> {children || "Go Back"}
+    </GoBackTextAndArrowWrapper>
   )
 }
 

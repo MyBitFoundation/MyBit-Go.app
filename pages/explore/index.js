@@ -4,6 +4,7 @@ import {
   getValueFromLocalStorage,
 } from 'utils/helpers';
 import AssetExplorer from 'components/AssetExplorer';
+import Loading from 'components/Loading';
 
 const Explore = withBlockchainContext(({
   blockchainContext,

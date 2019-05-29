@@ -6,7 +6,6 @@ import {
 import { withAirtableContext } from 'components/AirtableContext'
 import { withBlockchainContext } from 'components/BlockchainContext'
 import CategoryFilter from 'components/CategoryFilter';
-import Loading from 'components/Loading';
 import AssetDisplayer from 'components/AssetDisplayer';
 import ExploreFilters from './exploreFilters';
 import ExploreFiltersSwitch from './exploreFiltersSwitch';

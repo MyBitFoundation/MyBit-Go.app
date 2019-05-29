@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Civic from 'static/civic_v2.svg';
 import CheckMark from 'static/ic_unreal.svg';
 import Divider from 'ui/Divider';
@@ -20,21 +20,37 @@ const PoweredBy = styled.p`
 `
 
 const CivicVerificationWrapper = styled.span`
-  align-items: center;
   display: inline-flex;
 
-  .svg{
-    width: 30px;
-    height: 30px;
+  svg{
+    position: relative;
+    top: 2px;
+    margin-right: 5px;
+  }
+
+  span{
+    margin-right: 15px;
+    margin-bottom: 10px;
+
+    ${({theme}) => theme.tablet`
+      margin-right: 20px;
+    `}
+
+    ${props => props.noMargin && css`
+      margin-right: 0px;
+    `}
   }
 `
 
 const CivicVerification =  ({
   text,
+  noMargin,
 }) => (
-  <CivicVerificationWrapper>
-    <CheckMark style={{marginRight: '10px'}}/>
-    <span style={{marginRight: '20px'}}>{text}</span>
+  <CivicVerificationWrapper
+    noMargin={noMargin}
+  >
+    <CheckMark />
+    <span>{text}</span>
   </CivicVerificationWrapper>
 );
 
@@ -78,7 +94,7 @@ const AssetManagerProfile = ({
       <PoweredBy>Identity proved by <Civic /> Civic</PoweredBy>
       <CivicVerification text="Email Verified" />
       <CivicVerification text="ID Verified" />
-      <CivicVerification text="Phone Verified" />
+      <CivicVerification text="Phone Verified" noMargin/>
       <Divider styling={{
         ...styling.divider,
       }}/>

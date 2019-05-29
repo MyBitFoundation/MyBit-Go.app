@@ -67,7 +67,10 @@ class ManageAsset extends React.Component {
 
     getNavBarButtons = (assetId, error) => (
       <ManageAssetNavButtons>
-        <BackButton />
+        <BackButton
+          as="/portfolio/managed-assets"
+          href="/portfolio?type=managed-assets"
+        />
         {!error && (
           <React.Fragment>
             <Link
