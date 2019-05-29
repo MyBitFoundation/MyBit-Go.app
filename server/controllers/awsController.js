@@ -31,7 +31,6 @@ export const handleFileUpload = (files, assetId) => {
           responseData.push(data);
           if (responseData.length === files.length) {
             ProcessFilesForAssets();
-            console.log("Uploaded file(s) successfuly.")
             resolve(responseData);
           }
         }

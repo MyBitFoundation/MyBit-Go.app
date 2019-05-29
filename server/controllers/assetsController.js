@@ -20,7 +20,6 @@ export let assets = [];
 export const getAssets = async () => {
   try{
     if(AirTableController.assetsById){
-      console.log("getting assets...")
       assets = await fetchAssets(undefined, AirTableController.assetsById);
     }
   }catch(err){
