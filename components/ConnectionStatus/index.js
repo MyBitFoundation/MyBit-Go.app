@@ -50,7 +50,7 @@ const ConnectionStatus = ({
         <Label
           connected={connected}
         >
-          {connected ? 'Connected' : 'Not connected'}
+          {connected ? 'Connected' : 'Not Connected'}
         </Label>
       </ConnectionStatusWrapper>
       {!connected && (
