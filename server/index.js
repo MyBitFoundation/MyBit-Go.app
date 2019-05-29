@@ -89,13 +89,16 @@ app
   server.post('/api/files/upload', multipleUpload, async (req, res) => {
     const assetId = req.body.assetId;
     const files = req.files;
-        console.log(assetId, files);
 
     await AwsController.handleFileUpload(files, assetId, req, res);
   });
 
   server.get("/manage/:id", (req, res) => {
     return app.render(req, res, "/manage", { id: req.params.id })
+  })
+
+  server.get("/asset-managers/:id", (req, res) => {
+    return app.render(req, res, "/asset-managers", { id: req.params.id })
   })
 
   server.get("/portfolio/:type", (req, res) => {

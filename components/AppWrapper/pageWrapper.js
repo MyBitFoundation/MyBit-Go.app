@@ -8,11 +8,11 @@ const PageWrapper = styled.div`
     padding-top: ${`calc(${theme.sizes.marginTopPageWrapper}px + ${theme.sizes.headerHeightMobile}px)`};
   `}
   position: relative;
+  margin-bottom: 50px;
 
   ${({theme}) => theme.tablet`
     margin-top: ${({theme}) => `${theme.sizes.marginTopPageWrapper}px`};
     padding-top: 0px;
-    margin-bottom: 50px;
     min-height: 600px;
   `}
 

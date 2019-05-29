@@ -24,4 +24,5 @@ export const ExternalLinks = {
  ETHERSCAN_TX: txHash =>
   `https://api-ropsten.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${txHash}`,
   kyberSwapRopsten: (from, to) => `https://ropsten.kyber.network/swap/${from}-${to}`,
+ getEtherscanAddressURL: (network, address) => `https://${network === 'ropsten' ? 'ropsten.' : ''}etherscan.io/address/${address}`
 }
