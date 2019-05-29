@@ -23,12 +23,12 @@ const Tooltip = ({
   tooltipProps,
   children,
 }) => (
-  <span>
+  <React.Fragment>
     <GlobalStyle />
     <TooltipAnt overlayClassName="CustomLightColorTooltip" {...tooltipProps}>
       {children}
     </TooltipAnt>
-  </span>
+  </React.Fragment>
 )
 
 
