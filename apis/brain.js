@@ -434,7 +434,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
       const database = await Network.database();
       const events = await Network.events();
 
-      let assets = await Network.getTotalAssets();
+      let assets = await Network.getTotalAssetsWithBlockNumberAndManager();
       assets =
         assets
           .filter(({ address }) => assetsAirTableById[address] !== undefined)
