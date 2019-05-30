@@ -72,7 +72,6 @@ class BlockchainProvider extends React.Component {
     this.withdrawInvestorProfit = this.withdrawInvestorProfit.bind(this);
     this.withdrawCollateral = this.withdrawCollateral.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
-    this.airtableContextUpdates = 0;
     this.state = {
       loading: {
         assets: true,
@@ -95,6 +94,7 @@ class BlockchainProvider extends React.Component {
       callingPayout: [],
       withdrawingAssetManager: [],
       gasPrice: '10000000000', //10 GWEI
+      assetManagers: {},
     };
 
     const network = this.props.metamaskContext.network;
@@ -114,7 +114,7 @@ class BlockchainProvider extends React.Component {
     this.createIntervals();
   }
 
-  // handle case where account, login or enabled variable change
+  // handle case where account, login, enabled or network variable change
   componentDidUpdate = (prevProps) => {
     const {
       metamaskContext: oldProps,
@@ -146,6 +146,7 @@ class BlockchainProvider extends React.Component {
           transactionHistory: true,
         }
       })
+      this.timestampOfNetworkChange = Date.now();
       Brain.initialiseSDK(SUPPORTED_NETWORKS.includes(newNetwork) ? CONTRACTS_PATH[newNetwork] : CONTRACTS_PATH['default']);
       this.fetchAssets();
       this.fetchTransactionHistory();
@@ -158,7 +159,7 @@ class BlockchainProvider extends React.Component {
 
   createIntervals = () => {
     this.intervalFetchAssets =
-      setInterval(this.fetchAssets, FETCH_ASSETS_TIME);
+      setInterval(() => this.fetchAssets(this.props.metamaskContext.network), FETCH_ASSETS_TIME);
     this.intervalFetchTransactionHistory =
       setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
     this.intervalFetchGasPrice =
@@ -183,7 +184,7 @@ class BlockchainProvider extends React.Component {
           fast,
         } = response.data;
 
-        gasPrice = BN(((fast / 10) * 1000000000)).toString(); //converts to WEI, from GWEI
+        gasPrice = BN(fast).times(100000000).toString(); //converts to WEI, from GWEI
       }
     }catch(err){
       debug("Error pulling gas price");
@@ -885,7 +886,32 @@ class BlockchainProvider extends React.Component {
       });
   }
 
-  fetchAssets = async () => {
+  updateAssetsWithAssetManagerData = (assets, assetManagers) => {
+    return assets.map(asset => {
+      const {
+        assetManager,
+        listingDate,
+        assetIncome,
+      } = asset;
+
+      if(!assetManagers[assetManager]){
+        assetManagers[assetManager] = {
+          startDate: listingDate,
+          totalAssets: 1,
+          totalRevenue: assetIncome,
+        }
+      } else {
+        assetManagers[assetManager].totalAssets += 1;
+        assetManagers[assetManager].totalRevenue += assetIncome;
+      }
+      return {
+        ...asset,
+        assetManagerData: assetManagers[assetManager],
+      }
+    })
+  }
+
+  fetchAssets = async networkBeingUsed => {
     const {
       metamaskContext,
     } = this.props;
@@ -893,23 +919,34 @@ class BlockchainProvider extends React.Component {
     const {
       user,
       userIsLoggedIn,
+      network,
     } = metamaskContext;
 
     const {
       categoriesAirTable,
       assetsAirTableById,
+      network: airtableNetwork,
     } = this.props.airtableContext;
 
     if (!assetsAirTableById || !categoriesAirTable) {
       setTimeout(this.fetchAssets, 2000);
       return;
     }
-
+    networkBeingUsed = networkBeingUsed || network;
+    const assetManagers = {};
     await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
-        const updatedAssets = await this.pullFileInfoForAssets(response);
+        // this means this data should not be considered
+        console.log(networkBeingUsed)
+        console.log(network)
+        if(airtableNetwork !== network){
+          return;
+        }
+        const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
+        const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
         this.setState({
-          assets: updatedAssets,
+          assets: updatedAssetsWithManagerData,
+          assetManagers,
           loading: {
             ...this.state.loading,
             assets: false,
@@ -921,7 +958,7 @@ class BlockchainProvider extends React.Component {
         console.log(err)
         debug(err);
         if (userIsLoggedIn) {
-          setTimeout(this.fetchAssets, 5000);
+          setTimeout(() => this.fetchAssets(networkBeingUsed), 5000);
         }
       });
   }

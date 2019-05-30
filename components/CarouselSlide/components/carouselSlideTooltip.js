@@ -1,10 +1,9 @@
 import styled, { css } from 'styled-components';
-import {
-  Tooltip as TooltipAnt,
-} from 'antd';
+import Tooltip from 'ui/Tooltip';
 import questionTooltip from "static/list-asset/questionTooltip.png";
+import TooltipWithQuestionMark from 'ui/TooltipWithQuestionMark';
 
-const Tooltip = styled(TooltipAnt)`
+const TooltipWrapper = styled(TooltipWithQuestionMark)`
   font-size: 10px;
   transition: all 0.5s ease 0s;
   width: 20px;
@@ -17,7 +16,5 @@ const Tooltip = styled(TooltipAnt)`
 `;
 
 export const CarouselSlideTooltip = (props) => (
-  <Tooltip {...props}>
-    <img src={questionTooltip} />
-  </Tooltip>
+  <TooltipWrapper {...props} />
 )

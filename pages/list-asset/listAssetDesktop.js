@@ -9,6 +9,7 @@ import {
   CollateralSlide,
   ConfirmSlideDesktop,
   SuccessSlide,
+  TermsOfServiceSlide,
 } from "./slides";
 import CustomTimeline from './customTimeline';
 
@@ -78,6 +79,11 @@ const ListAssetDesktop = ({
   handleSelectSuggest,
   goToNextStep,
   goToStep,
+  readToS,
+  setReadToS,
+  checkedToS,
+  shouldShowToSCheckmark,
+  setCheckedToS,
 }) => {
   const {
     category,
@@ -119,6 +125,7 @@ const ListAssetDesktop = ({
         listedAssetId={listedAssetId}
         dev={dev}
         civic={civic}
+        readToS={readToS}
       />
       {step === 1 && (
         <AvailableAssetsSlide
@@ -192,15 +199,21 @@ const ListAssetDesktop = ({
           desktopMode
           nextButtonDisabled={managementFee !== 0 ? false : true}
         />
+      )}{step === 6 && !readToS && (
+        <TermsOfServiceSlide
+          maxWidthDesktop={MAX_WIDTH_DESKTOP}
+          desktopMode
+          onClick={setReadToS}
+        />
       )}
-      {step === 6 && listedAssetId && (
+      {(step === 6 && listedAssetId && readToS) && (
         <SuccessSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           assetId={listedAssetId}
           desktopMode
         />
        )}
-       {step === 6 && !listedAssetId && (
+       {(step === 6 && !listedAssetId && readToS) && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}
@@ -211,6 +224,10 @@ const ListAssetDesktop = ({
             setUserListingAsset(true);
             handleListAsset(formData, setUserListingAsset, civic.email);
           }}
+          checkedToS={checkedToS}
+          shouldShowToSCheckmark={shouldShowToSCheckmark}
+          setCheckedToS={setCheckedToS}
+          readToS={readToS}
         />
       )}
     </ListAssetDesktopWrapper>

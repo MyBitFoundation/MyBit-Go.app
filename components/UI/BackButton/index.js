@@ -4,10 +4,13 @@ import {
 } from 'antd';
 import BackButtonWrapper from './backButtonWrapper';
 
-const BackButton = () => (
+const BackButton = ({
+  href,
+  as,
+}) => (
   <BackButtonWrapper
     type="secondary"
-    onClick={() => window.history.length === 2 ? Router.push('/portfolio') : Router.back()}
+    onClick={() => window.history.length === 1 ? Router.push(href, as) : Router.back()}
   >
     Back
   </BackButtonWrapper>

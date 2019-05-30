@@ -199,9 +199,14 @@ class AirtableProvider extends React.PureComponent {
         console.log("assetsAirTableById: ", assetsAirTableById)
         console.log("assetsAirTable: ", assetsAirTable)
 
+        /*
+        * we save the network in the state to make sure fetchAssets() in brain.js
+        * uses the correct airtable data when pulling the assets, from the correct network
+        */
         this.setState({
           assetsAirTable,
           assetsAirTableById,
+          network,
         });
       }
     }

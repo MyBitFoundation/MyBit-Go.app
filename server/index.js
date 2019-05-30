@@ -99,6 +99,10 @@ app
     return app.render(req, res, "/manage", { id: req.params.id })
   })
 
+  server.get("/asset-managers/:id", (req, res) => {
+    return app.render(req, res, "/asset-managers", { id: req.params.id })
+  })
+
   server.get("/portfolio/:type", (req, res) => {
     return app.render(req, res, "/portfolio", { type: req.params.type })
   })
