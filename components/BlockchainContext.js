@@ -146,7 +146,6 @@ class BlockchainProvider extends React.Component {
           transactionHistory: true,
         }
       })
-      this.timestampOfNetworkChange = Date.now();
       Brain.initialiseSDK(SUPPORTED_NETWORKS.includes(newNetwork) ? CONTRACTS_PATH[newNetwork] : CONTRACTS_PATH['default']);
       this.fetchAssets();
       this.fetchTransactionHistory();
@@ -911,7 +910,7 @@ class BlockchainProvider extends React.Component {
     })
   }
 
-  fetchAssets = async networkBeingUsed => {
+  fetchAssets = async () => {
     const {
       metamaskContext,
     } = this.props;
@@ -932,33 +931,29 @@ class BlockchainProvider extends React.Component {
       setTimeout(this.fetchAssets, 2000);
       return;
     }
-    networkBeingUsed = networkBeingUsed || network;
     const assetManagers = {};
     await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
-        // this means this data should not be considered
-        console.log(networkBeingUsed)
-        console.log(network)
-        if(airtableNetwork !== network){
-          return;
+        // otherwise Airtable still needs to update
+        if(airtableNetwork === network){
+          const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
+          const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
+          this.setState({
+            assets: updatedAssetsWithManagerData,
+            assetManagers,
+            loading: {
+              ...this.state.loading,
+              assets: false,
+              userAssetsInfo: false,
+            },
+          });
         }
-        const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
-        const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
-        this.setState({
-          assets: updatedAssetsWithManagerData,
-          assetManagers,
-          loading: {
-            ...this.state.loading,
-            assets: false,
-            userAssetsInfo: false,
-          },
-        });
       })
       .catch((err) => {
         console.log(err)
         debug(err);
         if (userIsLoggedIn) {
-          setTimeout(() => this.fetchAssets(networkBeingUsed), 5000);
+          setTimeout(this.fetchAssets, 5000);
         }
       });
   }
