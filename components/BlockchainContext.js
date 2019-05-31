@@ -107,7 +107,6 @@ class BlockchainProvider extends React.Component {
       this.fetchAssets();
       this.fetchTransactionHistory();
       this.fetchGasPrice();
-
     } catch (err) {
       debug(err);
     }
@@ -115,7 +114,7 @@ class BlockchainProvider extends React.Component {
   }
 
   // handle case where account, login, enabled or network variable change
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = async prevProps => {
     const {
       metamaskContext: oldProps,
     } = prevProps;
@@ -146,7 +145,9 @@ class BlockchainProvider extends React.Component {
           transactionHistory: true,
         }
       })
-      Brain.initialiseSDK(SUPPORTED_NETWORKS.includes(newNetwork) ? CONTRACTS_PATH[newNetwork] : CONTRACTS_PATH['default']);
+      const isASupportedNetwork = SUPPORTED_NETWORKS.includes(newNetwork);
+      Brain.initialiseSDK(isASupportedNetwork ? CONTRACTS_PATH[newNetwork] : CONTRACTS_PATH['default']);
+      isASupportedNetwork && await this.props.airtableContext.forceRefresh(newNetwork)
       this.fetchAssets();
       this.fetchTransactionHistory();
     }
@@ -919,6 +920,7 @@ class BlockchainProvider extends React.Component {
       user,
       userIsLoggedIn,
       network,
+      userHasMetamask,
     } = metamaskContext;
 
     const {
@@ -935,7 +937,7 @@ class BlockchainProvider extends React.Component {
     await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
         // otherwise Airtable still needs to update
-        if(airtableNetwork === network){
+        if(airtableNetwork === network || !userHasMetamask){
           const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
           const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
           this.setState({

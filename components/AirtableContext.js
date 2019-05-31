@@ -10,6 +10,9 @@ import {
 import {
   fetchWithCache,
 } from 'utils/fetchWithCache';
+import {
+  FALLBACK_NETWORK,
+} from 'constants/supportedNetworks';
 
 const { Provider, Consumer } = React.createContext({});
 
@@ -52,24 +55,26 @@ class AirtableProvider extends React.PureComponent {
     this.setIntervals();
   }
 
-  componentWillUnmount = () => {
-    this.resetIntervals();
-  }
-
-
-  componentWillReceiveProps = nextProps => {
-    const {
-      network: oldNetwork,
+  componentWillReceiveProps = newProps => {
+    const { 
+      network,
+      userHasMetamask,
     } = this.props;
-
-    const {
+    const { 
       network: newNetwork,
-    } = nextProps;
-
-    if(oldNetwork !== newNetwork){
+      userHasMetamask: newUserHasMetamask,
+    } = newProps;
+    if(!network && newNetwork){
       this.getAssets(newNetwork);
       this.getCategories(newNetwork);
+    } else if(!network && newUserHasMetamask === false){
+      this.getAssets();
+      this.getCategories();
     }
+  }
+
+  componentWillUnmount = () => {
+    this.resetIntervals();
   }
 
   setIntervals = () => {
@@ -82,7 +87,12 @@ class AirtableProvider extends React.PureComponent {
     clearInterval(this.intervalPullCategories);
   }
 
-  forceRefresh = async () => this.getAssets()
+  forceRefresh = async network => {
+    await Promise.all([
+      this.getCategories(network),
+      this.getAssets(network),
+    ])
+  }
 
   processAssetsFromAirTable = ({ fields }) => {
     let location = undefined;
@@ -160,7 +170,8 @@ class AirtableProvider extends React.PureComponent {
   }
 
   getCategories = async network => {
-    network = network || this.props.network;
+    const { userHasMetamask } = this.props;
+    network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
     if(network){
       const response = await fetchWithCache(InternalLinks.getAirtableCategoriesUrl(network), 'assetsCategories', this);
       // avoid processing and setting state if the data hasn't changed
@@ -178,7 +189,9 @@ class AirtableProvider extends React.PureComponent {
   }
 
   getAssets = async network => {
-    network = network || this.props.network;
+    const { userHasMetamask } = this.props;
+    network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
+
     if(network){
       const response = await fetchWithCache(InternalLinks.getAirtableAssetsUrl(network), 'assetsEtag', this);
       // avoid processing and setting state if the data hasn't changed

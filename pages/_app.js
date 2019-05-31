@@ -27,6 +27,7 @@ class MyApp extends App {
   state = {
     mobileMenuOpen: false,
     network: undefined,
+    userHasMetamask: undefined,
   }
 
   saveFirstVisit = () => {
@@ -43,6 +44,8 @@ class MyApp extends App {
   }
 
   setNetwork = network => this.setState({network})
+
+  setUserHasMetamask = userHasMetamask => this.setState({userHasMetamask})
 
   prefetchPages = () => {
     Router.prefetch('/onboarding')
@@ -73,6 +76,7 @@ class MyApp extends App {
     const {
       mobileMenuOpen,
       network,
+      userHasMetamask,
     } = this.state;
 
     const isFullScreenPage = FULL_SCREEN_PAGES.includes(router.pathname);
@@ -84,7 +88,9 @@ class MyApp extends App {
         <Theme>
           <WithProviders
             setNetwork={this.setNetwork}
+            setUserHasMetamask={this.setUserHasMetamask}
             network={network}
+            userHasMetamask={userHasMetamask}
           >
             <Notifications />
             <MobileMenu
@@ -114,18 +120,22 @@ class MyApp extends App {
   }
 }
 
-const WithProviders = ({ children, setNetwork, network }) => (
+const WithProviders = ({ children, setNetwork, network, setUserHasMetamask, userHasMetamask }) => (
     <NotificationsProvider>
         <AirtableProvider
           network={network}
+          userHasMetamask={userHasMetamask}
         >
           <KyberProvider
             network={network}
+            supportedNetworks={SUPPORTED_NETWORKS}
+            userHasMetamask={userHasMetamask}
           >
           <MetamaskProvider
             backupProvider={WEB3_BACKUP_PROVIDER}
             supportedNetworks={SUPPORTED_NETWORKS}
             setNetwork={setNetwork}
+            setUserHasMetamask={setUserHasMetamask}
           >
             <BlockchainProvider
               supportedNetworks={SUPPORTED_NETWORKS}

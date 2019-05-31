@@ -129,6 +129,7 @@ class MetamaskProvider extends Component {
       }
       // Modern dapp browsers...
       if (window.ethereum) {
+        this.props.setUserHasMetamask(true);
         const { ethereum } = window;
         window.web3js = new Web3(ethereum);
         // don't auto refresh
@@ -149,9 +150,11 @@ class MetamaskProvider extends Component {
       } else if (window.web3) {
         window.web3js = new Web3(window.web3.currentProvider);
         await this.userHasMetamask(false);
+        this.props.setUserHasMetamask(true);
       } else if(this.props.backupProvider) {
         window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider));
         this.isBrowserSupported();
+        this.props.setUserHasMetamask(false);
       }
     } catch(err){
       console.log(err);
@@ -177,9 +180,9 @@ class MetamaskProvider extends Component {
   }
 
   fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress) => {
-    const {
-      user,
-    } = this.state;
+    const { user } = this.state;
+    const { supportedNetworks } = this.props;
+    const { kyberNetwork } = this.props;
 
     const network = await this.checkNetwork();
 
@@ -188,50 +191,58 @@ class MetamaskProvider extends Component {
 
     const updatedTokensWithBalance = {};
     let sumOfBalances = 0;
-    const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
-    const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
-
-    const balances = await Promise.all(Object.entries(supportedTokensInfo).map(async ([
-      symbol,
-      tokenData,
-    ]) => {
-      let balance = 0;
-      if(symbol === 'ETH'){
-        balance = ethBalance;
-      } else {
-        balance = await getBalanceOfERC20Token(tokenData.contractAddress, tokenData.decimals, userAddress);
-      }
-      // we are only interested in listing balances > 0
-      if(balance > 0){
-        const balanceInDai = tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRateDefaultToken.expectedRate;
-        const balanceInPlatformToken = tokenData.contractAddress === PLATFORM_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRatePlatformToken.expectedRate;
-        sumOfBalances += balanceInDai;
-        updatedTokensWithBalance[symbol] = {
-          ...tokenData,
-          balance,
-          balanceInDai,
-          balanceInPlatformToken,
-        }
-      }
-    }));
-
-    const avgBalance = Number(parseFloat(sumOfBalances.toFixed(2)));
-
     let shouldUpdateState = false;
-    if(avgBalance !== currentAvgBalance || Object.keys(currentBalances).length !== Object.keys(updatedTokensWithBalance).length){
-      shouldUpdateState = true;
-      console.log(`Updating balances state: different avgBalance: ${avgBalance} !== ${currentAvgBalance} || ${Object.keys(currentBalances).length} !== ${Object.keys(updatedTokensWithBalance).length}`)
-    } else {
-      for(const token of Object.entries(updatedTokensWithBalance)){
-        const [
-          symbol,
-          tokenInfo
-        ] = token;
-        if(currentBalances[symbol].balance !== tokenInfo.balance){
-          console.log(`Updating balances state: different balances! ${symbol}: ${currentBalances[symbol].balance} !== ${tokenInfo.balance}`)
-          shouldUpdateState = true;
+    let avgBalance = 0;
+
+    console.log(supportedTokensInfo, kyberNetwork)
+    if(supportedNetworks.includes(network) && kyberNetwork === network){
+      const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+      const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
+
+      const balances = await Promise.all(Object.entries(supportedTokensInfo).map(async ([
+        symbol,
+        tokenData,
+      ]) => {
+        let balance = 0;
+        if(symbol === 'ETH'){
+          balance = ethBalance;
+        } else {
+          balance = await getBalanceOfERC20Token(tokenData.contractAddress, tokenData.decimals, userAddress);
+        }
+        // we are only interested in listing balances > 0
+        if(balance > 0){
+          const balanceInDai = tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRateDefaultToken.expectedRate;
+          const balanceInPlatformToken = tokenData.contractAddress === PLATFORM_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRatePlatformToken.expectedRate;
+          sumOfBalances += balanceInDai;
+          updatedTokensWithBalance[symbol] = {
+            ...tokenData,
+            balance,
+            balanceInDai,
+            balanceInPlatformToken,
+          }
+        }
+      }));
+
+      avgBalance = Number(parseFloat(sumOfBalances.toFixed(2)));
+
+      if(avgBalance !== currentAvgBalance || Object.keys(currentBalances).length !== Object.keys(updatedTokensWithBalance).length){
+        shouldUpdateState = true;
+        console.log(`Updating balances state: different avgBalance: ${avgBalance} !== ${currentAvgBalance} || ${Object.keys(currentBalances).length} !== ${Object.keys(updatedTokensWithBalance).length}`)
+      } else {
+        for(const token of Object.entries(updatedTokensWithBalance)){
+          const [
+            symbol,
+            tokenInfo
+          ] = token;
+          if(currentBalances[symbol].balance !== tokenInfo.balance){
+            console.log(`Updating balances state: different balances! ${symbol}: ${currentBalances[symbol].balance} !== ${tokenInfo.balance}`)
+            shouldUpdateState = true;
+          }
         }
       }
+    } else {
+      shouldUpdateState = true;
+      avgBalance = 0;
     }
 
     /*
