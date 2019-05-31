@@ -6,7 +6,6 @@ const GetColumns = (sortedInfo, filteredInfo, getStatusImage) => [{
   key: 'type',
   filters: [
     { text: 'ETH', value: 'ETH' },
-    { text: 'MYB', value: 'MYB' },
   ],
   filteredValue: filteredInfo.type || null,
   onFilter: (value, record) => record.type.includes(value),

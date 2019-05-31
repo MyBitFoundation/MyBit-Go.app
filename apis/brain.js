@@ -3,8 +3,6 @@
 /* eslint-disable camelcase */
 import axios from 'axios';
 import dayjs from 'dayjs';
-import * as MyBitToken from '../constants/contracts/MyBitToken';
-
 import { ErrorTypes } from 'constants/errorTypes';
 import {
   InternalLinks,
@@ -16,24 +14,26 @@ import {
 } from 'constants/fundingStages';
 import {
   BLOCK_NUMBER_CONTRACT_CREATION,
-  DEFAULT_TOKEN_CONTRACT,
+  getDefaultTokenContract,
   CROWDSALE_DURATION,
 } from 'constants/app';
-
 import {
   generateRandomURI,
   debug,
   fromWeiToEth,
   toWei,
 } from '../utils/helpers';
+import { CONTRACTS } from 'constants/supportedNetworks';
 
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
-const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 const GAS = require("@mybit/network.js/gas");
 
 let Network;
+
+export const initialiseSDK = contractAddresses =>
+  Network = require('@mybit/network.js')(window.web3js, contractAddresses);
 
 export const fetchTransactionHistory = async userAddress =>
   new Promise(async (resolve, reject) => {
@@ -77,38 +77,7 @@ export const fetchTransactionHistory = async userAddress =>
           };
         });
 
-      // Pull MYB transactions from event log
-      const myBitTokenContract = new window.web3js.eth.Contract(
-        MyBitToken.ABI,
-        MyBitToken.ADDRESS,
-      );
-      const logTransactions = await myBitTokenContract.getPastEvents(
-        'Transfer',
-        { fromBlock: 0, toBlock: 'latest' },
-      );
-
-      const mybTransactionHistory = await Promise.all(logTransactions
-        .filter(txResult =>
-          txResult.returnValues.to === userAddress || txResult.returnValues.from === userAddress)
-        .map(async (txResult, index) => {
-          const blockInfo = await window.web3js.eth.getBlock(txResult.blockNumber);
-          const multiplier =
-            txResult.returnValues.from === userAddress ? -1 : 1;
-
-          return {
-            amount: window.web3js.utils.fromWei(txResult.returnValues[2], 'ether') * multiplier,
-            type: 'MYB',
-            txId: txResult.transactionHash,
-            status: 'Confirmed',
-            date: blockInfo.timestamp * 1000,
-            key: `${txResult.transactionHash} ${index}`,
-          };
-        }));
-
-      const mixedEthAndMybitTransactions =
-        ethTransactionHistory.concat(mybTransactionHistory);
-
-      resolve(mixedEthAndMybitTransactions);
+      resolve(ethTransactionHistory);
     } catch (error) {
       reject(error);
     }
@@ -189,7 +158,7 @@ export const fetchRevenueLogsByAssetId = async assetId => {
   }
 }
 
-export const createAsset = async (onCreateAsset, onApprove, params) => {
+export const createAsset = async (onCreateAsset, onApprove, params, network) => {
   try {
     const {
       asset,
@@ -214,7 +183,7 @@ export const createAsset = async (onCreateAsset, onApprove, params) => {
       amountToRaise: toWei(amountToBeRaised),
       assetManagerPercent: managerPercentage,
       operatorID,
-      fundingToken: DEFAULT_TOKEN_CONTRACT,
+      fundingToken: getDefaultTokenContract(network),
       paymentToken: paymentTokenAddress,
       gasPrice,
       createAsset: {
@@ -425,9 +394,6 @@ export const issueDividends = (
 export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAirTable) =>
   new Promise(async (resolve, reject) => {
     try {
-      if(!Network){
-        Network = require('@mybit/network.js')(window.web3js, SDK_CONTRACTS);
-      }
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       const api = await Network.api();
       const assetManagerFunds = await Network.assetManagerFunds();

@@ -1,9 +1,7 @@
 import {
   METAMASK_ERRORS,
 } from 'components/MetamaskContext/constants';
-import {
-  CORRECT_NETWORK,
-} from 'constants/app';
+import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
 import SupportedBrowsers from 'ui/SupportedBrowsers';
 
 const getMetamaskErrors = (metamaskError, extensionUrl) => {
@@ -59,7 +57,9 @@ const getMetamaskErrors = (metamaskError, extensionUrl) => {
           error: true,
         },
         messageProps: {
-          text: `Select the ${CORRECT_NETWORK} network in MetaMask`,
+          text: `Select one of the supported networks in MetaMask: ${
+            SUPPORTED_NETWORKS.map((network, index) => index === SUPPORTED_NETWORKS.length - 1 ? network : `${network}, `)
+          }`,
         }
       };
   }

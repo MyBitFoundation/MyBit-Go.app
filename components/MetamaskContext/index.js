@@ -8,13 +8,12 @@ import {
   METAMASK_FIREFOX,
   METAMASK_CHROME,
   METAMASK_OPERA,
-  PROVIDER_ROPSTEN,
-  CORRECT_NETWORK,
   METAMASK_ERRORS,
+  NETWORKS,
 } from './constants';
 import {
-  DEFAULT_TOKEN_CONTRACT,
-  PLATFORM_TOKEN_CONTRACT,
+  getDefaultTokenContract,
+  getPlatformTokenContract,
 } from 'constants/app';
 
 import {
@@ -69,6 +68,10 @@ class MetamaskProvider extends Component {
       privacyModeEnabled
     } = this.state;
 
+    const {
+      supportedNetworks,
+    } = this.props;
+
     let toRender = null;
     let error;
     if (!userHasMetamask && extensionUrl) {
@@ -98,11 +101,14 @@ class MetamaskProvider extends Component {
       toRender = (
         <span><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</span>
       );
-    } else if (network !== CORRECT_NETWORK) {
+    } else if (!supportedNetworks.includes(network)) {
       error = METAMASK_ERRORS.NOT_NETWORK;
       toRender = (
         <span>
-          Only the Ropsten network is supported at the moment, please change the network in MetaMask.
+          The selected network is not supported at the moment, please use MetaMask to change to one of the following networks:
+          <span style={{display: 'block'}}>
+            {supportedNetworks.map((network, index) => index === supportedNetworks.length - 1 ? network : `${network}, `)}
+          </span>
         </span>
       );
     }
@@ -123,17 +129,32 @@ class MetamaskProvider extends Component {
       }
       // Modern dapp browsers...
       if (window.ethereum) {
+        this.props.setUserHasMetamask(true);
         const { ethereum } = window;
         window.web3js = new Web3(ethereum);
+        // don't auto refresh
+        ethereum.autoRefreshOnNetworkChange = false;
+        ethereum.on('networkChanged', network => {
+          network = NETWORKS[network];
+          const {
+            setNetwork,
+          } = this.props;
+
+          if(setNetwork){
+            setNetwork(network);
+          }
+        })
         const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
         await this.userHasMetamask(accessToAccounts);
 
       } else if (window.web3) {
         window.web3js = new Web3(window.web3.currentProvider);
         await this.userHasMetamask(false);
-      } else {
-        window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider || PROVIDER_ROPSTEN));
+        this.props.setUserHasMetamask(true);
+      } else if(this.props.backupProvider) {
+        window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider));
         this.isBrowserSupported();
+        this.props.setUserHasMetamask(false);
       }
     } catch(err){
       console.log(err);
@@ -159,65 +180,77 @@ class MetamaskProvider extends Component {
   }
 
   fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress) => {
-    const currentAvgBalance = this.state.user.avgBalance;
-    const currentBalances = this.state.user.balances || {};
+    const { user } = this.state;
+    const { supportedNetworks } = this.props;
+    const { kyberNetwork } = this.props;
+
+    const network = await this.checkNetwork();
+
+    const currentAvgBalance = user.avgBalance;
+    const currentBalances = user.balances || {};
 
     const updatedTokensWithBalance = {};
     let sumOfBalances = 0;
-
-    const balances = await Promise.all(Object.entries(supportedTokensInfo).map(async ([
-      symbol,
-      tokenData,
-    ]) => {
-      let balance = 0;
-      if(symbol === 'ETH'){
-        balance = ethBalance;
-      } else {
-        balance = await getBalanceOfERC20Token(tokenData.contractAddress, tokenData.decimals, userAddress);
-      }
-      // we are only interested in listing balances > 0
-      if(balance > 0){
-        const balanceInDai = tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRateDefaultToken.expectedRate;
-        const balanceInPlatformToken = tokenData.contractAddress === PLATFORM_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRatePlatformToken.expectedRate;
-        sumOfBalances += balanceInDai;
-        updatedTokensWithBalance[symbol] = {
-          ...tokenData,
-          balance,
-          balanceInDai,
-          balanceInPlatformToken,
-        }
-      }
-    }));
-
-    const avgBalance = Number(parseFloat(sumOfBalances.toFixed(2)));
-
     let shouldUpdateState = false;
-    if(avgBalance !== currentAvgBalance || Object.keys(currentBalances).length !== Object.keys(updatedTokensWithBalance).length){
-      shouldUpdateState = true;
-      console.log(`Updating balances state: different avgBalance: ${avgBalance} !== ${currentAvgBalance} || ${Object.keys(currentBalances).length} !== ${Object.keys(updatedTokensWithBalance).length}`)
-    } else {
-      for(const token of Object.entries(updatedTokensWithBalance)){
-        const [
-          symbol,
-          tokenInfo
-        ] = token;
-        if(currentBalances[symbol].balance !== tokenInfo.balance){
-          console.log(`Updating balances state: different balances! ${symbol}: ${currentBalances[symbol].balance} !== ${tokenInfo.balance}`)
-          shouldUpdateState = true;
+    let avgBalance = 0;
+
+    console.log(supportedTokensInfo, kyberNetwork)
+    if(supportedNetworks.includes(network) && kyberNetwork === network){
+      const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+      const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
+
+      const balances = await Promise.all(Object.entries(supportedTokensInfo).map(async ([
+        symbol,
+        tokenData,
+      ]) => {
+        let balance = 0;
+        if(symbol === 'ETH'){
+          balance = ethBalance;
+        } else {
+          balance = await getBalanceOfERC20Token(tokenData.contractAddress, tokenData.decimals, userAddress);
+        }
+        // we are only interested in listing balances > 0
+        if(balance > 0){
+          const balanceInDai = tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRateDefaultToken.expectedRate;
+          const balanceInPlatformToken = tokenData.contractAddress === PLATFORM_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRatePlatformToken.expectedRate;
+          sumOfBalances += balanceInDai;
+          updatedTokensWithBalance[symbol] = {
+            ...tokenData,
+            balance,
+            balanceInDai,
+            balanceInPlatformToken,
+          }
+        }
+      }));
+
+      avgBalance = Number(parseFloat(sumOfBalances.toFixed(2)));
+
+      if(avgBalance !== currentAvgBalance || Object.keys(currentBalances).length !== Object.keys(updatedTokensWithBalance).length){
+        shouldUpdateState = true;
+        console.log(`Updating balances state: different avgBalance: ${avgBalance} !== ${currentAvgBalance} || ${Object.keys(currentBalances).length} !== ${Object.keys(updatedTokensWithBalance).length}`)
+      } else {
+        for(const token of Object.entries(updatedTokensWithBalance)){
+          const [
+            symbol,
+            tokenInfo
+          ] = token;
+          if(currentBalances[symbol].balance !== tokenInfo.balance){
+            console.log(`Updating balances state: different balances! ${symbol}: ${currentBalances[symbol].balance} !== ${tokenInfo.balance}`)
+            shouldUpdateState = true;
+          }
         }
       }
+    } else {
+      shouldUpdateState = true;
+      avgBalance = 0;
     }
 
     /*
     * Temp fix for a race condition between componentDidMount and componentWillReceiveProps
     */
 
-    let network = this.state.network;
     let privacyModeEnabled = this.state.privacyModeEnabled;
 
-    if(!network){
-      network = network = await this.checkNetwork();
-    }
     if(!privacyModeEnabled){
       privacyModeEnabled = await this.haveAccessToAccounts() ? true : undefined;
     }
@@ -239,7 +272,7 @@ class MetamaskProvider extends Component {
   }
 
   isReadOnlyMode = (userHasMetamask, userIsLoggedIn, network, privacyModeEnabled) => {
-    return !userHasMetamask || !userIsLoggedIn || network !== CORRECT_NETWORK || privacyModeEnabled === undefined;
+    return !userHasMetamask || !userIsLoggedIn || !this.props.supportedNetworks.includes(network) || privacyModeEnabled === undefined;
   }
 
   updateStateWithUserInfo = (privacyModeEnabled, network, ethBalance, address, userIsLoggedIn, supportedTokensInfo) => {
@@ -326,22 +359,21 @@ class MetamaskProvider extends Component {
 
   async userHasMetamask(privacyModeEnabled) {
     const network = await this.checkNetwork();
-
+    const { setNetwork } = this.props;
+    const { network: stateNetwork } = this.state;
+    if(!stateNetwork && network && setNetwork){
+      setNetwork(network);
+    }
     //subscribe to metamask updates
     window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
-
-    //case where user has metamask but is connected to the wrong network, we
-    //still need to load the data properly from the correct network
-    if(network !== CORRECT_NETWORK){
-      window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider))
-    }
 
     await this.getUserInfo(privacyModeEnabled, network);
   }
 
   async handleAddressChanged() {
     const privacyModeEnabled = await this.haveAccessToAccounts() ? true : undefined;
-    this.getUserInfo(privacyModeEnabled);
+    const network = await this.checkNetwork();
+    this.getUserInfo(privacyModeEnabled, network);
   }
 
   async checkIfLoggedIn() {

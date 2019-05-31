@@ -41,7 +41,7 @@ class AssetPage extends React.Component {
       toRender = (
         <ErrorPage
           title="Asset not found"
-          description="Perhaps it was deleted. Please remember this is a developement network. Thank you for testing!"
+          description="If you feel like this is an error, please contact us."
         />
       );
     } else {

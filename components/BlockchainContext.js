@@ -32,6 +32,12 @@ import {
 import {
   PLATFORM_TOKEN,
 } from 'constants/app';
+import {
+  SUPPORTED_NETWORKS,
+  FALLBACK_NETWORK,
+  CONTRACTS_PATH,
+} from 'constants/supportedNetworks';
+
 BN.config({ EXPONENTIAL_AT: 80 });
 
 const { Provider, Consumer } = React.createContext({});
@@ -66,7 +72,6 @@ class BlockchainProvider extends React.Component {
     this.withdrawInvestorProfit = this.withdrawInvestorProfit.bind(this);
     this.withdrawCollateral = this.withdrawCollateral.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
-    this.airtableContextUpdates = 0;
     this.state = {
       loading: {
         assets: true,
@@ -88,10 +93,13 @@ class BlockchainProvider extends React.Component {
       withdrawingCollateral: [],
       callingPayout: [],
       withdrawingAssetManager: [],
-      isLoadingUserInfo: false,
       gasPrice: '10000000000', //10 GWEI
       assetManagers: {},
     };
+
+    const network = this.props.metamaskContext.network;
+
+    Brain.initialiseSDK(SUPPORTED_NETWORKS.includes(network) ? CONTRACTS_PATH[network] : CONTRACTS_PATH['default']);
   }
 
   componentDidMount = async () => {
@@ -99,15 +107,14 @@ class BlockchainProvider extends React.Component {
       this.fetchAssets();
       this.fetchTransactionHistory();
       this.fetchGasPrice();
-
     } catch (err) {
       debug(err);
     }
     this.createIntervals();
   }
 
-  // handle case where account, login or enabled variable change
-  componentDidUpdate = (prevProps) => {
+  // handle case where account, login, enabled or network variable change
+  componentDidUpdate = async prevProps => {
     const {
       metamaskContext: oldProps,
     } = prevProps;
@@ -119,14 +126,30 @@ class BlockchainProvider extends React.Component {
     const oldEnabled = oldProps.privacyModeEnabled;
     const oldUsername = oldProps.user.address;
     const oldUserIsLoggedIn = oldProps.userIsLoggedIn;
+    const oldNetwork = oldProps.network;
 
     const newUserAddress = newProps.user.address;
     const newIsUserLoggedIn = newProps.userIsLoggedIn;
     const newEnabled = newProps.privacyModeEnabled;
+    const newNetwork = newProps.network;
 
     if((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)){
       console.log("Updating assets due to a change in: address or login or privacy mode")
       this.handleMetamaskUpdate();
+    } else if(newNetwork !== oldNetwork){
+      this.setState({
+        loading: {
+          ...this.state.loading,
+          assets: true,
+          userAssetsInfo: true,
+          transactionHistory: true,
+        }
+      })
+      const isASupportedNetwork = SUPPORTED_NETWORKS.includes(newNetwork);
+      Brain.initialiseSDK(isASupportedNetwork ? CONTRACTS_PATH[newNetwork] : CONTRACTS_PATH['default']);
+      isASupportedNetwork && await this.props.airtableContext.forceRefresh(newNetwork)
+      this.fetchAssets();
+      this.fetchTransactionHistory();
     }
   }
 
@@ -136,7 +159,7 @@ class BlockchainProvider extends React.Component {
 
   createIntervals = () => {
     this.intervalFetchAssets =
-      setInterval(this.fetchAssets, FETCH_ASSETS_TIME);
+      setInterval(() => this.fetchAssets(this.props.metamaskContext.network), FETCH_ASSETS_TIME);
     this.intervalFetchTransactionHistory =
       setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
     this.intervalFetchGasPrice =
@@ -458,6 +481,12 @@ class BlockchainProvider extends React.Component {
     } = this.state;
 
     const {
+      metamaskContext,
+      airtableContext,
+      notificationsContext,
+    } = this.props;
+
+    const {
       asset: assetName,
       userCountry: country,
       userCity: city,
@@ -473,15 +502,16 @@ class BlockchainProvider extends React.Component {
       operatorId,
     } = formData;
 
-    const {
-      categoriesAirTable,
-    } = this.props.airtableContext;
+    const { categoriesAirTable } = airtableContext;
+
+    const { buildNotification } = notificationsContext;
 
     const {
-      buildNotification,
-    } = this.props.notificationsContext;
+      user,
+      network,
+    } = metamaskContext;
 
-    const userAddress =  this.props.metamaskContext.user.address;
+    const userAddress =  user.address;
     const notificationId = Date.now();
 
     if(selectedToken !== 'ETH') {
@@ -590,7 +620,8 @@ class BlockchainProvider extends React.Component {
         paymentTokenAddress,
         operatorID: operatorId,
         gasPrice,
-      }
+      },
+      network,
     );
   }
 
@@ -888,32 +919,37 @@ class BlockchainProvider extends React.Component {
     const {
       user,
       userIsLoggedIn,
+      network,
+      userHasMetamask,
     } = metamaskContext;
 
     const {
       categoriesAirTable,
       assetsAirTableById,
+      network: airtableNetwork,
     } = this.props.airtableContext;
 
     if (!assetsAirTableById || !categoriesAirTable) {
       setTimeout(this.fetchAssets, 2000);
       return;
     }
-
     const assetManagers = {};
     await Brain.fetchAssets(user.address, assetsAirTableById, categoriesAirTable)
       .then( async (response) => {
-        const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
-        const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
-        this.setState({
-          assets: updatedAssetsWithManagerData,
-          assetManagers,
-          loading: {
-            ...this.state.loading,
-            assets: false,
-            userAssetsInfo: false,
-          },
-        });
+        // otherwise Airtable still needs to update
+        if(airtableNetwork === network || !userHasMetamask){
+          const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
+          const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
+          this.setState({
+            assets: updatedAssetsWithManagerData,
+            assetManagers,
+            loading: {
+              ...this.state.loading,
+              assets: false,
+              userAssetsInfo: false,
+            },
+          });
+        }
       })
       .catch((err) => {
         console.log(err)

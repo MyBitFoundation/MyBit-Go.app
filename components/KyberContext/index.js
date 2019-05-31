@@ -8,11 +8,15 @@ import {
 import {
   ABI,
   ADDRESS,
+  getSupportedTokensUrl,
 } from './constants';
 import {
-  DEFAULT_TOKEN_CONTRACT,
-  PLATFORM_TOKEN_CONTRACT,
+  getDefaultTokenContract,
+  getPlatformTokenContract,
 } from 'constants/app';
+import {
+  FALLBACK_NETWORK,
+} from 'constants/supportedNetworks';
 
 const { Provider, Consumer } = React.createContext({});
 let contract;
@@ -27,23 +31,27 @@ export const withKyberContext = (Component) => {
     render(){
       return (
         <Consumer>
-          {state => <Component {...this.props} supportedTokensInfo={state.supportedTokensInfo} kyberLoading={state.loading}/>}
+          {state =>
+            <Component
+              {...this.props}
+              supportedTokensInfo={state.supportedTokensInfo}
+              kyberLoading={state.loading}
+              kyberNetwork={state.network}
+            />
+          }
         </Consumer>
       )
     }
   }
 }
 
-export const getExpectedAndSlippage = async (src, dest, amount) => {
+export const getExpectedAndSlippage = async (src, dest, amount, network, contract) => {
     try{
       if(src === dest){
         return {
           expectedRate: 1,
           slippageRate: 1,
         };
-      }
-      if(!contract){
-        contract = new window.web3js.eth.Contract(ABI, ADDRESS);
       }
 
       const result = await contract.methods.getExpectedRate(src, dest, amount).call();
@@ -89,66 +97,100 @@ class KyberProvider extends React.Component {
     clearInterval(this.intervalSupportedTokens);
   }
 
-  fetchSupportedTokens = async () => {
-    try{
-      const supportedTokens = await fetch('https://ropsten-api.kyber.network/currencies');
+  componentWillReceiveProps = nextProps => {
+    const {
+      network: oldNetwork,
+    } = this.props;
 
-      const supportedTokensData = await supportedTokens.json();
+    const {
+      network: newNetwork,
+    } = nextProps;
+
+    if(oldNetwork !== newNetwork){
+      this.setState({loading: true});
+      this.fetchSupportedTokens(newNetwork);
+    }
+  }
+
+  fetchSupportedTokens = async network => {
+    try{
+      const {
+       userHasMetamask,
+       supportedNetworks,
+      } = this.props;
+
+      network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
+
+      if(!network){
+        return;
+      }
 
       const supportedTokensInfo = {};
-      await Promise.all(supportedTokensData.data.map(async({
-        symbol,
-        address: contractAddress,
-        name,
-        decimals,
-      }) => {
-        if(symbol === 'ETH'){
-          const [
-            exchangeRateDefaultToken,
-            exchangeRatePlatformToken,
-          ] = await Promise.all([
-            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
-            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
-          ])
 
-          supportedTokensInfo['ETH'] = {
-            contractAddress,
-            name,
-            decimals: 18,
-            exchangeRateDefaultToken,
-            exchangeRatePlatformToken,
-          }
-        } else {
-          const [
-            exchangeRateDefaultToken,
-            exchangeRatePlatformToken,
-          ] = await Promise.all([
-            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
-            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
-          ])
+      if(supportedNetworks.includes(network) || !userHasMetamask){
+        const supportedTokens = await fetch(getSupportedTokensUrl(network));
+        const supportedTokensData = await supportedTokens.json();
 
-          // This kind of filtering needs to be tested
-          if(exchangeRateDefaultToken && exchangeRatePlatformToken){
-            supportedTokensInfo[symbol] = {
+        const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
+        const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+        const kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
+
+        await Promise.all(supportedTokensData.data.map(async({
+          symbol,
+          address: contractAddress,
+          name,
+          decimals,
+        }) => {
+          if(symbol === 'ETH'){
+            const [
+              exchangeRateDefaultToken,
+              exchangeRatePlatformToken,
+            ] = await Promise.all([
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
+            ])
+
+            supportedTokensInfo['ETH'] = {
               contractAddress,
               name,
-              decimals,
+              decimals: 18,
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
             }
+          } else {
+            const [
+              exchangeRateDefaultToken,
+              exchangeRatePlatformToken,
+            ] = await Promise.all([
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
+            ])
+
+            // This kind of filtering needs to be tested
+            if(exchangeRateDefaultToken && exchangeRatePlatformToken){
+              supportedTokensInfo[symbol] = {
+                contractAddress,
+                name,
+                decimals,
+                exchangeRateDefaultToken,
+                exchangeRatePlatformToken,
+              }
+            }
           }
-        }
-      }));
+        }));
 
-      console.log(supportedTokensInfo)
+        console.log(supportedTokensInfo)
 
-      supportedTokensInfo['key'] = this.key + 1;
-      this.key += 1;
+        supportedTokensInfo['key'] = this.key + 1;
+        this.key += 1;
+      }
+
 
       //debug("supportedTokensInfo (kyberContext): ", supportedTokensInfo);
       this.setState({
         supportedTokensInfo,
         loading: false,
+        network,
       })
     }catch(err){
       debug("kyberContext error: ", err);

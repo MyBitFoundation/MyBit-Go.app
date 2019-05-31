@@ -10,6 +10,9 @@ import {
 import {
   fetchWithCache,
 } from 'utils/fetchWithCache';
+import {
+  FALLBACK_NETWORK,
+} from 'constants/supportedNetworks';
 
 const { Provider, Consumer } = React.createContext({});
 
@@ -44,9 +47,30 @@ class AirtableProvider extends React.PureComponent {
   }
 
   componentDidMount = () => {
-    this.getAssets();
-    this.getCategories();
+    const { network } = this.props;
+    if(network){
+      this.getAssets(network);
+      this.getCategories(network);
+    }
     this.setIntervals();
+  }
+
+  componentWillReceiveProps = newProps => {
+    const { 
+      network,
+      userHasMetamask,
+    } = this.props;
+    const { 
+      network: newNetwork,
+      userHasMetamask: newUserHasMetamask,
+    } = newProps;
+    if(!network && newNetwork){
+      this.getAssets(newNetwork);
+      this.getCategories(newNetwork);
+    } else if(!network && newUserHasMetamask === false){
+      this.getAssets();
+      this.getCategories();
+    }
   }
 
   componentWillUnmount = () => {
@@ -63,7 +87,12 @@ class AirtableProvider extends React.PureComponent {
     clearInterval(this.intervalPullCategories);
   }
 
-  forceRefresh = async () => this.getAssets()
+  forceRefresh = async network => {
+    await Promise.all([
+      this.getCategories(network),
+      this.getAssets(network),
+    ])
+  }
 
   processAssetsFromAirTable = ({ fields }) => {
     let location = undefined;
@@ -140,46 +169,59 @@ class AirtableProvider extends React.PureComponent {
     return assetsAirTableById;
   }
 
-  getCategories = async () => {
-    const response = await fetchWithCache(InternalLinks.AIRTABLE_CATEGORIES, 'assetsCategories', this);
-    // avoid processing and setting state if the data hasn't changed
-    if(!response.isCached) {
-      const { records } = response.data;
+  getCategories = async network => {
+    const { userHasMetamask } = this.props;
+    network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
+    if(network){
+      const response = await fetchWithCache(InternalLinks.getAirtableCategoriesUrl(network), 'assetsCategories', this);
+      // avoid processing and setting state if the data hasn't changed
+      if(!response.isCached) {
+        const { records } = response.data;
 
-      const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
+        const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
 
-      const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
-      this.setState({
-        categoriesAirTable
-      });
+        const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
+        this.setState({
+          categoriesAirTable
+        });
+      }
     }
   }
 
-  getAssets = async () => {
-    const response = await fetchWithCache(InternalLinks.AIRTABLE_ASSETS, 'assetsEtag', this);
-    // avoid processing and setting state if the data hasn't changed
-    if(!response.isCached) {
-      const { records } = response.data;
+  getAssets = async network => {
+    const { userHasMetamask } = this.props;
+    network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
 
-      const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
+    if(network){
+      const response = await fetchWithCache(InternalLinks.getAirtableAssetsUrl(network), 'assetsEtag', this);
+      // avoid processing and setting state if the data hasn't changed
+      if(!response.isCached) {
+        const { records } = response.data;
 
-      let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
-      const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
-      console.log(assetsAirTableById)
+        const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
 
-      // remove assetIDs as they are not required in this object
-      // they were requred before to facilitate the processing by asset ID
-      for(const asset of assetsAirTable){
-        delete asset['assetIDs'];
+        let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
+        const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
+
+        // remove assetIDs as they are not required in this object
+        // they were requred before to facilitate the processing by asset ID
+        for(const asset of assetsAirTable){
+          delete asset['assetIDs'];
+        }
+
+        console.log("assetsAirTableById: ", assetsAirTableById)
+        console.log("assetsAirTable: ", assetsAirTable)
+
+        /*
+        * we save the network in the state to make sure fetchAssets() in brain.js
+        * uses the correct airtable data when pulling the assets, from the correct network
+        */
+        this.setState({
+          assetsAirTable,
+          assetsAirTableById,
+          network,
+        });
       }
-
-      console.log("assetsAirTableById: ", assetsAirTableById)
-      console.log("assetsAirTable: ", assetsAirTable)
-
-      this.setState({
-        assetsAirTable,
-        assetsAirTableById,
-      });
     }
   }
 
