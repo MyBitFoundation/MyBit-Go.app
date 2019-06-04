@@ -62,6 +62,9 @@ const AppHeader = ({
     case '/help':
       pageName = 'Help';
       break;
+    case '/asset-managers':
+      pageName = 'Asset Managers';
+      break;
     default:
       pageName = '';
       break;
