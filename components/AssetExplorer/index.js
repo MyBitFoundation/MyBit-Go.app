@@ -41,7 +41,7 @@ class AssetExplorer extends React.Component {
       }
     } else {
       this.state = {
-        fundingActive: props.fundingActive || true,
+        fundingActive: fundingActive === undefined ? true : fundingActive,
         sortByFilterSelected: props.sortByFilterSelected || '',
         ...this.buildState(useLocalStorage),
       };

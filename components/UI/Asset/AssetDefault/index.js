@@ -92,7 +92,7 @@ const AssetDefault = ({
             as={`/asset-managers/${assetManager}`}
             href={`/asset-managers?id=${assetManager}`}
           >
-            {shortenAddress(assetManager, 6, 4)}
+            <a>{shortenAddress(assetManager, 6, 4)}</a>
           </Link>
         </div>
         <Link

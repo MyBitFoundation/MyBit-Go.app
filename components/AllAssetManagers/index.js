@@ -5,6 +5,7 @@ import {
 import Loading from 'components/Loading';
 import GetColumns from 'constants/assetManagers';
 import ErrorPage from 'components/ErrorPage';
+import PageTitle from 'ui/PageTitle';
 
 const TableWrapper = styled.div`
   table a:focus{
@@ -46,7 +47,7 @@ class AllAssetManagers extends React.Component {
     }
 
     const assetManagersArray = Object.entries(assetManagers).map(([key, value]) => ({
-      address: key,
+      key,
       ...value,
     }))
 
@@ -60,6 +61,7 @@ class AllAssetManagers extends React.Component {
 
     return (
       <TableWrapper>
+        <PageTitle>Asset Managers</PageTitle>
         <Table
           columns={columns}
           dataSource={assetManagersArray}

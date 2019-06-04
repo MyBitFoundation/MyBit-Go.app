@@ -15,6 +15,7 @@ import { 
   shortenAddress,
 } from 'utils/helpers';
 import ErrorPage from 'components/ErrorPage';
+import PageTitle from 'ui/PageTitle';
 
 const Colors = Theming.colors;
 
@@ -76,8 +77,13 @@ const AssetManagerFullProfile = ({
   }
 
   const assetsByManager = assets.filter(asset => asset.assetManager === managerAddress)
+
+  //if the asset manager does not have any live assets, then show all the funded assets instead
+  const fundingActive = assetsByManager.find(asset => asset.funded === false) !== undefined
+
   return (
     <div>
+      <PageTitle>Asset Manager</PageTitle>
       <GoBackTextAndArrow
         href="/asset-managers"
         style={{
@@ -112,6 +118,7 @@ const AssetManagerFullProfile = ({
       <div style={{height: '50px'}} />
       <AssetExplorer
         assets={assetsByManager}
+        fundingActive={fundingActive}
       />
     </div>
   )

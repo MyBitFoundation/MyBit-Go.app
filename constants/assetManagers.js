@@ -15,11 +15,11 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
     <Media query="(min-width: 769px)">
       {matches =>
         <a
-          href={ExternalLinks.getEtherscanAddressURL(network, record.address)}
+          href={ExternalLinks.getEtherscanAddressURL(network, record.key)}
           target="_blank"
           rel="noopener noreferrer"
         >
-        {matches ? text : shortenAddress(text, 4, 3)}
+        {matches ? record.key : shortenAddress(record.key, 4, 3)}
         </a>
       }
     </Media>
@@ -51,10 +51,10 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
   key: 'x',
   render: (text, record) => (
     <Link
-      as={`/asset-managers/${record.address}`}
-      href={`/asset-managers?id=${record.address}`}
+      as={`/asset-managers/${record.key}`}
+      href={`/asset-managers?id=${record.key}`}
     >
-      All Assets
+      <a>All Assets</a>
     </Link>
   ),
 }];
