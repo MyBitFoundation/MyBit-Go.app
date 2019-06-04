@@ -6,6 +6,7 @@ import ListAssetIcon from '../static/plus.svg';
 import KnowledgeBaseIcon from '../static/question.svg';
 import WatchIcon from '../static/watchList.svg';
 import AssetManagers from '../static/asset-managers.svg';
+import MyHedge from '../static/my-hedge.svg';
 
 export const navbarOptions = (currentPath) => [
   {
@@ -43,5 +44,11 @@ export const navbarOptions = (currentPath) => [
     icon: KnowledgeBaseIcon,
     selected: currentPath === '/help',
     url: '/help',
-  },
+  }, {
+    name: 'MyHedge',
+    url: 'https://cloudflare-ipfs.com/ipfs/QmZ6kwTnc3G6mx5Jxuu8fRZZvrzwhq3yPXndnmwxqkQyrj/?ethereum_node_http=https%3a%2f%2feth-mainnet.alchemyapi.io%2fjsonrpc%2f7sE1TzCIRIQA3NJPD5wg7YRiVjhxuWAE&augur_node=wss%3a%2f%2faugur-node.augur.casino#!/markets?category=MYBIT',
+    external: true,
+    newTab: true,
+    icon: MyHedge,
+  }
 ];
