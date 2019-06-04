@@ -8,7 +8,7 @@ const SliderNavigationTooltips = [
   { slide: 0, tooltip: 'What is MyBit Go?' },
   { slide: 1, tooltip: 'What can you use MyBit Go for?' },
   { slide: 2, tooltip: 'What it isn\'t?' },
-  { slide: 3, tooltip: 'What is blockain?' },
+  { slide: 3, tooltip: 'What is blockchain?' },
   { slide: 4, tooltip: 'What are the benefits?' },
   { slide: 5, tooltip: 'What is Ethereum?' },
   { slide: 6, tooltip: 'Smart contracts' },

@@ -4,11 +4,14 @@ import ErrorPageDescription from './errorPageDescription';
 import ErrorPageTitle from './errorPageTitle';
 import ErrorImg from 'static/error.svg';
 import ErrorPageUrl from './errorPageUrl';
+import BackButton from 'ui/BackButton';
 
 const ErrorPage = ({
   title,
   description,
   url,
+  hasBackButton,
+  href,
 }) => {
   let descriptionToRender = (
     <ErrorPageDescription>
@@ -28,6 +31,7 @@ const ErrorPage = ({
 
   return (
     <ErrorPageWrapper>
+      {hasBackButton && <BackButton href={href}/>}
       <ErrorImg />
       <ErrorPageTitle>
         {title}

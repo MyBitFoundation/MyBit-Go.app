@@ -1,9 +1,9 @@
 import Router from 'next/router';
 import Link from 'next/link';
 import {
-  Tooltip,
   Icon,
 } from 'antd';
+import Tooltip from 'ui/Tooltip';
 import CarouselWithNavigationContainer from './carouselWithNavigationContainer';
 import CarouselWithNavigationSlide from './carouselWithNavigationSlide';
 import CarouselWithNavigationNavButton from './carouselWithNavigationNavButton';
@@ -160,7 +160,9 @@ class CarouselWithNavigation extends React.Component {
         {navigationTooltips.map((slideTooltip) => {
           return (
             <Tooltip
-              title={slideTooltip.tooltip}
+              tooltipProps={{
+                title: slideTooltip.tooltip,
+              }}
               key={`slideTooltip${slideTooltip.slide}`}
             >
               <CarouselWithNavigationNavButton

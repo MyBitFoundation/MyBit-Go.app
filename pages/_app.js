@@ -21,10 +21,13 @@ import { navbarOptions } from 'constants/navigationBar';
 import { WEB3_BACKUP_PROVIDER } from 'constants/web3BackupProvider';
 import { FULL_SCREEN_PAGES } from 'constants/fullScreenPages';
 import { COOKIES } from 'constants/cookies';
+import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
 
 class MyApp extends App {
   state = {
     mobileMenuOpen: false,
+    network: undefined,
+    userHasMetamask: undefined,
   }
 
   saveFirstVisit = () => {
@@ -39,6 +42,10 @@ class MyApp extends App {
       return false;
     }
   }
+
+  setNetwork = network => this.setState({network})
+
+  setUserHasMetamask = userHasMetamask => this.setState({userHasMetamask})
 
   prefetchPages = () => {
     Router.prefetch('/onboarding')
@@ -68,6 +75,8 @@ class MyApp extends App {
     const { Component, pageProps, router } = this.props;
     const {
       mobileMenuOpen,
+      network,
+      userHasMetamask,
     } = this.state;
 
     const isFullScreenPage = FULL_SCREEN_PAGES.includes(router.pathname);
@@ -77,7 +86,12 @@ class MyApp extends App {
         <GlobalStyle />
         <Head/>
         <Theme>
-          <WithProviders>
+          <WithProviders
+            setNetwork={this.setNetwork}
+            setUserHasMetamask={this.setUserHasMetamask}
+            network={network}
+            userHasMetamask={userHasMetamask}
+          >
             <Notifications />
             <MobileMenu
               isOpen={mobileMenuOpen}
@@ -106,23 +120,36 @@ class MyApp extends App {
   }
 }
 
-const WithProviders = ({ children }) => (
+const WithProviders = ({ children, setNetwork, network, setUserHasMetamask, userHasMetamask }) => (
     <NotificationsProvider>
-      <AirtableProvider>
-        <KyberProvider>
+        <AirtableProvider
+          network={network}
+          userHasMetamask={userHasMetamask}
+        >
+          <KyberProvider
+            network={network}
+            supportedNetworks={SUPPORTED_NETWORKS}
+            userHasMetamask={userHasMetamask}
+          >
           <MetamaskProvider
             backupProvider={WEB3_BACKUP_PROVIDER}
+            supportedNetworks={SUPPORTED_NETWORKS}
+            setNetwork={setNetwork}
+            setUserHasMetamask={setUserHasMetamask}
           >
-            <BlockchainProvider>
+            <BlockchainProvider
+              supportedNetworks={SUPPORTED_NETWORKS}
+            >
               <CivicProvider>
                 <TermsOfServiceProvider>
                   {children}
                 </TermsOfServiceProvider>
               </CivicProvider>
             </BlockchainProvider>
-          </MetamaskProvider>
-        </KyberProvider>
-      </AirtableProvider>
+            </MetamaskProvider>
+          </KyberProvider>
+        </AirtableProvider>
+
     </NotificationsProvider>
 );
 

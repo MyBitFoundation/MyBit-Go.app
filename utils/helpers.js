@@ -142,13 +142,6 @@ export const formatMonetaryValue = (number, symbol = DEFAULT_TOKEN, includeToken
   }
 };
 
-export const getPrettyCategoryName = (category, categoriesAirTable) => {
-  for(let entry of Object.entries(categoriesAirTable)){
-    const [key, value] = entry;
-    if(value.contractName === category) return key;
-  }
-};
-
 export const generateRandomURI = (web3) => {
   let text = "";
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
