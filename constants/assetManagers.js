@@ -32,7 +32,7 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
   sortOrder: sortedInfo.columnKey === 'totalAssets' && sortedInfo.order,
   render: (text, record) => record.totalAssets,
 }, {
-  title: 'Start date',
+  title: 'Start Date',
   dataIndex: 'date',
   key: 'date',
   sorter: (a, b) => a.startDate.isAfter(b.startDate),
