@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { compose } from 'recompose'
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext'
@@ -6,6 +5,7 @@ import AssetManagerFullProfile from 'components/AssetManagerFullProfile';
 import { METAMASK_ERRORS } from 'components/MetamaskContext/constants';
 import MetamaskErrors from 'components/MetamaskErrors';
 import AllAssetManagers from 'components/AllAssetManagers';
+import PageTitle from 'ui/PageTitle';
 
 const AssetManager = ({
   blockchainContext,
@@ -22,18 +22,24 @@ const AssetManager = ({
   }
   if(!managerAddress){
     return (
-      <AllAssetManagers
-        blockchainContext={blockchainContext}
-        network={metamaskContext.network}
-      />
+      <React.Fragment>
+        <PageTitle>Asset Managers</PageTitle>
+        <AllAssetManagers
+          blockchainContext={blockchainContext}
+          network={metamaskContext.network}
+        />
+      </React.Fragment>
     )
   } else {
     return (
-      <AssetManagerFullProfile
-        blockchainContext={blockchainContext}
-        metamaskContext={metamaskContext}
-        managerAddress={managerAddress}
-      />
+      <React.Fragment>
+        <PageTitle>Asset Manager</PageTitle>
+        <AssetManagerFullProfile
+          blockchainContext={blockchainContext}
+          metamaskContext={metamaskContext}
+          managerAddress={managerAddress}
+        />
+      </React.Fragment>
     )
   }
 }
