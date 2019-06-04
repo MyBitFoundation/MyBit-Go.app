@@ -5,8 +5,13 @@ import CheckMark from 'static/ic_unreal.svg';
 import Divider from 'ui/Divider';
 
 const AssetManagerProfileDataWrapper = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-row-gap: 15px;
+
   ${({theme}) => theme.tablet`
-    display: flex;
+    grid-template-columns: auto auto auto;
   `}
 `
 
