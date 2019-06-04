@@ -36,34 +36,33 @@ const AssetManagerTooltip = ({
   totalAssets,
   startDate,
   totalRevenue,
-}) => {
-
-  return (
-    <span>
-      <GlobalStyle />
-      <Tooltip
-        overlayClassName="AssetManagerTooltip"
-        arrowPointAtCenter
-        placement="bottom"
-        destroyTooltipOnHide
-        title={
-          <AssetManagerProfile
-            totalAssets={totalAssets}
-            startDate={startDate}
-            totalRevenue={totalRevenue}
-            styling={{
-              divider: {
-                opacity: 0.2,
-                margin: '5px 0px',
-              }
-            }}
-          />
-        }
-      >
-        {children}
-      </Tooltip>
-    </span>
-  )
-};
+  collateralLocked,
+}) => (
+  <span>
+    <GlobalStyle />
+    <Tooltip
+      overlayClassName="AssetManagerTooltip"
+      arrowPointAtCenter
+      placement="bottom"
+      destroyTooltipOnHide
+      title={
+        <AssetManagerProfile
+          totalAssets={totalAssets}
+          startDate={startDate}
+          totalRevenue={totalRevenue}
+          collateralLocked={collateralLocked}
+          styling={{
+            divider: {
+              opacity: 0.2,
+              margin: '5px 0px',
+            }
+          }}
+        />
+      }
+    >
+      {children}
+    </Tooltip>
+  </span>
+)
 
 export default AssetManagerTooltip;

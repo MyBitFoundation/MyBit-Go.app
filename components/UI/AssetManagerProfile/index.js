@@ -92,6 +92,7 @@ const AssetManagerProfile = ({
   totalAssets,
   totalRevenue,
   startDate,
+  collateralLocked,
   styling,
 }) => {
   return (
@@ -117,6 +118,11 @@ const AssetManagerProfile = ({
         <Data
           text="Total Revenue"
           value={totalRevenue}
+          styling={styling}
+        />
+        <Data
+          text="Collateral Locked"
+          value={collateralLocked}
           styling={styling}
         />
       </AssetManagerProfileDataWrapper>
