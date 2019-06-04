@@ -23,8 +23,10 @@ class AssetDisplayer extends React.Component{
     }
   }
 
-  handleAssetImageClicked = (assetId) => {
-    Router.push(`/asset?id=${assetId}`, `/asset/${assetId}`)
+  handleAssetImageClicked = (assetId, shouldMakeImgClickable) => {
+    if(shouldMakeImgClickable){
+      Router.push(`/asset?id=${assetId}`, `/asset/${assetId}`)
+    }
   }
 
   render = () => {
@@ -53,7 +55,7 @@ class AssetDisplayer extends React.Component{
               {...asset}
               key={asset.assetId}
               handleAssetFavorited={handleAssetFavorited}
-              onClickImg={shouldMakeImgClickable ? this.handleAssetImageClicked.bind(this, asset.assetId) : undefined}
+              onClickImg={this.handleAssetImageClicked.bind(this, asset.assetId, shouldMakeImgClickable)}
             />
           ))}
         </Row>

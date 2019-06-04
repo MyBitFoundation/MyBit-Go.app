@@ -8,7 +8,6 @@ import {
 import { withBlockchainContext } from 'components/BlockchainContext'
 import Loading from 'components/Loading';
 import {
-  getPrettyCategoryName,
   getValueFromLocalStorage,
   setValueLocalStorage,
 } from 'utils/helpers';

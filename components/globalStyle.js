@@ -91,22 +91,6 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
-  .ant-tooltip {
-    .ant-tooltip-content {
-      box-shadow: 1px 5px 20px 2px rgba(0,0,0,0.2);
-      border-radius: 4px;
-      .ant-tooltip-inner {
-        background-color: #ffffff;
-        color: #4a4a4a;
-        padding: 10px;
-      }
-      .ant-tooltip-arrow {
-        border-top-color: #ffffff;
-        border-bottom-color: #ffffff;
-      }
-    }
-  }
-
   .christmas.ant-btn-primary:before{
     display: none !important;
   }
@@ -117,20 +101,6 @@ const GlobalStyle = createGlobalStyle`
     &:hover{
       cursor: pointer;
     }
-  }
-
-  .ant-tooltip-content {
-      box-shadow: 1px 5px 20px 2px rgba(0,0,0,0.2);
-      border-radius: 4px;
-  }
-  .ant-tooltip-inner {
-      background-color: #ffffff;
-      color: #4a4a4a;
-      padding: 10px;
-      max-width: 200px;
-  }
-  .ant-tooltip-arrow {
-      border-top-color: #ffffff;
   }
 
   .Watch__tooltip .ant-tooltip-inner{

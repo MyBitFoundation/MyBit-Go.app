@@ -18,10 +18,12 @@ const NavigationBar = ({
       </div>
     )
     return (
-    <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected && 'ant-menu-item-selected'}>
+    <Menu.Item key={menuItem.name} disabled={menuItem.disabled} className={menuItem.selected ? 'ant-menu-item-selected' : undefined}>
       {menuItem.external && (
         <a
           href={menuItem.url}
+          target={menuItem.newTab ? '_blank' : undefined}
+          rel={menuItem.newTab ? 'noreferrer' : undefined}
         >
           {linkContent}
         </a>
@@ -42,6 +44,7 @@ const NavigationBar = ({
         mode="horizontal"
         className="AppNavigationBar"
         key={currentPath}
+        selectedKeys={[currentPath]}
       >
         {navBarOptions}
       </Menu>

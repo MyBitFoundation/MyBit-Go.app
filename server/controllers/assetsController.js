@@ -11,6 +11,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(`https://ropsten.infura.io
 
 const fromWeiToEth = weiValue => Number(web3.utils.fromWei(weiValue.toString(), 'ether'));
 
+// TODO Change to /networks/main/ once live on mainnet
 const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 
 let Network;
@@ -20,7 +21,6 @@ export let assets = [];
 export const getAssets = async () => {
   try{
     if(AirTableController.assetsById){
-      console.log("getting assets...")
       assets = await fetchAssets(undefined, AirTableController.assetsById);
     }
   }catch(err){
