@@ -8,6 +8,7 @@ import {
 } from 'antd';
 import{
   DEFAULT_TOKEN,
+  PLATFORM_TOKEN,
 } from 'constants/app';
 import AssetDefaultDetailsContainer from './assetDefaultDetailsContainer';
 import AssetDefaultFunded from './assetDefaultFunded';
@@ -46,6 +47,7 @@ const AssetDefault = ({
     totalRevenue,
     totalAssets,
     startDate,
+    collateralLocked,
   } = assetManagerData;
   const barWidth = funded ? 100 : parseFloat(((fundingProgress * 100) / fundingGoal).toFixed(2));
   const goalFormatted = formatMonetaryValue(fundingGoal);
@@ -85,6 +87,7 @@ const AssetDefault = ({
             totalAssets={totalAssets}
             startDate={startDate}
             totalRevenue={formatMonetaryValue(totalRevenue)}
+            collateralLocked={formatMonetaryValue(collateralLocked, PLATFORM_TOKEN)}
           >
             <UserIconWrapper />
           </AssetManagerTooltip>

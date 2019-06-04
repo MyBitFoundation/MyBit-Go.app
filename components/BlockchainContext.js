@@ -892,6 +892,7 @@ class BlockchainProvider extends React.Component {
         assetManager,
         listingDate,
         assetIncome,
+        remainingEscrow,
       } = asset;
 
       if(!assetManagers[assetManager]){
@@ -899,10 +900,12 @@ class BlockchainProvider extends React.Component {
           startDate: listingDate,
           totalAssets: 1,
           totalRevenue: assetIncome,
+          collateralLocked: remainingEscrow,
         }
       } else {
         assetManagers[assetManager].totalAssets += 1;
         assetManagers[assetManager].totalRevenue += assetIncome;
+        assetManagers[assetManager].collateralLocked += remainingEscrow;
       }
       return {
         ...asset,

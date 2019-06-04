@@ -14,6 +14,7 @@ import { 
   formatMonetaryValue,
   shortenAddress,
 } from 'utils/helpers';
+import { PLATFORM_TOKEN } from 'constants/app';
 import ErrorPage from 'components/ErrorPage';
 import PageTitle from 'ui/PageTitle';
 
@@ -109,6 +110,7 @@ const AssetManagerFullProfile = ({
         <AssetManagerProfile
           {...assetManager}
           totalRevenue={formatMonetaryValue(assetManager.totalRevenue)}
+          collateralLocked={formatMonetaryValue(assetManager.collateralLocked, PLATFORM_TOKEN)}
           styling={{
             labelColor: Colors.grayBase,
             valueColor: Colors.black,
