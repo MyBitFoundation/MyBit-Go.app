@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import {
   Progress,
   Icon,
@@ -34,83 +35,116 @@ const UserIconWrapper = styled(UserIcon)`
   margin-left: 0px;
 `
 
-const AssetDefault = ({
-  fundingGoal,
-  fundingProgress,
-  pastDate,
-  funded,
-  assetId,
-  assetManager,
-  assetManagerData,
-}) => {
-  const {
-    totalRevenue,
-    totalAssets,
-    startDate,
-    collateralLocked,
-  } = assetManagerData;
-  const barWidth = funded ? 100 : parseFloat(((fundingProgress * 100) / fundingGoal).toFixed(2));
-  const goalFormatted = formatMonetaryValue(fundingGoal);
-  const progressFormatted = formatMonetaryValue(fundingProgress);
-  let buttonText = 'Contribute';
-  let buttonType = 'primary';
-  if (funded || pastDate) {
-    buttonText = 'View Asset';
-    buttonType = 'default';
+class AssetDefault extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      assetManagerProfile: {}
+    }
   }
 
-  return (
-    <AssetDefaultDetailsContainer
-      barWidth={barWidth}
-    >
-      <AssetDefaultFunded>
-        Funded:{' '}
-        <b>{progressFormatted}</b>
-      </AssetDefaultFunded>
-      <AssetDefaultGoal>
-        Goal:{' '}
-        <b>{goalFormatted}</b>
-      </AssetDefaultGoal>
-      <div>
-        <Progress percent={barWidth} />
-        {barWidth === 100 && (
-          <Icon
-            type="check-circle"
-            theme="filled"
-          />
-        )}
-      </div>
+  async componentDidMount() {
+    const { assetManager, threeBoxContext } = this.props;
+    const { load3BoxProfile } = threeBoxContext;
+    const assetManagerProfile = await load3BoxProfile(assetManager);
+    this.setState({ assetManagerProfile })
+  }
 
-      <Container>
+  render() {
+    const {
+      fundingGoal,
+      fundingProgress,
+      pastDate,
+      funded,
+      assetId,
+      assetManager,
+      assetManagerData,
+      threeBoxContext
+    } = this.props;
+
+    const {
+      assetManagerProfile
+    } = this.state;
+
+    const {
+      loadingThreeBox,
+    } = threeBoxContext;
+
+    const {
+      totalRevenue,
+      totalAssets,
+      startDate,
+      collateralLocked,
+    } = assetManagerData;
+    const barWidth = funded ? 100 : parseFloat(((fundingProgress * 100) / fundingGoal).toFixed(2));
+    const goalFormatted = formatMonetaryValue(fundingGoal);
+    const progressFormatted = formatMonetaryValue(fundingProgress);
+    let buttonText = 'Contribute';
+    let buttonType = 'primary';
+    if (funded || pastDate) {
+      buttonText = 'View Asset';
+      buttonType = 'default';
+    }
+
+    return (
+      <AssetDefaultDetailsContainer
+        barWidth={barWidth}
+      >
+        <AssetDefaultFunded>
+          Funded:{' '}
+          <b>{progressFormatted}</b>
+        </AssetDefaultFunded>
+        <AssetDefaultGoal>
+          Goal:{' '}
+          <b>{goalFormatted}</b>
+        </AssetDefaultGoal>
         <div>
-          <AssetManagerTooltip
-            totalAssets={totalAssets}
-            startDate={startDate}
-            totalRevenue={formatMonetaryValue(totalRevenue)}
-            collateralLocked={formatMonetaryValue(collateralLocked, PLATFORM_TOKEN)}
-          >
-            <UserIconWrapper />
-          </AssetManagerTooltip>
-          <Link
-            as={`/asset-managers/${assetManager}`}
-            href={`/asset-managers?id=${assetManager}`}
-          >
-            <a>{shortenAddress(assetManager, 6, 4)}</a>
-          </Link>
+          <Progress percent={barWidth} />
+          {barWidth === 100 && (
+            <Icon
+              type="check-circle"
+              theme="filled"
+            />
+          )}
         </div>
-        <Link
-          as={`/asset/${assetId}`}
-          href={`/asset?id=${assetId}`}
-        >
-          <AssetDefaultContributeButton
-            type={buttonType}
+
+        <Container>
+          <div>
+            <AssetManagerTooltip
+              totalAssets={totalAssets}
+              startDate={startDate}
+              totalRevenue={formatMonetaryValue(totalRevenue)}
+              collateralLocked={formatMonetaryValue(collateralLocked, PLATFORM_TOKEN)}
+            >
+              <UserIconWrapper />
+            </AssetManagerTooltip>
+            <Link
+              as={`/asset-managers/${assetManager}`}
+              href={`/asset-managers?id=${assetManager}`}
+            >
+              <a>
+                {
+                  assetManagerProfile.name ?
+                    assetManagerProfile.name :
+                    shortenAddress(assetManager, 6, 10)
+                }
+              </a>
+            </Link>
+          </div>
+          <Link
+            as={`/asset/${assetId}`}
+            href={`/asset?id=${assetId}`}
           >
-            {buttonText}
-          </AssetDefaultContributeButton>
-        </Link>
-      </Container>
-    </AssetDefaultDetailsContainer>
-  )
+            <AssetDefaultContributeButton
+              type={buttonType}
+            >
+              {buttonText}
+            </AssetDefaultContributeButton>
+          </Link>
+        </Container>
+      </AssetDefaultDetailsContainer>
+    )
+  }
 };
 
-export default React.memo(AssetDefault)
+export default withThreeBoxContext(React.memo(AssetDefault));
