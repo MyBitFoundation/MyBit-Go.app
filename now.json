@@ -14,7 +14,7 @@
     "GOOGLE_PLACES_API_KEY": "@google-places-api-key"
   },
   "engines": {
-    "node": "10.16.0"
+    "node": "10"
   },
   "version": 1
 }
