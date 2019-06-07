@@ -5,6 +5,7 @@ import AssetDetailsManagerInfoCivic from './assetDetailsManagerInfoCivic';
 import AssetDetailsManagerInfoAddress from './assetDetailsManagerInfoAddress';
 import AssetDetailsManagerInfoDocuments from './assetDetailsManagerInfoDocuments';
 import AssetDetailsManagerInfoPercentages from './assetDetailsManagerInfoPercentages';
+import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import ValueDisplay from 'ui/ValueDisplay';
 import MyBitLogo from 'static/mybit-blue.svg';
 import Sliders from 'static/sliders.svg';
@@ -31,10 +32,8 @@ const getFilesToRender = (files, assetId) => {
 
 const AssetDetailsManagerInfo = ({
   address,
-  addressShortened,
   managerPercentage,
   collateralPercentage,
-  image,
   style,
   files,
 }) => (
@@ -51,7 +50,7 @@ const AssetDetailsManagerInfo = ({
         target="_blank"
         rel="noopener noreferrer"
       >
-        {addressShortened}
+        <ThreeBoxProfile address={address} name />
       </AssetDetailsManagerInfoAddress>
       <AssetDetailsManagerInfoDocuments>
         Supporting documents
