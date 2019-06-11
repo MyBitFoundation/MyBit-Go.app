@@ -7,6 +7,29 @@ import AssetDetailsInfoDescription from './assetDetailsInfoDescription';
 import AssetDetailsInfoWrapper from './assetDetailsInfoWrapper';
 import Watch from 'ui/Watch';
 
+const getFilesToRender = (files, assetId) => {
+  if(!files || files.length === 0){
+    return <span>None</span>;
+  }
+  const toReturn = files.map(file => (
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      href={`${InternalLinks.S3}${assetId}:${file}`}
+    >
+      {file}
+    </a>
+  ))
+
+  return toReturn;
+}
+
+const newLineToParagraphs = text => {
+  return text.split('\n').map((item, i) => {
+    return <p key={i}>{item}</p>;
+  });
+}
+
 const AssetDetailsInfo = ({
   name,
   imageSrc,
@@ -17,6 +40,10 @@ const AssetDetailsInfo = ({
   watchListed,
   handleAssetFavorited,
   assetId,
+  financials,
+  about,
+  risks,
+  files,
 }) => (
   <AssetDetailsInfoWrapper>
     <AssetDetailsInfoName>
@@ -38,17 +65,27 @@ const AssetDetailsInfo = ({
     </AssetDetailsInfoImage>
 
     <AssetDetailsInfoTitle>
-      Asset Details
+      About
     </AssetDetailsInfoTitle>
     <AssetDetailsInfoDescription>
-      {details}
+      {newLineToParagraphs(about)}
     </AssetDetailsInfoDescription>
     <AssetDetailsInfoTitle>
-      Description
+      Financials
     </AssetDetailsInfoTitle>
     <AssetDetailsInfoDescription>
-      {description}
+      {newLineToParagraphs(financials)}
     </AssetDetailsInfoDescription>
+    <AssetDetailsInfoTitle>
+      Risks
+    </AssetDetailsInfoTitle>
+    <AssetDetailsInfoDescription>
+      {newLineToParagraphs(risks)}
+    </AssetDetailsInfoDescription>
+    <AssetDetailsInfoTitle>
+      Supporting documents
+    </AssetDetailsInfoTitle>
+    {getFilesToRender(files)}
   </AssetDetailsInfoWrapper>
 )
 
