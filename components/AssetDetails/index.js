@@ -37,6 +37,9 @@ const AssetDetails = ({
     fundingGoal,
     fundingProgress,
     userInvestment,
+    about,
+    financials,
+    risks,
   } = asset;
 
   const {
@@ -59,13 +62,16 @@ const AssetDetails = ({
           assetId={assetId}
           watchListed={watchListed}
           handleAssetFavorited={handleAssetFavorited}
+          about={about}
+          financials={financials}
+          risks={risks}
+          files={files}
         />
         <AssetDetailsManagerInfo
           address={assetManager}
           addressShortened={shortenAddress(assetManager, 5, 2)}
           managerPercentage={managerPercentage}
           collateralPercentage={collateralPercentage}
-          files={files}
           style={{
             marginTop: '20px',
           }}

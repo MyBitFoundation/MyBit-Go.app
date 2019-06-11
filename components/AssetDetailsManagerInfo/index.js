@@ -3,7 +3,6 @@ import AssetDetailsMananagerInfo from './assetDetailsMananagerInfo';
 import AssetDetailsManagerInfoTitle from './assetDetailsManagerInfoTitle';
 import AssetDetailsManagerInfoCivic from './assetDetailsManagerInfoCivic';
 import AssetDetailsManagerInfoAddress from './assetDetailsManagerInfoAddress';
-import AssetDetailsManagerInfoDocuments from './assetDetailsManagerInfoDocuments';
 import AssetDetailsManagerInfoPercentages from './assetDetailsManagerInfoPercentages';
 import ValueDisplay from 'ui/ValueDisplay';
 import MyBitLogo from 'static/mybit-blue.svg';
@@ -12,23 +11,6 @@ import {
   InternalLinks,
 } from 'constants/links';
 
-const getFilesToRender = (files, assetId) => {
-  if(!files || files.length === 0){
-    return <span>None</span>;
-  }
-  const toReturn = files.map(file => (
-    <a
-      target="_blank"
-      rel="noopener noreferrer"
-      href={`${InternalLinks.S3}${assetId}:${file}`}
-    >
-      {file}
-    </a>
-  ))
-
-  return toReturn;
-}
-
 const AssetDetailsManagerInfo = ({
   address,
   addressShortened,
@@ -36,7 +18,6 @@ const AssetDetailsManagerInfo = ({
   collateralPercentage,
   image,
   style,
-  files,
 }) => (
   <AssetDetailsMananagerInfo
     style={style}
@@ -53,16 +34,12 @@ const AssetDetailsManagerInfo = ({
       >
         {addressShortened}
       </AssetDetailsManagerInfoAddress>
-      <AssetDetailsManagerInfoDocuments>
-        Supporting documents
-      </AssetDetailsManagerInfoDocuments>
-      {getFilesToRender(files)}
     </div>
     <AssetDetailsManagerInfoPercentages>
       <ValueDisplay
         text="Total Management Fee"
         icon={<Sliders />}
-        value={`${managerPercentage * 100}%`}
+        value={`${parseFloat((managerPercentage * 100).toFixed(2))}%`}
         style={{
           margin: '5px 0',
         }}

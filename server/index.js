@@ -42,6 +42,16 @@ app
     }
   });
 
+  server.get('/api/airtable/assets-info/:network', (req, res) => {
+    try{
+      const network = req.params.network;
+      req.pipe(AirTableController.getAssetsInfo(network)).pipe(res);
+    }catch(err){
+      res.statusCode = 500;
+      res.send(error);
+    }
+  });
+
   server.get('/api/airtable/assets/:network', (req, res) => {
     try{
       const network = req.params.network;

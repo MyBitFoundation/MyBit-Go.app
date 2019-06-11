@@ -28,3 +28,9 @@ export const verifyDataAirtable = (rules, records) => {
     }
   ))
 }
+
+export const DEFAULT_ASSET_INFO = {
+  Financials: 'No financial information about this asset has been provided.',
+  Risks: 'No risk information about this asset has been provided.',
+  About: 'No information about this asset has been provided.',
+}

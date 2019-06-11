@@ -5331,11 +5331,6 @@ graphlib@^2.1.7:
   dependencies:
     lodash "^4.17.5"
 
-gridlex@2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/gridlex/-/gridlex-2.7.1.tgz#ff562762dc8fc7e59bee2163afaa116859961ef7"
-  integrity sha512-LnBGyAzX3GNYG/I7Vp2sQRo8EaI3IzOn8a8j2AjrsZUS0kClKImJAuluwu75H+31/PwWvaBlUGNpd+qDflb/QA==
-
 growl@1.10.3:
   version "1.10.3"
   resolved "https://registry.yarnpkg.com/growl/-/growl-1.10.3.tgz#1926ba90cf3edfe2adb4927f5880bc22c66c790f"
