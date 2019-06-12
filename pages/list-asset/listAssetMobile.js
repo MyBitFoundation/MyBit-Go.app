@@ -10,6 +10,7 @@ import {
   ConfirmSlide,
   SuccessSlide,
   TermsOfServiceSlide,
+  GeneralDescriptionSlide,
 } from "./slides";
 
 const MAX_WIDTH_DESKTOP = "500px";
@@ -58,6 +59,9 @@ const ListAssetMobile = ({
     collateralMyb,
     fileList,
     maxCollateralPercentage,
+    about,
+    financials,
+    risks,
   } = formData;
 
   return (
@@ -95,6 +99,18 @@ const ListAssetMobile = ({
           hasNextButton: true,
           hasBackButton: true,
           nextButtonDisabled: !category || !asset || !assetValue,
+        }
+      }, {
+        toRender: (
+          <GeneralDescriptionSlide
+            formData={formData}
+            maxWidthDesktop={MAX_WIDTH_DESKTOP}
+            handleInputChange={handleInputChange}
+          />
+        ), buttons: {
+          hasNextButton: true,
+          hasBackButton: true,
+          nextButtonDisabled: !about || !financials || !risks,
         }
       }, {
         toRender: (

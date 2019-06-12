@@ -500,6 +500,9 @@ class BlockchainProvider extends React.Component {
       selectedToken,
       assetValue,
       operatorId,
+      about,
+      financials,
+      risks,
     } = formData;
 
     const { categoriesAirTable } = airtableContext;
@@ -579,7 +582,7 @@ class BlockchainProvider extends React.Component {
         }
       }
 
-      Brain.updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, assetManagerEmail, performInternalAction)
+      Brain.updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, assetManagerEmail, about, financials, risks, performInternalAction)
       filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
 

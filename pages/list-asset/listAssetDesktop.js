@@ -10,6 +10,7 @@ import {
   ConfirmSlideDesktop,
   SuccessSlide,
   TermsOfServiceSlide,
+  GeneralDescriptionSlide,
 } from "./slides";
 import CustomTimeline from './customTimeline';
 
@@ -102,6 +103,9 @@ const ListAssetDesktop = ({
     collateralMyb,
     fileList,
     maxCollateralPercentage,
+    about,
+    financials,
+    risks,
   } = formData;
 
   if(step === 0){
@@ -143,6 +147,16 @@ const ListAssetDesktop = ({
         />
       )}
       {step === 2 && (
+        <GeneralDescriptionSlide
+          handleInputChange={handleInputChange}
+          formData={formData}
+          maxWidthDesktop={MAX_WIDTH_DESKTOP}
+          desktopMode
+          onClick={goToNextStep}
+          nextButtonDisabled={!about || !financials || !risks}
+        />
+      )}
+      {step === 3 && (
         <AssetLocationSlide
           handleInputChange={handleInputChange}
           handleSelectChange={handleSelectChange}
@@ -162,7 +176,7 @@ const ListAssetDesktop = ({
           onClick={goToNextStep}
         />
       )}
-      {step === 3 && (
+      {step === 4 && (
         <DocsSlide
           fileList={fileList}
           handleFileUpload={handleFileUpload}
@@ -171,7 +185,7 @@ const ListAssetDesktop = ({
           desktopMode
         />
       )}
-      {step === 4 && (
+      {step === 5 && (
         <FeesSlide
           handleSelectChange={handleSelectChange}
           managementFee={managementFee}
@@ -181,7 +195,7 @@ const ListAssetDesktop = ({
           nextButtonDisabled={managementFee !== 0 ? false : true}
         />
       )}
-      {step === 5 && (
+      {step === 6 && (
         <CollateralSlide
           collateralSelectedToken={collateralSelectedToken}
           collateralDai={collateralDai}
@@ -199,21 +213,21 @@ const ListAssetDesktop = ({
           desktopMode
           nextButtonDisabled={managementFee !== 0 ? false : true}
         />
-      )}{step === 6 && !readToS && (
+      )}{step === 7 && !readToS && (
         <TermsOfServiceSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={setReadToS}
         />
       )}
-      {(step === 6 && listedAssetId && readToS) && (
+      {(step === 7 && listedAssetId && readToS) && (
         <SuccessSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           assetId={listedAssetId}
           desktopMode
         />
        )}
-       {(step === 6 && !listedAssetId && readToS) && (
+       {(step === 7 && !listedAssetId && readToS) && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}

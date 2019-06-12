@@ -5,6 +5,7 @@ import {
   verifyDataAirtable,
   PULL_ASSETS_TIME,
   PULL_CATEGORIES_TIME,
+  DEFAULT_ASSET_INFO,
  } from 'constants/airtable';
 
 import {
@@ -142,7 +143,7 @@ class AirtableProvider extends React.PureComponent {
     return assetsFromAirTable.filter(asset => asset.name === assetName)[0];
   }
 
-  processAssetsByIdFromAirTable = (assetsFromAirTable) => {
+  processAssetsByIdFromAirTable = (assetsFromAirTable, extraAssetInfoById) => {
     const assetsAirTableById = {};
     const tmpCache = {};
     assetsFromAirTable.forEach(asset => {
@@ -157,11 +158,24 @@ class AirtableProvider extends React.PureComponent {
         assetIds = assetIds.split(',');
         assetIds.forEach(assetIdInfo => {
           const [assetId, country, city, collateralPercentage] = assetIdInfo.split('|');
+          let financials, about, risks;
+          if(extraAssetInfoById[assetId]){
+            financials = extraAssetInfoById[assetId].financials;
+            about = extraAssetInfoById[assetId].about;
+            risks = extraAssetInfoById[assetId].risks;
+          } else {
+            financials = DEFAULT_ASSET_INFO.Financials;
+            about = DEFAULT_ASSET_INFO.About;
+            risks = DEFAULT_ASSET_INFO.Risks;
+          }
           assetsAirTableById[assetId] = {
             defaultData: airtableAsset,
             city,
             country,
             collateralPercentage,
+            financials,
+            about,
+            risks,
           };
         });
       }
@@ -188,20 +202,44 @@ class AirtableProvider extends React.PureComponent {
     }
   }
 
+  processExtraAssetInfo = data => {
+    const extraAssetInfoById = {};
+    data.forEach(({fields}) => {
+      const {
+        Financials = DEFAULT_ASSET_INFO.Financials,
+        About = DEFAULT_ASSET_INFO.About,
+        Risks = DEFAULT_ASSET_INFO.Risks,
+      } = fields;
+
+      extraAssetInfoById[fields['Asset ID']] = {
+        financials: Financials,
+        about: About,
+        risks: Risks,
+      }
+    })
+
+    return extraAssetInfoById;
+  }
+
   getAssets = async network => {
     const { userHasMetamask } = this.props;
     network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
 
     if(network){
-      const response = await fetchWithCache(InternalLinks.getAirtableAssetsUrl(network), 'assetsEtag', this);
+      const [assets, assetsInfo] = await Promise.all([
+        fetchWithCache(InternalLinks.getAirtableAssetsUrl(network), 'assetsEtag', this),
+        fetchWithCache(InternalLinks.getAirtableAssetsInfoUrl(network), 'assetsInfoEtag', this),
+      ]);
+
       // avoid processing and setting state if the data hasn't changed
-      if(!response.isCached) {
-        const { records } = response.data;
+      if(!assets.isCached) {
+        const { records: assetRecords  } = assets.data;
+        const { records: assetInfoRecords  } = assetsInfo.data;
 
-        const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, records);
-
+        const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, assetRecords);
+        const extraAssetInfoById = this.processExtraAssetInfo(assetInfoRecords);
         let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
-        const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable);
+        const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable, extraAssetInfoById);
 
         // remove assetIDs as they are not required in this object
         // they were requred before to facilitate the processing by asset ID
