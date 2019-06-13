@@ -4,7 +4,6 @@ import {
 } from 'antd';
 import Loading from 'components/Loading';
 import GetColumns from 'constants/assetManagers';
-import ErrorPage from 'components/ErrorPage';
 import PageTitle from 'ui/PageTitle';
 
 const TableWrapper = styled.div`
