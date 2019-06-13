@@ -3,6 +3,7 @@ import Media from 'react-media';
 import AssetExplorer from 'components/AssetExplorer';
 import Loading from 'components/Loading';
 import AssetManagerProfile from 'ui/AssetManagerProfile';
+import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import Theming from 'components/Theme/theming';
 import {
   ExternalLinks,
@@ -97,7 +98,9 @@ const AssetManagerFullProfile = ({
         <AddressWrapper>
           <Media query={`(min-width: ${Sizes.tablet}px`}>
             {matches =>
-              matches ? managerAddress : shortenAddress(managerAddress, 6, 4)
+              matches ? 
+              <ThreeBoxProfile address={managerAddress} name long/> :
+              <ThreeBoxProfile address={managerAddress} name/>
             }
           </Media>
           <a

@@ -4,6 +4,7 @@ import AssetDetailsMananagerInfo from './assetDetailsMananagerInfo';
 import AssetDetailsManagerInfoTitle from './assetDetailsManagerInfoTitle';
 import AssetDetailsManagerInfoAddress from './assetDetailsManagerInfoAddress';
 import AssetDetailsManagerInfoPercentages from './assetDetailsManagerInfoPercentages';
+import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import ValueDisplay from 'ui/ValueDisplay';
 import MyBitLogo from 'static/mybit-blue.svg';
 import Sliders from 'static/sliders.svg';
@@ -22,7 +23,6 @@ const AssetDetailsManagerInfo = ({
   address,
   managerPercentage,
   collateralPercentage,
-  image,
   style,
   assetManager,
 }) => (
@@ -50,7 +50,7 @@ const AssetDetailsManagerInfo = ({
         target="_blank"
         rel="noopener noreferrer"
       >
-        {address}
+        <ThreeBoxProfile address={address} name />
       </AssetDetailsManagerInfoAddress>
       <Divider />
      <AssetManagerProfile

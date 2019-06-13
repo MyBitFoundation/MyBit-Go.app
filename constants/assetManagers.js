@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
 import Media from 'react-media';
+import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import { ExternalLinks } from 'constants/links'
 import Link from 'next/link';
 import { 
@@ -19,7 +19,10 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
           target="_blank"
           rel="noopener noreferrer"
         >
-        {matches ? record.key : shortenAddress(record.key, 4, 3)}
+        { matches ? 
+          <ThreeBoxProfile address={record.key} name long/> :
+          <ThreeBoxProfile address={record.key} name short={[4,3]}/>
+        }
         </a>
       }
     </Media>
