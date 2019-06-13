@@ -22,6 +22,10 @@ const PoweredBy = styled.p`
   svg{
     margin: 0 5px;
   }
+
+  a:focus{
+    text-decoration: none;
+  }
 `
 
 const CivicVerificationWrapper = styled.span`
@@ -98,7 +102,12 @@ const AssetManagerProfile = ({
 }) => {
   return (
     <div>
-      <PoweredBy>Identity proved by <Civic /> Civic</PoweredBy>
+      <PoweredBy>Identity proved by <Civic />
+      <a
+        href="https://www.civic.com/"
+        target="_blank"
+        rel="noreferrer"
+      >Civic</a></PoweredBy>
       <CivicVerification text="Email Verified" />
       <CivicVerification text="ID Verified" />
       <CivicVerification text="Phone Verified" noMargin/>
