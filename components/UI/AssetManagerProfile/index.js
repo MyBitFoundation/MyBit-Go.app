@@ -7,7 +7,7 @@ import Divider from 'ui/Divider';
 const AssetManagerProfileDataWrapper = styled.div`
   display: grid;
   grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
+  grid-template-rows: ${props => props.showCollateral ? 'auto auto' : 'auto'};
   grid-row-gap: 15px;
 
   ${({theme}) => theme.tablet`
@@ -94,6 +94,7 @@ const AssetManagerProfile = ({
   startDate,
   collateralLocked,
   styling,
+  showCollateral = true,
 }) => {
   return (
     <div>
@@ -104,14 +105,14 @@ const AssetManagerProfile = ({
       <Divider styling={{
         ...styling.divider,
       }}/>
-      <AssetManagerProfileDataWrapper>
+      <AssetManagerProfileDataWrapper showCollateral={showCollateral}>
         <Data
           text="Managing Assets"
           value={totalAssets}
           styling={styling}
         />
         <Data
-          text="Started as Asset Manager"
+          text="Started as Manager"
           value={startDate.format('DD-MM-YY')}
           styling={styling}
         />
@@ -120,11 +121,13 @@ const AssetManagerProfile = ({
           value={totalRevenue}
           styling={styling}
         />
-        <Data
-          text="Collateral Locked"
-          value={collateralLocked}
-          styling={styling}
-        />
+        {showCollateral && (
+          <Data
+            text="Collateral Locked"
+            value={collateralLocked}
+            styling={styling}
+          />
+        )}
       </AssetManagerProfileDataWrapper>
     </div>
   )

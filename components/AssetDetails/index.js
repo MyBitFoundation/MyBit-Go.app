@@ -5,9 +5,6 @@ import BN from 'bignumber.js';
 import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import AssetFunding from 'components/AssetFunding';
-import {
-  shortenAddress,
-} from 'utils/helpers';
 import AssetDetailsRightCol from './assetDetailsRightCol';
 import AssetDetailsLeftCol from './assetDetailsLeftCol';
 import AssetDetailsWrapper from './assetDetailsWrapper';
@@ -19,12 +16,13 @@ const AssetDetails = ({
   updateNotification,
   loadingUserInfo,
   gasPrice,
+  assetManager,
 }) => {
   const {
     city,
     country,
     assetId,
-    assetManager,
+    assetManager: assetManagerAddress,
     numberOfInvestors,
     watchListed,
     files,
@@ -67,15 +65,6 @@ const AssetDetails = ({
           risks={risks}
           files={files}
         />
-        <AssetDetailsManagerInfo
-          address={assetManager}
-          addressShortened={shortenAddress(assetManager, 5, 2)}
-          managerPercentage={managerPercentage}
-          collateralPercentage={collateralPercentage}
-          style={{
-            marginTop: '20px',
-          }}
-        />
       </AssetDetailsLeftCol>
       <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetFunding
@@ -84,6 +73,15 @@ const AssetDetails = ({
           updateNotification={updateNotification}
           loadingUserInfo={loadingUserInfo}
           gasPrice={gasPrice}
+        />
+        <AssetDetailsManagerInfo
+          assetManager={assetManager}
+          address={assetManagerAddress}
+          managerPercentage={managerPercentage}
+          collateralPercentage={collateralPercentage}
+          style={{
+            marginTop: '20px',
+          }}
         />
       </AssetDetailsRightCol>
     </AssetDetailsWrapper>
