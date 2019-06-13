@@ -1,31 +1,50 @@
 import React from 'react';
+import Link from 'next/link'
 import AssetDetailsMananagerInfo from './assetDetailsMananagerInfo';
 import AssetDetailsManagerInfoTitle from './assetDetailsManagerInfoTitle';
-import AssetDetailsManagerInfoCivic from './assetDetailsManagerInfoCivic';
 import AssetDetailsManagerInfoAddress from './assetDetailsManagerInfoAddress';
 import AssetDetailsManagerInfoPercentages from './assetDetailsManagerInfoPercentages';
 import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import ValueDisplay from 'ui/ValueDisplay';
 import MyBitLogo from 'static/mybit-blue.svg';
 import Sliders from 'static/sliders.svg';
+import { InternalLinks } from 'constants/links';
+import { PLATFORM_TOKEN } from 'constants/app';
+import AssetManagerProfile from 'ui/AssetManagerProfile';
 import {
-  InternalLinks,
-} from 'constants/links';
+  formatMonetaryValue,
+} from 'utils/helpers';
+import Theming from 'components/Theme/theming';
+import Divider from 'ui/Divider';
+
+const Colors = Theming.colors;
 
 const AssetDetailsManagerInfo = ({
   address,
   managerPercentage,
   collateralPercentage,
   style,
+  assetManager,
 }) => (
   <AssetDetailsMananagerInfo
     style={style}
   >
     <div>
-      <AssetDetailsManagerInfoTitle>
-        Asset Manager
-      </AssetDetailsManagerInfoTitle>
-      <AssetDetailsManagerInfoCivic />
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+        <AssetDetailsManagerInfoTitle>
+          Asset manager
+        </AssetDetailsManagerInfoTitle>
+        <Link
+          as={`/asset-managers/${address}`}
+          href={`/asset-managers?id=${address}`}
+        >
+          <a style={{fontSize: '16px'}}>Full Info</a>
+        </Link>
+      </div>
       <AssetDetailsManagerInfoAddress
         href={`https://ropsten.etherscan.io/address/${address}`}
         target="_blank"
@@ -33,7 +52,19 @@ const AssetDetailsManagerInfo = ({
       >
         <ThreeBoxProfile address={address} name />
       </AssetDetailsManagerInfoAddress>
+      <Divider />
+     <AssetManagerProfile
+        {...assetManager}
+        totalRevenue={formatMonetaryValue(assetManager.totalRevenue)}
+        collateralLocked={formatMonetaryValue(assetManager.collateralLocked, PLATFORM_TOKEN)}
+        styling={{
+          labelColor: Colors.grayBase,
+          valueColor: Colors.black,
+        }}
+        showCollateral={false}
+      />
     </div>
+    <Divider />
     <AssetDetailsManagerInfoPercentages>
       <ValueDisplay
         text="Total Management Fee"
@@ -45,6 +76,7 @@ const AssetDetailsManagerInfo = ({
         hasSeparator
         hasIcon
         isBlue
+        hasShadow
       />
       <ValueDisplay
         text="Asset Collateral"
@@ -56,6 +88,7 @@ const AssetDetailsManagerInfo = ({
         hasSeparator
         hasIcon
         isBlue
+        hasShadow
       />
     </AssetDetailsManagerInfoPercentages>
   </AssetDetailsMananagerInfo>

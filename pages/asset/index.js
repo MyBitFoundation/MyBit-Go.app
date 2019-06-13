@@ -19,6 +19,7 @@ class AssetPage extends React.Component {
 
     const {
       assets,
+      assetManagers,
       loading,
       handleAssetFavorited,
       fundAsset,
@@ -45,6 +46,7 @@ class AssetPage extends React.Component {
         />
       );
     } else {
+      const assetManager = assetManagers[asset.assetManager];
       toRender = (
         <AssetDetails
           asset={asset}
@@ -53,6 +55,7 @@ class AssetPage extends React.Component {
           updateNotification={updateNotification}
           loadingUserInfo={loading.userAssetsInfo}
           gasPrice={gasPrice}
+          assetManager={assetManager}
         />
       )
     }
