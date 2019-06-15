@@ -3,6 +3,7 @@ import {
 } from 'components/MetamaskContext/constants';
 import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
 import SupportedBrowsers from 'ui/SupportedBrowsers';
+import getTokenWithSufficientBalance from 'constants/getTokenWithSufficientBalance';
 
 const getMetamaskErrors = (metamaskError, extensionUrl) => {
   switch(metamaskError){
@@ -99,7 +100,7 @@ export const getFooter = (
   if(metamaskError){
      return getMetamaskErrors(metamaskError, extensionUrl);
   }
-  const tokenWithSufficientBalance = Object.values(balances).find(token => token.balanceInDai >= amountToPay);
+  const tokenWithSufficientBalance = getTokenWithSufficientBalance(balances, amountToPay);
   if(!tokenWithSufficientBalance){
     return getBalancesError();
   } else {

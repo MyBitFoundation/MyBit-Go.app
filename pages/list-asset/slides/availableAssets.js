@@ -6,9 +6,9 @@ import {
   Button,
   Select,
 } from "antd";
-import { withAirtableContext } from 'components/AirtableContext';
 import getConfig from 'next/config';
 import GoogleAutoComplete from 'ui/GoogleAutoComplete';
+import AlertMessage from 'ui/AlertMessage';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -83,8 +83,21 @@ const NoResults = styled.div`
     font-weight: 500;
   }
 `
+const AlertMessageWrapper = styled.div`
+  .ant-alert{
+    padding: 8px 10px 8px 37px;
+  }
 
-export const AvailableAssetsSlide = withAirtableContext(({
+  .ant-alert-message p {
+    margin: 0px 0px !important;
+  }
+
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+`
+
+export const AvailableAssetsSlide = ({
   handleSelectChange,
   formData,
   airtableContext,
@@ -97,6 +110,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
   desktopMode,
   onClick,
   nextButtonDisabled,
+  error,
 }) => {
   const {
     category,
@@ -110,7 +124,6 @@ export const AvailableAssetsSlide = withAirtableContext(({
 
   const {
     assetsAirTable,
-    categoriesAirTable,
     getCategoriesForAssets,
   } = airtableContext;
 
@@ -232,7 +245,7 @@ export const AvailableAssetsSlide = withAirtableContext(({
                     isCentered
                     showSearch
                     placeholder="Available Assets"
-                    onChange={value => handleSelectChange({name: value, assetsAirTable}, "asset")}
+                    onChange={value => handleSelectChange({name: value}, "asset")}
                     value={asset}
                   >
                     {assetsAvailable.map(asset => {
@@ -255,20 +268,31 @@ export const AvailableAssetsSlide = withAirtableContext(({
                     }
                     parser={value => value.replace(/\$\s?|(,*)/g, "")}
                   />
-                  {desktopMode && (
-                    <CarouselNextButton
-                      onClick={onClick}
-                      disabled={nextButtonDisabled}
-                    />
-                  )}
                 </React.Fragment>
               )}
-              {!areAssetsAvailable && (
+              {error && (
+                <AlertMessageWrapper>
+                  <AlertMessage
+                    type="error"
+                    message={error}
+                    showIcon
+                    closable={false}
+                  />
+                </AlertMessageWrapper>
+              )}
+              {(!areAssetsAvailable && !error) && (
                 <NoResults>
                   <ThinkingIcon />
                   <p>No Assets Available Yet</p>
                   <p>Looks like your region is not yet available</p>
                 </NoResults>
+              )}
+              {desktopMode && (
+                <CarouselNextButton
+                  onClick={onClick}
+                  disabled={nextButtonDisabled}
+                  desktopMode={desktopMode}
+                />
               )}
             </React.Fragment>
           )}
@@ -276,4 +300,4 @@ export const AvailableAssetsSlide = withAirtableContext(({
       </React.Fragment>
     </CarouselSlide>
   );
-});
+};

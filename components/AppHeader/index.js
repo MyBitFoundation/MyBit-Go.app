@@ -35,6 +35,7 @@ const AppHeader = ({
     isReadOnlyMode,
     metamaskErrors: getMetamaskErrors,
     network,
+    loadingBalancesForNewUser,
   } = metamaskContext;
 
   const {
@@ -88,7 +89,7 @@ const AppHeader = ({
             {!isReadOnlyMode && (
               <AppHeaderBalance>
                 <Balance
-                  balance={balance}
+                  balance={loadingBalancesForNewUser ? undefined : balance}
                 />
               </AppHeaderBalance>
             )}

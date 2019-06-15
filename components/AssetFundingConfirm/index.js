@@ -210,6 +210,7 @@ class AssetFundingConfirm extends React.Component {
               balances={user.balances}
               amountToPay={amountToPay}
               onChange={this.handleTokenChange}
+              userAddress={user.address}
             />
           </AssetFundingConfirmDropdownButton>
           <Separator style={separatorStyleFullWidth}/>

@@ -88,6 +88,7 @@ export const FeesSlide = ({
       <CarouselNextButton
         onClick={onClick}
         disabled={nextButtonDisabled}
+        desktopMode={desktopMode}
       />
     )}
   </CarouselSlide>

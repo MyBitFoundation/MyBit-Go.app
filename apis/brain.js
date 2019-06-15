@@ -252,11 +252,11 @@ export const updateAirTableWithNewAsset = async (
       assetName,
       country,
       city,
-      collateralPercentage,
       assetManagerEmail,
       about,
       financials,
       risks,
+      collateralPercentage,
     });
     performInternalAction();
   } catch(err){

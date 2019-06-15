@@ -42,9 +42,13 @@ class TokenSelector extends React.Component {
     const {
       balances,
       amountToPay,
+      loading,
     } = this.props;
 
-    if(nextProps.balances && nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
+    // refresh info when MetamaskContext signals it finished loading new balances
+    if(loading === true && nextProps.loading === false){
+      this.processBalances(nextProps, true);
+    } else if(nextProps.balances && nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
       // Due to the async nature of the app, the balances object may be empty initially,
       // in which case we want to call onChange
       if(Object.keys(nextProps.balances).length > 0 && (!balances || Object.keys(balances).length === 0)){
@@ -52,6 +56,8 @@ class TokenSelector extends React.Component {
       } else {
         this.processBalances(nextProps, false);
       }
+    } else if(balances && !nextProps.balances){
+      this.processBalances(nextProps, true);
     }
   }
 

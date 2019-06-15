@@ -49,6 +49,7 @@ export const ConfirmSlideDesktop = ({
   setCheckedToS,
   readToS,
   hadNotReadToS,
+  tokenWithSufficientBalance,
 }) => (
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
@@ -83,13 +84,15 @@ export const ConfirmSlideDesktop = ({
           checked={checkedToS}
           onChange={event => setCheckedToS(event.target.checked)}
           style={{marginTop: '141px'}}
+          disabled={isUserListingAsset}
         />
       )}
       <CarouselNextButton
         onClick={onClick}
-        disabled={nextButtonDisabled || error || (!checkedToS && shouldShowToSCheckmark && readToS)}
+        disabled={nextButtonDisabled || error || (!checkedToS && shouldShowToSCheckmark && readToS) || !tokenWithSufficientBalance}
         loading={isUserListingAsset}
         style={shouldShowToSCheckmark ? {} : {marginTop: '176px'}}
+        desktopMode
       >
         Confirm & List Asset
       </CarouselNextButton>

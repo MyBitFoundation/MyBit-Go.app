@@ -147,7 +147,7 @@ class ManageAssetModule extends React.Component{
               averageProfit,
             }
           }
-        }, () => console.log(this.state));
+        });
       }
       this._processingAssetInfo = false;
     }catch(err){

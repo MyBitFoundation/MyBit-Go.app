@@ -27,7 +27,6 @@ const ListAssetMobile = ({
   formData,
   handleFileUpload,
   handleSelectedTokenChange,
-  handleCollateralChange,
   balances,
   kyberLoading,
   listedAssetId,
@@ -41,6 +40,8 @@ const ListAssetMobile = ({
   shouldShowToSCheckmark,
   setCheckedToS,
   checkedToS,
+  tokenWithSufficientBalance,
+  airtableContext,
 }) => {
   const {
     category,
@@ -52,13 +53,11 @@ const ListAssetMobile = ({
     assetProvince,
     assetPostalCode,
     managementFee,
-    collateralSelectedToken,
-    collateralDai,
+    collateralInSelectedToken,
+    collateralInDefaultToken,
     selectedToken,
     collateralPercentage,
-    collateralMyb,
     fileList,
-    maxCollateralPercentage,
     about,
     financials,
     risks,
@@ -94,11 +93,13 @@ const ListAssetMobile = ({
             countries={countries}
             handleDetectLocationClicked={handleDetectLocationClicked}
             handleCitySuggest={handleCitySuggest}
+            error={false || metamaskErrorsToRender.render}
+            airtableContext={airtableContext}
           />
         ), buttons: {
           hasNextButton: true,
           hasBackButton: true,
-          nextButtonDisabled: !category || !asset || !assetValue,
+          nextButtonDisabled: !category || !asset || !assetValue || metamaskErrorsToRender.render,
         }
       }, {
         toRender: (
@@ -160,22 +161,17 @@ const ListAssetMobile = ({
       }, {
         toRender:
           <CollateralSlide
-            collateralSelectedToken={collateralSelectedToken}
-            collateralDai={collateralDai}
             selectedToken={selectedToken}
             handleSelectedTokenChange={handleSelectedTokenChange}
-            handleCollateralChange={handleCollateralChange}
-            collateralPercentage={collateralPercentage}
-            collateralMyb={collateralMyb}
             formData={formData}
             maxWidthDesktop={MAX_WIDTH_DESKTOP}
             balances={balances}
-            maxCollateralPercentage={maxCollateralPercentage}
             kyberLoading={kyberLoading}
           />
         , buttons: {
           hasNextButton: true,
           hasBackButton: true,
+          nextButtonDisabled: managementFee !== 0 ? false : true,
         }
       },
         !readToS ? {
@@ -218,7 +214,7 @@ const ListAssetMobile = ({
             hasBackButton: true,
             nextButtonText: isUserListingAsset ? 'Confirming listing' : 'Confirm Listing',
             nextButtonLoading: isUserListingAsset,
-            nextButtonDisabled: (!checkedToS && readToS),
+            nextButtonDisabled: (!checkedToS && readToS) || !tokenWithSufficientBalance,
             nextButtonHandler: () => {
               setUserListingAsset(true);
               handleListAsset(formData, setUserListingAsset, civic.email);

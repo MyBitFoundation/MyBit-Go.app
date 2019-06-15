@@ -113,6 +113,7 @@ export const AssetLocationSlide = ({
         <CarouselNextButton
           onClick={onClick}
           disabled={nextButtonDisabled}
+          desktopMode={desktopMode}
         />
       )}
     </CarouselSlide>

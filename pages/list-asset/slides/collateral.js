@@ -4,12 +4,8 @@ import {
   CarouselSlide,
   CarouselSlideMainTitle,
   CarouselSlideParagraph,
-  CarouselSlideTooltip,
   CarouselNextButton,
 } from 'components/CarouselSlide/';
-import {
-  Slider,
-} from 'antd';
 import {
   convertTokenAmount,
   getDecimalsForToken,
@@ -18,19 +14,11 @@ import {
 import {
   PLATFORM_TOKEN,
 } from 'constants/app';
-import Myb from "static/list-asset/assetList_myb.png";
 import { withMetamaskContext } from 'components/MetamaskContext';
 import TokenSelector from 'components/TokenSelector';
 import NumericInput from 'ui/NumericInput';
 import Spin from 'static/spin.svg';
-
-const Image = styled.img`
-  position: relative;
-  margin: 40px auto;
-  width: 90px;
-  height: 65px;
-  display: block;
-}`
+import LabelWithValueAndTooltip from 'ui/LabelWithValueAndTooltip';
 
 const formatter = (value) => {
   return `${value}%`;
@@ -103,25 +91,27 @@ const Loading = styled(Spin)`
 
 export const CollateralSlide = ({
   maxWidthDesktop,
-  handleCollateralChange,
   collateralPercentage,
-  collateralMyb,
-  collateralDai,
   formData,
   handleSelectedTokenChange,
   selectedToken,
   balances,
-  maxCollateralPercentage,
-  collateralSelectedToken,
   kyberLoading,
   desktopMode,
   onClick,
   nextButtonDisabled,
+  loadingBalancesForNewUser,
 }) => {
+  const {
+    collateralInPlatformToken,
+    collateralInDefaultToken,
+    collateralInSelectedToken,
+  } = formData;
+
   const noBalance = !balances || Object.keys(balances).length === 0;
   const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
   const decimalsOfPlatformToken = getDecimalsForToken(PLATFORM_TOKEN);
-  const collateralSelectedTokenFormatted = formatValueForToken(collateralSelectedToken, selectedToken);
+  const collateralSelectedTokenFormatted = formatValueForToken(collateralInSelectedToken, selectedToken);
 
   return (
     <CarouselSlide
@@ -135,19 +125,14 @@ export const CollateralSlide = ({
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
-        <React.Fragment>
-          Asset collateral
-          <CarouselSlideTooltip
-            title="Assets with a high collateral are more likely to get funded."
-          />
-        </React.Fragment>
+        Asset collateral
       </CarouselSlideMainTitle>
       <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
-        {`${PLATFORM_TOKEN} is used as an insurance mechanism, much like a deposit to protect
-        investors' funds and incentivise proper behaviour.`}
+        This a type of decentralised insurance for investors. It is calculated
+        based on the type of asset and your history as an asset manager. <a>Learn More</a>
       </CarouselSlideParagraph>
       {kyberLoading && (
         <React.Fragment>
@@ -163,32 +148,19 @@ export const CollateralSlide = ({
       )}
       {!kyberLoading && (
         <React.Fragment>
-          <Image
-            src={Myb}
-            alt="MyBit"
+          <LabelWithValueAndTooltip
+            {...formData}
           />
           <InputsWrapper>
-            <Slider
-              tipFormatter={formatter}
-              min={0}
-              max={maxCollateralPercentage}
-              defaultValue={collateralPercentage}
-              value={collateralPercentage}
-              onChange={value => handleCollateralChange({selectedAmount: value}, "percentage")}
-              disabled={noBalance}
-            />
             <MybitInput>
-              <Label>Collateral in {PLATFORM_TOKEN}</Label>
+              <Label>Required Escrow</Label>
               <NumericInput
-                defaultValue={collateralPercentage}
-                value={collateralPercentage}
-                min={0}
-                label="%"
-                max={maxCollateralPercentage}
-                onChange={value => handleCollateralChange({selectedAmount: value}, "percentage")}
+                defaultValue={collateralInPlatformToken}
+                value={collateralInPlatformToken}
+                label={PLATFORM_TOKEN}
                 decimalPlaces={2}
                 step={1}
-                disabled={noBalance}
+                disabled
               />
             </MybitInput>
             <Separator>=</Separator>
@@ -197,32 +169,36 @@ export const CollateralSlide = ({
             >
               <Label>Currency you pay in</Label>
               <NumericInput
-                defaultValue={collateralSelectedToken}
-                value={collateralSelectedToken}
+                defaultValue={collateralInSelectedToken}
+                value={collateralInSelectedToken}
                 min={0}
-                disabled={noBalance}
+                disabled
                 step={decimalsOfSelectedTokens.step}
                 decimalPlaces={decimalsOfSelectedTokens.decimals}
                 label={
                   <TokenSelector
                     balances={balances}
-                    amountToPay={collateralDai}
+                    amountToPay={collateralInDefaultToken}
                     onChange={handleSelectedTokenChange}
+                    loading={loadingBalancesForNewUser}
                   />
                 }
-                onChange={value => handleCollateralChange({selectedAmount: value}, "selectedToken")}
               />
 
             </TokenSelectorWrapper>
           </InputsWrapper>
           {desktopMode && (
             <CarouselNextButton
+              loading={loadingBalancesForNewUser}
+              desktopMode={desktopMode}
               onClick={onClick}
-              disabled={nextButtonDisabled}
+              disabled={nextButtonDisabled || noBalance}
               style={{
                 marginTop: '40px',
               }}
-            />
+            >
+              {loadingBalancesForNewUser ? 'Loading balances' : noBalance ? 'Insufficient Funds' : 'Next'}
+            </CarouselNextButton>
           )}
         </React.Fragment>
       )}
