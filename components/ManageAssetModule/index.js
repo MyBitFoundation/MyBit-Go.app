@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose } from 'recompose'
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
+import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import {
-  formatMonetaryValue,
   fromWeiToEth,
 } from 'utils/helpers';
 import ERRORS from './errors';
@@ -18,7 +17,32 @@ class ManageAssetModule extends React.Component{
     loading: true,
   }
 
+  load3BoxSpaces = async (props, asset) => {
+    console.log('[ ManageAssetModule - load3BoxSpaces ] init')
+    
+    const {
+      threeBoxContext
+    } = props;
+
+    console.log('[ ManageAssetModule - load3BoxSpaces ] threeBoxContext', threeBoxContext)
+
+    const {
+      openSpace
+    } = threeBoxContext;
+
+    console.log('[ ManageAssetModule - load3BoxSpaces ] openSpace', openSpace)
+
+    this.setState({
+      threeBoxSpaces: {
+        methods: {
+          authorizeThreeBoxSpace: () => openSpace(asset.assetId)
+        }
+      }
+    })
+  }
+
   processAssetInfo = async (props, asset) => {
+    console.log('[ ManageAssetModule - processAssetInfo ] init')
     if(this._processingAssetInfo){
       return;
     } else {
@@ -202,6 +226,7 @@ class ManageAssetModule extends React.Component{
       } else if(!asset.funded){
         errorType = ERRORS.ASSET_NOT_FUNDED;
       } else {
+        this.load3BoxSpaces(props || this.props, asset);
         this.processAssetInfo(props || this.props, asset);
       }
 
@@ -225,8 +250,9 @@ class ManageAssetModule extends React.Component{
  }
 
 const enhance = compose(
+  withThreeBoxContext,
   withMetamaskContext,
   withBlockchainContext,
 );
 
-export default enhance(ManageAssetModule);;
+export default enhance(ManageAssetModule);

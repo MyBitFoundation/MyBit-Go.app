@@ -28,6 +28,10 @@ const ManageAssetRectangleContainer = styled.div`
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
   `}
 
+  ${props => props.hasPadding && css`
+    padding: 20px;
+  `}
+
   ${(props => props.isLeftAligned && css`
     text-align: left;
   `)}

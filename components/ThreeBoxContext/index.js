@@ -18,8 +18,17 @@ class ThreeBoxProvider extends React.Component {
         super(props);
         this.state = {
           loadingThreeBox: false,
-          load3BoxProfile: this.load3BoxProfile
+          load3BoxProfile: this.load3BoxProfile,
+          openSpace: this.openSpace,
         }
+    }
+
+    openSpace = async (assetId) => {
+        console.log('[ ThreeBoxProvider - openSpace ] - assetId', assetId)
+        this.setState({ loadingThreeBox: true });
+        const space = await Box.openSpace(`mybit-go-${assetId}`)
+        this.setState({ loadingThreeBox: false});
+        return space;
     }
 
     load3BoxProfile = async (address) => {

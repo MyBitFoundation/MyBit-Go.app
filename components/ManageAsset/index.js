@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Button,
   Col,
+  Row,
 } from 'antd';
 import Link from 'next/link';
 import Router from 'next/router'
@@ -13,6 +14,7 @@ import ManageAssetNavButtons from './manageAssetNavButtons';
 import ManageAssetContentWrapper from './manageAssetContentWrapper';
 import ManageAssetAssetInfo from './manageAssetAssetInfo';
 import ManageAssetGraphs from './manageAssetGraphs';
+import ManageAssetUpdates from './manageAssetUpdates';
 import ManageAssetDocsButton from './manageAssetDocsButton';
 import { withMetamaskErrors } from 'components/MetamaskErrors';
 import {
@@ -98,6 +100,7 @@ class ManageAsset extends React.Component {
     render() {
       const {
         assetInfo = {},
+        threeBoxSpaces = {},
         error,
         loading,
         metamaskError,
@@ -127,6 +130,10 @@ class ManageAsset extends React.Component {
         methods = {},
         userAddress,
       } = assetInfo;
+
+      const {
+        authorizeThreeBoxSpace,
+      } = (threeBoxSpaces.methods || {});
 
       const {
         withdrawCollateral,
@@ -193,6 +200,9 @@ class ManageAsset extends React.Component {
                 </Col>
                 {!supportingDocuments && (
                   <Col {...COLUMN_SIZE}>
+                    <ManageAssetUpdates
+                      authorizeThreeBoxSpace={authorizeThreeBoxSpace}
+                    />
                     <ManageAssetGraphs
                       chartBoxView={chartBoxView}
                       revenueData={revenueData}
