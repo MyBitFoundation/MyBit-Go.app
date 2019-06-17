@@ -100,7 +100,7 @@ class ManageAsset extends React.Component {
     render() {
       const {
         assetInfo = {},
-        threeBoxSpaces = {},
+        threeBox = {},
         error,
         loading,
         metamaskError,
@@ -133,7 +133,12 @@ class ManageAsset extends React.Component {
 
       const {
         authorizeThreeBoxSpace,
-      } = (threeBoxSpaces.methods || {});
+        openThreeBoxSpace
+      } = (threeBox.methods || {});
+
+      const {
+        hasAuthorizedThreeBox
+      } = threeBox
 
       const {
         withdrawCollateral,
@@ -202,6 +207,8 @@ class ManageAsset extends React.Component {
                   <Col {...COLUMN_SIZE}>
                     <ManageAssetUpdates
                       authorizeThreeBoxSpace={authorizeThreeBoxSpace}
+                      hasAuthorizedThreeBox={hasAuthorizedThreeBox}
+                      openThreeBoxSpace={openThreeBoxSpace}
                     />
                     <ManageAssetGraphs
                       chartBoxView={chartBoxView}

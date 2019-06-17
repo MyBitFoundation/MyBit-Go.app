@@ -18,24 +18,29 @@ class ManageAssetModule extends React.Component{
   }
 
   load3BoxSpaces = async (props, asset) => {
-    console.log('[ ManageAssetModule - load3BoxSpaces ] init')
-    
     const {
-      threeBoxContext
+      threeBoxContext,
+      metamaskContext
     } = props;
 
-    console.log('[ ManageAssetModule - load3BoxSpaces ] threeBoxContext', threeBoxContext)
+    const {
+      user
+    } = metamaskContext;
 
     const {
-      openSpace
+      openSpace,
+      openBox,
+      hasAuthorizedThreeBox
     } = threeBoxContext;
 
-    console.log('[ ManageAssetModule - load3BoxSpaces ] openSpace', openSpace)
+    console.log('[ ManageAssetModule - load3BoxSpaces ] hasAuthorizedThreeBox', hasAuthorizedThreeBox)
 
     this.setState({
-      threeBoxSpaces: {
+      threeBox: {
+        hasAuthorizedThreeBox: hasAuthorizedThreeBox,
         methods: {
-          authorizeThreeBoxSpace: () => openSpace(asset.assetId)
+          authorizeThreeBoxSpace: () => user && user.address && openBox(user.address),
+          openThreeBoxSpace: () => hasAuthorizedThreeBox && openSpace(asset.assetId)
         }
       }
     })
@@ -59,6 +64,8 @@ class ManageAssetModule extends React.Component{
       withdrawCollateral,
       withdrawProfitAssetManager,
     } = blockchainContext;
+
+    console.log('[ ManageAssetModule - processAssetInfo ] metamaskContext', metamaskContext)
 
     try{
       const {

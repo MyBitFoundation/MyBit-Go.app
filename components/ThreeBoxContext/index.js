@@ -18,20 +18,43 @@ class ThreeBoxProvider extends React.Component {
         super(props);
         this.state = {
           loadingThreeBox: false,
-          load3BoxProfile: this.load3BoxProfile,
+          loadThreeBoxProfile: this.load3BoxProfile,
           openSpace: this.openSpace,
+          openBox: this.openBox,
+          box: null,
+          hasAuthorizedThreeBox: false,
+          spaces: {},
         }
+    }
+
+    openBox = async (userAddress) => {
+      const currentProvider = window.web3js && window.web3js.currentProvider ?
+        window.web3js.currentProvider :
+        { error: 'No Provider selected' }
+      return currentProvider.error ? 
+        currentProvider :
+        (async (provider) => {
+          this.setState({ loadingThreeBox: true });  
+          const box = await Box.openBox(userAddress, provider)
+          this.setState({ loadingThreeBox: false, box, hasAuthorizedThreeBox: true });
+          return box;
+        })(currentProvider)
     }
 
     openSpace = async (assetId) => {
         console.log('[ ThreeBoxProvider - openSpace ] - assetId', assetId)
         this.setState({ loadingThreeBox: true });
-        const space = await Box.openSpace(`mybit-go-${assetId}`)
-        this.setState({ loadingThreeBox: false});
-        return space;
+        const { spaces } = this.state;
+        const id = `mybit-go-${assetId}`
+        const space = spaces[id] ? 
+          spaces[id] :
+          await Box.openSpace(id)
+        spaces[id] = space;
+        this.setState({ spaces, loadingThreeBox: false });
+        return spaces[id];
     }
 
-    load3BoxProfile = async (address) => {
+    loadThreeBoxProfile = async (address) => {
         this.setState({ loadingThreeBox: true });
         const profile = await Box.getProfile(address)
         this.setState({ loadingThreeBox: false});

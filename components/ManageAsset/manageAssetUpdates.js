@@ -11,7 +11,9 @@ const ManageStyledTextArea = styled(TextArea)`
 `
 
 const ManageAssetUpdates = ({
-  authorizeThreeBoxSpace
+  authorizeThreeBoxSpace,
+  hasAuthorizedThreeBox,
+  openThreeBoxSpace
 }) => {
 
   return (
@@ -27,14 +29,26 @@ const ManageAssetUpdates = ({
               to investors of this asset.</p>
           <ManageStyledTextArea rows={3} placeholder='Add your update here' />
           <ButtonGroup size="medium">
-            <Button
-              type="secondary"
-              disabled={false}
-              loading={false}
-              onClick={() => { console.log('Triggering3BoxSpace'); authorizeThreeBoxSpace(); }}
-            >
-              Authorize Threads API
-            </Button>
+            {
+              hasAuthorizedThreeBox ?
+              <Button
+                type="secondary"
+                disabled={false}
+                loading={false}
+                onClick={() => { console.log('Authorizing Space'); authorizeThreeBoxSpace(); }}
+              >
+                Authorize Threads API
+              </Button> :
+              <Button
+                type="secondary"
+                disabled={false}
+                loading={false}
+                onClick={() => { console.log('Open Space'); openThreeBoxSpace(); }}
+              >
+                Open Asset Thread
+              </Button>
+            }
+            
             <Button
               type="primary"
               disabled={false}
