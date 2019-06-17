@@ -24,6 +24,12 @@ const CustomTimelineWrapper = styled(Timeline)`
       display: none;
     }
   }
+
+  ${props => props.listedAssetId && css`
+    li{
+      cursor: default;
+    }
+  `}
 `
 
 const CustomTimeline = React.memo(({
@@ -34,6 +40,9 @@ const CustomTimeline = React.memo(({
   dev,
   civic,
   readToS,
+  isUserListingAsset,
+  tokenWithSufficientBalance,
+  metamaskErrors,
 }) => {
   const{
     category,
@@ -47,20 +56,25 @@ const CustomTimeline = React.memo(({
     fileList,
     managementFee,
     collateralPercentage,
-    collateralMyb,
-    collateralSelectedToken,
+    collateralInPlatformToken,
+    collateralInSelectedToken,
     selectedToken,
   } = formData;
   let maxStep = 1;
-  if(managementFee > 0){
+  if(isUserListingAsset || tokenWithSufficientBalance){
+    maxStep = 8;
+  } else if(managementFee > 0){
     maxStep = 7;
   } else if(userCountry && assetCity){
     maxStep = 5;
-  } else if(assetValue){
+  } else if(assetValue && !metamaskErrors){
     maxStep = 3;
   }
+
   return (
-    <CustomTimelineWrapper>
+    <CustomTimelineWrapper
+      listedAssetId={listedAssetId}
+    >
       <CustomTimelineItem
         title="Civic Account"
         content={dev ? 'dev@mybit.io' : civic.email}
@@ -123,8 +137,8 @@ const CustomTimeline = React.memo(({
         content={step > 6 ?
           collateralPercentage === 0 ? 'No collateral' : (
             <div>
-              <div>{`${collateralPercentage}% of the asset = ${formatMonetaryValue(collateralMyb, PLATFORM_TOKEN)}`}</div>
-              <div>Currency you pay in: {formatMonetaryValue(collateralSelectedToken, selectedToken)}</div>
+              <div>{`${collateralPercentage}% of the asset = ${formatMonetaryValue(collateralInPlatformToken, PLATFORM_TOKEN)}`}</div>
+              <div>Currency you pay in: {formatMonetaryValue(collateralInSelectedToken, selectedToken)}</div>
             </div>
           )
          : "You'll need some MyBit tokens to put down as collateral for your asset and investors."}
@@ -145,7 +159,7 @@ const CustomTimeline = React.memo(({
         title="Confirm with MetaMask"
         content={listedAssetId ? "Asset Listed successfuly" : "Check if everything is right, confirm and deposit collateral with MetaMask."}
         step={!readToS ? 9 : 8}
-        currentStep={listedAssetId ? (!readToS ? 8 : 7) : step}
+        currentStep={listedAssetId ? (!readToS ? 9 : 8) : step}
         goToStep={maxStep > (!readToS ? 8 : 7) ? goToStep : undefined}
       />
     </CustomTimelineWrapper>

@@ -31,6 +31,8 @@ const processAssetsFromAirTable = record => {
     imageSrc: `https://s3.eu-central-1.amazonaws.com/mybit-go/assetImages:${image}`,
     fundingGoal: record.get('Funding goal'),
     assetIDs: record.get('Asset IDs'),
+    cryptoPurchase: record.get('Crypto Purchase') === 1,
+    cryptoPayout: record.get('Crypto Payout') === 1,
   };
 }
 

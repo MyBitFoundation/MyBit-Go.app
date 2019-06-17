@@ -75,6 +75,7 @@ export const GeneralDescriptionSlide = ({
         onClick={onClick}
         disabled={nextButtonDisabled}
         style={{marginTop: '20px'}}
+        desktopMode={desktopMode}
       />
     )}
   </CarouselSlide>

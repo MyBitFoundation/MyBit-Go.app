@@ -124,6 +124,8 @@ class AirtableProvider extends React.PureComponent {
       imageSrc: `${InternalLinks.S3}assetImages:${fields.Image}`,
       fundingGoal: fields['Funding goal'],
       assetIDs: fields['Asset IDs'],
+      cryptoPurchase: fields['Crypto Purchase'] === 1,
+      cryptoPayout: fields['Crypto Payout'] === 1,
       location,
     };
   }
