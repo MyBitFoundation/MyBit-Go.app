@@ -181,6 +181,7 @@ export const CollateralSlide = ({
                     amountToPay={collateralInDefaultToken}
                     onChange={handleSelectedTokenChange}
                     loading={loadingBalancesForNewUser}
+                    selectedToken={selectedToken}
                   />
                 }
               />

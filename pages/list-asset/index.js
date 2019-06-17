@@ -52,7 +52,6 @@ class ListAssetPage extends React.Component {
         collateralInDefaultToken: 0,
         collateralInSelectedToken: 0,
         partnerContractAddress: '',
-        selectedToken: '',
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
@@ -81,16 +80,6 @@ class ListAssetPage extends React.Component {
   componentWillUnmount = () => {
      this.ismounted = false;
      document.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  componentDidUpdate = prevProps => {
-    const { metamaskContext } = this.props;
-    const { loadingBalancesForNewUser } = metamaskContext;
-    const { data } = this.state;
-    const { asset } = data;
-    if (asset && !loadingBalancesForNewUser && prevProps.metamaskContext.loadingBalancesForNewUser) {
-      this.recalculateCollateral(asset);
-    }
   }
 
   setUserListingAsset = (isUserListingAsset, listedAssetId) => {
@@ -126,24 +115,16 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectedTokenChange = selectedToken => {
-    const collateralInDefaultToken = this.state.data.collateralInDefaultToken;
-    const balances = this.props.metamaskContext.user.balances;
-
-    const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
-    const collateralInSelectedToken = balances ? convertFromDefaultToken(selectedToken, balances, collateralInDefaultToken) : 0;
-
-    this.setState({
-      data: {
-        ...this.state.data,
-        selectedToken,
-        collateralInSelectedToken,
-        paymentTokenAddress,
-      },
-    });
+    this.setState({data: {...this.state.data, selectedToken}}, () => this.recalculateCollateral(this.state.data.asset))
   }
 
   recalculateCollateral = assetName => {
-    const { airtableContext } = this.props;
+    const {
+      blockchainContext,
+      airtableContext,
+      metamaskContext,
+      supportedTokensInfo,
+    } = this.props;
     const { assetsAirTable } = airtableContext;
     const asset = assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0];
 
@@ -155,21 +136,15 @@ class ListAssetPage extends React.Component {
     } = asset;
 
     const {
-      blockchainContext,
-      metamaskContext,
-      supportedTokensInfo,
-    } = this.props;
-
-    const {
       assets,
       assetManagers,
     } = blockchainContext;
 
     const { selectedToken } = this.state.data;
-
     const { user } = metamaskContext;
-
+    const { balances } = user;
     const numberOfAssetsByAssetManager = assetManagers[user.address] ? assetManagers[user.address].totalAssets : 0;
+    const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
 
     const {
       collateralBasedOnHistory,
@@ -196,6 +171,7 @@ class ListAssetPage extends React.Component {
         numberOfAssetsByAssetManager,
         collateralInDefaultToken,
         collateralInSelectedToken,
+        paymentTokenAddress,
       }
     })
   }
@@ -376,7 +352,7 @@ class ListAssetPage extends React.Component {
       userCity,
       userCountry,
     } = this.state.data;
-
+    console.log(this.state)
     const tokenWithSufficientBalance = collateralInDefaultToken > 0 ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken) : undefined;
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
