@@ -106,6 +106,7 @@ export const CollateralSlide = ({
     collateralInPlatformToken,
     collateralInDefaultToken,
     collateralInSelectedToken,
+    asset,
   } = formData;
 
   const noBalance = !balances || Object.keys(balances).length === 0;
@@ -164,29 +165,31 @@ export const CollateralSlide = ({
               />
             </MybitInput>
             <Separator>=</Separator>
-            <TokenSelectorWrapper
-              selectorIsDisabled={noBalance}
-            >
-              <Label>Currency you pay in</Label>
-              <NumericInput
-                defaultValue={collateralInSelectedToken}
-                value={collateralInSelectedToken}
-                min={0}
-                disabled
-                step={decimalsOfSelectedTokens.step}
-                decimalPlaces={decimalsOfSelectedTokens.decimals}
-                label={
-                  <TokenSelector
-                    balances={balances}
-                    amountToPay={collateralInDefaultToken}
-                    onChange={handleSelectedTokenChange}
-                    loading={loadingBalancesForNewUser}
-                    selectedToken={selectedToken}
-                  />
-                }
-              />
+            {asset && (
+              <TokenSelectorWrapper
+                selectorIsDisabled={noBalance}
+              >
+                <Label>Currency you pay in</Label>
+                <NumericInput
+                  defaultValue={collateralInSelectedToken}
+                  value={collateralInSelectedToken}
+                  min={0}
+                  disabled
+                  step={decimalsOfSelectedTokens.step}
+                  decimalPlaces={decimalsOfSelectedTokens.decimals}
+                  label={
+                    <TokenSelector
+                      balances={balances}
+                      amountToPay={collateralInDefaultToken}
+                      onChange={handleSelectedTokenChange}
+                      loading={loadingBalancesForNewUser}
+                      selectedToken={selectedToken}
+                    />
+                  }
+                />
 
-            </TokenSelectorWrapper>
+              </TokenSelectorWrapper>
+            )}
           </InputsWrapper>
           {desktopMode && (
             <CarouselNextButton

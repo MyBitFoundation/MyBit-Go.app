@@ -42,6 +42,7 @@ const ListAssetMobile = ({
   checkedToS,
   tokenWithSufficientBalance,
   airtableContext,
+  loadingBalancesForNewUser,
 }) => {
   const {
     category,
@@ -167,6 +168,7 @@ const ListAssetMobile = ({
             maxWidthDesktop={MAX_WIDTH_DESKTOP}
             balances={balances}
             kyberLoading={kyberLoading}
+            loadingBalancesForNewUser={loadingBalancesForNewUser}
           />
         , buttons: {
           hasNextButton: true,
