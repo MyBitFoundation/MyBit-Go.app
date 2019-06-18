@@ -5,6 +5,7 @@ import BN from 'bignumber.js';
 import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import AssetFunding from 'components/AssetFunding';
+import AssetUpdates from 'components/AssetUpdates';
 import AssetDetailsRightCol from './assetDetailsRightCol';
 import AssetDetailsLeftCol from './assetDetailsLeftCol';
 import AssetDetailsWrapper from './assetDetailsWrapper';
@@ -17,6 +18,7 @@ const AssetDetails = ({
   loadingUserInfo,
   gasPrice,
   assetManager,
+  getPosts,
 }) => {
   const {
     city,
@@ -67,6 +69,10 @@ const AssetDetails = ({
         />
       </AssetDetailsLeftCol>
       <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
+        <AssetUpdates
+          asset={asset}
+          getPosts={getPosts}
+        />
         <AssetFunding
           asset={asset}
           fundAsset={fundAsset}

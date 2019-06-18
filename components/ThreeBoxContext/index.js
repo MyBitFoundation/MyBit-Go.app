@@ -3,14 +3,24 @@ import Box from '3box';
 
 const { Provider, Consumer } = React.createContext({});
 
+const SPACE_ID = 'MYBIT_GO'
+
 export const withThreeBoxContext = (Component) => {
-    return function WrapperComponent(props) {
+    return class Higher extends React.Component{
+      static getInitialProps(ctx) {
+        if(Component.getInitialProps)
+          return Component.getInitialProps(ctx);
+        else return {};
+      }
+      render(){
         return (
-            <Consumer>
-                {state => <Component {...props} threeBoxContext={state} />}
-            </Consumer>
-        );
-    };
+          <Consumer>
+            {state => <Component {...this.props} threeBoxContext={state} />}
+          </Consumer>
+        )
+      }
+    }
+    
 }
 
 class ThreeBoxProvider extends React.Component {
@@ -18,9 +28,10 @@ class ThreeBoxProvider extends React.Component {
         super(props);
         this.state = {
           loadingThreeBox: false,
-          loadThreeBoxProfile: this.load3BoxProfile,
+          loadThreeBoxProfile: this.loadThreeBoxProfile,
           openSpace: this.openSpace,
           openBox: this.openBox,
+          getPosts: this.getPosts,
           box: null,
           hasAuthorizedThreeBox: false,
           spaces: {},
@@ -41,17 +52,29 @@ class ThreeBoxProvider extends React.Component {
         })(currentProvider)
     }
 
+    getPosts = async (threadName, moderator) => {
+      console.log('[ ThreeBoxProvider - getPosts ] ', SPACE_ID, threadName, moderator, typeof moderator === 'string')
+      this.setState({ loadingThreeBox: true });
+      const posts = await Box.getThread(
+        SPACE_ID, 
+        threadName,
+        { firstModerator: moderator, members: true }
+      )
+      console.log('[ ThreeBoxProvider - getPosts ] - posts', posts)
+      this.setState({ loadingThreeBox: false });
+      return posts;
+    }
+
     openSpace = async (assetId) => {
         console.log('[ ThreeBoxProvider - openSpace ] - assetId', assetId)
         this.setState({ loadingThreeBox: true });
         const { spaces } = this.state;
-        const id = `mybit-go-${assetId}`
-        const space = spaces[id] ? 
-          spaces[id] :
-          await Box.openSpace(id)
-        spaces[id] = space;
+        const space = spaces[SPACE_ID] ? 
+          spaces[SPACE_ID] :
+          await Box.openSpace(SPACE_ID)
+        spaces[SPACE_ID] = space;
         this.setState({ spaces, loadingThreeBox: false });
-        return spaces[id];
+        return spaces[SPACE_ID];
     }
 
     loadThreeBoxProfile = async (address) => {
