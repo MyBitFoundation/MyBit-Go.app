@@ -137,7 +137,8 @@ class ManageAsset extends React.Component {
       } = (threeBox.methods || {});
 
       const {
-        hasAuthorizedThreeBox
+        hasAuthorizedThreeBox,
+        hasOpenedGoSpace
       } = threeBox
 
       const {
@@ -209,6 +210,7 @@ class ManageAsset extends React.Component {
                       authorizeThreeBoxSpace={authorizeThreeBoxSpace}
                       hasAuthorizedThreeBox={hasAuthorizedThreeBox}
                       openThreeBoxSpace={openThreeBoxSpace}
+                      hasOpenedGoSpace={hasOpenedGoSpace}
                     />
                     <ManageAssetGraphs
                       chartBoxView={chartBoxView}

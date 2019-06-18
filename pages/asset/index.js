@@ -31,6 +31,7 @@ class AssetPage extends React.Component {
 
     const {
       getPosts,
+      loadingThreeBox
     } = threeBoxContext;
 
     if (loading.assets) {
@@ -63,6 +64,7 @@ class AssetPage extends React.Component {
           gasPrice={gasPrice}
           assetManager={assetManager}
           getPosts={getPosts}
+          loadingThreeBox={loadingThreeBox}
         />
       )
     }

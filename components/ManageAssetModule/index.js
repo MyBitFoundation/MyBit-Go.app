@@ -30,7 +30,8 @@ class ManageAssetModule extends React.Component{
     const {
       openSpace,
       openBox,
-      hasAuthorizedThreeBox
+      hasAuthorizedThreeBox,
+      hasOpenedGoSpace
     } = threeBoxContext;
 
     console.log('[ ManageAssetModule - load3BoxSpaces ] hasAuthorizedThreeBox', hasAuthorizedThreeBox)
@@ -38,9 +39,10 @@ class ManageAssetModule extends React.Component{
     this.setState({
       threeBox: {
         hasAuthorizedThreeBox: hasAuthorizedThreeBox,
+        hasOpenedGoSpace: hasOpenedGoSpace,
         methods: {
           authorizeThreeBoxSpace: () => user && user.address && openBox(user.address),
-          openThreeBoxSpace: () => hasAuthorizedThreeBox && openSpace(asset.assetId)
+          openThreeBoxSpace: () => openSpace(asset.assetId)
         }
       }
     })

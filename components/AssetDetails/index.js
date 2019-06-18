@@ -19,6 +19,7 @@ const AssetDetails = ({
   gasPrice,
   assetManager,
   getPosts,
+  loadingThreeBox
 }) => {
   const {
     city,
@@ -72,6 +73,7 @@ const AssetDetails = ({
         <AssetUpdates
           asset={asset}
           getPosts={getPosts}
+          loadingThreeBox={loadingThreeBox}
         />
         <AssetFunding
           asset={asset}

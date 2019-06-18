@@ -13,8 +13,11 @@ const ManageStyledTextArea = styled(TextArea)`
 const ManageAssetUpdates = ({
   authorizeThreeBoxSpace,
   hasAuthorizedThreeBox,
-  openThreeBoxSpace
+  hasOpenedGoSpace,
+  openThreeBoxSpace,
 }) => {
+
+  console.log('[ ManageAssetUpdates - init ] - hasOpenedGoSpace', hasOpenedGoSpace)
 
   return (
     <ManageAssetCustomRow>
@@ -27,10 +30,16 @@ const ManageAssetUpdates = ({
           <b>Updates</b>
           <p>Use the following section to post updates 
               to investors of this asset.</p>
-          <ManageStyledTextArea rows={3} placeholder='Add your update here' />
+          <ManageStyledTextArea
+            rows={3}
+            placeholder={
+              `Add your update here. The update will show up in the asset ` +
+              `listing and can not be removed afterwards.`
+            }
+          />
           <ButtonGroup size="medium">
             {
-              hasAuthorizedThreeBox ?
+              !hasAuthorizedThreeBox ?
               <Button
                 type="secondary"
                 disabled={false}
@@ -39,11 +48,14 @@ const ManageAssetUpdates = ({
               >
                 Authorize Threads API
               </Button> :
-              <Button
+              !hasOpenedGoSpace && <Button
                 type="secondary"
                 disabled={false}
                 loading={false}
-                onClick={() => { console.log('Open Space'); openThreeBoxSpace(); }}
+                onClick={() => { 
+                  console.log('[ ManageAssetUpdates - onClick ] - calling openThreeBoxSpace'); 
+                  openThreeBoxSpace(); 
+                }}
               >
                 Open Asset Thread
               </Button>
@@ -51,7 +63,7 @@ const ManageAssetUpdates = ({
             
             <Button
               type="primary"
-              disabled={false}
+              disabled={!hasOpenedGoSpace && !hasAuthorizedThreeBox}
               loading={false}
               onClick={() => {}}
             >

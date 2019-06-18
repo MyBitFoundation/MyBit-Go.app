@@ -34,7 +34,8 @@ class ThreeBoxProvider extends React.Component {
           getPosts: this.getPosts,
           box: null,
           hasAuthorizedThreeBox: false,
-          spaces: {},
+          hasOpenedGoSpace: false,
+          space: null,
         }
     }
 
@@ -47,19 +48,29 @@ class ThreeBoxProvider extends React.Component {
         (async (provider) => {
           this.setState({ loadingThreeBox: true });  
           const box = await Box.openBox(userAddress, provider)
+          console.log('[ ThreeBoxProvider - openBox ] - box', box)
           this.setState({ loadingThreeBox: false, box, hasAuthorizedThreeBox: true });
           return box;
         })(currentProvider)
     }
 
     getPosts = async (threadName, moderator) => {
-      console.log('[ ThreeBoxProvider - getPosts ] ', SPACE_ID, threadName, moderator, typeof moderator === 'string')
+      console.log('[ ThreeBoxProvider - getPosts ] ', SPACE_ID, threadName, moderator)
       this.setState({ loadingThreeBox: true });
-      const posts = await Box.getThread(
-        SPACE_ID, 
-        threadName,
-        { firstModerator: moderator, members: true }
-      )
+      const posts = await new Promise(async (res) => {
+        try {
+          const posts = await Box.getThread(
+            SPACE_ID,
+            threadName,
+            moderator,
+            true
+          );
+          res(posts)
+        } catch (err) {
+          console.log('[ ThreeBoxProvider - getPosts ] error', err)
+          res([])
+        }
+      })
       console.log('[ ThreeBoxProvider - getPosts ] - posts', posts)
       this.setState({ loadingThreeBox: false });
       return posts;
@@ -68,13 +79,23 @@ class ThreeBoxProvider extends React.Component {
     openSpace = async (assetId) => {
         console.log('[ ThreeBoxProvider - openSpace ] - assetId', assetId)
         this.setState({ loadingThreeBox: true });
-        const { spaces } = this.state;
-        const space = spaces[SPACE_ID] ? 
-          spaces[SPACE_ID] :
-          await Box.openSpace(SPACE_ID)
-        spaces[SPACE_ID] = space;
-        this.setState({ spaces, loadingThreeBox: false });
-        return spaces[SPACE_ID];
+        const { space, box } = this.state;
+        const openedSpace = space ? 
+          space :
+          await new Promise(async (res) => {
+            try {
+              const space = await box.openSpace(SPACE_ID);
+              console.log('[ ThreeBoxProvider - openSpace ] - space', space)
+              this.setState({ hasOpenedGoSpace: space !== null })
+              res(space);
+            } catch (err) {
+              console.log('[ ThreeBoxProvider - openSpace ] - err', err)
+              res({ error: err })
+            }
+          })
+        this.setState({ space: openedSpace, loadingThreeBox: false });
+        console.log('[ ThreeBoxProvider - openSpace ] - space', openedSpace)
+        return openedSpace;
     }
 
     loadThreeBoxProfile = async (address) => {

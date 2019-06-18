@@ -17,20 +17,34 @@ const AssetUpdatesTitle = styled.p`
 }`
 
 class AssetUpdates extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      posts: []
+    }
+  }
   async componentWillMount() {
     const { getPosts, asset } = this.props;
-    console.log('[ AssetUpdates - componentWillMount ] asset', asset);
     const posts = asset && asset.assetId && asset.assetManager ? 
       await getPosts(asset.assetId, asset.assetManager) : []
-    console.log('[ AssetUpdates - componentWillMount ] posts', posts);
+    this.setState({ posts })
   }
   render() {
+    const { loadingThreeBox } = this.props;
+    const { posts } = this.state;
     return (
       <AssetUpdatesWrapper>
         <AssetUpdatesTitle>Updates from Asset Manager</AssetUpdatesTitle>
-        <p>
-          No updates from the asset manager.
-        </p>
+        {
+          loadingThreeBox ?
+          <p>
+            Loading updates from Asset Manager...
+          </p> : posts.length === 0 ?
+            <p>
+              No updates from the asset manager.
+            </p> :
+            <p> We got some updates for ya</p>
+        }
       </AssetUpdatesWrapper>
     )
   }
