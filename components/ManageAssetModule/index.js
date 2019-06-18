@@ -30,6 +30,7 @@ class ManageAssetModule extends React.Component{
     const {
       openSpace,
       openBox,
+      postThread,
       hasAuthorizedThreeBox,
       hasOpenedGoSpace
     } = threeBoxContext;
@@ -42,7 +43,8 @@ class ManageAssetModule extends React.Component{
         hasOpenedGoSpace: hasOpenedGoSpace,
         methods: {
           authorizeThreeBoxSpace: () => user && user.address && openBox(user.address),
-          openThreeBoxSpace: () => openSpace(asset.assetId)
+          openThreeBoxSpace: () => openSpace(),
+          postUpdateOnThread: (update) => postThread(asset.assetId, update)
         }
       }
     })

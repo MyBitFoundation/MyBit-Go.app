@@ -32,9 +32,12 @@ class ThreeBoxProvider extends React.Component {
           openSpace: this.openSpace,
           openBox: this.openBox,
           getPosts: this.getPosts,
+          postThread: this.postThread,
           box: null,
           hasAuthorizedThreeBox: false,
           hasOpenedGoSpace: false,
+          threads: [],
+          currentThread: {},
           space: null,
         }
     }
@@ -76,8 +79,23 @@ class ThreeBoxProvider extends React.Component {
       return posts;
     }
 
-    openSpace = async (assetId) => {
-        console.log('[ ThreeBoxProvider - openSpace ] - assetId', assetId)
+    postThread = async (threadName, update) => {
+      console.log('[ ThreeBoxProvider - postUpdate ] - threadName', threadName)
+      this.setState({ loadingThreeBox: true });
+      const { space, threads } = this.state;
+      console.log('[ ThreeBoxProvider - postUpdate ] - threadName', space)
+      const thread = threads[threadName] ?
+        threads[threadName] :
+        await space.joinThread(threadName);
+        console.log('[ ThreeBoxProvider - postUpdate ] - thread', thread)
+      threads[threadName] = thread;
+      const response = await thread.post(update);
+      console.log('[ ThreeBoxProvider - postUpdate ] - response', response)
+      this.setState({ threads, currentThread: thread, loadingThreeBox: false});
+      return { thread, response };
+    }
+
+    openSpace = async () => {
         this.setState({ loadingThreeBox: true });
         const { space, box } = this.state;
         const openedSpace = space ? 

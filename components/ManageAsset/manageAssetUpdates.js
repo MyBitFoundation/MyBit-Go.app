@@ -10,14 +10,20 @@ const ManageStyledTextArea = styled(TextArea)`
     margin: 10px;
 `
 
-const ManageAssetUpdates = ({
-  authorizeThreeBoxSpace,
-  hasAuthorizedThreeBox,
-  hasOpenedGoSpace,
-  openThreeBoxSpace,
-}) => {
+class ManageAssetUpdates extends React.Component {
+  state =  {
+    updateText: null
+  }
 
-  console.log('[ ManageAssetUpdates - init ] - hasOpenedGoSpace', hasOpenedGoSpace)
+  render() {
+
+  const {
+    authorizeThreeBoxSpace,
+    hasAuthorizedThreeBox,
+    hasOpenedGoSpace,
+    openThreeBoxSpace,
+    postUpdateOnThread,
+  } = this.props;
 
   return (
     <ManageAssetCustomRow>
@@ -36,6 +42,8 @@ const ManageAssetUpdates = ({
               `Add your update here. The update will show up in the asset ` +
               `listing and can not be removed afterwards.`
             }
+            onChange={(e) => this.setState({ updateText: e.target.value })}
+            value={this.state.updateText}
           />
           <ButtonGroup size="medium">
             {
@@ -48,7 +56,7 @@ const ManageAssetUpdates = ({
               >
                 Authorize Threads API
               </Button> :
-              !hasOpenedGoSpace && <Button
+              (!hasOpenedGoSpace && <Button
                 type="secondary"
                 disabled={false}
                 loading={false}
@@ -58,20 +66,26 @@ const ManageAssetUpdates = ({
                 }}
               >
                 Open Asset Thread
-              </Button>
+              </Button>)
             }
             
             <Button
               type="primary"
-              disabled={!hasOpenedGoSpace && !hasAuthorizedThreeBox}
+              disabled={!hasOpenedGoSpace || !hasAuthorizedThreeBox}
               loading={false}
-              onClick={() => {}}
+              onClick={() => {
+                  postUpdateOnThread(this.state.updateText)
+                  this.setState({ updateText: '' })
+                }
+              }
             >
               Post Update
             </Button>
           </ButtonGroup>
         </ManageAssetRectangleContainer>
     </ManageAssetCustomRow>
-)}
+  );
+  }
+}
 
 export default ManageAssetUpdates;
