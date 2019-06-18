@@ -1,13 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
+import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import {
   Progress,
   Icon,
 } from 'antd';
 import{
-  DEFAULT_TOKEN,
   PLATFORM_TOKEN,
 } from 'constants/app';
 import AssetDefaultDetailsContainer from './assetDefaultDetailsContainer';
@@ -16,9 +15,8 @@ import AssetDefaultGoal from './assetDefaultGoal';
 import AssetDefaultContributeButton from './assetDefaultContributeButton';
 import {
   formatMonetaryValue,
-  shortenAddress,
 } from 'utils/helpers';
-import UserIcon from 'static/user.svg';
+
 import AssetManagerTooltip from 'ui/AssetManagerTooltip';
 
 const Container = styled.div`
@@ -27,11 +25,9 @@ const Container = styled.div`
   align-items: center;
 `
 
-const UserIconWrapper = styled(UserIcon)`
-  position: relative;
-  top: 2px;
-  margin-right: 5px;
-  margin-left: 0px;
+const ProfileContainer = styled.div`
+  display: flex;
+  align-items: center;
 `
 
 const AssetDefault = ({
@@ -43,6 +39,7 @@ const AssetDefault = ({
   assetManager,
   assetManagerData,
 }) => {
+
   const {
     totalRevenue,
     totalAssets,
@@ -82,22 +79,24 @@ const AssetDefault = ({
       </div>
 
       <Container>
-        <div>
+        <ProfileContainer>
           <AssetManagerTooltip
             totalAssets={totalAssets}
             startDate={startDate}
             totalRevenue={formatMonetaryValue(totalRevenue)}
             collateralLocked={formatMonetaryValue(collateralLocked, PLATFORM_TOKEN)}
           >
-            <UserIconWrapper />
+            <ThreeBoxProfile address={assetManager} icon />
           </AssetManagerTooltip>
           <Link
             as={`/asset-managers/${assetManager}`}
             href={`/asset-managers?id=${assetManager}`}
           >
-            <a>{shortenAddress(assetManager, 6, 4)}</a>
+            <a>
+              <ThreeBoxProfile address={assetManager} name />
+            </a>
           </Link>
-        </div>
+        </ProfileContainer>
         <Link
           as={`/asset/${assetId}`}
           href={`/asset?id=${assetId}`}
@@ -113,4 +112,4 @@ const AssetDefault = ({
   )
 };
 
-export default React.memo(AssetDefault)
+export default React.memo(AssetDefault);

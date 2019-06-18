@@ -24,6 +24,12 @@ const CustomTimelineWrapper = styled(Timeline)`
       display: none;
     }
   }
+
+  ${props => props.listedAssetId && css`
+    li{
+      cursor: default;
+    }
+  `}
 `
 
 const CustomTimeline = React.memo(({
@@ -34,6 +40,9 @@ const CustomTimeline = React.memo(({
   dev,
   civic,
   readToS,
+  isUserListingAsset,
+  tokenWithSufficientBalance,
+  metamaskErrors,
 }) => {
   const{
     category,
@@ -47,20 +56,25 @@ const CustomTimeline = React.memo(({
     fileList,
     managementFee,
     collateralPercentage,
-    collateralMyb,
-    collateralSelectedToken,
+    collateralInPlatformToken,
+    collateralInSelectedToken,
     selectedToken,
   } = formData;
   let maxStep = 1;
-  if(managementFee > 0){
+  if(isUserListingAsset || tokenWithSufficientBalance){
+    maxStep = 8;
+  } else if(managementFee > 0){
     maxStep = 7;
   } else if(userCountry && assetCity){
     maxStep = 5;
-  } else if(assetValue){
+  } else if(assetValue && !metamaskErrors){
     maxStep = 3;
   }
+
   return (
-    <CustomTimelineWrapper>
+    <CustomTimelineWrapper
+      listedAssetId={listedAssetId}
+    >
       <CustomTimelineItem
         title="Civic Account"
         content={dev ? 'dev@mybit.io' : civic.email}
@@ -81,64 +95,72 @@ const CustomTimeline = React.memo(({
         goToStep={maxStep > 1 ? goToStep : undefined}
       />
       <CustomTimelineItem
-        title="Asset Location"
-        content={step > 2 ? (
-          <React.Fragment>
-            <div>{userCountry}, {assetCity}</div>
-            <div>{`${assetAddress1}${assetAddress2 ? `, ${assetAddress2}` : ''}${assetPostalCode ? `, ${assetPostalCode}` : ''}`}</div>
-          </React.Fragment>
-        ) : "Enter a location. For investor, it's important they know exactly where the asset is based."}
+        title="General Description"
+        content={step > 2 ? "Provided information about the asset, financial aspects and associated risks."
+          : "Tell the community about the project. Why do you think it will work? Provide financial details and the associated risks."}
         step={3}
         currentStep={step}
         goToStep={maxStep > 2 ? goToStep : undefined}
       />
       <CustomTimelineItem
-        title="Supporting Documents"
+        title="Asset Location"
         content={step > 3 ? (
-          <div>
-            {fileList.length === 0 ? 'No files have been uploaded.' : fileList.map(file => <div>{file.name}</div>)}
-          </div>
-        ) : "Confirm you have the necessary legal and property rights to install the asset."}
+          <React.Fragment>
+            <div>{userCountry}, {assetCity}</div>
+            <div>{`${assetAddress1}${assetAddress2 ? `, ${assetAddress2}` : ''}${assetPostalCode ? `, ${assetPostalCode}` : ''}`}</div>
+          </React.Fragment>
+        ) : "Enter a location. For investor, it's important they know exactly where the asset is based."}
         step={4}
         currentStep={step}
         goToStep={maxStep > 3 ? goToStep : undefined}
       />
       <CustomTimelineItem
-        title="Management Fee"
-        content={step > 4 ? `${managementFee}%` : "How much will it cost for you to operate the asset?"}
+        title="Supporting Documents"
+        content={step > 4 ? (
+          <div>
+            {fileList.length === 0 ? 'No files have been uploaded.' : fileList.map(file => <div>{file.name}</div>)}
+          </div>
+        ) : "Confirm you have the necessary legal and property rights to install the asset."}
         step={5}
         currentStep={step}
         goToStep={maxStep > 4 ? goToStep : undefined}
       />
       <CustomTimelineItem
-        title="Asset Collateral"
-        content={step > 5 ?
-          collateralPercentage === 0 ? 'No collateral' : (
-            <div>
-              <div>{`${collateralPercentage}% of the asset = ${formatMonetaryValue(collateralMyb, PLATFORM_TOKEN)}`}</div>
-              <div>Currency you pay in: {formatMonetaryValue(collateralSelectedToken, selectedToken)}</div>
-            </div>
-          )
-         : "You'll need some MyBit tokens to put down as collateral for your asset and investors."}
+        title="Management Fee"
+        content={step > 5 ? `${managementFee}%` : "How much will it cost for you to operate the asset?"}
         step={6}
         currentStep={step}
         goToStep={maxStep > 5 ? goToStep : undefined}
+      />
+      <CustomTimelineItem
+        title="Asset Collateral"
+        content={step > 6 ?
+          collateralPercentage === 0 ? 'No collateral' : (
+            <div>
+              <div>{`${collateralPercentage}% of the asset = ${formatMonetaryValue(collateralInPlatformToken, PLATFORM_TOKEN)}`}</div>
+              <div>Currency you pay in: {formatMonetaryValue(collateralInSelectedToken, selectedToken)}</div>
+            </div>
+          )
+         : "You'll need some MyBit tokens to put down as collateral for your asset and investors."}
+        step={7}
+        currentStep={step}
+        goToStep={maxStep > 6 ? goToStep : undefined}
       />
       {!readToS && (
         <CustomTimelineItem
           title="Terms and Conditions"
           content="Read the risks and understand the high degree of risk associated with MyBit Go"
-          step={7}
+          step={8}
           currentStep={step}
-          goToStep={maxStep > 6 ? goToStep : undefined}
+          goToStep={maxStep > 7 ? goToStep : undefined}
         />
       )}
       <CustomTimelineItem
         title="Confirm with MetaMask"
         content={listedAssetId ? "Asset Listed successfuly" : "Check if everything is right, confirm and deposit collateral with MetaMask."}
-        step={!readToS ? 8 : 7}
-        currentStep={listedAssetId ? (!readToS ? 7 : 6) : step}
-        goToStep={maxStep > (!readToS ? 7 : 6) ? goToStep : undefined}
+        step={!readToS ? 9 : 8}
+        currentStep={listedAssetId ? (!readToS ? 9 : 8) : step}
+        goToStep={maxStep > (!readToS ? 8 : 7) ? goToStep : undefined}
       />
     </CustomTimelineWrapper>
   )

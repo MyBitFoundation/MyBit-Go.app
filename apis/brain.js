@@ -241,6 +241,9 @@ export const updateAirTableWithNewAsset = async (
   city,
   collateralPercentage,
   assetManagerEmail,
+  about,
+  financials,
+  risks,
   performInternalAction,
 ) => {
   try{
@@ -249,12 +252,27 @@ export const updateAirTableWithNewAsset = async (
       assetName,
       country,
       city,
-      collateralPercentage,
       assetManagerEmail,
+      about,
+      financials,
+      risks,
+      collateralPercentage,
     });
     performInternalAction();
   } catch(err){
-    setTimeout(() => updateAirTableWithNewAsset(assetId, assetName, country, city, collateralPercentage, assetManagerEmail, performInternalAction), 5000);
+    setTimeout(() =>
+      updateAirTableWithNewAsset(
+        assetId,
+        assetName,
+        country,
+        city,
+        collateralPercentage,
+        assetManagerEmail,
+        performInternalAction,
+        about,
+        financials,
+        risks,
+      ), 5000);
     debug(err);
   }
 }

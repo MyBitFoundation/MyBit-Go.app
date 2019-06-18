@@ -13,5 +13,8 @@
     "REACT_APP_INFURA_API_KEY": "@infura-api-key",
     "GOOGLE_PLACES_API_KEY": "@google-places-api-key"
   },
+  "engines": {
+    "node": "10"
+  },
   "version": 1
 }

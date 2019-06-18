@@ -42,9 +42,12 @@ class TokenSelector extends React.Component {
     const {
       balances,
       amountToPay,
-    } = this.props;
-
-    if(nextProps.balances && nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
+      loading,
+    } = this.props
+    // refresh info when MetamaskContext signals it finished loading new balances
+    if(loading === true && nextProps.loading === false){
+      this.processBalances(nextProps, true);
+    } else if(nextProps.balances && nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
       // Due to the async nature of the app, the balances object may be empty initially,
       // in which case we want to call onChange
       if(Object.keys(nextProps.balances).length > 0 && (!balances || Object.keys(balances).length === 0)){
@@ -52,6 +55,8 @@ class TokenSelector extends React.Component {
       } else {
         this.processBalances(nextProps, false);
       }
+    } else if(balances && !nextProps.balances){
+      this.processBalances(nextProps, true);
     }
   }
 
@@ -72,6 +77,7 @@ class TokenSelector extends React.Component {
       balances,
       amountToPay,
       onChange,
+      selectedToken: manuallySelectedToken,
     } = props;
 
     let selectedToken;
@@ -82,7 +88,7 @@ class TokenSelector extends React.Component {
     if(totalTokens === 0 || !sortedBalances[0].enoughFunds){
       selectedToken = DEFAULT_TOKEN;
     } else {
-      selectedToken = sortedBalances[0].symbol;
+      selectedToken = balances[manuallySelectedToken] ? manuallySelectedToken : sortedBalances[0].symbol;
     }
 
     this.setState({
@@ -93,7 +99,7 @@ class TokenSelector extends React.Component {
       sortedBalancesBackup: sortedBalances,
     })
 
-    if(callOnChange) {
+    if((manuallySelectedToken !== selectedToken) || callOnChange) {
       onChange(selectedToken);
     }
   }

@@ -10,6 +10,7 @@ import {
   ConfirmSlideDesktop,
   SuccessSlide,
   TermsOfServiceSlide,
+  GeneralDescriptionSlide,
 } from "./slides";
 import CustomTimeline from './customTimeline';
 
@@ -68,7 +69,6 @@ const ListAssetDesktop = ({
   formData,
   handleFileUpload,
   handleSelectedTokenChange,
-  handleCollateralChange,
   balances,
   kyberLoading,
   listedAssetId,
@@ -84,6 +84,10 @@ const ListAssetDesktop = ({
   checkedToS,
   shouldShowToSCheckmark,
   setCheckedToS,
+  tokenWithSufficientBalance,
+  airtableContext,
+  userAddress,
+  loadingBalancesForNewUser
 }) => {
   const {
     category,
@@ -95,13 +99,15 @@ const ListAssetDesktop = ({
     assetProvince,
     assetPostalCode,
     managementFee,
-    collateralSelectedToken,
-    collateralDai,
+    collateralInSelectedToken,
+    collateralInDefaultToken,
     selectedToken,
     collateralPercentage,
-    collateralMyb,
+    collateralInPlatformToken,
     fileList,
-    maxCollateralPercentage,
+    about,
+    financials,
+    risks,
   } = formData;
 
   if(step === 0){
@@ -126,6 +132,9 @@ const ListAssetDesktop = ({
         dev={dev}
         civic={civic}
         readToS={readToS}
+        isUserListingAsset={isUserListingAsset}
+        tokenWithSufficientBalance={tokenWithSufficientBalance}
+        metamaskErrors={metamaskErrorsToRender.error !== undefined}
       />
       {step === 1 && (
         <AvailableAssetsSlide
@@ -138,11 +147,23 @@ const ListAssetDesktop = ({
           handleDetectLocationClicked={handleDetectLocationClicked}
           handleCitySuggest={handleCitySuggest}
           desktopMode
-          nextButtonDisabled={!category || !asset || !assetValue}
+          nextButtonDisabled={!category || !asset || !assetValue || metamaskErrorsToRender.render}
           onClick={goToNextStep}
+          error={false || metamaskErrorsToRender.render}
+          airtableContext={airtableContext}
         />
       )}
       {step === 2 && (
+        <GeneralDescriptionSlide
+          handleInputChange={handleInputChange}
+          formData={formData}
+          maxWidthDesktop={MAX_WIDTH_DESKTOP}
+          desktopMode
+          onClick={goToNextStep}
+          nextButtonDisabled={!about || !financials || !risks}
+        />
+      )}
+      {step === 3 && (
         <AssetLocationSlide
           handleInputChange={handleInputChange}
           handleSelectChange={handleSelectChange}
@@ -162,7 +183,7 @@ const ListAssetDesktop = ({
           onClick={goToNextStep}
         />
       )}
-      {step === 3 && (
+      {step === 4 && (
         <DocsSlide
           fileList={fileList}
           handleFileUpload={handleFileUpload}
@@ -171,7 +192,7 @@ const ListAssetDesktop = ({
           desktopMode
         />
       )}
-      {step === 4 && (
+      {step === 5 && (
         <FeesSlide
           handleSelectChange={handleSelectChange}
           managementFee={managementFee}
@@ -181,39 +202,34 @@ const ListAssetDesktop = ({
           nextButtonDisabled={managementFee !== 0 ? false : true}
         />
       )}
-      {step === 5 && (
+      {step === 6 && (
         <CollateralSlide
-          collateralSelectedToken={collateralSelectedToken}
-          collateralDai={collateralDai}
           selectedToken={selectedToken}
           handleSelectedTokenChange={handleSelectedTokenChange}
-          handleCollateralChange={handleCollateralChange}
-          collateralPercentage={collateralPercentage}
-          collateralMyb={collateralMyb}
           formData={formData}
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           balances={balances}
-          maxCollateralPercentage={maxCollateralPercentage}
           kyberLoading={kyberLoading}
           onClick={goToNextStep}
           desktopMode
           nextButtonDisabled={managementFee !== 0 ? false : true}
+          loadingBalancesForNewUser={loadingBalancesForNewUser}
         />
-      )}{step === 6 && !readToS && (
+      )}{step === 7 && !readToS && (
         <TermsOfServiceSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={setReadToS}
         />
       )}
-      {(step === 6 && listedAssetId && readToS) && (
+      {(step === 7 && listedAssetId && readToS) && (
         <SuccessSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           assetId={listedAssetId}
           desktopMode
         />
        )}
-       {(step === 6 && !listedAssetId && readToS) && (
+       {(step === 7 && !listedAssetId && readToS) && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}
@@ -228,6 +244,7 @@ const ListAssetDesktop = ({
           shouldShowToSCheckmark={shouldShowToSCheckmark}
           setCheckedToS={setCheckedToS}
           readToS={readToS}
+          tokenWithSufficientBalance={tokenWithSufficientBalance}
         />
       )}
     </ListAssetDesktopWrapper>

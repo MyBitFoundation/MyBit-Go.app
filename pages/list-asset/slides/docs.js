@@ -71,6 +71,7 @@ export const DocsSlide = ({
         <CarouselNextButton
           onClick={onClick}
           style={{marginTop: '40px'}}
+          desktopMode={desktopMode}
         />
       )}
     </CarouselSlide>

@@ -5,6 +5,7 @@ import AirtableProvider, { withAirtableContext } from 'components/AirtableContex
 import BlockchainProvider from 'components/BlockchainContext';
 import KyberProvider from 'components/KyberContext';
 import NotificationsProvider from 'components/NotificationsContext';
+import ThreeBoxProvider from 'components/ThreeBoxContext';
 import TermsOfServiceProvider from 'components/TermsOfServiceContext';
 import Notifications from 'components/Notifications';
 import MetamaskProvider from 'components/MetamaskContext';
@@ -140,11 +141,13 @@ const WithProviders = ({ children, setNetwork, network, setUserHasMetamask, user
             <BlockchainProvider
               supportedNetworks={SUPPORTED_NETWORKS}
             >
+            <ThreeBoxProvider>
               <CivicProvider>
                 <TermsOfServiceProvider>
                   {children}
                 </TermsOfServiceProvider>
               </CivicProvider>
+            </ThreeBoxProvider>
             </BlockchainProvider>
             </MetamaskProvider>
           </KyberProvider>
