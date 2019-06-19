@@ -1,6 +1,5 @@
 export const PULL_ASSETS_TIME = 1000 * 60;
 export const PULL_CATEGORIES_TIME = 1000 * 60;
-
 export const AIRTABLE_ASSETS_RULES = [
   'Asset',
   'Category',
@@ -10,6 +9,8 @@ export const AIRTABLE_ASSETS_RULES = [
   'Image URL',
   'Partner',
   'Partner Address',
+  'Crypto Purchase',
+  'Crypto Payout',
 ];
 
 export const AIRTABLE_CATEGORIES_RULES = [
@@ -24,7 +25,7 @@ export const verifyDataAirtable = (rules, records) => {
   return records.filter(({ fields }) =>
     rules.every(field => {
       const valueOfField = fields[field];
-      return Object.keys(fields).includes(field) && valueOfField;
+      return Object.keys(fields).includes(field) && valueOfField !== undefined;
     }
   ))
 }

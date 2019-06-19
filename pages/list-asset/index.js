@@ -13,9 +13,11 @@ import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
+import { withAirtableContext } from 'components/AirtableContext';
 import { withCivicContext } from "ui/CivicContext";
 import ListAssetMobile from './listAssetMobile';
 import ListAssetDesktop from './listAssetDesktop';
+import getTokenWithSufficientBalance from 'constants/getTokenWithSufficientBalance';
 import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
@@ -24,7 +26,7 @@ import {
   DEFAULT_TOKEN,
 } from 'constants/app';
 import { COOKIES } from 'constants/cookies';
-
+import calculateCollateral from 'constants/calculateCollateral';
 import {
   convertFromPlatformToken,
   convertFromDefaultToken,
@@ -43,28 +45,13 @@ class ListAssetPage extends React.Component {
     super(props);
     this.state = {
       data: {
-        searchCity: '',
-        searchAddress1: '',
-        assetAddress1: '',
-        assetAddress2: '',
-        assetCity: '',
-        assetCountry: '',
-        assetProvince: '',
-        assetPostalCode: '',
         fileList: [],
         managementFee: 0,
-        maxCollateralPercentage: 100,
         collateralPercentage: 0,
-        collateralMyb: 0,
-        collateralDai: 0,
-        collateralSelectedToken: 0,
+        collateralInPlatformToken: 0,
+        collateralInDefaultToken: 0,
+        collateralInSelectedToken: 0,
         partnerContractAddress: '',
-        selectedToken: '',
-        operatorId: '',
-        countryCode: '',
-        about: '',
-        financials: '',
-        risks: '',
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
@@ -128,39 +115,71 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectedTokenChange = selectedToken => {
-    const collateralDai = this.state.data.collateralDai;
-    const balances = this.props.metamaskContext.user.balances;
+    this.setState({data: {...this.state.data, selectedToken}}, () => this.recalculateCollateral(this.state.data.asset))
+  }
 
+  recalculateCollateral = assetName => {
+    const {
+      blockchainContext,
+      airtableContext,
+      metamaskContext,
+      supportedTokensInfo,
+    } = this.props;
+    const { assetsAirTable } = airtableContext;
+    const asset = assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0];
+
+    const {
+      operatorId,
+      fundingGoal,
+      cryptoPayout,
+      cryptoPurchase,
+    } = asset;
+
+    const {
+      assets,
+      assetManagers,
+    } = blockchainContext;
+
+    const { selectedToken } = this.state.data;
+    const { user } = metamaskContext;
+    const { balances } = user;
+    const numberOfAssetsByAssetManager = assetManagers[user.address] ? assetManagers[user.address].totalAssets : 0;
     const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
-    const collateralSelectedToken = balances ? convertFromDefaultToken(selectedToken, balances, collateralDai) : 0;
+
+    const {
+      collateralBasedOnHistory,
+      collateralCryptoPurchase,
+      collateralCryptoPayouts,
+      collateralPercentage,
+    } = calculateCollateral(numberOfAssetsByAssetManager, cryptoPayout, cryptoPurchase);
+
+    const collateralInDefaultToken = fundingGoal * (collateralPercentage / 100);
+    const collateralInPlatformToken = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokensInfo, collateralInDefaultToken)
+    const collateralInSelectedToken = convertFromDefaultToken(selectedToken || DEFAULT_TOKEN, supportedTokensInfo, collateralInDefaultToken)
 
     this.setState({
       data: {
         ...this.state.data,
-        selectedToken,
-        collateralSelectedToken,
+        asset: assetName,
+        assetValue: fundingGoal,
+        operatorId,
+        collateralInPlatformToken,
+        collateralBasedOnHistory,
+        collateralCryptoPurchase,
+        collateralCryptoPayouts,
+        collateralPercentage,
+        numberOfAssetsByAssetManager,
+        collateralInDefaultToken,
+        collateralInSelectedToken,
         paymentTokenAddress,
-      },
-    });
+      }
+    })
   }
 
   handleSelectChange = (value, name) => {
     if(name === 'asset'){
       const assetName = value.name;
-      const asset = value.assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0];
-      const {
-        operatorId,
-        fundingGoal,
-      } = asset;
-
-      this.setState({
-        data: {
-          ...this.state.data,
-          asset: assetName,
-          assetValue: fundingGoal,
-          operatorId,
-        }
-      })
+      this.recalculateCollateral(assetName);
     } else {
       this.setState(
         {
@@ -275,77 +294,14 @@ class ListAssetPage extends React.Component {
     });
   };
 
-  handleCollateralChange = (value, name) => {
-    let percentage, myb, dai, collateralSelectedToken, maxCollateralPercentage, convertedAmount;
-    const {
-      assetValue,
-      selectedToken,
-    } = this.state.data;
-
-    const {
-      selectedAmount,
-    } = value;
-
-    const {
-      metamaskContext,
-      supportedTokensInfo: supportedTokens,
-    } = this.props;
-
-    const balances = metamaskContext.user.balances;
-
-    const totalTokens = Object.keys(balances).length;
-    if(totalTokens > 0){
-      const selectedTokenInfo = balances[selectedToken];
-      const maxAmountAllowedInDai = !selectedTokenInfo ? 0
-        : selectedTokenInfo.balanceInDai > assetValue
-          ? assetValue
-            : selectedTokenInfo.balanceInDai;
-
-      maxCollateralPercentage = maxAmountAllowedInDai === 0 ? 0 : parseInt((maxAmountAllowedInDai / assetValue) * 100);
-      const maxInMyb = maxAmountAllowedInDai === 0 ? 0 : convertFromDefaultToken(PLATFORM_TOKEN, supportedTokens, maxAmountAllowedInDai);
-      const maxCollateralSelectedToken = maxAmountAllowedInDai === 0 ? 0 : convertFromDefaultToken(selectedToken, supportedTokens, maxAmountAllowedInDai);
-      switch (name) {
-        case "percentage":
-          percentage = selectedAmount;
-          myb = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokens, assetValue * (selectedAmount / 100))
-          dai = assetValue * (selectedAmount / 100)
-          collateralSelectedToken = formatValueForToken(convertFromDefaultToken(selectedToken, supportedTokens, dai), selectedToken)
-          break;
-        case "myb":
-          myb = selectedAmount > maxInMyb ? maxInMyb : selectedAmount
-          percentage = parseInt((myb / maxInMyb) * 100)
-          dai = (maxAmountAllowedInDai * (percentage / 100))
-          collateralSelectedToken = convertFromPlatformToken(selectedToken, supportedTokens, myb)
-          break;
-        case "selectedToken":
-          collateralSelectedToken = selectedAmount > maxCollateralSelectedToken ? maxCollateralSelectedToken : Number(selectedAmount)
-          dai = convertFromTokenToDefault(selectedToken, supportedTokens, collateralSelectedToken)
-          myb = selectedToken === PLATFORM_TOKEN ? collateralSelectedToken : convertFromDefaultToken(PLATFORM_TOKEN, supportedTokens, dai)
-          percentage = parseInt((dai/maxAmountAllowedInDai) * 100)
-          break;
-        default: return null;
-      }
-    }
-
-    this.setState(
-      {
-        data: {
-          ...this.state.data,
-          collateralMyb: myb,
-          collateralDai: dai,
-          collateralPercentage: percentage,
-          maxCollateralPercentage,
-          collateralSelectedToken,
-        }
-      });
-  };
-
   goToNextStep = () => {
     this.setState({step: this.state.step + 1});
   }
 
   goToStep = step => {
-    this.setState({step});
+    if(!this.state.listedAssetId){
+      this.setState({step});
+    }
   }
 
   setCheckedToS = () => this.setState(prevState => ({checkedToS: !prevState.checkedToS}));
@@ -366,6 +322,7 @@ class ListAssetPage extends React.Component {
 
     const {
       user,
+      loadingBalancesForNewUser,
     } = metamaskContext;
 
     const {
@@ -383,20 +340,20 @@ class ListAssetPage extends React.Component {
 
     const {
       managementFee,
-      collateralMyb,
+      collateralInPlatformToken,
       collateralPercentage,
       assetValue,
       fileList,
       selectedToken,
-      collateralDai,
-      maxCollateralPercentage,
-      collateralSelectedToken,
+      collateralInSelectedToken,
+      collateralInDefaultToken,
       asset,
       category,
       userCity,
       userCountry,
     } = this.state.data;
-
+    console.log(this.state)
+    const tokenWithSufficientBalance = collateralInDefaultToken > 0 ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken) : undefined;
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
       dev,
@@ -411,12 +368,14 @@ class ListAssetPage extends React.Component {
       readToS,
       setReadToS,
       checkedToS,
+      collateralInPlatformToken,
+      loadingBalancesForNewUser,
+      tokenWithSufficientBalance: tokenWithSufficientBalance !== undefined,
       setCheckedToS: this.setCheckedToS,
       handleSelectChange: this.handleSelectChange,
       handleInputChange: this.handleInputChange,
       handleCitySuggest: this.handleCitySuggest,
       handleSelectedTokenChange: this.handleSelectedTokenChange,
-      handleCollateralChange: this.handleCollateralChange,
       handleFileUpload: this.handleFileUpload,
       setUserListingAsset: this.setUserListingAsset,
       handleDetectLocationClicked: this.handleDetectLocationClicked,
@@ -427,6 +386,7 @@ class ListAssetPage extends React.Component {
       formData: data,
       balances: user.balances,
       shouldShowToSCheckmark: this.readTermsOfService,
+      airtableContext: this.props.airtableContext,
     }
     return (
       <div>
@@ -445,11 +405,12 @@ class ListAssetPage extends React.Component {
 }
 
 const enhance = compose(
+  withKyberContext,
   withBlockchainContext,
   withMetamaskContext,
   withCivicContext,
-  withKyberContext,
   withTermsOfServiceContext,
+  withAirtableContext,
 );
 
 export default enhance(ListAssetPage);

@@ -69,7 +69,6 @@ const ListAssetDesktop = ({
   formData,
   handleFileUpload,
   handleSelectedTokenChange,
-  handleCollateralChange,
   balances,
   kyberLoading,
   listedAssetId,
@@ -85,6 +84,10 @@ const ListAssetDesktop = ({
   checkedToS,
   shouldShowToSCheckmark,
   setCheckedToS,
+  tokenWithSufficientBalance,
+  airtableContext,
+  userAddress,
+  loadingBalancesForNewUser
 }) => {
   const {
     category,
@@ -96,13 +99,12 @@ const ListAssetDesktop = ({
     assetProvince,
     assetPostalCode,
     managementFee,
-    collateralSelectedToken,
-    collateralDai,
+    collateralInSelectedToken,
+    collateralInDefaultToken,
     selectedToken,
     collateralPercentage,
-    collateralMyb,
+    collateralInPlatformToken,
     fileList,
-    maxCollateralPercentage,
     about,
     financials,
     risks,
@@ -130,6 +132,9 @@ const ListAssetDesktop = ({
         dev={dev}
         civic={civic}
         readToS={readToS}
+        isUserListingAsset={isUserListingAsset}
+        tokenWithSufficientBalance={tokenWithSufficientBalance}
+        metamaskErrors={metamaskErrorsToRender.error !== undefined}
       />
       {step === 1 && (
         <AvailableAssetsSlide
@@ -142,8 +147,10 @@ const ListAssetDesktop = ({
           handleDetectLocationClicked={handleDetectLocationClicked}
           handleCitySuggest={handleCitySuggest}
           desktopMode
-          nextButtonDisabled={!category || !asset || !assetValue}
+          nextButtonDisabled={!category || !asset || !assetValue || metamaskErrorsToRender.render}
           onClick={goToNextStep}
+          error={false || metamaskErrorsToRender.render}
+          airtableContext={airtableContext}
         />
       )}
       {step === 2 && (
@@ -197,21 +204,16 @@ const ListAssetDesktop = ({
       )}
       {step === 6 && (
         <CollateralSlide
-          collateralSelectedToken={collateralSelectedToken}
-          collateralDai={collateralDai}
           selectedToken={selectedToken}
           handleSelectedTokenChange={handleSelectedTokenChange}
-          handleCollateralChange={handleCollateralChange}
-          collateralPercentage={collateralPercentage}
-          collateralMyb={collateralMyb}
           formData={formData}
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           balances={balances}
-          maxCollateralPercentage={maxCollateralPercentage}
           kyberLoading={kyberLoading}
           onClick={goToNextStep}
           desktopMode
           nextButtonDisabled={managementFee !== 0 ? false : true}
+          loadingBalancesForNewUser={loadingBalancesForNewUser}
         />
       )}{step === 7 && !readToS && (
         <TermsOfServiceSlide
@@ -242,6 +244,7 @@ const ListAssetDesktop = ({
           shouldShowToSCheckmark={shouldShowToSCheckmark}
           setCheckedToS={setCheckedToS}
           readToS={readToS}
+          tokenWithSufficientBalance={tokenWithSufficientBalance}
         />
       )}
     </ListAssetDesktopWrapper>

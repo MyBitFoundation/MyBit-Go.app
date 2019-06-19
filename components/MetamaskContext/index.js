@@ -262,6 +262,7 @@ class MetamaskProvider extends Component {
         privacyModeEnabled,
         isReadOnlyMode: this.isReadOnlyMode(true, this.state.userIsLoggedIn, network, privacyModeEnabled),
         loadingBalances: false,
+        loadingBalancesForNewUser: false,
         user: {
           ...this.state.user,
           balances: updatedTokensWithBalance,
@@ -292,7 +293,8 @@ class MetamaskProvider extends Component {
       this.fetchUserBalances(supportedTokens, ethBalance, address);
     }
 
-    if(oldPrivacyModeEnabled !== privacyModeEnabled || oldNetwork !== network || oldUser.address !== address ){
+    const addressChanged = oldUser.address !== address;
+    if(oldPrivacyModeEnabled !== privacyModeEnabled || oldNetwork !== network || addressChanged){
       this.setState({
         network,
         user: {
@@ -303,6 +305,7 @@ class MetamaskProvider extends Component {
         privacyModeEnabled,
         userIsLoggedIn,
         isReadOnlyMode: this.isReadOnlyMode(true, userIsLoggedIn, network, privacyModeEnabled),
+        loadingBalancesForNewUser: addressChanged,
       }, () => console.log("updateStateWithUserInfo(): ", this.state))
     }
   }

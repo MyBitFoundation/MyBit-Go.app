@@ -59,6 +59,7 @@ export const TermsOfServiceSlide = ({
         {desktopMode && (
           <CarouselNextButton
             onClick={onClick}
+            desktopMode={desktopMode}
             style={{
               marginTop: '10px',
             }}

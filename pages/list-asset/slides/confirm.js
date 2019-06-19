@@ -51,7 +51,7 @@ export const ConfirmSlide = ({
   checkedToS,
   setCheckedToS,
 }) => {
-  const formattedCollateral = formatValueForToken(formData.collateralMyb, PLATFORM_TOKEN);
+  const formattedCollateral = formatValueForToken(formData.collateralInPlatformToken, PLATFORM_TOKEN);
   return (
     <CarouselSlide>
       <CarouselSlideMainTitle
