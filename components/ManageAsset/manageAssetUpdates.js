@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button  } from 'antd';
 import styled from 'styled-components';
 import ManageAssetCustomRow from './manageAssetCustomRow';
 import ManageAssetRectangleContainer from './manageAssetRectangleContainer';

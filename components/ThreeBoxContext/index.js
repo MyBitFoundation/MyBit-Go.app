@@ -33,6 +33,8 @@ class ThreeBoxProvider extends React.Component {
           openBox: this.openBox,
           getPosts: this.getPosts,
           postThread: this.postThread,
+          getProfile: this.getProfile,
+          getAvatar: this.getAvatar,
           box: null,
           hasAuthorizedThreeBox: false,
           hasOpenedGoSpace: false,
@@ -66,9 +68,10 @@ class ThreeBoxProvider extends React.Component {
             SPACE_ID,
             threadName,
             moderator,
-            true
+            false
           );
           res(posts)
+          console.log('[ ThreeBoxProvider - getPosts ] posts (res)', posts)
         } catch (err) {
           console.log('[ ThreeBoxProvider - getPosts ] error', err)
           res([])
@@ -121,6 +124,14 @@ class ThreeBoxProvider extends React.Component {
         const profile = await Box.getProfile(address)
         this.setState({ loadingThreeBox: false});
         return profile;
+    }
+
+    getProfile = this.loadThreeBoxProfile
+
+    getAvatar = async (address) => {
+      const profile = await this.loadThreeBoxProfile(address)
+      const avatar = `https://ipfs.infura.io/ipfs/${profile.image[0]['contentUrl']['/']}`
+      return avatar;
     }
     
     render(){

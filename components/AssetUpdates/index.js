@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Comment, List } from 'antd';
+import dayjs from 'dayjs';
 
 const AssetUpdatesWrapper = styled.div`
   padding: 10px 20px 10px 20px;
@@ -20,18 +22,22 @@ class AssetUpdates extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: []
+      posts: [],
+      author: 'Loading...',
+      avatar: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=',
     }
   }
   async componentWillMount() {
-    const { getPosts, asset } = this.props;
+    const { getPosts, asset, getProfile, getAvatar } = this.props;
     const posts = asset && asset.assetId && asset.assetManager ? 
       await getPosts(asset.assetId, asset.assetManager) : []
-    this.setState({ posts })
+    const author = await getProfile(asset.assetManager)
+    const avatar = await getAvatar(asset.assetManager)
+    this.setState({ posts, author, avatar })
   }
   render() {
     const { loadingThreeBox } = this.props;
-    const { posts } = this.state;
+    const { posts, author, avatar } = this.state;
     return (
       <AssetUpdatesWrapper>
         <AssetUpdatesTitle>Updates from Asset Manager</AssetUpdatesTitle>
@@ -43,7 +49,22 @@ class AssetUpdates extends React.Component {
             <p>
               No updates from the asset manager.
             </p> :
-            <p> We got some updates for ya</p>
+            <List
+              header={`${posts.length} updates`}
+              itemLayout='horizontal'
+              dataSource={posts}
+              renderItem={post => (
+                <li>
+                  <Comment
+                    author={author.name}
+                    avatar={avatar}
+                    content={post.message}
+                    datetime={dayjs(post.timestamp).format('ddd, MMM D, H:mm:ss')}
+                  />
+                </li>
+              )}
+            >
+            </List>
         }
       </AssetUpdatesWrapper>
     )
