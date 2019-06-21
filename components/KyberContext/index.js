@@ -135,7 +135,7 @@ class KyberProvider extends React.Component {
         const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
         const kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
 
-        await Promise.all(supportedTokensData.data.map(async({
+        Promise.all(supportedTokensData.data.map(async({
           symbol,
           address: contractAddress,
           name,
@@ -177,21 +177,23 @@ class KyberProvider extends React.Component {
               }
             }
           }
-        }));
-
-        console.log(supportedTokensInfo)
-
-        supportedTokensInfo['key'] = this.key + 1;
-        this.key += 1;
+        })).then(() => {
+          console.log(supportedTokensInfo)
+          supportedTokensInfo['key'] = this.key + 1;
+          this.key += 1;
+          this.setState({
+            supportedTokensInfo,
+            loading: false,
+            network,
+          })
+        })
+      } else {
+        this.setState({
+          supportedTokensInfo,
+          loading: false,
+          network,
+        })
       }
-
-
-      //debug("supportedTokensInfo (kyberContext): ", supportedTokensInfo);
-      this.setState({
-        supportedTokensInfo,
-        loading: false,
-        network,
-      })
     }catch(err){
       debug("kyberContext error: ", err);
     }

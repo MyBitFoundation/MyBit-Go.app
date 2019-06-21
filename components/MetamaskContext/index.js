@@ -23,7 +23,9 @@ import {
 
 import SupportedBrowsers from 'ui/SupportedBrowsers';
 
-const { Provider, Consumer } = React.createContext({});
+const MetamaskContext = React.createContext({});
+const { Provider, Consumer } = MetamaskContext;
+MetamaskContext.displayName = 'MetamaskContext';
 
 // Required so we can trigger getInitialProps in our exported pages
 export const withMetamaskContext = (Component) => {

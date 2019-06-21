@@ -148,11 +148,8 @@ class ManageAsset extends React.Component {
       } = methods;
 
       const {
-        assetManagerProfits,
         averageProfit,
         collateralData,
-        percentageMax,
-        withdrawMax,
         profit,
         revenueData,
         toWithdraw,

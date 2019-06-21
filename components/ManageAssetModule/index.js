@@ -232,10 +232,6 @@ class ManageAssetModule extends React.Component{
         errorType = ERRORS.NO_ASSET;
       } else if (user.address !== asset.assetManager){
         errorType = ERRORS.NO_PERMISSION;
-      } else if(!asset.funded && asset.pastDate){
-        errorType = ERRORS.ASSET_FUNDING_FAILED;
-      } else if(!asset.funded){
-        errorType = ERRORS.ASSET_NOT_FUNDED;
       } else {
         this.load3BoxSpaces(props || this.props, asset);
         this.processAssetInfo(props || this.props, asset);
