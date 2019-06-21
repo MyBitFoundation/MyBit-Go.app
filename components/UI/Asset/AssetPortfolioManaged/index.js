@@ -89,7 +89,7 @@ const AssetPortfolioManaged = ({
       <AssetPortfolioManagedSection>
         <span>Your management fee:</span>
         <AssetPortfolioManagedValue>
-          {managerPercentage * 100}%
+          {parseFloat((managerPercentage * 100).toFixed(2))}%
         </AssetPortfolioManagedValue>
       </AssetPortfolioManagedSection>
       <AssetPortfolioManagedSection>
