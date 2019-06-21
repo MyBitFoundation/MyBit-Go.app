@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import Watch from 'ui/Watch';
 import AssetTemplateWrapper from './assetTemplateWrapper';
 import AssetTemplateImageHolder from './assetTemplateImageHolder';
@@ -29,7 +30,6 @@ class AssetTemplate extends React.PureComponent {
       country,
       height,
       margin,
-      onClickImg,
     } = this.props;
 
     return (
@@ -42,7 +42,7 @@ class AssetTemplate extends React.PureComponent {
         <AssetTemplateImageHolder
           backgroundImage={backgroundImage}
           height={height}
-          onClick={onClickImg}
+          onClick={() => Router.push(`/asset?id=${assetId}`, `/asset/${assetId}`)}
         >
           {handleAssetFavorited && (
             <Watch

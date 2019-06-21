@@ -75,7 +75,6 @@ const Asset = (props) => {
         watchListed={watchListed}
         height={height}
         margin={margin}
-        onClickImg={onClickImg}
       >
         <AssetComponent
           {...props}

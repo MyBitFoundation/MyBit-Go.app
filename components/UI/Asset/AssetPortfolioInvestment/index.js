@@ -13,7 +13,6 @@ import AssetPortfolioInvestmentWrapper from './assetPortfolioInvestmentWrapper';
 import AssetPortfolioInvestmentSection from './assetPortfolioInvestmentSection';
 import AssetPortfolioInvestmentValue from './assetPortfolioInvestmentValue';
 import AssetPortfolioInvestmentFundingLabel from './assetPortfolioInvestmentFundingLabel';
-import AssetPortfolioInvestmentButtons from './assetPortfolioInvestmentButtons';
 import AssetPortfolioManagedContribution from './assetPortfolioManagedContribution';
 
 const AssetPortfolioInvestment = ({
@@ -31,23 +30,6 @@ const AssetPortfolioInvestment = ({
   totalProfit,
   userInvestment,
 }) => {
-
-  const buttonType = funded ? 'secondary' : 'primary';
-  const text = funded ? 'View asset listing' : 'Contribute more';
-
-  const button = (
-    <Link
-      as={`/asset/${assetId}`}
-      href={`/asset?id=${assetId}`}
-    >
-      <Button
-        type={buttonType}
-      >
-        {text}
-      </Button>
-    </Link>
-  );
-
   const withdrawButton = unrealizedProfit > 0 ? (
     <Button
       onClick={() => withdrawInvestorProfit(assetId, formatMonetaryValue(unrealizedProfit))}
@@ -123,12 +105,7 @@ const AssetPortfolioInvestment = ({
           </React.Fragment>
         )}
         </div>
-        <AssetPortfolioInvestmentButtons
-          hasWithdrawButton={unrealizedProfit > 0}
-        >
-          {withdrawButton}
-          {button}
-        </AssetPortfolioInvestmentButtons>
+        {withdrawButton}
       </AssetPortfolioInvestmentSection>
     </AssetPortfolioInvestmentWrapper>
   )
