@@ -42,9 +42,9 @@ const AssetPortfolioManaged = ({
 }) => {
 
   const buttonType = 'secondary';
-  const text = !funded ? 'View asset listing' : managerHasToCallPayout ? 'Send funds to operator' : 'Manage asset';
-  const url = !funded ? `/asset?id=${assetId}` : managerHasToCallPayout ? undefined : `/manage?id=${assetId}`;
-  const urlAs = !funded ? `/asset/${assetId}` : managerHasToCallPayout ? undefined : `/manage/${assetId}`;
+  const text = managerHasToCallPayout ? 'Send funds to operator' : 'Manage asset';
+  const url = managerHasToCallPayout ? undefined : `/manage?id=${assetId}`;
+  const urlAs = managerHasToCallPayout ? undefined : `/manage/${assetId}`;
   const button = (
     <Button
       type={buttonType}
