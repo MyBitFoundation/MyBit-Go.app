@@ -28,6 +28,11 @@ class ThreeBoxProvider extends React.Component {
         super(props);
         this.state = {
           loadingThreeBox: false,
+          loadingThreeBoxThreadAPIAuthorization: false,
+          loadingThreeBoxSpaceAuthorization: false,
+          loadingThreeBoxThreadPostRequest: false,
+          syncingThreeBox: false,
+          syncingThreeBoxThread: false,
           loadThreeBoxProfile: this.loadThreeBoxProfile,
           openSpace: this.openSpace,
           openBox: this.openBox,
@@ -42,9 +47,22 @@ class ThreeBoxProvider extends React.Component {
           currentThread: {},
           space: null,
         }
+        this.syncBoxDone = this.syncBoxDone.bind(this)
+        this.syncThreadDone = this.syncThreadDone.bind(this)
+    }
+
+    syncBoxDone = () => {
+      console.log('********** [ ThreeBoxProvider - syncBoxDone ] init *********')
+      this.setState({ syncingThreeBox: false })
+    }
+
+    syncThreadDone = () => {
+      console.log('********** [ ThreeBoxProvider - syncThreadDone ] init *********')
+      this.setState({ syncingThreeBoxThread: false })
     }
 
     openBox = async (userAddress) => {
+      this.setState({ loadingThreeBox: true, loadingThreeBoxThreadAPIAuthorization: true })
       const currentProvider = window.web3js && window.web3js.currentProvider ?
         window.web3js.currentProvider :
         { error: 'No Provider selected' }
@@ -53,8 +71,15 @@ class ThreeBoxProvider extends React.Component {
         (async (provider) => {
           this.setState({ loadingThreeBox: true });  
           const box = await Box.openBox(userAddress, provider)
+          box.onSyncDone( this.syncBoxDone );
           console.log('[ ThreeBoxProvider - openBox ] - box', box)
-          this.setState({ loadingThreeBox: false, box, hasAuthorizedThreeBox: true });
+          this.setState({
+            loadingThreeBox: false,
+            box,
+            hasAuthorizedThreeBox: true,
+            loadingThreeBoxThreadAPIAuthorization: false,
+            syncingThreeBox: true,
+          });
           return box;
         })(currentProvider)
     }
@@ -82,9 +107,9 @@ class ThreeBoxProvider extends React.Component {
       return posts;
     }
 
-    postThread = async (threadName, update) => {
+    postThread = async (threadName, update, callback) => {
       console.log('[ ThreeBoxProvider - postUpdate ] - threadName', threadName)
-      this.setState({ loadingThreeBox: true });
+      this.setState({ loadingThreeBox: true, loadingThreeBoxThreadPostRequest: true });
       const { space, threads } = this.state;
       console.log('[ ThreeBoxProvider - postUpdate ] - threadName', space)
       const thread = threads[threadName] ?
@@ -92,14 +117,23 @@ class ThreeBoxProvider extends React.Component {
         await space.joinThread(threadName);
         console.log('[ ThreeBoxProvider - postUpdate ] - thread', thread)
       threads[threadName] = thread;
+      thread.onUpdate(() => {
+        console.log('[ ThreeBoxProvider - postUpdate ] - onUpdate')
+        callback();
+      })
       const response = await thread.post(update);
       console.log('[ ThreeBoxProvider - postUpdate ] - response', response)
-      this.setState({ threads, currentThread: thread, loadingThreeBox: false});
+      this.setState({
+        threads,
+        currentThread: thread,
+        loadingThreeBox: false,
+        loadingThreeBoxThreadPostRequest: false,
+      });
       return { thread, response };
     }
 
     openSpace = async () => {
-        this.setState({ loadingThreeBox: true });
+        this.setState({ loadingThreeBox: true, loadingThreeBoxSpaceAuthorization: true });
         const { space, box } = this.state;
         const openedSpace = space ? 
           space :
@@ -114,7 +148,11 @@ class ThreeBoxProvider extends React.Component {
               res({ error: err })
             }
           })
-        this.setState({ space: openedSpace, loadingThreeBox: false });
+        this.setState({
+          space: openedSpace,
+          loadingThreeBox: false,
+          loadingThreeBoxSpaceAuthorization: false
+        });
         console.log('[ ThreeBoxProvider - openSpace ] - space', openedSpace)
         return openedSpace;
     }

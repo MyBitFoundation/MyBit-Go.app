@@ -33,7 +33,8 @@ class AssetPage extends React.Component {
       getPosts,
       getProfile,
       loadingThreeBox,
-      getAvatar
+      getAvatar,
+      syncingThreeBox
     } = threeBoxContext;
 
     if (loading.assets) {
@@ -67,6 +68,7 @@ class AssetPage extends React.Component {
           assetManager={assetManager}
           getPosts={getPosts}
           loadingThreeBox={loadingThreeBox}
+          syncingThreeBox={syncingThreeBox}
           getProfile={getProfile}
           getAvatar={getAvatar}
         />

@@ -134,12 +134,18 @@ class ManageAsset extends React.Component {
       const {
         authorizeThreeBoxSpace,
         openThreeBoxSpace,
-        postUpdateOnThread
+        postUpdateOnThread,
+        getThreadPosts,
       } = (threeBox.methods || {});
 
       const {
         hasAuthorizedThreeBox,
-        hasOpenedGoSpace
+        hasOpenedGoSpace,
+        syncingThreeBox,
+        syncingThreeBoxThread,
+        loadingThreeBoxThreadAPIAuthorization,
+        loadingThreeBoxSpaceAuthorization,
+        loadingThreeBoxThreadPostRequest
       } = threeBox
 
       const {
@@ -204,16 +210,22 @@ class ManageAsset extends React.Component {
                     isWithdrawingAssetManager={isWithdrawingAssetManager}
                     withdrawProfitAssetManager={withdrawProfitAssetManager}
                   />
+                  <ManageAssetUpdates
+                    authorizeThreeBoxSpace={authorizeThreeBoxSpace}
+                    hasAuthorizedThreeBox={hasAuthorizedThreeBox}
+                    openThreeBoxSpace={openThreeBoxSpace}
+                    hasOpenedGoSpace={hasOpenedGoSpace}
+                    postUpdateOnThread={postUpdateOnThread}
+                    getThreadPosts={getThreadPosts}
+                    syncingThreeBox={syncingThreeBox}
+                    syncingThreeBoxThread={syncingThreeBoxThread}
+                    loadingThreeBoxThreadPostRequest={loadingThreeBoxThreadPostRequest}
+                    loadingThreeBoxThreadAPIAuthorization={loadingThreeBoxThreadAPIAuthorization}
+                    loadingThreeBoxSpaceAuthorization={loadingThreeBoxSpaceAuthorization}
+                  />
                 </Col>
                 {!supportingDocuments && (
                   <Col {...COLUMN_SIZE}>
-                    <ManageAssetUpdates
-                      authorizeThreeBoxSpace={authorizeThreeBoxSpace}
-                      hasAuthorizedThreeBox={hasAuthorizedThreeBox}
-                      openThreeBoxSpace={openThreeBoxSpace}
-                      hasOpenedGoSpace={hasOpenedGoSpace}
-                      postUpdateOnThread={postUpdateOnThread}
-                    />
                     <ManageAssetGraphs
                       chartBoxView={chartBoxView}
                       revenueData={revenueData}

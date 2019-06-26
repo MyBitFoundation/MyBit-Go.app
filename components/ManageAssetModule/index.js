@@ -31,7 +31,13 @@ class ManageAssetModule extends React.Component{
       openSpace,
       openBox,
       postThread,
+      getPosts,
       hasAuthorizedThreeBox,
+      syncingThreeBox,
+      syncingThreeBoxThread,
+      loadingThreeBoxThreadAPIAuthorization,
+      loadingThreeBoxSpaceAuthorization,
+      loadingThreeBoxThreadPostRequest,
       hasOpenedGoSpace
     } = threeBoxContext;
 
@@ -41,10 +47,16 @@ class ManageAssetModule extends React.Component{
       threeBox: {
         hasAuthorizedThreeBox: hasAuthorizedThreeBox,
         hasOpenedGoSpace: hasOpenedGoSpace,
+        syncingThreeBox: syncingThreeBox,
+        syncingThreeBoxThread: syncingThreeBoxThread,
+        loadingThreeBoxThreadPostRequest: loadingThreeBoxThreadPostRequest,
+        loadingThreeBoxSpaceAuthorization: loadingThreeBoxSpaceAuthorization,
+        loadingThreeBoxThreadAPIAuthorization: loadingThreeBoxThreadAPIAuthorization,
         methods: {
           authorizeThreeBoxSpace: () => user && user.address && openBox(user.address),
           openThreeBoxSpace: () => openSpace(),
-          postUpdateOnThread: (update) => postThread(asset.assetId, update)
+          postUpdateOnThread: (update, callback) => postThread(asset.assetId, update, callback),
+          getThreadPosts: () => getPosts(asset.assetId, asset.assetManager)
         }
       }
     })
