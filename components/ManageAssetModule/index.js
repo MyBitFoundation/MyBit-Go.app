@@ -31,7 +31,7 @@ class ManageAssetModule extends React.Component{
       openSpace,
       openBox,
       postThread,
-      getPosts,
+      getPostsFromThread,
       hasAuthorizedThreeBox,
       syncingThreeBox,
       syncingThreeBoxThread,
@@ -56,7 +56,7 @@ class ManageAssetModule extends React.Component{
           authorizeThreeBoxSpace: () => user && user.address && openBox(user.address),
           openThreeBoxSpace: () => openSpace(),
           postUpdateOnThread: (update, callback) => postThread(asset.assetId, update, callback),
-          getThreadPosts: () => getPosts(asset.assetId, asset.assetManager)
+          getPostsFromCurrentThread: () => getPostsFromThread(asset.assetId)
         }
       }
     })

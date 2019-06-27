@@ -135,7 +135,7 @@ class ManageAsset extends React.Component {
         authorizeThreeBoxSpace,
         openThreeBoxSpace,
         postUpdateOnThread,
-        getThreadPosts,
+        getPostsFromCurrentThread,
       } = (threeBox.methods || {});
 
       const {
@@ -216,7 +216,7 @@ class ManageAsset extends React.Component {
                     openThreeBoxSpace={openThreeBoxSpace}
                     hasOpenedGoSpace={hasOpenedGoSpace}
                     postUpdateOnThread={postUpdateOnThread}
-                    getThreadPosts={getThreadPosts}
+                    getPostsFromCurrentThread={getPostsFromCurrentThread}
                     syncingThreeBox={syncingThreeBox}
                     syncingThreeBoxThread={syncingThreeBoxThread}
                     loadingThreeBoxThreadPostRequest={loadingThreeBoxThreadPostRequest}

@@ -23,11 +23,9 @@ class ManageAssetUpdates extends React.Component {
   }
 
   async loadPosts () {
-    console.log('**************************** loading posts *************')
     this.setState({ loadingPosts: true })
-    const { getThreadPosts } = this.props;
-    const posts = await getThreadPosts()
-    console.log('******* posts *************', posts)
+    const { getPostsFromCurrentThread } = this.props;
+    const posts = await getPostsFromCurrentThread()
     this.setState({ posts, loadingPosts: false });
   }
 
@@ -98,9 +96,9 @@ class ManageAssetUpdates extends React.Component {
                 type="secondary"
                 disabled={loadingThreeBoxSpaceAuthorization}
                 loading={loadingThreeBoxSpaceAuthorization}
-                onClick={() => { 
+                onClick={async () => { 
                   console.log('[ ManageAssetUpdates - onClick ] - calling openThreeBoxSpace'); 
-                  openThreeBoxSpace();
+                  const space = await openThreeBoxSpace();
                   this.loadPosts();
                 }}
               >

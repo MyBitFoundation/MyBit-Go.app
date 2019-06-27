@@ -32,11 +32,11 @@ class ThreeBoxProvider extends React.Component {
           loadingThreeBoxSpaceAuthorization: false,
           loadingThreeBoxThreadPostRequest: false,
           syncingThreeBox: false,
-          syncingThreeBoxThread: false,
           loadThreeBoxProfile: this.loadThreeBoxProfile,
           openSpace: this.openSpace,
           openBox: this.openBox,
           getPosts: this.getPosts,
+          getPostsFromThread: this.getPostsFromThread,
           postThread: this.postThread,
           getProfile: this.getProfile,
           getAvatar: this.getAvatar,
@@ -48,17 +48,11 @@ class ThreeBoxProvider extends React.Component {
           space: null,
         }
         this.syncBoxDone = this.syncBoxDone.bind(this)
-        this.syncThreadDone = this.syncThreadDone.bind(this)
     }
 
     syncBoxDone = () => {
       console.log('********** [ ThreeBoxProvider - syncBoxDone ] init *********')
       this.setState({ syncingThreeBox: false })
-    }
-
-    syncThreadDone = () => {
-      console.log('********** [ ThreeBoxProvider - syncThreadDone ] init *********')
-      this.setState({ syncingThreeBoxThread: false })
     }
 
     openBox = async (userAddress) => {
@@ -107,15 +101,32 @@ class ThreeBoxProvider extends React.Component {
       return posts;
     }
 
+    getPostsFromThread = async(threadName) => {
+      this.setState({ loadingThreeBox: true })
+      const { space, threads } = this.state;
+      console.log('[ ThreeBoxProvider - getPostsFromThread ] - space', space)
+      const thread = threads[threadName] ?
+        threads[threadName] :
+        await space.joinThread(threadName);
+      threads[threadName] = thread;
+      const posts = thread ? await thread.getPosts() : [];
+      this.setState({
+        currentThread: thread,
+        loadingThreeBox: false,
+        threads
+      });
+      return posts;
+    }
+
     postThread = async (threadName, update, callback) => {
       console.log('[ ThreeBoxProvider - postUpdate ] - threadName', threadName)
       this.setState({ loadingThreeBox: true, loadingThreeBoxThreadPostRequest: true });
       const { space, threads } = this.state;
-      console.log('[ ThreeBoxProvider - postUpdate ] - threadName', space)
+      console.log('[ ThreeBoxProvider - postUpdate ] - space', space)
       const thread = threads[threadName] ?
         threads[threadName] :
         await space.joinThread(threadName);
-        console.log('[ ThreeBoxProvider - postUpdate ] - thread', thread)
+      console.log('[ ThreeBoxProvider - postUpdate ] - thread', thread)
       threads[threadName] = thread;
       thread.onUpdate(() => {
         console.log('[ ThreeBoxProvider - postUpdate ] - onUpdate')
