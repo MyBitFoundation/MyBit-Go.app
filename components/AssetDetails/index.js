@@ -22,7 +22,7 @@ const AssetDetails = ({
   getPosts,
   getProfile,
   loadingThreeBox,
-  getAvatar
+  getAvatar,
   blockchainContext,
 }) => {
   const {
@@ -72,8 +72,6 @@ const AssetDetails = ({
           risks={risks}
           files={files}
         />
-      </AssetDetailsLeftCol>
-      <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetUpdates
           asset={asset}
           getPosts={getPosts}
@@ -81,6 +79,8 @@ const AssetDetails = ({
           getAvatar={getAvatar}
           loadingThreeBox={loadingThreeBox}
         />
+      </AssetDetailsLeftCol>
+      <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetFundingModule
           asset={asset}
           blockchainContext={blockchainContext}

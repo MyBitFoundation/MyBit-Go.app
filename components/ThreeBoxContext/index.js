@@ -20,7 +20,7 @@ export const withThreeBoxContext = (Component) => {
         )
       }
     }
-    
+
 }
 
 class ThreeBoxProvider extends React.Component {
@@ -60,10 +60,10 @@ class ThreeBoxProvider extends React.Component {
       const currentProvider = window.web3js && window.web3js.currentProvider ?
         window.web3js.currentProvider :
         { error: 'No Provider selected' }
-      return currentProvider.error ? 
+      return currentProvider.error ?
         currentProvider :
         (async (provider) => {
-          this.setState({ loadingThreeBox: true });  
+          this.setState({ loadingThreeBox: true });
           const box = await Box.openBox(userAddress, provider)
           box.onSyncDone( this.syncBoxDone );
           console.log('[ ThreeBoxProvider - openBox ] - box', box)
@@ -146,7 +146,7 @@ class ThreeBoxProvider extends React.Component {
     openSpace = async () => {
         this.setState({ loadingThreeBox: true, loadingThreeBoxSpaceAuthorization: true });
         const { space, box } = this.state;
-        const openedSpace = space ? 
+        const openedSpace = space ?
           space :
           await new Promise(async (res) => {
             try {
@@ -179,10 +179,10 @@ class ThreeBoxProvider extends React.Component {
 
     getAvatar = async (address) => {
       const profile = await this.loadThreeBoxProfile(address)
-      const avatar = `https://ipfs.infura.io/ipfs/${profile.image[0]['contentUrl']['/']}`
+      const avatar = profile.image && `https://ipfs.infura.io/ipfs/${profile.image[0]['contentUrl']['/']}`
       return avatar;
     }
-    
+
     render(){
         return (
           <Provider value={this.state}>
