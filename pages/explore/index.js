@@ -1,5 +1,5 @@
 import { compose } from 'recompose'
-import { withBlockchainContext } from 'components/BlockchainContext'
+import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { LocalStorageKeys } from 'constants/localStorageKeys';
 import {
@@ -45,7 +45,7 @@ const Explore = ({
 };
 
 const enhance = compose(
-  withBlockchainContext,
+  withBlockchainContextPageWrapper,
   withMetamaskContext,
 );
 
