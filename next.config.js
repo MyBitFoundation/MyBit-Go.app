@@ -11,7 +11,6 @@ if (typeof require !== 'undefined') {
 module.exports = withBundleAnalyzer(withCss({
   webpack: (config, { dev, isServer }) => {
     if(!dev) {
-        // disable sourcemaps of webpack
       config.devtool = false
 
        // disable soucemaps of babel-loader
@@ -39,7 +38,7 @@ module.exports = withBundleAnalyzer(withCss({
       }
     }
 
-   return config
+    return config
   },
   analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
   analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
