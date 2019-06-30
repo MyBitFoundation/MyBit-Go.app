@@ -7,6 +7,9 @@ const AssetUpdatesWrapper = styled.div`
   padding: 10px 20px 10px 20px;
   box-shadow: 0 4px 12px 0 rgba(0,0,0,.1);
   margin-bottom: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+  margin-top: 20px;
 }`
 
 const AssetUpdatesTitle = styled.p`
@@ -29,15 +32,24 @@ class AssetUpdates extends React.Component {
   }
   async componentWillMount() {
     const { getPosts, asset, getProfile, getAvatar } = this.props;
-    const posts = asset && asset.assetId && asset.assetManager ? 
-      await getPosts(asset.assetId, asset.assetManager) : []
-    const author = await getProfile(asset.assetManager)
-    const avatar = await getAvatar(asset.assetManager)
+    const [
+      posts,
+      author,
+      avatar,
+    ] = await Promise.all([
+      asset && asset.assetId && asset.assetManager ?
+      await getPosts(asset.assetId, asset.assetManager) : [],
+      getProfile(asset.assetManager),
+      getAvatar(asset.assetManager),
+    ])
+    // order posts by date in desc order
+    posts.reverse();
     this.setState({ posts, author, avatar })
   }
   render() {
     const { loadingThreeBox } = this.props;
     const { posts, author, avatar } = this.state;
+    const numberOfPosts = posts.length;
     return (
       <AssetUpdatesWrapper>
         <AssetUpdatesTitle>Updates from Asset Manager</AssetUpdatesTitle>
@@ -45,12 +57,12 @@ class AssetUpdates extends React.Component {
           loadingThreeBox ?
           <p>
             Loading updates from Asset Manager...
-          </p> : posts.length === 0 ?
+          </p> : numberOfPosts === 0 ?
             <p>
               No updates from the asset manager.
             </p> :
             <List
-              header={`${posts.length} updates`}
+              header={numberOfPosts === 1 ? `${numberOfPosts} update` : `${numberOfPosts} updates`}
               itemLayout='horizontal'
               dataSource={posts}
               renderItem={post => (
