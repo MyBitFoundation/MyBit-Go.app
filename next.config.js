@@ -9,7 +9,7 @@ if (typeof require !== 'undefined') {
 }
 
 module.exports = withBundleAnalyzer(withCss({
-  webpack: (config, { dev }) => {
+  webpack: (config, { dev, isServer }) => {
     if(!dev){
       // disable sourcemaps of webpack
       config.devtool = false
@@ -19,6 +19,23 @@ module.exports = withBundleAnalyzer(withCss({
         if (r.loader === 'babel-loader') {
           r.options.sourceMaps = false
         }
+      }
+    }
+
+    if (!isServer) {
+      const cacheGroups = config.optimization.splitChunks.cacheGroups
+      delete cacheGroups.react
+      cacheGroups.default = false
+      cacheGroups.vendors = {
+        name: 'vendors',
+        test: /[\\/](node_modules|packages)[\\/]/,
+        enforce: true,
+        priority: 20,
+      }
+      cacheGroups.commons = {
+        name: 'commons',
+        minChunks: 2,
+        priority: 10,
       }
     }
 
