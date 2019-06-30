@@ -3,8 +3,6 @@ import {
   Button,
   Col,
 } from 'antd';
-import Link from 'next/link';
-import Router from 'next/router'
 import Loading from 'components/Loading';
 import {
   InternalLinks,
@@ -73,16 +71,6 @@ class ManageAsset extends React.Component {
         />
         {!error && (
           <React.Fragment>
-            <Link
-              as={`/asset/${assetId}`}
-              href={`/asset?id=${assetId}`}
-            >
-              <Button
-                type="secondary"
-              >
-                View Asset Listing
-              </Button>
-            </Link>
             <ManageAssetDocsButton
                 type="secondary"
                 selected={this.state.supportingDocuments}

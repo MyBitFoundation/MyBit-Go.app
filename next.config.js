@@ -10,8 +10,7 @@ if (typeof require !== 'undefined') {
 
 module.exports = withBundleAnalyzer(withCss({
   webpack: (config, { dev, isServer }) => {
-    if(!dev){
-      // disable sourcemaps of webpack
+    if(!dev) {
       config.devtool = false
 
        // disable soucemaps of babel-loader
