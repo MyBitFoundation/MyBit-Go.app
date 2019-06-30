@@ -5,6 +5,7 @@ import BN from 'bignumber.js';
 import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import AssetFunding from 'components/AssetFunding';
+import AssetUpdates from 'components/AssetUpdates';
 import AssetFundingModule from 'components/AssetFundingModule';
 import AssetDetailsRightCol from './assetDetailsRightCol';
 import AssetDetailsLeftCol from './assetDetailsLeftCol';
@@ -18,6 +19,10 @@ const AssetDetails = ({
   loadingUserInfo,
   gasPrice,
   assetManager,
+  getPosts,
+  getProfile,
+  loadingThreeBox,
+  getAvatar
   blockchainContext,
 }) => {
   const {
@@ -69,13 +74,20 @@ const AssetDetails = ({
         />
       </AssetDetailsLeftCol>
       <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
-      <AssetFundingModule
-        asset={asset}
-        blockchainContext={blockchainContext}
-        gasPrice={gasPrice}
-      >
-        {props => <AssetFunding {...props}/>}
-      </AssetFundingModule>
+        <AssetUpdates
+          asset={asset}
+          getPosts={getPosts}
+          getProfile={getProfile}
+          getAvatar={getAvatar}
+          loadingThreeBox={loadingThreeBox}
+        />
+        <AssetFundingModule
+          asset={asset}
+          blockchainContext={blockchainContext}
+          gasPrice={gasPrice}
+        >
+          {props => <AssetFunding {...props}/>}
+        </AssetFundingModule>
         <AssetDetailsManagerInfo
           assetManager={assetManager}
           address={assetManagerAddress}

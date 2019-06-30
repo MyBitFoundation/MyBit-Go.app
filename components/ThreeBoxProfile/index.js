@@ -29,8 +29,8 @@ class ThreeBoxProfile extends React.Component {
 
     async componentWillMount() {
         const { address, threeBoxContext } = this.props;
-        const { load3BoxProfile } = threeBoxContext;
-        const profile = await load3BoxProfile(address);
+        const { loadThreeBoxProfile } = threeBoxContext;
+        const profile = await loadThreeBoxProfile(address);
         this.setState({ profile })
       }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Button,
   Col,
+  Row,
 } from 'antd';
 import Loading from 'components/Loading';
 import {
@@ -11,6 +12,7 @@ import ManageAssetNavButtons from './manageAssetNavButtons';
 import ManageAssetContentWrapper from './manageAssetContentWrapper';
 import ManageAssetAssetInfo from './manageAssetAssetInfo';
 import ManageAssetGraphs from './manageAssetGraphs';
+import ManageAssetUpdates from './manageAssetUpdates';
 import ManageAssetDocsButton from './manageAssetDocsButton';
 import { withMetamaskErrors } from 'components/MetamaskErrors';
 import {
@@ -86,6 +88,7 @@ class ManageAsset extends React.Component {
     render() {
       const {
         assetInfo = {},
+        threeBox = {},
         error,
         loading,
         metamaskError,
@@ -115,6 +118,23 @@ class ManageAsset extends React.Component {
         methods = {},
         userAddress,
       } = assetInfo;
+
+      const {
+        authorizeThreeBoxSpace,
+        openThreeBoxSpace,
+        postUpdateOnThread,
+        getPostsFromCurrentThread,
+      } = (threeBox.methods || {});
+
+      const {
+        hasAuthorizedThreeBox,
+        hasOpenedGoSpace,
+        syncingThreeBox,
+        syncingThreeBoxThread,
+        loadingThreeBoxThreadAPIAuthorization,
+        loadingThreeBoxSpaceAuthorization,
+        loadingThreeBoxThreadPostRequest
+      } = threeBox
 
       const {
         withdrawCollateral,
@@ -177,6 +197,19 @@ class ManageAsset extends React.Component {
                     toWithdraw={toWithdraw}
                     isWithdrawingAssetManager={isWithdrawingAssetManager}
                     withdrawProfitAssetManager={withdrawProfitAssetManager}
+                  />
+                  <ManageAssetUpdates
+                    authorizeThreeBoxSpace={authorizeThreeBoxSpace}
+                    hasAuthorizedThreeBox={hasAuthorizedThreeBox}
+                    openThreeBoxSpace={openThreeBoxSpace}
+                    hasOpenedGoSpace={hasOpenedGoSpace}
+                    postUpdateOnThread={postUpdateOnThread}
+                    getPostsFromCurrentThread={getPostsFromCurrentThread}
+                    syncingThreeBox={syncingThreeBox}
+                    syncingThreeBoxThread={syncingThreeBoxThread}
+                    loadingThreeBoxThreadPostRequest={loadingThreeBoxThreadPostRequest}
+                    loadingThreeBoxThreadAPIAuthorization={loadingThreeBoxThreadAPIAuthorization}
+                    loadingThreeBoxSpaceAuthorization={loadingThreeBoxSpaceAuthorization}
                   />
                 </Col>
                 {!supportingDocuments && (
