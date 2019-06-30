@@ -43,6 +43,8 @@ const ListAssetMobile = ({
   tokenWithSufficientBalance,
   airtableContext,
   loadingBalancesForNewUser,
+  loadingConversionInfo,
+  tokenSlippagePercentages,
 }) => {
   const {
     category,
@@ -169,6 +171,8 @@ const ListAssetMobile = ({
             balances={balances}
             kyberLoading={kyberLoading}
             loadingBalancesForNewUser={loadingBalancesForNewUser}
+            loadingConversionInfo={loadingConversionInfo}
+            tokenSlippagePercentages={tokenSlippagePercentages}
           />
         , buttons: {
           hasNextButton: true,
