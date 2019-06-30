@@ -87,7 +87,9 @@ const ListAssetDesktop = ({
   tokenWithSufficientBalance,
   airtableContext,
   userAddress,
-  loadingBalancesForNewUser
+  loadingBalancesForNewUser,
+  loadingConversionInfo,
+  tokenSlippagePercentages,
 }) => {
   const {
     category,
@@ -214,6 +216,8 @@ const ListAssetDesktop = ({
           desktopMode
           nextButtonDisabled={managementFee !== 0 ? false : true}
           loadingBalancesForNewUser={loadingBalancesForNewUser}
+          loadingConversionInfo={loadingConversionInfo}
+          tokenSlippagePercentages={tokenSlippagePercentages}
         />
       )}{step === 7 && !readToS && (
         <TermsOfServiceSlide

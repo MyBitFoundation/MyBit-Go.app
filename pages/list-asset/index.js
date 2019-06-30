@@ -24,6 +24,7 @@ import {
   MAX_FILE_SIZE,
   PLATFORM_TOKEN,
   DEFAULT_TOKEN,
+  getPlatformTokenContract,
 } from 'constants/app';
 import { COOKIES } from 'constants/cookies';
 import calculateCollateral from 'constants/calculateCollateral';
@@ -37,6 +38,7 @@ import {
   processLocationData,
 } from 'utils/locationData';
 import getCountry from 'utils/countryCodes';
+import { calculateSlippage } from 'constants/calculateSlippage';
 const dev = process.env.NODE_ENV === 'development';
 const { publicRuntimeConfig } = getConfig();
 
@@ -141,7 +143,7 @@ class ListAssetPage extends React.Component {
     } = blockchainContext;
 
     const { selectedToken } = this.state.data;
-    const { user } = metamaskContext;
+    const { user, network } = metamaskContext;
     const { balances } = user;
     const numberOfAssetsByAssetManager = assetManagers[user.address] ? assetManagers[user.address].totalAssets : 0;
     const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
@@ -172,8 +174,16 @@ class ListAssetPage extends React.Component {
         collateralInDefaultToken,
         collateralInSelectedToken,
         paymentTokenAddress,
-      }
+      },
+      loadingConversionInfo: true,
     })
+
+    const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+    const tokenSlippagePercentages = calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInPlatformToken)
+      .then(tokenSlippagePercentages => {
+        console.log("tokenSlippagePercentages: ", tokenSlippagePercentages)
+        this.setState({tokenSlippagePercentages, loadingConversionInfo: false})
+      })
   }
 
   handleSelectChange = (value, name) => {
@@ -336,6 +346,7 @@ class ListAssetPage extends React.Component {
       listedAssetId,
       step,
       checkedToS,
+      tokenSlippagePercentages,
      } = this.state;
 
     const {
@@ -351,8 +362,9 @@ class ListAssetPage extends React.Component {
       category,
       userCity,
       userCountry,
+      loadingConversionInfo,
     } = this.state.data;
-    console.log(this.state)
+
     const tokenWithSufficientBalance = collateralInDefaultToken > 0 ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken) : undefined;
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
@@ -370,6 +382,8 @@ class ListAssetPage extends React.Component {
       checkedToS,
       collateralInPlatformToken,
       loadingBalancesForNewUser,
+      loadingConversionInfo,
+      tokenSlippagePercentages,
       tokenWithSufficientBalance: tokenWithSufficientBalance !== undefined,
       setCheckedToS: this.setCheckedToS,
       handleSelectChange: this.handleSelectChange,

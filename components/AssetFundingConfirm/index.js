@@ -117,7 +117,7 @@ const AssetFundingConfirm = ({
     kyberLoading
   );
 
-  const showSlipage = selectedToken !== DEFAULT_TOKEN && tokenSlippagePercentages && tokenSlippagePercentages[selectedToken];
+  const showSlipage = tokenSlippagePercentages && tokenSlippagePercentages[selectedToken];
 
   const {
     buttonProps,
