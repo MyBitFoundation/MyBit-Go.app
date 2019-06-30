@@ -43,8 +43,8 @@ BN.config({ EXPONENTIAL_AT: 80 });
 const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
-export const withBlockchainContext = (Component) => {
-  return class Higher extends React.Component{
+export const withBlockchainContextPageWrapper = (Component) => {
+  return class BlockchainContextPageWrapper extends React.Component{
     static getInitialProps(ctx) {
       if(Component.getInitialProps)
         return Component.getInitialProps(ctx);
@@ -58,6 +58,16 @@ export const withBlockchainContext = (Component) => {
       )
     }
   }
+}
+
+export const withBlockchainContext = (Component) => {
+  return function WrapperComponent(props) {
+    return (
+      <Consumer>
+          {state => <Component {...props} blockchainContext={state} />}
+      </Consumer>
+    );
+  };
 }
 
 class BlockchainProvider extends React.Component {
@@ -633,6 +643,7 @@ class BlockchainProvider extends React.Component {
       const {
         gasPrice,
       } = this.state;
+
       const currentAsset = this.state.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
       const amountFormatted = formatMonetaryValue(amountContributed);

@@ -5,6 +5,7 @@ import BN from 'bignumber.js';
 import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import AssetFunding from 'components/AssetFunding';
+import AssetFundingModule from 'components/AssetFundingModule';
 import AssetDetailsRightCol from './assetDetailsRightCol';
 import AssetDetailsLeftCol from './assetDetailsLeftCol';
 import AssetDetailsWrapper from './assetDetailsWrapper';
@@ -17,6 +18,7 @@ const AssetDetails = ({
   loadingUserInfo,
   gasPrice,
   assetManager,
+  blockchainContext,
 }) => {
   const {
     city,
@@ -67,13 +69,13 @@ const AssetDetails = ({
         />
       </AssetDetailsLeftCol>
       <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
-        <AssetFunding
-          asset={asset}
-          fundAsset={fundAsset}
-          updateNotification={updateNotification}
-          loadingUserInfo={loadingUserInfo}
-          gasPrice={gasPrice}
-        />
+      <AssetFundingModule
+        asset={asset}
+        blockchainContext={blockchainContext}
+        gasPrice={gasPrice}
+      >
+        {props => <AssetFunding {...props}/>}
+      </AssetFundingModule>
         <AssetDetailsManagerInfo
           assetManager={assetManager}
           address={assetManagerAddress}
