@@ -19,9 +19,9 @@ import {
 } from 'constants/supportedNetworks';
 
 const { Provider, Consumer } = React.createContext({});
-let contract;
+let kyberContract;
 // Required so we can trigger getInitialProps in our exported pages
-export const withKyberContext = (Component) => {
+export const withKyberContextPageWrapper = (Component) => {
   return class Higher extends React.Component{
     static getInitialProps(ctx) {
       if(Component.getInitialProps)
@@ -45,7 +45,24 @@ export const withKyberContext = (Component) => {
   }
 }
 
-export const getExpectedAndSlippage = async (src, dest, amount, network, contract) => {
+export const withKyberContext = (Component) => {
+  return function WrapperComponent(props) {
+    return (
+      <Consumer>
+        {state =>
+          <Component
+            {...props}
+            supportedTokensInfo={state.supportedTokensInfo}
+            kyberLoading={state.loading}
+            kyberNetwork={state.network}
+          />
+        }
+      </Consumer>
+    );
+  };
+}
+
+export const getExpectedAndSlippage = async (src, dest, amount) => {
     try{
       if(src === dest){
         return {
@@ -54,7 +71,7 @@ export const getExpectedAndSlippage = async (src, dest, amount, network, contrac
         };
       }
 
-      const result = await contract.methods.getExpectedRate(src, dest, amount).call();
+      const result = await kyberContract.methods.getExpectedRate(src, dest, amount).call();
       let {
         expectedRate,
         slippageRate,
@@ -70,6 +87,7 @@ export const getExpectedAndSlippage = async (src, dest, amount, network, contrac
         };
       }
     } catch(err) {
+      console.log(err)
       // Might mean token is under maintenance
     }
     return null;
@@ -78,7 +96,6 @@ export const getExpectedAndSlippage = async (src, dest, amount, network, contrac
 class KyberProvider extends React.Component {
   constructor(props){
     super(props);
-    this.key = 0;
     this.state = {
       loading: true,
     }
@@ -86,6 +103,7 @@ class KyberProvider extends React.Component {
 
   componentDidMount = async () => {
     try {
+      kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
       this.fetchSupportedTokens();
     } catch (err) {
       debug(err);
@@ -133,7 +151,6 @@ class KyberProvider extends React.Component {
 
         const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
         const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
-        const kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
 
         await Promise.all(supportedTokensData.data.map(async({
           symbol,
@@ -146,8 +163,8 @@ class KyberProvider extends React.Component {
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
             ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network),
             ])
 
             supportedTokensInfo['ETH'] = {
@@ -162,8 +179,8 @@ class KyberProvider extends React.Component {
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
             ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network, kyberContract),
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network),
             ])
 
             // This kind of filtering needs to be tested
@@ -180,9 +197,6 @@ class KyberProvider extends React.Component {
         }));
 
         console.log(supportedTokensInfo)
-
-        supportedTokensInfo['key'] = this.key + 1;
-        this.key += 1;
       }
 
 

@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import FundingDetailsWrapper from './fundingDetailsWrapper';
 import FundingDetailsSection from './fundingDetailsSection';
 import FundingDetailsTitle from './fundingDetailsTitle';
 import FundingDetailsValue from './fundingDetailsValue';
 
-const AssetFundingDetails = ({
+const AssetFundingDetails = memo(({
   fundingGoal,
   fundingProgress,
   funded,
@@ -37,6 +38,6 @@ const AssetFundingDetails = ({
       </FundingDetailsValue>
     </FundingDetailsSection>
   </FundingDetailsWrapper>
-)
+))
 
 export default AssetFundingDetails;

@@ -6,6 +6,7 @@ import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import AssetFunding from 'components/AssetFunding';
 import AssetUpdates from 'components/AssetUpdates';
+import AssetFundingModule from 'components/AssetFundingModule';
 import AssetDetailsRightCol from './assetDetailsRightCol';
 import AssetDetailsLeftCol from './assetDetailsLeftCol';
 import AssetDetailsWrapper from './assetDetailsWrapper';
@@ -22,6 +23,7 @@ const AssetDetails = ({
   getProfile,
   loadingThreeBox,
   getAvatar
+  blockchainContext,
 }) => {
   const {
     city,
@@ -79,13 +81,13 @@ const AssetDetails = ({
           getAvatar={getAvatar}
           loadingThreeBox={loadingThreeBox}
         />
-        <AssetFunding
+        <AssetFundingModule
           asset={asset}
-          fundAsset={fundAsset}
-          updateNotification={updateNotification}
-          loadingUserInfo={loadingUserInfo}
+          blockchainContext={blockchainContext}
           gasPrice={gasPrice}
-        />
+        >
+          {props => <AssetFunding {...props}/>}
+        </AssetFundingModule>
         <AssetDetailsManagerInfo
           assetManager={assetManager}
           address={assetManagerAddress}

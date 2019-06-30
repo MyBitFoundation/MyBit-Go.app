@@ -9,18 +9,36 @@ if (typeof require !== 'undefined') {
 }
 
 module.exports = withBundleAnalyzer(withCss({
-  webpack: (config, { dev }) => {
-    // disable sourcemaps of webpack
-    config.devtool = false
+  webpack: (config, { dev, isServer }) => {
+    if(!dev) {
+      config.devtool = false
 
-     // disable soucemaps of babel-loader
-    for (const r of config.module.rules) {
-      if (r.loader === 'babel-loader') {
-        r.options.sourceMaps = false
+       // disable soucemaps of babel-loader
+      for (const r of config.module.rules) {
+        if (r.loader === 'babel-loader') {
+          r.options.sourceMaps = false
+        }
       }
     }
 
-     return config
+    if (!isServer) {
+      const cacheGroups = config.optimization.splitChunks.cacheGroups
+      delete cacheGroups.react
+      cacheGroups.default = false
+      cacheGroups.vendors = {
+        name: 'vendors',
+        test: /[\\/](node_modules|packages)[\\/]/,
+        enforce: true,
+        priority: 20,
+      }
+      cacheGroups.commons = {
+        name: 'commons',
+        minChunks: 2,
+        priority: 10,
+      }
+    }
+
+    return config
   },
   analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
   analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
