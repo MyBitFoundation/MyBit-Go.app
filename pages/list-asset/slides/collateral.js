@@ -153,7 +153,7 @@ export const CollateralSlide = ({
     buttonText = 'Loading Slippage Info'
   }
 
-  const slippagePercentage = loadingConversionInfo ? 0 : tokenSlippagePercentages[selectedToken];
+  const slippagePercentage = (!tokenSlippagePercentages || loadingConversionInfo) ? 0 : tokenSlippagePercentages[selectedToken];
 
   return (
     <CarouselSlide
