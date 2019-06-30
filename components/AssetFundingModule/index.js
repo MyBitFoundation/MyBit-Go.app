@@ -16,7 +16,7 @@ import {
   convertFromTokenToDefault,
   toWei,
 } from 'utils/helpers';
-import { getExpectedAndSlippage } from 'components/KyberContext';
+import { calculateSlippage } from 'constants/calculateSlippage';
 
 BN.config({ EXPONENTIAL_AT: 80 });
 
@@ -112,7 +112,7 @@ class AssetFundingModule extends React.Component {
   * We calculate the exchange rate for all the tokens the user has.
   */
 
-  loadExchangeRateForAmountToPay = async newBalances => {
+  loadExchangeRateForAmountToPay = newBalances => {
     this.setState({loadingConversionInfo: true})
     const {
       amountToPayDefaultToken,
@@ -122,23 +122,8 @@ class AssetFundingModule extends React.Component {
     let { balances } = user;
     balances = newBalances || balances;
     const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
-
-    const tokensUserHas = balances ? Object.entries(balances) : [];
-
-    const userTokensSlippage = await Promise.all(tokensUserHas.map(async ([key, value]) => {
-      return getExpectedAndSlippage(DEFAULT_TOKEN_CONTRACT, value.contractAddress, toWei(amountToPayDefaultToken))
-    }))
-
-    const tokenSlippagePercentages = {};
-    userTokensSlippage.forEach((slippage, index) => {
-      const { expectedRate, slippageRate } = slippage;
-      const tokenName = tokensUserHas[index][0];
-      const difference = expectedRate - slippageRate;
-      const percentageDifference = difference / expectedRate * 100;
-      tokenSlippagePercentages[tokenName] = percentageDifference.toFixed(2);
-    });
-
-    this.setState({tokenSlippagePercentages, loadingConversionInfo: false});
+    const tokenSlippagePercentages = calculateSlippage(balances, DEFAULT_TOKEN_CONTRACT, amountToPayDefaultToken)
+      .then(tokenSlippagePercentages => this.setState({tokenSlippagePercentages, loadingConversionInfo: false}))
   }
 
   /*
