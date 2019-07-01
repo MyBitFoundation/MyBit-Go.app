@@ -178,6 +178,7 @@ const AssetFundingConfirm = ({
                   tooltipText="If the type of asset is acquired physically and required fiat payments,
                   the asset incurs an additional 8% fee on top of the total investment to cover most exchanges
                   fees in order to transfer the money into its fiat equivalent."
+                  isDark
                 />
               }
               firstValue={formatMonetaryValue(fiatToCryptoFeeDefaultToken)}
@@ -203,6 +204,7 @@ const AssetFundingConfirm = ({
                   tooltipText="Slippage is a necessary part of automated trading reserves.
                     As the relative balance of the two currencies shift due to a purchase,
                     so does the price."
+                  isDark
                 />
               }
               firstValue={

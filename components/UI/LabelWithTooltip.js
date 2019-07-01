@@ -12,10 +12,12 @@ const LabelWithTooltipWrapper = styled.div`
 const LabelWithTooltip = ({
   title,
   tooltipText,
+  isDark,
 }) => (
   <LabelWithTooltipWrapper>
     {title}
     <TooltipWrapper
+      overlayClassName={isDark ? 'AssetManagerTooltip' : ''}
       arrowPointAtCenter
       placement="top"
       destroyTooltipOnHide
