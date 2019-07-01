@@ -4,10 +4,9 @@ import {
 } from 'antd';
 
 const AssetDetailsLeftCol = styled(Col)`
-  ${({theme}) => theme.tablet`
+  @media(min-width: 992px){
     padding-right: 10px;
-  `}
+  }
 }`
 
 export default AssetDetailsLeftCol;
-

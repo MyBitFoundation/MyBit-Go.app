@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import BN from 'bignumber.js';
@@ -93,9 +94,6 @@ const AssetDetails = ({
           address={assetManagerAddress}
           managerPercentage={managerPercentage}
           collateralPercentage={collateralPercentage}
-          style={{
-            marginTop: '20px',
-          }}
         />
       </AssetDetailsRightCol>
     </AssetDetailsWrapper>

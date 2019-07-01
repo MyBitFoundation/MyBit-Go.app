@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 const AssetUpdatesWrapper = styled.div`
   padding: 10px 20px 10px 20px;
   box-shadow: 0 4px 12px 0 rgba(0,0,0,.1);
-  margin-bottom: 20px;
   max-height: 500px;
   overflow-y: auto;
   margin-top: 20px;
