@@ -10,6 +10,7 @@ import {
 import {
   MYBIT_FOUNDATION_SHARE,
   MYBIT_FOUNDATION_FEE,
+  FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
 import {
   fromWeiToEth,
@@ -161,13 +162,16 @@ class AssetFundingModule extends React.Component {
     })
   }
 
-  getAmountToPayAndPlatformFee = amount => {
+  getAmountToPayAndFees = (amount, asset) => {
     const amountInBn = BN(amount);
     const mybitPlatformFeeDefaultToken = amountInBn.times(MYBIT_FOUNDATION_FEE).toNumber();
-    const amountToPayDefaultToken = amountInBn.plus(mybitPlatformFeeDefaultToken).toNumber();
+    const fiatToCryptoFeeDefaultToken = !asset.defaultData.cryptoPurchase ?
+      amountInBn.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;
+    const amountToPayDefaultToken = amountInBn.plus(mybitPlatformFeeDefaultToken).plus(fiatToCryptoFeeDefaultToken).toNumber();
     return {
       mybitPlatformFeeDefaultToken,
       amountToPayDefaultToken,
+      fiatToCryptoFeeDefaultToken,
     }
   }
 
@@ -186,7 +190,7 @@ class AssetFundingModule extends React.Component {
       } = this.props;
       const { totalSupply } = asset;
 
-      const amountToPayAndFee = this.getAmountToPayAndPlatformFee(value);
+      const amountToPayAndFee = this.getAmountToPayAndFees(value, asset);
       this.setState({
         selectedAmountDefaultToken: Number(value),
         selectedOwnership: value > 0 ? this.getOwnershipOffSelectedAmountAndTotalSupply(value, totalSupply) : 0,
@@ -215,7 +219,7 @@ class AssetFundingModule extends React.Component {
       // calculate the new amount considering the percentage changed
       const selectedAmountDefaultToken = value > 0 ? parseFloat((totalSupply * (value / 100)).toFixed(DEFAULT_TOKEN_MAX_DECIMALS)) : 0;
       // calculate total amount to  pay and the platform fee
-      const amountToPayAndFee = this.getAmountToPayAndPlatformFee(selectedAmountDefaultToken);
+      const amountToPayAndFee = this.getAmountToPayAndFees(selectedAmountDefaultToken, asset);
 
       this.setState({
         selectedMaxValue: false,

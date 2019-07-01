@@ -25,6 +25,7 @@ import {
 } from 'constants/app';
 import {
   MYBIT_FOUNDATION_FEE,
+  FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
 import {
   formatMonetaryValue,
@@ -34,7 +35,7 @@ import {
   fromWeiToEth,
 } from 'utils/helpers';
 import AssetFundingButton from 'components/AssetFunding/assetFundingButton';
-import TooltipWithQuestionMarkGrey from 'ui/TooltipWithQuestionMarkGrey';
+import LabelWithTooltip from 'ui/LabelWithTooltip';
 
 const separatorStyleFullWidth = {
   position: 'absolute',
@@ -46,15 +47,6 @@ const separatorStyle = {
   marginTop: '15px',
   marginBottom: '10px',
 };
-
-const StyledTooltip = styled(TooltipWithQuestionMarkGrey)`
-  margin-left: 10px;
-`
-
-const StyledSlippage = styled.span`
-  display: flex;
-  align-items: center;
-`
 
 const StyledSlippageValue = styled.span`
   ${props => props.value >= 5 && css`
@@ -84,6 +76,7 @@ const AssetFundingConfirm = ({
   onCancel,
   onChangeSelectedToken,
   tokenSlippagePercentages,
+  fiatToCryptoFeeDefaultToken,
 }) => {
   const {
     user,
@@ -103,6 +96,7 @@ const AssetFundingConfirm = ({
   const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDefaultToken);
   const amountToPaySelectedToken = selectedToken === DEFAULT_TOKEN ? amountToPayDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountToPayDefaultToken);
   const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFeeDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, mybitPlatformFeeDefaultToken);
+  const fiatToCryptoFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? fiatToCryptoFeeDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, fiatToCryptoFeeDefaultToken);
 
   const metamaskErrors = metamaskContext.metamaskErrors();
   const footer = getFooter(
@@ -174,6 +168,24 @@ const AssetFundingConfirm = ({
           secondValue={formatMonetaryValue(mybitPlatformFeeSelectedToken, selectedToken)}
           loading={loadingConversionInfo || !selectedToken}
         />
+        {fiatToCryptoFeeDefaultToken > 0 && (
+          <React.Fragment>
+            <Separator style={separatorStyle}/>
+            <Item
+              title={
+                <LabelWithTooltip
+                  title={`Fiat to Crypto Fee (${FIAT_TO_CRYPTO_CONVERSION_FEE * 100}%)`}
+                  tooltipText="If the type of asset is acquired physically and required fiat payments,
+                  the asset incurs an additional 8% fee on top of the total investment to cover most exchanges
+                  fees in order to transfer the money into its fiat equivalent."
+                />
+              }
+              firstValue={formatMonetaryValue(fiatToCryptoFeeDefaultToken)}
+              secondValue={formatMonetaryValue(fiatToCryptoFeeSelectedToken, selectedToken)}
+              loading={loadingConversionInfo || !selectedToken}
+            />
+          </React.Fragment>
+        )}
         <Separator style={separatorStyle}/>
         <Item
           title="Gas Fee"
@@ -186,16 +198,12 @@ const AssetFundingConfirm = ({
             <Separator style={separatorStyle}/>
             <Item
               title={
-                <StyledSlippage>Slippage rate
-                  <StyledTooltip
-                    arrowPointAtCenter
-                    placement="top"
-                    destroyTooltipOnHide
-                    title="Slippage is a necessary part of automated trading reserves.
+                <LabelWithTooltip
+                  title="Slippage rate"
+                  tooltipText="Slippage is a necessary part of automated trading reserves.
                     As the relative balance of the two currencies shift due to a purchase,
                     so does the price."
-                  />
-                </StyledSlippage>
+                />
               }
               firstValue={
                 <StyledSlippageValue
