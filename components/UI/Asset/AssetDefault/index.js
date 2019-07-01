@@ -39,13 +39,13 @@ const AssetDefault = ({
   assetManager,
   assetManagerData,
 }) => {
-
   const {
     totalRevenue,
     totalAssets,
     startDate,
     collateralLocked,
   } = assetManagerData;
+
   const barWidth = funded ? 100 : parseFloat(((fundingProgress * 100) / fundingGoal).toFixed(2));
   const goalFormatted = formatMonetaryValue(fundingGoal);
   const progressFormatted = formatMonetaryValue(fundingProgress);
@@ -58,7 +58,8 @@ const AssetDefault = ({
 
   return (
     <AssetDefaultDetailsContainer
-      barWidth={barWidth}
+      funded={funded}
+      failed={!funded && pastDate}
     >
       <AssetDefaultFunded>
         Funded:{' '}
@@ -73,6 +74,12 @@ const AssetDefault = ({
         {barWidth === 100 && (
           <Icon
             type="check-circle"
+            theme="filled"
+          />
+        )}
+        {(pastDate && !funded) && (
+          <Icon
+            type="close-circle"
             theme="filled"
           />
         )}

@@ -6,7 +6,7 @@ const CustomDot = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 1px solid #D9D9D9;
+  border: 1px solid ${({theme}) => theme.colors.grayUltraLight};
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
@@ -20,8 +20,8 @@ const CustomDot = styled.div`
   `}
 
   ${(props) => props.completed && css`
-    color: #52C41A;
-    background-color: #52C41A;
+    color: ${({theme}) => theme.colors.green};
+    background-color: ${({theme}) => theme.colors.green};
     border: none;
 
     &::after{
@@ -51,7 +51,7 @@ const CustomTitle = styled.div`
   `}
 
   ${(props) => props.completed && css`
-    color: #52C41A;
+    color: ${({theme}) => theme.colors.green};
   `}
 `
 
