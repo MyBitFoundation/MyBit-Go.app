@@ -1,6 +1,6 @@
 import React from 'react';
 import Box from '3box';
-
+import Freddy from 'static/freddy.svg';
 const { Provider, Consumer } = React.createContext({});
 
 const SPACE_ID = 'MYBIT_GO'
@@ -179,7 +179,7 @@ class ThreeBoxProvider extends React.Component {
 
     getAvatar = async (address) => {
       const profile = await this.loadThreeBoxProfile(address)
-      const avatar = profile.image && `https://ipfs.infura.io/ipfs/${profile.image[0]['contentUrl']['/']}`
+      const avatar = profile.image ? `https://ipfs.infura.io/ipfs/${profile.image[0]['contentUrl']['/']}` : <Freddy />
       return avatar;
     }
 
