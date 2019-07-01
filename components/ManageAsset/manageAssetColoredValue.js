@@ -2,11 +2,11 @@ import styled, { css } from 'styled-components';
 
 const ManageAssetColoredValue = styled.b`
   ${props => props.isBlue && css`
-    color: #1890FF;
+    color: ${({theme}) => theme.colors.blueMain};
   `}
 
   ${props => props.isGreen && css`
-    color: #52C41A;
+    color: ${({theme}) => theme.colors.green};
   `}
 
 }`

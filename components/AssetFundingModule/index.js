@@ -36,6 +36,7 @@ class AssetFundingModule extends React.Component {
       onChangeContributionPercentage: this.onChangeContributionPercentage,
       onChangeSelectedToken: this.onChangeSelectedToken,
       loadExchangeRateForAmountToPay: this.loadExchangeRateForAmountToPay,
+      handleDeadlineHit: this.handleDeadlineHit,
       maxInvestment: 0,
       maxOwnership: 0,
       selectedAmountDefaultToken: 0,
@@ -112,7 +113,6 @@ class AssetFundingModule extends React.Component {
   * Exchange rate varies with the amount to pay.
   * We calculate the exchange rate for all the tokens the user has.
   */
-
   loadExchangeRateForAmountToPay = newBalances => {
     this.setState({loadingConversionInfo: true})
     const {

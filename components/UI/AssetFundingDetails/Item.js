@@ -17,7 +17,7 @@ const ItemValue = styled.span`
   position: relative;
   top: 5px;
   ${props => props.funded && css`
-    color: #52C41A;
+    color: ${({theme}) => theme.colors.green};
   `}
 }`
 
