@@ -1,7 +1,6 @@
 import {
   Icon,
 } from 'antd';
-import RevenueGeneratorWrapper from './revenueGeneratorWrapper';
 import * as Brain from '../../apis/brain';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import InputRevenueGenerator from './inputRevenueGenerator';
@@ -49,9 +48,9 @@ class RevenueGenerator extends React.PureComponent {
 
     return (
       <div>
-        <RevenueGeneratorWrapper onClick={this.handleInputTriggered}>
-          <Icon type="gift" />
-        </RevenueGeneratorWrapper>
+        <div onClick={this.handleInputTriggered}>
+          {this.props.children}
+        </div>
         {inputActive && (
           <InputRevenueGenerator
             currentValue={currentValue}

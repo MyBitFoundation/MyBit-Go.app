@@ -11,7 +11,7 @@ const ManageAssetNavButtons = styled.div`
     display: none;
   }
 
-  ${({theme}) => theme.mobileM`
+  ${({theme}) => theme.mobileL`
     display: flex;
 
     button{

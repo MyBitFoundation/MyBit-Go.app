@@ -65,25 +65,44 @@ class ManageAsset extends React.Component {
       return toReturn;
     }
 
-    getNavBarButtons = (assetId, error) => (
-      <ManageAssetNavButtons>
-        <BackButton
-          as="/portfolio/managed-assets"
-          href="/portfolio?type=managed-assets"
-        />
-        {!error && (
-          <React.Fragment>
-            <ManageAssetDocsButton
-                type="secondary"
-                selected={this.state.supportingDocuments}
-                onClick={() => this.setState(prevProps => ({supportingDocuments: !prevProps.supportingDocuments}))}
-              >
-              Supporting Documents
-            </ManageAssetDocsButton>
-          </React.Fragment>
-        )}
-      </ManageAssetNavButtons>
-    )
+    getNavBarButtons = (asset, error, isCallingPayout, payoutAsset) => {
+      const {
+        assetId,
+        managerHasToCallPayout,
+      } = asset;
+
+      let sendFundsToOperatorButton = managerHasToCallPayout ? (
+        <Button
+          type="primary"
+          onClick={() => payoutAsset()}
+          loading={isCallingPayout}
+          disabled={isCallingPayout}
+        >
+          Send Funds To Operator
+        </Button>
+      ) : undefined;
+
+      return (
+        <ManageAssetNavButtons>
+          <BackButton
+            as="/portfolio/managed-assets"
+            href="/portfolio?type=managed-assets"
+          />
+          {!error && (
+            <React.Fragment>
+              <ManageAssetDocsButton
+                  type="secondary"
+                  selected={this.state.supportingDocuments}
+                  onClick={() => this.setState(prevProps => ({supportingDocuments: !prevProps.supportingDocuments}))}
+                >
+                Supporting Documents
+              </ManageAssetDocsButton>
+              {sendFundsToOperatorButton}
+            </React.Fragment>
+          )}
+        </ManageAssetNavButtons>
+      )
+    }
 
     render() {
       const {
@@ -139,6 +158,7 @@ class ManageAsset extends React.Component {
       const {
         withdrawCollateral,
         withdrawProfitAssetManager,
+        payoutAsset,
       } = methods;
 
       const {
@@ -152,6 +172,7 @@ class ManageAsset extends React.Component {
         toWithdraw,
         isWithdrawingCollateral,
         isWithdrawingAssetManager,
+        isCallingPayout,
       } = finantialDetails;
 
       const {
@@ -180,7 +201,7 @@ class ManageAsset extends React.Component {
 
       return (
         <div>
-          {this.getNavBarButtons(assetId, error)}
+          {this.getNavBarButtons(asset, error, isCallingPayout, payoutAsset)}
             {!error && (
               <ManageAssetContentWrapper>
                 <Col {...COLUMN_SIZE}>

@@ -79,6 +79,8 @@ class ManageAssetModule extends React.Component{
       withdrawingAssetManager,
       withdrawCollateral,
       withdrawProfitAssetManager,
+      callingPayout,
+      payoutAsset,
     } = blockchainContext;
 
     console.log('[ ManageAssetModule - processAssetInfo ] metamaskContext', metamaskContext)
@@ -96,6 +98,8 @@ class ManageAssetModule extends React.Component{
         remainingEscrow,
         assetManagerCollateral,
         owedToAssetManager,
+        defaultData,
+        managerHasToCallPayout,
       } = asset;
 
       // calculate collateral data to be displayed
@@ -170,6 +174,7 @@ class ManageAssetModule extends React.Component{
 
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
+      const isCallingPayout = callingPayout.includes(assetId);
 
       if(this._mounted !== false){
         this.setState({
@@ -179,7 +184,8 @@ class ManageAssetModule extends React.Component{
             asset: asset,
             methods: {
               withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
-              withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, owedToAssetManager): undefined,
+              withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, owedToAssetManager) : undefined,
+              payoutAsset: (!isCallingPayout && managerHasToCallPayout) ? () => payoutAsset({assetId, defaultData}) : undefined,
             },
             finantialDetails: {
               assetManagerProfits,
@@ -192,6 +198,7 @@ class ManageAssetModule extends React.Component{
               withdrawMax,
               percentageMax,
               averageProfit,
+              isCallingPayout,
             }
           }
         });

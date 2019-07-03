@@ -8,10 +8,6 @@ const ManageAssetValueDisplayer = styled.div`
   width: 100%;
   margin: 5px 0px;
   margin-bottom: 10px;
-
-  ${({theme}) => theme.laptopL`
-    flex-direction: row;
-  `}
 }`
 
 export default ManageAssetValueDisplayer;
