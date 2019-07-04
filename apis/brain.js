@@ -393,19 +393,38 @@ const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, as
     ]);
 }
 
-export const issueDividends = (
-  amount,
-  address,
-  assetId,
+export const issueDividends = async (
+  onDividendsIssued,
+  onApprove,
+  params,
 ) => {
+  const {
+    amount,
+    address,
+    assetId,
+    gasPrice,
+  } = params;
   try{
-    Network.issueDividends({
+    const response = await Network.issueDividends({
       asset: assetId,
       account: address,
       amount: toWei(amount),
+      gasPrice,
+      buyAsset: {},
+      issueDividends: {
+        onTransactionHash: onDividendsIssued.onTransactionHash,
+        onError: error => processErrorType(error, onDividendsIssued.onError),
+      },
+      approve: {
+        onTransactionHash: onApprove.onTransactionHash,
+        onError: error => processErrorType(error, onDividendsIssued.onError),
+        onReceipt: receipt => onApprove.onReceipt(receipt.status),
+      }
     })
-  } catch(err){
-    debug(err);
+
+    onDividendsIssued.onReceipt(response.status);
+  } catch(error){
+    processErrorType(error, onDividendsIssued.onError)
   }
 }
 

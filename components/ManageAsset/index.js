@@ -218,6 +218,7 @@ class ManageAsset extends React.Component {
                     toWithdraw={toWithdraw}
                     isWithdrawingAssetManager={isWithdrawingAssetManager}
                     withdrawProfitAssetManager={withdrawProfitAssetManager}
+                    managerPercentage={managerPercentage}
                   />
                   <ManageAssetUpdates
                     authorizeThreeBoxSpace={authorizeThreeBoxSpace}

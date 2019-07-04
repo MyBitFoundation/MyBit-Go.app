@@ -97,6 +97,7 @@ class BlockchainProvider extends React.Component {
       withdrawInvestorProfit: this.withdrawInvestorProfit,
       withdrawCollateral: this.withdrawCollateral,
       withdrawProfitAssetManager: this.withdrawProfitAssetManager,
+      issueDividends: this.issueDividends,
       payoutAsset: this.payoutAsset,
       isUserContributing: false,
       withdrawingAssetIds: [],
@@ -734,6 +735,101 @@ class BlockchainProvider extends React.Component {
         assetId,
         amount: amountToPay,
         paymentToken,
+        gasPrice,
+      });
+
+    } catch (err) {
+      debug(err);
+    }
+  }
+
+  issueDividends = (amount, assetId) => {
+    try {
+      const {
+        gasPrice,
+      } = this.state;
+
+      const currentAsset = this.state.assets.find(item => item.assetId === assetId);
+      const notificationId = Date.now();
+      const formattedAmount = formatMonetaryValue(amount);
+      const {
+        name : assetName,
+      } = currentAsset.defaultData;
+
+      const {
+        buildNotification,
+      } = this.props.notificationsContext;
+
+      // Call Approve first
+      buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+        operationType: NotificationsMetamask.APPROVE,
+        formattedAmount,
+      });
+
+      const onTransactionHash = () => {
+        buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.INFO, {
+          formattedAmount,
+        });
+      }
+
+      const onTransactionHashApprove = () => {
+        buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.INFO, {
+          formattedAmount,
+          type: NotificationTypes.APPROVE,
+        });
+      }
+
+      const onReceipt = (wasSuccessful) => {
+        if(wasSuccessful){
+          onSuccessRefreshData();
+        } else {
+          onError(ErrorTypes.ETHEREUM)
+        }
+      }
+
+      const onReceiptApprove = (wasSuccessful) => {
+        if(wasSuccessful){
+          buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.SUCCESS, {
+            formattedAmount,
+            type: NotificationTypes.APPROVE,
+          });
+        } else {
+          onError(ErrorTypes.ETHEREUM)
+        }
+      }
+
+      const onError = (type) => {
+        if(type === ErrorTypes.METAMASK){
+          buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+            operationType: NotificationsMetamask.PAY_DIVIDENDS,
+          });
+        } else {
+          buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.ERROR, {
+            assetName,
+          });
+        }
+      }
+
+      const onSuccessRefreshData = async () => {
+        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.SUCCESS, {
+          assetName,
+          formattedAmount,
+        });
+      }
+
+      Brain.issueDividends({
+        onTransactionHash,
+        onReceipt,
+        onError,
+      }, {
+        onTransactionHash: onTransactionHashApprove,
+        onReceipt: onReceiptApprove,
+        onError,
+      }, {
+        address: this.props.metamaskContext.user.address,
+        assetId,
+        amount,
         gasPrice,
       });
 

@@ -58,6 +58,7 @@ const ManageAssetAssetInfo = React.memo(({
   toWithdraw,
   isWithdrawingAssetManager,
   withdrawProfitAssetManager,
+  managerPercentage,
 }) => (
   <AssetTemplate
     backgroundImage={imageSrc}
@@ -95,6 +96,7 @@ const ManageAssetAssetInfo = React.memo(({
         />
         <RevenueGenerator
           assetId={assetId}
+          managerPercentage={managerPercentage}
         >
           <Button
             type="default"
