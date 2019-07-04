@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 const ValueDisplayValue = styled.b`
-  padding: 4px;
+  padding: 7px;
   border-radius: 4px;
   font-size: 16px;
 

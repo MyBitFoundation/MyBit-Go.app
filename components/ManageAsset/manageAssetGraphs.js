@@ -107,7 +107,7 @@ const ManageAssetGraphs = ({
             </ManageAssetColoredValue>
             <br />
           </div>
-          <Button type="secondary" onClick={displayCollateral}>View</Button>
+          <Button type="secondary" onClick={displayCollateral}>View & Withdraw</Button>
         </ManageAssetRectangleContainer>
       </ManageAssetCustomRow>
       {chartBoxView === "profit" && (

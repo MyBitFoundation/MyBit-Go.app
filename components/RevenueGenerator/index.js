@@ -1,10 +1,9 @@
 import {
   Icon,
 } from 'antd';
-import RevenueGeneratorWrapper from './revenueGeneratorWrapper';
-import * as Brain from '../../apis/brain';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import InputRevenueGenerator from './inputRevenueGenerator';
+import { withBlockchainContext } from 'components/BlockchainContext';
 
 class RevenueGenerator extends React.PureComponent {
   state = {
@@ -19,6 +18,7 @@ class RevenueGenerator extends React.PureComponent {
   handleConfirm = () => {
     const {
       metamaskContext,
+      blockchainContext,
     } = this.props;
     const {
       user,
@@ -26,12 +26,12 @@ class RevenueGenerator extends React.PureComponent {
     } = metamaskContext;
 
     if(user.address && !isReadOnlyMode){
-      Brain.issueDividends(this.state.currentValue, user.address, this.props.assetId)
+      blockchainContext.issueDividends(this.state.currentValue, this.props.assetId)
       this.handleCancel();
     }
   }
 
-  handleCancel = () => this.setState({inputActive: false})
+  handleCancel = () => this.setState({inputActive: false, currentValue: 0})
 
   render = () => {
     const {
@@ -41,6 +41,7 @@ class RevenueGenerator extends React.PureComponent {
 
     const {
       metamaskContext,
+      managerPercentage,
     } = this.props;
 
     if(metamaskContext.isReadOnlyMode !== false){
@@ -49,15 +50,16 @@ class RevenueGenerator extends React.PureComponent {
 
     return (
       <div>
-        <RevenueGeneratorWrapper onClick={this.handleInputTriggered}>
-          <Icon type="gift" />
-        </RevenueGeneratorWrapper>
+        <div onClick={this.handleInputTriggered}>
+          {this.props.children}
+        </div>
         {inputActive && (
           <InputRevenueGenerator
             currentValue={currentValue}
             onValueChange={this.handleValueChanged}
             onConfirm={this.handleConfirm}
             onCancel={this.handleCancel}
+            managerPercentage={managerPercentage * 100}
           />
         )}
       </div>
@@ -65,4 +67,4 @@ class RevenueGenerator extends React.PureComponent {
   }
 }
 
-export default withMetamaskContext(RevenueGenerator);
+export default withBlockchainContext(withMetamaskContext(RevenueGenerator));
