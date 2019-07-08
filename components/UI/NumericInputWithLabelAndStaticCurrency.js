@@ -1,1 +1,0 @@
-NumericInputWithLabelAndStaticCurrency.js
