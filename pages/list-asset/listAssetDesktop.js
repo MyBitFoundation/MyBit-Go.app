@@ -110,6 +110,9 @@ const ListAssetDesktop = ({
     about,
     financials,
     risks,
+    hasAdditionalCosts,
+    additionalCosts,
+    fees,
   } = formData;
 
   if(step === 0){
@@ -162,7 +165,8 @@ const ListAssetDesktop = ({
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={goToNextStep}
-          nextButtonDisabled={!about || !financials || !risks}
+          nextButtonDisabled={!about || !financials || !risks || (hasAdditionalCosts && (!fees || additionalCosts <= 0))}
+          handleSelectChange={handleSelectChange}
         />
       )}
       {step === 3 && (

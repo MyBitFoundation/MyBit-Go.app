@@ -46,6 +46,7 @@ const AssetDetails = ({
     about,
     financials,
     risks,
+    fees,
   } = asset;
 
   const {
@@ -72,6 +73,7 @@ const AssetDetails = ({
           financials={financials}
           risks={risks}
           files={files}
+          fees={fees}
         />
         <AssetUpdates
           asset={asset}

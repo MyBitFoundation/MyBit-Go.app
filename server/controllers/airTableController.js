@@ -45,10 +45,12 @@ const getAllAssetInfoById = async () => {
           const financials = record.get('Financials');
           const risks = record.get('Risks');
           const about = record.get('About');
+          const fees = record.get('Fees');
           assetInfoById[assetId] = {
             financials,
             risks,
             about,
+            fees,
           };
       });
 
@@ -90,11 +92,12 @@ const getAllAssetsById = async (newAsset = false) => {
       assetIds = assetIds.split(',');
       assetIds.forEach(assetIdInfo => {
         const [assetId, country, city, collateralPercentage] = assetIdInfo.split('|');
-        let financials, risks, about;
+        let financials, risks, about, fees;
         if(allAssetInfoRecord[assetId]){
           financials = allAssetInfoRecord[assetId].financials;
           risks = allAssetInfoRecord[assetId].risks;
           about = allAssetInfoRecord[assetId].about;
+          fees = allAssetInfoRecord[assetId].fees;
         }
         assetsAirTableById[assetId] = {
           defaultData: airtableAsset,
@@ -104,6 +107,7 @@ const getAllAssetsById = async (newAsset = false) => {
           financials,
           risks,
           about,
+          fees,
         };
       });
     }
@@ -153,12 +157,14 @@ export const addNewAsset = async (data) => {
       about,
       financials,
       risks,
+      fees,
     } = data;
     await base('Asset Info').create({
       'Asset ID': assetId,
       'About': about,
       'Financials': financials,
       'Risks': risks,
+      'Fees': fees,
     });
 
     const rowIdAndAssetId = await getIdAndAssetIdsOfAssetName(assetName);

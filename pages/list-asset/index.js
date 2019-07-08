@@ -1,5 +1,6 @@
 import Router from "next/router";
 import Media from 'react-media';
+import BN from 'bignumber.js';
 import { compose } from 'recompose'
 import {
   Button,
@@ -39,8 +40,12 @@ import {
 } from 'utils/locationData';
 import getCountry from 'utils/countryCodes';
 import { calculateSlippage } from 'constants/calculateSlippage';
+import {
+  FIAT_TO_CRYPTO_CONVERSION_FEE,
+} from 'constants/platformFees';
 const dev = process.env.NODE_ENV === 'development';
 const { publicRuntimeConfig } = getConfig();
+BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
   constructor(props) {
@@ -54,6 +59,8 @@ class ListAssetPage extends React.Component {
         collateralInDefaultToken: 0,
         collateralInSelectedToken: 0,
         partnerContractAddress: '',
+        hasAdditionalCosts: false,
+        additionalCosts: 0,
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
@@ -127,9 +134,10 @@ class ListAssetPage extends React.Component {
       metamaskContext,
       supportedTokensInfo,
     } = this.props;
+    assetName = assetName || this.state.data.asset;
     const { assetsAirTable } = airtableContext;
     const asset = assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0];
-
+    const { additionalCosts = 0 } = this.state.data;
     const {
       operatorId,
       fundingGoal,
@@ -141,6 +149,12 @@ class ListAssetPage extends React.Component {
       assets,
       assetManagers,
     } = blockchainContext;
+
+    let assetValue = BN(fundingGoal);
+
+    // Add 8% fee if it applies and AM expenses
+    const fiatToCryptoFee = cryptoPurchase ? assetValue.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;
+    assetValue = assetValue.plus(fiatToCryptoFee).plus(additionalCosts).toNumber();
 
     const { selectedToken } = this.state.data;
     const { user, network } = metamaskContext;
@@ -155,7 +169,7 @@ class ListAssetPage extends React.Component {
       collateralPercentage,
     } = calculateCollateral(numberOfAssetsByAssetManager, cryptoPayout, cryptoPurchase);
 
-    const collateralInDefaultToken = fundingGoal * (collateralPercentage / 100);
+    const collateralInDefaultToken = assetValue * (collateralPercentage / 100);
     const collateralInPlatformToken = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokensInfo, collateralInDefaultToken)
     const collateralInSelectedToken = convertFromDefaultToken(selectedToken || DEFAULT_TOKEN, supportedTokensInfo, collateralInDefaultToken)
 
@@ -163,7 +177,7 @@ class ListAssetPage extends React.Component {
       data: {
         ...this.state.data,
         asset: assetName,
-        assetValue: fundingGoal,
+        assetValue,
         operatorId,
         collateralInPlatformToken,
         collateralBasedOnHistory,
@@ -174,6 +188,7 @@ class ListAssetPage extends React.Component {
         collateralInDefaultToken,
         collateralInSelectedToken,
         paymentTokenAddress,
+        cryptoPurchase,
       },
       loadingConversionInfo: true,
     })
@@ -209,6 +224,9 @@ class ListAssetPage extends React.Component {
               this.setState({
                 data: { ...this.state.data, category: value, asset: undefined, assetValue: undefined, }
               });break;
+            }
+            case 'additionalCosts': {
+              this.recalculateCollateral();
             }
             default: return null;
           }

@@ -44,6 +44,7 @@ const AssetDetailsInfo = ({
   about,
   risks,
   files,
+  fees,
 }) => (
   <AssetDetailsInfoWrapper>
     <AssetDetailsInfoName>
@@ -81,6 +82,12 @@ const AssetDetailsInfo = ({
     </AssetDetailsInfoTitle>
     <AssetDetailsInfoDescription>
       {newLineToParagraphs(risks)}
+    </AssetDetailsInfoDescription>
+    <AssetDetailsInfoTitle>
+      Additional Costs
+    </AssetDetailsInfoTitle>
+    <AssetDetailsInfoDescription>
+      {newLineToParagraphs(fees)}
     </AssetDetailsInfoDescription>
     <AssetDetailsInfoTitle>
       Supporting documents
