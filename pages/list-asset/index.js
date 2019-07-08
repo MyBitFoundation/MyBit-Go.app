@@ -153,7 +153,7 @@ class ListAssetPage extends React.Component {
     let assetValue = BN(fundingGoal);
 
     // Add 8% fee if it applies and AM expenses
-    const fiatToCryptoFee = cryptoPurchase ? assetValue.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;
+    const fiatToCryptoFee = !cryptoPurchase ? assetValue.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;
     assetValue = assetValue.plus(fiatToCryptoFee).plus(additionalCosts).toNumber();
 
     const { selectedToken } = this.state.data;

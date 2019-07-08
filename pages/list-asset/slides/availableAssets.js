@@ -105,9 +105,7 @@ const AssetValueContainer = styled.div`
   width: 80%;
   margin: 0 auto;
 
-  ${props => props.cryptoPurchase && css`
-    background: white;
-
+  ${props => props.cryptoPurchase === false && css`
     ${({ theme }) => theme.mobileL`
       margin-bottom: 20px;
       flex-direction: row;
@@ -293,9 +291,9 @@ export const AvailableAssetsSlide = ({
                        !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       }
                       parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                       style={{marginRight: '10px', marginBottom: '5px'}}
+                       style={cryptoPurchase === false ? {marginRight: '10px', marginBottom: '5px'} : {}}
                     />
-                    {cryptoPurchase && (
+                    {cryptoPurchase === false && (
                       <LabelWithTooltip
                         title={'8% fiat fee incl.'}
                         tooltipText="The asset incurs an additional 8% fee on top of the total investment to cover most exchanges
