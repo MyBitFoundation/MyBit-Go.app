@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import Address from 'ui/Address';
 import Balance from 'components/Balance';
 import MobileAccountInfoBalance from './mobileAccountInfoBalance';
@@ -7,6 +8,7 @@ import { withMetamaskContext } from 'components/MetamaskContext';
 
 const MobileAccountInfo = ({
   metamaskContext,
+  handleMobileMenuState,
 }) =>  {
   const{
     user,
@@ -28,7 +30,13 @@ const MobileAccountInfo = ({
 
   return (
     <div>
-      {addressToRender}
+      <div onClick={() => {
+        Router.push(`/asset-managers?id=${user.address}`, `/asset-managers/${user.address}`)
+        handleMobileMenuState(false);
+      }}
+      style={{cursor: 'pointer'}}>
+        {addressToRender}
+      </div>
       <MobileAccountInfoBalance>
         <Balance
           balance={balance}
