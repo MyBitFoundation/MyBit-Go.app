@@ -40,8 +40,8 @@ const AssetPortfolioManaged = ({
 
   const buttonWithLink = (
     <Link
-      as={`/manage?id=${assetId}`}
-      href={`/manage/${assetId}`}
+      href={`/manage?id=${assetId}`}
+      as={`/manage/${assetId}`}
     >
       {button}
     </Link>
