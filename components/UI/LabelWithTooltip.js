@@ -13,8 +13,9 @@ const LabelWithTooltip = ({
   title,
   tooltipText,
   isDark,
+  style,
 }) => (
-  <LabelWithTooltipWrapper>
+  <LabelWithTooltipWrapper style={style}>
     {title}
     <TooltipWrapper
       overlayClassName={isDark ? 'AssetManagerTooltip' : ''}

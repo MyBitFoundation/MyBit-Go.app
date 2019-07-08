@@ -244,6 +244,7 @@ export const updateAirTableWithNewAsset = async (
   about,
   financials,
   risks,
+  fees,
   performInternalAction,
 ) => {
   try{
@@ -256,6 +257,7 @@ export const updateAirTableWithNewAsset = async (
       about,
       financials,
       risks,
+      fees,
       collateralPercentage,
     });
     performInternalAction();
@@ -268,10 +270,11 @@ export const updateAirTableWithNewAsset = async (
         city,
         collateralPercentage,
         assetManagerEmail,
-        performInternalAction,
         about,
         financials,
         risks,
+        fees,
+        performInternalAction,
       ), 5000);
     debug(err);
   }

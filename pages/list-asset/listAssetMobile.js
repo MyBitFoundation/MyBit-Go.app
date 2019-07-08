@@ -64,6 +64,9 @@ const ListAssetMobile = ({
     about,
     financials,
     risks,
+    hasAdditionalCosts,
+    additionalCosts,
+    fees,
   } = formData;
 
   return (
@@ -114,7 +117,7 @@ const ListAssetMobile = ({
         ), buttons: {
           hasNextButton: true,
           hasBackButton: true,
-          nextButtonDisabled: !about || !financials || !risks,
+          nextButtonDisabled: !about || !financials || !risks || (hasAdditionalCosts && (!fees || additionalCosts <= 0)),
         }
       }, {
         toRender: (

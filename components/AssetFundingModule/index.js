@@ -165,13 +165,10 @@ class AssetFundingModule extends React.Component {
   getAmountToPayAndFees = (amount, asset) => {
     const amountInBn = BN(amount);
     const mybitPlatformFeeDefaultToken = amountInBn.times(MYBIT_FOUNDATION_FEE).toNumber();
-    const fiatToCryptoFeeDefaultToken = !asset.defaultData.cryptoPurchase ?
-      amountInBn.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;
-    const amountToPayDefaultToken = amountInBn.plus(mybitPlatformFeeDefaultToken).plus(fiatToCryptoFeeDefaultToken).toNumber();
+    const amountToPayDefaultToken = amountInBn.plus(mybitPlatformFeeDefaultToken).toNumber();
     return {
       mybitPlatformFeeDefaultToken,
       amountToPayDefaultToken,
-      fiatToCryptoFeeDefaultToken,
     }
   }
 

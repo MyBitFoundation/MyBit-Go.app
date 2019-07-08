@@ -76,7 +76,6 @@ const AssetFundingConfirm = ({
   onCancel,
   onChangeSelectedToken,
   tokenSlippagePercentages,
-  fiatToCryptoFeeDefaultToken,
 }) => {
   const {
     user,
@@ -96,7 +95,6 @@ const AssetFundingConfirm = ({
   const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDefaultToken);
   const amountToPaySelectedToken = selectedToken === DEFAULT_TOKEN ? amountToPayDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountToPayDefaultToken);
   const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFeeDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, mybitPlatformFeeDefaultToken);
-  const fiatToCryptoFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? fiatToCryptoFeeDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, fiatToCryptoFeeDefaultToken);
 
   const metamaskErrors = metamaskContext.metamaskErrors();
   const footer = getFooter(
@@ -168,25 +166,6 @@ const AssetFundingConfirm = ({
           secondValue={formatMonetaryValue(mybitPlatformFeeSelectedToken, selectedToken)}
           loading={loadingConversionInfo || !selectedToken}
         />
-        {fiatToCryptoFeeDefaultToken > 0 && (
-          <React.Fragment>
-            <Separator style={separatorStyle}/>
-            <Item
-              title={
-                <LabelWithTooltip
-                  title={`Fiat to Crypto Fee (${FIAT_TO_CRYPTO_CONVERSION_FEE * 100}%)`}
-                  tooltipText="If the type of asset is acquired physically and required fiat payments,
-                  the asset incurs an additional 8% fee on top of the total investment to cover most exchanges
-                  fees in order to transfer the money into its fiat equivalent."
-                  isDark
-                />
-              }
-              firstValue={formatMonetaryValue(fiatToCryptoFeeDefaultToken)}
-              secondValue={formatMonetaryValue(fiatToCryptoFeeSelectedToken, selectedToken)}
-              loading={loadingConversionInfo || !selectedToken}
-            />
-          </React.Fragment>
-        )}
         <Separator style={separatorStyle}/>
         <Item
           title="Gas Fee"

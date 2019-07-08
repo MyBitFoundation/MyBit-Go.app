@@ -160,16 +160,18 @@ class AirtableProvider extends React.PureComponent {
         assetIds = assetIds.split(',');
         assetIds.forEach(assetIdInfo => {
           const [assetId, country, city, collateralPercentage] = assetIdInfo.split('|');
-          let financials, about, risks;
+          let financials, about, risks, fees, asset;
           if(extraAssetInfoById[assetId]){
-            financials = extraAssetInfoById[assetId].financials;
-            about = extraAssetInfoById[assetId].about;
-            risks = extraAssetInfoById[assetId].risks;
+            asset = extraAssetInfoById[assetId];
           } else {
-            financials = DEFAULT_ASSET_INFO.Financials;
-            about = DEFAULT_ASSET_INFO.About;
-            risks = DEFAULT_ASSET_INFO.Risks;
+            asset = DEFAULT_ASSET_INFO;
           }
+
+          financials = asset.financials;
+          about = asset.about;
+          risks = asset.risks;
+          fees = asset.fees;
+
           assetsAirTableById[assetId] = {
             defaultData: airtableAsset,
             city,
@@ -178,6 +180,7 @@ class AirtableProvider extends React.PureComponent {
             financials,
             about,
             risks,
+            fees,
           };
         });
       }
@@ -211,12 +214,14 @@ class AirtableProvider extends React.PureComponent {
         Financials = DEFAULT_ASSET_INFO.Financials,
         About = DEFAULT_ASSET_INFO.About,
         Risks = DEFAULT_ASSET_INFO.Risks,
+        Fees = DEFAULT_ASSET_INFO.Fees,
       } = fields;
 
       extraAssetInfoById[fields['Asset ID']] = {
         financials: Financials,
         about: About,
         risks: Risks,
+        fees: Fees,
       }
     })
 
