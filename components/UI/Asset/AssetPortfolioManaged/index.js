@@ -22,12 +22,6 @@ const AssetPortfolioManaged = ({
   funded,
   assetId,
   fundingStage,
-  owedToInvestor,
-  numberOfInvestors,
-  ownership,
-  withdrawing,
-  withdrawInvestorProfit,
-  unrealizedProfit,
   toWithdraw,
   managerPercentage,
   totalProfitAssetManager,
@@ -35,33 +29,19 @@ const AssetPortfolioManaged = ({
   pastDate,
   fundingGoal,
   fundingProgress,
-  managerHasToCallPayout,
-  callingPayout,
-  payoutAsset,
-  defaultData,
 }) => {
-
-  const text = managerHasToCallPayout ? 'Send funds to operator' : 'Manage asset';
-  const url = managerHasToCallPayout ? undefined : `/manage?id=${assetId}`;
-  const urlAs = managerHasToCallPayout ? undefined : `/manage/${assetId}`;
   const button = (
     <Button
       type="secondary"
-      onClick={managerHasToCallPayout ? () => payoutAsset({
-        assetId,
-        defaultData,
-      }) : undefined}
-      loading={callingPayout}
-      disabled={callingPayout}
     >
-      {text}
+      Manage asset
     </Button>
   )
 
-  const buttonWithLink = url && (
+  const buttonWithLink = (
     <Link
-      as={urlAs}
-      href={url}
+      as={`/manage?id=${assetId}`}
+      href={`/manage/${assetId}`}
     >
       {button}
     </Link>
@@ -141,7 +121,7 @@ const AssetPortfolioManaged = ({
           )}
         </div>
         <AssetPortfolioManagedButtons>
-          {buttonWithLink || button}
+          {buttonWithLink}
         </AssetPortfolioManagedButtons>
       </AssetPortfolioManagedSection>
     </AssetPortfolioManagedWrapper>
