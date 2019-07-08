@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const AppHeaderLogo = styled.div`
   svg{
+    cursor: pointer;
     height: 100%;
     width: 100%;
     position: absolute;

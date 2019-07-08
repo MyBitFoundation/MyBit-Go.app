@@ -1,6 +1,6 @@
 import React from 'react';
 import { compose } from 'recompose'
-import Router from 'next/router';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import Logo from 'components/Logo';
 import Balance from 'components/Balance';
@@ -74,49 +74,52 @@ const AppHeader = ({
   const balance = user && user.avgBalance;
 
   return (
-    <BancorConsumer>
-      {({ initBancor }) => (
-        <AppHeaderContainer
-          hideOnMobile={hideOnMobile}
-        >
-          <div style={{position: 'relative', height: '100%'}}>
-            <AppHeaderLogo>
-              <Logo onCLick={() => Router.push('/explore')}/>
-            </AppHeaderLogo>
-            <AppHeaderPageName>
-              {pageName}
-            </AppHeaderPageName>
+    <AppHeaderContainer
+      hideOnMobile={hideOnMobile}
+    >
+      <div style={{position: 'relative', height: '100%'}}>
+        <Link href="/explore">
+          <AppHeaderLogo>
+            <Logo />
+          </AppHeaderLogo>
+        </Link>
+        <AppHeaderPageName>
+          {pageName}
+        </AppHeaderPageName>
+        {!isReadOnlyMode && (
+          <AppHeaderBalance>
+            <Balance
+              balance={loadingBalancesForNewUser ? undefined : balance}
+            />
+          </AppHeaderBalance>
+        )}
+        <AppHeaderConnectionStatus>
+          <React.Fragment>
+            <ConnectionStatus
+              metamaskErrors={metamaskErrors}
+            />
             {!isReadOnlyMode && (
-              <AppHeaderBalance>
-                <Balance
-                  balance={loadingBalancesForNewUser ? undefined : balance}
-                />
-              </AppHeaderBalance>
+              <AppHeaderAddress>
+                <span>{network}</span>
+                <div/>
+                <Link
+                  as={`/asset-managers/${user.address}`}
+                  href={`/asset-managers?id=${user.address}`}
+                >
+                  <span style={{cursor: 'pointer'}}>{shortenAddress(user.address, 4, 3)}</span>
+                </Link>
+              </AppHeaderAddress>
             )}
-            <AppHeaderConnectionStatus>
-              <React.Fragment>
-                <ConnectionStatus
-                  metamaskErrors={metamaskErrors}
-                />
-                {!isReadOnlyMode && (
-                  <AppHeaderAddress>
-                    <span>{network}</span>
-                    <div/>
-                    <span>{shortenAddress(user.address, 4, 3)}</span>
-                  </AppHeaderAddress>
-                )}
-              </React.Fragment>
-            </AppHeaderConnectionStatus>
-            <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)} />
-            {notificationsNumberToRender > 0 && (
-              <AppHeaderNotificationCounter>
-                {notificationsNumberToRender}
-              </AppHeaderNotificationCounter>
-            )}
-          </div>
-        </AppHeaderContainer>
-      )}
-    </BancorConsumer>
+          </React.Fragment>
+        </AppHeaderConnectionStatus>
+        <AppHeaderHamburguerButton onClick={() => handleMobileMenuState(true)} />
+        {notificationsNumberToRender > 0 && (
+          <AppHeaderNotificationCounter>
+            {notificationsNumberToRender}
+          </AppHeaderNotificationCounter>
+        )}
+      </div>
+    </AppHeaderContainer>
   )
 };
 
