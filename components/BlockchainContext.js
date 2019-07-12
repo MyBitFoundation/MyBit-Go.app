@@ -522,7 +522,7 @@ class BlockchainProvider extends React.Component {
     return filesString;
   }
 
-  handleListAsset = async (formData, setUserListingAsset, assetManagerEmail) => {
+  handleListAsset = async (formData, setUserListingAsset) => {
     const {
       gasPrice,
     } = this.state;

@@ -58,8 +58,7 @@
         ["import", {"libraryName": "antd","style": "less"}],
         ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
         ["inline-react-svg" ],
-        ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }],
-        ["transform-remove-console"]
+        ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }]
       ]
     }
   }
