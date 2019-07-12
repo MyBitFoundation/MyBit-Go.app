@@ -43,9 +43,11 @@ class ThreeBoxProfile extends React.Component {
 
         const { loadThreeBoxProfile } = threeBoxContext;
         loadThreeBoxProfile(address).then((profile) => {
-          this.setState({name: profile.name, imageIpfs: profile.image[0]['contentUrl']['/']});
-          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_NAME}${address}`, name)
-          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_IMAGE}${address}`, imageIpfs)
+          const newName = profile.name;
+          const newIpfsHash = profile.image[0]['contentUrl']['/']
+          this.setState({name: newName, imageIpfs: newIpfsHash});
+          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_NAME}${address}`, newName)
+          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_IMAGE}${address}`, newIpfsHash)
         })
 
        this.setState({ name, imageIpfs })

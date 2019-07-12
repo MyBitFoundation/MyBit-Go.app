@@ -428,8 +428,6 @@ export const fetchAssets = async (userAddress, assetListingsAirtable, assetModel
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       const api = await Network.api();
       const assetManagerFunds = await Network.assetManagerFunds();
-      const database = await Network.database();
-      const events = await Network.events();
       let assets = await Network.getTotalAssetsWithBlockNumberAndManager();
       const platformOperators = await Network.getOperators();
       mergeAirtableModelsWithPlatformOperators(platformOperators, assetModelsAirtable, updateAssetModels)
