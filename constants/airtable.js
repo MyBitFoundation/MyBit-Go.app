@@ -1,16 +1,29 @@
 export const PULL_ASSETS_TIME = 1000 * 60;
 export const PULL_CATEGORIES_TIME = 1000 * 60;
-export const AIRTABLE_ASSETS_RULES = [
+export const AIRTABLE_ASSET_MODELS = [
   'Asset',
   'Category',
-  'Description',
-  'Details',
-  'Funding goal',
-  'Image URL',
-  'Partner',
+  'Funding Goal',
+  'Image',
   'Partner Address',
   'Crypto Purchase',
   'Crypto Payout',
+  'Model ID',
+];
+
+export const AIRTABLE_ASSET_LISTINGS = [
+  'Asset ID',
+  'Model ID',
+  'Financials',
+  'Risks',
+  'About',
+  'Fees',
+  'City',
+  'Country',
+  'Collateral Percentage',
+  'Route',
+  'Province',
+  'Postal Code',
 ];
 
 export const AIRTABLE_CATEGORIES_RULES = [

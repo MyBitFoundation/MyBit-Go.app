@@ -39,7 +39,7 @@ const AssetDetails = ({
     funded,
     pastDate,
     percentageOwnedByUser,
-    defaultData,
+    model,
     fundingGoal,
     fundingProgress,
     userInvestment,
@@ -54,7 +54,7 @@ const AssetDetails = ({
     name,
     details,
     description,
-  } = defaultData;
+  } = model;
 
   return (
     <AssetDetailsWrapper>

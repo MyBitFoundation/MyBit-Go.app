@@ -193,9 +193,10 @@ class ManageAsset extends React.Component {
       imageSrc,
       partner,
       files,
-      defaultData,
+      model,
       assetManagerCollateral,
       funded,
+      managerHasToCallPayout,
     } = asset;
 
     const assetListingUrl = `/explore/${assetId}`;
@@ -207,9 +208,9 @@ class ManageAsset extends React.Component {
             <ManageAssetContentWrapper>
               <Col {...COLUMN_SIZE}>
                 <ManageAssetAssetInfo
-                  imageSrc={defaultData.imageSrc}
+                  imageSrc={model.imageSrc}
                   assetId={assetId}
-                  name={defaultData.name}
+                  name={model.name}
                   city={city}
                   country={country}
                   fundingGoal={fundingGoal}
@@ -221,6 +222,7 @@ class ManageAsset extends React.Component {
                   withdrawProfitAssetManager={withdrawProfitAssetManager}
                   managerPercentage={managerPercentage}
                   funded={funded}
+                  managerHasToCallPayout={managerHasToCallPayout}
                 />
                 <ManageAssetUpdates
                   authorizeThreeBoxSpace={authorizeThreeBoxSpace}

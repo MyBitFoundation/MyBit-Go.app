@@ -19,7 +19,7 @@ const Asset = (props) => {
     type,
     withdrawInvestorProfit,
     withdrawing,
-    defaultData,
+    model,
   } = props;
 
   let AssetComponent = AssetDefault;
@@ -60,7 +60,7 @@ const Asset = (props) => {
   const {
     name,
     imageSrc,
-  } = defaultData;
+  } = model;
 
   return(
     <Col {...colSize} key={`${assetId}-${type}`}>

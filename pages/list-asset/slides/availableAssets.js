@@ -268,12 +268,12 @@ export const AvailableAssetsSlide = ({
                     isCentered
                     showSearch
                     placeholder="Available Assets"
-                    onChange={value => handleSelectChange({name: value}, "asset")}
+                    onChange={value => handleSelectChange({modelId: value}, "asset")}
                     value={asset}
                   >
                     {assetsAvailable.map(asset => {
                       return (
-                        <Select.Option key={asset.name} value={asset.name}>
+                        <Select.Option key={asset.name} value={asset.modelId}>
                           {asset.name}
                         </Select.Option>
                       )}
