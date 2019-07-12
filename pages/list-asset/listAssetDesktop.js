@@ -246,7 +246,7 @@ const ListAssetDesktop = ({
           error={false || metamaskErrorsToRender.render}
           onClick={() => {
             setUserListingAsset(true);
-            handleListAsset(formData, setUserListingAsset, civic.email);
+            handleListAsset(formData, setUserListingAsset);
           }}
           checkedToS={checkedToS}
           shouldShowToSCheckmark={shouldShowToSCheckmark}

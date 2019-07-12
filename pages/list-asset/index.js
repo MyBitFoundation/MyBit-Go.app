@@ -124,25 +124,26 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectedTokenChange = selectedToken => {
-    this.setState({data: {...this.state.data, selectedToken}}, () => this.recalculateCollateral(this.state.data.asset))
+    this.setState({data: {...this.state.data, selectedToken}}, () => this.recalculateCollateral(this.state.data.modelId))
   }
 
-  recalculateCollateral = assetName => {
+  recalculateCollateral = modelId => {
     const {
       blockchainContext,
       airtableContext,
       metamaskContext,
       supportedTokensInfo,
     } = this.props;
-    assetName = assetName || this.state.data.asset;
+    modelId = modelId || this.state.data.modelId;
     const { assetsAirTable } = airtableContext;
-    const asset = assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0];
+    const asset = assetsAirTable[modelId];
     const { additionalCosts = 0 } = this.state.data;
     const {
       operatorId,
       fundingGoal,
       cryptoPayout,
       cryptoPurchase,
+      name,
     } = asset;
 
     const {
@@ -176,7 +177,7 @@ class ListAssetPage extends React.Component {
     this.setState({
       data: {
         ...this.state.data,
-        asset: assetName,
+        asset: name,
         assetValue,
         operatorId,
         collateralInPlatformToken,
@@ -189,6 +190,7 @@ class ListAssetPage extends React.Component {
         collateralInSelectedToken,
         paymentTokenAddress,
         cryptoPurchase,
+        modelId,
       },
       loadingConversionInfo: true,
     })
@@ -203,8 +205,8 @@ class ListAssetPage extends React.Component {
 
   handleSelectChange = (value, name) => {
     if(name === 'asset'){
-      const assetName = value.name;
-      this.recalculateCollateral(assetName);
+      const modelId = value.modelId;
+      this.recalculateCollateral(modelId);
     } else {
       this.setState(
         {
@@ -317,6 +319,7 @@ class ListAssetPage extends React.Component {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
+    console.log("Files going to be uploaded: ", files)
     this.setState({
       data: { ...this.state.data, fileList: files }
     });

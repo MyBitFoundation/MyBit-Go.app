@@ -226,7 +226,7 @@ const ListAssetMobile = ({
             nextButtonDisabled: (!checkedToS && readToS) || !tokenWithSufficientBalance,
             nextButtonHandler: () => {
               setUserListingAsset(true);
-              handleListAsset(formData, setUserListingAsset, civic.email);
+              handleListAsset(formData, setUserListingAsset);
             },
           }
         }

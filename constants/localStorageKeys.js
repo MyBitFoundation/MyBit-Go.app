@@ -3,5 +3,7 @@ export const LocalStorageKeys = {
   EXPLORE_PAGE_FUNDING_ACTIVE: 'explorePageFundingActive',
   EXPLORE_PAGE_SORT_BY: 'explorePageSortBy',
   EXPLORE_PAGE_SELECTED_FILTERS: 'explorePageSelectedFilters',
-  ACCEPTED_TOS: 'accepted_tos'
+  ACCEPTED_TOS: 'accepted_tos',
+  THREE_BOX_CACHE_IMAGE: 'threeBoxCacheImage',
+  THREE_BOX_CACHE_NAME: 'threeBoxCacheName',
 };
