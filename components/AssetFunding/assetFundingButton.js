@@ -10,7 +10,7 @@ const AssetFundingButton = styled(Button)`
   line-height: 48px !important;
 
   ${props => props.type === 'default' && css`
-     border: 1px solid #F5222D !important;
+     border: 1px solid ${({theme}) => theme.colors.red} !important;
      background-color: #FFFFFF !important;
      color: ${({theme}) => theme.colors.black2} !important;
   `}

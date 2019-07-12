@@ -31,6 +31,7 @@ class MobileMenu extends React.PureComponent {
               <React.Fragment key={`Section--${index}`}>
                 <Section
                   {...this.props}
+                  handleMobileMenuState={handleMobileMenuState}
                 />
                 {index !== Sections.length -1 &&
                   <MobileMenuSection />

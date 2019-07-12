@@ -42,30 +42,20 @@ app
     }
   });
 
-  server.get('/api/airtable/assets-info/:network', (req, res) => {
+  server.get('/api/airtable/assetModels/:network', (req, res) => {
     try{
       const network = req.params.network;
-      req.pipe(AirTableController.getAssetsInfo(network)).pipe(res);
+      req.pipe(AirTableController.pipeAssetModels(network)).pipe(res);
     }catch(err){
       res.statusCode = 500;
       res.send(error);
     }
   });
 
-  server.get('/api/airtable/assets/:network', (req, res) => {
+  server.get('/api/airtable/assetListings/:network', (req, res) => {
     try{
       const network = req.params.network;
-      req.pipe(AirTableController.getAssets(network)).pipe(res);
-    }catch(err){
-      res.statusCode = 500;
-      res.send(error);
-    }
-  });
-
-  server.get('/api/airtable/categories/:network', (req, res) => {
-    try{
-      const network = req.params.network;
-      req.pipe(AirTableController.getCategories(network)).pipe(res);
+      req.pipe(AirTableController.pipeAssetListings(network)).pipe(res);
     }catch(error){
       res.statusCode = 500;
       res.send(error);

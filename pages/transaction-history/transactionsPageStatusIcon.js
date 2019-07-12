@@ -12,7 +12,7 @@ const statusIcon = (color) => css`
 
 const TransactionsPageStatusIcon = styled.span`
   ${props => props.status === 'Confirmed' && css`
-    ${statusIcon('#52c41a')}
+    ${statusIcon(props.theme.colors.green)}
   `}
 
   ${props => props.status === 'Pending' && css`
@@ -20,7 +20,7 @@ const TransactionsPageStatusIcon = styled.span`
   `}
 
   ${props => props.status === 'Error' && css`
-    ${statusIcon('#f5222d')}
+    ${statusIcon(props.theme.colors.red)}
   `}
 }`
 

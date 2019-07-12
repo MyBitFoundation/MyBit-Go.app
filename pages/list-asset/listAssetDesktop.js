@@ -87,7 +87,9 @@ const ListAssetDesktop = ({
   tokenWithSufficientBalance,
   airtableContext,
   userAddress,
-  loadingBalancesForNewUser
+  loadingBalancesForNewUser,
+  loadingConversionInfo,
+  tokenSlippagePercentages,
 }) => {
   const {
     category,
@@ -108,6 +110,9 @@ const ListAssetDesktop = ({
     about,
     financials,
     risks,
+    hasAdditionalCosts,
+    additionalCosts,
+    fees,
   } = formData;
 
   if(step === 0){
@@ -160,7 +165,8 @@ const ListAssetDesktop = ({
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={goToNextStep}
-          nextButtonDisabled={!about || !financials || !risks}
+          nextButtonDisabled={!about || !financials || !risks || (hasAdditionalCosts && (!fees || additionalCosts <= 0))}
+          handleSelectChange={handleSelectChange}
         />
       )}
       {step === 3 && (
@@ -214,6 +220,8 @@ const ListAssetDesktop = ({
           desktopMode
           nextButtonDisabled={managementFee !== 0 ? false : true}
           loadingBalancesForNewUser={loadingBalancesForNewUser}
+          loadingConversionInfo={loadingConversionInfo}
+          tokenSlippagePercentages={tokenSlippagePercentages}
         />
       )}{step === 7 && !readToS && (
         <TermsOfServiceSlide
@@ -238,7 +246,7 @@ const ListAssetDesktop = ({
           error={false || metamaskErrorsToRender.render}
           onClick={() => {
             setUserListingAsset(true);
-            handleListAsset(formData, setUserListingAsset, civic.email);
+            handleListAsset(formData, setUserListingAsset);
           }}
           checkedToS={checkedToS}
           shouldShowToSCheckmark={shouldShowToSCheckmark}

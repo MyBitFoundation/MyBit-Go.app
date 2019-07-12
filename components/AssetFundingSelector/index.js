@@ -20,19 +20,15 @@ const AssetFundingSelector = ({
   ended,
   loadingUserInfo,
   maxOwnership,
-  yourOwnership,
-  yourContribution,
   formatMonetaryValue,
   selectedOwnership,
   minInvestment,
   maxInvestment,
-  selectedAmountEth,
-  handleOnChangeSlider,
-  handleOnChangePercentage,
-  handleOnChangeEthValue,
+  selectedAmountDefaultToken,
+  onChangeContributionPercentage,
+  onChangeContributionDefaultToken,
   handleDeadlineHit,
   handleConfirmationClicked,
-  maxPercentageAfterFees,
   selectedMaxValue,
 }) => (
   <div>
@@ -48,22 +44,22 @@ const AssetFundingSelector = ({
         fundingGoal={formatMonetaryValue(asset.fundingGoal)}
         fundingProgress={formatMonetaryValue(asset.fundingProgress)}
         style={{marginTop: '20px'}}
+        cryptoPayout={asset.model.cryptoPayout}
+        cryptoPurchase={asset.model.cryptoPurchase}
       />
     </div>
     <Separator style={separatorStyle}/>
     <FundingCalculator
       {...asset}
-      maxPercentageAfterFees={maxPercentageAfterFees}
-      handleOnChangeEthValue={handleOnChangeEthValue}
-      handleOnChangePercentage={handleOnChangePercentage}
-      handleOnChangeSlider={handleOnChangeSlider}
-      selectedAmountEth={selectedAmountEth}
+      onChangeContributionDefaultToken={onChangeContributionDefaultToken}
+      onChangeContributionPercentage={onChangeContributionPercentage}
+      selectedAmountDefaultToken={selectedAmountDefaultToken}
       maxInvestment={maxInvestment}
       minInvestment={minInvestment}
       selectedOwnership={selectedOwnership}
       ended={ended}
-      yourContribution={yourContribution}
-      yourOwnership={yourOwnership}
+      userInvestment={asset.userInvestment}
+      userOwnership={asset.percentageOwnedByUser}
       maxOwnership={maxOwnership}
       loadingUserInfo={loadingUserInfo}
     />
@@ -72,7 +68,7 @@ const AssetFundingSelector = ({
         <AssetFundingButton
           type="primary"
           onClick={handleConfirmationClicked}
-          disabled={maxInvestment === 0 || selectedAmountEth < minInvestment}
+          disabled={maxInvestment === 0 || selectedAmountDefaultToken < minInvestment || selectedAmountDefaultToken === 0}
           size="large"
           style={{
             margin: '20px 0px',

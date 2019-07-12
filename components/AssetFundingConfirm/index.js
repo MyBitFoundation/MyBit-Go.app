@@ -1,13 +1,9 @@
 import {
   Button,
 } from 'antd';
-import { withMetamaskContext } from 'components/MetamaskContext';
-import { withKyberContext } from 'components/KyberContext';
+import styled, { css } from 'styled-components';
 import Separator from 'ui/Separator';
 import AssetFundingTitle from 'components/AssetFunding/assetFundingTitle';
-import AssetFundingConfirmItem from './assetFundingConfirmItem';
-import AssetFundingConfirmItemName from './assetFundingConfirmItemName';
-import AssetFundingConfirmItemValue from './assetFundingConfirmItemValue';
 import AssetFundingConfirmListWrapper from './assetFundingConfirmListWrapper';
 import AssetFundingConfirmTotalLabel from './assetFundingConfirmTotalLabel';
 import TokenSelector from 'components/TokenSelector';
@@ -15,6 +11,7 @@ import AssetFundingConfirmDropdownButton from './assetFundingConfirmDropdownButt
 import AssetFundingConfirmPayWith from './assetFundingConfirmPayWith';
 import TermsAndConditions from 'ui/TermsAndConditions';
 import AssetFundingFooter from './assetFundingFooter';
+import Item, { AssetFundingConfirmItemValue } from './Item';
 import {
   AssetFundingConfirmFooterMessage,
   AssetFundingConfirmFooterMessageUrl,
@@ -28,8 +25,8 @@ import {
 } from 'constants/app';
 import {
   MYBIT_FOUNDATION_FEE,
+  FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
-
 import {
   formatMonetaryValue,
   convertFromDefaultToken,
@@ -38,11 +35,7 @@ import {
   fromWeiToEth,
 } from 'utils/helpers';
 import AssetFundingButton from 'components/AssetFunding/assetFundingButton';
-import BN from 'bignumber.js';
-BN.config({ EXPONENTIAL_AT: 80 });
-
-const GAS_FUNDING = require("@mybit/network.js/gas").buyAssetOrderERC20;
-const GAS_APPROVE = require("@mybit/network.js/gas").approve;
+import LabelWithTooltip from 'ui/LabelWithTooltip';
 
 const separatorStyleFullWidth = {
   position: 'absolute',
@@ -55,177 +48,193 @@ const separatorStyle = {
   marginBottom: '10px',
 };
 
-class AssetFundingConfirm extends React.Component {
-  state = {
-    selectedToken: DEFAULT_TOKEN,
-    acceptedToS: false,
-    setAcceptedToS: this.setAcceptedToS,
-  }
+const StyledSlippageValue = styled.span`
+  ${props => props.value >= 5 && css`
+    color: #F7861C;
+  `}
+  ${props => props.value >= 10 && css`
+    color: #FF0000;
+  `}
+`
 
-  setAcceptedToS = acceptedToS => this.setState({acceptedToS})
+const AssetFundingConfirm = ({
+  metamaskContext,
+  selectedOwnership,
+  supportedTokensInfo,
+  kyberLoading,
+  gasPrice,
+  readToS,
+  loadingConversionInfo,
+  selectedToken,
+  setAcceptedToS,
+  acceptedToS,
+  mybitPlatformFeeDefaultToken,
+  selectedAmountDefaultToken,
+  amountToPayDefaultToken,
+  gasInDefaultToken,
+  fundAsset,
+  onCancel,
+  onChangeSelectedToken,
+  tokenSlippagePercentages,
+}) => {
+  const {
+    user,
+    extensionUrl,
+    loadingBalancesForNewUser,
+  } = metamaskContext;
+  const {
+    balances,
+    address: userAddress,
+   } = user;
 
-  handleTokenChange = selectedToken => this.setState({selectedToken});
+  // total the user pays (contribution + platform fee + transaction fee)
+  const totalToPayInDefaultToken = amountToPayDefaultToken + gasInDefaultToken;
 
-  render(){
-    const {
-      selectedToken,
-      acceptedToS,
-      setAcceptedToS,
-    } = this.state;
+  const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? selectedAmountDefaultToken : convertFromDefaultToken(selectedToken, supportedTokensInfo, selectedAmountDefaultToken);
+  const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, gasInDefaultToken);
+  const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDefaultToken);
+  const amountToPaySelectedToken = selectedToken === DEFAULT_TOKEN ? amountToPayDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountToPayDefaultToken);
+  const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFeeDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, mybitPlatformFeeDefaultToken);
 
-    const {
-      metamaskContext,
-      selectedOwnership,
-      amount: amountContributed,
-      supportedTokensInfo,
-      kyberLoading,
-      gasPrice,
-      readToS,
-    } = this.props;
+  const metamaskErrors = metamaskContext.metamaskErrors();
+  const footer = getFooter(
+    metamaskErrors.error,
+    extensionUrl,
+    amountToPaySelectedToken.toFixed(18),
+    selectedAmountDefaultToken,
+    balances,
+    fundAsset,
+    !kyberLoading && supportedTokensInfo[selectedToken].contractAddress,
+    selectedToken,
+    kyberLoading
+  );
 
-    const {
-      user,
-      extensionUrl,
-    } = metamaskContext;
+  const showSlipage = tokenSlippagePercentages && tokenSlippagePercentages[selectedToken];
 
-    /*
-    * Calculate total gas. Note that we may or not call approve
-    * so we need to account for that when estimating the total gas cost
-    */
-    const gasPriceInEth = fromWeiToEth(gasPrice);
-    const approveGastCost = selectedToken === 'ETH' ? 0 : gasPriceInEth * GAS_APPROVE;
-    const transactionGasCost =  gasPriceInEth * GAS_FUNDING;
-    const totalGas = approveGastCost + transactionGasCost;
+  const {
+    buttonProps,
+    messageProps,
+  } = footer;
 
-    const balances = user.balances;
-    const amountInBn = BN(amountContributed);
-    const mybitPlatformFee = amountInBn.times(MYBIT_FOUNDATION_FEE).toNumber();
-    let amountToPay = amountInBn.plus(mybitPlatformFee).toNumber();
+  const footerButton = (
+    <AssetFundingButton
+      size="large"
+      type={buttonProps.error ? 'default' : 'primary'}
+      onClick={buttonProps.onClick}
+      disabled={buttonProps.error || ((!acceptedToS && readToS) && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
+      href={buttonProps.href}
+      target={buttonProps.href && '_blank'}
+      loading={buttonProps.loading}
+    >
+      {buttonProps.text}
+    </AssetFundingButton>
+  )
 
-    const amountInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountContributed : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountContributed);
-
-    // calculate gas from knowing the cost in ETH
-    const gasInDai = kyberLoading ? 0 : parseFloat(convertFromTokenToDefault('ETH', supportedTokensInfo, totalGas).toFixed(DEFAULT_TOKEN_MAX_DECIMALS));
-    const gasInSelectedToken = selectedToken === DEFAULT_TOKEN ? gasInDai : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, gasInDai);
-
-    const totalToPayInDai = amountToPay + gasInDai;
-    const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDai : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDai);
-    const amountToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? amountToPay : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountToPay);
-    const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFee : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, mybitPlatformFee);
-
-    const metamaskErrors = metamaskContext.metamaskErrors();
-    const footer = getFooter(metamaskErrors.error, extensionUrl, amountToPayInSelectedToken.toFixed(18), amountContributed, user.balances, this.props.fundAsset, !kyberLoading && supportedTokensInfo[selectedToken].contractAddress, selectedToken, kyberLoading);
-
-    const {
-      buttonProps,
-      messageProps,
-    } = footer;
-
-    const footerButton = (
-      <AssetFundingButton
-        size="large"
-        type={buttonProps.error ? 'default' : 'primary'}
-        onClick={buttonProps.onClick}
-        disabled={buttonProps.error || ((!acceptedToS && readToS) && !buttonProps.href && buttonProps.text !== 'Connect MetaMask')}
-        href={buttonProps.href}
-        target={buttonProps.href && '_blank'}
-        loading={buttonProps.loading}
+  let footerMessage = messageProps ?
+    !messageProps.href ? (
+      <AssetFundingConfirmFooterMessage>
+        {messageProps.text}
+      </AssetFundingConfirmFooterMessage>
+    ) : (
+      <AssetFundingConfirmFooterMessageUrl
+        href={messageProps.href}
+        target="_blank"
+        rel="noreferrer"
       >
-        {buttonProps.text}
-      </AssetFundingButton>
-    )
+        {messageProps.text}
+      </AssetFundingConfirmFooterMessageUrl>
+    ) : null;
 
-    let footerMessage = messageProps ?
-      !messageProps.href ? (
-        <AssetFundingConfirmFooterMessage>
-          {messageProps.text}
-        </AssetFundingConfirmFooterMessage>
-      ) : (
-        <AssetFundingConfirmFooterMessageUrl
-          href={messageProps.href}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {messageProps.text}
-        </AssetFundingConfirmFooterMessageUrl>
-      ) : null;
-
-    return (
-      <React.Fragment>
-        <AssetFundingTitle
-          text={`You will own ${selectedOwnership}% of the asset`}
-          onClick={this.props.cancel}
+  return  (
+    <React.Fragment>
+      <AssetFundingTitle
+        text={`You will own ${selectedOwnership}% of the asset`}
+        onClick={onCancel}
+      />
+      <Separator style={separatorStyleFullWidth}/>
+      <AssetFundingConfirmListWrapper>
+        <Item
+          title="Contribution"
+          firstValue={formatMonetaryValue(selectedAmountDefaultToken)}
+          secondValue={formatMonetaryValue(amountInSelectedToken, selectedToken)}
+          loading={loadingConversionInfo || !selectedToken}
         />
-        <Separator style={separatorStyleFullWidth}/>
-        <AssetFundingConfirmListWrapper>
-          <AssetFundingConfirmItem>
-            <AssetFundingConfirmItemName>
-              Contribution
-            </AssetFundingConfirmItemName>
-            <AssetFundingConfirmItemValue>
-              <p>{formatMonetaryValue(amountContributed)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(amountInSelectedToken, selectedToken)}</p>
-            </AssetFundingConfirmItemValue>
-          </AssetFundingConfirmItem>
-          <Separator style={separatorStyle}/>
-          <AssetFundingConfirmItem>
-            <AssetFundingConfirmItemName>
-              MyBit Foundation Fee ({MYBIT_FOUNDATION_FEE * 100}%)
-            </AssetFundingConfirmItemName>
-            <AssetFundingConfirmItemValue>
-              <p>{formatMonetaryValue(mybitPlatformFee)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(mybitPlatformFeeSelectedToken, selectedToken)}</p>
-            </AssetFundingConfirmItemValue>
-          </AssetFundingConfirmItem>
-          <Separator style={separatorStyle}/>
-          <AssetFundingConfirmItem>
-            <AssetFundingConfirmItemName>
-              Gas Fee
-            </AssetFundingConfirmItemName>
-            <AssetFundingConfirmItemValue>
-              <p>~{formatMonetaryValue(gasInDai)}</p>
-              <p>~{!selectedToken ? <span>loading</span> : formatMonetaryValue(gasInSelectedToken, selectedToken)}</p>
-            </AssetFundingConfirmItemValue>
-          </AssetFundingConfirmItem>
-          <Separator style={separatorStyle}/>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}>
-            <AssetFundingConfirmTotalLabel>
-              Total to pay:
-            </AssetFundingConfirmTotalLabel>
-            <AssetFundingConfirmItemValue
-              isLarge
-            >
-              <p>{formatMonetaryValue(totalToPayInDai)}</p>
-              <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(totalToPayInSelectedToken, selectedToken)}</p>
-            </AssetFundingConfirmItemValue>
-          </div>
-          <AssetFundingConfirmDropdownButton>
-            <AssetFundingConfirmPayWith>
-              Pay with
-            </AssetFundingConfirmPayWith>
-            <TokenSelector
-              balances={user.balances}
-              amountToPay={amountToPay}
-              onChange={this.handleTokenChange}
-              userAddress={user.address}
+        <Separator style={separatorStyle}/>
+        <Item
+          title={`MyBit Foundation Fee (${MYBIT_FOUNDATION_FEE * 100}%)`}
+          firstValue={formatMonetaryValue(mybitPlatformFeeDefaultToken)}
+          secondValue={formatMonetaryValue(mybitPlatformFeeSelectedToken, selectedToken)}
+          loading={loadingConversionInfo || !selectedToken}
+        />
+        <Separator style={separatorStyle}/>
+        <Item
+          title="Gas Fee"
+          firstValue={formatMonetaryValue(gasInDefaultToken)}
+          secondValue={formatMonetaryValue(gasInSelectedToken, selectedToken)}
+          loading={loadingConversionInfo || !selectedToken}
+        />
+        {showSlipage && (
+          <React.Fragment>
+            <Separator style={separatorStyle}/>
+            <Item
+              title={
+                <LabelWithTooltip
+                  title="Slippage rate"
+                  tooltipText="Slippage is a necessary part of automated trading reserves.
+                    As the relative balance of the two currencies shift due to a purchase,
+                    so does the price."
+                  isDark
+                />
+              }
+              firstValue={
+                <StyledSlippageValue
+                  value={tokenSlippagePercentages[selectedToken]}
+                >
+                  {tokenSlippagePercentages[selectedToken]}%
+                </StyledSlippageValue>
+              }
             />
-          </AssetFundingConfirmDropdownButton>
-          <Separator style={separatorStyleFullWidth}/>
-          <AssetFundingFooter>
-            {readToS && <TermsAndConditions
-              checked={acceptedToS}
-              onChange={event => this.setAcceptedToS(event.target.checked)}
-            />}
-            {footerButton}
-            {footerMessage}
-          </AssetFundingFooter>
-        </AssetFundingConfirmListWrapper>
-      </React.Fragment>
-    )
-  }
+          </React.Fragment>
+        )}
+        <Separator style={separatorStyle}/>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}>
+          <AssetFundingConfirmTotalLabel>
+            Total to pay:
+          </AssetFundingConfirmTotalLabel>
+          <AssetFundingConfirmItemValue
+            isLarge
+          >
+            <p>{formatMonetaryValue(totalToPayInDefaultToken)}</p>
+            <p>{!selectedToken ? <span>loading</span> : formatMonetaryValue(totalToPayInSelectedToken, selectedToken)}</p>
+          </AssetFundingConfirmItemValue>
+        </div>
+        <AssetFundingConfirmDropdownButton>
+          <AssetFundingConfirmPayWith>
+            Pay with
+          </AssetFundingConfirmPayWith>
+          <TokenSelector
+            balances={balances}
+            amountToPay={amountToPayDefaultToken}
+            onChange={onChangeSelectedToken}
+            userAddress={userAddress}
+            loading={loadingBalancesForNewUser}
+          />
+        </AssetFundingConfirmDropdownButton>
+        <Separator style={separatorStyleFullWidth}/>
+        <AssetFundingFooter>
+          {readToS && <TermsAndConditions
+            checked={acceptedToS}
+            onChange={event => setAcceptedToS(event.target.checked)}
+          />}
+          {footerButton}
+          {footerMessage}
+        </AssetFundingFooter>
+      </AssetFundingConfirmListWrapper>
+    </React.Fragment>
+  )
 }
 
-export default withKyberContext(withMetamaskContext(AssetFundingConfirm));
+export default AssetFundingConfirm;

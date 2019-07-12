@@ -93,10 +93,10 @@ class CivicProvider extends Component {
     axios
     .get('/api/list-asset/auth', { headers: {"Authorization" : `Bearer ${jwtToken}`} })
     .then(res => {
-        if(res.data && res.data.data && Array.isArray(res.data.data) && res.data.data.length === 11 && res.data.data[9].value){
-          this.setState({email: res.data.data[9].value}, () => cb && cb());
-        }
-      })
+      const responseIsValid = res.data && res.data.data && Array.isArray(res.data.data);
+      const email = responseIsValid ? res.data.data.find(({label}) => label === 'contact.personal.email').value : 'user@mybit.io'
+      this.setState({email}, () => cb && cb());
+    })
     .catch(error => console.log(error))
   }
 

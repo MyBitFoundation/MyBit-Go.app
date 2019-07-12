@@ -111,10 +111,6 @@ class AssetExplorer extends React.Component {
       useLocalStorage,
     } = this.props;
 
-    const {
-      categoriesAirTable,
-    } = this.props.airtableContext;
-
     const { fundingActive } = this.state;
     let assetsFiltered = assets.slice();
     let {
@@ -124,7 +120,7 @@ class AssetExplorer extends React.Component {
 
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      const assetCategory = asset.defaultData.category;
+      const assetCategory = asset.model.category;
       if (((fundingActive && asset.fundingStage === FundingStages.IN_PROGRESS && !asset.pastDate) || (!fundingActive && (asset.funded || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
         return true;
       }

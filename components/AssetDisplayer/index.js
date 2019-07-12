@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import {
   Row,
 } from 'antd';
@@ -20,12 +19,6 @@ class AssetDisplayer extends React.Component{
       this.setState({
         currentPage: 0,
       });
-    }
-  }
-
-  handleAssetImageClicked = (assetId, shouldMakeImgClickable) => {
-    if(shouldMakeImgClickable){
-      Router.push(`/asset?id=${assetId}`, `/asset/${assetId}`)
     }
   }
 
@@ -55,7 +48,6 @@ class AssetDisplayer extends React.Component{
               {...asset}
               key={asset.assetId}
               handleAssetFavorited={handleAssetFavorited}
-              onClickImg={this.handleAssetImageClicked.bind(this, asset.assetId, shouldMakeImgClickable)}
             />
           ))}
         </Row>

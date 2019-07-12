@@ -1,5 +1,6 @@
 import Router from "next/router";
 import Media from 'react-media';
+import BN from 'bignumber.js';
 import { compose } from 'recompose'
 import {
   Button,
@@ -24,6 +25,7 @@ import {
   MAX_FILE_SIZE,
   PLATFORM_TOKEN,
   DEFAULT_TOKEN,
+  getPlatformTokenContract,
 } from 'constants/app';
 import { COOKIES } from 'constants/cookies';
 import calculateCollateral from 'constants/calculateCollateral';
@@ -37,8 +39,13 @@ import {
   processLocationData,
 } from 'utils/locationData';
 import getCountry from 'utils/countryCodes';
+import { calculateSlippage } from 'constants/calculateSlippage';
+import {
+  FIAT_TO_CRYPTO_CONVERSION_FEE,
+} from 'constants/platformFees';
 const dev = process.env.NODE_ENV === 'development';
 const { publicRuntimeConfig } = getConfig();
+BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
   constructor(props) {
@@ -52,6 +59,8 @@ class ListAssetPage extends React.Component {
         collateralInDefaultToken: 0,
         collateralInSelectedToken: 0,
         partnerContractAddress: '',
+        hasAdditionalCosts: false,
+        additionalCosts: 0,
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
@@ -115,24 +124,26 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectedTokenChange = selectedToken => {
-    this.setState({data: {...this.state.data, selectedToken}}, () => this.recalculateCollateral(this.state.data.asset))
+    this.setState({data: {...this.state.data, selectedToken}}, () => this.recalculateCollateral(this.state.data.modelId))
   }
 
-  recalculateCollateral = assetName => {
+  recalculateCollateral = modelId => {
     const {
       blockchainContext,
       airtableContext,
       metamaskContext,
       supportedTokensInfo,
     } = this.props;
+    modelId = modelId || this.state.data.modelId;
     const { assetsAirTable } = airtableContext;
-    const asset = assetsAirTable.filter(assetTmp => assetTmp.name === assetName)[0];
-
+    const asset = assetsAirTable[modelId];
+    const { additionalCosts = 0 } = this.state.data;
     const {
       operatorId,
       fundingGoal,
       cryptoPayout,
       cryptoPurchase,
+      name,
     } = asset;
 
     const {
@@ -140,8 +151,14 @@ class ListAssetPage extends React.Component {
       assetManagers,
     } = blockchainContext;
 
+    let assetValue = BN(fundingGoal);
+
+    // Add 8% fee if it applies and AM expenses
+    const fiatToCryptoFee = !cryptoPurchase ? assetValue.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;
+    assetValue = assetValue.plus(fiatToCryptoFee).plus(additionalCosts).toNumber();
+
     const { selectedToken } = this.state.data;
-    const { user } = metamaskContext;
+    const { user, network } = metamaskContext;
     const { balances } = user;
     const numberOfAssetsByAssetManager = assetManagers[user.address] ? assetManagers[user.address].totalAssets : 0;
     const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
@@ -153,15 +170,15 @@ class ListAssetPage extends React.Component {
       collateralPercentage,
     } = calculateCollateral(numberOfAssetsByAssetManager, cryptoPayout, cryptoPurchase);
 
-    const collateralInDefaultToken = fundingGoal * (collateralPercentage / 100);
+    const collateralInDefaultToken = assetValue * (collateralPercentage / 100);
     const collateralInPlatformToken = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokensInfo, collateralInDefaultToken)
     const collateralInSelectedToken = convertFromDefaultToken(selectedToken || DEFAULT_TOKEN, supportedTokensInfo, collateralInDefaultToken)
 
     this.setState({
       data: {
         ...this.state.data,
-        asset: assetName,
-        assetValue: fundingGoal,
+        asset: name,
+        assetValue,
         operatorId,
         collateralInPlatformToken,
         collateralBasedOnHistory,
@@ -172,14 +189,24 @@ class ListAssetPage extends React.Component {
         collateralInDefaultToken,
         collateralInSelectedToken,
         paymentTokenAddress,
-      }
+        cryptoPurchase,
+        modelId,
+      },
+      loadingConversionInfo: true,
     })
+
+    const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+    const tokenSlippagePercentages = calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInPlatformToken)
+      .then(tokenSlippagePercentages => {
+        console.log("tokenSlippagePercentages: ", tokenSlippagePercentages)
+        this.setState({tokenSlippagePercentages, loadingConversionInfo: false})
+      })
   }
 
   handleSelectChange = (value, name) => {
     if(name === 'asset'){
-      const assetName = value.name;
-      this.recalculateCollateral(assetName);
+      const modelId = value.modelId;
+      this.recalculateCollateral(modelId);
     } else {
       this.setState(
         {
@@ -199,6 +226,9 @@ class ListAssetPage extends React.Component {
               this.setState({
                 data: { ...this.state.data, category: value, asset: undefined, assetValue: undefined, }
               });break;
+            }
+            case 'additionalCosts': {
+              this.recalculateCollateral();
             }
             default: return null;
           }
@@ -289,6 +319,7 @@ class ListAssetPage extends React.Component {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
+    console.log("Files going to be uploaded: ", files)
     this.setState({
       data: { ...this.state.data, fileList: files }
     });
@@ -336,6 +367,7 @@ class ListAssetPage extends React.Component {
       listedAssetId,
       step,
       checkedToS,
+      tokenSlippagePercentages,
      } = this.state;
 
     const {
@@ -351,8 +383,9 @@ class ListAssetPage extends React.Component {
       category,
       userCity,
       userCountry,
+      loadingConversionInfo,
     } = this.state.data;
-    console.log(this.state)
+
     const tokenWithSufficientBalance = collateralInDefaultToken > 0 ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken) : undefined;
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
@@ -370,6 +403,8 @@ class ListAssetPage extends React.Component {
       checkedToS,
       collateralInPlatformToken,
       loadingBalancesForNewUser,
+      loadingConversionInfo,
+      tokenSlippagePercentages,
       tokenWithSufficientBalance: tokenWithSufficientBalance !== undefined,
       setCheckedToS: this.setCheckedToS,
       handleSelectChange: this.handleSelectChange,

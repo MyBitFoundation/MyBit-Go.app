@@ -2,7 +2,8 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
-import { withBlockchainContext } from 'components/BlockchainContext'
+import { withThreeBoxContext } from 'components/ThreeBoxContext';
+import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
 import BackButton from 'ui/BackButton';
 import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
@@ -14,6 +15,7 @@ class AssetPage extends React.Component {
   render(){
     const {
       blockchainContext,
+      threeBoxContext,
       router,
     } = this.props;
 
@@ -26,6 +28,14 @@ class AssetPage extends React.Component {
       updateNotification,
       gasPrice,
     } = blockchainContext;
+
+    const {
+      getPosts,
+      getProfile,
+      loadingThreeBox,
+      getAvatar,
+      syncingThreeBox
+    } = threeBoxContext;
 
     if (loading.assets) {
       return (
@@ -56,6 +66,12 @@ class AssetPage extends React.Component {
           loadingUserInfo={loading.userAssetsInfo}
           gasPrice={gasPrice}
           assetManager={assetManager}
+          getPosts={getPosts}
+          loadingThreeBox={loadingThreeBox}
+          syncingThreeBox={syncingThreeBox}
+          getProfile={getProfile}
+          getAvatar={getAvatar}
+          blockchainContext={blockchainContext}
         />
       )
     }
@@ -70,7 +86,8 @@ class AssetPage extends React.Component {
 }
 
 const enhance = compose(
-  withBlockchainContext,
+  withThreeBoxContext,
+  withBlockchainContextPageWrapper,
 );
 
 export default enhance(AssetPage);

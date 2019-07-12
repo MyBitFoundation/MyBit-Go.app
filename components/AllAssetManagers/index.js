@@ -27,23 +27,33 @@ class AllAssetManagers extends React.Component {
     this.setState({
       sortedInfo: sorter,
       filteredInfo: filters,
+      loadingManagersData: true,
     });
   }
 
-  render() {
+  componentWillMount = () => {
+    this.getData()
+  }
+
+  shouldComponentUpdate = (nextProps, nextState) => {
+    const oldAssetManagers = this.props.blockchainContext.assetManagers;
+    const newAssetManagers = nextProps.blockchainContext.assetManagers;
+    if(Object.keys(oldAssetManagers).length === 0 && Object.keys(newAssetManagers).length > 0){
+      this.getData(nextProps);
+      return false;
+    }
+
+    return true;
+  }
+
+  getData = nextProps => {
     const {
       blockchainContext,
       network,
-    } = this.props;
-
+    } = nextProps || this.props;
     const {
-      loading,
       assetManagers,
     } = blockchainContext;
-
-    if (loading.assets) {
-      return <Loading message="Loading Asset Managers" />;
-    }
 
     const assetManagersArray = Object.entries(assetManagers).map(([key, value]) => ({
       key,
@@ -57,6 +67,33 @@ class AllAssetManagers extends React.Component {
     } = this.state;
 
     const columns = GetColumns(sortedInfo, filteredInfo, network);
+
+    this.setState({
+      columns,
+      assetManagersArray,
+      loadingManagersData: false,
+    })
+  }
+
+  render() {
+    const {
+      blockchainContext,
+    } = this.props;
+
+    const {
+      loading,
+    } = blockchainContext;
+
+    const {
+      loadingManagersData,
+      columns,
+      assetManagersArray,
+      itemsPerPage,
+    } = this.state;
+
+    if (loading.assets || loadingManagersData) {
+      return <Loading message="Loading Asset Managers" />;
+    }
 
     return (
       <TableWrapper>

@@ -14,6 +14,7 @@ export const NotificationTypes = {
   WITHDRAW_MANAGER: 'withdrawManager',
   ASSET_PAYOUT: 'assetPayout',
   APPROVE: 'approve',
+  PAY_DIVIDENDS: 'payDividends',
 };
 
 export const NotificationsMetamask = {
@@ -24,6 +25,7 @@ export const NotificationsMetamask = {
   WITHDRAW_MANAGER: 'withdrawManager',
   ASSET_PAYOUT: 'assetPayout',
   APPROVE: 'approve',
+  PAY_DIVIDENDS: 'payDividends',
 };
 
 export const NotificationStatus = {
@@ -42,6 +44,7 @@ export const getContentForNotification = (obj) => {
     withdrawManager,
     assetPayout,
     status,
+    payDividends,
   } = obj;
   if(listAsset){
     const {
@@ -63,7 +66,7 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.ERROR:
           return {
             title: `Failed to approve access to funds`,
-            message: 'Unfortunately your transaction failed. Please try again.',
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
           }
         default:
           return null;
@@ -89,7 +92,7 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.ERROR:
           return {
             title: `Failed to start the crowdsale for ${listAsset.assetName}`,
-            message: 'Unfortunately your transaction failed. Please try again.',
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
           }
         default:
           return null;
@@ -115,7 +118,7 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.ERROR:
           return {
             title: `Failed to approve access to funds`,
-            message: 'Unfortunately your transaction failed. Please try again.',
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
           }
         default:
           return null;
@@ -152,7 +155,75 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.ERROR:
           return {
             title: `Failed to contribute to ${funding.assetName}`,
-            message: 'Unfortunately your transaction failed. Please try again.',
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+          }
+        default:
+          return null;
+      }
+    }
+  } else if(payDividends){
+    const {
+      type,
+      formattedAmount,
+      assetName,
+    } = payDividends;
+    if(type === NotificationTypes.APPROVE){
+      switch (status) {
+        case NotificationStatus.SUCCESS:
+          return {
+            title: <span style={{marginRight: '10px'}}>Approved access to {formattedAmount} successfully</span>,
+            message: 'Please accept the next transaction in MetaMask that will make the revenue available for investors to withdraw.'
+          }
+        case NotificationStatus.INFO:
+          return {
+            title: `Approving access to ${formattedAmount}`,
+            message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
+          }
+        case NotificationStatus.ERROR:
+          return {
+            title: `Failed to approve access to funds`,
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+          }
+        default:
+          return null;
+      }
+    } else {
+      switch(status){
+        case NotificationStatus.SUCCESS:
+          return {
+            title: <span style={{marginRight: '10px'}}>Dividends of {assetName} paid out successfuly</span>,
+            message: (
+                <React.Fragment>
+                  <span>Dividend amount: <span style={{fontWeight: 600}}>{formattedAmount}</span></span>
+                  {window.location.pathname.includes('portfolio') ? <p>Investors are now able to withdraw their share. And so can you! Well done, Asset Manager.</p> :
+                  (
+                    <React.Fragment>
+                      <p>Investors are now able to withdraw their share. And so can you! Check your{' '}
+                        <span>
+                          <Link
+                            href={`/portfolio?type=${PortfolioTypes.INVESTMENTS}`}
+                            as={`/portfolio/${PortfolioTypes.INVESTMENTS}`}
+                          >
+                            Portfolio
+                          </Link>
+                        .</span>
+                      </p>
+                      <p>Well done, Asset Manager.</p>
+                    </React.Fragment>
+                  )
+                }
+                </React.Fragment>
+              )
+          }
+        case NotificationStatus.INFO:
+          return {
+            title: `Paying out dividends of ${formattedAmount} to investors`,
+            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+          }
+        case NotificationStatus.ERROR:
+          return {
+            title: `Failed to pay out dividends of ${assetName}`,
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
           }
         default:
           return null;
@@ -178,7 +249,7 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.ERROR:
           return {
             title: `Failed to withdraw from ${withdrawInvestor.assetName}`,
-            message: 'Unfortunately your transaction failed. Please try again.',
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
           }
         default:
           return null;
@@ -202,7 +273,7 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.ERROR:
           return {
             title: `Failed to withdraw the collateral from ${withdrawCollateral.assetName}`,
-            message: 'Unfortunately your transaction failed. Please try again.',
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
           }
         default:
           return null;
@@ -226,7 +297,7 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.ERROR:
           return {
             title: `Failed to withdraw profits from ${withdrawManager.assetName}`,
-            message: 'Unfortunately your transaction failed. Please try again.',
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
           }
         default:
           return null;
@@ -246,7 +317,7 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.ERROR:
           return {
             title: `Failed to send the funds to the Operator`,
-            message: 'Unfortunately your transaction failed. Please try again.',
+            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
           }
         default:
           return null;

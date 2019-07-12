@@ -1,12 +1,12 @@
 import styled, { css } from 'styled-components';
 
 const ValueDisplayValue = styled.b`
-  padding: 4px;
+  padding: 7px;
   border-radius: 4px;
   font-size: 16px;
 
   ${props => props.isGreen && css`
-    color: #52C41A;
+    color: ${({theme}) => theme.colors.green};
     ${props => props.coloredBackground && css`
       background-color: #F6FFED;
     `}

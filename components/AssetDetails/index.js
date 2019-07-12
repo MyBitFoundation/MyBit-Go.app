@@ -1,10 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import BN from 'bignumber.js';
 import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import AssetFunding from 'components/AssetFunding';
+import AssetUpdates from 'components/AssetUpdates';
+import AssetFundingModule from 'components/AssetFundingModule';
 import AssetDetailsRightCol from './assetDetailsRightCol';
 import AssetDetailsLeftCol from './assetDetailsLeftCol';
 import AssetDetailsWrapper from './assetDetailsWrapper';
@@ -17,6 +20,11 @@ const AssetDetails = ({
   loadingUserInfo,
   gasPrice,
   assetManager,
+  getPosts,
+  getProfile,
+  loadingThreeBox,
+  getAvatar,
+  blockchainContext,
 }) => {
   const {
     city,
@@ -31,13 +39,14 @@ const AssetDetails = ({
     funded,
     pastDate,
     percentageOwnedByUser,
-    defaultData,
+    model,
     fundingGoal,
     fundingProgress,
     userInvestment,
     about,
     financials,
     risks,
+    fees,
   } = asset;
 
   const {
@@ -45,7 +54,7 @@ const AssetDetails = ({
     name,
     details,
     description,
-  } = defaultData;
+  } = model;
 
   return (
     <AssetDetailsWrapper>
@@ -64,24 +73,29 @@ const AssetDetails = ({
           financials={financials}
           risks={risks}
           files={files}
+          fees={fees}
+        />
+        <AssetUpdates
+          asset={asset}
+          getPosts={getPosts}
+          getProfile={getProfile}
+          getAvatar={getAvatar}
+          loadingThreeBox={loadingThreeBox}
         />
       </AssetDetailsLeftCol>
       <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
-        <AssetFunding
+        <AssetFundingModule
           asset={asset}
-          fundAsset={fundAsset}
-          updateNotification={updateNotification}
-          loadingUserInfo={loadingUserInfo}
+          blockchainContext={blockchainContext}
           gasPrice={gasPrice}
-        />
+        >
+          {props => <AssetFunding {...props}/>}
+        </AssetFundingModule>
         <AssetDetailsManagerInfo
           assetManager={assetManager}
           address={assetManagerAddress}
           managerPercentage={managerPercentage}
           collateralPercentage={collateralPercentage}
-          style={{
-            marginTop: '20px',
-          }}
         />
       </AssetDetailsRightCol>
     </AssetDetailsWrapper>

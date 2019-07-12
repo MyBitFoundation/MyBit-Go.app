@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   Slider,
   InputNumber,
@@ -22,23 +22,17 @@ import FundingCalculatorSliderLabel from './fundingCalculatorSliderLabel';
 
 const decimalsForDefaultToken = getDecimalsForToken(DEFAULT_TOKEN);
 
-const FundingCalculator = ({
-  handleOnChangeEthValue,
-  handleOnChangePercentage,
-  handleOnChangeSlider,
-  selectedAmountEth,
-  fundingGoal,
+const FundingCalculator = memo(({
+  onChangeContributionDefaultToken,
+  onChangeContributionPercentage,
+  selectedAmountDefaultToken,
   maxInvestment,
   minInvestment,
   selectedOwnership,
   ended,
-  yourContribution,
-  yourOwnership,
-  maxOwnership,
+  userOwnership,
   loadingUserInfo,
   userInvestment,
-  maxPercentageAfterFees,
-  totalSupply,
 }) => {
   return(
     <React.Fragment>
@@ -50,10 +44,9 @@ const FundingCalculator = ({
           <div style={{display: 'flex'}}>
             <NumericInput
               placeholdertext={`Amount in ${DEFAULT_TOKEN}`}
-              value={selectedAmountEth}
+              value={selectedAmountDefaultToken > 0 ? selectedAmountDefaultToken : null}
               label={DEFAULT_TOKEN}
-              onChange={number =>
-                handleOnChangeEthValue(number, maxInvestment, totalSupply, maxPercentageAfterFees)}
+              onChange={onChangeContributionDefaultToken}
               min={0}
               decimalPlaces={decimalsForDefaultToken.decimals}
               step={decimalsForDefaultToken.step}
@@ -63,28 +56,22 @@ const FundingCalculator = ({
             </FundingCalculatorEqualsSeparator>
             <NumericInput
               placeholdertext="Amount %"
-              value={selectedOwnership}
+              value={selectedOwnership > 0 ? selectedOwnership : null}
               min={0}
               label="%"
               decimalPlaces={2}
               step={0.01}
-              onChange={number => handleOnChangePercentage(number, maxOwnership, fundingGoal, maxInvestment, maxPercentageAfterFees, totalSupply)}
+              onChange={onChangeContributionPercentage}
             />
           </div>
           <Slider
             id="slider"
             step={decimalsForDefaultToken.step}
             defaultValue={0}
-            value={
-              selectedAmountEth ?
-                Number(selectedAmountEth) >= minInvestment
-                  ? Number(selectedAmountEth)
-                  : minInvestment
-                : 0
-            }
-            min={minInvestment}
+            value={selectedAmountDefaultToken}
+            min={0}
             max={maxInvestment}
-            onChange={number => handleOnChangeSlider(number, totalSupply, maxPercentageAfterFees, maxInvestment)}
+            onChange={onChangeContributionDefaultToken}
             disabled={ended}
           />
           <FundingCalculatorGrid
@@ -110,7 +97,7 @@ const FundingCalculator = ({
             {(loadingUserInfo && ended) && (
               <FundingCalculatorSpin />
             )}
-            {(loadingUserInfo && ended) ? null : ended ? formatMonetaryValue(parseFloat(userInvestment)) : selectedAmountEth ? formatMonetaryValue(parseFloat(selectedAmountEth)) : 0}
+            {(loadingUserInfo && ended) ? null : ended ? formatMonetaryValue(parseFloat(userInvestment)) : selectedAmountDefaultToken ? formatMonetaryValue(parseFloat(selectedAmountDefaultToken)) : 0}
           </FundingCalculatorValue>
         </div>
         <div>
@@ -121,12 +108,12 @@ const FundingCalculator = ({
             {(loadingUserInfo && ended) && (
               <FundingCalculatorSpin />
             )}
-            {(loadingUserInfo && ended) ? null : ended ? parseFloat((yourOwnership * 100).toFixed(2)) : selectedAmountEth ? selectedOwnership : 0}%
+            {(loadingUserInfo && ended) ? null : ended ? parseFloat((userOwnership * 100).toFixed(2)) : selectedAmountDefaultToken ? selectedOwnership : 0}%
           </FundingCalculatorValue>
         </div>
       </FundingCalculatorGrid>
     </React.Fragment>
   )
-}
+})
 
 export default FundingCalculator;

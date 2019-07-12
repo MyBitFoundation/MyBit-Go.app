@@ -3,18 +3,19 @@ import {
   Button,
   Modal,
 } from 'antd';
-
 import styled from 'styled-components';
+import NumericInput from 'ui/NumericInput';
+import {
+  DEFAULT_TOKEN_MAX_DECIMALS,
+  DEFAULT_TOKEN,
+} from 'constants/app';
+import { MYBIT_FOUNDATION_SHARE } from 'constants/platformFees';
 
-const InputRevenueGeneratorWrapper = styled.div`
-  height: 400px;
-  width: 400px;
-  position: fixed;
-  z-index: 1000;
-}`
+const PLATFORM_FEE = MYBIT_FOUNDATION_SHARE * 100;
 
-const InputRevenueGeneratorNumber = styled(InputNumber)`
-
+const InputRevenueGeneratorNumber = styled(NumericInput)`
+  width: 167px;
+  margin-bottom: 15px;
 `
 
 const InputRevenueGeneratorWarning = styled.p`
@@ -22,7 +23,19 @@ const InputRevenueGeneratorWarning = styled.p`
 `
 
 const InputRevenueGeneratorLabel = styled.span`
-  margin-right: 20px;
+  font-weight: 500;
+  display: block;
+  color: ${({theme}) => theme.colors.grayBase};
+`
+
+const FundsSplitWrapper = styled.div`
+  color: ${({theme}) => theme.colors.black3};
+  line-height: 22px;
+`
+
+const MessageToManager = styled.p`
+  line-height: 20px;
+  color: ${({theme}) => theme.colors.black3};
 `
 
 const InputRevenueGenerator = ({
@@ -30,34 +43,46 @@ const InputRevenueGenerator = ({
   onCancel,
   currentValue,
   onValueChange,
+  managerPercentage,
 }) => (
-  <InputRevenueGeneratorWrapper>
-    <Modal
-      visible={true}
-      okButtonProps={{
-        disabled: currentValue === 0,
-        type: 'primary',
-        text: 'Confirm',
-      }}
-      onOk={onConfirm}
-      onCancel={onCancel}
-      title={`Generate Revenue for asset`}
+  <Modal
+    visible={true}
+    footer={null}
+    onOk={onConfirm}
+    onCancel={onCancel}
+    title={`Deposit Revenue`}
+    style={{width: '387px'}}
+  >
+    <InputRevenueGeneratorLabel>
+      Revenue to Deposit
+    </InputRevenueGeneratorLabel>
+    <InputRevenueGeneratorNumber
+      value={currentValue}
+      label={DEFAULT_TOKEN}
+      onChange={onValueChange}
+      min={1}
+      decimalPlaces={2}
+      step={1}
+    />
+    <MessageToManager>Deposit all of the revenue. Your Manager’s Fee will be sent back to you to withdraw.
+     We know that it sounds a bit funny but we really believe in your honesty.</MessageToManager>
+    <FundsSplitWrapper>
+      <div>Funds are split as follows:</div>
+      <div>Your Share - {managerPercentage}%</div>
+      <div>Platform Fee - {PLATFORM_FEE}%</div>
+      <div>Split between the Investors - {100 - managerPercentage - PLATFORM_FEE}%</div>
+    </FundsSplitWrapper>
+    <Button
+      key="submit"
+      type="primary"
+      onClick={onConfirm}
+      size="large"
+      style={{width: '100%', display: 'block', marginTop: '25px'}}
+      disabled={isNaN(currentValue) || currentValue === 0}
     >
-      <InputRevenueGeneratorWarning>
-        Please read before continuing.
-      </InputRevenueGeneratorWarning>
-      <p>
-        Note that once you click <b>confirm</b> Metamask takes over and MyBit Go won't give you any directions.
-        Wait for the transactions to be confirmed and then either wait for Go to refresh on its own or
-        refresh the page.<br />
-        Make sure you have enough DAI to cover the expense, as well as ETH for gas.
-      </p>
-      <InputRevenueGeneratorLabel>
-        Amount to generate (DAI) :
-      </InputRevenueGeneratorLabel>
-      <InputRevenueGeneratorNumber min={1} defaultValue={3} onChange={onValueChange} value={currentValue}/>
-    </Modal>
-  </InputRevenueGeneratorWrapper>
+      Deposit Revenue
+    </Button>
+  </Modal>
 );
 
 export default InputRevenueGenerator;

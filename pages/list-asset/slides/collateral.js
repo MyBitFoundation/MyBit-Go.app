@@ -19,10 +19,38 @@ import TokenSelector from 'components/TokenSelector';
 import NumericInput from 'ui/NumericInput';
 import Spin from 'static/spin.svg';
 import LabelWithValueAndTooltip from 'ui/LabelWithValueAndTooltip';
+import TooltipWithQuestionMarkGrey from 'ui/TooltipWithQuestionMarkGrey';
 
 const formatter = (value) => {
   return `${value}%`;
 }
+
+const StyledTooltip = styled(TooltipWithQuestionMarkGrey)`
+  margin-left: 5px;
+`
+
+const SlippageWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0% 2%;
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 24px;
+`
+
+const SlippageLabel = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const SlippageValue = styled.div`
+  ${props => props.value >= 5 && css`
+    color: #F7861C;
+  `}
+  ${props => props.value >= 10 && css`
+    color: #FF0000;
+  `}
+`
 
 const InputsWrapper = styled.div`
   margin: 0 auto;
@@ -101,6 +129,8 @@ export const CollateralSlide = ({
   onClick,
   nextButtonDisabled,
   loadingBalancesForNewUser,
+  loadingConversionInfo,
+  tokenSlippagePercentages,
 }) => {
   const {
     collateralInPlatformToken,
@@ -113,6 +143,17 @@ export const CollateralSlide = ({
   const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
   const decimalsOfPlatformToken = getDecimalsForToken(PLATFORM_TOKEN);
   const collateralSelectedTokenFormatted = formatValueForToken(collateralInSelectedToken, selectedToken);
+
+  let buttonText = 'Next';
+  if(loadingBalancesForNewUser){
+    buttonText = 'Loading Balances'
+  } else if(noBalance){
+    buttonText = 'Insufficient Funds'
+  } else if(loadingConversionInfo){
+    buttonText = 'Loading Slippage Info'
+  }
+
+  const slippagePercentage = (!tokenSlippagePercentages || loadingConversionInfo) ? 0 : tokenSlippagePercentages[selectedToken];
 
   return (
     <CarouselSlide
@@ -190,10 +231,26 @@ export const CollateralSlide = ({
 
               </TokenSelectorWrapper>
             )}
+            <SlippageWrapper>
+              <SlippageLabel>
+                Slippage rate
+                <StyledTooltip
+                  arrowPointAtCenter
+                  placement="top"
+                  destroyTooltipOnHide
+                  title="Slippage is a necessary part of automated trading reserves.
+                  As the relative balance of the two currencies shift due to a purchase,
+                  so does the price."
+                />
+              </SlippageLabel>
+              <SlippageValue value={slippagePercentage}>
+                {slippagePercentage}%
+              </SlippageValue>
+            </SlippageWrapper>
           </InputsWrapper>
           {desktopMode && (
             <CarouselNextButton
-              loading={loadingBalancesForNewUser}
+              loading={loadingBalancesForNewUser || loadingConversionInfo}
               desktopMode={desktopMode}
               onClick={onClick}
               disabled={nextButtonDisabled || noBalance}
@@ -201,7 +258,7 @@ export const CollateralSlide = ({
                 marginTop: '40px',
               }}
             >
-              {loadingBalancesForNewUser ? 'Loading balances' : noBalance ? 'Insufficient Funds' : 'Next'}
+              {buttonText}
             </CarouselNextButton>
           )}
         </React.Fragment>

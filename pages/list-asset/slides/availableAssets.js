@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Router from 'next/router';
 import {
   InputNumber,
@@ -26,6 +26,8 @@ import {
 } from 'constants/app';
 import ThinkingIcon from 'static/ic_thinking.svg';
 import Spin from 'static/spin.svg';
+import LabelWithTooltip from 'ui/LabelWithTooltip';
+
 const { publicRuntimeConfig } = getConfig();
 
 const Image = styled.img`
@@ -97,6 +99,26 @@ const AlertMessageWrapper = styled.div`
   margin-bottom: 20px;
 `
 
+const AssetValueContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 0 auto;
+
+  ${props => props.cryptoPurchase === false && css`
+    ${({ theme }) => theme.mobileL`
+      margin-bottom: 20px;
+      flex-direction: row;
+    `}
+
+    .ant-input-number{
+      width: auto;
+      margin: 0px;
+      width: 155px;
+    }
+  `}
+`
+
 export const AvailableAssetsSlide = ({
   handleSelectChange,
   formData,
@@ -120,6 +142,7 @@ export const AvailableAssetsSlide = ({
     userCountry,
     searchCity,
     countryCode,
+    cryptoPurchase,
   } = formData;
 
   const {
@@ -245,29 +268,40 @@ export const AvailableAssetsSlide = ({
                     isCentered
                     showSearch
                     placeholder="Available Assets"
-                    onChange={value => handleSelectChange({name: value}, "asset")}
+                    onChange={value => handleSelectChange({modelId: value}, "asset")}
                     value={asset}
                   >
                     {assetsAvailable.map(asset => {
                       return (
-                        <Select.Option key={asset.name} value={asset.name}>
+                        <Select.Option key={asset.name} value={asset.modelId}>
                           {asset.name}
                         </Select.Option>
                       )}
                     )}
                   </CarouselSlideSelect>
                   <SelectedAssetValueLabel>Selected Asset value:</SelectedAssetValueLabel>
-                  <CarouselSlideInputNumber
-                    isCentered
-                    disabled
-                    placeholder="Funding Goal"
-                    name="assetValue"
-                    value={assetValue}
-                    formatter={value =>
-                     !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                  />
+                  <AssetValueContainer cryptoPurchase={cryptoPurchase}>
+                    <CarouselSlideInputNumber
+                      isCentered
+                      disabled
+                      placeholder="Funding Goal"
+                      name="assetValue"
+                      value={assetValue}
+                      formatter={value =>
+                       !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      parser={value => value.replace(/\$\s?|(,*)/g, "")}
+                       style={cryptoPurchase === false ? {marginRight: '10px', marginBottom: '5px'} : {}}
+                    />
+                    {cryptoPurchase === false && (
+                      <LabelWithTooltip
+                        title={'8% fiat fee incl.'}
+                        tooltipText="The asset incurs an additional 8% fee on top of the total investment to cover most exchanges
+                          fees in order to transfer the money into its fiat equivalent."
+                        isDark
+                      />
+                    )}
+                  </AssetValueContainer>
                 </React.Fragment>
               )}
               {error && (

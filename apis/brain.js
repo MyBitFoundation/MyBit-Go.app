@@ -32,8 +32,9 @@ const GAS = require("@mybit/network.js/gas");
 
 let Network;
 
-export const initialiseSDK = contractAddresses =>
-  Network = require('@mybit/network.js')(window.web3js, contractAddresses);
+export const initialiseSDK = (contractAddresses, blockNumber) => {
+  Network = require('@mybit/network.js')(window.web3js, contractAddresses, blockNumber);
+}
 
 export const fetchTransactionHistory = async userAddress =>
   new Promise(async (resolve, reject) => {
@@ -110,7 +111,7 @@ export const withdrawAssetManager = async (
 ) => {
   try {
     const assetManagerFunds = await Network.assetManagerFunds();
-    assetManagerFunds.methods.withdraw(assetId, userAddress)
+    assetManagerFunds.methods.withdraw(assetId)
       .send({ from: userAddress, gas: '200000', gasPrice})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
@@ -135,7 +136,7 @@ export const withdrawEscrow = async (
 ) => {
   try {
     const assetManagerEscrow = await Network.assetManagerEscrow();
-    assetManagerEscrow.methods.unlockEscrow(assetId, userAddress)
+    assetManagerEscrow.methods.unlockEscrow(assetId)
       .send({ from: userAddress, gas: '200000', gasPrice})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
@@ -167,8 +168,9 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
       collateral,
       amountToBeRaised,
       paymentTokenAddress,
-      operatorID,
       gasPrice,
+      ipfs,
+      modelId,
     } = params;
 
     const randomURI = generateRandomURI(window.web3js);
@@ -179,21 +181,22 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
       assetURI: randomURI,
       assetManager: userAddress,
       fundingLength: CROWDSALE_DURATION,
-      startTime: 1,
       amountToRaise: toWei(amountToBeRaised),
       assetManagerPercent: managerPercentage,
-      operatorID,
       fundingToken: getDefaultTokenContract(network),
       paymentToken: paymentTokenAddress,
-      gasPrice,
+      ipfs,
+      modelID: modelId,
       createAsset: {
         onTransactionHash: onCreateAsset.onTransactionHash,
         onError: error => processErrorType(error, onCreateAsset.onError),
+        gasPrice,
       },
       approve: {
         onTransactionHash: onApprove.onTransactionHash,
         onError: error => processErrorType(error, onApprove.onError),
         onReceipt: receipt => onApprove.onReceipt(receipt.status),
+        gasPrice,
       }
     })
 
@@ -235,43 +238,19 @@ export const uploadFilesToAWS = async (
 }
 
 export const updateAirTableWithNewAsset = async (
-  assetId,
-  assetName,
-  country,
-  city,
-  collateralPercentage,
-  assetManagerEmail,
-  about,
-  financials,
-  risks,
+  data,
   performInternalAction,
 ) => {
   try{
     await axios.post(InternalLinks.UPDATE_ASSETS, {
-      assetId,
-      assetName,
-      country,
-      city,
-      assetManagerEmail,
-      about,
-      financials,
-      risks,
-      collateralPercentage,
+      ...data,
     });
     performInternalAction();
   } catch(err){
     setTimeout(() =>
       updateAirTableWithNewAsset(
-        assetId,
-        assetName,
-        country,
-        city,
-        collateralPercentage,
-        assetManagerEmail,
+        data,
         performInternalAction,
-        about,
-        financials,
-        risks,
       ), 5000);
     debug(err);
   }
@@ -308,8 +287,8 @@ export const withdrawInvestorProfit = async (
   gasPrice,
 ) => {
   try {
-    const dividendTokenETH = await Network.dividendTokenETH(assetId);
-    const response = await dividendTokenETH.methods.withdraw()
+    const dividendToken = await Network.dividendToken(assetId);
+    const response = await dividendToken.methods.withdraw()
       .send({from: userAddress, gas: '200000', gasPrice})
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
@@ -369,7 +348,7 @@ const processErrorType = (error, handleError) => {
 
 const getAssetDetails = (api, assetId, blockNumber) => {
   return Promise.all([
-    Network.dividendTokenETH(assetId),
+    Network.dividendToken(assetId),
     api.methods.getAssetPlatformFee(assetId).call(),
     Network.getAssetOperator(assetId),
     api.methods.crowdsaleFinalized(assetId).call(),
@@ -393,45 +372,80 @@ const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, as
     ]);
 }
 
-export const issueDividends = (
-  amount,
-  address,
-  assetId,
+export const issueDividends = async (
+  onDividendsIssued,
+  onApprove,
+  params,
 ) => {
+  const {
+    amount,
+    address,
+    assetId,
+    gasPrice,
+  } = params;
   try{
-    Network.issueDividends({
+    const response = await Network.issueDividends({
       asset: assetId,
       account: address,
       amount: toWei(amount),
+      gasPrice,
+      buyAsset: {},
+      issueDividends: {
+        onTransactionHash: onDividendsIssued.onTransactionHash,
+        onError: error => processErrorType(error, onDividendsIssued.onError),
+      },
+      approve: {
+        onTransactionHash: onApprove.onTransactionHash,
+        onError: error => processErrorType(error, onDividendsIssued.onError),
+        onReceipt: receipt => onApprove.onReceipt(receipt.status),
+      }
     })
-  } catch(err){
-    debug(err);
+
+    onDividendsIssued.onReceipt(response.status);
+  } catch(error){
+    processErrorType(error, onDividendsIssued.onError)
   }
 }
 
-export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAirTable) =>
+const mergeAirtableModelsWithPlatformOperators = (platformOperators, assetModelsAirtable, updateAssetModels) => {
+  const updatedAssetModels = {};
+  for(const key in assetModelsAirtable){
+    const assetModel = assetModelsAirtable[key];
+    const { partnerAddress } = assetModel;
+    const operatorInfo = platformOperators[partnerAddress];
+    updatedAssetModels[key] = {
+      ...assetModel,
+      ...operatorInfo,
+      operatorId: operatorInfo.operatorID,
+    }
+  }
+  updateAssetModels(updatedAssetModels);
+}
+
+export const fetchAssets = async (userAddress, assetListingsAirtable, assetModelsAirtable, updateAssetModels) =>
   new Promise(async (resolve, reject) => {
     try {
       const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
       const api = await Network.api();
       const assetManagerFunds = await Network.assetManagerFunds();
-      const database = await Network.database();
-      const events = await Network.events();
-
       let assets = await Network.getTotalAssetsWithBlockNumberAndManager();
+      const platformOperators = await Network.getOperators();
+      mergeAirtableModelsWithPlatformOperators(platformOperators, assetModelsAirtable, updateAssetModels)
       assets =
         assets
-          .filter(({ address }) => assetsAirTableById[address] !== undefined)
+          .filter(({ address }) => assetListingsAirtable[address] !== undefined)
           .map(({
             address,
             blockNumber,
             manager,
+            ipfs,
           })=> {
             return {
-              ...assetsAirTableById[address],
+              ...assetListingsAirtable[address],
               assetId: address,
               assetManager: manager,
               blockNumber,
+              ipfs,
             }
           });
 
@@ -442,7 +456,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           blockNumber,
         } = asset;
         let [
-          dividendTokenETH,
+          dividendToken,
           platformFee,
           assetOperator,
           crowdsaleFinalized,
@@ -496,7 +510,7 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
         ])
 
         if(isInvestor){
-          balanceOfUser = await dividendTokenETH.methods.balanceOf(realAddress).call();
+          balanceOfUser = await dividendToken.methods.balanceOf(realAddress).call();
           userInvestment = fromWeiToEth(BN(balanceOfUser).toString());
           percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
         }
@@ -507,11 +521,11 @@ export const fetchAssets = async (userAddress, assetsAirTableById, categoriesAir
           if(timestamp){
             fundingProgress = fundingProgress - ((managerPercentage + platformFee) * fundingProgress)
             if(isInvestor){
-              assetIncome = await dividendTokenETH.methods.assetIncome().call();
-              owedToInvestor = await dividendTokenETH.methods.getAmountOwed(realAddress).call();
+              assetIncome = await dividendToken.methods.assetIncome().call();
+              owedToInvestor = await dividendToken.methods.getAmountOwed(realAddress).call();
             }
 
-            assetIncome = await dividendTokenETH.methods.assetIncome().call();
+            assetIncome = await dividendToken.methods.assetIncome().call();
             if(isAssetManager){
               daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
               daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;

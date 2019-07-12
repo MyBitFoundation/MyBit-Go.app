@@ -19,8 +19,7 @@ const Asset = (props) => {
     type,
     withdrawInvestorProfit,
     withdrawing,
-    onClickImg,
-    defaultData,
+    model,
   } = props;
 
   let AssetComponent = AssetDefault;
@@ -61,7 +60,7 @@ const Asset = (props) => {
   const {
     name,
     imageSrc,
-  } = defaultData;
+  } = model;
 
   return(
     <Col {...colSize} key={`${assetId}-${type}`}>
@@ -75,7 +74,6 @@ const Asset = (props) => {
         watchListed={watchListed}
         height={height}
         margin={margin}
-        onClickImg={onClickImg}
       >
         <AssetComponent
           {...props}

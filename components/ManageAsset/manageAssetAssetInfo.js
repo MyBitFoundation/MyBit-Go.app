@@ -1,3 +1,4 @@
+import styled, { css } from 'styled-components';
 import React from 'react';
 import {
   Button,
@@ -13,9 +14,36 @@ import ManageAssetColoredValue from './manageAssetColoredValue';
 import ManageAssetCustomRow from './manageAssetCustomRow';
 import ManageAssetRectangleContainer from './manageAssetRectangleContainer';
 import ManageAssetValueDisplayer from './manageAssetValueDisplayer';
+import RevenueGenerator from 'components/RevenueGenerator';
 import {
   formatMonetaryValue,
 } from 'utils/helpers';
+
+const ValueDisplayWrapper = styled.div`
+  width: 90%;
+  background-color: white;
+  margin: 5px 0px;
+  display: flex;
+  justify-content: center;
+  border-radius: 4px;
+
+  ${({theme}) => theme.laptop`
+    width: 80%;
+  `}
+
+  ${props => props.multipleItems && css`
+    flex-direction: column;
+    padding-bottom: 10px;
+    align-items: center;
+
+    ${({theme}) => theme.tablet`
+      flex-direction: row;
+      justify-content: space-around;
+      padding-bottom: 0px;
+    `}
+
+  `}
+`
 
 const ManageAssetAssetInfo = React.memo(({
   imageSrc,
@@ -30,6 +58,9 @@ const ManageAssetAssetInfo = React.memo(({
   toWithdraw,
   isWithdrawingAssetManager,
   withdrawProfitAssetManager,
+  managerPercentage,
+  funded,
+  managerHasToCallPayout,
 }) => (
   <AssetTemplate
     backgroundImage={imageSrc}
@@ -41,30 +72,42 @@ const ManageAssetAssetInfo = React.memo(({
   >
     <ManageAssetWrapper>
       <ManageAssetValueDisplayer>
+      <ValueDisplayWrapper>
         <ValueDisplay
           text="Asset Value"
           icon={<PieChart />}
           value={formatMonetaryValue(fundingGoal)}
-          style={{
-            margin: '5px 0',
-          }}
           hasSeparator
           hasIcon
           isBlue
           coloredBackground
         />
+      </ValueDisplayWrapper>
+      <ValueDisplayWrapper multipleItems>
         <ValueDisplay
           text="Asset Revenue"
           icon={<LineChart />}
           value={formatMonetaryValue(assetIncome)}
           style={{
-            margin: '5px 0',
+            margin: '5px 0px',
           }}
           hasSeparator
           hasIcon
           isGreen
           coloredBackground
         />
+        <RevenueGenerator
+          assetId={assetId}
+          managerPercentage={managerPercentage}
+        >
+          <Button
+            type="default"
+            disabled={!funded || managerHasToCallPayout}
+          >
+            Deposit Revenue
+          </Button>
+        </RevenueGenerator>
+       </ValueDisplayWrapper>
       </ManageAssetValueDisplayer>
       <ManageAssetProfitSectionWrapper>
         <ManageAssetCustomRow>

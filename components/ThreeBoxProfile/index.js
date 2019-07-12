@@ -1,15 +1,23 @@
 import React from 'react'
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import UserIcon from 'static/user_large.svg';
 import {
     shortenAddress,
 } from 'utils/helpers';
-
+import {
+  LocalStorageKeys,
+} from 'constants/localStorageKeys';
 const ProfileImageIconWrapper = styled.img`
   width: 32px;
+  height: 26.26px;
   border-radius: 50%;
   margin-right: 5px;
+  opacity: 0;
+  transition: opacity 0.1s;
+  ${props => props.hasLoaded && css`
+    opacity: 1;
+  `}
 `
 
 const UserIconWrapper = styled(UserIcon)`
@@ -23,37 +31,50 @@ class ThreeBoxProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            profile: {}
+            profile: {},
+            imageLoaded: false,
         }
     }
 
     async componentWillMount() {
         const { address, threeBoxContext } = this.props;
-        const { load3BoxProfile } = threeBoxContext;
-        const profile = await load3BoxProfile(address);
-        this.setState({ profile })
+        const name = localStorage.getItem(`${LocalStorageKeys.THREE_BOX_CACHE_NAME}${address}`)
+        const imageIpfs = localStorage.getItem(`${LocalStorageKeys.THREE_BOX_CACHE_IMAGE}${address}`)
+
+        const { loadThreeBoxProfile } = threeBoxContext;
+        loadThreeBoxProfile(address).then((profile) => {
+          const newName = profile.name;
+          const newIpfsHash = profile.image[0]['contentUrl']['/']
+          this.setState({name: newName, imageIpfs: newIpfsHash});
+          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_NAME}${address}`, newName)
+          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_IMAGE}${address}`, newIpfsHash)
+        })
+
+       this.setState({ name, imageIpfs })
       }
 
     render() {
-        const { profile } = this.state;
+        const { name: profileName, imageIpfs, imageLoaded } = this.state;
         const { address, icon, name, long, short } = this.props;
         const [ startIndex, endIndex ] = short ? short : [6, 4]
 
-        const iconImage = indexImage => profile && profile.image && 
-            <ProfileImageIconWrapper 
-                src={`https://ipfs.infura.io/ipfs/${profile.image[indexImage]['contentUrl']['/']}`} 
+        const iconImage = indexImage => imageIpfs &&
+            <ProfileImageIconWrapper
+                src={`https://ipfs.infura.io/ipfs/${imageIpfs}`}
+                onLoad={() => this.setState({imageLoaded: true})}
+                hasLoaded={imageLoaded}
             />
-        
+
         return (
             <React.Fragment>
             {
-                icon && (iconImage ? 
-                    iconImage(0) : 
+                icon && (iconImage ?
+                    iconImage(0) :
                     <UserIconWrapper />)
             }
             {
-                name && (profile.name ?
-                    <span>{ profile.name }</span> :
+                name && (profileName ?
+                    <span>{ profileName }</span> :
                     <span>{ long ? address : shortenAddress(address, startIndex, endIndex) }</span>)
             }
             </React.Fragment>

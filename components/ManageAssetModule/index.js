@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose } from 'recompose'
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
+import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import {
-  formatMonetaryValue,
   fromWeiToEth,
 } from 'utils/helpers';
 import ERRORS from './errors';
@@ -18,7 +17,53 @@ class ManageAssetModule extends React.Component{
     loading: true,
   }
 
+  load3BoxSpaces = async (props, asset) => {
+    const {
+      threeBoxContext,
+      metamaskContext
+    } = props;
+
+    const {
+      user
+    } = metamaskContext;
+
+    const {
+      openSpace,
+      openBox,
+      postThread,
+      getPostsFromThread,
+      hasAuthorizedThreeBox,
+      syncingThreeBox,
+      syncingThreeBoxThread,
+      loadingThreeBoxThreadAPIAuthorization,
+      loadingThreeBoxSpaceAuthorization,
+      loadingThreeBoxThreadPostRequest,
+      hasOpenedGoSpace
+    } = threeBoxContext;
+
+    console.log('[ ManageAssetModule - load3BoxSpaces ] hasAuthorizedThreeBox', hasAuthorizedThreeBox)
+
+    this.setState({
+      threeBox: {
+        hasAuthorizedThreeBox: hasAuthorizedThreeBox,
+        hasOpenedGoSpace: hasOpenedGoSpace,
+        syncingThreeBox: syncingThreeBox,
+        syncingThreeBoxThread: syncingThreeBoxThread,
+        loadingThreeBoxThreadPostRequest: loadingThreeBoxThreadPostRequest,
+        loadingThreeBoxSpaceAuthorization: loadingThreeBoxSpaceAuthorization,
+        loadingThreeBoxThreadAPIAuthorization: loadingThreeBoxThreadAPIAuthorization,
+        methods: {
+          authorizeThreeBoxSpace: () => user && user.address && openBox(user.address),
+          openThreeBoxSpace: () => openSpace(),
+          postUpdateOnThread: (update, callback) => postThread(asset.assetId, update, callback),
+          getPostsFromCurrentThread: () => getPostsFromThread(asset.assetId)
+        }
+      }
+    })
+  }
+
   processAssetInfo = async (props, asset) => {
+    console.log('[ ManageAssetModule - processAssetInfo ] init')
     if(this._processingAssetInfo){
       return;
     } else {
@@ -34,7 +79,11 @@ class ManageAssetModule extends React.Component{
       withdrawingAssetManager,
       withdrawCollateral,
       withdrawProfitAssetManager,
+      callingPayout,
+      payoutAsset,
     } = blockchainContext;
+
+    console.log('[ ManageAssetModule - processAssetInfo ] metamaskContext', metamaskContext)
 
     try{
       const {
@@ -49,6 +98,8 @@ class ManageAssetModule extends React.Component{
         remainingEscrow,
         assetManagerCollateral,
         owedToAssetManager,
+        model,
+        managerHasToCallPayout,
       } = asset;
 
       // calculate collateral data to be displayed
@@ -123,6 +174,7 @@ class ManageAssetModule extends React.Component{
 
       const isWithdrawingCollateral = withdrawingCollateral.includes(assetId);
       const isWithdrawingAssetManager = withdrawingAssetManager.includes(assetId);
+      const isCallingPayout = callingPayout.includes(assetId);
 
       if(this._mounted !== false){
         this.setState({
@@ -132,7 +184,8 @@ class ManageAssetModule extends React.Component{
             asset: asset,
             methods: {
               withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
-              withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, owedToAssetManager): undefined,
+              withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, owedToAssetManager) : undefined,
+              payoutAsset: (!isCallingPayout && managerHasToCallPayout) ? () => payoutAsset({assetId, model}) : undefined,
             },
             finantialDetails: {
               assetManagerProfits,
@@ -145,6 +198,7 @@ class ManageAssetModule extends React.Component{
               withdrawMax,
               percentageMax,
               averageProfit,
+              isCallingPayout,
             }
           }
         });
@@ -197,11 +251,8 @@ class ManageAssetModule extends React.Component{
         errorType = ERRORS.NO_ASSET;
       } else if (user.address !== asset.assetManager){
         errorType = ERRORS.NO_PERMISSION;
-      } else if(!asset.funded && asset.pastDate){
-        errorType = ERRORS.ASSET_FUNDING_FAILED;
-      } else if(!asset.funded){
-        errorType = ERRORS.ASSET_NOT_FUNDED;
       } else {
+        this.load3BoxSpaces(props || this.props, asset);
         this.processAssetInfo(props || this.props, asset);
       }
 
@@ -225,8 +276,9 @@ class ManageAssetModule extends React.Component{
  }
 
 const enhance = compose(
+  withThreeBoxContext,
   withMetamaskContext,
   withBlockchainContext,
 );
 
-export default enhance(ManageAssetModule);;
+export default enhance(ManageAssetModule);

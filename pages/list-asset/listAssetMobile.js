@@ -43,6 +43,8 @@ const ListAssetMobile = ({
   tokenWithSufficientBalance,
   airtableContext,
   loadingBalancesForNewUser,
+  loadingConversionInfo,
+  tokenSlippagePercentages,
 }) => {
   const {
     category,
@@ -62,6 +64,9 @@ const ListAssetMobile = ({
     about,
     financials,
     risks,
+    hasAdditionalCosts,
+    additionalCosts,
+    fees,
   } = formData;
 
   return (
@@ -112,7 +117,7 @@ const ListAssetMobile = ({
         ), buttons: {
           hasNextButton: true,
           hasBackButton: true,
-          nextButtonDisabled: !about || !financials || !risks,
+          nextButtonDisabled: !about || !financials || !risks || (hasAdditionalCosts && (!fees || additionalCosts <= 0)),
         }
       }, {
         toRender: (
@@ -169,6 +174,8 @@ const ListAssetMobile = ({
             balances={balances}
             kyberLoading={kyberLoading}
             loadingBalancesForNewUser={loadingBalancesForNewUser}
+            loadingConversionInfo={loadingConversionInfo}
+            tokenSlippagePercentages={tokenSlippagePercentages}
           />
         , buttons: {
           hasNextButton: true,
@@ -219,7 +226,7 @@ const ListAssetMobile = ({
             nextButtonDisabled: (!checkedToS && readToS) || !tokenWithSufficientBalance,
             nextButtonHandler: () => {
               setUserListingAsset(true);
-              handleListAsset(formData, setUserListingAsset, civic.email);
+              handleListAsset(formData, setUserListingAsset);
             },
           }
         }

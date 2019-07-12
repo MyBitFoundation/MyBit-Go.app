@@ -1,16 +1,13 @@
 import { InternalLinks } from 'constants/links';
 import {
-  AIRTABLE_ASSETS_RULES,
+  AIRTABLE_ASSET_MODELS,
+  AIRTABLE_ASSET_LISTINGS,
   AIRTABLE_CATEGORIES_RULES,
   verifyDataAirtable,
   PULL_ASSETS_TIME,
   PULL_CATEGORIES_TIME,
   DEFAULT_ASSET_INFO,
  } from 'constants/airtable';
-
-import {
-  fetchWithCache,
-} from 'utils/fetchWithCache';
 import {
   FALLBACK_NETWORK,
 } from 'constants/supportedNetworks';
@@ -42,16 +39,14 @@ class AirtableProvider extends React.PureComponent {
       getCategoriesForAssets: this.getCategoriesForAssets,
       getAssetByName: this.getAssetByName,
       forceRefresh: this.forceRefresh,
+      updateAssetModels: this.updateAssetModels,
     }
-    this.categoriesEtag = '';
-    this.assetsEtag = '';
   }
 
   componentDidMount = () => {
     const { network } = this.props;
     if(network){
       this.getAssets(network);
-      this.getCategories(network);
     }
     this.setIntervals();
   }
@@ -67,10 +62,8 @@ class AirtableProvider extends React.PureComponent {
     } = newProps;
     if(!network && newNetwork){
       this.getAssets(newNetwork);
-      this.getCategories(newNetwork);
     } else if(!network && newUserHasMetamask === false){
       this.getAssets();
-      this.getCategories();
     }
   }
 
@@ -88,17 +81,30 @@ class AirtableProvider extends React.PureComponent {
     clearInterval(this.intervalPullCategories);
   }
 
-  forceRefresh = async network => {
-    await Promise.all([
-      this.getCategories(network),
-      this.getAssets(network),
-    ])
+  forceRefresh = network => {
+    this.getAssets(network);
   }
 
-  processAssetsFromAirTable = ({ fields }) => {
+  getFiles = filesString => {
+    try{
+      if(filesString){
+        const files = [];
+        const filesArr = files.split('\\');
+        for(let i=0;i<filesArr.length;i+=2){
+          const fileName = filesArr[i];
+          const fileIpfs = filesArr[i+1];
+        }
+      }
+    }
+    catch(err){
+      console.log("Error getting asset with filesString: ", filesString)
+    }
+  }
+
+  getLocationFromString = locations => {
     let location = undefined;
-    if(fields.Location){
-      let countries = fields.Location.split(',');
+    if(locations){
+      let countries = locations.split(',');
       location = {};
       countries.forEach(country => {
         country = country.trim();
@@ -108,119 +114,58 @@ class AirtableProvider extends React.PureComponent {
           cities = cities[1].split(';');
           location[country] = cities;
         } else {
-           location[country] = {};
+          location[country] = {};
         }
       })
     }
-
-    return {
-      name: fields.Asset,
-      category: fields.Category,
-      description: fields.Description,
-      details: fields.Details,
-      partner: fields.Partner,
-      partnerContractAddress: fields['Partner Address'],
-      operatorId: fields['Operator ID'],
-      imageSrc: `${InternalLinks.S3}assetImages:${fields.Image}`,
-      fundingGoal: fields['Funding goal'],
-      assetIDs: fields['Asset IDs'],
-      cryptoPurchase: fields['Crypto Purchase'] === 1,
-      cryptoPayout: fields['Crypto Payout'] === 1,
-      location,
-    };
+    return location;
   }
 
-  processCategoriesFromAirTable = (data) => {
-    const categories = {};
-    data.forEach(({ fields }) => {
-      categories[fields.Category] = {
-        contractName: fields['Category Contract'],
-        encoded: fields['byte32'],
-      }
-    })
-    return categories;
-  }
-
-  getAssetByName = (assetName, assetsFromAirTable) => {
-    return assetsFromAirTable.filter(asset => asset.name === assetName)[0];
-  }
-
-  processAssetsByIdFromAirTable = (assetsFromAirTable, extraAssetInfoById) => {
-    const assetsAirTableById = {};
-    const tmpCache = {};
-    assetsFromAirTable.forEach(asset => {
-      let assetIds = asset.assetIDs;
-      if(assetIds){
-        const assetName = asset.name;
-        const airtableAsset = tmpCache[assetName] || this.getAssetByName(assetName, assetsFromAirTable);
-        // add to temporary cache (will help when we have a lot of assets)
-        if(airtableAsset && !tmpCache[assetName]){
-          tmpCache[assetName] = airtableAsset;
-        }
-        assetIds = assetIds.split(',');
-        assetIds.forEach(assetIdInfo => {
-          const [assetId, country, city, collateralPercentage] = assetIdInfo.split('|');
-          let financials, about, risks;
-          if(extraAssetInfoById[assetId]){
-            financials = extraAssetInfoById[assetId].financials;
-            about = extraAssetInfoById[assetId].about;
-            risks = extraAssetInfoById[assetId].risks;
-          } else {
-            financials = DEFAULT_ASSET_INFO.Financials;
-            about = DEFAULT_ASSET_INFO.About;
-            risks = DEFAULT_ASSET_INFO.Risks;
-          }
-          assetsAirTableById[assetId] = {
-            defaultData: airtableAsset,
-            city,
-            country,
-            collateralPercentage,
-            financials,
-            about,
-            risks,
-          };
-        });
-      }
-    })
-    return assetsAirTableById;
-  }
-
-  getCategories = async network => {
-    const { userHasMetamask } = this.props;
-    network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
-    if(network){
-      const response = await fetchWithCache(InternalLinks.getAirtableCategoriesUrl(network), 'assetsCategories', this);
-      // avoid processing and setting state if the data hasn't changed
-      if(!response.isCached) {
-        const { records } = response.data;
-
-        const filteredCategoriesFromAirtable = verifyDataAirtable(AIRTABLE_CATEGORIES_RULES, records);
-
-        const categoriesAirTable = this.processCategoriesFromAirTable(filteredCategoriesFromAirtable);
-        this.setState({
-          categoriesAirTable
-        });
-      }
-    }
-  }
-
-  processExtraAssetInfo = data => {
-    const extraAssetInfoById = {};
+  processAssetModels = data => {
+    const assetModels = {};
     data.forEach(({fields}) => {
-      const {
-        Financials = DEFAULT_ASSET_INFO.Financials,
-        About = DEFAULT_ASSET_INFO.About,
-        Risks = DEFAULT_ASSET_INFO.Risks,
-      } = fields;
-
-      extraAssetInfoById[fields['Asset ID']] = {
-        financials: Financials,
-        about: About,
-        risks: Risks,
+      assetModels[fields['Model ID']] = {
+        category: fields['Category'],
+        name: fields['Asset'],
+        imageSrc: `https://s3.eu-central-1.amazonaws.com/mybit-go/assetImages:${fields['Image']}`,
+        partnerAddress: fields['Partner Address'],
+        cryptoPayout: fields['Crypto Purchase'],
+        cryptoPurchase: fields['Crypto Payout'],
+        location: this.getLocationFromString(fields['Location']),
+        files: this.getFiles(fields['Files']),
+        fundingGoal: fields['Funding Goal'],
+        modelId: fields['Model ID'],
       }
     })
 
-    return extraAssetInfoById;
+    return assetModels;
+  }
+
+  processAssetListings = (data, models) => {
+    const assetListings = {};
+    data.forEach(({fields}) => {
+      assetListings[fields['Asset ID']] = {
+        financials: fields['Financials'],
+        about: fields['About'],
+        risks: fields['Risks'],
+        fees: fields['Fees'],
+        model: models[fields['Model ID']],
+        modelId: fields['Model ID'],
+        city: fields['City'],
+        country: fields['Country'],
+        collateralPercentage: fields['Collateral Percentage'],
+        assetAddress1: fields['Route'],
+        assetAddress2: fields['Street Number'],
+        assetProvince: fields['Province'],
+        assetPostalCode: fields['Postal Code'],
+        files: this.getFiles(fields['Files']),
+      }
+    })
+    return assetListings;
+  }
+
+  updateAssetModels = newAssetModelsWithOperatorInfo => {
+    this.setState({assetsAirTable: newAssetModelsWithOperatorInfo})
   }
 
   getAssets = async network => {
@@ -228,40 +173,32 @@ class AirtableProvider extends React.PureComponent {
     network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
 
     if(network){
-      const [assets, assetsInfo] = await Promise.all([
-        fetchWithCache(InternalLinks.getAirtableAssetsUrl(network), 'assetsEtag', this),
-        fetchWithCache(InternalLinks.getAirtableAssetsInfoUrl(network), 'assetsInfoEtag', this),
+      let [assetModels, assetListings] = await Promise.all([
+        fetch(InternalLinks.getAirtableAssetModels(network)),
+        fetch(InternalLinks.getAirtableAssetListings(network)),
       ]);
+      [assetModels, assetListings] = await Promise.all([
+        assetModels.json(),
+        assetListings.json(),
+      ]);
+      const { records: modelsRecords  } = assetModels;
+      const { records: listingsRecords  } = assetListings;
 
-      // avoid processing and setting state if the data hasn't changed
-      if(!assets.isCached) {
-        const { records: assetRecords  } = assets.data;
-        const { records: assetInfoRecords  } = assetsInfo.data;
-
-        const filteredAssetsFromAirtable = verifyDataAirtable(AIRTABLE_ASSETS_RULES, assetRecords);
-        const extraAssetInfoById = this.processExtraAssetInfo(assetInfoRecords);
-        let assetsAirTable = filteredAssetsFromAirtable.map(this.processAssetsFromAirTable)
-        const assetsAirTableById = this.processAssetsByIdFromAirTable(assetsAirTable, extraAssetInfoById);
-
-        // remove assetIDs as they are not required in this object
-        // they were requred before to facilitate the processing by asset ID
-        for(const asset of assetsAirTable){
-          delete asset['assetIDs'];
-        }
-
-        console.log("assetsAirTableById: ", assetsAirTableById)
-        console.log("assetsAirTable: ", assetsAirTable)
-
-        /*
-        * we save the network in the state to make sure fetchAssets() in brain.js
-        * uses the correct airtable data when pulling the assets, from the correct network
-        */
-        this.setState({
-          assetsAirTable,
-          assetsAirTableById,
-          network,
-        });
-      }
+      const assetModelsFiltered = verifyDataAirtable(AIRTABLE_ASSET_MODELS, modelsRecords);
+      const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
+      const assetModelsProcessed = this.processAssetModels(assetModelsFiltered);
+      const assetListingsProcessed = this.processAssetListings(assetListingsFiltered, assetModelsProcessed);
+      console.log("assetlistingsAirTable: ", assetListingsProcessed)
+      console.log("assetModelsAirTable: ", assetModelsProcessed)
+      /*
+      * we save the network in the state to make sure fetchAssets() in brain.js
+      * uses the correct airtable data when pulling the assets, from the correct network
+      */
+      this.setState({
+        assetsAirTable: assetModelsProcessed,
+        assetsAirTableById: assetListingsProcessed,
+        network,
+      });
     }
   }
 
@@ -277,36 +214,34 @@ class AirtableProvider extends React.PureComponent {
       return {};
     }
 
-    for(const asset of assetsAirTable){
+    for(const key in assetsAirTable){
+      const asset = assetsAirTable[key];
       const {
         category,
         location,
       } = asset;
 
       let shouldAdd = false;
-      if(categoriesAirTable[asset.category]){
-        /*
-        * If the asset does not have a specified location
-        * then anyone from anywhere can list it
-        */
-        if(!asset.location){
-          shouldAdd = true;
+      /*
+      * If the asset does not have a specified location
+      * then anyone from anywhere can list it
+      */
+      if(!location){
+        shouldAdd = true;
+      }
+      /*
+      * The user's country needs to an allowed location for the asset
+      * and either the city also matches or there are no city specified
+      * which means the user is eligible to list this asset
+      */
+      else if((location && location[country] && Array.isArray(location[country]) && (location && location[country].includes(city.toLowerCase())) || (location && location[country] && Object.keys(location[country]).length === 0))){
+        shouldAdd = true;
+      }
+      if(shouldAdd){
+        if(!categories[category]){
+          categories[category] = [];
         }
-        /*
-        * The user's country needs to an allowed location for the asset
-        * and either the city also matches or there are no city specified
-        * which means the user is eligible to list this asset
-        */
-        else if((asset.location[country] && Array.isArray(asset.location[country]) && (asset.location[country].includes(city.toLowerCase())) || (asset.location[country] && Object.keys(asset.location[country]).length === 0))){
-          shouldAdd = true;
-        }
-
-        if(shouldAdd){
-          if(!categories[category]){
-            categories[category] = [];
-          }
-          categories[category].push(asset);
-        }
+        categories[category].push(asset);
       }
     }
     return categories;

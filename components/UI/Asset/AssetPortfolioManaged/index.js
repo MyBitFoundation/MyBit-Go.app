@@ -22,12 +22,6 @@ const AssetPortfolioManaged = ({
   funded,
   assetId,
   fundingStage,
-  owedToInvestor,
-  numberOfInvestors,
-  ownership,
-  withdrawing,
-  withdrawInvestorProfit,
-  unrealizedProfit,
   toWithdraw,
   managerPercentage,
   totalProfitAssetManager,
@@ -35,34 +29,19 @@ const AssetPortfolioManaged = ({
   pastDate,
   fundingGoal,
   fundingProgress,
-  managerHasToCallPayout,
-  callingPayout,
-  payoutAsset,
-  defaultData,
 }) => {
-
-  const buttonType = 'secondary';
-  const text = !funded ? 'View asset listing' : managerHasToCallPayout ? 'Send funds to operator' : 'Manage asset';
-  const url = !funded ? `/asset?id=${assetId}` : managerHasToCallPayout ? undefined : `/manage?id=${assetId}`;
-  const urlAs = !funded ? `/asset/${assetId}` : managerHasToCallPayout ? undefined : `/manage/${assetId}`;
   const button = (
     <Button
-      type={buttonType}
-      onClick={managerHasToCallPayout ? () => payoutAsset({
-        assetId,
-        defaultData,
-      }) : undefined}
-      loading={callingPayout}
-      disabled={callingPayout}
+      type="secondary"
     >
-      {text}
+      Manage asset
     </Button>
   )
 
-  const buttonWithLink = url && (
+  const buttonWithLink = (
     <Link
-      as={urlAs}
-      href={url}
+      href={`/manage?id=${assetId}`}
+      as={`/manage/${assetId}`}
     >
       {button}
     </Link>
@@ -89,7 +68,7 @@ const AssetPortfolioManaged = ({
       <AssetPortfolioManagedSection>
         <span>Your management fee:</span>
         <AssetPortfolioManagedValue>
-          {managerPercentage * 100}%
+          {parseFloat((managerPercentage * 100).toFixed(2))}%
         </AssetPortfolioManagedValue>
       </AssetPortfolioManagedSection>
       <AssetPortfolioManagedSection>
@@ -142,7 +121,7 @@ const AssetPortfolioManaged = ({
           )}
         </div>
         <AssetPortfolioManagedButtons>
-          {buttonWithLink || button}
+          {buttonWithLink}
         </AssetPortfolioManagedButtons>
       </AssetPortfolioManagedSection>
     </AssetPortfolioManagedWrapper>
