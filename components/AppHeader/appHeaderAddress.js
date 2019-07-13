@@ -11,11 +11,11 @@ const AppHeaderAddress = styled.div`
     display: flex;
   `}
 
-  span{
+  > span{
     text-transform: capitalize;
   }
 
-  span:nth-child(1){
+  > span:nth-child(1){
     :before {
       content: ' ';
       display: inline-block;

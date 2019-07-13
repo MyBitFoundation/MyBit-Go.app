@@ -6,6 +6,7 @@ import AddressWrapper from './addressWrapper';
 import AddressLoader from './addressLoader';
 import AddressText from './addressText';
 import AddressJazzicon from './addressJazzicon';
+import ThreeBoxProfile from 'components/ThreeBoxProfile';
 
 const Address = ({ address, isMobile }) => (
   <AddressWrapper>
@@ -20,7 +21,7 @@ const Address = ({ address, isMobile }) => (
         <AddressText
           isMobile={isMobile}
         >
-          {address}
+          <ThreeBoxProfile address={address} name />
         </AddressText>
       </AddressJazzicon>
     )}

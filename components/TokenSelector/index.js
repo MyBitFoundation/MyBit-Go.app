@@ -161,7 +161,7 @@ class TokenSelector extends React.Component {
     const tokenToConvertFrom = hoveringToken && this.getTokenToConvertFrom();
 
     return (
-      <Menu style={{height: '268px', width: '284px'}}>
+      <Menu style={{height: '268px', width: '284px', overflowY: 'auto'}}>
         <TokenSelectorSearchWrapper
           key="search"
         >
