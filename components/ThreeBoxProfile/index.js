@@ -37,21 +37,37 @@ class ThreeBoxProfile extends React.Component {
     }
 
     async componentWillMount() {
-        const { address, threeBoxContext } = this.props;
-        const name = localStorage.getItem(`${LocalStorageKeys.THREE_BOX_CACHE_NAME}${address}`)
-        const imageIpfs = localStorage.getItem(`${LocalStorageKeys.THREE_BOX_CACHE_IMAGE}${address}`)
+      this.loadData();
+    }
 
-        const { loadThreeBoxProfile } = threeBoxContext;
-        loadThreeBoxProfile(address).then((profile) => {
-          const newName = profile.name;
-          const newIpfsHash = profile.image[0]['contentUrl']['/']
-          this.setState({name: newName, imageIpfs: newIpfsHash});
-          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_NAME}${address}`, newName)
-          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_IMAGE}${address}`, newIpfsHash)
-        })
-
-       this.setState({ name, imageIpfs })
+    componentDidUpdate = prevProps => {
+      const { address: oldAddress } = prevProps;
+      const { address: newAddress } = this.props;
+      if(oldAddress !== newAddress){
+        this.loadData();
       }
+    }
+
+    loadData = () => {
+      const { address, threeBoxContext } = this.props;
+      let name = localStorage.getItem(`${LocalStorageKeys.THREE_BOX_CACHE_NAME}${address}`)
+      const imageIpfs = localStorage.getItem(`${LocalStorageKeys.THREE_BOX_CACHE_IMAGE}${address}`)
+      this.setState({ name, imageIpfs })
+      const { loadThreeBoxProfile } = threeBoxContext;
+      loadThreeBoxProfile(address).then((profile) => {
+        let newName, newIpfsHash;
+        if(profile.name){
+          newName = profile.name;
+          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_NAME}${address}`, newName)
+          this.setState({name: newName});
+        }
+        if(profile.image){
+          newIpfsHash = profile.image[0]['contentUrl']['/']
+          localStorage.setItem(`${LocalStorageKeys.THREE_BOX_CACHE_IMAGE}${address}`, newIpfsHash)
+          this.setState({imageIpfs: newIpfsHash});
+        }
+      })
+    }
 
     render() {
         const { name: profileName, imageIpfs, imageLoaded } = this.state;
