@@ -18,6 +18,7 @@ import NotificationsMobileCounter from 'components/NotificationsMobile';
 import AppHeaderNotificationCounter from './appHeaderNotificationCounter';
 import AppHeaderAddress from './appHeaderAddress';
 import AppHeaderBalance from './appHeaderBalance';
+import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import {
   shortenAddress,
 } from 'utils/helpers';
@@ -106,7 +107,7 @@ const AppHeader = ({
                   as={`/asset-managers/${user.address}`}
                   href={`/asset-managers?id=${user.address}`}
                 >
-                  <span style={{cursor: 'pointer'}}>{shortenAddress(user.address, 4, 3)}</span>
+                  <span style={{cursor: 'pointer'}}><ThreeBoxProfile address={user.address} name /></span>
                 </Link>
               </AppHeaderAddress>
             )}
