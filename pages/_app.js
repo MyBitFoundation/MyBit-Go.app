@@ -15,9 +15,9 @@ import GlobalStyle from 'components/globalStyle';
 import AppWrapper from 'components/AppWrapper';
 import Theme from 'components/Theme'
 import MobileMenu from 'components/MobileMenu'
-import BancorContainer from 'ui/BancorContainer';
 import Cookie from 'js-cookie';
 import Router from 'next/router';
+import Footer from 'components/Footer';
 import { navbarOptions } from 'constants/navigationBar';
 import { WEB3_BACKUP_PROVIDER } from 'constants/web3BackupProvider';
 import { FULL_SCREEN_PAGES } from 'constants/fullScreenPages';
@@ -101,17 +101,18 @@ class MyApp extends App {
               handleMobileMenuState={this.handleMobileMenuClicked}
             >
               <React.Fragment>
-                <BancorContainer>
-                  <AppWrapper
-                    isFullScreenPage={isFullScreenPage}
-                    handleMobileMenuState={this.handleMobileMenuClicked}
-                  >
+                <AppWrapper
+                  isFullScreenPage={isFullScreenPage}
+                  handleMobileMenuState={this.handleMobileMenuClicked}
+                >
+                  <React.Fragment>
                     <Component
                       {...pageProps}
                       currentPath={router.route}
                     />
-                  </AppWrapper>
-                </BancorContainer>
+                  </React.Fragment>
+                </AppWrapper>
+                <Footer isFullScreenPage={isFullScreenPage}/>
               </React.Fragment>
             </MobileMenu>
           </WithProviders>
