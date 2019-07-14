@@ -23,7 +23,11 @@ const PageWrapper = styled.div`
     padding: 0px;
   `}
 
-  min-height: calc(100vh - 499px);
+  min-height: calc(100vh - 50px);
+
+  ${({theme}) => theme.laptop`
+    min-height: calc(100vh - 499px);
+  `}
 }`
 
 export default PageWrapper;
