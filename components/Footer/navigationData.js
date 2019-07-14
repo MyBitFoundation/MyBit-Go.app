@@ -1,4 +1,4 @@
-import Links from './links';
+import Links from './components/links';
 import { PortfolioTypes } from 'constants/portfolioTypes';
 
 export const MyBitGo = () => (

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Medium from 'static/footer/medium.svg';
 import Reddit from 'static/footer/reddit.svg';
 import Telegram from 'static/footer/telegram.svg';

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Mybit from 'static/footer/logo-dark.svg';
 
 const AboutWrapper = styled.div`

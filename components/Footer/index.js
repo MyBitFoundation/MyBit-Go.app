@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
-import Column from './column';
-import Social from './social';
-import About from './about';
+import Column from './components/column';
+import Social from './components/social';
+import About from './components/about';
 import * as NavigationData from './navigationData';
 
 const FooterWrapper = styled.div`
