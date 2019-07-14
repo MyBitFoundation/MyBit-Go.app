@@ -41,7 +41,7 @@ const HelpPage = () => (
         </HelpPageButton>
       ))}
     </HelpPageButtons>
-    <Collapse defaultActiveKey="About MyBit Go" onChange={() => {}} accordion>
+    <Collapse defaultActiveKey="Value of MyBit Go" onChange={() => {}} accordion>
       {FAQ.map(section => (
         <Panel header={section.title} key={section.title}>
           {section.content.map(content => (
