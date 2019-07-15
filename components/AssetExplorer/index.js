@@ -18,7 +18,7 @@ import {
   setValueLocalStorage,
 } from 'utils/helpers';
 import { Categories } from 'constants/categories';
-
+import { DefaultAsset } from 'ui/Asset';
 class AssetExplorer extends React.Component {
   constructor(props) {
     super(props);
@@ -159,7 +159,7 @@ class AssetExplorer extends React.Component {
         </ExploreFiltersSwitch>
         <AssetDisplayer
           assets={assetsFiltered}
-          type="default"
+          assetToRender={DefaultAsset}
           handleAssetFavorited={handleAssetFavorited}
         />
       </React.Fragment>
