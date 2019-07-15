@@ -40,8 +40,9 @@ class AssetDeadline extends React.Component {
       return;
     }
 
-    const days = fundingDeadline.diff(dayjs(), 'days');
-    const seconds = fundingDeadline.diff(dayjs(), 'seconds');
+    const fundingDeadLineDayJs = dayjs(fundingDeadline)
+    const days = fundingDeadLineDayJs.diff(dayjs(), 'days');
+    const seconds = fundingDeadLineDayJs.diff(dayjs(), 'seconds');
     const calculateRemainingTime = dayjs()
       .startOf('day')
       .add(seconds, 'seconds');
@@ -51,14 +52,14 @@ class AssetDeadline extends React.Component {
       handleDeadlineHit();
       // funding period has reached end date
       this.setState({
-        endingAt: `Funding period has ended on ${dayjs(fundingDeadline).format('dddd, MMMM D')}`,
+        endingAt: `Funding period has ended on ${dayjs(fundingDeadLineDayJs).format('dddd, MMMM D')}`,
       });
       return;
     }
 
     // less than 1 day until funding period ends
     if (days === 0) {
-      const secondsToEndDate = fundingDeadline.diff(dayjs(), 'seconds');
+      const secondsToEndDate = fundingDeadLineDayJs.diff(dayjs(), 'seconds');
       const aux = dayjs()
         .startOf('day')
         .add(86400, 'seconds');
@@ -67,7 +68,7 @@ class AssetDeadline extends React.Component {
       if (secondsToEndDate > secondsToMidnight) day = 'tomorrow';
 
       this.setState({
-        endingAt: `Ending in ${calculateRemainingTime.hour()}h ${calculateRemainingTime.minute()}m ${calculateRemainingTime.second()}s at ${dayjs(fundingDeadline).format('H:mm:ss')}`,
+        endingAt: `Ending in ${calculateRemainingTime.hour()}h ${calculateRemainingTime.minute()}m ${calculateRemainingTime.second()}s at ${dayjs(fundingDeadLineDayJs).format('H:mm:ss')}`,
       });
 
       if (!this.setDateInterval || this.runningMinInterval) {
@@ -80,7 +81,7 @@ class AssetDeadline extends React.Component {
       // less than 1 week to finish
       const dayString = days === 1 ? 'day' : 'days';
       this.setState({
-        endingAt: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go.\n Funding period ends on ${dayjs(fundingDeadline).format('dddd, MMMM D')}`,
+        endingAt: `${days} ${dayString} and ${calculateRemainingTime.hour()} hours to go.\n Funding period ends on ${dayjs(fundingDeadLineDayJs).format('dddd, MMMM D')}`,
       });
       if (!this.setDateInterval) {
         this.setDateInterval = setInterval(() => {
@@ -90,7 +91,7 @@ class AssetDeadline extends React.Component {
       }
     } else {
       this.setState({
-        endingAt: `Funding period ends on ${dayjs(fundingDeadline).format('dddd, MMMM D')}`,
+        endingAt: `Funding period ends on ${dayjs(fundingDeadLineDayJs).format('dddd, MMMM D')}`,
       });
     }
   }

@@ -6,7 +6,7 @@ import {
   Button,
 } from 'antd';
 import ValueDisplay from 'ui/ValueDisplay';
-import Asset from 'ui/Asset/';
+import { PortfolioAsset, ManagedAsset } from 'ui/Asset';
 import PieChart from 'static/chart-pie.svg';
 import LineChart from 'static/chart-line.svg';
 import Sliders from 'static/sliders.svg';
@@ -19,7 +19,6 @@ import {
 import {
   PortfolioTypes,
 } from 'constants/portfolioTypes';
-
 import PortfolioPageValueDisplays from './portfolioPageValueDisplays';
 import PortfolioPageNavButtons from './portfolioPageNavButtons';
 import PortfolioPageExplore from './portfolioPageExplore';
@@ -82,6 +81,11 @@ class PortfolioPage extends React.Component{
       ) : assets.filter(assetFinantialDetails =>
         assetFinantialDetails.managerDetails || false
       )
+
+    let AssetToRender = PortfolioAsset;
+    if(currentView === PortfolioTypes.MANAGED_ASSETS){
+      AssetToRender = ManagedAsset;
+    }
 
     // slice results for pagination
     const startIndex = currentPage * assetsPerPage;
@@ -153,8 +157,7 @@ class PortfolioPage extends React.Component{
           <React.Fragment>
           <PortfolioPageExplore>
             {assetsToDisplay.map(asset =>
-              <Asset
-                type={currentView}
+              <AssetToRender
                 {...asset.managerDetails}
                 {...asset.investmentDetails}
                 key={asset.assetId}

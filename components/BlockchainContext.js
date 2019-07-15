@@ -6,6 +6,7 @@ import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import BN from 'bignumber.js';
+import dayjs from 'dayjs';
 import { withAirtableContext } from 'components/AirtableContext';
 import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
@@ -1080,8 +1081,9 @@ class BlockchainProvider extends React.Component {
       } = asset;
 
       if(!assetManagers[assetManager]){
+        const startDate = dayjs(listingDate);
         assetManagers[assetManager] = {
-          startDate: listingDate,
+          startDate,
           totalAssets: 1,
           totalRevenue: assetIncome,
           collateralLocked: remainingEscrow,
