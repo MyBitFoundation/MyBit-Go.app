@@ -19,6 +19,10 @@ const GlobalStyle = createGlobalStyle`
     ${({theme}) => theme.tablet`
       width: 460px;
     `}
+
+    a {
+      color: #FFFFFF;
+    }
   }
 
   .AssetManagerTooltip .ant-tooltip-arrow{

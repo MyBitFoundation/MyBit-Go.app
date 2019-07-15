@@ -1,7 +1,6 @@
 import {
   Row,
 } from 'antd';
-import Asset from 'ui/Asset/';
 import NoResults from 'components/NoResults';
 import Pagination from './pagination';
 
@@ -27,6 +26,7 @@ class AssetDisplayer extends React.Component{
       type,
       assets,
       handleAssetFavorited,
+      assetToRender: AssetToRender,
     } = this.props;
 
     const {
@@ -43,10 +43,8 @@ class AssetDisplayer extends React.Component{
       <React.Fragment>
         <Row>
           {assetsToDisplay.map(asset => (
-            <Asset
-              type={type}
+            <AssetToRender
               {...asset}
-              key={asset.assetId}
               handleAssetFavorited={handleAssetFavorited}
             />
           ))}

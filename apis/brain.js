@@ -467,7 +467,7 @@ export const fetchAssets = async (userAddress, assetListingsAirtable, assetModel
           managerPercentage,
           blockInfo,
         ] = await getAssetDetails(api, assetId, blockNumber);
-        const listingDate = dayjs(blockInfo.timestamp * 1000);
+        const listingDate = blockInfo.timestamp * 1000;
 
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
         const isAssetManager = assetManager === realAddress;
@@ -572,7 +572,7 @@ export const fetchAssets = async (userAddress, assetListingsAirtable, assetModel
           escrowRedeemed: fromWeiToEth(escrowRedeemed),
           totalSupply: fromWeiToEth(totalShares),
           availableShares: availableSharesFormatted,
-          fundingDeadline: dueDate,
+          fundingDeadline: fundingDeadline * 1000,
           numberOfInvestors: assetInvestors.length,
           funded: fundingStage === FundingStages.FUNDED,
           listingDate,
