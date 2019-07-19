@@ -88,6 +88,7 @@ export const IntroSlide = ({
           margin: '0 auto',
         }}
         onClick={() => civic.signUp(onClick)}
+        loading={civic.loading}
       />
     )}
   </CarouselSlide>
