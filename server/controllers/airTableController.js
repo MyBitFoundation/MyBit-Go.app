@@ -5,7 +5,7 @@ import * as AssetsController from './assetsController';
 require('dotenv').config();
 const Airtable = require('airtable');
 const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appsalptZgxk3uE94';
-const AIRTABLE_BASE_ASSETS_MAINNET = 'appLhVGxZjvwiBA6Q';
+const AIRTABLE_BASE_ASSETS_MAINNET = 'appvR0rvJg5fg7Kg4';
 export let assetListings;
 export let assetModels;
 let calledGetAssets = false;
