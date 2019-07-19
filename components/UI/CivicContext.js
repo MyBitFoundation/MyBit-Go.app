@@ -1,8 +1,18 @@
 import React, { Component } from "react";
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import getConfig from 'next/config';
 import axios from 'axios';
 export const { Provider, Consumer } = React.createContext({});
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 const CivicButtonWrapper = styled.button`
   display: inline-block;
@@ -30,13 +40,21 @@ const CivicButtonWrapper = styled.button`
     top: 12px;
     left: 12px;
   }
+
+  ${props => props.loading && css`
+    > svg path {
+      transform: rotate(332deg);
+      transform-origin: center;
+      animation: ${rotate} 3s linear infinite;
+    }
+  `}
 `
 export const CivicButton = (props) => (
   <CivicButtonWrapper {...props}>
     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <path d="M3,12 C3,16.7557705 6.8112793,21 12,21 C16.3410645,21 19.8986122,18.5324628 20.9909576,15 L24,15 C22.8386328,20.1411987 18.861084,24 12,24 C4.36572266,24 4.40760283e-16,18.8982832 0,12.0000449 C0,5.10180664 4.38793945,0 12,0 C19.0664062,0 22.8386328,3.85880133 24,9 L20.9909576,9 C19.8986122,5.46744739 16.6115723,3 12,3 C6.49707031,3 3,7.24413967 3,12 Z M12,8 C13.6569,8 15,9.28596049 15,10.872371 C15,12.006383 13.9967,12.9866275 13,13.4535793 L13,17 L11,17 L11,13.4535793 C10.0032,12.9866275 9,12.006383 9,10.872371 C9,9.28596049 10.3432,8 12,8 Z" fill="#FFFFFF" />
     </svg>
-    Connect with Civic
+    {props.loading ? 'Connecting' : ' Connect' } with Civic
   </CivicButtonWrapper>
 )
 
@@ -95,7 +113,7 @@ class CivicProvider extends Component {
     .then(res => {
       const responseIsValid = res.data && res.data.data && Array.isArray(res.data.data);
       const email = responseIsValid ? res.data.data.find(({label}) => label === 'contact.personal.email').value : 'user@mybit.io'
-      this.setState({email}, () => cb && cb());
+      this.setState({email, loading: false}, () => cb && cb());
     })
     .catch(error => console.log(error))
   }
@@ -117,6 +135,7 @@ class CivicProvider extends Component {
   }
 
   handleRead(event) {
+    this.setState({loading: true})
     console.log('Reading QR code...', event);
   }
 
