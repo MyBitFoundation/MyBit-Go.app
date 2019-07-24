@@ -21,9 +21,12 @@ const { Panel } = Collapse;
 import ScrollableAnchor, { goToAnchor } from 'react-scrollable-anchor'
 
 class HelpPage extends React.Component {
+  state = {
+    activeKey: 'Value of MyBit Go',
+  }
   componentDidMount(){
     const anchor = window.location.hash !== '' && window.location.hash;
-    anchor && goToAnchor(anchor.substring(1));
+    anchor && this.setState({activeKey: 'Asset Managers'}, () => goToAnchor(anchor.substring(1)))
   }
 
   render = () => (
@@ -48,7 +51,7 @@ class HelpPage extends React.Component {
           </HelpPageButton>
         ))}
       </HelpPageButtons>
-      <Collapse defaultActiveKey="Asset Managers" onChange={() => {}} accordion>
+      <Collapse activeKey={this.state.activeKey} onChange={(activeKey) => {this.setState({activeKey})}} accordion>
         {FAQ.map(section => (
           <Panel header={section.title} key={section.title}>
             {section.content.map(content => {
