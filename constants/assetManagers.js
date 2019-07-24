@@ -19,7 +19,7 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
           href={`/asset-managers?id=${record.key}`}
         ><a>
         { matches ?
-          <ThreeBoxProfile address={record.key} name long/> :
+          <ThreeBoxProfile address={record.key} icon name long/> :
           <ThreeBoxProfile address={record.key} name short={[4,3]}/>
         }
         </a></Link>
