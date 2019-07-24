@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   Dropdown,
   Menu,
@@ -28,10 +29,22 @@ const separatorStyle = {
   top: '5px',
 }
 
+const MenuWrapper = styled(Menu)`
+  min-height: 268px;
+  max-height: 328px;
+  width: 284px;
+  overflow-y: auto;
+  overflow-x: hidden;
+`
+
 class TokenSelector extends React.Component {
-  state = {
-    selectedToken: DEFAULT_TOKEN,
-    hoveringToken: null,
+  constructor(props){
+    super(props);
+    this.state = {
+      selectedToken: DEFAULT_TOKEN,
+      hoveringToken: null,
+    }
+    this.searchInput = React.createRef();
   }
 
   componentWillMount = () => {
@@ -161,7 +174,7 @@ class TokenSelector extends React.Component {
     const tokenToConvertFrom = hoveringToken && this.getTokenToConvertFrom();
 
     return (
-      <Menu style={{height: '268px', width: '284px', overflowY: 'auto'}}>
+      <MenuWrapper>
         <TokenSelectorSearchWrapper
           key="search"
         >
@@ -169,6 +182,7 @@ class TokenSelector extends React.Component {
             placeholder="Search Token"
             onChange={this.handleSearchInputChanged}
             maxLength={10}
+            ref={input => input && input.focus()}
           />
           <div>
             <TokenSelectorAmount>
@@ -214,7 +228,7 @@ class TokenSelector extends React.Component {
           </Menu.Item>
         )}
       )}
-      </Menu>
+      </MenuWrapper>
     )
   }
 
