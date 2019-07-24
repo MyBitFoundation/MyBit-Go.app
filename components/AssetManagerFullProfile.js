@@ -98,7 +98,7 @@ const AssetManagerFullProfile = ({
         <AddressWrapper>
           <Media query={`(min-width: ${Sizes.tablet}px`}>
             {matches =>
-              matches ? 
+              matches ?
               <ThreeBoxProfile address={managerAddress} name long/> :
               <ThreeBoxProfile address={managerAddress} name/>
             }
@@ -107,7 +107,7 @@ const AssetManagerFullProfile = ({
             href={ExternalLinks.getEtherscanAddressURL(network, managerAddress)}
             target="_blank"
             rel="noreferrer"
-          >View on etherscan</a>
+          >View on Etherscan</a>
         </AddressWrapper>
         <Divider />
         <AssetManagerProfile
