@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import Button from 'antd/lib/button';
-import {omit} from 'lodash';
+import { omit } from 'lodash';
 
 const CarouselWithNavigationButton = styled(props => <Button {...omit(props, CarouselWithNavigationButton.OmitProps)}/>)`
   font-style: normal;

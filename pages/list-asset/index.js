@@ -198,7 +198,6 @@ class ListAssetPage extends React.Component {
     const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
     const tokenSlippagePercentages = calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInPlatformToken)
       .then(tokenSlippagePercentages => {
-        console.log("tokenSlippagePercentages: ", tokenSlippagePercentages)
         this.setState({tokenSlippagePercentages, loadingConversionInfo: false})
       })
   }

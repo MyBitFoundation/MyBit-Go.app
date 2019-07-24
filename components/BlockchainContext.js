@@ -507,19 +507,16 @@ class BlockchainProvider extends React.Component {
     for(const file of fileList){
       toWait.push(addUserFileToIpfs(file.originFileObj ? file.originFileObj : file));
     }
-
-    await Promise.all(toWait);
-    console.log("resolved ipfs upload: ", toWait)
-    if(toWait.length > 0){
-      for(let i=0;i<toWait.length;i++){
-        const ipfs = toWait[i];
+    const ipfsHashes = await Promise.all(toWait);
+    if(ipfsHashes.length > 0){
+      for(let i=0;i<ipfsHashes.length;i++){
+        const ipfs = ipfsHashes[i];
         const fileName = fileList[i].name;
-        filesString+=`${fileName}\\${ipfs}/`
+        filesString+=`${fileName}|${ipfs}|`
       }
     } else {
       filesString = undefined;
     }
-    console.log("filesString: ", filesString)
     return filesString;
   }
 
@@ -611,6 +608,27 @@ class BlockchainProvider extends React.Component {
       }
     }
 
+    const {
+      assetsAirTable,
+    } = this.props.airtableContext;
+
+    const filesInfo = await this.handleIpfsFileUpload(fileList);
+
+    const ipfsHash = await addJsonFileToIpfs({
+      financials,
+      about,
+      risks,
+      fees,
+      country,
+      city,
+      collateralPercentage,
+      assetAddress1,
+      assetAddress2,
+      assetProvince,
+      assetPostalCode,
+      files: filesInfo,
+    })
+
     const onSuccess = async (assetId) => {
       const {
         airtableContext,
@@ -650,6 +668,7 @@ class BlockchainProvider extends React.Component {
         assetProvince,
         assetPostalCode,
         modelId,
+        files: filesInfo,
       }, performInternalAction)
 
       filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
@@ -668,27 +687,6 @@ class BlockchainProvider extends React.Component {
         });
       }
     }
-
-    const {
-      assetsAirTable,
-    } = this.props.airtableContext;
-
-    const filesString = await this.handleIpfsFileUpload(fileList);
-
-    const ipfsHash = await addJsonFileToIpfs({
-      financials,
-      about,
-      risks,
-      fees,
-      country,
-      city,
-      collateralPercentage,
-      assetAddress1,
-      assetAddress2,
-      assetProvince,
-      assetPostalCode,
-      files: filesString,
-    })
 
     await Brain.createAsset({
         onTransactionHash,
@@ -1129,7 +1127,6 @@ class BlockchainProvider extends React.Component {
         if(airtableNetwork === network || !userHasMetamask){
           const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
           const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
-          console.log("Asset managers: ", assetManagers)
           this.setState({
             assets: updatedAssetsWithManagerData,
             assetManagers,

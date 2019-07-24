@@ -5,7 +5,7 @@ const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
-const SIZE_OF_ASSETID = 66;
+const SIZE_OF_ASSETID = 42;
 export let filesByAssetId = {};
 const s3bucket = new AWS.S3({
   accessKeyId,
@@ -15,7 +15,7 @@ const s3bucket = new AWS.S3({
 });
 
 export const handleFileUpload = (files, assetId) => {
-  new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const responseData = [];
     files.map((item) => {
       const params = {

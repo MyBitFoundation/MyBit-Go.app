@@ -224,13 +224,11 @@ export const uploadFilesToAWS = async (
         }
       }
     )
-
     if(performInternalAction){
       performInternalAction();
     } else {
       return result;
     }
-
   } catch(err){
     setTimeout(() => uploadFilesToAWS(assetId, fileList, performInternalAction), 5000);
     debug(err);
@@ -579,7 +577,6 @@ export const fetchAssets = async (userAddress, assetListingsAirtable, assetModel
         };
       }));
 
-      console.log("ALL ASSETS: ", assetDetails)
       resolve(assetDetails);
     } catch (error) {
       debug('failed to fetch assets, error: ', error);
