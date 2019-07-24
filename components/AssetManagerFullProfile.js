@@ -98,9 +98,9 @@ const AssetManagerFullProfile = ({
         <AddressWrapper>
           <Media query={`(min-width: ${Sizes.tablet}px`}>
             {matches =>
-              matches ? 
-              <ThreeBoxProfile address={managerAddress} name long/> :
-              <ThreeBoxProfile address={managerAddress} name/>
+              matches ?
+              <div><ThreeBoxProfile address={managerAddress} icon name long/></div> :
+              <div><ThreeBoxProfile address={managerAddress} icon name/></div>
             }
           </Media>
           <a

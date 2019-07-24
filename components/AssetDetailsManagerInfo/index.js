@@ -50,7 +50,7 @@ const AssetDetailsManagerInfo = ({
         target="_blank"
         rel="noopener noreferrer"
       >
-        <ThreeBoxProfile address={address} name />
+        <ThreeBoxProfile address={address} name icon />
       </AssetDetailsManagerInfoAddress>
       <Divider />
      <AssetManagerProfile
