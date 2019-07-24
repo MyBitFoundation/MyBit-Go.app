@@ -3,6 +3,7 @@ import {
   Slides,
 } from './slides';
 import Router from 'next/router';
+import BancorProvider from 'components/BancorContext';
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: 'What is MyBit Go?' },
@@ -50,14 +51,16 @@ class OnboardingPage extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <CarouselWithNavigation
-          redirectOnClose={this.firstLocation}
-          navigationTooltips={SliderNavigationTooltips}
-          slides={Slides}
-          onFinish={this.finishOnboarding}
-          maxWidthDesktop="600px"
-          nextButtonHasArrow
-        />
+        <BancorProvider>
+          <CarouselWithNavigation
+            redirectOnClose={this.firstLocation}
+            navigationTooltips={SliderNavigationTooltips}
+            slides={Slides}
+            onFinish={this.finishOnboarding}
+            maxWidthDesktop="600px"
+            nextButtonHasArrow
+          />
+        </BancorProvider>
       </React.Fragment>
     )
   }

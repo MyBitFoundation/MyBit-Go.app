@@ -47,7 +47,7 @@ const Links = ({
             rel="noreferrer"
             key={name}
           >
-            <a>{name}</a>
+            {name}
           </a>
         )
       }
