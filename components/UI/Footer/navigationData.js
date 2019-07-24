@@ -5,7 +5,7 @@ export const MyBitGo = () => (
   <Links
     data={[{
       name: 'Explore',
-      url: '/',
+      url: '/explore',
       internal: true,
     }, {
       name: 'Portfolio',

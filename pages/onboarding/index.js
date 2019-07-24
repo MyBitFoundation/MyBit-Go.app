@@ -38,12 +38,16 @@ class OnboardingPage extends React.Component {
     if(window && redirectTo) {
       Router.push('/onboarding');
     }
-
-    this.firstLocation = redirectTo || {
-      href:'/explore',
-      as: '/explore',
-    };
+    this.firstLocation = redirectTo;
+    // The path / should redirect to /explore, user's first visit for example
+    if(!redirectTo || (redirectTo && redirectTo.href === '/' && redirectTo.as === '/')) {
+      this.firstLocation = {
+        href:'/explore',
+        as: '/explore',
+      };
+    }
   }
+
   finishOnboarding = () => {
     Router.push(this.firstLocation.href, this.firstLocation.as);
   }
