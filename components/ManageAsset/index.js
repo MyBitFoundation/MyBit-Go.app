@@ -119,6 +119,7 @@ class ManageAsset extends React.Component {
         <Loading
           message="Loading asset information"
           hasBackButton
+          oldBackButton
         />
       )
     } else if(error){

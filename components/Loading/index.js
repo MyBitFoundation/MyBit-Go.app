@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import Spin from 'static/spin.svg';
 import LoadingWrapper from './loadingWrapper';
 import LoadingMessage from './loadingMessage';
+import GoBackTextAndArrow from 'components/GoBackTextAndArrow';
 import BackButton from 'ui/BackButton';
 
-const Loading = ({ message, hasBackButton }) => (
+const Loading = ({ message, hasBackButton, oldBackButton }) => (
   <div>
-    {hasBackButton && <BackButton />}
+    {hasBackButton ? (oldBackButton ? <BackButton /> : <GoBackTextAndArrow />) : null }
     <LoadingWrapper>
       <Spin style={{ height: '64px', width: '64px' }} />
       <LoadingMessage>
