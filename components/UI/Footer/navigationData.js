@@ -28,6 +28,10 @@ export const MyBitGo = () => (
       name: 'Knowledge Base',
       url: `/help`,
       internal: true,
+    }, {
+      name: 'Onboarding',
+      url: `/onboarding`,
+      internal: true,
     },
   ]}/>
 );

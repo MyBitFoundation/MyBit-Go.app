@@ -17,11 +17,11 @@ const IconWrapper = styled.div`
 const Social = () => (
   <div>
     <IconWrapper>
-      <a href="https://t.me/mybitio" target="_blank" rel="noopener noreferrer"a><Telegram /></a>
-      <a href="https://www.reddit.com/user/MyBit_DApp/" target="_blank" rel="noopener noreferrer"a><Reddit /></a>
-      <a href="https://medium.com/mybit-dapp" target="_blank" rel="noopener noreferrer"a><Medium /></a>
-      <a href="https://www.facebook.com/MyBitDApp/" target="_blank" rel="noopener noreferrer"a><Facebook /></a>
-      <a href="https://twitter.com/MyBit_DApp" target="_blank" rel="noopener noreferrer"a><Twitter /></a>
+      <a href="https://t.me/mybitio" target="_blank" rel="noopener noreferrer"><Telegram /></a>
+      <a href="https://www.reddit.com/user/MyBit_DApp/" target="_blank" rel="noopener noreferrer"><Reddit /></a>
+      <a href="https://medium.com/mybit-dapp" target="_blank" rel="noopener noreferrer"><Medium /></a>
+      <a href="https://www.facebook.com/MyBitDApp/" target="_blank" rel="noopener noreferrer"><Facebook /></a>
+      <a href="https://twitter.com/MyBit_DApp" target="_blank" rel="noopener noreferrer"><Twitter /></a>
     </IconWrapper>
   </div>
 );

@@ -21,7 +21,7 @@ const Image = styled.img`
 
 import {
   withBancorContext,
-} from '../../../components/UI/BancorContainer';
+} from 'components/BancorContext';
 
 const RequiredSetup = withBancorContext(({
   bancorContext,

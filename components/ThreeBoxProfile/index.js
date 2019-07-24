@@ -10,7 +10,7 @@ import {
 } from 'constants/localStorageKeys';
 const ProfileImageIconWrapper = styled.img`
   width: 32px;
-  height: 26.26px;
+  height: 32px;
   border-radius: 50%;
   margin-right: 5px;
   opacity: 0;
