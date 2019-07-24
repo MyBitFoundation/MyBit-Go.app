@@ -84,6 +84,7 @@ class CarouselWithNavigation extends React.Component {
         <CarouselWithNavigationCloseButton>
           <Link
             {...closeButtonProps}
+            passHref
           >
             <a>+</a>
           </Link>

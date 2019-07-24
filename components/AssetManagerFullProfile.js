@@ -107,7 +107,7 @@ const AssetManagerFullProfile = ({
             href={ExternalLinks.getEtherscanAddressURL(network, managerAddress)}
             target="_blank"
             rel="noreferrer"
-          >View on etherscan</a>
+          >View on Etherscan</a>
         </AddressWrapper>
         <Divider />
         <AssetManagerProfile

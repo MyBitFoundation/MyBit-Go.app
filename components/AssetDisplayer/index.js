@@ -44,6 +44,7 @@ class AssetDisplayer extends React.Component{
         <Row>
           {assetsToDisplay.map(asset => (
             <AssetToRender
+              key={asset.assetId}
               {...asset}
               handleAssetFavorited={handleAssetFavorited}
             />
