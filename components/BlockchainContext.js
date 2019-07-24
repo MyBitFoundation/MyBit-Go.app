@@ -705,7 +705,6 @@ class BlockchainProvider extends React.Component {
         collateral: collateralInSelectedToken,
         userAddress,
         paymentTokenAddress,
-        operatorID: operatorId,
         gasPrice,
         ipfs: ipfsHash,
         modelId,
