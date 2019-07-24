@@ -133,6 +133,7 @@ export const AvailableAssetsSlide = ({
   onClick,
   nextButtonDisabled,
   error,
+  autoLocationOffline,
 }) => {
   const {
     category,
@@ -200,7 +201,7 @@ export const AvailableAssetsSlide = ({
               >
                 Different assets will be available to fund depending on where you are.
               </CarouselSlideParagraph>
-              <DetectLocation onClick={handleDetectLocationClicked}>Detect Your Location</DetectLocation>
+              {!autoLocationOffline && <DetectLocation onClick={handleDetectLocationClicked}>Detect Your Location</DetectLocation>}
               <div className="Slider__input-container">
                 <CarouselSlideSelect
                   isCentered
