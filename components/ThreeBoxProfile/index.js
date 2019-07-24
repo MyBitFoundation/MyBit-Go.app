@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components';
 import { withThreeBoxContext } from 'components/ThreeBoxContext';
-import UserIcon from 'static/user_large.svg';
+import Freddy from 'static/freddy.svg';
 import {
     shortenAddress,
 } from 'utils/helpers';
@@ -20,7 +20,7 @@ const ProfileImageIconWrapper = styled.img`
   `}
 `
 
-const UserIconWrapper = styled(UserIcon)`
+const UserIconWrapper = styled(Freddy)`
   position: relative;
   top: 2px;
   margin-right: 5px;
@@ -71,10 +71,9 @@ class ThreeBoxProfile extends React.Component {
 
     render() {
         const { name: profileName, imageIpfs, imageLoaded } = this.state;
-        const { address, icon, name, long, short } = this.props;
+        const { address, icon, name, long, short, showDefault } = this.props;
         const [ startIndex, endIndex ] = short ? short : [6, 4]
-
-        const iconImage = indexImage => imageIpfs &&
+        const iconImage = () =>
             <ProfileImageIconWrapper
                 src={`https://ipfs.infura.io/ipfs/${imageIpfs}`}
                 onLoad={() => this.setState({imageLoaded: true})}
@@ -84,9 +83,9 @@ class ThreeBoxProfile extends React.Component {
         return (
             <React.Fragment>
             {
-                icon && (iconImage ?
-                    iconImage(0) :
-                    <UserIconWrapper />)
+                icon && (imageIpfs ?
+                    iconImage() : showDefault ?
+                    <UserIconWrapper /> : null)
             }
             {
                 name && (profileName ?

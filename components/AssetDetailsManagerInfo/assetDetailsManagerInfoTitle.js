@@ -5,7 +5,6 @@ const AssetDetailsManagerInfoTitle = styled.p`
   display: block;
   font-weight: 600;
   margin-bottom: 10px;
-  display: inline-block;
 }`
 
 export default AssetDetailsManagerInfoTitle;

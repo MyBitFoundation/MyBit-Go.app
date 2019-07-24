@@ -4,6 +4,7 @@ import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
 import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
+import { withMetamaskContext } from 'components/MetamaskContext';
 import BackButton from 'ui/BackButton';
 import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
@@ -17,6 +18,7 @@ class AssetPage extends React.Component {
       blockchainContext,
       threeBoxContext,
       router,
+      metamaskContext,
     } = this.props;
 
     const {
@@ -28,6 +30,8 @@ class AssetPage extends React.Component {
       updateNotification,
       gasPrice,
     } = blockchainContext;
+
+    const { user } = metamaskContext;
 
     const {
       getPosts,
@@ -72,6 +76,7 @@ class AssetPage extends React.Component {
           getProfile={getProfile}
           getAvatar={getAvatar}
           blockchainContext={blockchainContext}
+          isAssetManager={asset.assetManager === user.address}
         />
       )
     }
@@ -88,6 +93,7 @@ class AssetPage extends React.Component {
 const enhance = compose(
   withThreeBoxContext,
   withBlockchainContextPageWrapper,
+  withMetamaskContext,
 );
 
 export default enhance(AssetPage);

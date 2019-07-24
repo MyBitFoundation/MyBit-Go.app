@@ -25,6 +25,7 @@ const AssetDetails = ({
   loadingThreeBox,
   getAvatar,
   blockchainContext,
+  isAssetManager,
 }) => {
   const {
     city,
@@ -96,6 +97,7 @@ const AssetDetails = ({
           address={assetManagerAddress}
           managerPercentage={managerPercentage}
           collateralPercentage={collateralPercentage}
+          isAssetManager={isAssetManager}
         />
       </AssetDetailsRightCol>
     </AssetDetailsWrapper>

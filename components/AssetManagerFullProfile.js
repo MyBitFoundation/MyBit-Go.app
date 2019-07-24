@@ -41,6 +41,21 @@ const Title = styled.p`
 const AddressWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  ${({theme}) => theme.mobileM`
+    font-size: 16px;
+  `}
+
+  span, a {
+    position: relative;
+    top: 2px;
+  }
+`
+
+const ThreeBoxProfileWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `
 
 const AssetManagerFullProfile = ({
@@ -56,6 +71,7 @@ const AssetManagerFullProfile = ({
 
   const {
     network,
+    user,
   } = metamaskContext;
 
   if (loading.assets) {
@@ -82,7 +98,7 @@ const AssetManagerFullProfile = ({
 
   //if the asset manager does not have any live assets, then show all the funded assets instead
   const fundingActive = assetsByManager.find(asset => asset.funded === false) !== undefined
-
+  const isAssetManager = managerAddress === user.address;
   return (
     <div>
       <PageTitle>Asset Manager</PageTitle>
@@ -94,13 +110,12 @@ const AssetManagerFullProfile = ({
         }}
       />
       <ProfileWrapper>
-        <Title>Asset manager</Title>
         <AddressWrapper>
           <Media query={`(min-width: ${Sizes.tablet}px`}>
             {matches =>
               matches ?
-              <div><ThreeBoxProfile address={managerAddress} icon name long/></div> :
-              <div><ThreeBoxProfile address={managerAddress} icon name/></div>
+              <ThreeBoxProfileWrapper><ThreeBoxProfile address={managerAddress} icon name long showDefault={isAssetManager}/></ThreeBoxProfileWrapper> :
+              <ThreeBoxProfileWrapper><ThreeBoxProfile address={managerAddress} icon name showDefault={isAssetManager}/></ThreeBoxProfileWrapper>
             }
           </Media>
           <a
