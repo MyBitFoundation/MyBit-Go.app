@@ -6,6 +6,7 @@ import AssetDetailsInfoTitle from './assetDetailsInfoTitle';
 import AssetDetailsInfoDescription from './assetDetailsInfoDescription';
 import AssetDetailsInfoWrapper from './assetDetailsInfoWrapper';
 import Watch from 'ui/Watch';
+import { InternalLinks } from 'constants/links';
 
 const getFilesToRender = (files, assetId) => {
   if(!files || files.length === 0){
@@ -92,7 +93,7 @@ const AssetDetailsInfo = ({
     <AssetDetailsInfoTitle>
       Supporting documents
     </AssetDetailsInfoTitle>
-    {getFilesToRender(files)}
+    {getFilesToRender(files, assetId)}
   </AssetDetailsInfoWrapper>
 )
 

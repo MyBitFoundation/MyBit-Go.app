@@ -93,6 +93,7 @@ app
     const files = req.files;
 
     await AwsController.handleFileUpload(files, assetId, req, res);
+    res.sendStatus(200);
   });
 
   server.get("/manage/:id", (req, res) => {

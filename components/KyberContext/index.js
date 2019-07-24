@@ -86,8 +86,7 @@ export const getExpectedAndSlippage = async (src, dest, amount) => {
           slippageRate,
         };
       }
-    } catch(err) {
-      console.log(err)
+    } catch {
       // Might mean token is under maintenance
     }
     return null;
@@ -195,12 +194,7 @@ class KyberProvider extends React.Component {
             }
           }
         }));
-
-        console.log(supportedTokensInfo)
       }
-
-
-      //debug("supportedTokensInfo (kyberContext): ", supportedTokensInfo);
       this.setState({
         supportedTokensInfo,
         loading: false,

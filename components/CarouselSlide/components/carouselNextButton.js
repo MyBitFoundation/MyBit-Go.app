@@ -2,8 +2,9 @@ import styled, { css } from 'styled-components';
 import {
   Button,
 } from 'antd';
+import { omit } from 'lodash';
 
-const CarouselNextButtonWrapper = styled(Button)`
+const CarouselNextButtonWrapper = styled(props => <Button {...omit(props, CarouselNextButtonWrapper.OmitProps)}/>)`
   width: 328px;
   margin: 0 auto;
   display: block;
@@ -19,6 +20,11 @@ const CarouselNextButtonWrapper = styled(Button)`
     bottom: 20px;
   `}
 `
+
+CarouselNextButtonWrapper.OmitProps = [
+  'desktopMode',
+]
+
 export const CarouselNextButton = props => (
   <CarouselNextButtonWrapper
     type="primary"

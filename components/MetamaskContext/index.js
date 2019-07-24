@@ -183,22 +183,16 @@ class MetamaskProvider extends Component {
     const { user } = this.state;
     const { supportedNetworks } = this.props;
     const { kyberNetwork } = this.props;
-
     const network = await this.checkNetwork();
-
     const currentAvgBalance = user.avgBalance;
     const currentBalances = user.balances || {};
-
     const updatedTokensWithBalance = {};
     let sumOfBalances = 0;
     let shouldUpdateState = false;
     let avgBalance = 0;
-
-    console.log(supportedTokensInfo, kyberNetwork)
     if(supportedNetworks.includes(network) && kyberNetwork === network){
       const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
       const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
-
       const balances = await Promise.all(Object.entries(supportedTokensInfo).map(async ([
         symbol,
         tokenData,
@@ -222,12 +216,9 @@ class MetamaskProvider extends Component {
           }
         }
       }));
-
       avgBalance = Number(parseFloat(sumOfBalances.toFixed(2)));
-
       if(avgBalance !== currentAvgBalance || Object.keys(currentBalances).length !== Object.keys(updatedTokensWithBalance).length){
         shouldUpdateState = true;
-        console.log(`Updating balances state: different avgBalance: ${avgBalance} !== ${currentAvgBalance} || ${Object.keys(currentBalances).length} !== ${Object.keys(updatedTokensWithBalance).length}`)
       } else {
         for(const token of Object.entries(updatedTokensWithBalance)){
           const [
@@ -235,7 +226,6 @@ class MetamaskProvider extends Component {
             tokenInfo
           ] = token;
           if(currentBalances[symbol].balance !== tokenInfo.balance){
-            console.log(`Updating balances state: different balances! ${symbol}: ${currentBalances[symbol].balance} !== ${tokenInfo.balance}`)
             shouldUpdateState = true;
           }
         }
@@ -244,17 +234,13 @@ class MetamaskProvider extends Component {
       shouldUpdateState = true;
       avgBalance = 0;
     }
-
     /*
     * Temp fix for a race condition between componentDidMount and componentWillReceiveProps
     */
-
     let privacyModeEnabled = this.state.privacyModeEnabled;
-
     if(!privacyModeEnabled){
       privacyModeEnabled = await this.haveAccessToAccounts() ? true : undefined;
     }
-
     if(shouldUpdateState){
       this.setState({
         ...this.state,
@@ -268,7 +254,7 @@ class MetamaskProvider extends Component {
           balances: updatedTokensWithBalance,
           avgBalance: Number(parseFloat(sumOfBalances.toFixed(2))),
         },
-      }, () => console.log("Updated state with new balances: ", this.state));
+      });
     }
   }
 
@@ -306,7 +292,7 @@ class MetamaskProvider extends Component {
         userIsLoggedIn,
         isReadOnlyMode: this.isReadOnlyMode(true, userIsLoggedIn, network, privacyModeEnabled),
         loadingBalancesForNewUser: addressChanged,
-      }, () => console.log("updateStateWithUserInfo(): ", this.state))
+      })
     }
   }
 
@@ -325,7 +311,7 @@ class MetamaskProvider extends Component {
         userIsLoggedIn,
         privacyModeEnabled,
         isReadOnlyMode: this.isReadOnlyMode(true, userIsLoggedIn, network, privacyModeEnabled),
-      }, () => console.log("updateStateNoAccess(): ", this.state))
+      })
     }
   }
 
@@ -419,7 +405,7 @@ class MetamaskProvider extends Component {
       userIsLoggedIn: false,
       loadingBalances: false,
       extensionUrl,
-    }, () => console.log("isBrowserSupported(): ", this.state));
+    });
   }
 
   render() {

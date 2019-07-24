@@ -1,9 +1,15 @@
-const IPFS = require('ipfs-api');
-const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+var ipfsClient = require('ipfs-http-client')
+const ipfs = new ipfsClient('ipfs.infura.io', '5001', {  protocol: 'https' });
 
-const addFileToIpfs = async buffer => {
-  const result = await ipfs.files.add(buffer);
-  return result[0].hash;
+export const addFileToIpfs = async data => {
+  try{
+    const result = await ipfs.add(data);
+    const ipfsHash = result[result.length - 1].hash;
+    return ipfsHash;
+  } catch(err){
+    console.log(err)
+    return null;
+  }
 }
 
 export const addJsonFileToIpfs = async obj => {
@@ -15,10 +21,13 @@ export const addJsonFileToIpfs = async obj => {
   }
 }
 
-export const addUserFileToIpfs = async obj => {
+export const addUserFileToIpfs = file => {
   try{
-    const buffer = Buffer.from(obj);
-    return addFileToIpfs(buffer);
+    const fileDetails = {
+      path: file.name,
+      content: file
+    }
+    return addFileToIpfs(fileDetails);
   } catch(err){
     console.log(err);
   }
