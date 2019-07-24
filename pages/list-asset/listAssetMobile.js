@@ -45,6 +45,7 @@ const ListAssetMobile = ({
   loadingBalancesForNewUser,
   loadingConversionInfo,
   tokenSlippagePercentages,
+  autoLocationOffline,
 }) => {
   const {
     category,
@@ -101,6 +102,7 @@ const ListAssetMobile = ({
             handleCitySuggest={handleCitySuggest}
             error={false || metamaskErrorsToRender.render}
             airtableContext={airtableContext}
+            autoLocationOffline={autoLocationOffline}
           />
         ), buttons: {
           hasNextButton: true,

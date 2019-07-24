@@ -90,6 +90,7 @@ const ListAssetDesktop = ({
   loadingBalancesForNewUser,
   loadingConversionInfo,
   tokenSlippagePercentages,
+  autoLocationOffline,
 }) => {
   const {
     category,
@@ -156,6 +157,7 @@ const ListAssetDesktop = ({
           onClick={goToNextStep}
           error={false || metamaskErrorsToRender.render}
           airtableContext={airtableContext}
+          autoLocationOffline={autoLocationOffline}
         />
       )}
       {step === 2 && (
