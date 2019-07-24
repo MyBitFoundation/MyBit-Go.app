@@ -81,24 +81,31 @@ class AirtableProvider extends React.PureComponent {
     clearInterval(this.intervalPullCategories);
   }
 
-  forceRefresh = network => {
-    this.getAssets(network);
+  forceRefresh = async (network) => {
+    await this.getAssets(network);
   }
 
   getFiles = filesString => {
+    const ipfsFiles = [];
     try{
       if(filesString){
-        const files = [];
-        const filesArr = files.split('\\');
+        const filesArr = filesString.split('|');
         for(let i=0;i<filesArr.length;i+=2){
-          const fileName = filesArr[i];
-          const fileIpfs = filesArr[i+1];
+          if(i+1 < filesArr.length){
+            const fileName = filesArr[i];
+            const ipfs = filesArr[i+1];
+            ipfsFiles.push({
+              fileName,
+              ipfs,
+            })
+          }
         }
       }
     }
     catch(err){
       console.log("Error getting asset with filesString: ", filesString)
     }
+    return ipfsFiles;
   }
 
   getLocationFromString = locations => {
@@ -158,7 +165,7 @@ class AirtableProvider extends React.PureComponent {
         assetAddress2: fields['Street Number'],
         assetProvince: fields['Province'],
         assetPostalCode: fields['Postal Code'],
-        files: this.getFiles(fields['Files']),
+        ipfsFiles: this.getFiles(fields['Files']),
       }
     })
     return assetListings;
@@ -168,38 +175,43 @@ class AirtableProvider extends React.PureComponent {
     this.setState({assetsAirTable: newAssetModelsWithOperatorInfo})
   }
 
-  getAssets = async network => {
-    const { userHasMetamask } = this.props;
-    network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
 
-    if(network){
-      let [assetModels, assetListings] = await Promise.all([
-        fetch(InternalLinks.getAirtableAssetModels(network)),
-        fetch(InternalLinks.getAirtableAssetListings(network)),
-      ]);
-      [assetModels, assetListings] = await Promise.all([
-        assetModels.json(),
-        assetListings.json(),
-      ]);
-      const { records: modelsRecords  } = assetModels;
-      const { records: listingsRecords  } = assetListings;
+  getAssets = network => {
+    return new Promise(async (res) => {
+      try{
+        const { userHasMetamask } = this.props;
+        network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
 
-      const assetModelsFiltered = verifyDataAirtable(AIRTABLE_ASSET_MODELS, modelsRecords);
-      const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
-      const assetModelsProcessed = this.processAssetModels(assetModelsFiltered);
-      const assetListingsProcessed = this.processAssetListings(assetListingsFiltered, assetModelsProcessed);
-      console.log("assetlistingsAirTable: ", assetListingsProcessed)
-      console.log("assetModelsAirTable: ", assetModelsProcessed)
-      /*
-      * we save the network in the state to make sure fetchAssets() in brain.js
-      * uses the correct airtable data when pulling the assets, from the correct network
-      */
-      this.setState({
-        assetsAirTable: assetModelsProcessed,
-        assetsAirTableById: assetListingsProcessed,
-        network,
-      });
-    }
+        if(network){
+          let [assetModels, assetListings] = await Promise.all([
+            fetch(InternalLinks.getAirtableAssetModels(network)),
+            fetch(InternalLinks.getAirtableAssetListings(network)),
+          ]);
+          [assetModels, assetListings] = await Promise.all([
+            assetModels.json(),
+            assetListings.json(),
+          ]);
+          const { records: modelsRecords  } = assetModels;
+          const { records: listingsRecords  } = assetListings;
+
+          const assetModelsFiltered = verifyDataAirtable(AIRTABLE_ASSET_MODELS, modelsRecords);
+          const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
+          const assetModelsProcessed = this.processAssetModels(assetModelsFiltered);
+          const assetListingsProcessed = this.processAssetListings(assetListingsFiltered, assetModelsProcessed);
+          /*
+          * we save the network in the state to make sure fetchAssets() in brain.js
+          * uses the correct airtable data when pulling the assets, from the correct network
+          */
+          this.setState({
+            assetsAirTable: assetModelsProcessed,
+            assetsAirTableById: assetListingsProcessed,
+            network,
+          }, () => res());
+        }
+      }catch(err){
+        res({err: err})
+      }
+    });
   }
 
   getCategoriesForAssets = (country, city) => {

@@ -8,8 +8,10 @@ import {
 import {
   PLATFORM_TOKEN,
 } from 'constants/app';
+import { omit } from 'lodash';
 
-const CustomTimelineWrapper = styled(Timeline)`
+
+const CustomTimelineWrapper = styled(props => <Timeline {...omit(props, CustomTimelineWrapper.OmitProps)} />)`
   .ant-timeline-item-content{
     margin: 0 0 0 22px;
     top: -4px;
@@ -31,6 +33,10 @@ const CustomTimelineWrapper = styled(Timeline)`
     }
   `}
 `
+
+CustomTimelineWrapper.OmitProps = [
+  'listedAssetId',
+]
 
 const CustomTimeline = React.memo(({
   step,
