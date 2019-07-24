@@ -75,4 +75,10 @@ export const CarouselSlideParagraph = styled.p`
       text-align: center;
     `}
   `}
+
+  ${props => props.removeFocus && css`
+    a:focus{
+      text-decoration: none;
+    }
+  `}
 }`

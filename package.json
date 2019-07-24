@@ -51,6 +51,7 @@
     "react-media": "1.9.2",
     "react-resize-detector": "3.4.0",
     "react-router-dom": "4.3.1",
+    "react-scrollable-anchor": "^0.6.1",
     "react-twitter-conversion-tracker": "1.0.0",
     "recompose": "0.30.0",
     "styled-components": "4.1.3",

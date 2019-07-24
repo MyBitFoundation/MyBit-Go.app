@@ -201,6 +201,7 @@ const sectionAssetManagers = [{
   answer: 'Asset managers are paid a fraction of the total asset revenue as it is generated.',
 }, {
   question: 'How is asset manager collateral calculated?',
+  anchor: true,
   answer: <React.Fragment>Asset collateral is standardised based on payment channels of asset management and asset manager history as described below.<br /><br />
 
 Based on Asset Manager History:<br />

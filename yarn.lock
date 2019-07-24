@@ -9226,6 +9226,11 @@ jsx-ast-utils@^2.0.1:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
 
+jump.js@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jump.js/-/jump.js-1.0.1.tgz#0de2b1631ba9a1c2c6b8572ad277d877e8503600"
+  integrity sha1-DeKxYxupocLGuFcq0nfYd+hQNgA=
+
 just-debounce-it@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/just-debounce-it/-/just-debounce-it-1.1.0.tgz#8e92578effc155358a44f458c52ffbee66983bef"
@@ -13043,7 +13048,7 @@ pull-utf8-decoder@^1.0.2:
   resolved "https://registry.yarnpkg.com/pull-utf8-decoder/-/pull-utf8-decoder-1.0.2.tgz#a7afa2384d1e6415a5d602054126cc8de3bcbce7"
   integrity sha1-p6+iOE0eZBWl1gIFQSbMjeO8vOc=
 
-"pull-ws@github:hugomrdias/pull-ws#fix/bundle-size":
+pull-ws@hugomrdias/pull-ws#fix/bundle-size:
   version "3.3.1"
   resolved "https://codeload.github.com/hugomrdias/pull-ws/tar.gz/8e2ce0bb3b1cd6804828316e937fff8e0bef6225"
   dependencies:
@@ -13786,6 +13791,14 @@ react-router@^4.3.1:
     path-to-regexp "^1.7.0"
     prop-types "^15.6.1"
     warning "^4.0.1"
+
+react-scrollable-anchor@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-scrollable-anchor/-/react-scrollable-anchor-0.6.1.tgz#fd6e78026c744f76414053d06903b82adccb54d9"
+  integrity sha1-/W54Amx0T3ZBQFPQaQO4KtzLVNk=
+  dependencies:
+    jump.js "1.0.1"
+    prop-types "^15.5.10"
 
 react-slick@~0.23.2:
   version "0.23.2"
@@ -14870,7 +14883,7 @@ simple-statistics@~6.1.0:
   resolved "https://registry.yarnpkg.com/simple-statistics/-/simple-statistics-6.1.1.tgz#e3a0799ffc49914d6f421c5a4ac585f6a13e2bad"
   integrity sha512-zGwn0DDRa9Zel4H4n2pjTFIyGoAGpnpjrGIctreCxj5XWrcx9v7Xy7270FkC967WMmcvuc8ZU7m0ZG+hGN7gAA==
 
-"sjcl@github:civicteam/sjcl":
+sjcl@civicteam/sjcl.git:
   version "1.0.8"
   resolved "https://codeload.github.com/civicteam/sjcl/tar.gz/74fcc71a486a41d39200767d9235f6eac9e51f26"
 
@@ -17732,7 +17745,6 @@ websocket@^1.0.28:
 
 "websocket@git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible":
   version "1.0.26"
-  uid "6c72925e3f8aaaea8dc8450f97627e85263999f2"
   resolved "git://github.com/frozeman/WebSocket-Node.git#6c72925e3f8aaaea8dc8450f97627e85263999f2"
   dependencies:
     debug "^2.2.0"
