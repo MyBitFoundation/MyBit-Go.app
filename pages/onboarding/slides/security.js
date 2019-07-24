@@ -10,8 +10,8 @@ import {
 
 const Image = styled.img`
   position: absolute;
-  top: 57px;
-  right: 240px;
+  top: 84px;
+  right: 205px;
   width: 50px;
   display: none !important;
 
