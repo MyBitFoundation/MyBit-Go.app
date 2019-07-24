@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import {
   CarouselSlide,
@@ -172,9 +173,13 @@ export const CollateralSlide = ({
       <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
+        removeFocus
       >
         This a type of decentralised insurance for investors. It is calculated
-        based on the type of asset and your history as an asset manager. <a>Learn More</a>
+        based on the type of asset and your history as an asset manager.
+        <a href="/help#How%20is%20asset%20manager%20collateral%20calculated?" target="_blank">
+          {' '}Learn More
+        </a>
       </CarouselSlideParagraph>
       {kyberLoading && (
         <React.Fragment>
