@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import Link from 'next/link'
 import AssetDetailsMananagerInfo from './assetDetailsMananagerInfo';
 import AssetDetailsManagerInfoTitle from './assetDetailsManagerInfoTitle';
@@ -19,39 +20,43 @@ import Divider from 'ui/Divider';
 
 const Colors = Theming.colors;
 
+const UserWrapper = styled.a`
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  ${({theme}) => theme.mobileM`
+    font-size: 16px;
+  `}
+
+  span {
+    position: relative;
+    top: 2px;
+  }
+`
+
 const AssetDetailsManagerInfo = ({
   address,
   managerPercentage,
   collateralPercentage,
   style,
   assetManager,
+  isAssetManager,
 }) => (
   <AssetDetailsMananagerInfo
     style={style}
   >
     <div>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-        <AssetDetailsManagerInfoTitle>
-          Asset manager
-        </AssetDetailsManagerInfoTitle>
-        <Link
-          as={`/asset-managers/${address}`}
-          href={`/asset-managers?id=${address}`}
-        >
-          <a style={{fontSize: '16px'}}>Full Info</a>
-        </Link>
-      </div>
-      <AssetDetailsManagerInfoAddress
-        href={`https://ropsten.etherscan.io/address/${address}`}
-        target="_blank"
-        rel="noopener noreferrer"
+      <AssetDetailsManagerInfoTitle>
+        Asset manager
+      </AssetDetailsManagerInfoTitle>
+      <Link
+        as={`/asset-managers/${address}`}
+        href={`/asset-managers?id=${address}`}
       >
-        <ThreeBoxProfile address={address} name />
-      </AssetDetailsManagerInfoAddress>
+        <UserWrapper>
+          <ThreeBoxProfile address={address} name icon showDefault={isAssetManager} />
+        </UserWrapper>
+      </Link>
       <Divider />
      <AssetManagerProfile
         {...assetManager}

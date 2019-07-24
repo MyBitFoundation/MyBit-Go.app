@@ -6,6 +6,7 @@ const AssetDetailsManagerInfoAddress = styled.a`
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 16px;
+  width: max-content;
   :focus{
     text-decoration: none;
   }
