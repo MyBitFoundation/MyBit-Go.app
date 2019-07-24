@@ -21,14 +21,14 @@ class AllAssetManagers extends React.Component {
       columnKey: 'date',
     },
     filteredInfo: {},
+    loadingManagersData: true,
   };
 
   handleChange = (pagination, filters, sorter) => {
     this.setState({
       sortedInfo: sorter,
       filteredInfo: filters,
-      loadingManagersData: true,
-    });
+    }, this.getData);
   }
 
   componentWillMount = () => {

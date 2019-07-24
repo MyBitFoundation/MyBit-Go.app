@@ -260,6 +260,7 @@ class ListAssetPage extends React.Component {
           })
         },
         error => {
+          this.setState({autoLocationOffline: true})
           console.error(error);
         }
       );
@@ -368,6 +369,7 @@ class ListAssetPage extends React.Component {
       step,
       checkedToS,
       tokenSlippagePercentages,
+      autoLocationOffline,
      } = this.state;
 
     const {
@@ -405,6 +407,7 @@ class ListAssetPage extends React.Component {
       loadingBalancesForNewUser,
       loadingConversionInfo,
       tokenSlippagePercentages,
+      autoLocationOffline,
       tokenWithSufficientBalance: tokenWithSufficientBalance !== undefined,
       setCheckedToS: this.setCheckedToS,
       handleSelectChange: this.handleSelectChange,

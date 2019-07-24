@@ -3,6 +3,7 @@ import {
   Slides,
 } from './slides';
 import Router from 'next/router';
+import BancorProvider from 'components/BancorContext';
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: 'What is MyBit Go?' },
@@ -37,12 +38,16 @@ class OnboardingPage extends React.Component {
     if(window && redirectTo) {
       Router.push('/onboarding');
     }
-
-    this.firstLocation = redirectTo || {
-      href:'/explore',
-      as: '/explore',
-    };
+    this.firstLocation = redirectTo;
+    // The path / should redirect to /explore, user's first visit for example
+    if(!redirectTo || (redirectTo && redirectTo.href === '/' && redirectTo.as === '/')) {
+      this.firstLocation = {
+        href:'/explore',
+        as: '/explore',
+      };
+    }
   }
+
   finishOnboarding = () => {
     Router.push(this.firstLocation.href, this.firstLocation.as);
   }
@@ -50,14 +55,16 @@ class OnboardingPage extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <CarouselWithNavigation
-          redirectOnClose={this.firstLocation}
-          navigationTooltips={SliderNavigationTooltips}
-          slides={Slides}
-          onFinish={this.finishOnboarding}
-          maxWidthDesktop="600px"
-          nextButtonHasArrow
-        />
+        <BancorProvider>
+          <CarouselWithNavigation
+            redirectOnClose={this.firstLocation}
+            navigationTooltips={SliderNavigationTooltips}
+            slides={Slides}
+            onFinish={this.finishOnboarding}
+            maxWidthDesktop="600px"
+            nextButtonHasArrow
+          />
+        </BancorProvider>
       </React.Fragment>
     )
   }

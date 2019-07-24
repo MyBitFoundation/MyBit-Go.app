@@ -17,7 +17,6 @@ export const AIRTABLE_ASSET_LISTINGS = [
   'Financials',
   'Risks',
   'About',
-  'Fees',
   'City',
   'Country',
   'Collateral Percentage',

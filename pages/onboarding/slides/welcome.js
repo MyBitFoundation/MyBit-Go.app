@@ -9,7 +9,7 @@ import {
 const Image = styled.img`
   position: absolute;
   top: 40px;
-  right: 40px;
+  right: 20px;
   width: 72px;
   display: none !important;
 
