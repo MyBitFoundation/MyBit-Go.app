@@ -19,7 +19,7 @@ import WatchListFilters from './watchListFilters';
 import WatchListSwitch from './watchListSwitch';
 import NoResults from 'components/NoResults';
 import AssetDisplayer from 'components/AssetDisplayer';
-
+import { DefaultAsset } from 'ui/Asset';
 const assetsPerPage = 12;
 
 class WatchListPage extends React.Component {
@@ -72,7 +72,7 @@ class WatchListPage extends React.Component {
         </WatchListFilters>
         <AssetDisplayer
           assets={assetsFiltered}
-          type="default"
+          assetToRender={DefaultAsset}
           handleAssetFavorited={handleAssetFavorited}
         />
       </React.Fragment>
