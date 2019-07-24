@@ -78,6 +78,7 @@ const AssetManagerFullProfile = ({
     return (
       <Loading
         message="Loading Asset Manager"
+        hasBackButton
       />
     );
   }

@@ -5,7 +5,7 @@ import AssetDetails from 'components/AssetDetails';
 import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
 import { withMetamaskContext } from 'components/MetamaskContext';
-import BackButton from 'ui/BackButton';
+import GoBackTextAndArrow from 'components/GoBackTextAndArrow';
 import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
 
@@ -83,7 +83,7 @@ class AssetPage extends React.Component {
 
     return(
       <React.Fragment>
-        <BackButton />
+        <GoBackTextAndArrow />
         {toRender}
       </React.Fragment>
     )
