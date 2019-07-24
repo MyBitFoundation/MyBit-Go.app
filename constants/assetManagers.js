@@ -14,16 +14,15 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
   render: (text, record) => (
     <Media query="(min-width: 769px)">
       {matches =>
-        <a
-          href={ExternalLinks.getEtherscanAddressURL(network, record.key)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-        { matches ? 
+        <Link
+          as={`/asset-managers/${record.key}`}
+          href={`/asset-managers?id=${record.key}`}
+        ><a>
+        { matches ?
           <ThreeBoxProfile address={record.key} name long/> :
           <ThreeBoxProfile address={record.key} name short={[4,3]}/>
         }
-        </a>
+        </a></Link>
       }
     </Media>
   )
@@ -48,18 +47,6 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
   sorter: (a, b) => a.totalRevenue - b.totalRevenue,
   sortOrder: sortedInfo.columnKey === 'revenue' && sortedInfo.order,
   render: (text, record) => formatMonetaryValue(record.totalRevenue)
-}, {
-  title: '',
-  dataIndex: '',
-  key: 'x',
-  render: (text, record) => (
-    <Link
-      as={`/asset-managers/${record.key}`}
-      href={`/asset-managers?id=${record.key}`}
-    >
-      <a>All Assets</a>
-    </Link>
-  ),
 }];
 
 export default GetColumns;
