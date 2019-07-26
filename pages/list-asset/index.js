@@ -10,7 +10,7 @@ import {
 import getConfig from 'next/config';
 import Cookie from 'js-cookie';
 import Geocode from "react-geocode";
-import { withMetamaskContext } from 'components/MetamaskContext';
+import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
@@ -444,7 +444,7 @@ class ListAssetPage extends React.Component {
 const enhance = compose(
   withKyberContext,
   withBlockchainContext,
-  withMetamaskContext,
+  withMetamaskContextPageWrapper,
   withCivicContext,
   withTermsOfServiceContext,
   withAirtableContext,

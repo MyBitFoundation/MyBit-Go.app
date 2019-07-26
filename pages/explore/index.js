@@ -1,6 +1,6 @@
 import { compose } from 'recompose'
 import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
-import { withMetamaskContext } from 'components/MetamaskContext';
+import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import { LocalStorageKeys } from 'constants/localStorageKeys';
 import {
   getValueFromLocalStorage,
@@ -46,7 +46,7 @@ const Explore = ({
 
 const enhance = compose(
   withBlockchainContextPageWrapper,
-  withMetamaskContext,
+  withMetamaskContextPageWrapper,
 );
 
 export default enhance(Explore);

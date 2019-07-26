@@ -1,5 +1,5 @@
 export const PULL_ASSETS_TIME = 1000 * 60;
-export const PULL_CATEGORIES_TIME = 1000 * 60;
+
 export const AIRTABLE_ASSET_MODELS = [
   'Asset',
   'Category',
@@ -25,10 +25,10 @@ export const AIRTABLE_ASSET_LISTINGS = [
   'Postal Code',
 ];
 
-export const AIRTABLE_CATEGORIES_RULES = [
-  'Category',
-  'byte32',
-  'Category Contract',
+export const AIRTABLE_OPERATORS = [
+  'Operator ID',
+  'Name',
+  'Files',
 ];
 
 // make sure the data from airtable is correct

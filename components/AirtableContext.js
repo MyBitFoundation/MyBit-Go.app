@@ -3,6 +3,7 @@ import {
   AIRTABLE_ASSET_MODELS,
   AIRTABLE_ASSET_LISTINGS,
   AIRTABLE_CATEGORIES_RULES,
+  AIRTABLE_ASSET_OPERATORS,
   verifyDataAirtable,
   PULL_ASSETS_TIME,
   PULL_CATEGORIES_TIME,
@@ -128,6 +129,19 @@ class AirtableProvider extends React.PureComponent {
     return location;
   }
 
+  processOperators = data => {
+    const operators = {};
+    data.forEach(({fields}) => {
+      assetModels[fields['Operator ID']] = {
+        name: fields['Name'],
+        imageSrc: `https://s3.eu-central-1.amazonaws.com/mybit-go/assetImages:${fields['Image']}`,
+        files: this.getFiles(fields['Files']),
+      }
+    })
+
+    return assetModels;
+  }
+
   processAssetModels = data => {
     const assetModels = {};
     data.forEach(({fields}) => {
@@ -172,7 +186,7 @@ class AirtableProvider extends React.PureComponent {
   }
 
   updateAssetModels = newAssetModelsWithOperatorInfo => {
-    this.setState({assetsAirTable: newAssetModelsWithOperatorInfo})
+    this.setState({assetModels: newAssetModelsWithOperatorInfo})
   }
 
 
@@ -186,6 +200,7 @@ class AirtableProvider extends React.PureComponent {
           let [assetModels, assetListings] = await Promise.all([
             fetch(InternalLinks.getAirtableAssetModels(network)),
             fetch(InternalLinks.getAirtableAssetListings(network)),
+            fetch(InternalLinks.getAirtableOperators(network)),
           ]);
           [assetModels, assetListings] = await Promise.all([
             assetModels.json(),
@@ -193,18 +208,22 @@ class AirtableProvider extends React.PureComponent {
           ]);
           const { records: modelsRecords  } = assetModels;
           const { records: listingsRecords  } = assetListings;
+          const { records: operatorsRecords  } = assetListings;
 
           const assetModelsFiltered = verifyDataAirtable(AIRTABLE_ASSET_MODELS, modelsRecords);
           const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
+          const operatorsFiltered = verifyDataAirtable(AIRTABLE_ASSET_OPERATORS, operatorsRecords);
           const assetModelsProcessed = this.processAssetModels(assetModelsFiltered);
-          const assetListingsProcessed = this.processAssetListings(assetListingsFiltered, assetModelsProcessed);
+          const operatorsProcessed = this.processOperators(operatorsFiltered)
+          const assetListingsProcessed = this.processAssetListings(assetListingsFiltered);
           /*
           * we save the network in the state to make sure fetchAssets() in brain.js
           * uses the correct airtable data when pulling the assets, from the correct network
           */
           this.setState({
-            assetsAirTable: assetModelsProcessed,
-            assetsAirTableById: assetListingsProcessed,
+            assetModels: assetModelsProcessed,
+            assetListings: assetListingsProcessed,
+            operators: operatorsProcessed,
             network,
           }, () => res());
         }
@@ -212,51 +231,6 @@ class AirtableProvider extends React.PureComponent {
         res({err: err})
       }
     });
-  }
-
-  getCategoriesForAssets = (country, city) => {
-    const {
-      assetsAirTable,
-      categoriesAirTable,
-    } = this.state;
-
-    const categories = {};
-
-    if(!assetsAirTable){
-      return {};
-    }
-
-    for(const key in assetsAirTable){
-      const asset = assetsAirTable[key];
-      const {
-        category,
-        location,
-      } = asset;
-
-      let shouldAdd = false;
-      /*
-      * If the asset does not have a specified location
-      * then anyone from anywhere can list it
-      */
-      if(!location){
-        shouldAdd = true;
-      }
-      /*
-      * The user's country needs to an allowed location for the asset
-      * and either the city also matches or there are no city specified
-      * which means the user is eligible to list this asset
-      */
-      else if((location && location[country] && Array.isArray(location[country]) && (location && location[country].includes(city.toLowerCase())) || (location && location[country] && Object.keys(location[country]).length === 0))){
-        shouldAdd = true;
-      }
-      if(shouldAdd){
-        if(!categories[category]){
-          categories[category] = [];
-        }
-        categories[category].push(asset);
-      }
-    }
-    return categories;
   }
 
   render(){

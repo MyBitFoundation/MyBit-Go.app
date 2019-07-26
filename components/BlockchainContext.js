@@ -94,6 +94,7 @@ class BlockchainProvider extends React.Component {
       },
       transactions: [],
       assets: [],
+      assetsLoading: [],
       fetchAssets: this.fetchAssets,
       fetchTransactionHistory: this.fetchTransactionHistory,
       fundAsset: this.fundAsset,
@@ -220,6 +221,50 @@ class BlockchainProvider extends React.Component {
     this.setState({
       gasPrice,
     })
+  }
+
+  getCategoriesForAssets = (country, city) => {
+    const {
+      assetModels,
+    } = this.state;
+
+    const categories = {};
+
+    if(!assetModels){
+      return {};
+    }
+
+    for(const key in assetModels){
+      const asset = assetModels[key];
+      const {
+        category,
+        location,
+      } = asset;
+
+      let shouldAdd = false;
+      /*
+      * If the asset does not have a specified location
+      * then anyone from anywhere can list it
+      */
+      if(!location){
+        shouldAdd = true;
+      }
+      /*
+      * The user's country needs to an allowed location for the asset
+      * and either the city also matches or there are no city specified
+      * which means the user is eligible to list this asset
+      */
+      else if((location && location[country] && Array.isArray(location[country]) && (location && location[country].includes(city.toLowerCase())) || (location && location[country] && Object.keys(location[country]).length === 0))){
+        shouldAdd = true;
+      }
+      if(shouldAdd){
+        if(!categories[category]){
+          categories[category] = [];
+        }
+        categories[category].push(asset);
+      }
+    }
+    return categories;
   }
 
   pullFileInfoForAssets = async (assets) => {
@@ -527,7 +572,6 @@ class BlockchainProvider extends React.Component {
 
     const {
       metamaskContext,
-      airtableContext,
       notificationsContext,
     } = this.props;
 
@@ -556,7 +600,6 @@ class BlockchainProvider extends React.Component {
       assetPostalCode,
     } = formData;
 
-    const { categoriesAirTable } = airtableContext;
     const { buildNotification } = notificationsContext;
 
     const {

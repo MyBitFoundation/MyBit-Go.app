@@ -1323,10 +1323,10 @@
     "@hapi/bourne" "1.x.x"
     "@hapi/hoek" "6.x.x"
 
-"@mybit/contracts@0.1.30":
-  version "0.1.30"
-  resolved "https://registry.yarnpkg.com/@mybit/contracts/-/contracts-0.1.30.tgz#684ff32433d2a3c7560b9a013e0fc80fdcc4be32"
-  integrity sha512-gXTjfuMA1s2EaptaW3RGdQ9LzcPk1KL0MAqPev2UEpqaJU3/XefDHXBzIG9OmZFqgPSQkxD7N2+aZPFJ4Q18HA==
+"@mybit/contracts@0.1.33":
+  version "0.1.33"
+  resolved "https://registry.yarnpkg.com/@mybit/contracts/-/contracts-0.1.33.tgz#d90221fb2427039461543276a458682d464db56c"
+  integrity sha512-9aXNCrJBDy5HIUYe6h2axU9Y+D04oacaXEyVDLLFu5nD3LAqHkJxQbGT0fAnhvAUnvomC4O4nEYmJ/R5s1zd/A==
   dependencies:
     bignumber.js "^7.2.1"
     ethereumjs-util "^6.0.0"
@@ -1341,12 +1341,12 @@
     web3-eth-abi "1.0.0-beta.36"
     web3-utils "1.0.0-beta.36"
 
-"@mybit/network.js@0.0.44":
-  version "0.0.44"
-  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.44.tgz#ad2e292c3578056d421ae6c07841edb3f08c847f"
-  integrity sha512-mG7uCC/9lnTDYofPPp6Khmd9XFWK+sSEYmt54wVEraWlT0yDbp90p44G88DFNDbe+xJbgcymjZscffa0gvsXJg==
+"@mybit/network.js@0.0.45":
+  version "0.0.45"
+  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.45.tgz#b7d46f134b317e7ce6333b496495cefbeb11fc3a"
+  integrity sha512-rKDE1a/VXeKZT/1Rz9QweRykq0+D+eEJhcQayUBMzpYwTDmxAL8m7F6wfdZSHlk2TtYfKBONinwka5KNwGEATg==
   dependencies:
-    "@mybit/contracts" "0.1.30"
+    "@mybit/contracts" "0.1.33"
     bignumber.js "^8.0.2"
     web3 "1.0.0-beta.36"
 
@@ -13025,7 +13025,7 @@ pull-utf8-decoder@^1.0.2:
   resolved "https://registry.yarnpkg.com/pull-utf8-decoder/-/pull-utf8-decoder-1.0.2.tgz#a7afa2384d1e6415a5d602054126cc8de3bcbce7"
   integrity sha1-p6+iOE0eZBWl1gIFQSbMjeO8vOc=
 
-"pull-ws@github:hugomrdias/pull-ws#fix/bundle-size":
+pull-ws@hugomrdias/pull-ws#fix/bundle-size:
   version "3.3.1"
   resolved "https://codeload.github.com/hugomrdias/pull-ws/tar.gz/8e2ce0bb3b1cd6804828316e937fff8e0bef6225"
   dependencies:
@@ -14860,7 +14860,7 @@ simple-statistics@~6.1.0:
   resolved "https://registry.yarnpkg.com/simple-statistics/-/simple-statistics-6.1.1.tgz#e3a0799ffc49914d6f421c5a4ac585f6a13e2bad"
   integrity sha512-zGwn0DDRa9Zel4H4n2pjTFIyGoAGpnpjrGIctreCxj5XWrcx9v7Xy7270FkC967WMmcvuc8ZU7m0ZG+hGN7gAA==
 
-"sjcl@github:civicteam/sjcl":
+sjcl@civicteam/sjcl.git:
   version "1.0.8"
   resolved "https://codeload.github.com/civicteam/sjcl/tar.gz/74fcc71a486a41d39200767d9235f6eac9e51f26"
 

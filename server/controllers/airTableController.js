@@ -12,6 +12,36 @@ let calledGetAssets = false;
 // TODO Change to AIRTABLE_BASE_ASSETS_MAINNET once live on mainnet
 const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS_ROPSTEN);
 
+const getOperators = async () => {
+  return new Promise(async (resolve, reject) => {
+    const operators = {};
+    base('Operators').select().eachPage((records, fetchNextPage) => {
+      records.forEach(record => {
+        const operatorID = record.get('Operator ID');
+        const name = record.get('Name');
+        const files = record.get('Files');
+        assetModels[operatorId] = {
+          name,
+          files,
+        };
+      });
+
+      // To fetch the next page of records, call `fetchNextPage`.
+      // If there are more records, `page` will get called again.
+      // If there are no more records, `done` will get called.
+      fetchNextPage();
+
+    }, error =>  {
+      if (error) {
+        console.error(error);
+        reject();
+      } else {
+        resolve(assetModels);
+      }
+    });
+  })
+}
+
 const getAssetModels = async () => {
   return new Promise(async (resolve, reject) => {
     const assetModels = {};
@@ -111,8 +141,15 @@ const getAssetListings = async assetModels => {
 }
 const getAllAssetsById = async (newAsset = false) => {
   try{
-    assetModels = await getAssetModels();
-    assetListings = await getAssetListings(assetModels);
+    [
+      assetOperators,
+      assetModels,
+      assetListings,
+    ] = await Promise.all([
+      getOperators,
+      getAssetModels,
+      getAssetListings,
+    ])
     if(!calledGetAssets || newAsset){
       // trigger the first run
       AssetsController.getAssets();

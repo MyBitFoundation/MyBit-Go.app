@@ -1,5 +1,5 @@
 import { compose } from 'recompose'
-import { withMetamaskContext } from 'components/MetamaskContext';
+import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
 import AssetManagerFullProfile from 'components/AssetManagerFullProfile';
 import { METAMASK_ERRORS } from 'components/MetamaskContext/constants';
@@ -43,7 +43,7 @@ AssetManager.getInitialProps = ctx => {
 
 const enhance = compose(
   withBlockchainContextPageWrapper,
-  withMetamaskContext,
+  withMetamaskContextPageWrapper,
 );
 
 export default enhance(AssetManager);

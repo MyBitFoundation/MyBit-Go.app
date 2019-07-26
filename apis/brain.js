@@ -418,7 +418,16 @@ const mergeAirtableModelsWithPlatformOperators = (platformOperators, assetModels
     }
   }
   updateAssetModels(updatedAssetModels);
+
 }
+
+export const getOperators = async () =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const platformOperators = await Network.getOperators();
+      return platformOperators;
+    }
+  })
 
 export const fetchAssets = async (userAddress, assetListingsAirtable, assetModelsAirtable, updateAssetModels) =>
   new Promise(async (resolve, reject) => {
@@ -428,10 +437,21 @@ export const fetchAssets = async (userAddress, assetListingsAirtable, assetModel
       const assetManagerFunds = await Network.assetManagerFunds();
       let assets = await Network.getTotalAssetsWithBlockNumberAndManager();
       const platformOperators = await Network.getOperators();
-      mergeAirtableModelsWithPlatformOperators(platformOperators, assetModelsAirtable, updateAssetModels)
+      console.log("assets: ", assets)
+      /*
+      await Network.addModel({
+        token: '0xad6d458402f60fd3bd25163575031acdce07538d',
+        operatorID: '0x3eccf03d236410e626e8000a285b59e17132713a829ada5638ccf8b82a6e7a65',
+        name: 'Smart Bench',
+        ipfs: 'QmYxiCZAXxJEwqqXjqzdwz159Z3Li6YhYXt8CMoBEj9xYq',
+        payout: true,
+        operator: '0x15c9C83075b7214308fd4526731db4172299E2a4',
+        accept: true,
+      })
+      */
+      //mergeAirtableModelsWithPlatformOperators(platformOperators, assetModelsAirtable, updateAssetModels)
       assets =
         assets
-          .filter(({ address }) => assetListingsAirtable[address] !== undefined)
           .map(({
             address,
             blockNumber,
@@ -439,7 +459,6 @@ export const fetchAssets = async (userAddress, assetListingsAirtable, assetModel
             ipfs,
           })=> {
             return {
-              ...assetListingsAirtable[address],
               assetId: address,
               assetManager: manager,
               blockNumber,

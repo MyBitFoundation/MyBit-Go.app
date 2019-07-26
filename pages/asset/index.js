@@ -4,7 +4,7 @@ import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
 import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
-import { withMetamaskContext } from 'components/MetamaskContext';
+import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import GoBackTextAndArrow from 'components/GoBackTextAndArrow';
 import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
@@ -93,7 +93,7 @@ class AssetPage extends React.Component {
 const enhance = compose(
   withThreeBoxContext,
   withBlockchainContextPageWrapper,
-  withMetamaskContext,
+  withMetamaskContextPageWrapper,
 );
 
 export default enhance(AssetPage);
