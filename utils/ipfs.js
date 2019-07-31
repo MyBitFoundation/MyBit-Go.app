@@ -1,6 +1,5 @@
-var ipfsClient = require('ipfs-http-client')
+const ipfsClient = require('ipfs-http-client')
 import { HOST, PROTOCOL, PORT } from 'constants/ipfs';
-
 const ipfs = new ipfsClient(HOST, PORT, {  protocol: PROTOCOL });
 
 export const addFileToIpfs = async data => {
