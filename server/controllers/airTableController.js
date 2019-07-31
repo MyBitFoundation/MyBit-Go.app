@@ -5,12 +5,12 @@ import * as AssetsController from './assetsController';
 require('dotenv').config();
 const Airtable = require('airtable');
 const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appy9WN6JEvAuyA0S';
-const AIRTABLE_BASE_ASSETS_MAINNET = 'appvR0rvJg5fg7Kg4';
+const AIRTABLE_BASE_ASSETS_MAINNET = 'app98ncQl4JjSLBNA';
 export let assetListings;
 export let assetModels;
 let calledGetAssets = false;
 // TODO Change to AIRTABLE_BASE_ASSETS_MAINNET once live on mainnet
-const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS_ROPSTEN);
+const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS_MAINNET);
 
 const getOperators = async () => {
   return new Promise(async (resolve, reject) => {

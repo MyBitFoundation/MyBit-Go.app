@@ -8,7 +8,7 @@
   "dependencies": {
     "3box": "^1.9.0",
     "@antv/data-set": "0.10.1",
-    "@mybit/network.js": "0.0.50",
+    "@mybit/network.js": "0.0.51",
     "@zeit/next-bundle-analyzer": "0.1.2",
     "@zeit/next-css": "1.0.1",
     "airtable": "0.5.8",

@@ -609,8 +609,11 @@ export const fetchAssets = async (userAddress,network, updateFunction) => {
       Network.getAssetModels(getDefaultTokenContract(network)),
     ])
 
-    console.log(assets)
+    console.log("operators")
     console.log(operators)
+    console.log("assetModels")
+    console.log(assetModels)
+    console.log("assets")
     console.log(assets)
 
     /*

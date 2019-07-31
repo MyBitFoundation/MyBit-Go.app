@@ -1323,10 +1323,10 @@
     "@hapi/bourne" "1.x.x"
     "@hapi/hoek" "6.x.x"
 
-"@mybit/contracts@0.1.36":
-  version "0.1.36"
-  resolved "https://registry.yarnpkg.com/@mybit/contracts/-/contracts-0.1.36.tgz#c47946ea32f6bb7ddc2e1ea712af4683e84bee53"
-  integrity sha512-u/9B287msD0evh5gRhHGz50y+Vd0QrwR1djjsW3wDsqENhn/j9WmALwpWArysh8EegAxCiG2vEZqfylxpk8x2Q==
+"@mybit/contracts@0.1.37":
+  version "0.1.37"
+  resolved "https://registry.yarnpkg.com/@mybit/contracts/-/contracts-0.1.37.tgz#bd419d444d799dedd92a3bf6b0b8565dda84ee19"
+  integrity sha512-XXOx9SAlN6YEbJBLKdBAoLUMlsBJJBR/cSd5esjFKSzv3UfBKX3utDBqzxM++pJGn9VMOv8bWTQn/+xYdvZA4A==
   dependencies:
     bignumber.js "^7.2.1"
     ethereumjs-util "^6.0.0"
@@ -1341,12 +1341,12 @@
     web3-eth-abi "1.0.0-beta.36"
     web3-utils "1.0.0-beta.36"
 
-"@mybit/network.js@0.0.50":
-  version "0.0.50"
-  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.50.tgz#0e0d71185019f4b6370a1e462745a3ae41cbe7d6"
-  integrity sha512-NVYsNEuPMyVgVplqBm0Qa/t/BNDYqlygPusYPkvMkMUeGxvgJWI7mlu4HTdMssqRvw7iLdrgivGg0BIYLcr3ug==
+"@mybit/network.js@0.0.51":
+  version "0.0.51"
+  resolved "https://registry.yarnpkg.com/@mybit/network.js/-/network.js-0.0.51.tgz#eb776a9c458b6ea3bf81b3cce04d72a0cfca21aa"
+  integrity sha512-o9rIww26LVAWB9HyJUdMXm2vfCX1ARZgPXQ/hX+GAAguQn2LSe4upK8eCkU0nSrw1gJfT4kPk6a62fvx/UkXdQ==
   dependencies:
-    "@mybit/contracts" "0.1.36"
+    "@mybit/contracts" "0.1.37"
     bignumber.js "^8.0.2"
     web3 "1.0.0-beta.36"
 

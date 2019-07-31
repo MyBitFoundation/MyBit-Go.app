@@ -390,7 +390,11 @@ class MetamaskProvider extends Component {
   }
 
   async checkNetwork() {
-    return await window.web3js.eth.net.getNetworkType();
+    let network = await window.web3js.eth.net.getNetworkType();
+    if(network === 'main'){
+      network = 'mainnet';
+    }
+    return network;
   }
 
   isBrowserSupported() {
