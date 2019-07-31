@@ -24,7 +24,7 @@ import {
 import SupportedBrowsers from 'ui/SupportedBrowsers';
 
 const { Provider, Consumer } = React.createContext({});
-const MetamaskEmitter = new EventEmitter();
+
 // Required so we can trigger getInitialProps in our exported pages
 export const withMetamaskContextPageWrapper = (Component) => {
   return class Higher extends React.Component{
@@ -47,7 +47,7 @@ export const withMetamaskContext = (Component) => {
   return function WrapperComponent(props) {
     return (
       <Consumer>
-          {state => <Component {...props} blockchainContext={state} />}
+          {state => <Component {...props} metamaskContext={state} />}
       </Consumer>
     );
   };
@@ -361,7 +361,6 @@ class MetamaskProvider extends Component {
     const { setNetwork } = this.props;
     const { network: stateNetwork } = this.state;
     if(!stateNetwork && network && setNetwork){
-      MetamaskEmitter.emit('networkChange', network);
       setNetwork(network);
     }
     //subscribe to metamask updates

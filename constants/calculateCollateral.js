@@ -13,9 +13,10 @@ const calculateCollateral = (
   cryptoPayout,
   cryptoPurchase,
 ) => {
-  const collateralBasedOnHistory = calculateCollateralBasedOnHistory(numberOfAssets);
+  const collateral = calculateCollateralBasedOnHistory(numberOfAssets);
   const collateralCryptoPurchase = cryptoPurchase ? 0 : 100;
-  const collateralCryptoPayouts = cryptoPayout ? 0 : collateralBasedOnHistory * 3;
+  const collateralCryptoPayouts = cryptoPayout ? 0 : collateral * 3;
+  const collateralBasedOnHistory = cryptoPayout ? collateral : 0;
   return {
     collateralBasedOnHistory,
     collateralCryptoPurchase,

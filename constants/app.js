@@ -26,3 +26,9 @@ export const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","
   ,"Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia"
   ,"Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","Uruguay"
   ,"Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+
+export const DEFAULT_ASSET_INFO = {
+  Financials: 'No financial information about this asset has been provided.',
+  Risks: 'No risk information about this asset has been provided.',
+  About: 'No information about this asset has been provided.',
+}

@@ -14,7 +14,7 @@ import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
-import { withAirtableContext } from 'components/AirtableContext';
+import { withAssetsContext } from 'components/AssetsContext';
 import { withCivicContext } from "ui/CivicContext";
 import ListAssetMobile from './listAssetMobile';
 import ListAssetDesktop from './listAssetDesktop';
@@ -129,30 +129,25 @@ class ListAssetPage extends React.Component {
 
   recalculateCollateral = modelId => {
     const {
-      blockchainContext,
-      airtableContext,
+      assetsContext,
       metamaskContext,
       supportedTokensInfo,
     } = this.props;
     modelId = modelId || this.state.data.modelId;
-    const { assetsAirTable } = airtableContext;
-    const asset = assetsAirTable[modelId];
+    const {
+      assetModels,
+      assetManagers,
+    } = assetsContext;
+    const model = assetModels[modelId];
     const { additionalCosts = 0 } = this.state.data;
     const {
-      operatorId,
+      operator: operatorAddress,
       fundingGoal,
       cryptoPayout,
       cryptoPurchase,
       name,
-    } = asset;
-
-    const {
-      assets,
-      assetManagers,
-    } = blockchainContext;
-
+    } = model;
     let assetValue = BN(fundingGoal);
-
     // Add 8% fee if it applies and AM expenses
     const fiatToCryptoFee = !cryptoPurchase ? assetValue.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;
     assetValue = assetValue.plus(fiatToCryptoFee).plus(additionalCosts).toNumber();
@@ -160,7 +155,7 @@ class ListAssetPage extends React.Component {
     const { selectedToken } = this.state.data;
     const { user, network } = metamaskContext;
     const { balances } = user;
-    const numberOfAssetsByAssetManager = assetManagers[user.address] ? assetManagers[user.address].totalAssets : 0;
+    const totalFundedAssets = assetManagers[user.address] ? assetManagers[user.address].totalFundedAssets : 0;
     const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
 
     const {
@@ -168,7 +163,7 @@ class ListAssetPage extends React.Component {
       collateralCryptoPurchase,
       collateralCryptoPayouts,
       collateralPercentage,
-    } = calculateCollateral(numberOfAssetsByAssetManager, cryptoPayout, cryptoPurchase);
+    } = calculateCollateral(totalFundedAssets, cryptoPayout, cryptoPurchase);
 
     const collateralInDefaultToken = assetValue * (collateralPercentage / 100);
     const collateralInPlatformToken = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokensInfo, collateralInDefaultToken)
@@ -179,13 +174,12 @@ class ListAssetPage extends React.Component {
         ...this.state.data,
         asset: name,
         assetValue,
-        operatorId,
         collateralInPlatformToken,
         collateralBasedOnHistory,
         collateralCryptoPurchase,
         collateralCryptoPayouts,
         collateralPercentage,
-        numberOfAssetsByAssetManager,
+        totalFundedAssets,
         collateralInDefaultToken,
         collateralInSelectedToken,
         paymentTokenAddress,
@@ -193,7 +187,7 @@ class ListAssetPage extends React.Component {
         modelId,
       },
       loadingConversionInfo: true,
-    })
+    }, () => console.log(this.state))
 
     const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
     const tokenSlippagePercentages = calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInPlatformToken)
@@ -349,6 +343,7 @@ class ListAssetPage extends React.Component {
     const {
       handleListAsset,
       loadingAssets,
+      getCategoriesForAssets,
     } = blockchainContext;
 
     const {
@@ -407,6 +402,7 @@ class ListAssetPage extends React.Component {
       loadingConversionInfo,
       tokenSlippagePercentages,
       autoLocationOffline,
+      getCategoriesForAssets,
       tokenWithSufficientBalance: tokenWithSufficientBalance !== undefined,
       setCheckedToS: this.setCheckedToS,
       handleSelectChange: this.handleSelectChange,
@@ -447,7 +443,7 @@ const enhance = compose(
   withMetamaskContextPageWrapper,
   withCivicContext,
   withTermsOfServiceContext,
-  withAirtableContext,
+  withAssetsContext,
 );
 
 export default enhance(ListAssetPage);

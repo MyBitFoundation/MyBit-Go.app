@@ -11,7 +11,6 @@ const AssetTemplateImageHolder = styled.div`
   background-size: cover;
   background-position: center;
   position: relative;
-  box-shadow: 0 4px 12px 0 rgba(0,0,0,0.1);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 

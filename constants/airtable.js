@@ -5,9 +5,6 @@ export const AIRTABLE_ASSET_MODELS = [
   'Category',
   'Funding Goal',
   'Image',
-  'Partner Address',
-  'Crypto Purchase',
-  'Crypto Payout',
   'Model ID',
 ];
 
@@ -26,9 +23,8 @@ export const AIRTABLE_ASSET_LISTINGS = [
 ];
 
 export const AIRTABLE_OPERATORS = [
-  'Operator ID',
   'Name',
-  'Files',
+  'Address',
 ];
 
 // make sure the data from airtable is correct
@@ -40,11 +36,4 @@ export const verifyDataAirtable = (rules, records) => {
       return Object.keys(fields).includes(field) && valueOfField !== undefined;
     }
   ))
-}
-
-export const DEFAULT_ASSET_INFO = {
-  Financials: 'No financial information about this asset has been provided.',
-  Risks: 'No risk information about this asset has been provided.',
-  About: 'No information about this asset has been provided.',
-  Fees: 'No fee information about this asset has been provided.',
 }

@@ -17,10 +17,10 @@ import DocumentsManagerNav from './documentsManagerNav';
 import DocumentsManagerDescription from './documentsManagerDescription';
 import DocumentsManagerFile from './documentsManagerFile';
 import DocumentsManagerList from './documentsManagerList';
-import DocumentsManagerWarning from './documentsManagerWarning';
 import DocumentsManagerWrapper from './documentsManagerWrapper';
 import DocumentsManagerError from './documentsManagerError';
 import DocumentsManagerNoFiles from './documentsManagerNoFiles';
+import { withBlockchainContext } from 'components/BlockchainContext';
 
 class DocumentsManager extends React.Component{
   constructor(props){
@@ -31,13 +31,15 @@ class DocumentsManager extends React.Component{
     }
   }
 
-  upload = async (files) => {
+  upload = async (files, propsFiles) => {
     try{
+      const { assetId } = this.props;
+      const { updateAssetListingIpfs } = this.props.blockchainContext;
       const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
       if(result){
         this.setState({
           success: this.state.files.length,
-        })
+        }, () => updateAssetListingIpfs(assetId, files, propsFiles))
       };
     }catch(err){
       console.log(err);
@@ -57,6 +59,10 @@ class DocumentsManager extends React.Component{
     let error;
     if(currentNumberOfFiles + uploadedNumberOfFiles > MAX_FILES_UPLOAD){
       error = 'A maximum of 5 files can be uploaded.'
+      this.setState({
+        error,
+      })
+      return;
     }
     const filesTmp = [];
     const actualFiles = [];
@@ -79,17 +85,12 @@ class DocumentsManager extends React.Component{
       }
     }
 
-    if(error){
-      this.setState({
-        error,
-      })
-    }
-
     if(actualFiles.length > 0){
       this.setState({
         files: propsFiles.concat(filesTmp),
+        error,
       })
-      this.upload(actualFiles);
+      this.upload(actualFiles, propsFiles);
     }
   }
 
@@ -131,7 +132,7 @@ class DocumentsManager extends React.Component{
             <Icon type="upload" />
           </UploadButton>
           <DocumentsManagerDescription>
-            Up to a maximum of 5 files* can be uploaded, a maximum of 5MB each.
+            Up to a maximum of 5 files can be uploaded, a maximum of 5MB each. Files cannot be removed.
           </DocumentsManagerDescription>
         </DocumentsManagerNav>
         {!noFiles && (
@@ -169,16 +170,13 @@ class DocumentsManager extends React.Component{
             color="green"
           >
             <Icon type="check" />
-            <span>{`${success}(s) have been uploaded.`}</span>
+            <span>{`${success} file(s) successfully uploaded.`}</span>
             <Icon type="cross" onClick={() => this.setState({success: undefined})}/>
           </DocumentsManagerError>
         )}
-        <DocumentsManagerWarning>
-          * files can not be removed after they have been uploaded.
-        </DocumentsManagerWarning>
       </DocumentsManagerWrapper>
     )
   }
 }
 
-export default DocumentsManager
+export default withBlockchainContext(DocumentsManager)

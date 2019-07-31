@@ -11,6 +11,7 @@ export const InternalLinks = {
   getAirtableAssetListings: network => process.env.NODE_ENV === 'development' ? `${host}/api/airtable/assetListings/${network}` : `/api/airtable/assetListings/${network}`,
   getAirtableOperators: network => process.env.NODE_ENV === 'development' ? `${host}/api/airtable/operators/${network}` : `/api/airtable/operators/${network}`,
   UPDATE_ASSETS: process.env.NODE_ENV === 'development' ? `${host}/api/airtable/update` : '/api/airtable/update',
+  UPDATE_ASSET_LISTING_FILES: process.env.NODE_ENV === 'development' ? `${host}/api/airtable/updateAssetListingFiles` : '/api/airtable/updateAssetListingFiles',
   S3_UPLOAD: process.env.NODE_ENV === 'development' ? `${host}/api/files/upload` : '/api/files/upload',
   S3_ASSET_FILES: process.env.NODE_ENV === 'development' ? `${host}/api/assets/files` : '/api/assets/files',
   GAS_PRICE: `${apiEndpoint}/gasprice`,

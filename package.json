@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "0.2.4",
+  "version": "1.1.0",
   "private": true,
   "resolutions": {
     "terser": "3.14.1"
@@ -8,7 +8,7 @@
   "dependencies": {
     "3box": "^1.9.0",
     "@antv/data-set": "0.10.1",
-    "@mybit/network.js": "0.0.45",
+    "@mybit/network.js": "0.0.50",
     "@zeit/next-bundle-analyzer": "0.1.2",
     "@zeit/next-css": "1.0.1",
     "airtable": "0.5.8",
@@ -31,6 +31,7 @@
     "dotenv-webpack": "1.7.0",
     "express": "4.16.4",
     "ipfs-http-client": "^33.1.0",
+    "is-ipfs": "^0.6.1",
     "js-cookie": "2.2.0",
     "less": "3.9.0",
     "lint": "1.1.2",

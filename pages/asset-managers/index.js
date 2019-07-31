@@ -1,13 +1,13 @@
 import { compose } from 'recompose'
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
-import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
+import { withAssetsContextPageWrapper } from 'components/AssetsContext'
 import AssetManagerFullProfile from 'components/AssetManagerFullProfile';
 import { METAMASK_ERRORS } from 'components/MetamaskContext/constants';
 import MetamaskErrors from 'components/MetamaskErrors';
 import AllAssetManagers from 'components/AllAssetManagers';
 
 const AssetManager = ({
-  blockchainContext,
+  assetsContext,
   metamaskContext,
   managerAddress,
 }) => {
@@ -22,14 +22,14 @@ const AssetManager = ({
   if(!managerAddress){
     return (
       <AllAssetManagers
-        blockchainContext={blockchainContext}
+        assetsContext={assetsContext}
         network={metamaskContext.network}
       />
     )
   } else {
     return (
       <AssetManagerFullProfile
-        blockchainContext={blockchainContext}
+        assetsContext={assetsContext}
         metamaskContext={metamaskContext}
         managerAddress={managerAddress}
       />
@@ -42,7 +42,7 @@ AssetManager.getInitialProps = ctx => {
 }
 
 const enhance = compose(
-  withBlockchainContextPageWrapper,
+  withAssetsContextPageWrapper,
   withMetamaskContextPageWrapper,
 );
 

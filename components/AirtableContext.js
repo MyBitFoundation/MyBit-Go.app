@@ -1,14 +1,17 @@
+import axios from 'axios';
 import { InternalLinks } from 'constants/links';
 import {
   AIRTABLE_ASSET_MODELS,
   AIRTABLE_ASSET_LISTINGS,
   AIRTABLE_CATEGORIES_RULES,
-  AIRTABLE_ASSET_OPERATORS,
+  AIRTABLE_OPERATORS,
   verifyDataAirtable,
   PULL_ASSETS_TIME,
   PULL_CATEGORIES_TIME,
-  DEFAULT_ASSET_INFO,
  } from 'constants/airtable';
+ import {
+  DEFAULT_ASSET_INFO
+ } from 'constants/app';
 import {
   FALLBACK_NETWORK,
 } from 'constants/supportedNetworks';
@@ -26,7 +29,7 @@ export const withAirtableContext = (Component) => {
     render(){
       return (
         <Consumer>
-          {state => <Component {...this.props} airtableContext={state} />}
+          {state => <Component {...this.props} {...state}/>}
         </Consumer>
       )
     }
@@ -37,53 +40,9 @@ class AirtableProvider extends React.PureComponent {
   constructor(props){
     super(props);
     this.state = {
-      getCategoriesForAssets: this.getCategoriesForAssets,
-      getAssetByName: this.getAssetByName,
-      forceRefresh: this.forceRefresh,
-      updateAssetModels: this.updateAssetModels,
+      getAssetsFromAirtable: this.getAssets,
+      fetchNewAssetListing: this.fetchNewAssetListing,
     }
-  }
-
-  componentDidMount = () => {
-    const { network } = this.props;
-    if(network){
-      this.getAssets(network);
-    }
-    this.setIntervals();
-  }
-
-  componentWillReceiveProps = newProps => {
-    const { 
-      network,
-      userHasMetamask,
-    } = this.props;
-    const { 
-      network: newNetwork,
-      userHasMetamask: newUserHasMetamask,
-    } = newProps;
-    if(!network && newNetwork){
-      this.getAssets(newNetwork);
-    } else if(!network && newUserHasMetamask === false){
-      this.getAssets();
-    }
-  }
-
-  componentWillUnmount = () => {
-    this.resetIntervals();
-  }
-
-  setIntervals = () => {
-    this.intervalPullAssets = setInterval(this.getAssets, 10000)
-    this.intervalPullCategories = setInterval(this.getCategories, PULL_CATEGORIES_TIME)
-  }
-
-  resetIntervals = () => {
-    clearInterval(this.intervalPullAssets);
-    clearInterval(this.intervalPullCategories);
-  }
-
-  forceRefresh = async (network) => {
-    await this.getAssets(network);
   }
 
   getFiles = filesString => {
@@ -93,11 +52,11 @@ class AirtableProvider extends React.PureComponent {
         const filesArr = filesString.split('|');
         for(let i=0;i<filesArr.length;i+=2){
           if(i+1 < filesArr.length){
-            const fileName = filesArr[i];
-            const ipfs = filesArr[i+1];
+            const name = filesArr[i];
+            const hash = filesArr[i+1];
             ipfsFiles.push({
-              fileName,
-              ipfs,
+              name,
+              hash,
             })
           }
         }
@@ -132,14 +91,12 @@ class AirtableProvider extends React.PureComponent {
   processOperators = data => {
     const operators = {};
     data.forEach(({fields}) => {
-      assetModels[fields['Operator ID']] = {
+      operators[fields['Address']] = {
         name: fields['Name'],
-        imageSrc: `https://s3.eu-central-1.amazonaws.com/mybit-go/assetImages:${fields['Image']}`,
-        files: this.getFiles(fields['Files']),
+        files: this.getFiles(fields['IPFS Files']),
       }
     })
-
-    return assetModels;
+    return operators;
   }
 
   processAssetModels = data => {
@@ -149,28 +106,22 @@ class AirtableProvider extends React.PureComponent {
         category: fields['Category'],
         name: fields['Asset'],
         imageSrc: `https://s3.eu-central-1.amazonaws.com/mybit-go/assetImages:${fields['Image']}`,
-        partnerAddress: fields['Partner Address'],
-        cryptoPayout: fields['Crypto Purchase'],
-        cryptoPurchase: fields['Crypto Payout'],
         location: this.getLocationFromString(fields['Location']),
         files: this.getFiles(fields['Files']),
         fundingGoal: fields['Funding Goal'],
-        modelId: fields['Model ID'],
+        url: fields['URL'],
       }
     })
-
     return assetModels;
   }
 
-  processAssetListings = (data, models) => {
+  processAssetListings = data => {
     const assetListings = {};
     data.forEach(({fields}) => {
       assetListings[fields['Asset ID']] = {
         financials: fields['Financials'] || DEFAULT_ASSET_INFO.Financials,
         about: fields['About'] || DEFAULT_ASSET_INFO.About,
         risks: fields['Risks'] || DEFAULT_ASSET_INFO.Risks,
-        fees: fields['Fees'] || DEFAULT_ASSET_INFO.Fees,
-        model: models[fields['Model ID']],
         modelId: fields['Model ID'],
         city: fields['City'],
         country: fields['Country'],
@@ -179,58 +130,68 @@ class AirtableProvider extends React.PureComponent {
         assetAddress2: fields['Street Number'],
         assetProvince: fields['Province'],
         assetPostalCode: fields['Postal Code'],
-        ipfsFiles: this.getFiles(fields['Files']),
+        files: this.getFiles(fields['Files']),
       }
     })
     return assetListings;
   }
 
-  updateAssetModels = newAssetModelsWithOperatorInfo => {
-    this.setState({assetModels: newAssetModelsWithOperatorInfo})
+  fetchNewAssetListing = async (network, updateFunction, assetId) => {
+    let assetListings = await fetch(InternalLinks.getAirtableAssetListings(network))
+    assetListings = await assetListings.json();
+    const { records: listingsRecords  } = assetListings;
+    const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
+    let assetListingsProcessed = this.processAssetListings(assetListingsFiltered);
+    if(assetListingsProcessed[assetId]){
+      updateFunction({assetListings: assetListingsProcessed, network, airtable: true})
+    } else {
+      setTimeout(() => this.fetchNewAssetListing(network, updateFunction, assetId), 200);
+    }
   }
 
+  getAssets = async (network, updateFunction) => {
+    try{
+      this.updateFunction = updateFunction;
+      // if subscribbed to events, unsubscribe
 
-  getAssets = network => {
-    return new Promise(async (res) => {
-      try{
-        const { userHasMetamask } = this.props;
-        network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
+      let [assetModels, assetListings, operators] = await Promise.all([
+        fetch(InternalLinks.getAirtableAssetModels(network)),
+        fetch(InternalLinks.getAirtableAssetListings(network)),
+        fetch(InternalLinks.getAirtableOperators(network)),
+      ]);
+      [assetModels, assetListings, operators] = await Promise.all([
+        assetModels.json(),
+        assetListings.json(),
+        operators.json(),
+      ]);
+      const { records: modelsRecords  } = assetModels;
+      const { records: listingsRecords  } = assetListings;
+      const { records: operatorsRecords  } = operators;
 
-        if(network){
-          let [assetModels, assetListings] = await Promise.all([
-            fetch(InternalLinks.getAirtableAssetModels(network)),
-            fetch(InternalLinks.getAirtableAssetListings(network)),
-            fetch(InternalLinks.getAirtableOperators(network)),
-          ]);
-          [assetModels, assetListings] = await Promise.all([
-            assetModels.json(),
-            assetListings.json(),
-          ]);
-          const { records: modelsRecords  } = assetModels;
-          const { records: listingsRecords  } = assetListings;
-          const { records: operatorsRecords  } = assetListings;
+      const assetModelsFiltered = verifyDataAirtable(AIRTABLE_ASSET_MODELS, modelsRecords);
+      const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
+      const operatorsFiltered = verifyDataAirtable(AIRTABLE_OPERATORS, operatorsRecords);
+      const assetModelsProcessed = this.processAssetModels(assetModelsFiltered);
+      const operatorsProcessed = this.processOperators(operatorsFiltered)
+      const assetListingsProcessed = this.processAssetListings(assetListingsFiltered);
+      //subscribe to events of the sdk and update a given piece of data when required
 
-          const assetModelsFiltered = verifyDataAirtable(AIRTABLE_ASSET_MODELS, modelsRecords);
-          const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
-          const operatorsFiltered = verifyDataAirtable(AIRTABLE_ASSET_OPERATORS, operatorsRecords);
-          const assetModelsProcessed = this.processAssetModels(assetModelsFiltered);
-          const operatorsProcessed = this.processOperators(operatorsFiltered)
-          const assetListingsProcessed = this.processAssetListings(assetListingsFiltered);
-          /*
-          * we save the network in the state to make sure fetchAssets() in brain.js
-          * uses the correct airtable data when pulling the assets, from the correct network
-          */
-          this.setState({
-            assetModels: assetModelsProcessed,
-            assetListings: assetListingsProcessed,
-            operators: operatorsProcessed,
-            network,
-          }, () => res());
-        }
-      }catch(err){
-        res({err: err})
-      }
-    });
+      /*
+      * we save the network in the state to make sure fetchAssets() in brain.js
+      * uses the correct airtable data when pulling the assets, from the correct network
+      */
+      updateFunction({
+        assetModels: assetModelsProcessed,
+        assetListings: assetListingsProcessed,
+        operators: operatorsProcessed,
+        network,
+        airtable: true,
+      });
+
+    }catch(err){
+      console.log(err)
+      setTimeout(() => this.getAssets(network, updateFunction), 1000);
+    }
   }
 
   render(){
