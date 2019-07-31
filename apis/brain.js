@@ -213,7 +213,7 @@ export const uploadFilesToAWS = async (
     let data = new FormData();
     data.append('assetId', assetId);
     for(const file of fileList){
-      data.append('file', file.originFileObj ? file.originFileObj : file);
+      data.append('file', file.originFileObj ? file.originFileObj : file.file ? file.file : file);
     }
     const result = await axios.post(InternalLinks.S3_UPLOAD,
       data, {

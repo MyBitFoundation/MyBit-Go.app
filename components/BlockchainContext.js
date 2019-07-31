@@ -226,7 +226,7 @@ class BlockchainProvider extends React.Component {
     return categories;
   }
 
-  updateAssetListingIpfs = async (assetId, filesToUpload, existingFiles) => {
+  updateAssetListingIpfs = async (assetId, filesToUpload, existingFiles, cb) => {
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
     const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
@@ -293,6 +293,7 @@ class BlockchainProvider extends React.Component {
     }
 
     const onError = (type) => {
+      cb && cb();
       updateAssetListingsIpfs();
       if(type === ErrorTypes.METAMASK){
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
@@ -316,6 +317,7 @@ class BlockchainProvider extends React.Component {
         this.fetchTransactionHistory,
         this.props.assetsContext.updateAssetListingWithNewFiles(assetId, filesInfo),
       ]);
+      cb && cb();
       updateAssetListingsIpfs();
       buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.SUCCESS, {
         assetName,
@@ -563,7 +565,7 @@ class BlockchainProvider extends React.Component {
     const files = [];
     let filesString = '';
     for(const file of fileList){
-      toWait.push(addUserFileToIpfs(file.originFileObj ? file.originFileObj : file));
+      toWait.push(addUserFileToIpfs(file.originFileObj ? file.originFileObj : file.file ? file.file : file));
     }
     const ipfsHashes = await Promise.all(toWait);
     if(ipfsHashes.length > 0){
