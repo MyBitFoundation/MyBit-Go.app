@@ -79,9 +79,15 @@ const getAssetModels = async () => {
   })
 }
 
-export const updateAssetListingFilesString = async data => {
+const getCorrectBase = network => {
+  const baseId = network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET;
+  return new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(baseId);
+}
+
+export const updateAssetListingFilesString = async (data, network) => {
   const { assetId, files } = data;
   let recordId;
+  const base = getCorrectBase(network)
   base('Asset Listings').select().eachPage((records, fetchNextPage) => {
     records.forEach(record => {
       if(record.get('Asset ID') === assetId){
@@ -175,7 +181,7 @@ const getAllAssetsInfo = async (newAsset = false) => {
   }
 }
 
-export const addNewAsset = async (data) => {
+export const addNewAsset = async (data, network) => {
   try{
     const {
       assetId,
@@ -194,7 +200,7 @@ export const addNewAsset = async (data) => {
       assetPostalCode,
       files,
     } = data;
-
+    const base = getCorrectBase(network);
     await base('Asset Listings').create({
       'Asset ID': assetId,
       'Model ID': modelId,

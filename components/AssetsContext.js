@@ -311,9 +311,11 @@ class AssetsProvider extends React.PureComponent {
 
   updateAssetListingWithNewFiles = async (assetId, files) => {
     const { assetListings } = this.state;
+    const { metamaskContext } = this.props;
+    const { network } = metamaskContext;
     const asset = assetListings[assetId];
     if(asset){
-      await Brain.updateAirTableWithNewAssetListingFiles({assetId, files: files.string})
+      await Brain.updateAirTableWithNewAssetListingFiles({assetId, files: files.string}, network)
       this.updateListingProps(assetId, {...asset, files: files.array})
     }
   }

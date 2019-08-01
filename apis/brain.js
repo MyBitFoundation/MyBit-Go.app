@@ -236,9 +236,10 @@ export const uploadFilesToAWS = async (
 export const updateAirTableWithNewAsset = async (
   data,
   performInternalAction,
+  network,
 ) => {
   try{
-    await axios.post(InternalLinks.UPDATE_ASSETS, {
+    await axios.post(InternalLinks.updateAirtableAssets(network), {
       ...data,
     });
     performInternalAction();
@@ -247,6 +248,7 @@ export const updateAirTableWithNewAsset = async (
       updateAirTableWithNewAsset(
         data,
         performInternalAction,
+        network,
       ), 5000);
     debug(err);
   }
@@ -254,15 +256,17 @@ export const updateAirTableWithNewAsset = async (
 
 export const updateAirTableWithNewAssetListingFiles = async (
   data,
+  network,
 ) => {
   try{
-    await axios.post(InternalLinks.UPDATE_ASSET_LISTING_FILES, {
+    await axios.post(InternalLinks.updateAirtableAssetsFiles(network), {
       ...data,
     });
   } catch(err){
     setTimeout(() =>
       updateAirTableWithNewAssetListingFiles(
         data,
+        network,
       ), 5000);
     debug(err);
   }
