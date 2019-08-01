@@ -4,6 +4,7 @@ import App, { Container } from 'next/app';
 import AirtableProvider, { withAirtableContext } from 'components/AirtableContext';
 import BlockchainProvider from 'components/BlockchainContext';
 import KyberProvider from 'components/KyberContext';
+import AssetsProvider from 'components/AssetsContext';
 import NotificationsProvider from 'components/NotificationsContext';
 import ThreeBoxProvider from 'components/ThreeBoxContext';
 import TermsOfServiceProvider from 'components/TermsOfServiceContext';
@@ -139,17 +140,19 @@ const WithProviders = ({ children, setNetwork, network, setUserHasMetamask, user
             setNetwork={setNetwork}
             setUserHasMetamask={setUserHasMetamask}
           >
-            <BlockchainProvider
-              supportedNetworks={SUPPORTED_NETWORKS}
-            >
-            <ThreeBoxProvider>
-              <CivicProvider>
-                <TermsOfServiceProvider>
-                  {children}
-                </TermsOfServiceProvider>
-              </CivicProvider>
-            </ThreeBoxProvider>
-            </BlockchainProvider>
+            <AssetsProvider>
+              <BlockchainProvider
+                supportedNetworks={SUPPORTED_NETWORKS}
+              >
+              <ThreeBoxProvider>
+                <CivicProvider>
+                  <TermsOfServiceProvider>
+                    {children}
+                  </TermsOfServiceProvider>
+                </CivicProvider>
+              </ThreeBoxProvider>
+              </BlockchainProvider>
+            </AssetsProvider>
             </MetamaskProvider>
           </KyberProvider>
         </AirtableProvider>

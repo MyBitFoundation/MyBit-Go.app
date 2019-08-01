@@ -46,6 +46,7 @@ const ListAssetMobile = ({
   loadingConversionInfo,
   tokenSlippagePercentages,
   autoLocationOffline,
+  getCategoriesForAssets,
 }) => {
   const {
     category,
@@ -103,6 +104,7 @@ const ListAssetMobile = ({
             error={false || metamaskErrorsToRender.render}
             airtableContext={airtableContext}
             autoLocationOffline={autoLocationOffline}
+            getCategoriesForAssets={getCategoriesForAssets}
           />
         ), buttons: {
           hasNextButton: true,

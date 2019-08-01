@@ -43,7 +43,7 @@ const getFundingStage = (fundingStageNumber) => {
   }
 }
 
-const fetchAssets = async (assetListingsAirtable, assetModelsAirtable) =>
+const fetchAssets = async () =>
   new Promise(async (resolve, reject) => {
     try {
       if(!Network){
@@ -55,7 +55,6 @@ const fetchAssets = async (assetListingsAirtable, assetModelsAirtable) =>
       let assets = await Network.getTotalAssetsWithBlockNumberAndManager();
       assets =
         assets
-          .filter(({ address }) => assetListingsAirtable[address] !== undefined)
           .map(({
             address,
             blockNumber,
@@ -63,7 +62,6 @@ const fetchAssets = async (assetListingsAirtable, assetModelsAirtable) =>
             ipfs,
           })=> {
             return {
-              ...assetListingsAirtable[address],
               assetId: address,
               assetManager: manager,
               blockNumber,
@@ -85,7 +83,9 @@ const fetchAssets = async (assetListingsAirtable, assetModelsAirtable) =>
           assetManager,
           assetInvestors,
           fundingProgress,
-          managerPercentage
+          managerPercentage,
+          modelId,
+          fundingToken,
         ] = await getAssetDetails(api, assetId);
         const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
         const escrow = await api.methods.getAssetManagerEscrow(escrowId).call();
@@ -143,6 +143,8 @@ const fetchAssets = async (assetListingsAirtable, assetModelsAirtable) =>
           assetManager,
           daysSinceItWentLive,
           managerPercentage,
+          modelId,
+          fundingToken,
           fundingGoal: fromWeiToEth(fundingGoal),
           fundingProgress: (availableSharesFormatted < 0.01 && availableSharesFormatted > 0 && !crowdsaleFinalized) ? fundingProgressFormatted - 0.01 : fundingProgressFormatted,
           remainingEscrow: fromWeiToEth(remainingEscrow),
@@ -174,6 +176,8 @@ const getAssetDetails = (api, assetId) => {
     Network.getAssetInvestors(assetId),
     Network.getFundingProgress(assetId),
     api.methods.getAssetManagerFee(assetId).call(),
+    api.methods.getAssetModelID(assetId).call(),
+    api.methods.getAssetFundingToken(assetId).call(),
   ]);
 }
 

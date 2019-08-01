@@ -162,7 +162,6 @@ export const fetchRevenueLogsByAssetId = async assetId => {
 export const createAsset = async (onCreateAsset, onApprove, params, network) => {
   try {
     const {
-      asset,
       userAddress,
       managerPercentage,
       collateral,
@@ -176,8 +175,7 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
     const randomURI = generateRandomURI(window.web3js);
     const api = await Network.api();
     const response = await Network.createAsset({
-      // in case collateral turns out to have more than 18 decimals, force a max.
-      escrow: toWei(collateral.toFixed(18)),
+      escrow: toWei(collateral),
       assetURI: randomURI,
       assetManager: userAddress,
       fundingLength: CROWDSALE_DURATION,
@@ -215,7 +213,7 @@ export const uploadFilesToAWS = async (
     let data = new FormData();
     data.append('assetId', assetId);
     for(const file of fileList){
-      data.append('file', file.originFileObj ? file.originFileObj : file);
+      data.append('file', file.originFileObj ? file.originFileObj : file.file ? file.file : file);
     }
     const result = await axios.post(InternalLinks.S3_UPLOAD,
       data, {
@@ -249,6 +247,22 @@ export const updateAirTableWithNewAsset = async (
       updateAirTableWithNewAsset(
         data,
         performInternalAction,
+      ), 5000);
+    debug(err);
+  }
+}
+
+export const updateAirTableWithNewAssetListingFiles = async (
+  data,
+) => {
+  try{
+    await axios.post(InternalLinks.UPDATE_ASSET_LISTING_FILES, {
+      ...data,
+    });
+  } catch(err){
+    setTimeout(() =>
+      updateAirTableWithNewAssetListingFiles(
+        data,
       ), 5000);
     debug(err);
   }
@@ -311,7 +325,6 @@ export const fundAsset = async (onFundAsset, onApprove, params) => {
       paymentToken,
       gasPrice,
     } = params;
-
     const response = await Network.fundAsset({
       asset: assetId,
       investor: userAddress,
@@ -345,27 +358,33 @@ const processErrorType = (error, handleError) => {
 }
 
 const getAssetDetails = (api, assetId, blockNumber) => {
-  return Promise.all([
-    Network.dividendToken(assetId),
-    api.methods.getAssetPlatformFee(assetId).call(),
-    Network.getAssetOperator(assetId),
-    api.methods.crowdsaleFinalized(assetId).call(),
-    api.methods.getCrowdsaleDeadline(assetId).call(),
-    Network.getFundingGoal(assetId),
-    Network.getAssetInvestors(assetId),
-    Network.getFundingProgress(assetId),
-    api.methods.getAssetManagerFee(assetId).call(),
-    window.web3js.eth.getBlock(blockNumber),
-  ]);
+  try{
+    return Promise.all([
+      Network.dividendToken(assetId),
+      api.methods.getAssetPlatformFee(assetId).call(),
+      Network.getAssetOperator(assetId),
+      api.methods.crowdsaleFinalized(assetId).call(),
+      api.methods.getCrowdsaleDeadline(assetId).call(),
+      Network.getFundingGoal(assetId),
+      Network.getAssetInvestors(assetId),
+      Network.getFundingProgress(assetId),
+      api.methods.getAssetManagerFee(assetId).call(),
+      window.web3js.eth.getBlock(blockNumber),
+      api.methods.getAssetModelID(assetId).call(),
+      api.methods.getAssetFundingToken(assetId).call(),
+    ]);
+  } catch(err){
+    console.log("getAssetDetails error: ", err)
+  }
 }
 
-const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, asset, realAddress) => {
+const getExtraAssetDetails = (ownershipUnitsTmp, isAssetManager, apiContract, asset, userAddress) => {
   return Promise.all([
     getNumberOfInvestors(asset.assetId),
-    ownershipUnitsTmp > 0 ? apiContract.methods.getAmountOwed(asset.assetId, realAddress).call() : 0,
+    ownershipUnitsTmp > 0 ? apiContract.methods.getAmountOwed(asset.assetId, userAddress).call() : 0,
     isAssetManager ? Promise.all([
-          getManagerIncomeEarned(realAddress, asset.assetId),
-          getManagerIncomeWithdraw(realAddress, asset.assetId)
+          getManagerIncomeEarned(userAddress, asset.assetId),
+          getManagerIncomeWithdraw(userAddress, asset.assetId)
         ]) : [0, 0],
     ]);
 }
@@ -405,181 +424,243 @@ export const issueDividends = async (
   }
 }
 
-const mergeAirtableModelsWithPlatformOperators = (platformOperators, assetModelsAirtable, updateAssetModels) => {
-  const updatedAssetModels = {};
-  for(const key in assetModelsAirtable){
-    const assetModel = assetModelsAirtable[key];
-    const { partnerAddress } = assetModel;
-    const operatorInfo = platformOperators[partnerAddress];
-    updatedAssetModels[key] = {
-      ...assetModel,
-      ...operatorInfo,
-      operatorId: operatorInfo.operatorID,
-    }
-  }
-  updateAssetModels(updatedAssetModels);
-}
-
-export const fetchAssets = async (userAddress, assetListingsAirtable, assetModelsAirtable, updateAssetModels) =>
+export const getOperators = async () =>
   new Promise(async (resolve, reject) => {
     try {
-      const realAddress = userAddress && window.web3js.utils.toChecksumAddress(userAddress);
-      const api = await Network.api();
-      const assetManagerFunds = await Network.assetManagerFunds();
-      let assets = await Network.getTotalAssetsWithBlockNumberAndManager();
       const platformOperators = await Network.getOperators();
-      mergeAirtableModelsWithPlatformOperators(platformOperators, assetModelsAirtable, updateAssetModels)
-      assets =
-        assets
-          .filter(({ address }) => assetListingsAirtable[address] !== undefined)
-          .map(({
-            address,
-            blockNumber,
-            manager,
-            ipfs,
-          })=> {
-            return {
-              ...assetListingsAirtable[address],
-              assetId: address,
-              assetManager: manager,
-              blockNumber,
-              ipfs,
-            }
-          });
-
-      const assetDetails = await Promise.all(assets.map(async asset =>  {
-        const {
-          assetId,
-          assetManager,
-          blockNumber,
-        } = asset;
-        let [
-          dividendToken,
-          platformFee,
-          assetOperator,
-          crowdsaleFinalized,
-          fundingDeadline,
-          fundingGoal,
-          assetInvestors,
-          fundingProgress,
-          managerPercentage,
-          blockInfo,
-        ] = await getAssetDetails(api, assetId, blockNumber);
-        const listingDate = blockInfo.timestamp * 1000;
-
-        const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
-        const isAssetManager = assetManager === realAddress;
-
-        let daysSinceItWentLive = 1;
-        let assetIncome = 0;
-        let managerHasToCallPayout = false;
-        let totalShares = 0;
-        let availableShares = 0;
-        let owedToInvestor = 0;
-        let owedToAssetManager = 0;
-        let assetIncomeForCollateral = 0;
-
-        managerPercentage = BN(managerPercentage);
-        platformFee = BN(platformFee);
-        fundingGoal = BN(fundingGoal);
-        fundingProgress = BN(fundingProgress);
-        totalShares = fundingGoal.plus(managerPercentage).plus(platformFee);
-        availableShares = totalShares.minus(managerPercentage).minus(platformFee).minus(fundingProgress);
-        managerPercentage = managerPercentage.div(totalShares).toNumber();
-        platformFee = platformFee.div(totalShares).toNumber();
-        fundingGoal = fundingGoal.toNumber();
-
-        availableShares = availableShares.toNumber();
-        totalShares = totalShares.toNumber();
-
-        let percentageOwnedByUser = 0;
-        let balanceOfUser = 0;
-        let userInvestment = 0;
-
-        const isInvestor = realAddress && assetInvestors.includes(realAddress);
-        const [
-          remainingEscrow,
-          escrowRedeemed,
-          assetManagerCollateral,
-        ] = await Promise.all([
-          api.methods.getAssetManagerEscrowRemaining(escrowId).call(),
-          api.methods.getAssetManagerEscrowRedeemed(escrowId).call(),
-          api.methods.getAssetManagerEscrow(escrowId).call(),
-        ])
-
-        if(isInvestor){
-          balanceOfUser = await dividendToken.methods.balanceOf(realAddress).call();
-          userInvestment = fromWeiToEth(BN(balanceOfUser).toString());
-          percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
-        }
-
-        if(crowdsaleFinalized){
-          const timestamp = await Network.getTimestampOfFundedAsset(assetId)
-          // no timestamp means payout has to be called (asset manager does it)
-          if(timestamp){
-            fundingProgress = fundingProgress - ((managerPercentage + platformFee) * fundingProgress)
-            if(isInvestor){
-              assetIncome = await dividendToken.methods.assetIncome().call();
-              owedToInvestor = await dividendToken.methods.getAmountOwed(realAddress).call();
-            }
-
-            assetIncome = await dividendToken.methods.assetIncome().call();
-            if(isAssetManager){
-              daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
-              daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
-              assetIncomeForCollateral = fromWeiToEth(assetIncome) * (1 - platformFee - managerPercentage);
-              owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, realAddress).call();
-            }
-
-          } else if(isAssetManager) {
-            managerHasToCallPayout = true;
-          }
-        }
-
-        const searchQuery = `mybit_watchlist_${assetId}`;
-        const watchListed = window.localStorage.getItem(searchQuery) === 'true';
-
-        // determine whether asset has expired
-        const dueDate = dayjs(fundingDeadline * 1000);
-        const pastDate = dayjs() >= dueDate ? true : false;
-
-        const fundingStageTmp = crowdsaleFinalized ? 0 : (!pastDate && !crowdsaleFinalized) ? 2 : 1;
-        const fundingStage = getFundingStage(fundingStageTmp);
-
-        const fundingProgressFormatted = fromWeiToEth(fundingProgress);
-        const availableSharesFormatted = fromWeiToEth(availableShares);
-        return {
-          ...asset,
-          managerHasToCallPayout,
-          fundingStage,
-          pastDate,
-          isAssetManager,
-          percentageOwnedByUser,
-          daysSinceItWentLive,
-          assetIncomeForCollateral,
-          owedToInvestor,
-          watchListed,
-          userInvestment,
-          managerPercentage,
-          fundingGoal: fromWeiToEth(fundingGoal),
-          fundingProgress: (availableSharesFormatted < 0.01 && availableSharesFormatted > 0 && !crowdsaleFinalized) ? fundingProgressFormatted - 0.01 : fundingProgressFormatted,
-          assetIncome: fromWeiToEth(assetIncome),
-          owedToAssetManager: fromWeiToEth(owedToAssetManager),
-          remainingEscrow: fromWeiToEth(remainingEscrow),
-          assetManagerCollateral: fromWeiToEth(assetManagerCollateral),
-          escrowRedeemed: fromWeiToEth(escrowRedeemed),
-          totalSupply: fromWeiToEth(totalShares),
-          availableShares: availableSharesFormatted,
-          fundingDeadline: fundingDeadline * 1000,
-          numberOfInvestors: assetInvestors.length,
-          funded: fundingStage === FundingStages.FUNDED,
-          listingDate,
-        };
-      }));
-
-      resolve(assetDetails);
-    } catch (error) {
-      debug('failed to fetch assets, error: ', error);
-      reject(error);
+      return platformOperators;
+    } catch(err){
+      return {}
     }
-  });
+  })
+
+export const updateAssetListingIpfs = async ({
+  userAddress,
+  fundingToken,
+  assetId,
+  onTransactionHash,
+  onReceipt,
+  onError,
+  gasPrice,
+  ipfs,
+}) => {
+  try{
+    const assetCreationContract = !fundingToken ? Network.crowdsaleGeneratorETH() : Network.crowdsaleGeneratorERC20()
+    assetCreationContract.methods.updateIPFS(assetId,ipfs)
+      .send({from: userAddress, gas: '80000', gasPrice: gasPrice})
+      .on('error', error => processErrorType(error, onError))
+      .on('transactionHash', onTransactionHash)
+      .on('receipt', receipt => onReceipt(receipt.status))
+  } catch(error){
+    processErrorType(error, onError)
+  }
+}
+
+export const fetchAsset = async (asset, userAddress) => {
+  try{
+    const api = await Network.api();
+    const assetManagerFunds = await Network.assetManagerFunds();
+    const {
+      assetId,
+      assetManager,
+      blockNumber,
+    } = asset;
+
+    let [
+      dividendToken,
+      platformFee,
+      assetOperator,
+      crowdsaleFinalized,
+      fundingDeadline,
+      fundingGoal,
+      assetInvestors,
+      fundingProgress,
+      managerPercentage,
+      blockInfo,
+      modelId,
+      fundingToken,
+    ] = await getAssetDetails(api, assetId, blockNumber);
+    const listingDate = blockInfo.timestamp * 1000;
+    const escrowId = await api.methods.getAssetManagerEscrowID(assetId, assetManager).call();
+    const isAssetManager = assetManager === userAddress;
+
+    let daysSinceItWentLive = 1;
+    let assetIncome = 0;
+    let managerHasToCallPayout = false;
+    let totalShares = 0;
+    let availableShares = 0;
+    let owedToInvestor = 0;
+    let owedToAssetManager = 0;
+    let assetIncomeForCollateral = 0;
+
+    managerPercentage = BN(managerPercentage);
+    platformFee = BN(platformFee);
+    fundingGoal = BN(fundingGoal);
+    fundingProgress = BN(fundingProgress);
+    totalShares = fundingGoal.plus(managerPercentage).plus(platformFee);
+    availableShares = totalShares.minus(managerPercentage).minus(platformFee).minus(fundingProgress);
+    managerPercentage = managerPercentage.div(totalShares).toNumber();
+    platformFee = platformFee.div(totalShares).toNumber();
+    fundingGoal = fundingGoal.toNumber();
+
+    availableShares = availableShares.toNumber();
+    totalShares = totalShares.toNumber();
+
+    let percentageOwnedByUser = 0;
+    let balanceOfUser = 0;
+    let userInvestment = 0;
+
+    const isInvestor = userAddress && assetInvestors.includes(userAddress);
+    const [
+      remainingEscrow,
+      escrowRedeemed,
+      assetManagerCollateral,
+    ] = await Promise.all([
+      api.methods.getAssetManagerEscrowRemaining(escrowId).call(),
+      api.methods.getAssetManagerEscrowRedeemed(escrowId).call(),
+      api.methods.getAssetManagerEscrow(escrowId).call(),
+    ])
+
+    if(isInvestor){
+      balanceOfUser = await dividendToken.methods.balanceOf(userAddress).call();
+      userInvestment = fromWeiToEth(BN(balanceOfUser).toString());
+      percentageOwnedByUser = BN(balanceOfUser).div(totalShares).toNumber();
+    }
+
+    if(crowdsaleFinalized){
+      const timestamp = await Network.getTimestampOfFundedAsset(assetId)
+      // no timestamp means payout has to be called (asset manager does it)
+      if(timestamp){
+        fundingProgress = fundingProgress - ((managerPercentage + platformFee) * fundingProgress)
+        if(isInvestor){
+          assetIncome = await dividendToken.methods.assetIncome().call();
+          owedToInvestor = await dividendToken.methods.getAmountOwed(userAddress).call();
+        }
+
+        assetIncome = await dividendToken.methods.assetIncome().call();
+        if(isAssetManager){
+          daysSinceItWentLive = dayjs().diff(dayjs(timestamp * 1000), 'day');
+          daysSinceItWentLive = daysSinceItWentLive === 0 ? 1 : daysSinceItWentLive;
+          assetIncomeForCollateral = fromWeiToEth(assetIncome) * (1 - platformFee - managerPercentage);
+          owedToAssetManager = await assetManagerFunds.methods.viewAmountOwed(assetId, userAddress).call();
+        }
+
+      } else if(isAssetManager) {
+        managerHasToCallPayout = true;
+      }
+    }
+
+    const searchQuery = `mybit_watchlist_${assetId}`;
+    const watchListed = window.localStorage.getItem(searchQuery) === 'true';
+
+    // determine whether asset has expired
+    const dueDate = dayjs(fundingDeadline * 1000);
+    const pastDate = dayjs() >= dueDate ? true : false;
+
+    const fundingStageTmp = crowdsaleFinalized ? 0 : (!pastDate && !crowdsaleFinalized) ? 2 : 1;
+    const fundingStage = getFundingStage(fundingStageTmp);
+
+    const fundingProgressFormatted = fromWeiToEth(fundingProgress);
+    const availableSharesFormatted = fromWeiToEth(availableShares);
+    return {
+      ...asset,
+      modelId,
+      managerHasToCallPayout,
+      fundingStage,
+      pastDate,
+      isAssetManager,
+      percentageOwnedByUser,
+      daysSinceItWentLive,
+      assetIncomeForCollateral,
+      owedToInvestor,
+      watchListed,
+      userInvestment,
+      managerPercentage,
+      fundingGoal: fromWeiToEth(fundingGoal),
+      fundingProgress: (availableSharesFormatted < 0.01 && availableSharesFormatted > 0 && !crowdsaleFinalized) ? fundingProgressFormatted - 0.01 : fundingProgressFormatted,
+      assetIncome: fromWeiToEth(assetIncome),
+      owedToAssetManager: fromWeiToEth(owedToAssetManager),
+      remainingEscrow: fromWeiToEth(remainingEscrow),
+      assetManagerCollateral: fromWeiToEth(assetManagerCollateral),
+      escrowRedeemed: fromWeiToEth(escrowRedeemed),
+      totalSupply: fromWeiToEth(totalShares),
+      availableShares: availableSharesFormatted,
+      fundingDeadline: fundingDeadline * 1000,
+      numberOfInvestors: assetInvestors.length,
+      funded: fundingStage === FundingStages.FUNDED,
+      listingDate,
+      fundingToken,
+    }
+  }catch(err){
+    console.log(err)
+  }
+
+}
+
+export const fetchAssets = async (userAddress,network, updateFunction) => {
+  try {
+    const [
+      assets,
+      operators,
+      assetModels,
+    ] = await Promise.all([
+      Network.getTotalAssetsWithBlockNumberAndManager(),
+      Network.getOperators(),
+      Network.getAssetModels(getDefaultTokenContract(network)),
+    ])
+
+    console.log("operators")
+    console.log(operators)
+    console.log("assetModels")
+    console.log(assetModels)
+    console.log("assets")
+    console.log(assets)
+
+    /*
+    await Network.addModel({
+      token: '0xad6d458402f60fd3bd25163575031acdce07538d',
+      operatorID: '0x3eccf03d236410e626e8000a285b59e17132713a829ada5638ccf8b82a6e7a65',
+      name: 'Smart Bench',
+      ipfs: 'QmYxiCZAXxJEwqqXjqzdwz159Z3Li6YhYXt8CMoBEj9xYq',
+      payout: true,
+      operator: '0x15c9C83075b7214308fd4526731db4172299E2a4',
+      accept: true,
+    })
+    */
+
+    const assetsRenamed =
+      assets
+        .map(({
+          address,
+          blockNumber,
+          manager,
+          ipfs,
+        })=> {
+          return {
+            assetId: address,
+            assetManager: manager,
+            blockNumber,
+            ipfs,
+          }
+        });
+
+    const assetDetails = await Promise.all(assetsRenamed.map(asset => fetchAsset(asset, userAddress)));
+
+    const objectToReturn = {};
+    assetDetails.forEach(asset => objectToReturn[asset.assetId] = asset);
+    /*console.log("SDK Data")
+    console.log("Asset Listings: ", objectToReturn)
+    console.log("Operators: ", platformOperators)
+    console.log("Asset Models: ", assetModels)
+    console.log("\n")*/
+    updateFunction({
+      assetListings: objectToReturn,
+      operators,
+      assetModels,
+    });
+  } catch (error) {
+    debug('failed to fetch assets, error: ', error);
+  }
+}
+
+export const subscribe = (onError, onUpdate, blockNumber) => Network.subscribe(onError, onUpdate, blockNumber)

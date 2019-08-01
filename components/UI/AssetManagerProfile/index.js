@@ -1,4 +1,5 @@
 import React from 'react';
+import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import Civic from 'static/civic_v2.svg';
 import CheckMark from 'static/ic_unreal.svg';
@@ -122,7 +123,7 @@ const AssetManagerProfile = ({
         />
         <Data
           text="Started as Manager"
-          value={startDate.format('DD-MM-YY')}
+          value={dayjs(startDate).format('DD-MM-YY')}
           styling={styling}
         />
         <Data

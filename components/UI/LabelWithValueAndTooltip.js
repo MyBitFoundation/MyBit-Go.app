@@ -32,7 +32,7 @@ const LabelWithValueAndTooltip = ({
   collateralCryptoPurchase,
   collateralCryptoPayouts,
   collateralPercentage,
-  numberOfAssetsByAssetManager,
+  totalFundedAssets,
 }) => {
   return (
     <Wrapper>
@@ -49,7 +49,7 @@ const LabelWithValueAndTooltip = ({
           }}
           title={
             <div>
-              <div>For managing {numberOfAssetsByAssetManager} assets: +{collateralBasedOnHistory}%</div>
+              <div>For having {totalFundedAssets} funded assets: +{collateralBasedOnHistory}%</div>
               <div>{collateralCryptoPurchase > 0 ? 'Manual Purchase' : 'Crypto Purchase'}: +{collateralCryptoPurchase}%</div>
               <div>{collateralCryptoPayouts > 0 ? 'Manual Payouts' : 'Crypto Payouts'}: +{collateralCryptoPayouts}%</div>
             </div>

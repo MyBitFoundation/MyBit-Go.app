@@ -9,6 +9,7 @@ import {
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
 } from 'constants/app';
+import CloseIcon from 'static/ic_close.svg';
 import { InternalLinks } from 'constants/links';
 import FileImg from 'static/file-icon.svg';
 import * as Brain from '../../apis/brain';
@@ -17,10 +18,32 @@ import DocumentsManagerNav from './documentsManagerNav';
 import DocumentsManagerDescription from './documentsManagerDescription';
 import DocumentsManagerFile from './documentsManagerFile';
 import DocumentsManagerList from './documentsManagerList';
-import DocumentsManagerWarning from './documentsManagerWarning';
 import DocumentsManagerWrapper from './documentsManagerWrapper';
 import DocumentsManagerError from './documentsManagerError';
 import DocumentsManagerNoFiles from './documentsManagerNoFiles';
+import { withBlockchainContext } from 'components/BlockchainContext';
+
+const CloseIconWrapper = styled(CloseIcon)`
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  transform: translate(0%,100%);
+  cursor: pointer;
+`
+
+const ChangesWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0px;
+  padding: 0% 10%;
+  bottom: 30px;
+
+  button{
+    margin-left: 20px;
+    width: 124px;
+  }
+`
 
 class DocumentsManager extends React.Component{
   constructor(props){
@@ -28,83 +51,98 @@ class DocumentsManager extends React.Component{
     this.state = {
       files: this.props.files || [],
       error: undefined,
-    }
-  }
-
-  upload = async (files) => {
-    try{
-      const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
-      if(result){
-        this.setState({
-          success: this.state.files.length,
-        })
-      };
-    }catch(err){
-      console.log(err);
+      filesTmp: [],
     }
   }
 
   handleFileUploaded = (file) => {
-    const {
-      files: propsFiles,
-    } = this.props;
+    const { files = [] } = this.props;
+    const { filesTmp } = this.state;
 
     const uploadedFiles = file.target.files;
-    const currentNumberOfFiles = propsFiles.length;
+    const currentNumberOfFiles = files.length + filesTmp.length;
     const uploadedNumberOfFiles = uploadedFiles.length;
     const canUpload = MAX_FILES_UPLOAD - currentNumberOfFiles;
 
     let error;
     if(currentNumberOfFiles + uploadedNumberOfFiles > MAX_FILES_UPLOAD){
       error = 'A maximum of 5 files can be uploaded.'
+      this.setState({
+        error,
+      })
+      return;
     }
-    const filesTmp = [];
-    const actualFiles = [];
     let counter = 0;
     let hasRepeatedNames = false;
     for(file of Object.values(uploadedFiles)){
-      if(propsFiles.includes(file.name)){
-        error = `Some files have duplicate names. They were skipped.`
-        hasRepeatedNames = true;
-      } else if(file.size > MAX_FILE_SIZE) {
+      if(file.size > MAX_FILE_SIZE) {
         error = `Some files are over 5MB. They were skipped.`
       } else {
-        filesTmp.push(file.name);
-        actualFiles.push(file);
+        filesTmp.push({name: file.name, deletable: true, file});
         counter+=1;
         if(counter === canUpload && counter !== 1){
-          error = `Only uploaded ${counter} file(s). Only 5 items (total) can be uploaded.`;
           break;
         }
       }
     }
 
-    if(error){
+    if(filesTmp.length > 0){
       this.setState({
+        filesTmp,
         error,
       })
     }
+  }
 
-    if(actualFiles.length > 0){
-      this.setState({
-        files: propsFiles.concat(filesTmp),
+  handleRemoveUpload = fileName => {
+    const { uploading } = this.state;
+    if(!uploading){
+      this.setState(prevState => {
+        return {
+          filesTmp: prevState.filesTmp.filter(file => file.name !== fileName),
+        }
       })
-      this.upload(actualFiles);
+    }
+  }
+
+  upload = async (files, propsFiles) => {
+    const { assetId } = this.props;
+    const { updateAssetListingIpfs } = this.props.blockchainContext;
+    const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
+    if(result){
+      updateAssetListingIpfs(assetId, files, propsFiles, () => {
+        this.setState({uploading: false, filesTmp: []})
+      })
+    }
+  }
+
+  handleFileUpload = () => {
+    try{
+      const { filesTmp } = this.state;
+      const { files = [] } = this.props;
+      this.setState({uploading: true})
+      this.upload(filesTmp, files);
+    }catch(err){
+      console.log(err);
+      this.setState({uploading: false})
     }
   }
 
   render = () => {
     const {
-      files,
+      files = [],
     } = this.props;
 
     const {
       error,
       success,
+      uploading,
+      filesTmp,
     } = this.state;
 
-    const noFiles = this.state.files.length === 0;
-
+    const noFiles = files.length === 0 && filesTmp.length === 0;
+    const noFilesToUpload = filesTmp.length === 0;
+    const reachedMaxFiles = filesTmp.length + files.length >= MAX_FILES_UPLOAD;
     return (
       <DocumentsManagerWrapper>
         <DocumentsManagerTitle>Supporting Documents</DocumentsManagerTitle>
@@ -118,8 +156,9 @@ class DocumentsManager extends React.Component{
             <Button
               size="large"
               type="file"
+              disabled={reachedMaxFiles}
             >
-              Upload Documents
+              {reachedMaxFiles ? 'Max 5 files' : 'Documents'}
             </Button>
           </UploadButton>
           <UploadButton
@@ -131,12 +170,12 @@ class DocumentsManager extends React.Component{
             <Icon type="upload" />
           </UploadButton>
           <DocumentsManagerDescription>
-            Up to a maximum of 5 files* can be uploaded, a maximum of 5MB each.
+            Up to a maximum of 5 files can be uploaded, a maximum of 5MB each. Files cannot be removed.
           </DocumentsManagerDescription>
         </DocumentsManagerNav>
         {!noFiles && (
           <DocumentsManagerList>
-            {this.state.files.map((file, index) => {
+            {files.concat(filesTmp).map((file, index) => {
               return (
                 <DocumentsManagerFile key={`file${index}`}>
                   <div>
@@ -146,11 +185,29 @@ class DocumentsManager extends React.Component{
                       rel="noopener noreferrer"
                       href={`${InternalLinks.S3}${this.props.assetId}:${file.name || file}`}>{file.name || file}
                     </a>
+                    {file.deletable && (
+                      <CloseIconWrapper onClick={this.handleRemoveUpload.bind(this, file.name || file)}/>
+                    )}
                   </div>
                 </DocumentsManagerFile>
               )
             })}
           </DocumentsManagerList>
+        )}
+        {(!noFiles || !noFilesToUpload) && (
+          <ChangesWrapper>
+            <div>Changes in asset information must be recorded on chain</div>
+            <Button
+              size="large"
+              type="file"
+              disabled={noFilesToUpload}
+              type={noFilesToUpload ? 'default' : 'primary'}
+              onClick={this.handleFileUpload}
+              loading={uploading}
+            >
+              {uploading ? 'Uploading' : noFilesToUpload ? 'Saved' : 'Save Changes'}
+            </Button>
+          </ChangesWrapper>
         )}
         {noFiles && (
           <DocumentsManagerNoFiles />
@@ -169,16 +226,13 @@ class DocumentsManager extends React.Component{
             color="green"
           >
             <Icon type="check" />
-            <span>{`${success}(s) have been uploaded.`}</span>
+            <span>{`${success} file(s) successfully uploaded.`}</span>
             <Icon type="cross" onClick={() => this.setState({success: undefined})}/>
           </DocumentsManagerError>
         )}
-        <DocumentsManagerWarning>
-          * files can not be removed after they have been uploaded.
-        </DocumentsManagerWarning>
       </DocumentsManagerWrapper>
     )
   }
 }
 
-export default DocumentsManager
+export default withBlockchainContext(DocumentsManager)

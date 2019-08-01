@@ -26,7 +26,6 @@ class AssetDisplayer extends React.Component{
     const {
       type,
       assets,
-      handleAssetFavorited,
       assetToRender: AssetToRender,
     } = this.props;
 
@@ -47,7 +46,6 @@ class AssetDisplayer extends React.Component{
             <AssetToRender
               key={asset.assetId}
               {...asset}
-              handleAssetFavorited={handleAssetFavorited}
             />
           ))}
         </Row>

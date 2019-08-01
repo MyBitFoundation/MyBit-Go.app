@@ -4,7 +4,8 @@ import { compose } from 'recompose'
 import AssetDetails from 'components/AssetDetails';
 import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
-import { withMetamaskContext } from 'components/MetamaskContext';
+import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
+import { withAssetsContextPageWrapper } from 'components/AssetsContext';
 import GoBackTextAndArrow from 'components/GoBackTextAndArrow';
 import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
@@ -15,17 +16,19 @@ class AssetPage extends React.Component {
   }
   render(){
     const {
+      assetsContext,
       blockchainContext,
       threeBoxContext,
       router,
       metamaskContext,
     } = this.props;
+    const {
+      loadingAssets,
+      assets,
+      loadingUserInfo,
+    } = assetsContext;
 
     const {
-      assets,
-      assetManagers,
-      loading,
-      handleAssetFavorited,
       fundAsset,
       updateNotification,
       gasPrice,
@@ -41,7 +44,7 @@ class AssetPage extends React.Component {
       syncingThreeBox
     } = threeBoxContext;
 
-    if (loading.assets) {
+    if (loadingAssets) {
       return (
         <Loading
           message="Loading asset information"
@@ -60,16 +63,13 @@ class AssetPage extends React.Component {
         />
       );
     } else {
-      const assetManager = assetManagers[asset.assetManager];
       toRender = (
         <AssetDetails
           asset={asset}
-          handleAssetFavorited={handleAssetFavorited}
           fundAsset={fundAsset}
           updateNotification={updateNotification}
-          loadingUserInfo={loading.userAssetsInfo}
+          loadingUserInfo={loadingUserInfo}
           gasPrice={gasPrice}
-          assetManager={assetManager}
           getPosts={getPosts}
           loadingThreeBox={loadingThreeBox}
           syncingThreeBox={syncingThreeBox}
@@ -93,7 +93,8 @@ class AssetPage extends React.Component {
 const enhance = compose(
   withThreeBoxContext,
   withBlockchainContextPageWrapper,
-  withMetamaskContext,
+  withMetamaskContextPageWrapper,
+  withAssetsContextPageWrapper,
 );
 
 export default enhance(AssetPage);

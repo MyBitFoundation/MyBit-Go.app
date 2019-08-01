@@ -3,8 +3,6 @@ import {
   Switch,
   Icon,
 } from 'antd';
-import { withAirtableContext } from 'components/AirtableContext'
-import { withBlockchainContext } from 'components/BlockchainContext'
 import CategoryFilter from 'components/CategoryFilter';
 import AssetDisplayer from 'components/AssetDisplayer';
 import ExploreFilters from './exploreFilters';
@@ -19,6 +17,7 @@ import {
 } from 'utils/helpers';
 import { Categories } from 'constants/categories';
 import { DefaultAsset } from 'ui/Asset';
+
 class AssetExplorer extends React.Component {
   constructor(props) {
     super(props);
@@ -106,7 +105,6 @@ class AssetExplorer extends React.Component {
   render = () => {
     const {
       assets,
-      handleAssetFavorited,
       EXPLORE_PAGE_FUNDING_ACTIVE,
       useLocalStorage,
     } = this.props;
@@ -120,7 +118,7 @@ class AssetExplorer extends React.Component {
 
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      const assetCategory = asset.model.category;
+      const assetCategory = asset && asset.model && asset.model.category;
       if (((fundingActive && asset.fundingStage === FundingStages.IN_PROGRESS && !asset.pastDate) || (!fundingActive && (asset.funded || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
         return true;
       }
@@ -160,16 +158,11 @@ class AssetExplorer extends React.Component {
         <AssetDisplayer
           assets={assetsFiltered}
           assetToRender={DefaultAsset}
-          handleAssetFavorited={handleAssetFavorited}
         />
       </React.Fragment>
     )
   }
 }
 
-const enhance = compose(
-  withAirtableContext,
-);
-
-export default enhance(AssetExplorer);
+export default AssetExplorer;
 

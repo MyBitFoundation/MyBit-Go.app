@@ -4,13 +4,43 @@ import { fetchAssets } from '../utils';
 import * as AssetsController from './assetsController';
 require('dotenv').config();
 const Airtable = require('airtable');
-const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appsalptZgxk3uE94';
-const AIRTABLE_BASE_ASSETS_MAINNET = 'appvR0rvJg5fg7Kg4';
+const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appy9WN6JEvAuyA0S';
+const AIRTABLE_BASE_ASSETS_MAINNET = 'app98ncQl4JjSLBNA';
 export let assetListings;
 export let assetModels;
 let calledGetAssets = false;
 // TODO Change to AIRTABLE_BASE_ASSETS_MAINNET once live on mainnet
-const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS_ROPSTEN);
+const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS_MAINNET);
+
+const getOperators = async () => {
+  return new Promise(async (resolve, reject) => {
+    const operators = {};
+    base('Operators').select().eachPage((records, fetchNextPage) => {
+      records.forEach(record => {
+        const address = record.get('Address');
+        const name = record.get('Name');
+        const files = record.get('Files');
+        operators[address] = {
+          name,
+          files,
+        };
+      });
+
+      // To fetch the next page of records, call `fetchNextPage`.
+      // If there are more records, `page` will get called again.
+      // If there are no more records, `done` will get called.
+      fetchNextPage();
+
+    }, error =>  {
+      if (error) {
+        console.error(error);
+        reject();
+      } else {
+        resolve(operators);
+      }
+    });
+  })
+}
 
 const getAssetModels = async () => {
   return new Promise(async (resolve, reject) => {
@@ -20,9 +50,6 @@ const getAssetModels = async () => {
         const category = record.get('Category');
         const name = record.get('Asset');
         const fundingGoal = record.get('Funding Goal');
-        const partnerAddress = record.get('Partner Address');
-        const cryptoPurchase = record.get('Crypto Purchase');
-        const cryptoPayout = record.get('Crypto Payout');
         const modelId = record.get('Model ID');
         const files = record.get('Files');
         const image = record.get('Image');
@@ -31,8 +58,6 @@ const getAssetModels = async () => {
           name,
           fundingGoal,
           partnerAddress,
-          cryptoPurchase,
-          cryptoPayout,
           files,
           image,
         };
@@ -51,6 +76,27 @@ const getAssetModels = async () => {
         resolve(assetModels);
       }
     });
+  })
+}
+
+export const updateAssetListingFilesString = async data => {
+  const { assetId, files } = data;
+  let recordId;
+  base('Asset Listings').select().eachPage((records, fetchNextPage) => {
+    records.forEach(record => {
+      if(record.get('Asset ID') === assetId){
+        recordId = record.id
+        base('Asset Models').update(recordId, {
+          "Files": files
+        }, (err, record) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        });
+      }
+    })
+    fetchNextPage();
   })
 }
 
@@ -76,7 +122,6 @@ const getAssetListings = async assetModels => {
         let defaultData = assetModels[modelId];
         defaultData.imageSrc = `https://s3.eu-central-1.amazonaws.com/mybit-go/assetImages:${defaultData.image}`
         assetListings[assetId] = {
-          assetId,
           modelId,
           files,
           financials,
@@ -109,17 +154,24 @@ const getAssetListings = async assetModels => {
     });
   })
 }
-const getAllAssetsById = async (newAsset = false) => {
+const getAllAssetsInfo = async (newAsset = false) => {
   try{
-    assetModels = await getAssetModels();
-    assetListings = await getAssetListings(assetModels);
+    [
+      assetOperators,
+      assetModels,
+      assetListings,
+    ] = await Promise.all([
+      getOperators,
+      getAssetModels,
+      getAssetListings,
+    ])
     if(!calledGetAssets || newAsset){
       // trigger the first run
       AssetsController.getAssets();
       calledGetAssets = true;
     }
   }catch(err){
-    setTimeout(getAllAssetsById, 2000);
+    setTimeout(getAllAssetsInfo, 2000);
   }
 }
 
@@ -161,7 +213,7 @@ export const addNewAsset = async (data) => {
     });
 
     // force refresh assets in the server
-    getAllAssetsById(true);
+    getAllAssetsInfo(true);
   } catch(err){
     console.log(err)
   }
@@ -173,5 +225,8 @@ export const pipeAssetModels = network =>
 export const pipeAssetListings = network =>
   request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Asset%20Listings?api_key=${process.env.AIRTABLE_KEY}`)
 
-getAllAssetsById();
-setTimeout(getAllAssetsById, 10000);
+export const pipeOperators = network =>
+    request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Operators?api_key=${process.env.AIRTABLE_KEY}`)
+
+getAllAssetsInfo();
+setTimeout(getAllAssetsInfo, 10000);

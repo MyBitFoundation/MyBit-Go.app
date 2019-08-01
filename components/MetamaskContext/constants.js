@@ -10,7 +10,7 @@ export const METAMASK_ERRORS = {
 };
 
 export const NETWORKS = {
-  1: 'main',
+  1: 'mainnet',
   2: 'morden',
   3: 'ropsten',
   4: 'rinkby',

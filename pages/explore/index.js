@@ -1,6 +1,6 @@
 import { compose } from 'recompose'
-import { withBlockchainContextPageWrapper } from 'components/BlockchainContext'
-import { withMetamaskContext } from 'components/MetamaskContext';
+import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
+import { withAssetsContextPageWrapper } from 'components/AssetsContext';
 import { LocalStorageKeys } from 'constants/localStorageKeys';
 import {
   getValueFromLocalStorage,
@@ -11,15 +11,13 @@ import { METAMASK_ERRORS } from 'components/MetamaskContext/constants';
 import MetamaskErrors from 'components/MetamaskErrors';
 
 const Explore = ({
-  blockchainContext,
+  assetsContext,
   metamaskContext,
 }) => {
   const {
     assets,
-    loading,
-    handleAssetFavorited,
-  } = blockchainContext;
-
+    loadingAssets,
+  } = assetsContext;
   const hasMetamaskErrors = metamaskContext.metamaskErrors();
   if(hasMetamaskErrors.error &&hasMetamaskErrors.error !== METAMASK_ERRORS.NO_METAMASK){
     return (
@@ -28,13 +26,12 @@ const Explore = ({
       />
     )
   }
-  if (loading.assets) {
+  if (loadingAssets) {
     return <Loading message="Loading assets" />;
   } else if(!hasMetamaskErrors.error || (hasMetamaskErrors.error === METAMASK_ERRORS.NO_METAMASK)){
     return (
       <AssetExplorer
         assets={assets}
-        handleAssetFavorited={handleAssetFavorited}
         EXPLORE_PAGE_FUNDING_ACTIVE={LocalStorageKeys.EXPLORE_PAGE_FUNDING_ACTIVE}
         EXPLORE_PAGE_SORT_BY={LocalStorageKeys.EXPLORE_PAGE_SORT_BY}
         EXPLORE_PAGE_SELECTED_FILTERS={LocalStorageKeys.EXPLORE_PAGE_SELECTED_FILTERS}
@@ -45,8 +42,8 @@ const Explore = ({
 };
 
 const enhance = compose(
-  withBlockchainContextPageWrapper,
-  withMetamaskContext,
+  withAssetsContextPageWrapper,
+  withMetamaskContextPageWrapper,
 );
 
 export default enhance(Explore);

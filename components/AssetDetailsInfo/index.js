@@ -1,3 +1,4 @@
+import { withAssetsContext } from 'components/AssetsContext';
 import AssetDetailsInfoName from './assetDetailsInfoName';
 import AssetDetailsInfoLocationIcon from './assetDetailsInfoLocationIcon';
 import AssetDetailsInfoLocation from './assetDetailsInfoLocation';
@@ -8,27 +9,36 @@ import AssetDetailsInfoWrapper from './assetDetailsInfoWrapper';
 import Watch from 'ui/Watch';
 import { InternalLinks } from 'constants/links';
 
-const getFilesToRender = (files, assetId) => {
+const FilesToRender = withAssetsContext(({
+  files,
+  assetId,
+  assetsContext,
+}) => {
   if(!files || files.length === 0){
     return <span>None</span>;
   }
-  const toReturn = files.map(file => (
+  const { usingAirtable } = assetsContext;
+  return files.map(file => (
     <a
       target="_blank"
       rel="noopener noreferrer"
-      href={`${InternalLinks.S3}${assetId}:${file}`}
+      href={usingAirtable ? `${InternalLinks.S3}${assetId}:${file.name}` : `https://cloudflare-ipfs.com/ipfs/${file.hash}`}
+      key={file.hash}
+      style={{display: "block"}}
     >
-      {file}
+      {file.name}
     </a>
   ))
-
-  return toReturn;
-}
+})
 
 const newLineToParagraphs = text => {
-  return text.split('\n').map((item, i) => {
-    return <p key={i}>{item}</p>;
-  });
+  try{
+    return text.split('\n').map((item, i) => {
+      return <p key={i}>{item}</p>;
+    });
+  }catch {
+    return '';
+  }
 }
 
 const AssetDetailsInfo = ({
@@ -84,16 +94,20 @@ const AssetDetailsInfo = ({
     <AssetDetailsInfoDescription>
       {newLineToParagraphs(risks)}
     </AssetDetailsInfoDescription>
-    <AssetDetailsInfoTitle>
-      Additional Costs
-    </AssetDetailsInfoTitle>
-    <AssetDetailsInfoDescription>
-      {newLineToParagraphs(fees)}
-    </AssetDetailsInfoDescription>
+    {fees && (
+      <React.Fragment>
+        <AssetDetailsInfoTitle>
+          Additional Costs
+        </AssetDetailsInfoTitle>
+        <AssetDetailsInfoDescription>
+          {newLineToParagraphs(fees)}
+        </AssetDetailsInfoDescription>
+      </React.Fragment>
+    )}
     <AssetDetailsInfoTitle>
       Supporting documents
     </AssetDetailsInfoTitle>
-    {getFilesToRender(files, assetId)}
+    <FilesToRender files={files} assetId={assetId}/>
   </AssetDetailsInfoWrapper>
 )
 

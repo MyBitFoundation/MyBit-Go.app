@@ -30,6 +30,7 @@ const AppHeader = ({
   currentPath,
   handleMobileMenuState,
   notificationsContext,
+  assetsContext,
 }) => {
   const {
     user,
@@ -73,7 +74,6 @@ const AppHeader = ({
   }
 
   const balance = user && user.avgBalance;
-
   return (
     <AppHeaderContainer
       hideOnMobile={hideOnMobile}

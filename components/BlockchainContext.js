@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import BN from 'bignumber.js';
 import dayjs from 'dayjs';
-import { withAirtableContext } from 'components/AirtableContext';
+import { withAssetsContext } from 'components/AssetsContext';
 import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import * as Brain from '../apis/brain';
@@ -41,7 +41,7 @@ import {
   addJsonFileToIpfs,
   addUserFileToIpfs,
 } from 'utils/ipfs';
-const Contracts = require('@mybit/contracts');
+
 
 BN.config({ EXPONENTIAL_AT: 80 });
 
@@ -78,46 +78,40 @@ export const withBlockchainContext = (Component) => {
 class BlockchainProvider extends React.Component {
   constructor(props) {
     super(props);
-    this.fetchAssets = this.fetchAssets.bind(this);
     this.fetchTransactionHistory = this.fetchTransactionHistory.bind(this);
     this.fundAsset = this.fundAsset.bind(this);
     this.handleMetamaskUpdate = this.handleMetamaskUpdate.bind(this);
-    this.handleAssetFavorited = this.handleAssetFavorited.bind(this);
     this.handleListAsset = this.handleListAsset.bind(this);
     this.withdrawInvestorProfit = this.withdrawInvestorProfit.bind(this);
     this.withdrawCollateral = this.withdrawCollateral.bind(this);
     this.withdrawProfitAssetManager = this.withdrawProfitAssetManager.bind(this);
     this.state = {
       loading: {
-        assets: true,
         transactionHistory: true,
       },
       transactions: [],
-      assets: [],
-      fetchAssets: this.fetchAssets,
+      getCategoriesForAssets: this.getCategoriesForAssets,
       fetchTransactionHistory: this.fetchTransactionHistory,
       fundAsset: this.fundAsset,
-      handleAssetFavorited: this.handleAssetFavorited,
       handleListAsset: this.handleListAsset,
       withdrawInvestorProfit: this.withdrawInvestorProfit,
       withdrawCollateral: this.withdrawCollateral,
       withdrawProfitAssetManager: this.withdrawProfitAssetManager,
       issueDividends: this.issueDividends,
       payoutAsset: this.payoutAsset,
+      updateAssetListingIpfs: this.updateAssetListingIpfs,
       isUserContributing: false,
       withdrawingAssetIds: [],
       withdrawingCollateral: [],
       callingPayout: [],
       withdrawingAssetManager: [],
       gasPrice: '10000000000', //10 GWEI
-      assetManagers: {},
+      updatingAssetListingsIpfs: [],
     };
-    this.initialiseSDK();
   }
 
   componentDidMount = async () => {
     try {
-      this.fetchAssets();
       this.fetchTransactionHistory();
       this.fetchGasPrice();
     } catch (err) {
@@ -128,40 +122,26 @@ class BlockchainProvider extends React.Component {
 
   // handle case where account, login, enabled or network variable change
   componentDidUpdate = async prevProps => {
-    const {
-      metamaskContext: oldProps,
-    } = prevProps;
-
-    const {
-      metamaskContext: newProps,
-    } = this.props;
-
+    const { metamaskContext: oldProps } = prevProps;
+    const { metamaskContext: newProps } = this.props;
     const oldEnabled = oldProps.privacyModeEnabled;
     const oldUsername = oldProps.user.address;
     const oldUserIsLoggedIn = oldProps.userIsLoggedIn;
     const oldNetwork = oldProps.network;
-
     const newUserAddress = newProps.user.address;
     const newIsUserLoggedIn = newProps.userIsLoggedIn;
     const newEnabled = newProps.privacyModeEnabled;
     const newNetwork = newProps.network;
 
     if((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)){
-      console.log("Updating assets due to a change in: address or login or privacy mode")
+      console.log("Updating blockchainContext due to a change in: address or login or privacy mode")
       this.handleMetamaskUpdate();
     } else if(newNetwork !== oldNetwork){
       this.setState({
         loading: {
-          ...this.state.loading,
-          assets: true,
-          userAssetsInfo: true,
           transactionHistory: true,
         }
       })
-      const isASupportedNetwork = SUPPORTED_NETWORKS.includes(newNetwork);
-      Brain.initialiseSDK();
-      isASupportedNetwork && await this.props.airtableContext.forceRefresh(newNetwork)
-      this.fetchAssets();
       this.fetchTransactionHistory();
     }
   }
@@ -170,23 +150,7 @@ class BlockchainProvider extends React.Component {
     this.resetIntervals();
   }
 
-  initialiseSDK = () => {
-    const network = this.props.metamaskContext.network;
-    const isASupportedNetwork = SUPPORTED_NETWORKS.includes(network);
-    let contracts, block;
-    if(isASupportedNetwork){
-      contracts = CONTRACTS_PATH[network];
-      block = Contracts.block[network];
-    } else {
-      contracts = CONTRACTS_PATH['default'];
-      block = Contracts.block[FALLBACK_NETWORK];
-    }
-    Brain.initialiseSDK(contracts, block);
-  }
-
   createIntervals = () => {
-    this.intervalFetchAssets =
-      setInterval(() => this.fetchAssets(this.props.metamaskContext.network), FETCH_ASSETS_TIME);
     this.intervalFetchTransactionHistory =
       setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
     this.intervalFetchGasPrice =
@@ -194,7 +158,6 @@ class BlockchainProvider extends React.Component {
   }
 
   resetIntervals = () => {
-    clearInterval(this.intervalFetchAssets);
     clearInterval(this.intervalFetchTransactionHistory);
     clearInterval(this.intervalFetchGasPrice);
   }
@@ -212,54 +175,173 @@ class BlockchainProvider extends React.Component {
         } = response.data;
 
         gasPrice = BN(fast).times(100000000).toString(); //converts to WEI, from GWEI
+        this.setState({
+          gasPrice,
+        })
       }
     }catch(err){
       debug("Error pulling gas price");
       debug(err)
     }
-    this.setState({
-      gasPrice,
-    })
   }
 
-  pullFileInfoForAssets = async (assets) => {
-    try{
-      const response = await axios(InternalLinks.S3_ASSET_FILES);
+  getCategoriesForAssets = (country, city) => {
+    const {
+      assetModels,
+    } = this.props.assetsContext;
 
-      const filesByassetId = response.data.filesByAssetId;
+    const categories = {};
 
-      for(const asset of assets){
-        const assetId = asset.assetId;
-        if(filesByassetId[assetId]){
-          asset.files = filesByassetId[assetId];
-        }
+    for(const key in assetModels){
+      const asset = assetModels[key];
+      const {
+        category,
+        location,
+        url,
+      } = asset;
+
+      let shouldAdd = false;
+      /*
+      * If the asset does not have a specified location
+      * then anyone from anywhere can list it
+      */
+      if(!location){
+        shouldAdd = true;
       }
-      return assets;
-    }catch(err){
-      debug("Error pulling files from server");
-      debug(err)
-      return assets;
+      /*
+      * The user's country needs to an allowed location for the asset
+      * and either the city also matches or there are no city specified
+      * which means the user is eligible to list this asset
+      */
+      else if((location && location[country] && Array.isArray(location[country]) && (location && location[country].includes(city.toLowerCase())) || (location && location[country] && Object.keys(location[country]).length === 0))){
+        shouldAdd = true;
+      }
+      if(shouldAdd){
+        if(!categories[category]){
+          categories[category] = [];
+        }
+        categories[category].push({...asset, modelId: key, url});
+      }
     }
+    return categories;
+  }
+
+  updateAssetListingIpfs = async (assetId, filesToUpload, existingFiles, cb) => {
+    const { gasPrice } = this.state;
+    const { buildNotification } = this.props.notificationsContext;
+    const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
+    const {
+      financials,
+      about,
+      risks,
+      fees,
+      country,
+      city,
+      collateralPercentage,
+      assetAddress1,
+      assetAddress2,
+      assetProvince,
+      assetPostalCode,
+      fundingToken,
+    } = currentAsset;
+    const { name: assetName } = currentAsset.model;
+    const notificationId = Date.now();
+
+    let filesInfo = await this.handleIpfsFileUpload(filesToUpload);
+    existingFiles.forEach(file => {
+      filesInfo.array.push({...file})
+      filesInfo.string += `${file.name}|${file.hash}|`
+    })
+    const ipfsHash = await addJsonFileToIpfs({
+      financials,
+      about,
+      risks,
+      fees,
+      country,
+      city,
+      collateralPercentage,
+      assetAddress1,
+      assetAddress2,
+      assetProvince,
+      assetPostalCode,
+      files: filesInfo.array,
+    })
+    //update state so users can't trigger multiple saves
+    const updatingAssetListingsIpfs = this.state.updatingAssetListingsIpfs.slice();
+    updatingAssetListingsIpfs.push(assetId);
+    this.setState({
+      updatingAssetListingsIpfs,
+    });
+
+    buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
+      operationType: NotificationsMetamask.ASSET_FILES_UPLOAD,
+      assetName,
+    });
+
+    const onTransactionHash = () => {
+      buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.INFO, {
+        assetName,
+      });
+    }
+
+    const onReceipt = (wasSuccessful) => {
+      if(wasSuccessful){
+        onSuccess();
+      } else{
+        onError(ErrorTypes.ETHEREUM);
+      }
+    }
+
+    const onError = (type) => {
+      cb && cb();
+      updateAssetListingsIpfs();
+      if(type === ErrorTypes.METAMASK){
+        buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
+          operationType: NotificationsMetamask.ASSET_FILES_UPLOAD
+        });
+      } else {
+        buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.ERROR);
+      }
+    }
+
+    const updateAssetListingsIpfs = () => {
+      let updatingAssetListingsIpfs = this.state.updatingAssetListingsIpfs.slice();
+      updatingAssetListingsIpfs = updatingAssetListingsIpfs.filter(assetIdTmp => assetIdTmp !== assetId);
+      this.setState({
+        updatingAssetListingsIpfs,
+      });
+    }
+
+    const onSuccess = async () => {
+      await Promise.all([
+        this.fetchTransactionHistory,
+        this.props.assetsContext.updateAssetListingWithNewFiles(assetId, filesInfo),
+      ]);
+      cb && cb();
+      updateAssetListingsIpfs();
+      buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.SUCCESS, {
+        assetName,
+      });
+    }
+
+    Brain.updateAssetListingIpfs({
+      userAddress: this.props.metamaskContext.user.address,
+      fundingToken,
+      assetId,
+      onTransactionHash,
+      onReceipt,
+      onError,
+      gasPrice,
+      ipfs: ipfsHash,
+    });
   }
 
   payoutAsset = async asset => {
-    const {
-      gasPrice,
-    } = this.state;
-
-    const {
-      assetId,
-      model
-    } = asset;
-
-    const {
-      name: assetName,
-    } = model;
-
-    const {
-      buildNotification,
-    } = this.props.notificationsContext;
-
+    const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
+    const { gasPrice } = this.state;
+    const { assetId, model} = asset;
+    const { name: assetName } = model;
+    const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
     //update state so users can't trigger payout multiple times
@@ -308,7 +390,7 @@ class BlockchainProvider extends React.Component {
     }
 
     const onSuccess = async () => {
-      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory]);
+      await Promise.all([this.fetchTransactionHistory, forceUpdateListingWithOnChainData(assetId)]);
       updateCallingPayout();
       buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.SUCCESS, {
         assetName,
@@ -326,23 +408,11 @@ class BlockchainProvider extends React.Component {
   }
 
   withdrawProfitAssetManager = async (asset, amount) => {
-    const {
-      gasPrice,
-    } = this.state;
-
-    const {
-      assetId,
-      model
-    } = asset;
-
-    const {
-      name: assetName,
-    } = model;
-
-    const {
-      buildNotification,
-    } = this.props.notificationsContext;
-
+    const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
+    const { gasPrice } = this.state;
+    const { assetId, model} = asset;
+    const { name: assetName } = model;
+    const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
     //update state so users can't trigger the withdrawal multiple times
@@ -394,7 +464,7 @@ class BlockchainProvider extends React.Component {
     }
 
     const onSuccess = async () => {
-      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+      await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
       updatewithdrawingAssetManager();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.SUCCESS, {
         assetName,
@@ -413,24 +483,13 @@ class BlockchainProvider extends React.Component {
   }
 
   withdrawCollateral = async (asset, percentage, amount, updateAssetCollateralPage) => {
-    const {
-      gasPrice,
-    } = this.state;
-
-    const {
-      assetId,
-      model,
-    } = asset;
-
-    const {
-      name: assetName,
-    } = model;
-
-    const {
-      buildNotification,
-    } = this.props.notificationsContext;
-
+    const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
+    const { gasPrice } = this.state;
+    const { assetId, model} = asset;
+    const { name: assetName } = model;
+    const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
+
     const formattedAmount = formatMonetaryValue(amount, PLATFORM_TOKEN);
 
     //update state so users can't trigger the withdrawal multiple times
@@ -482,7 +541,7 @@ class BlockchainProvider extends React.Component {
     }
 
     const onSuccess = async () => {
-      await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+      await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
       updateWithdrawingCollateral();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.SUCCESS, {
         assetName,
@@ -503,21 +562,27 @@ class BlockchainProvider extends React.Component {
 
   handleIpfsFileUpload = async fileList => {
     const toWait = []
+    const files = [];
     let filesString = '';
     for(const file of fileList){
-      toWait.push(addUserFileToIpfs(file.originFileObj ? file.originFileObj : file));
+      toWait.push(addUserFileToIpfs(file.originFileObj ? file.originFileObj : file.file ? file.file : file));
     }
     const ipfsHashes = await Promise.all(toWait);
     if(ipfsHashes.length > 0){
       for(let i=0;i<ipfsHashes.length;i++){
-        const ipfs = ipfsHashes[i];
-        const fileName = fileList[i].name;
-        filesString+=`${fileName}|${ipfs}|`
+        const hash = ipfsHashes[i];
+        const name = fileList[i].name;
+        files.push({
+          hash,
+          name,
+        })
+        filesString+=`${name}|${hash}|`
       }
-    } else {
-      filesString = undefined;
     }
-    return filesString;
+    return {
+      array: files,
+      string: filesString,
+    }
   }
 
   handleListAsset = async (formData, setUserListingAsset) => {
@@ -527,7 +592,6 @@ class BlockchainProvider extends React.Component {
 
     const {
       metamaskContext,
-      airtableContext,
       notificationsContext,
     } = this.props;
 
@@ -536,14 +600,12 @@ class BlockchainProvider extends React.Component {
       userCountry: country,
       userCity: city,
       managementFee,
-      category,
       fileList,
       collateralInSelectedToken,
       collateralPercentage,
       paymentTokenAddress,
       selectedToken,
       assetValue,
-      operatorId,
       about,
       financials,
       risks,
@@ -556,7 +618,6 @@ class BlockchainProvider extends React.Component {
       assetPostalCode,
     } = formData;
 
-    const { categoriesAirTable } = airtableContext;
     const { buildNotification } = notificationsContext;
 
     const {
@@ -608,10 +669,6 @@ class BlockchainProvider extends React.Component {
       }
     }
 
-    const {
-      assetsAirTable,
-    } = this.props.airtableContext;
-
     const filesInfo = await this.handleIpfsFileUpload(fileList);
 
     const ipfsHash = await addJsonFileToIpfs({
@@ -626,13 +683,10 @@ class BlockchainProvider extends React.Component {
       assetAddress2,
       assetProvince,
       assetPostalCode,
-      files: filesInfo,
+      files: filesInfo.array,
     })
 
     const onSuccess = async (assetId) => {
-      const {
-        airtableContext,
-      } = this.props;
       const numberOfInternalActions = 1;
       const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
       const filesUploaded = fileList.length > 0;
@@ -643,8 +697,6 @@ class BlockchainProvider extends React.Component {
       const performInternalAction = async () => {
         counterCallsToInternalActions++;
         if(counterCallsToInternalActions === requiredCallsToInternalActions){
-          await airtableContext.forceRefresh();
-          await this.fetchAssets();
           buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
             assetName,
             assetId,
@@ -668,7 +720,7 @@ class BlockchainProvider extends React.Component {
         assetProvince,
         assetPostalCode,
         modelId,
-        files: filesInfo,
+        files: filesInfo.string,
       }, performInternalAction)
 
       filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
@@ -717,7 +769,7 @@ class BlockchainProvider extends React.Component {
         gasPrice,
       } = this.state;
 
-      const currentAsset = this.state.assets.find(item => item.assetId === assetId);
+      const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
       const amountFormatted = formatMonetaryValue(amountContributed);
       const {
@@ -787,7 +839,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onSuccessRefreshData = async () => {
-        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        await Promise.all([this.fetchTransactionHistory()]);
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
           assetName,
           amount: amountFormatted,
@@ -817,20 +869,14 @@ class BlockchainProvider extends React.Component {
 
   issueDividends = (amount, assetId) => {
     try {
-      const {
-        gasPrice,
-      } = this.state;
-
-      const currentAsset = this.state.assets.find(item => item.assetId === assetId);
+      const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
+      const { gasPrice } = this.state;
+      const { buildNotification } = this.props.notificationsContext;
       const notificationId = Date.now();
-      const formattedAmount = formatMonetaryValue(amount);
-      const {
-        name : assetName,
-      } = currentAsset.model;
 
-      const {
-        buildNotification,
-      } = this.props.notificationsContext;
+      const formattedAmount = formatMonetaryValue(amount);
+      const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
+      const { name : assetName } = currentAsset.model;
 
       // Call Approve first
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -883,7 +929,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onSuccessRefreshData = async () => {
-        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
         buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.SUCCESS, {
           assetName,
           formattedAmount,
@@ -912,11 +958,12 @@ class BlockchainProvider extends React.Component {
 
   withdrawInvestorProfit = async (assetId, amount) => {
     try {
+      const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
       const {
         gasPrice,
       } = this.state;
 
-      const currentAsset = this.state.assets.find(item => item.assetId === assetId);
+      const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
       const{
         name: assetName,
       } = currentAsset.model;
@@ -977,7 +1024,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onSuccessRefreshData = async () => {
-        await Promise.all([this.fetchAssets(), this.fetchTransactionHistory()]);
+        await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
         removeassetIdFromList();
         buildNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.SUCCESS, {
           assetName,
@@ -999,25 +1046,6 @@ class BlockchainProvider extends React.Component {
     }
   }
 
-  handleAssetFavorited = (assetId) => {
-    const searchQuery = `mybit_watchlist_${assetId}`;
-    const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
-    if (alreadyFavorite) {
-      localStorage.removeItem(searchQuery);
-    } else {
-      localStorage.setItem(searchQuery, true);
-    }
-
-    const assets = this.state.assets.slice();
-    const asset = assets.filter(assetToFilter => assetToFilter.assetId === assetId)[0];
-
-    asset.watchListed = !alreadyFavorite;
-
-    this.setState({
-      assets,
-    });
-  }
-
   resetNotifications = () => {
     this.setState({
       notifications: [],
@@ -1027,16 +1055,14 @@ class BlockchainProvider extends React.Component {
   handleMetamaskUpdate = async () => {
     const {
       userIsLoggedIn,
-    } = this.state;
+    } = this.props.metamaskContext;
 
-    this.fetchAssets();
     this.fetchTransactionHistory();
     this.resetNotifications();
 
     this.setState({
       loading: {
         ...this.state.loading,
-        userAssetsInfo: true,
         transactionHistory: !userIsLoggedIn ? false : true,
       },
     });
@@ -1062,87 +1088,8 @@ class BlockchainProvider extends React.Component {
       })
       .catch((err) => {
         debug(err);
-        if (this.state.userIsLoggedIn) {
+        if (this.props.metamaskContext.userIsLoggedIn) {
           setTimeout(this.fetchTransactionHistory, 5000);
-        }
-      });
-  }
-
-  updateAssetsWithAssetManagerData = (assets, assetManagers) => {
-    return assets.map(asset => {
-      const {
-        assetManager,
-        listingDate,
-        assetIncome,
-        remainingEscrow,
-      } = asset;
-
-      if(!assetManagers[assetManager]){
-        const startDate = dayjs(listingDate);
-        assetManagers[assetManager] = {
-          startDate,
-          totalAssets: 1,
-          totalRevenue: assetIncome,
-          collateralLocked: remainingEscrow,
-        }
-      } else {
-        assetManagers[assetManager].totalAssets += 1;
-        assetManagers[assetManager].totalRevenue += assetIncome;
-        assetManagers[assetManager].collateralLocked += remainingEscrow;
-      }
-      return {
-        ...asset,
-        assetManagerData: assetManagers[assetManager],
-      }
-    })
-  }
-
-  fetchAssets = async () => {
-    const {
-      metamaskContext,
-    } = this.props;
-
-    const {
-      user,
-      userIsLoggedIn,
-      network,
-      userHasMetamask,
-    } = metamaskContext;
-
-    const {
-      assetsAirTable,
-      assetsAirTableById,
-      network: airtableNetwork,
-      updateAssetModels,
-    } = this.props.airtableContext;
-
-    if (!assetsAirTableById || !assetsAirTable) {
-      setTimeout(this.fetchAssets, 2000);
-      return;
-    }
-    const assetManagers = {};
-    await Brain.fetchAssets(user.address, assetsAirTableById, assetsAirTable, updateAssetModels)
-      .then( async (response) => {
-        // otherwise Airtable still needs to update
-        if(airtableNetwork === network || !userHasMetamask){
-          const updatedAssetsWithData = await this.pullFileInfoForAssets(response);
-          const updatedAssetsWithManagerData = this.updateAssetsWithAssetManagerData(updatedAssetsWithData, assetManagers);
-          this.setState({
-            assets: updatedAssetsWithManagerData,
-            assetManagers,
-            loading: {
-              ...this.state.loading,
-              assets: false,
-              userAssetsInfo: false,
-            },
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-        debug(err);
-        if (userIsLoggedIn) {
-          setTimeout(this.fetchAssets, 5000);
         }
       });
   }
@@ -1159,7 +1106,7 @@ class BlockchainProvider extends React.Component {
 const enhance = compose(
   withNotificationsContext,
   withMetamaskContext,
-  withAirtableContext,
+  withAssetsContext,
 );
 
 export default enhance(BlockchainProvider);

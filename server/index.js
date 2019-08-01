@@ -42,6 +42,16 @@ app
     }
   });
 
+  server.post('/api/airtable/updateAssetListingFiles', async (req, res) => {
+    try{
+      await AirTableController.updateAssetListingFilesString(req.body);
+      res.sendStatus(200)
+    }catch(error){
+      res.statusCode = 500;
+      res.send(error);
+    }
+  });
+
   server.get('/api/airtable/assetModels/:network', (req, res) => {
     try{
       const network = req.params.network;
@@ -56,6 +66,16 @@ app
     try{
       const network = req.params.network;
       req.pipe(AirTableController.pipeAssetListings(network)).pipe(res);
+    }catch(error){
+      res.statusCode = 500;
+      res.send(error);
+    }
+  });
+
+  server.get('/api/airtable/operators/:network', (req, res) => {
+    try{
+      const network = req.params.network;
+      req.pipe(AirTableController.pipeOperators(network)).pipe(res);
     }catch(error){
       res.statusCode = 500;
       res.send(error);
