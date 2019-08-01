@@ -101,9 +101,8 @@ const AlertMessageWrapper = styled.div`
 
 const AssetValueContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  width: 80%;
   margin: 0 auto;
+  justify-content: center;
 
   ${props => props.cryptoPurchase === false && css`
     ${({ theme }) => theme.mobileL`
@@ -134,6 +133,7 @@ export const AvailableAssetsSlide = ({
   nextButtonDisabled,
   error,
   autoLocationOffline,
+  getCategoriesForAssets,
 }) => {
   const {
     category,
@@ -145,11 +145,6 @@ export const AvailableAssetsSlide = ({
     countryCode,
     cryptoPurchase,
   } = formData;
-
-  const {
-    assetsAirTable,
-    getCategoriesForAssets,
-  } = airtableContext;
 
   let areAssetsAvailable = true;
   let categories = {};
@@ -275,7 +270,7 @@ export const AvailableAssetsSlide = ({
                     {assetsAvailable.map(asset => {
                       return (
                         <Select.Option key={asset.name} value={asset.modelId}>
-                          {asset.name}
+                          <span style={{display: 'flex', justifyContent: 'space-between'}}><span>{asset.name}</span><a href={asset.url} target="_blank">view</a></span>
                         </Select.Option>
                       )}
                     )}

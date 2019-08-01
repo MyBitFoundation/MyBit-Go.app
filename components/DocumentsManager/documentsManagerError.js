@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 
 const DocumentsManagerError = styled.div`
-  margin: 0% 10%;
-  position: relative;
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+  left: 0px;
+  padding: 0% 10%;
 
   span{
     margin-left: 10px;
+    padding-right: 10px;
   }
 
   i:nth-child(1) svg{
@@ -13,9 +17,6 @@ const DocumentsManagerError = styled.div`
   }
 
   i:nth-child(3){
-    position: absolute;
-    right: 0px;
-    top: 3px;
     cursor: pointer;
   }
 }`

@@ -47,7 +47,6 @@ class AssetFundingModule extends React.Component {
     this.setStaticParameters();
   }
 
-  //compare componentDidUpdate with componentWillReceiveProps
   componentWillReceiveProps = nextProps => {
     const { asset } = this.props;
     const { loading } = this.props.blockchainContext;

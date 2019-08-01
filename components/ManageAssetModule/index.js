@@ -2,6 +2,7 @@ import React from 'react';
 import { compose } from 'recompose'
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
+import { withAssetsContext } from 'components/AssetsContext';
 import { withThreeBoxContext } from 'components/ThreeBoxContext';
 import {
   fromWeiToEth,
@@ -226,21 +227,21 @@ class ManageAssetModule extends React.Component{
 
   getData = async (props) => {
     const {
-      blockchainContext,
+      assetsContext,
       metamaskContext,
       assetId: requestedAssetId,
     } = props || this.props;
 
     const {
-      loading,
+      loadingAssets,
       assets,
-    } = blockchainContext;
+    } = assetsContext;
 
     const {
       user,
     } = metamaskContext;
 
-    if(loading.assets){
+    if(loadingAssets){
       this.setState({
         loading: true,
       })
@@ -279,6 +280,7 @@ const enhance = compose(
   withThreeBoxContext,
   withMetamaskContext,
   withBlockchainContext,
+  withAssetsContext,
 );
 
 export default enhance(ManageAssetModule);

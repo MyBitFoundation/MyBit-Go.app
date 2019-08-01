@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const AssetTemplateWrapper = styled.div`
   margin: 0px;

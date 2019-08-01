@@ -1,5 +1,6 @@
-var ipfsClient = require('ipfs-http-client')
-const ipfs = new ipfsClient('ipfs.infura.io', '5001', {  protocol: 'https' });
+const ipfsClient = require('ipfs-http-client')
+import { HOST, PROTOCOL, PORT } from 'constants/ipfs';
+const ipfs = new ipfsClient(HOST, PORT, {  protocol: PROTOCOL });
 
 export const addFileToIpfs = async data => {
   try{

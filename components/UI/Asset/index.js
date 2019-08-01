@@ -70,13 +70,14 @@ export const DefaultAsset = props => (
   />
 )
 
-const Asset = memo(props => {
+const Asset = props => {
   const {
     assetId,
     model,
     colSize,
     toRender: ToRender,
   } = props;
+
   const {
     imageSrc,
     name,
@@ -95,4 +96,4 @@ const Asset = memo(props => {
       </AssetTemplate>
     </Col>
   )
-})
+}

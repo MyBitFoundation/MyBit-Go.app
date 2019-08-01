@@ -5,7 +5,7 @@ import {
   Switch,
   Icon,
 } from 'antd';
-import { withBlockchainContext } from 'components/BlockchainContext'
+import { withAssetsContext } from 'components/AssetsContext'
 import Loading from 'components/Loading';
 import {
   getValueFromLocalStorage,
@@ -30,16 +30,15 @@ class WatchListPage extends React.Component {
 
   render = () => {
     const {
-      blockchainContext,
+      assetsContext,
      } = this.props;
 
      const {
-      loading,
+      loadingAssets,
       assets,
-      handleAssetFavorited,
-     } = blockchainContext;
+     } = assetsContext;
 
-    if (loading.assets) {
+    if (loadingAssets) {
       return <Loading message="Loading Watch List" />;
     }
 
@@ -73,11 +72,10 @@ class WatchListPage extends React.Component {
         <AssetDisplayer
           assets={assetsFiltered}
           assetToRender={DefaultAsset}
-          handleAssetFavorited={handleAssetFavorited}
         />
       </React.Fragment>
     );
   }
 }
 
-export default withBlockchainContext(WatchListPage);
+export default withAssetsContext(WatchListPage);

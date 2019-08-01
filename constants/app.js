@@ -9,7 +9,7 @@ export const ERC20_TOKEN_MAX_DECIMALS = 4;
 export const PLATFORM_TOKEN = 'MYB';
 export const PLATFORM_TOKEN_MAX_DECIMALS = 3;
 export const getDefaultTokenContract = network => network === 'ropsten' ? '0xad6d458402f60fd3bd25163575031acdce07538d' : '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359';
-export const getPlatformTokenContract = network => network === 'ropsten' ? '0xc68d7c356e1b725f75cbaf1306a2603abd7157ca' : '0xc68d7c356e1b725f75cbaf1306a2603abd7157ca';
+export const getPlatformTokenContract = network => network === 'ropsten' ? '0xc68d7c356e1b725f75cbaf1306a2603abd7157ca' : '0x5d60d8d7eF6d37E16EBABc324de3bE57f135e0BC';
 export const CROWDSALE_DURATION = 2592000; //30 days in seconds
 export const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
   ,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
@@ -26,3 +26,9 @@ export const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","
   ,"Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia"
   ,"Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","Uruguay"
   ,"Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+
+export const DEFAULT_ASSET_INFO = {
+  Financials: 'No financial information about this asset has been provided.',
+  Risks: 'No risk information about this asset has been provided.',
+  About: 'No information about this asset has been provided.',
+}

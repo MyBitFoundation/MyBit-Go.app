@@ -114,14 +114,14 @@ class KyberProvider extends React.Component {
     clearInterval(this.intervalSupportedTokens);
   }
 
-  componentWillReceiveProps = nextProps => {
+  componentDidUpdate = prevProps => {
     const {
       network: oldNetwork,
-    } = this.props;
+    } = prevProps;
 
     const {
       network: newNetwork,
-    } = nextProps;
+    } = this.props;
 
     if(oldNetwork !== newNetwork){
       this.setState({loading: true});
@@ -138,16 +138,11 @@ class KyberProvider extends React.Component {
 
       network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
 
-      if(!network){
-        return;
-      }
-
       const supportedTokensInfo = {};
 
       if(supportedNetworks.includes(network) || !userHasMetamask){
         const supportedTokens = await fetch(getSupportedTokensUrl(network));
         const supportedTokensData = await supportedTokens.json();
-
         const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
         const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
 
@@ -162,8 +157,8 @@ class KyberProvider extends React.Component {
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
             ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network),
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
             ])
 
             supportedTokensInfo['ETH'] = {
@@ -178,8 +173,8 @@ class KyberProvider extends React.Component {
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
             ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000', network),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000', network),
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
             ])
 
             // This kind of filtering needs to be tested
@@ -195,6 +190,7 @@ class KyberProvider extends React.Component {
           }
         }));
       }
+
       this.setState({
         supportedTokensInfo,
         loading: false,

@@ -26,7 +26,7 @@ import SupportedBrowsers from 'ui/SupportedBrowsers';
 const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
-export const withMetamaskContext = (Component) => {
+export const withMetamaskContextPageWrapper = (Component) => {
   return class Higher extends React.Component{
     static getInitialProps(ctx) {
       if(Component.getInitialProps)
@@ -41,6 +41,16 @@ export const withMetamaskContext = (Component) => {
       )
     }
   }
+}
+
+export const withMetamaskContext = (Component) => {
+  return function WrapperComponent(props) {
+    return (
+      <Consumer>
+          {state => <Component {...props} metamaskContext={state} />}
+      </Consumer>
+    );
+  };
 }
 
 class MetamaskProvider extends Component {
@@ -380,7 +390,11 @@ class MetamaskProvider extends Component {
   }
 
   async checkNetwork() {
-    return await window.web3js.eth.net.getNetworkType();
+    let network = await window.web3js.eth.net.getNetworkType();
+    if(network === 'main'){
+      network = 'mainnet';
+    }
+    return network;
   }
 
   isBrowserSupported() {

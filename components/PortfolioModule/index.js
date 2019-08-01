@@ -2,6 +2,7 @@ import React from 'react';
 import { compose } from 'recompose';
 import Loading from 'components/Loading';
 import { withBlockchainContext } from 'components/BlockchainContext'
+import { withAssetsContext } from 'components/AssetsContext'
 import { withMetamaskContext } from 'components/MetamaskContext'
 
 import {
@@ -33,25 +34,24 @@ class PortfolioModule extends React.Component {
 
   loadData(props){
     const {
+      assetsContext,
       blockchainContext,
       metamaskContext,
     } = props;
-
     const {
-      loading,
-      assets,
       withdrawingAssetIds,
       payoutAsset,
       callingPayout,
     } = blockchainContext;
-
     const {
-      user,
-    } = metamaskContext;
-
+      loadingAssets,
+      assets,
+      loadingUserInfo,
+    } = assetsContext;
+    const { user } = metamaskContext;
     const { currentView } = this.state;
 
-    if (loading.assets || loading.userAssetsInfo) {
+    if (loadingAssets || loadingUserInfo) {
       this.setState({loading: true});
       return;
     }
@@ -74,6 +74,7 @@ class PortfolioModule extends React.Component {
 const enhance = compose(
   withMetamaskContext,
   withBlockchainContext,
+  withAssetsContext,
 );
 
 export default enhance(PortfolioModule);

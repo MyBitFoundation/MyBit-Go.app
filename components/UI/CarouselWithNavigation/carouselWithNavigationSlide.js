@@ -14,11 +14,7 @@ const CarouselWithNavigationSlide = styled.div`
   @media(min-width: ${props => props.desktopAt || `${props.theme.sizes.tablet}px`}) {
     max-width: ${props => props.maxWidthDesktop || auto};
     min-height: 600px;
-    padding: 0px;
     height: auto;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 30px;
   }
 `
 

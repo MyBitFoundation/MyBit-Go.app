@@ -163,7 +163,7 @@ const CustomTimeline = React.memo(({
       )}
       <CustomTimelineItem
         title="Confirm with MetaMask"
-        content={listedAssetId ? "Asset Listed successfuly" : "Check if everything is right, confirm and deposit collateral with MetaMask."}
+        content={listedAssetId ? "Asset Listed successfully" : "Check if everything is right, confirm and deposit collateral with MetaMask."}
         step={!readToS ? 9 : 8}
         currentStep={listedAssetId ? (!readToS ? 9 : 8) : step}
         goToStep={maxStep > (!readToS ? 8 : 7) ? goToStep : undefined}

@@ -1,4 +1,5 @@
 import Media from 'react-media';
+import dayjs from 'dayjs';
 import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import { ExternalLinks } from 'constants/links'
 import Link from 'next/link';
@@ -37,9 +38,9 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
   title: 'Start Date',
   dataIndex: 'date',
   key: 'date',
-  sorter: (a, b) => a.startDate.isAfter(b.startDate),
+  sorter: (a, b) => a.startDate - b.startDate,
   sortOrder: sortedInfo.columnKey === 'date' && sortedInfo.order,
-  render: (text, record) => record.startDate.format('DD MMMM YYYY'),
+  render: (text, record) => dayjs(record.startDate).format('DD MMMM YYYY'),
 }, {
   title: 'Total Revenue',
   dataIndex: 'revenue',

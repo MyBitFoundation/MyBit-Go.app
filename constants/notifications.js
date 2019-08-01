@@ -15,6 +15,7 @@ export const NotificationTypes = {
   ASSET_PAYOUT: 'assetPayout',
   APPROVE: 'approve',
   PAY_DIVIDENDS: 'payDividends',
+  ASSET_FILES_UPLOAD: 'assetFilesUpload',
 };
 
 export const NotificationsMetamask = {
@@ -26,6 +27,7 @@ export const NotificationsMetamask = {
   ASSET_PAYOUT: 'assetPayout',
   APPROVE: 'approve',
   PAY_DIVIDENDS: 'payDividends',
+  ASSET_FILES_UPLOAD: 'assetFilesUpload',
 };
 
 export const NotificationStatus = {
@@ -45,6 +47,7 @@ export const getContentForNotification = (obj) => {
     assetPayout,
     status,
     payDividends,
+    assetFilesUpload,
   } = obj;
   if(listAsset){
     const {
@@ -61,12 +64,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Approving access to ${formattedAmount}`,
-            message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to approve access to funds`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -87,12 +90,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `${listAsset.assetName} is being listed for investors`,
-            message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to start the crowdsale for ${listAsset.assetName}`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -113,12 +116,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Approving access to ${formattedAmount}`,
-            message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to approve access to funds`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -127,7 +130,7 @@ export const getContentForNotification = (obj) => {
       switch(status){
         case NotificationStatus.SUCCESS:
           return {
-            title: <span style={{marginRight: '10px'}}>Contributed successfuly to {funding.assetName}</span>,
+            title: <span style={{marginRight: '10px'}}>Contributed successfully to {funding.assetName}</span>,
             message: (
                 <React.Fragment>
                   <span >Amount contributed: <span style={{fontWeight: 600}}>{funding.amount}</span></span>
@@ -150,12 +153,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Contributing ${funding.amount} to ${funding.assetName}`,
-            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to contribute to ${funding.assetName}`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -177,12 +180,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Approving access to ${formattedAmount}`,
-            message: 'This action can take several minutes. This message will update as soon as the transaction is processed.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to approve access to funds`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -191,7 +194,7 @@ export const getContentForNotification = (obj) => {
       switch(status){
         case NotificationStatus.SUCCESS:
           return {
-            title: <span style={{marginRight: '10px'}}>Dividends of {assetName} paid out successfuly</span>,
+            title: <span style={{marginRight: '10px'}}>Dividends of {assetName} paid out successfully</span>,
             message: (
                 <React.Fragment>
                   <span>Dividend amount: <span style={{fontWeight: 600}}>{formattedAmount}</span></span>
@@ -218,12 +221,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Paying out dividends of ${formattedAmount} to investors`,
-            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to pay out dividends of ${assetName}`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -233,7 +236,7 @@ export const getContentForNotification = (obj) => {
       switch(status){
         case NotificationStatus.SUCCESS:
           return {
-            title: <span style={{marginRight: '10px'}}>Withdrew profits from {withdrawInvestor.assetName} successfuly</span>,
+            title: <span style={{marginRight: '10px'}}>Withdrew profits from {withdrawInvestor.assetName} successfully</span>,
             message: (
                 <React.Fragment>
                   <span style={{display: 'block'}}>Amount received: <span style={{fontWeight: 600}}>{withdrawInvestor.amount}</span></span>
@@ -244,12 +247,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Withdrawing profits from ${withdrawInvestor.assetName}`,
-            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to withdraw from ${withdrawInvestor.assetName}`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -258,7 +261,7 @@ export const getContentForNotification = (obj) => {
       switch(status){
         case NotificationStatus.SUCCESS:
           return {
-            title: <span style={{marginRight: '10px'}}>Withdrew collateral of {withdrawCollateral.assetName} successfuly</span>,
+            title: <span style={{marginRight: '10px'}}>Withdrew collateral of {withdrawCollateral.assetName} successfully</span>,
             message: (
                 <React.Fragment>
                   <span style={{display: 'block'}}>Amount received: <span style={{fontWeight: 600}}>{`${withdrawCollateral.amount} (${withdrawCollateral.percentage}%)`}</span></span>
@@ -268,12 +271,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Withdrawing collateral of ${withdrawCollateral.assetName}`,
-            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to withdraw the collateral from ${withdrawCollateral.assetName}`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -282,7 +285,7 @@ export const getContentForNotification = (obj) => {
       switch(status){
         case NotificationStatus.SUCCESS:
           return {
-            title: <span style={{marginRight: '10px'}}>Withdrew profits of {withdrawManager.assetName} successfuly</span>,
+            title: <span style={{marginRight: '10px'}}>Withdrew profits of {withdrawManager.assetName} successfully</span>,
             message: (
                 <React.Fragment>
                   <span style={{display: 'block'}}>Amount received: <span style={{fontWeight: 600}}>{withdrawManager.amount}</span></span>
@@ -292,12 +295,12 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Withdrawing profits of ${withdrawManager.assetName}`,
-            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to withdraw profits from ${withdrawManager.assetName}`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
@@ -312,17 +315,37 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.INFO:
           return {
             title: `Sending funds to Operator of ${assetPayout.assetName}`,
-            message: 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.',
+            message: slowEthereumMessage,
           }
         case NotificationStatus.ERROR:
           return {
             title: `Failed to send the funds to the Operator`,
-            message: 'Unfortunately your transaction failed. Please refresh the page and try again.',
+            message: transactionFailed,
           }
         default:
           return null;
       }
-  } else if(metamask){
+  } else if(assetFilesUpload){
+      switch(status){
+        case NotificationStatus.SUCCESS:
+          return {
+            title: <span style={{marginRight: '10px'}}>Successfully updated the files of {assetFilesUpload.assetName}</span>,
+            message: `Done done :)`,
+          }
+        case NotificationStatus.INFO:
+          return {
+            title: `Updating the files of ${assetFilesUpload.assetName}`,
+            message: slowEthereumMessage,
+          }
+        case NotificationStatus.ERROR:
+          return {
+            title: `Failed to update the files of ${assetFilesUpload.assetName}`,
+            message: transactionFailed,
+          }
+        default:
+          return null;
+      }
+  }   else if(metamask){
     const { operationType } = metamask;
     switch(operationType){
       case NotificationsMetamask.LIST_ASSET:
@@ -330,7 +353,7 @@ export const getContentForNotification = (obj) => {
           case NotificationStatus.INFO:
             return {
               title: `Listing ${metamask.assetName} for investors`,
-              message: 'Please confirm the transaction in Metamask to list the asset. Thank you for beta testing the platform.',
+              message: approveTemplateMessage('list the asset'),
             }
           case NotificationStatus.ERROR:
             return undefined;
@@ -342,7 +365,7 @@ export const getContentForNotification = (obj) => {
           case NotificationStatus.INFO:
             return {
               title: `Contributing to ${metamask.assetName}`,
-              message: 'Please confirm the transaction in Metamask to contribute to the crowdsale. Thank you for beta testing the platform.',
+              message: approveTemplateMessage('contribute to the crowdsale'),
             }
           case NotificationStatus.ERROR:
             return undefined;
@@ -354,7 +377,7 @@ export const getContentForNotification = (obj) => {
           case NotificationStatus.INFO:
             return {
               title: `Withdrawing profits of ${metamask.assetName}`,
-              message: 'Please confirm the transaction in Metamask to withdraw your profits. Thank you for beta testing the platform.',
+              message: approveTemplateMessage('withdraw your profits'),
             }
           case NotificationStatus.ERROR:
             return undefined;
@@ -366,7 +389,7 @@ export const getContentForNotification = (obj) => {
           case NotificationStatus.INFO:
             return {
               title: `Withdrawing collateral of ${metamask.assetName}`,
-              message: 'Please confirm the transaction in Metamask to withdraw your collateral. Thank you for beta testing the platform.',
+              message: approveTemplateMessage('withdraw your collateral'),
             }
           case NotificationStatus.ERROR:
             return undefined;
@@ -378,7 +401,7 @@ export const getContentForNotification = (obj) => {
           case NotificationStatus.INFO:
             return {
               title: `Withdrawing profits of ${metamask.assetName}`,
-              message: 'Please confirm the transaction in Metamask to withdraw your profits. Thank you for beta testing the platform.',
+              message: approveTemplateMessage('withdraw your profits'),
             }
           case NotificationStatus.ERROR:
             return undefined;
@@ -390,7 +413,7 @@ export const getContentForNotification = (obj) => {
           case NotificationStatus.INFO:
             return {
               title: `Sending funds to Operator of ${metamask.assetName}`,
-              message: 'Please confirm the transaction in Metamask to send the crowdsale funds to the Operator. Thank you for beta testing the platform.',
+              message: approveTemplateMessage('send the crowdsale funds to the Operator'),
             }
           case NotificationStatus.ERROR:
             return undefined;
@@ -402,7 +425,20 @@ export const getContentForNotification = (obj) => {
           case NotificationStatus.INFO:
             return {
               title: `Approving access to ${metamask.formattedAmount}`,
-              message: 'Please confirm the transaction in Metamask to approve access to funds.',
+              message: approveTemplateMessage('approve access to funds'),
+            }
+          case NotificationStatus.ERROR:
+            return undefined;
+          default:
+            return null;
+        }
+      case NotificationsMetamask.ASSET_FILES_UPLOAD:
+        switch(status) {
+          case NotificationStatus.INFO:
+            return {
+              title: `Approving change in files of ${metamask.assetName}`,
+              message: `Please confirm the transaction in Metamask to register this action in the ethereum network. Your asset will
+                        be removed from the platform eventually otherwise, once we update the platform to only rely on data from IPFS.`,
             }
           case NotificationStatus.ERROR:
             return undefined;
@@ -414,3 +450,7 @@ export const getContentForNotification = (obj) => {
     }
   }
 }
+
+const slowEthereumMessage = 'It may take several minutes for this action to be processed by the Ethereum Network. Meanwhile, you can explore the platform.'
+const approveTemplateMessage = chunk => `Please confirm the transaction in Metamask to ${chunk}.`
+const transactionFailed = 'Unfortunately your transaction failed. Please refresh the page and try again.'

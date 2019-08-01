@@ -14,7 +14,6 @@ import AssetDetailsWrapper from './assetDetailsWrapper';
 
 const AssetDetails = ({
   asset,
-  handleAssetFavorited,
   fundAsset,
   updateNotification,
   loadingUserInfo,
@@ -48,13 +47,15 @@ const AssetDetails = ({
     financials,
     risks,
     fees,
+    modelImage,
+    modelName,
+    assetManagerData,
+    handleAssetFavorited,
   } = asset;
 
   const {
     imageSrc,
     name,
-    details,
-    description,
   } = model;
 
   return (
@@ -65,16 +66,14 @@ const AssetDetails = ({
           imageSrc={imageSrc}
           city={city}
           country={country}
-          details={details}
-          description={description}
           assetId={assetId}
           watchListed={watchListed}
-          handleAssetFavorited={handleAssetFavorited}
           about={about}
           financials={financials}
           risks={risks}
           files={files}
           fees={fees}
+          handleAssetFavorited={handleAssetFavorited}
         />
         <AssetUpdates
           asset={asset}
@@ -93,7 +92,7 @@ const AssetDetails = ({
           {props => <AssetFunding {...props}/>}
         </AssetFundingModule>
         <AssetDetailsManagerInfo
-          assetManager={assetManager}
+          assetManager={assetManagerData}
           address={assetManagerAddress}
           managerPercentage={managerPercentage}
           collateralPercentage={collateralPercentage}

@@ -59,22 +59,22 @@ const ThreeBoxProfileWrapper = styled.div`
 `
 
 const AssetManagerFullProfile = ({
-  blockchainContext,
+  assetsContext,
   metamaskContext,
   managerAddress,
 }) => {
   const {
-    loading,
+    loadingAssets,
     assets,
     assetManagers,
-  } = blockchainContext;
+  } = assetsContext;
 
   const {
     network,
     user,
   } = metamaskContext;
 
-  if (loading.assets) {
+  if (loadingAssets) {
     return (
       <Loading
         message="Loading Asset Manager"
