@@ -32,9 +32,10 @@ app
   server.use(cors());
   server.use(compression())
 
-  server.post('/api/airtable/update', async (req, res) => {
+  server.post('/api/airtable/update/:network', async (req, res) => {
     try{
-      await AirTableController.addNewAsset(req.body);
+      const network = req.params.network;
+      await AirTableController.addNewAsset(req.body, network);
       res.sendStatus(200)
     }catch(error){
       res.statusCode = 500;
@@ -42,9 +43,10 @@ app
     }
   });
 
-  server.post('/api/airtable/updateAssetListingFiles', async (req, res) => {
+  server.post('/api/airtable/updateAssetListingFiles/:network', async (req, res) => {
     try{
-      await AirTableController.updateAssetListingFilesString(req.body);
+      const network = req.params.network;
+      await AirTableController.updateAssetListingFilesString(req.body, network);
       res.sendStatus(200)
     }catch(error){
       res.statusCode = 500;

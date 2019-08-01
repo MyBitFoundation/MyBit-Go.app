@@ -721,7 +721,7 @@ class BlockchainProvider extends React.Component {
         assetPostalCode,
         modelId,
         files: filesInfo.string,
-      }, performInternalAction)
+      }, performInternalAction, network)
 
       filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
