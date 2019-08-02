@@ -10,6 +10,7 @@ const GoBackTextAndArrowWrapper = styled.a`
   color: ${props => props.color || props.theme.colors.blueMain};
   transition: color .3s;
   width: max-content;
+  margin-bottom: 20px;
   svg{
     margin-right: 5px;
     fill: ${props => props.color || props.theme.colors.blueMain};
@@ -26,6 +27,10 @@ const GoBackTextAndArrowWrapper = styled.a`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
+
+  ${({theme}) => theme.tablet`
+    margin-bottom: 0px;
+  `}
 `
 
 const GoBackTextAndArrow = ({
