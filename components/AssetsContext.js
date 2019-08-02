@@ -33,7 +33,7 @@ class AssetsProvider extends React.PureComponent {
       assetsWithPendingIpfs: {},
       getAssetListingFull: this.getAssetListingFull,
       forceUpdateListingWithOnChainData: this.forceUpdateListingWithOnChainData,
-      updateAssetListingWithNewFiles: this.updateAssetListingWithNewFiles,
+      updateAssetListingWithOffChainData: this.updateAssetListingWithOffChainData,
     }
   }
 
@@ -309,15 +309,13 @@ class AssetsProvider extends React.PureComponent {
     }
   }
 
-  updateAssetListingWithNewFiles = async (assetId, files) => {
+  updateAssetListingWithOffChainData = async (assetId, files, risks, financials, about, fees) => {
     const { assetListings } = this.state;
     const { metamaskContext } = this.props;
     const { network } = metamaskContext;
     const asset = assetListings[assetId];
-    if(asset){
-      await Brain.updateAirTableWithNewAssetListingFiles({assetId, files: files.string}, network)
-      this.updateListingProps(assetId, {...asset, files: files.array})
-    }
+    await Brain.updateAirTableWithNewOffChainData({assetId, files: files.string, risks, financials, about, fees,}, network)
+    this.updateListingProps(assetId, {...asset, files: files.array, risks, financials, about, fees})
   }
 
   updateModelProps = (modelId, props) => {

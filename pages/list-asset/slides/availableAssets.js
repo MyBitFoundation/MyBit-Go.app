@@ -270,7 +270,7 @@ export const AvailableAssetsSlide = ({
                     {assetsAvailable.map(asset => {
                       return (
                         <Select.Option key={asset.name} value={asset.modelId}>
-                          <span style={{display: 'flex', justifyContent: 'space-between'}}><span>{asset.name}</span><a href={asset.url} target="_blank">view</a></span>
+                          <span style={{display: 'flex', justifyContent: 'space-between'}}><span>{asset.name}</span><a href={asset.url} target="_blank">View</a></span>
                         </Select.Option>
                       )}
                     )}

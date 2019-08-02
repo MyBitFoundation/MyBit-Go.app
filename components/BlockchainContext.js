@@ -226,11 +226,11 @@ class BlockchainProvider extends React.Component {
     return categories;
   }
 
-  updateAssetListingIpfs = async (assetId, filesToUpload, existingFiles, cb) => {
+  updateAssetListingIpfs = async (asset, cb) => {
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
-    const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
     const {
+      assetId,
       financials,
       about,
       risks,
@@ -243,15 +243,12 @@ class BlockchainProvider extends React.Component {
       assetProvince,
       assetPostalCode,
       fundingToken,
-    } = currentAsset;
-    const { name: assetName } = currentAsset.model;
+      files,
+    } = asset;
+    const { name: assetName } = asset.model;
     const notificationId = Date.now();
 
-    let filesInfo = await this.handleIpfsFileUpload(filesToUpload);
-    existingFiles.forEach(file => {
-      filesInfo.array.push({...file})
-      filesInfo.string += `${file.name}|${file.hash}|`
-    })
+    let filesInfo = await this.handleIpfsFileUpload(files);
     const ipfsHash = await addJsonFileToIpfs({
       financials,
       about,
@@ -293,7 +290,7 @@ class BlockchainProvider extends React.Component {
     }
 
     const onError = (type) => {
-      cb && cb();
+      cb && cb(false);
       updateAssetListingsIpfs();
       if(type === ErrorTypes.METAMASK){
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
@@ -315,9 +312,9 @@ class BlockchainProvider extends React.Component {
     const onSuccess = async () => {
       await Promise.all([
         this.fetchTransactionHistory,
-        this.props.assetsContext.updateAssetListingWithNewFiles(assetId, filesInfo),
+        this.props.assetsContext.updateAssetListingWithOffChainData(assetId, filesInfo, risks, financials, about, fees),
       ]);
-      cb && cb();
+      cb && cb(true);
       updateAssetListingsIpfs();
       buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.SUCCESS, {
         assetName,
@@ -560,18 +557,32 @@ class BlockchainProvider extends React.Component {
     );
   }
 
+  /*
+  * This method may take an array containing both
+  * existing files and the new files
+  */
   handleIpfsFileUpload = async fileList => {
     const toWait = []
     const files = [];
     let filesString = '';
-    for(const file of fileList){
+    const existingFiles = [];
+    const filesToUpload = [];
+    for(let i=0;i<fileList.length;i++){
+      const file = fileList[i];
+      if(file.hash){
+        existingFiles.push(file);
+      } else{
+        filesToUpload.push(file);
+      }
+    }
+    for(const file of filesToUpload){
       toWait.push(addUserFileToIpfs(file.originFileObj ? file.originFileObj : file.file ? file.file : file));
     }
     const ipfsHashes = await Promise.all(toWait);
     if(ipfsHashes.length > 0){
       for(let i=0;i<ipfsHashes.length;i++){
         const hash = ipfsHashes[i];
-        const name = fileList[i].name;
+        const name = filesToUpload[i].name;
         files.push({
           hash,
           name,
@@ -579,6 +590,10 @@ class BlockchainProvider extends React.Component {
         filesString+=`${name}|${hash}|`
       }
     }
+    existingFiles.map(file => {
+      files.push({...file})
+      filesString+=`${file.name}|${file.hash}|`
+    })
     return {
       array: files,
       string: filesString,
