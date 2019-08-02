@@ -20,7 +20,7 @@ import {
   getBalanceOfERC20Token,
   getBalanceInDai,
 } from './utils';
-
+import { FALLBACK_NETWORK } from 'constants/supportedNetworks';
 import SupportedBrowsers from 'ui/SupportedBrowsers';
 
 const { Provider, Consumer } = React.createContext({});
@@ -419,6 +419,7 @@ class MetamaskProvider extends Component {
       userIsLoggedIn: false,
       loadingBalances: false,
       extensionUrl,
+      network: FALLBACK_NETWORK,
     });
   }
 
