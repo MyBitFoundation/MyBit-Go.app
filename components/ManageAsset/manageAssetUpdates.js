@@ -54,7 +54,7 @@ class ManageAssetUpdates extends React.Component {
           height="250px"
         >
           <b>Updates</b>
-          <p>Use the following section to post updates 
+          <p>Use the following section to post updates
               to investors of this asset.</p>
           <ManageStyledTextArea
             rows={3}
@@ -86,9 +86,9 @@ class ManageAssetUpdates extends React.Component {
                 loading={loadingThreeBoxThreadAPIAuthorization}
                 onClick={() => { console.log('Authorizing Space'); authorizeThreeBoxSpace(); }}
               >
-                { 
+                {
                   !loadingThreeBoxThreadAPIAuthorization ?
-                  'Authorize Threads API' :
+                  'Authorize 3Box' :
                   'Authorizing...'
                 }
               </Button> :
@@ -96,8 +96,8 @@ class ManageAssetUpdates extends React.Component {
                 type="secondary"
                 disabled={loadingThreeBoxSpaceAuthorization}
                 loading={loadingThreeBoxSpaceAuthorization}
-                onClick={async () => { 
-                  console.log('[ ManageAssetUpdates - onClick ] - calling openThreeBoxSpace'); 
+                onClick={async () => {
+                  console.log('[ ManageAssetUpdates - onClick ] - calling openThreeBoxSpace');
                   const space = await openThreeBoxSpace();
                   this.loadPosts();
                 }}
@@ -109,7 +109,7 @@ class ManageAssetUpdates extends React.Component {
                 }
               </Button>)
             }
-            
+
             <Button
               type="primary"
               disabled={!hasOpenedGoSpace || !hasAuthorizedThreeBox || syncingThreeBox}

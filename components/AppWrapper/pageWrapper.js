@@ -15,7 +15,7 @@ const PageWrapper = styled.div`
   `}
 
   ${({theme}) => theme.laptop`
-    padding: 0px 40px;
+    padding: 0px 20px;
   `}
 
   ${props => props.isFullScreenPage && css`

@@ -22,6 +22,7 @@ import DocumentsManagerWrapper from './documentsManagerWrapper';
 import DocumentsManagerError from './documentsManagerError';
 import DocumentsManagerNoFiles from './documentsManagerNoFiles';
 import { withBlockchainContext } from 'components/BlockchainContext';
+import ChangesButtonWithLabel from 'components/ChangesButtonWithLabel';
 
 const CloseIconWrapper = styled(CloseIcon)`
   position: absolute;
@@ -56,7 +57,8 @@ class DocumentsManager extends React.Component{
   }
 
   handleFileUploaded = (file) => {
-    const { files = [] } = this.props;
+    const { asset } = this.props;
+    const { files = [] } = asset;
     const { filesTmp } = this.state;
 
     const uploadedFiles = file.target.files;
@@ -106,12 +108,18 @@ class DocumentsManager extends React.Component{
   }
 
   upload = async (files, propsFiles) => {
-    const { assetId } = this.props;
+    const { asset } = this.props;
+    const { assetId } = asset;
     const { updateAssetListingIpfs } = this.props.blockchainContext;
     const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
     if(result){
-      updateAssetListingIpfs(assetId, files, propsFiles, () => {
-        this.setState({uploading: false, filesTmp: []})
+      const assetWithUpdatedFiles = {...asset, files: asset.files ? [...asset.files] : []};
+      //update asset object with new files
+      files.forEach(file => {
+        assetWithUpdatedFiles.files.push(file)
+      })
+      updateAssetListingIpfs(assetWithUpdatedFiles, success => {
+        this.setState({uploading: false, filesTmp: success ? [] : files})
       })
     }
   }
@@ -129,10 +137,8 @@ class DocumentsManager extends React.Component{
   }
 
   render = () => {
-    const {
-      files = [],
-    } = this.props;
-
+    const { asset } = this.props;
+    const { files = [], assetId } = asset;
     const {
       error,
       success,
@@ -183,7 +189,7 @@ class DocumentsManager extends React.Component{
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={`${InternalLinks.S3}${this.props.assetId}:${file.name || file}`}>{file.name || file}
+                      href={`${InternalLinks.S3}${assetId}:${file.name || file}`}>{file.name || file}
                     </a>
                     {file.deletable && (
                       <CloseIconWrapper onClick={this.handleRemoveUpload.bind(this, file.name || file)}/>
@@ -195,19 +201,12 @@ class DocumentsManager extends React.Component{
           </DocumentsManagerList>
         )}
         {(!noFiles || !noFilesToUpload) && (
-          <ChangesWrapper>
-            <div>Changes in asset information must be recorded on chain</div>
-            <Button
-              size="large"
-              type="file"
-              disabled={noFilesToUpload}
-              type={noFilesToUpload ? 'default' : 'primary'}
-              onClick={this.handleFileUpload}
-              loading={uploading}
-            >
-              {uploading ? 'Uploading' : noFilesToUpload ? 'Saved' : 'Save Changes'}
-            </Button>
-          </ChangesWrapper>
+          <ChangesButtonWithLabel
+            onClick={this.handleFileUpload}
+            loading={uploading}
+            loadingText="Uploading"
+            changes={!noFilesToUpload}
+          />
         )}
         {noFiles && (
           <DocumentsManagerNoFiles />

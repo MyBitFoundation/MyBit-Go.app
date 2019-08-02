@@ -42,8 +42,6 @@ class ManageAssetModule extends React.Component{
       hasOpenedGoSpace
     } = threeBoxContext;
 
-    console.log('[ ManageAssetModule - load3BoxSpaces ] hasAuthorizedThreeBox', hasAuthorizedThreeBox)
-
     this.setState({
       threeBox: {
         hasAuthorizedThreeBox: hasAuthorizedThreeBox,
@@ -64,7 +62,6 @@ class ManageAssetModule extends React.Component{
   }
 
   processAssetInfo = async (props, asset) => {
-    console.log('[ ManageAssetModule - processAssetInfo ] init')
     if(this._processingAssetInfo){
       return;
     } else {
@@ -83,8 +80,6 @@ class ManageAssetModule extends React.Component{
       callingPayout,
       payoutAsset,
     } = blockchainContext;
-
-    console.log('[ ManageAssetModule - processAssetInfo ] metamaskContext', metamaskContext)
 
     try{
       const {
@@ -134,8 +129,6 @@ class ManageAssetModule extends React.Component{
         }
       }
 
-      console.log("Collateral data: ", collateralData)
-
       // calculate asset manager profits
       const assetManagerProfits = [];
       const revenueRawData = await Brain.fetchRevenueLogsByAssetId(asset.assetId);
@@ -146,17 +139,11 @@ class ManageAssetModule extends React.Component{
         }
       })
 
-      console.log("Revenue data: ", revenueData)
-
       //calculate how much the asset manager can withdraw
       //const [totalIncome, totalWithdrawn] = await Promise.all([Brain.getManagerIncomeEarned(assetManager, asset.assetId), Brain.getManagerIncomeWithdraw(assetManager, asset.assetId)]);
       const totalIncome = assetIncome * managerPercentage;
       //set the state with the calculated data
       const profit = assetIncome * managerPercentage;
-
-      console.log("totalIncome: ", totalIncome)
-      console.log("profit: ", profit)
-      console.log("escrowRedeemed: ", escrowRedeemed)
       let withdrawMax;
       let percentageMax;
 
