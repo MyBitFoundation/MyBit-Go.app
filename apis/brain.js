@@ -620,18 +620,6 @@ export const fetchAssets = async (userAddress,network, updateFunction) => {
     console.log("assets")
     console.log(assets)
 
-    /*
-    await Network.addModel({
-      token: '0xad6d458402f60fd3bd25163575031acdce07538d',
-      operatorID: '0x3eccf03d236410e626e8000a285b59e17132713a829ada5638ccf8b82a6e7a65',
-      name: 'Smart Bench',
-      ipfs: 'QmYxiCZAXxJEwqqXjqzdwz159Z3Li6YhYXt8CMoBEj9xYq',
-      payout: true,
-      operator: '0x15c9C83075b7214308fd4526731db4172299E2a4',
-      accept: true,
-    })
-    */
-
     const assetsRenamed =
       assets
         .map(({
@@ -652,11 +640,6 @@ export const fetchAssets = async (userAddress,network, updateFunction) => {
 
     const objectToReturn = {};
     assetDetails.forEach(asset => objectToReturn[asset.assetId] = asset);
-    /*console.log("SDK Data")
-    console.log("Asset Listings: ", objectToReturn)
-    console.log("Operators: ", platformOperators)
-    console.log("Asset Models: ", assetModels)
-    console.log("\n")*/
     updateFunction({
       assetListings: objectToReturn,
       operators,

@@ -152,7 +152,6 @@ class AirtableProvider extends React.PureComponent {
   getAssets = async (network, updateFunction) => {
     try{
       this.updateFunction = updateFunction;
-      // if subscribbed to events, unsubscribe
 
       let [assetModels, assetListings, operators] = await Promise.all([
         fetch(InternalLinks.getAirtableAssetModels(network)),
@@ -174,8 +173,6 @@ class AirtableProvider extends React.PureComponent {
       const assetModelsProcessed = this.processAssetModels(assetModelsFiltered);
       const operatorsProcessed = this.processOperators(operatorsFiltered)
       const assetListingsProcessed = this.processAssetListings(assetListingsFiltered);
-      //subscribe to events of the sdk and update a given piece of data when required
-
       /*
       * we save the network in the state to make sure fetchAssets() in brain.js
       * uses the correct airtable data when pulling the assets, from the correct network
