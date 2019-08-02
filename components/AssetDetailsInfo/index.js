@@ -8,6 +8,7 @@ import AssetDetailsInfoDescription from './assetDetailsInfoDescription';
 import AssetDetailsInfoWrapper from './assetDetailsInfoWrapper';
 import Watch from 'ui/Watch';
 import { InternalLinks } from 'constants/links';
+import Panel from 'ui/Panel';
 
 const FilesToRender = withAssetsContext(({
   files,
@@ -58,56 +59,58 @@ const AssetDetailsInfo = ({
   fees,
 }) => (
   <AssetDetailsInfoWrapper>
-    <AssetDetailsInfoName>
-      {name}
-    </AssetDetailsInfoName>
-    <AssetDetailsInfoLocationIcon
-    />
-    <AssetDetailsInfoLocation>
-      {country}, {city}
-    </AssetDetailsInfoLocation>
-    <AssetDetailsInfoImage
-      background={imageSrc}
-    >
-    <Watch
-      active={watchListed}
-      handleClick={handleAssetFavorited}
-      assetId={assetId}
-    />
-    </AssetDetailsInfoImage>
+    <Panel maximizeForMobile>
+      <AssetDetailsInfoName>
+        {name}
+      </AssetDetailsInfoName>
+      <AssetDetailsInfoLocationIcon
+      />
+      <AssetDetailsInfoLocation>
+        {country}, {city}
+      </AssetDetailsInfoLocation>
+      <AssetDetailsInfoImage
+        background={imageSrc}
+      >
+      <Watch
+        active={watchListed}
+        handleClick={handleAssetFavorited}
+        assetId={assetId}
+      />
+      </AssetDetailsInfoImage>
 
-    <AssetDetailsInfoTitle>
-      About
-    </AssetDetailsInfoTitle>
-    <AssetDetailsInfoDescription>
-      {newLineToParagraphs(about)}
-    </AssetDetailsInfoDescription>
-    <AssetDetailsInfoTitle>
-      Financials
-    </AssetDetailsInfoTitle>
-    <AssetDetailsInfoDescription>
-      {newLineToParagraphs(financials)}
-    </AssetDetailsInfoDescription>
-    <AssetDetailsInfoTitle>
-      Risks
-    </AssetDetailsInfoTitle>
-    <AssetDetailsInfoDescription>
-      {newLineToParagraphs(risks)}
-    </AssetDetailsInfoDescription>
-    {fees && (
-      <React.Fragment>
-        <AssetDetailsInfoTitle>
-          Additional Costs
-        </AssetDetailsInfoTitle>
-        <AssetDetailsInfoDescription>
-          {newLineToParagraphs(fees)}
-        </AssetDetailsInfoDescription>
-      </React.Fragment>
-    )}
-    <AssetDetailsInfoTitle>
-      Supporting documents
-    </AssetDetailsInfoTitle>
-    <FilesToRender files={files} assetId={assetId}/>
+      <AssetDetailsInfoTitle>
+        About
+      </AssetDetailsInfoTitle>
+      <AssetDetailsInfoDescription>
+        {newLineToParagraphs(about)}
+      </AssetDetailsInfoDescription>
+      <AssetDetailsInfoTitle>
+        Financials
+      </AssetDetailsInfoTitle>
+      <AssetDetailsInfoDescription>
+        {newLineToParagraphs(financials)}
+      </AssetDetailsInfoDescription>
+      <AssetDetailsInfoTitle>
+        Risks
+      </AssetDetailsInfoTitle>
+      <AssetDetailsInfoDescription>
+        {newLineToParagraphs(risks)}
+      </AssetDetailsInfoDescription>
+      {fees && (
+        <React.Fragment>
+          <AssetDetailsInfoTitle>
+            Additional Costs
+          </AssetDetailsInfoTitle>
+          <AssetDetailsInfoDescription>
+            {newLineToParagraphs(fees)}
+          </AssetDetailsInfoDescription>
+        </React.Fragment>
+      )}
+      <AssetDetailsInfoTitle>
+        Supporting documents
+      </AssetDetailsInfoTitle>
+      <FilesToRender files={files} assetId={assetId}/>
+    </Panel>
   </AssetDetailsInfoWrapper>
 )
 

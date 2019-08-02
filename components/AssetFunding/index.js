@@ -6,7 +6,6 @@ import {
 import AssetDetailsManagerInfo from 'components/AssetDetailsManagerInfo';
 import AssetDetailsInfo from 'components/AssetDetailsInfo';
 import AssetFundingSelector from 'components/AssetFundingSelector';
-import AssetFundingWrapper from './assetFundingWrapper';
 import AssetFundingConfirm from 'components/AssetFundingConfirm';
 import AssetFundingConfirming from 'components/AssetFundingConfirming';
 import {
@@ -24,6 +23,7 @@ import {
 } from 'constants/app';
 import { TERMS_OF_SERVICE } from 'constants/termsOfService';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
+import Panel from 'ui/Panel';
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
 
@@ -114,7 +114,7 @@ class AssetFunding extends React.Component {
     const { readToS } = ToSContext;
 
     return (
-      <AssetFundingWrapper>
+      <Panel maximizeForMobile>
         {renderToS || null}
         {step === 0 && (
           <AssetFundingSelector
@@ -134,7 +134,7 @@ class AssetFunding extends React.Component {
         {step === 2 && (
           <AssetFundingConfirming cancel={this.resetStep}/>
         )}
-      </AssetFundingWrapper>
+      </Panel>
     );
   }
 }

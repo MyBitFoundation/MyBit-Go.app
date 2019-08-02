@@ -2,14 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Comment, List } from 'antd';
 import dayjs from 'dayjs';
-
-const AssetUpdatesWrapper = styled.div`
-  padding: 10px 20px 10px 20px;
-  box-shadow: 0 4px 12px 0 rgba(0,0,0,.1);
-  max-height: 500px;
-  overflow-y: auto;
-  margin-top: 20px;
-}`
+import Panel from 'ui/Panel';
 
 const AssetUpdatesTitle = styled.p`
   font-size: 20px;
@@ -50,7 +43,14 @@ class AssetUpdates extends React.Component {
     const { posts, author, avatar } = this.state;
     const numberOfPosts = posts.length;
     return (
-      <AssetUpdatesWrapper>
+      <Panel
+        maximizeForMobile
+        style={{
+          maxHeight: '500px',
+          overflowY: 'auto',
+          marginTop: '20px',
+        }}
+      >
         <AssetUpdatesTitle>Updates from Asset Manager</AssetUpdatesTitle>
         {
           loadingThreeBox ?
@@ -77,7 +77,7 @@ class AssetUpdates extends React.Component {
             >
             </List>
         }
-      </AssetUpdatesWrapper>
+      </Panel>
     )
   }
 }

@@ -17,6 +17,7 @@ import {
 } from 'utils/helpers';
 import Theming from 'components/Theme/theming';
 import Divider from 'ui/Divider';
+import Panel from 'ui/Panel';
 
 const Colors = Theming.colors;
 
@@ -38,12 +39,12 @@ const AssetDetailsManagerInfo = ({
   address,
   managerPercentage,
   collateralPercentage,
-  style,
   assetManager,
   isAssetManager,
 }) => (
-  <AssetDetailsMananagerInfo
-    style={style}
+  <Panel
+    maximizeForMobile
+    style={{marginTop: '20px'}}
   >
     <div>
       <AssetDetailsManagerInfoTitle>
@@ -96,7 +97,7 @@ const AssetDetailsManagerInfo = ({
         hasShadow
       />
     </AssetDetailsManagerInfoPercentages>
-  </AssetDetailsMananagerInfo>
+  </Panel>
 );
 
 export default React.memo(AssetDetailsManagerInfo);
