@@ -63,8 +63,6 @@ class AssetsProvider extends React.PureComponent {
   }
 
   componentDidMount = () => {
-    const { metamaskContext } = this.props;
-    const { network } = metamaskContext;
     this.initialiseSDK();
     this.init();
   }
