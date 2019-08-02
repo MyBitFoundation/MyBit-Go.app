@@ -84,8 +84,8 @@ const getCorrectBase = network => {
   return new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(baseId);
 }
 
-export const updateAssetListingFilesString = async (data, network) => {
-  const { assetId, files } = data;
+export const updateAssetListing = async (data, network) => {
+  const { assetId, files, risks, about, financials, fees } = data;
   let recordId;
   const base = getCorrectBase(network)
   base('Asset Listings').select().eachPage((records, fetchNextPage) => {
@@ -93,7 +93,11 @@ export const updateAssetListingFilesString = async (data, network) => {
       if(record.get('Asset ID') === assetId){
         recordId = record.id
         base('Asset Models').update(recordId, {
-          "Files": files
+          "Files": files,
+          "About": about,
+          "Financials": financials,
+          "Risks": risks,
+          "Fees": fees,
         }, (err, record) => {
           if (err) {
             console.error(err);

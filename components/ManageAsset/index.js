@@ -21,6 +21,7 @@ import {
 import ErrorPage from 'components/ErrorPage';
 import DocumentsManager from 'components/DocumentsManager';
 import BackButton from 'ui/BackButton';
+import GeneralDescriptionEditor from 'components/GeneralDescriptionEditor';
 
 const COLUMN_SIZE = {
   xs: 24,
@@ -39,6 +40,7 @@ class ManageAsset extends React.Component {
       chartBoxView: "profit",
       profitChartView: 'weekly',
       supportingDocuments: false,
+      generalDocuments: false,
     };
   }
 
@@ -93,9 +95,22 @@ class ManageAsset extends React.Component {
             <ManageAssetDocsButton
                 type="secondary"
                 selected={this.state.supportingDocuments}
-                onClick={() => this.setState(prevProps => ({supportingDocuments: !prevProps.supportingDocuments}))}
+                onClick={() => this.setState(prevProps => ({
+                  supportingDocuments: !prevProps.supportingDocuments,
+                  generalDocuments: false,
+                }))}
               >
               Supporting Documents
+            </ManageAssetDocsButton>
+            <ManageAssetDocsButton
+                type="secondary"
+                selected={this.state.generalDocuments}
+                onClick={() => this.setState(prevProps => ({
+                  generalDocuments: !prevProps.generalDocuments,
+                  supportingDocuments: false,
+                }))}
+              >
+              General Description
             </ManageAssetDocsButton>
             {sendFundsToOperatorButton}
           </React.Fragment>
@@ -180,6 +195,7 @@ class ManageAsset extends React.Component {
       profitChartView,
       chartBoxView,
       supportingDocuments,
+      generalDocuments,
     } = this.state;
 
     const {
@@ -198,6 +214,10 @@ class ManageAsset extends React.Component {
       assetManagerCollateral,
       funded,
       managerHasToCallPayout,
+      risks,
+      about,
+      financials,
+      fees,
     } = asset;
 
     const assetListingUrl = `/explore/${assetId}`;
@@ -239,7 +259,7 @@ class ManageAsset extends React.Component {
                   loadingThreeBoxSpaceAuthorization={loadingThreeBoxSpaceAuthorization}
                 />
               </Col>
-              {!supportingDocuments && (
+              {!supportingDocuments && !generalDocuments && (
                 <Col {...COLUMN_SIZE}>
                   <ManageAssetGraphs
                     chartBoxView={chartBoxView}
@@ -259,8 +279,14 @@ class ManageAsset extends React.Component {
               {supportingDocuments && (
                 <Col {...COLUMN_SIZE}>
                   <DocumentsManager
-                    assetId={assetId}
-                    files={files}
+                    asset={asset}
+                  />
+                </Col>
+              )}
+              {generalDocuments && (
+                <Col {...COLUMN_SIZE}>
+                  <GeneralDescriptionEditor
+                    asset={asset}
                   />
                 </Col>
               )}

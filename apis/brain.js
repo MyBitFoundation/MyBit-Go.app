@@ -254,17 +254,17 @@ export const updateAirTableWithNewAsset = async (
   }
 }
 
-export const updateAirTableWithNewAssetListingFiles = async (
+export const updateAirTableWithNewOffChainData = async (
   data,
   network,
 ) => {
   try{
-    await axios.post(InternalLinks.updateAirtableAssetsFiles(network), {
+    await axios.post(InternalLinks.updateAirtableAssetListing(network), {
       ...data,
     });
   } catch(err){
     setTimeout(() =>
-      updateAirTableWithNewAssetListingFiles(
+      updateAirTableWithNewOffChainData(
         data,
         network,
       ), 5000);

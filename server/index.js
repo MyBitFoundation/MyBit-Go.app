@@ -43,10 +43,10 @@ app
     }
   });
 
-  server.post('/api/airtable/updateAssetListingFiles/:network', async (req, res) => {
+  server.post('/api/airtable/updateAssetListing/:network', async (req, res) => {
     try{
       const network = req.params.network;
-      await AirTableController.updateAssetListingFilesString(req.body, network);
+      await AirTableController.updateAssetListing(req.body, network);
       res.sendStatus(200)
     }catch(error){
       res.statusCode = 500;
