@@ -4,6 +4,7 @@ const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 import {
   debug,
   fromWeiToEth,
+  toWei,
 } from 'utils/helpers';
 import {
   ABI,
@@ -18,6 +19,7 @@ import {
   FALLBACK_NETWORK,
 } from 'constants/supportedNetworks';
 
+const DEFAULT_QUANTITY = 0.5;
 const { Provider, Consumer } = React.createContext({});
 let kyberContract;
 // Required so we can trigger getInitialProps in our exported pages
@@ -146,6 +148,7 @@ class KyberProvider extends React.Component {
         const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
         const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
 
+        const amountToConvert = toWei(DEFAULT_QUANTITY);
         await Promise.all(supportedTokensData.data.map(async({
           symbol,
           address: contractAddress,
@@ -157,8 +160,8 @@ class KyberProvider extends React.Component {
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
             ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, amountToConvert),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, amountToConvert),
             ])
 
             supportedTokensInfo['ETH'] = {
@@ -173,8 +176,8 @@ class KyberProvider extends React.Component {
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
             ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, '1000000000000000000'),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, '1000000000000000000'),
+              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, amountToConvert),
+              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, amountToConvert),
             ])
 
             // This kind of filtering needs to be tested
