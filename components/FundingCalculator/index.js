@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
+import styled from 'styled-components';
 import {
   Slider,
   InputNumber,
 } from 'antd';
-import {
-  DEFAULT_TOKEN,
-} from 'constants/app';
+import { DEFAULT_TOKEN } from 'constants/app';
+import { MYBIT_FOUNDATION_SHARE } from 'constants/platformFees';
 import {
   formatMonetaryValue,
   getDecimalsForToken,
@@ -19,8 +19,19 @@ import FundingCalculatorValue from './fundingCalculatorValue';
 import FundingCalculatorSpin from './fundingCalculatorSpin';
 import FundingCalculatorGrid from './fundingCalculatorGrid';
 import FundingCalculatorSliderLabel from './fundingCalculatorSliderLabel';
-
+import TooltipWithQuestionMarkGrey from 'ui/TooltipWithQuestionMarkGrey';
 const decimalsForDefaultToken = getDecimalsForToken(DEFAULT_TOKEN);
+
+const PLATFORM_FEE = MYBIT_FOUNDATION_SHARE * 100;
+
+const ToolTipWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  svg{
+    margin-left: 5px;
+  }
+`
 
 const FundingCalculator = memo(({
   onChangeContributionDefaultToken,
@@ -33,11 +44,34 @@ const FundingCalculator = memo(({
   userOwnership,
   loadingUserInfo,
   userInvestment,
+  managerPercentage,
 }) => {
+  const managerInPercentage = managerPercentage * 100;
+  const investorsPercentage = 100 - managerInPercentage - PLATFORM_FEE;
   return(
     <React.Fragment>
       <FundingCalculatorTitle>
-        {ended ? 'Your investment' : 'Calculate your investment'}
+        {ended ? 'Your investment' :
+          <ToolTipWrapper>
+            <span>Calculate your investment</span>
+            <TooltipWithQuestionMarkGrey
+              overlayClassName={''}
+              arrowPointAtCenter
+              placement="top"
+              destroyTooltipOnHide
+              title={
+                <div style={{width: '220px'}}>
+                  <p>Distribution of Shares:</p>
+                  <div>
+                    Investors: {investorsPercentage}%<br />
+                    Asset Manager: {managerInPercentage}%<br />
+                    MyBit Platform: {PLATFORM_FEE}%
+                  </div>
+                </div>
+              }
+            />
+          </ToolTipWrapper>
+        }
       </FundingCalculatorTitle>
       {!ended && (
         <React.Fragment>
