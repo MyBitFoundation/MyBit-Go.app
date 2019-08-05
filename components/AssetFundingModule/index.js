@@ -122,7 +122,7 @@ class AssetFundingModule extends React.Component {
     let { balances } = user;
     balances = newBalances || balances;
     const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
-    const tokenSlippagePercentages = calculateSlippage(balances, DEFAULT_TOKEN_CONTRACT, amountToPayDefaultToken)
+    const tokenSlippagePercentages = calculateSlippage(balances, DEFAULT_TOKEN_CONTRACT, amountToPayDefaultToken, true)
       .then(tokenSlippagePercentages => this.setState({tokenSlippagePercentages, loadingConversionInfo: false}))
   }
 
