@@ -36,7 +36,8 @@ class AssetUpdates extends React.Component {
     ])
     // order posts by date in desc order
     posts.reverse();
-    this.setState({ posts, author, avatar })
+    const postsWithoutEmptyMessages = posts.filter(post => post.message && post.message !== "")
+    this.setState({ posts: postsWithoutEmptyMessages, author, avatar })
   }
   render() {
     const { loadingThreeBox } = this.props;
