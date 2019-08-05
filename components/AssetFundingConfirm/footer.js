@@ -100,7 +100,7 @@ export const getFooter = (
   if(metamaskError){
      return getMetamaskErrors(metamaskError, extensionUrl);
   }
-  const tokenWithSufficientBalance = getTokenWithSufficientBalance(balances, amountToPay);
+  const tokenWithSufficientBalance = getTokenWithSufficientBalance(balances, amountContributed);
   if(!tokenWithSufficientBalance){
     return getBalancesError();
   } else {

@@ -100,7 +100,7 @@ const AssetFundingConfirm = ({
   const footer = getFooter(
     metamaskErrors.error,
     extensionUrl,
-    amountToPayDefaultToken.toFixed(18),
+    amountToPaySelectedToken.toFixed(18),
     selectedAmountDefaultToken,
     balances,
     fundAsset,
