@@ -45,6 +45,7 @@ const FundingCalculator = memo(({
   loadingUserInfo,
   userInvestment,
   managerPercentage,
+  percentageOwnedByUser,
 }) => {
   const managerInPercentage = managerPercentage * 100;
   const investorsPercentage = 100 - managerInPercentage - PLATFORM_FEE;
@@ -63,9 +64,10 @@ const FundingCalculator = memo(({
                 <div style={{width: '220px'}}>
                   <p>Distribution of Shares:</p>
                   <div>
-                    Investors: {investorsPercentage}%<br />
+                    Investors: {investorsPercentage}%{percentageOwnedByUser > 0 ? ` (you own ${(percentageOwnedByUser * 100).toFixed(2)}%)` : ''}<br />
                     Asset Manager: {managerInPercentage}%<br />
                     MyBit Platform: {PLATFORM_FEE}%
+
                   </div>
                 </div>
               }
