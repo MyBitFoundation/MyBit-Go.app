@@ -109,7 +109,7 @@ const AssetFundingConfirm = ({
     kyberLoading
   );
 
-  const showSlipage = tokenSlippagePercentages && tokenSlippagePercentages[selectedToken];
+  const slippage = tokenSlippagePercentages && tokenSlippagePercentages[selectedToken];
 
   const {
     buttonProps,
@@ -173,7 +173,7 @@ const AssetFundingConfirm = ({
           secondValue={formatMonetaryValue(gasInSelectedToken, selectedToken)}
           loading={loadingConversionInfo || !selectedToken}
         />
-        {showSlipage && (
+        {slippage > 0 && (
           <React.Fragment>
             <Separator style={separatorStyle}/>
             <Item
