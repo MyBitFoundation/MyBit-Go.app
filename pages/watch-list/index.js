@@ -72,6 +72,7 @@ class WatchListPage extends React.Component {
         <AssetDisplayer
           assets={assetsFiltered}
           assetToRender={DefaultAsset}
+          addInvestmentLabel
         />
       </React.Fragment>
     );

@@ -27,6 +27,7 @@ class AssetDisplayer extends React.Component{
       type,
       assets,
       assetToRender: AssetToRender,
+      addInvestmentLabel,
     } = this.props;
 
     const {
@@ -46,6 +47,7 @@ class AssetDisplayer extends React.Component{
             <AssetToRender
               key={asset.assetId}
               {...asset}
+              addInvestmentLabel={addInvestmentLabel}
             />
           ))}
         </Row>

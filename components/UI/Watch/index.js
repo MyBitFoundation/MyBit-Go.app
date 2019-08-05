@@ -12,8 +12,9 @@ const Watch = ({
   active,
   handleClick,
   assetId,
+  bottom,
 }) => (
-  <WatchWrapper active={active} onClick={(e) => {
+  <WatchWrapper bottom={bottom} active={active} onClick={(e) => {
     e.stopPropagation();
     handleClick(assetId);
   }}>
