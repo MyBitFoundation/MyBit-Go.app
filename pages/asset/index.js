@@ -24,7 +24,7 @@ class AssetPage extends React.Component {
     } = this.props;
     const {
       loadingAssets,
-      assets,
+      assets = [],
       loadingUserInfo,
     } = assetsContext;
 
