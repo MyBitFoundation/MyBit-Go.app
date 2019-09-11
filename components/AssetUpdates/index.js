@@ -71,7 +71,7 @@ class AssetUpdates extends React.Component {
                     author={author.name}
                     avatar={avatar}
                     content={post.message}
-                    datetime={dayjs(post.timestamp).format('ddd, MMM D, H:mm:ss')}
+                    datetime={dayjs(post.timestamp * 1000).format('ddd, MMM D, H:mm:ss')}
                   />
                 </li>
               )}

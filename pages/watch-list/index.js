@@ -35,7 +35,7 @@ class WatchListPage extends React.Component {
 
      const {
       loadingAssets,
-      assets,
+      assets = [],
      } = assetsContext;
 
     if (loadingAssets) {
