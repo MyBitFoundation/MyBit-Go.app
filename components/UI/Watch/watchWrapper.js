@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const WatchWrapper = styled.span`
   position: absolute;
@@ -15,6 +15,11 @@ const WatchWrapper = styled.span`
   svg:hover{
     fill: #40a9ff;
   }
+
+  ${props => props.bottom && css`
+    top: auto;
+    bottom: 12px;
+  `}
 }`
 
 export default WatchWrapper;

@@ -35,7 +35,7 @@ class WatchListPage extends React.Component {
 
      const {
       loadingAssets,
-      assets,
+      assets = [],
      } = assetsContext;
 
     if (loadingAssets) {
@@ -72,6 +72,7 @@ class WatchListPage extends React.Component {
         <AssetDisplayer
           assets={assetsFiltered}
           assetToRender={DefaultAsset}
+          addInvestmentLabel
         />
       </React.Fragment>
     );

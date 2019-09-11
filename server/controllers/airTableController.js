@@ -1,7 +1,6 @@
 import regeneratorRuntime from "regenerator-runtime";
 import request from 'request';
 import { fetchAssets } from '../utils';
-import * as AssetsController from './assetsController';
 require('dotenv').config();
 const Airtable = require('airtable');
 const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appy9WN6JEvAuyA0S';
@@ -175,11 +174,6 @@ const getAllAssetsInfo = async (newAsset = false) => {
       getAssetModels,
       getAssetListings,
     ])
-    if(!calledGetAssets || newAsset){
-      // trigger the first run
-      AssetsController.getAssets();
-      calledGetAssets = true;
-    }
   }catch(err){
     setTimeout(getAllAssetsInfo, 2000);
   }

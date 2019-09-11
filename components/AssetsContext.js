@@ -56,15 +56,19 @@ class AssetsProvider extends React.PureComponent {
       })
       this.fetchAssetsFromSDK()
     } else if(newNetwork !== oldNetwork){
-
       this.initialiseSDK();
       this.init();
     }
   }
 
   componentDidMount = () => {
-    this.initialiseSDK();
-    this.init();
+    const { userHasMetamask } = this.props.metamaskContext;
+    if(userHasMetamask){
+      this.initialiseSDK();
+      this.init();
+    } else {
+      this.setState({loadingAssets: false})
+    }
   }
 
   /*

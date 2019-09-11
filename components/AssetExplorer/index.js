@@ -158,6 +158,7 @@ class AssetExplorer extends React.Component {
         <AssetDisplayer
           assets={assetsFiltered}
           assetToRender={DefaultAsset}
+          addInvestmentLabel
         />
       </React.Fragment>
     )

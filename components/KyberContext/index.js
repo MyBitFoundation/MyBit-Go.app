@@ -102,16 +102,6 @@ class KyberProvider extends React.Component {
     }
   }
 
-  componentDidMount = async () => {
-    try {
-      kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
-      this.fetchSupportedTokens();
-    } catch (err) {
-      debug(err);
-    }
-    this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, LOAD_SUPPORTED_TOKENS_TIME)
-  }
-
   componentWillUnmount = () => {
     clearInterval(this.intervalSupportedTokens);
   }
@@ -119,15 +109,21 @@ class KyberProvider extends React.Component {
   componentDidUpdate = prevProps => {
     const {
       network: oldNetwork,
+      userHasMetamask: oldUserHasMetamask,
     } = prevProps;
 
     const {
       network: newNetwork,
+      userHasMetamask,
     } = this.props;
 
     if(oldNetwork !== newNetwork){
       this.setState({loading: true});
       this.fetchSupportedTokens(newNetwork);
+    } else if(!oldUserHasMetamask && userHasMetamask){
+      kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
+      this.fetchSupportedTokens();
+      this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, LOAD_SUPPORTED_TOKENS_TIME)
     }
   }
 
@@ -138,7 +134,7 @@ class KyberProvider extends React.Component {
        supportedNetworks,
       } = this.props;
 
-      network = userHasMetamask ? network || this.props.network : FALLBACK_NETWORK;
+      network = this.props.network || FALLBACK_NETWORK;
 
       const supportedTokensInfo = {};
 

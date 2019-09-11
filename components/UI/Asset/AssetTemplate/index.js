@@ -6,6 +6,7 @@ import AssetTemplateLocationIcon from './assetTemplateLocationIcon';
 import AssetTemplateName from './assetTemplateName';
 import AssetTemplateLocation from './assetTemplateLocation';
 import RevenueGenerator from 'components/RevenueGenerator';
+import InvestmentLabel from 'ui/InvestmentLabel';
 
 const AssetTemplate = ({
   children,
@@ -18,6 +19,8 @@ const AssetTemplate = ({
   country,
   height,
   margin,
+  addInvestmentLabel,
+  userInvestment,
 }) => {
   const loadingModel = !backgroundImage;
   return (
@@ -30,11 +33,17 @@ const AssetTemplate = ({
         height={height}
         onClick={() => Router.push(`/asset?id=${assetId}`, `/asset/${assetId}`)}
       >
+        {(addInvestmentLabel && userInvestment > 0) && (
+          <InvestmentLabel
+            value={userInvestment}
+          />
+        )}
         {handleAssetFavorited && (
           <Watch
             active={watchListed}
             handleClick={handleAssetFavorited}
             assetId={assetId}
+            bottom={addInvestmentLabel}
           />
         )}
         <AssetTemplateLocationIcon />
