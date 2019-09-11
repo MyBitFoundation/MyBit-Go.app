@@ -19,7 +19,7 @@ const Explore = ({
     loadingAssets,
   } = assetsContext;
   const hasMetamaskErrors = metamaskContext.metamaskErrors();
-  if(hasMetamaskErrors.error &&hasMetamaskErrors.error !== METAMASK_ERRORS.NO_METAMASK){
+  if(hasMetamaskErrors.error){
     return (
       <MetamaskErrors
         shouldRenderComponent={false}
@@ -28,7 +28,7 @@ const Explore = ({
   }
   if (loadingAssets) {
     return <Loading message="Loading assets" />;
-  } else if(!hasMetamaskErrors.error || (hasMetamaskErrors.error === METAMASK_ERRORS.NO_METAMASK)){
+  } else {
     return (
       <AssetExplorer
         assets={assets}

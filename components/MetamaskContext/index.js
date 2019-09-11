@@ -87,7 +87,7 @@ class MetamaskProvider extends Component {
     if (!userHasMetamask && extensionUrl) {
       error = METAMASK_ERRORS.NO_METAMASK;
       toRender = (
-        <span>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a> to be able to fund and create assets.
+        <span>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a> to be able to view, fund and list assets.
           You can download the extension via{' '}
           <a href={extensionUrl} target="_blank" rel="noopener noreferrer">this</a> link.
         </span>
@@ -161,8 +161,10 @@ class MetamaskProvider extends Component {
         window.web3js = new Web3(window.web3.currentProvider);
         await this.userHasMetamask(false);
         this.props.setUserHasMetamask(true);
-      } else if(this.props.backupProvider) {
-        window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider));
+      } else {
+        if(this.props.backupProvider){
+          window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider));
+        }
         this.isBrowserSupported();
         this.props.setUserHasMetamask(false);
       }
@@ -419,7 +421,6 @@ class MetamaskProvider extends Component {
       userIsLoggedIn: false,
       loadingBalances: false,
       extensionUrl,
-      network: FALLBACK_NETWORK,
     });
   }
 

@@ -20,7 +20,6 @@ import Cookie from 'js-cookie';
 import Router from 'next/router';
 import Footer from 'ui/Footer';
 import { navbarOptions } from 'constants/navigationBar';
-import { WEB3_BACKUP_PROVIDER } from 'constants/web3BackupProvider';
 import { FULL_SCREEN_PAGES } from 'constants/fullScreenPages';
 import { COOKIES } from 'constants/cookies';
 import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
@@ -135,7 +134,6 @@ const WithProviders = ({ children, setNetwork, network, setUserHasMetamask, user
             userHasMetamask={userHasMetamask}
           >
           <MetamaskProvider
-            backupProvider={WEB3_BACKUP_PROVIDER}
             supportedNetworks={SUPPORTED_NETWORKS}
             setNetwork={setNetwork}
             setUserHasMetamask={setUserHasMetamask}
