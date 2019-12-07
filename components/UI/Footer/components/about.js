@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import Mybit from 'static/footer/logo-dark.svg';
+import React from "react";
+import styled from "styled-components";
+import Mybit from "static/footer/logo-dark.svg";
 
 const AboutWrapper = styled.div`
   color: #575757;
@@ -11,21 +11,32 @@ const AboutWrapper = styled.div`
     color: #575757;
   }
 
-  a:hover{
+  a:hover {
     color: inherit;
   }
 
-  a:focus{
+  a:focus {
     text-decoration: none;
   }
-`
+`;
 
 const About = () => (
   <AboutWrapper>
     <Mybit />
-    <p>MyBit Foundation. Dammstrasse<br /> 16, 6300 Zug, Switzerland.<br />Registration No. CHE-177.186.963</p><p/>
+    <p>
+      MyBit is operated and maintained by a DAO
+      <div>DAO address:</div>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://mainnet.aragon.org/#/0xcD3d9b832BfF15E0a519610372c6AAC651872DdE/"
+      >
+        0xcD3d9b832BfF15E0a519610372c6AAC651872DdE
+      </a>
+    </p>
     <a
       href="https://github.com/MyBitFoundation/MyBit-Go.website/blob/develop/TOC.md"
+      rel="noopener noreferrer"
       target="_blank"
     >
       Terms & Conditions

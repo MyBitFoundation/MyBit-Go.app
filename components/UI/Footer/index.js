@@ -87,18 +87,16 @@ const Footer = ({ isFullScreenPage }) => (
     <FooterWrapper isFullScreenPage={isFullScreenPage}>
       <NavWrapper>
         <Column
-          title="MyBit Go"
+          title="MyBit"
           content={<NavigationData.MyBitGo />}
         />
-        <Column
-          title="About MyBit"
-          content={<NavigationData.AboutMyBit />}
-        />
-        <Column
-          title="Products"
-          content={<NavigationData.Products />}
-        />
       </NavWrapper>
+	  <NavWrapper>
+		<Column
+			title="Resources"
+			content={<NavigationData.Resources />}
+			/>
+	  </NavWrapper>
       <MediaWrapper>
         <Column
           title="Follow Us"
@@ -111,7 +109,6 @@ const Footer = ({ isFullScreenPage }) => (
         />
       </AboutWrapper>
     </FooterWrapper>
-    <Label>Copyright © MyBit 2019. All Rights Reserved.</Label>
   </div>
 );
 
