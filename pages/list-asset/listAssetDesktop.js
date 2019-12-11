@@ -59,7 +59,6 @@ const PageTitle = styled.div`
 const ListAssetDesktop = ({
   step,
   dev,
-  civic,
   handleSelectChange,
   handleInputChange,
   handleCitySuggest,
@@ -124,7 +123,6 @@ const ListAssetDesktop = ({
         desktopMode
         onClick={goToNextStep}
         dev={dev}
-        civic={civic}
       />
     )
   }
@@ -137,7 +135,6 @@ const ListAssetDesktop = ({
         goToStep={goToStep}
         listedAssetId={listedAssetId}
         dev={dev}
-        civic={civic}
         readToS={readToS}
         isUserListingAsset={isUserListingAsset}
         tokenWithSufficientBalance={tokenWithSufficientBalance}
