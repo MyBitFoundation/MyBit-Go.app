@@ -115,7 +115,7 @@ export default () => (
         content="Invest without a bank or broker and receive revenue instantly."
       />
       <meta property="og:site_name" content="MyBit" />
-      <title>MyBit Go</title>
+      <title>MyBit</title>
       <script src="//gw.alipayobjects.com/os/antv/assets/data-set/0.8.6/data-set.min.js"></script>
       <script src="https://hosted-sip.civic.com/js/civic.sip.min.js"></script>
     </Head>

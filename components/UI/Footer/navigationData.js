@@ -60,7 +60,7 @@ export const Products = () => (
       name: 'SDK',
       url: 'https://developer.mybit.io/portal/',
     }, {
-      name: 'MyBit Go',
+      name: 'MyBit',
       url: '/',
     }, {
       name: 'Task.Market',
@@ -74,3 +74,19 @@ export const Products = () => (
     },
   ]}/>
 );
+
+export const Resources = () => (
+	<Links data={[{
+		name: 'SDK',
+		url: 'https://developer.mybit.io/portal/'
+	}, {
+		name: 'GitHub',
+		url: 'https://github.com/MyBitFoundation'
+	}, {
+		name: 'Whitepaper',
+		url: 'https://whitepaper.mybit.io/'
+	}, {
+		name: 'Contact',
+		url: 'https://t.me/mybitio'
+	}]}/>
+)
