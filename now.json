@@ -12,8 +12,5 @@
     "AWS_ACCESS_KEY": "@aws-access-key",
     "GOOGLE_PLACES_API_KEY": "@google-places-api-key"
   },
-  "engines": {
-    "node": "10"
-  },
-  "version": 1
+  "version": 2
 }
