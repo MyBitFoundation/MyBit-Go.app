@@ -15,7 +15,6 @@ import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
 import { withAssetsContext } from 'components/AssetsContext';
-import { withCivicContext } from "ui/CivicContext";
 import ListAssetMobile from './listAssetMobile';
 import ListAssetDesktop from './listAssetDesktop';
 import getTokenWithSufficientBalance from 'constants/getTokenWithSufficientBalance';
@@ -64,7 +63,7 @@ class ListAssetPage extends React.Component {
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
-      step: props.civic.token ? 1 : 0,
+      step: 0,
       checkedToS: false,
     };
     this.readTermsOfService = props.ToSContext.readToS;
@@ -333,7 +332,6 @@ class ListAssetPage extends React.Component {
 
   render() {
     const {
-      civic,
       metamaskContext,
       blockchainContext,
       kyberLoading,
@@ -387,7 +385,6 @@ class ListAssetPage extends React.Component {
     const propsToPass = {
       dev,
       step,
-      civic,
       loadingAssets,
       kyberLoading,
       listedAssetId,
@@ -441,7 +438,6 @@ const enhance = compose(
   withKyberContext,
   withBlockchainContext,
   withMetamaskContextPageWrapper,
-  withCivicContext,
   withTermsOfServiceContext,
   withAssetsContext,
 );

@@ -112,7 +112,7 @@ export const AssetLocationSlide = ({
       {desktopMode && (
         <CarouselNextButton
           onClick={onClick}
-          disabled={nextButtonDisabled}
+          disabled={false}
           desktopMode={desktopMode}
         />
       )}
