@@ -11,7 +11,6 @@ export default () => (
         rel="stylesheet"
         type="text/css"
       />
-      <link rel="stylesheet" href="https://hosted-sip.civic.com/css/civic-modal.min.css" />
       <link
         rel="apple-touch-icon"
         sizes="57x57"
@@ -117,7 +116,6 @@ export default () => (
       <meta property="og:site_name" content="MyBit" />
       <title>MyBit</title>
       <script src="//gw.alipayobjects.com/os/antv/assets/data-set/0.8.6/data-set.min.js"></script>
-      <script src="https://hosted-sip.civic.com/js/civic.sip.min.js"></script>
     </Head>
   </div>
 )
