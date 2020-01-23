@@ -1,5 +1,6 @@
 {
   "name": "app.mybit.io",
+  "type": "docker",
   "env": {
     "INFURA_API_KEY": "@infura-api-key",
     "CIVIC_PRIVATE_KEY": "@civic-private-key",
