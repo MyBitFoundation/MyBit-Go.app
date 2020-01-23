@@ -9,6 +9,11 @@ if (typeof require !== 'undefined') {
 }
 
 module.exports = withBundleAnalyzer(withCss({
+  env: {
+    AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
+    AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY
+  },
+
   webpack: (config, { dev, isServer }) => {
     if(!dev) {
       config.devtool = false
