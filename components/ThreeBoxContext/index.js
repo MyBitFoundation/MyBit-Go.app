@@ -1,6 +1,8 @@
 import React from 'react';
 import Box from '3box';
 import Freddy from 'static/freddy.svg';
+import { ExternalLinks } from 'constants/links';
+import get from 'lodash/get';
 const { Provider, Consumer } = React.createContext({});
 
 const SPACE_ID = 'MYBIT_GO'
@@ -178,8 +180,12 @@ class ThreeBoxProvider extends React.Component {
     getProfile = this.loadThreeBoxProfile
 
     getAvatar = async (address) => {
-      const profile = await this.loadThreeBoxProfile(address)
-      const avatar = profile.image ? `https://ipfs.infura.io/ipfs/${profile.image[0]['contentUrl']['/']}` : <Freddy />
+      const profile = await this.loadThreeBoxProfile(address);
+      let avatar = <Freddy />;
+      if (profile.image) {
+        const slug = get(profile, 'image.0.contentUrl./');
+        avatar = ExternalLinks.IPFS_GATEWAY_HASH(slug);
+      }
       return avatar;
     }
 

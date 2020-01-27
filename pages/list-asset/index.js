@@ -69,7 +69,7 @@ class ListAssetPage extends React.Component {
     this.readTermsOfService = props.ToSContext.readToS;
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     try {
       document.addEventListener('keydown', this.handleKeyDown);
       if (!Cookie.get(COOKIES.LIST_ASSET_VISIT)) {
@@ -416,7 +416,6 @@ class ListAssetPage extends React.Component {
       formData: data,
       balances: user.balances,
       shouldShowToSCheckmark: this.readTermsOfService,
-      airtableContext: this.props.airtableContext,
     }
     return (
       <div>

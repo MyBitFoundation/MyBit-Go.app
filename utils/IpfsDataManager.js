@@ -1,5 +1,5 @@
+import { ExternalLinks } from 'constants/links';
 const isIPFS = require('is-ipfs');
-import { IPFS_URL } from 'constants/ipfs';
 
 const MAX_DOWNLOADS_PARALLEL = 10;
 
@@ -69,8 +69,8 @@ class IpfsDataManager {
         ipfs,
         updater
       } = params;
-
-      const result = await fetch(`${IPFS_URL}${ipfs}`);
+      const downloadUrl = ExternalLinks.IPFS_GATEWAY_URL(ipfs);
+      const result = await fetch(downloadUrl);
       const jsonResult = await result.json();
       updater(id, {
         ...value,

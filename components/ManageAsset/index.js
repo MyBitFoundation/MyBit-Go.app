@@ -5,9 +5,6 @@ import {
   Row,
 } from 'antd';
 import Loading from 'components/Loading';
-import {
-  InternalLinks,
-} from 'constants/links';
 import ManageAssetNavButtons from './manageAssetNavButtons';
 import ManageAssetContentWrapper from './manageAssetContentWrapper';
 import ManageAssetAssetInfo from './manageAssetAssetInfo';
@@ -56,6 +53,7 @@ class ManageAsset extends React.Component {
     if(!files || files.length === 0){
       return <span>None</span>;
     }
+    throw new Error("replace s3 asset file")
     const toReturn = files.map(file => (
       <a
         href={`${InternalLinks.S3}${assetId}:${file}`}

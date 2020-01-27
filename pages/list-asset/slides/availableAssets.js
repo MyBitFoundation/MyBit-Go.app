@@ -121,7 +121,6 @@ const AssetValueContainer = styled.div`
 export const AvailableAssetsSlide = ({
   handleSelectChange,
   formData,
-  airtableContext,
   maxWidthDesktop,
   loadingAssets,
   handleDetectLocationClicked,

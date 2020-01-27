@@ -31,7 +31,7 @@ class AllAssetManagers extends React.Component {
     }, this.getData);
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.getData()
   }
 

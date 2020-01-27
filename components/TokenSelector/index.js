@@ -47,7 +47,7 @@ class TokenSelector extends React.Component {
     this.searchInput = React.createRef();
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.processBalances(this.props, true);
   }
 

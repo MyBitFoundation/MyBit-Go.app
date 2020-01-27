@@ -22,7 +22,7 @@ class AssetUpdates extends React.Component {
       avatar: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=',
     }
   }
-  async componentWillMount() {
+  async componentDidMount() {
     const { getPosts, asset, getProfile, getAvatar } = this.props;
     const [
       posts,

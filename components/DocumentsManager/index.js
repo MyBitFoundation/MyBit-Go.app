@@ -10,7 +10,6 @@ import {
   MAX_FILE_SIZE,
 } from 'constants/app';
 import CloseIcon from 'static/ic_close.svg';
-import { InternalLinks } from 'constants/links';
 import FileImg from 'static/file-icon.svg';
 import * as Brain from '../../apis/brain';
 import DocumentsManagerTitle from './documentsManagerTitle';
@@ -111,7 +110,8 @@ class DocumentsManager extends React.Component{
     const { asset } = this.props;
     const { assetId } = asset;
     const { updateAssetListingIpfs } = this.props.blockchainContext;
-    const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
+    throw new Error("replace AWS S3 upload")
+    // const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
     if(result){
       const assetWithUpdatedFiles = {...asset, files: asset.files ? [...asset.files] : []};
       //update asset object with new files
@@ -182,6 +182,7 @@ class DocumentsManager extends React.Component{
         {!noFiles && (
           <DocumentsManagerList>
             {files.concat(filesTmp).map((file, index) => {
+              throw new Error("replace s3 asset link");
               return (
                 <DocumentsManagerFile key={`file${index}`}>
                   <div>

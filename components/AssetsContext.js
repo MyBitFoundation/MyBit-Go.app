@@ -1,5 +1,4 @@
 import { hot } from 'react-hot-loader/root'
-import { InternalLinks } from 'constants/links';
 import * as Brain from '../apis/brain';
 import {
   SUPPORTED_NETWORKS,
@@ -9,9 +8,8 @@ import {
  import { DEFAULT_ASSET_INFO } from 'constants/app';
 import { SDK_EVENTS } from 'constants/sdkEvents';
 import { withMetamaskContext } from 'components/MetamaskContext';
-import { withAirtableContext } from 'components/AirtableContext';
 import IpfsDataManager from 'utils/IpfsDataManager';
-import { IPFS_URL } from 'constants/ipfs';
+import { ExternalLinks } from 'constants/links';
 const Contracts = require('@mybit/contracts');
 const { Provider, Consumer } = React.createContext({});
 
@@ -22,8 +20,6 @@ class AssetsProvider extends React.PureComponent {
       loadingUserInfo: false,
       loadingSdk: false,
       loadingIpfs: false,
-      loadingAirtable: false,
-      usingAirtable: true,
       usingIpfs: false,
       loadingAssets: true,
       assetListings: {},
@@ -72,11 +68,10 @@ class AssetsProvider extends React.PureComponent {
   }
 
   /*
-  * Initializes SDK calls and Airtable (if active)
+  * Initializes SDK calls and load assets
   * Sync is async between onChain and offChain data
   */
   init = () => {
-    const { usingAirtable } = this.state;
     const { metamaskContext } = this.props;
     const { network } = metamaskContext;
     if(SUPPORTED_NETWORKS.includes(network)){
@@ -90,7 +85,6 @@ class AssetsProvider extends React.PureComponent {
         assetsWithPendingIpfs: {},
       })
       this.fetchAssetsFromSDK();
-      usingAirtable && this.getAssetsFromAirtable(network)
     }
   }
 
@@ -136,7 +130,7 @@ class AssetsProvider extends React.PureComponent {
   }
 
   getAssetsFromIpfs = (network, assetListings, assetModels, operators) => {
-    this.setState({loadingIpfs: true, loadingAirtable: false})
+    this.setState({loadingIpfs: true})
     this.ipfs = new IpfsDataManager(
       network,
       assetListings,
@@ -145,12 +139,6 @@ class AssetsProvider extends React.PureComponent {
       this.handleListingUpdateIpfs,
       this.handleModelUpdateIpfs,
     );
-  }
-
-  getAssetsFromAirtable = (network) => {
-    const { getAssetsFromAirtable } = this.props;
-    this.setState({loadingAirtable: true, loadingIpfs: false})
-    getAssetsFromAirtable(network, this.handleLoadedAirtable)
   }
 
   handleListingUpdateIpfs = (assetId, asset) => {
@@ -257,13 +245,10 @@ class AssetsProvider extends React.PureComponent {
     }
 
     const onAssetListing = async data => {
-      const { assetListings, usingAirtable, usingIpfs, assetModels, assetManagers} = this.state;
+      const { assetListings, usingIpfs, assetModels, assetManagers} = this.state;
       const { fetchNewAssetListing } = this.props;
       const { user, network } = this.props.metamaskContext;
       const { asset: assetId, manager: assetManager } = event.returnValues;
-      if(usingAirtable){
-        fetchNewAssetListing(network, this.setData, assetId);
-      }
       const { blockNumber } = event;
       let asset = await Brain.fetchAsset({
         assetId,
@@ -316,7 +301,6 @@ class AssetsProvider extends React.PureComponent {
     const { metamaskContext } = this.props;
     const { network } = metamaskContext;
     const asset = assetListings[assetId];
-    await Brain.updateAirTableWithNewOffChainData({assetId, files: files.string, risks, financials, about, fees,}, network)
     this.updateListingProps(assetId, {...asset, files: files.array, risks, financials, about, fees})
   }
 
@@ -324,7 +308,7 @@ class AssetsProvider extends React.PureComponent {
     this.setState(prevState => {
       let { assetModels, assets, } = prevState;
       const imageIpfs = props.images && props.images.length > 0 && props.images[0];
-      const imageSrc = imageIpfs ? `${IPFS_URL}${imageIpfs}` : '';
+      const imageSrc = ExternalLinks.IPFS_GATEWAY_URL(imageIpfs);
       const assetModelsNew = {
         ...assetModels,
         [modelId]: {
@@ -400,20 +384,13 @@ class AssetsProvider extends React.PureComponent {
     })
   }
 
-  getLoadingState = (loadingAirtable, loadingIpfs, loadingSdk) => {
-    if(!loadingSdk && !loadingAirtable && !loadingIpfs){
+  getLoadingState = (loadingIpfs, loadingSdk) => {
+    if(!loadingSdk && !loadingIpfs){
       console.log("Done loading assets")
       return false;
     } else {
       console.log("Not done loading assets")
       return true;
-    }
-  }
-
-  handleLoadedAirtable = data => {
-    const { usingAirtable, loadingAirtable } = this.state;
-    if(usingAirtable && loadingAirtable){
-      this.setState({ loadingAirtable: false }, () => this.setData(data))
     }
   }
 
@@ -438,11 +415,6 @@ class AssetsProvider extends React.PureComponent {
     return a;
   }
 
-  /*
-  * Only setup this way right now because we first load data from Airtable,
-  * which essentially means two total calls, one from the SDK and one from Airtable,
-  * both resolve the whole data up until then, so we can merge the data like so.
-  */
   setData = ({
     assetModels={},
     assetModelsLoading={},
@@ -452,22 +424,19 @@ class AssetsProvider extends React.PureComponent {
     operators={},
     network,
     ipfs,
-    airtable,
     sdk,
   }, cb) => {
     const {
       usingIpfs,
-      usingAirtable,
     } = this.state;
     const { metamaskContext } = this.props;
     const { network: currentNetwork } = metamaskContext;
-    if(((usingIpfs && ipfs) || (usingAirtable && airtable) || sdk) && (network === currentNetwork)){
+    if(((usingIpfs && ipfs) || sdk) && (network === currentNetwork)){
       this.setState(prevState => {
         const {
           assetListings: currentAssetListings,
           operators: currentOperators,
           assetModels: currentAssetModels,
-          loadingAirtable,
           loadingIpfs,
           loadingSdk,
         } = prevState;
@@ -483,7 +452,7 @@ class AssetsProvider extends React.PureComponent {
           operators: operatorsMerged,
           assetModels: assetModelsMerged,
           assets: assetsArray, // for backwards compatability
-          loadingAssets: this.getLoadingState(loadingAirtable, loadingIpfs, loadingSdk),
+          loadingAssets: this.getLoadingState(loadingIpfs, loadingSdk),
         }
       }, () => {
         console.log("New Assets State: ", this.state)
@@ -533,4 +502,4 @@ const getNameOfPropertyFromData = sdk => {
   return sdk ? 'chainData' : 'offChainData';
 }
 
-export default hot(withAirtableContext(withMetamaskContext(AssetsProvider)));
+export default hot(withMetamaskContext(AssetsProvider));

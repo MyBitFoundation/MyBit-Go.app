@@ -8,6 +8,8 @@ import {
 import {
   LocalStorageKeys,
 } from 'constants/localStorageKeys';
+import { ExternalLinks } from 'constants/links';
+
 const ProfileImageIconWrapper = styled.img`
   width: 32px;
   height: 32px;
@@ -36,7 +38,7 @@ class ThreeBoxProfile extends React.Component {
         }
     }
 
-    async componentWillMount() {
+    async componentDidMount() {
       this.loadData();
     }
 
@@ -73,9 +75,10 @@ class ThreeBoxProfile extends React.Component {
         const { name: profileName, imageIpfs, imageLoaded } = this.state;
         const { address, icon, name, long, short, showDefault } = this.props;
         const [ startIndex, endIndex ] = short ? short : [6, 4]
+        const src = ExternalLinks.IPFS_GATEWAY_HASH(imageIpfs);
         const iconImage = () =>
             <ProfileImageIconWrapper
-                src={`https://ipfs.infura.io/ipfs/${imageIpfs}`}
+                src={src}
                 onLoad={() => this.setState({imageLoaded: true})}
                 hasLoaded={imageLoaded}
             />

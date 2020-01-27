@@ -12,7 +12,7 @@ import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import * as Brain from '../apis/brain';
 import { ErrorTypes } from 'constants/errorTypes';
-import {InternalLinks } from 'constants/links';
+import { ExternalLinks } from 'constants/links';
 import {
   NotificationTypes,
   NotificationsMetamask,
@@ -168,7 +168,7 @@ class BlockchainProvider extends React.Component {
     } = this.state;
 
     try{
-      const response = await axios(InternalLinks.GAS_PRICE);
+      const response = await axios(ExternalLinks.GAS_PRICE_URL);
       if(response.data){
         const {
           fast,
@@ -720,7 +720,10 @@ class BlockchainProvider extends React.Component {
         }
       }
 
-      Brain.updateAirTableWithNewAsset({
+      throw new Error("replace airtable save");
+
+      /*
+      {
         assetId,
         assetName,
         country,
@@ -737,8 +740,11 @@ class BlockchainProvider extends React.Component {
         modelId,
         files: filesInfo.string,
       }, performInternalAction, network)
+      */
 
-      filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
+      throw new Error("replace AWS upload")
+
+      // filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
 
     const onError = (type) => {
