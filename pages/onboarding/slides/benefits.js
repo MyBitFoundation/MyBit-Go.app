@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import SafeGraphic from 'static/onboarding/safe-graphic.png';
+import SafeGraphic from 'public/onboarding/safe-graphic.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,

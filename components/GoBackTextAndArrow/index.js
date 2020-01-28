@@ -1,7 +1,7 @@
 import React from 'react';
 import Router from 'next/router';
 import styled from 'styled-components'
-import BackArrow from 'static/back-arrow.svg'
+import BackArrow from 'public/back-arrow.svg'
 
 const GoBackTextAndArrowWrapper = styled.a`
   cursor: pointer;

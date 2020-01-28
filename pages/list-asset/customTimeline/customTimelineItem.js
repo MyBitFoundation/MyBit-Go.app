@@ -29,7 +29,7 @@ const CustomDot = styled.div`
       display: block;
       width: 14px;
       height: 11px;
-      background-image: url(static/list-asset/checkmark.svg);
+      background-image: url(/list-asset/checkmark.svg);
       background-repeat: no-repeat;
       top: 50%;
       transform: translate(-50%,-50%);

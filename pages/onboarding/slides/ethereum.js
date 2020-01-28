@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import EthereumGraphic from 'static/onboarding/ethereum.png';
+import EthereumGraphic from 'public/onboarding/ethereum.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,

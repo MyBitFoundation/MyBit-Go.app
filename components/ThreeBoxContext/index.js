@@ -1,6 +1,6 @@
 import React from 'react';
 import Box from '3box';
-import Freddy from 'static/freddy.svg';
+import Freddy from 'public/freddy.svg';
 import { ExternalLinks } from 'constants/links';
 import get from 'lodash/get';
 const { Provider, Consumer } = React.createContext({});

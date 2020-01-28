@@ -1,15 +1,33 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    }
-  ],
+  "short_name": "app.mybit.io",
+  "name": "MyBit Go",
+  "description": "🔷 The MyBit Platform™ for investing in alternative assets",
+  "lang": "en",
+  "categories": ["cryptocurrency", "ethereum", "iot"],
   "start_url": "./index.html",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "icons": [
+    { "sizes": "310x310", "src": "/favicons/310x310.png" },
+    { "sizes": "192x192", "src": "/favicons/192x192.png" },
+    { "sizes": "180x180", "src": "/favicons/180x180.png" },
+    { "sizes": "144x144", "src": "/favicons/144x144.png" },
+    { "sizes": "152x152", "src": "/favicons/152x152.png" },
+    { "sizes": "150x150", "src": "/favicons/150x150.png" },
+    { "sizes": "120x120", "src": "/favicons/120x120.png" },
+    { "sizes": "114x114", "src": "/favicons/114x114.png" },
+    { "sizes": "96x96", "src": "/favicons/96x96.png" },
+    { "sizes": "76x76", "src": "/favicons/76x76.png" },
+    { "sizes": "72x72", "src": "/favicons/72x72.png" },
+    { "sizes": "70x70", "src": "/favicons/70x70.png" },
+    { "sizes": "60x60", "src": "/favicons/60x60.png" },
+    { "sizes": "57x57", "src": "/favicons/57x57.png" },
+    { "sizes": "48x48", "src": "/favicons/48x48.png" },
+    { "sizes": "36x36", "src": "/favicons/36x36.png" },
+    { "sizes": "32x32", "src": "/favicons/32x32.png" },
+    { "sizes": "16x16", "src": "/favicons/16x16.png" }
+  ],
+  "screenshots": [],
+  "serviceworker": {}
 }

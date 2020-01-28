@@ -9,8 +9,8 @@ import {
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
 } from 'constants/app';
-import CloseIcon from 'static/ic_close.svg';
-import FileImg from 'static/file-icon.svg';
+import CloseIcon from 'public/ic_close.svg';
+import FileImg from 'public/file-icon.svg';
 import * as Brain from '../../apis/brain';
 import DocumentsManagerTitle from './documentsManagerTitle';
 import DocumentsManagerNav from './documentsManagerNav';

@@ -9,7 +9,6 @@ import ThreeBoxProvider from "components/ThreeBoxContext";
 import TermsOfServiceProvider from "components/TermsOfServiceContext";
 import Notifications from "components/Notifications";
 import MetamaskProvider from "components/MetamaskContext";
-import Head from "components/Head";
 import GlobalStyle from "components/globalStyle";
 import AppWrapper from "components/AppWrapper";
 import Theme from "components/Theme";
@@ -66,7 +65,6 @@ class MyApp extends App {
     return (
       <Container>
         <GlobalStyle />
-        <Head />
         <Theme>
           <WithProviders
             setNetwork={this.setNetwork}

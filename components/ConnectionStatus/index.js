@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import ConnectionStatusWrapper from './connectionStatusWrapper';
 import Tooltip from 'ui/Tooltip';
-import InfoIcon from 'static/info-icon-dark.svg';
+import InfoIcon from 'public/info-icon-dark.svg';
 
 const StyledTooltip = styled(Tooltip)`
   margin-left: 10px;

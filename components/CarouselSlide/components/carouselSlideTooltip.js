@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import Tooltip from 'ui/Tooltip';
-import questionTooltip from "static/list-asset/questionTooltip.png";
+import questionTooltip from "public/list-asset/questionTooltip.png";
 import TooltipWithQuestionMark from 'ui/TooltipWithQuestionMark';
 
 const TooltipWrapper = styled(TooltipWithQuestionMark)`

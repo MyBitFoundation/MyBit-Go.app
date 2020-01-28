@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import SetupGraphic from 'static/onboarding/setup.png';
+import SetupGraphic from 'public/onboarding/setup.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,

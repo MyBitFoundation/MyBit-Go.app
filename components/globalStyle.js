@@ -4,7 +4,7 @@ import 'antd/dist/antd.min.css';
 const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'Gilroy';
-    src: url('/static/fonts/gilroy-extrabold.otf') format('opentype');
+    src: url('/fonts/gilroy-extrabold.otf') format('opentype');
     font-weight: bold;
   }
 

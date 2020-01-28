@@ -6,7 +6,7 @@ import {
   CarouselSlideList,
   CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
-import Myb from 'static/asset-manager/myb.png';
+import Myb from 'public/asset-manager/myb.png';
 
 const Image = styled.img`
   margin: 0px auto;

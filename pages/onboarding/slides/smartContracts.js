@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import SmartContract from 'static/onboarding/smart_contract.png';
+import SmartContract from 'public/onboarding/smart_contract.png';
 
 import {
   CarouselSlide,

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import CloseButton from 'static/close-button.svg';
+import CloseButton from 'public/close-button.svg';
 
 const AssetFundingTitleWrapper = styled.div`
   font-weight: 500;

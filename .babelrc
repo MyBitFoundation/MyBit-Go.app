@@ -4,9 +4,9 @@
       "presets": [["next/babel", { "preset-env": { "modules": "commonjs" } }]],
       "plugins": [
       ["module-resolver", {
-          "root": ["./src"],
+          "root": ["."],
           "alias": {
-            "static": "./static",
+            "public": "./public",
             "components": "./components",
             "constants": "./constants",
             "utils": "./utils",
@@ -16,7 +16,7 @@
         }],
         ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
         ["inline-react-svg" ],
-        ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }],
+        ["transform-assets-import-to-string", {"baseDir": "public","baseUri": "/" }],
         ["react-hot-loader/babel"]
       ]
     },
@@ -24,9 +24,9 @@
       "presets": ["next/babel"],
       "plugins": [
         ["module-resolver", {
-          "root": ["./src"],
+          "root": ["."],
           "alias": {
-            "static": "./static",
+            "public": "./public",
             "components": "./components",
             "constants": "./constants",
             "utils": "./utils",
@@ -37,7 +37,7 @@
         ["import", {"libraryName": "antd","style": "less"}],
         ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
         ["inline-react-svg" ],
-        ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }],
+        ["transform-assets-import-to-string", {"baseDir": "public","baseUri": "/" }],
         ["react-hot-loader/babel"]
       ]
     },
@@ -45,9 +45,9 @@
       "presets": ["next/babel"],
       "plugins": [
         ["module-resolver", {
-          "root": ["./src"],
+          "root": ["."],
           "alias": {
-            "static": "./static",
+            "public": "./public",
             "components": "./components",
             "constants": "./constants",
             "utils": "./utils",
@@ -58,7 +58,7 @@
         ["import", {"libraryName": "antd","style": "less"}],
         ["styled-components", {"ssr": true, "displayName": true, "preprocess": false }],
         ["inline-react-svg" ],
-        ["transform-assets-import-to-string", {"baseDir": "static","baseUri": "/" }],
+        ["transform-assets-import-to-string", {"baseDir": "public","baseUri": "/" }],
         ["transform-remove-console"]
       ]
     }

@@ -24,8 +24,8 @@ import {
 import {
   DEFAULT_TOKEN,
 } from 'constants/app';
-import ThinkingIcon from 'static/ic_thinking.svg';
-import Spin from 'static/spin.svg';
+import ThinkingIcon from 'public/ic_thinking.svg';
+import Spin from 'public/spin.svg';
 import LabelWithTooltip from 'ui/LabelWithTooltip';
 
 const { publicRuntimeConfig } = getConfig();

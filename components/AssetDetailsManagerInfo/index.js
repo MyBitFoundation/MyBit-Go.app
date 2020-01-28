@@ -7,8 +7,8 @@ import AssetDetailsManagerInfoAddress from './assetDetailsManagerInfoAddress';
 import AssetDetailsManagerInfoPercentages from './assetDetailsManagerInfoPercentages';
 import ThreeBoxProfile from 'components/ThreeBoxProfile';
 import ValueDisplay from 'ui/ValueDisplay';
-import MyBitLogo from 'static/mybit-blue.svg';
-import Sliders from 'static/sliders.svg';
+import MyBitLogo from 'public/mybit-blue.svg';
+import Sliders from 'public/sliders.svg';
 import { PLATFORM_TOKEN } from 'constants/app';
 import AssetManagerProfile from 'ui/AssetManagerProfile';
 import {

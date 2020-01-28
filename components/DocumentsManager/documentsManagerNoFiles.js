@@ -1,7 +1,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import LostMan from 'static/lost-man.svg';
+import LostMan from 'public/lost-man.svg';
 
 const DocumentsManagerNoFilesWrapper = styled.div`
   margin: 0 auto;

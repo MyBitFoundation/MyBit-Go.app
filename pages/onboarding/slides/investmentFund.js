@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import MyBitDesk from 'static/onboarding/desk.png';
+import MyBitDesk from 'public/onboarding/desk.png';
 import {
   Button,
 } from 'antd';

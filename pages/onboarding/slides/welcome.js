@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import MyBitGoLogo from 'static/onboarding/mybitgo.png';
+import MyBitGoLogo from 'public/onboarding/mybitgo.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import LogoSvg from 'static/mybit-logo_v3.svg';
-import LogoSvgMobile from 'static/mybit-logo-mobile.svg';
+import LogoSvg from 'public/mybit-logo_v3.svg';
+import LogoSvgMobile from 'public/mybit-logo-mobile.svg';
 import LogoWrapper from './logoWrapper';
 
 const Logo = () => (

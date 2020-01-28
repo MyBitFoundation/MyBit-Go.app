@@ -6,7 +6,7 @@ import {
   CarouselSlideList,
   CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
-import Tools from 'static/asset-manager/tools.png';
+import Tools from 'public/asset-manager/tools.png';
 
 const Image = styled.img`
   margin: 0px auto;

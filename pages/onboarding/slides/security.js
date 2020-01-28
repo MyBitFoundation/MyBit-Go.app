@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Key from 'static/onboarding/key.png';
+import Key from 'public/onboarding/key.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,

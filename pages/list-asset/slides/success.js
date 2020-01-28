@@ -11,8 +11,8 @@ import {
   CarouselSlideList,
 } from 'components/CarouselSlide/';
 
-import SuccessEarth from "static/list-asset/success-list-asset-earth.svg";
-import SuccessCheckmark from "static/list-asset/success-list-asset.svg";
+import SuccessEarth from "public/list-asset/success-list-asset-earth.svg";
+import SuccessCheckmark from "public/list-asset/success-list-asset.svg";
 
 const Earth = styled(SuccessEarth)`
   margin: 0 auto;

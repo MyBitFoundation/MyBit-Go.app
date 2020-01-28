@@ -13,7 +13,7 @@ import {
   Slider
 } from 'antd';
 
-import Coins from "static/list-asset/assetList_coins.png";
+import Coins from "public/list-asset/assetList_coins.png";
 
 const Image = styled.img`
   position: relative;

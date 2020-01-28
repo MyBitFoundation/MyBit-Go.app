@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Globe from 'static/onboarding/globe.png';
+import Globe from 'public/onboarding/globe.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
