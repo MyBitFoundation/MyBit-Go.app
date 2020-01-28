@@ -1,22 +1,17 @@
-<p align="center">
-  <a href="https://mybit.io/">
-    <img alt="MyBit Logo" src="./src/images/MyBit-logo.svg" width="150">
-  </a>
-</p>
 
-
-# MyBitDapp-FrontEnd
+# MyBit Go
 
 [![CircleCI](https://circleci.com/gh/MyBitFoundation/MyBit-Go.svg?style=svg)](https://circleci.com/gh/MyBitFoundation/MyBit-Go)
 
-<br/>
+<https://app.mybit.io>
 
 🎨 The Front End that supports the MyBit Platform™
 
 MyBit offers a fast, secure and cost-effective investing experience. Powered by Ethereum.
 
 The MyBit Decentralized Application (DApp) enables anyone to invest directly in revenue generating assets.
-<br/>
+
+https://www.youtube.com/watch?v=SGFGfpKn1dg
 
 ### Versions
 >***0.0.1.alpha***
@@ -27,30 +22,56 @@ Note, this is an Alpha version which may not be well tested. Features in this ve
 - The Assets Portfolio and Revenue Contract Explorer
 - [IPFS](https://github.com/ipfs) (A peer-to-peer hypermedia protocol) testflight
 
-<br/><br/>
+## Contributing
 
-## Tools Used
-#### [Next.js](https://nextjs.org/)
-#### [Styled Components](https://www.styled-components.com/)
+MyBit Go leverages the following technology. It will help to have some knowledge of these modules and reference these links during your development.
 
-## Read before you contribute
+- [React](https://reactjs.org/docs)
+- [Next.js](https://nextjs.org/docs)
+- [Ant Design components](https://ant.design/docs/react/introduce)
+- [Styled Components](https://styled-components.com/docs)
+- [Web3 JS](https://web3js.readthedocs.io)
+- [IPFS](https://docs.ipfs.io)
+- [3box](https://docs.3box.io)
 
-### Contexts
+### Environment Variables
+
+`GOOGLE_PLACES_API_KEY` is required for connecting with `react-geocode`. [Get a Google Places API key](https://developers.google.com/places/web-service/get-api-key).
+
+### Development tasks
+
+```sh
+yarn install
+```
+
+- `yarn run dev` Build, watch, and re-build during development. [http://127.0.0.1:8081](http://127.0.0.1:8081)
+- `yarn run build` Build a production-ready version of the site.
+- `yarn run export` Export the static version of the build.
+
+Before submitting a PR please ensure the build runs successfully.
+
+### React Contexts
 The application is built around a series of Contexts (See [React Context](https://reactjs.org/docs/context.html)) in conjunction with [HOCs](https://reactjs.org/docs/higher-order-components.html) to provide different data to different components across the appliacation.
 
 The following Contexts are available:
 
-- [Metamask](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/MetamaskContext/index.js)
-- [Blockchain](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/BlockchainContext.js)
-- [Kyber](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/KyberContext.js)
-- [Notifications](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/NotificationsContext.js)
-- [Civic](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/UI/CivicContext.js)
++ [./components/BancorContext.js](./components/BancorContext.js)
++ [./components/NotificationsContext.js](./components/NotificationsContext.js)
++ [./components/ThreeBoxContext](./components/ThreeBoxContext)
++ [./components/ThreeBoxContext/index.js](./components/ThreeBoxContext/index.js)
++ [./components/KyberContext](./components/KyberContext)
++ [./components/KyberContext/constants.js](./components/KyberContext/constants.js)
++ [./components/KyberContext/index.js](./components/KyberContext/index.js)
++ [./components/AssetsContext.js](./components/AssetsContext.js)
++ [./components/UI/CivicContext.js](./components/UI/CivicContext.js)
++ [./components/MetamaskContext](./components/MetamaskContext)
++ [./components/MetamaskContext/constants.js](./components/MetamaskContext/constants.js)
++ [./components/MetamaskContext/index.js](./components/MetamaskContext/index.js)
++ [./components/MetamaskContext/utils.js](./components/MetamaskContext/utils.js)
++ [./components/TermsOfServiceContext.js](./components/TermsOfServiceContext.js)
++ [./components/BlockchainContext.js](./components/BlockchainContext.js)
 
-So if you need any of the information inside these contexts you can use the `with` high order component each of them provides.
-
-### File Structure
-
-### Patterns
+If you need any of the information inside these contexts you can use the `with` high order component each of them provides.
 
 ### Styling
 
@@ -70,7 +91,7 @@ NavBar/index.js
 NavBar/navBarWrapper.js
 NavBar/navBarButton.js
 ```
-<br/>
+
 
 index.js:
 ```
@@ -86,56 +107,23 @@ We use a mobile first approach. See more about it [here](https://zellwk.com/blog
 
 See [this](https://itnext.io/thinking-in-styled-components-e230ea37c52c) document as a good reference on thinking in Styled Components.
 
-### Server
-
 ### Global folders for your convenience
 Using [babel](https://github.com/tleunen/babel-plugin-module-resolver).
 
-The following folders are available from anywhere (but `/server`):
-- static
+- public
 - components
 - constants
 - utils
 - ui
+- hooks
+
+For example import from the above directories:
+
+```js
+import Logo from "components/Logo";
+import { ExternalLinks } from "constants/links";
+```
 
 ### User Documentation
 MyBit Go follows user-centered design and documentation.
 For User Flow docs check [this page](./TESTING.md).
-
-
-
-## To run
-
-### Installing the dependencies with [yarn](https://yarnpkg.com/en/docs/usage)
-```sh
-yarn install
-```
-### Development server
-```sh
-yarn dev
-```
-
-### Production server
-```sh
-yarn build
-yarn now-start
-```
-
-### Powered with
-<br/>
-<p>
-<img src="./src/images/ethereum-logo.png" width="30%">
-</p>
-</p>
-
-<br/><br/><br/>
-<p align="center">
-    <a href="https://www.youtube.com/watch?v=SGFGfpKn1dg">
-        <img src="./src/images/rocket.png" width="70%">
-    </a>
-</a>
-<br/>
-
-<p align="center">
-MyBit Platform™ CHE-177.186.963<br/>
-</p>
