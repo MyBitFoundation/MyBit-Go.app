@@ -16,7 +16,7 @@
     "babel-plugin-import": "1.11.0",
     "babel-plugin-inline-react-svg": "1.0.1",
     "babel-plugin-styled-components": "1.10.0",
-    "babel-plugin-transform-assets-import-to-string": "1.2.0",
+    "babel-plugin-transform-assets-import-to-string": "^1.2.0",
     "bizcharts": "3.4.1",
     "color-hash": "1.0.3",
     "dayjs": "1.8.8",
