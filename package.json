@@ -42,7 +42,7 @@
     "web3": "1.2.4"
   },
   "scripts": {
-    "clean": "rm -rf .next",
+    "clean": "rm -rf .next build",
     "dev": "NODE_ENV=development next dev -p 8081 -H 127.0.0.1 || true",
     "build": "next build",
     "export": "next export -o build",
