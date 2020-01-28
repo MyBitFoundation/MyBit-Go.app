@@ -117,13 +117,18 @@ Using [babel](https://github.com/tleunen/babel-plugin-module-resolver).
 - ui
 - hooks
 
-For example import from the above directories:
+For example the developer can import from the above directories from anywhere.
 
 ```js
 import Logo from "components/Logo";
 import { ExternalLinks } from "constants/links";
 ```
 
-### User Documentation
+Notice how it's not using relative `../` paths.
+
+### Testing
 MyBit Go follows user-centered design and documentation.
 For User Flow docs check [this page](./TESTING.md).
+
+### Deployment
+See [./circleci](./circleci) and [./travis.yml](./travis.yml) for the steps used to generate the static site and deploy to IPFS.
