@@ -2,12 +2,12 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:11.15.0
     steps:
       - checkout
       - deploy:
           name: Deploy to IPFS
           command: |
-            yarn install --ignore-engines
+            yarn install
             yarn run build
             yarn run export
