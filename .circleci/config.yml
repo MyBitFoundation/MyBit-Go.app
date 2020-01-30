@@ -8,7 +8,6 @@ jobs:
       - deploy:
           name: Deploy to IPFS
           command: |
-            yarn install
+            yarn install --ignore-engines
             yarn run build
             yarn run export
-            npx ipfs-deploy -p pinata -d cloudflare build
