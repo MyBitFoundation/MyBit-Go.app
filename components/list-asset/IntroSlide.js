@@ -6,7 +6,7 @@ import {
   CarouselNextButton
 } from "components/CarouselSlide/";
 
-export const IntroSlide = ({ maxWidthDesktop, desktopMode, onClick, dev }) => (
+const IntroSlide = ({ maxWidthDesktop, desktopMode, onClick, dev }) => (
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
     hasBoxShadow={desktopMode}
@@ -53,3 +53,5 @@ export const IntroSlide = ({ maxWidthDesktop, desktopMode, onClick, dev }) => (
     {desktopMode && dev && <CarouselNextButton onClick={onClick} />}
   </CarouselSlide>
 );
+
+export default IntroSlide;

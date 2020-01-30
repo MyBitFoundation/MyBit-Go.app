@@ -20,7 +20,7 @@ const Image = styled.img`
   `}
 }`
 
-const Security = () => (
+const SecuritySlide = () => (
   <CarouselSlide>
     <Image
       src={Key}
@@ -79,4 +79,4 @@ const Security = () => (
   </CarouselSlide>
 );
 
-export default Security;
+export default SecuritySlide;

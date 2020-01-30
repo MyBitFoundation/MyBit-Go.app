@@ -7,7 +7,6 @@ import {
   Tooltip,
   Carousel,
 } from "antd";
-import getConfig from 'next/config';
 import Cookie from 'js-cookie';
 import Geocode from "react-geocode";
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
@@ -43,7 +42,7 @@ import {
   FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
 const dev = process.env.NODE_ENV === 'development';
-const { publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig } = process.env;
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {

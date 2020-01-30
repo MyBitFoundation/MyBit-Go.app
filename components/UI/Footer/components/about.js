@@ -25,7 +25,7 @@ const About = () => (
     <Mybit />
     <p>
       MyBit is operated and maintained by a DAO
-      <div>DAO address:</div>
+      <span>DAO address:</span>
       <a
         target="_blank"
         rel="noopener noreferrer"

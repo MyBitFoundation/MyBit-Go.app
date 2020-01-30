@@ -21,7 +21,7 @@ const Label = styled.div`
   color: ${({theme}) => theme.colors.grayBase};
 `
 
-export const GeneralDescriptionSlide = ({
+const GeneralDescriptionSlide = ({
   maxWidthDesktop,
   handleInputChange,
   desktopMode,
@@ -132,3 +132,5 @@ export const GeneralDescriptionSlide = ({
     </CarouselSlide>
   )
 };
+
+export default GeneralDescriptionSlide;

@@ -19,7 +19,7 @@ const Image = styled.img`
   `}
 `;
 
-const Why = ({
+const WhySlide = ({
   next,
   previous,
 }) => (
@@ -54,4 +54,4 @@ const Why = ({
   </CarouselSlide>
 )
 
-export default Why;
+export default WhySlide;

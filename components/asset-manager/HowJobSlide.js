@@ -19,7 +19,7 @@ const Image = styled.img`
   `}
 `;
 
-const HowJob = ({
+const HowJobSlide = ({
   onFinish,
   previous,
 }) => (
@@ -55,4 +55,4 @@ const HowJob = ({
   </CarouselSlide>
 )
 
-export default HowJob;
+export default HowJobSlide;

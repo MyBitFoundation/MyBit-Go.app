@@ -1,4 +1,3 @@
-import getConfig from 'next/config';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -8,9 +7,9 @@ import {
   CarouselNextButton,
 } from 'components/CarouselSlide/';
 import GoogleAutoComplete from 'ui/GoogleAutoComplete';
-const { publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig } = process.env;
 
-export const AssetLocationSlide = ({
+const AssetLocationSlide = ({
   maxWidthDesktop,
   handleInputChange,
   formData,
@@ -119,3 +118,5 @@ export const AssetLocationSlide = ({
     </CarouselSlide>
   )
 };
+
+export default AssetLocationSlide;

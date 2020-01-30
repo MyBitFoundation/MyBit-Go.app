@@ -11,7 +11,7 @@ import {
   CarouselNextButton,
 } from 'components/CarouselSlide/';
 
-export const DocsSlide = ({
+const DocsSlide = ({
   fileList,
   handleFileUpload,
   maxWidthDesktop,
@@ -77,3 +77,5 @@ export const DocsSlide = ({
     </CarouselSlide>
   );
 }
+
+export default DocsSlide;

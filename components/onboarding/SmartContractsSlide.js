@@ -19,7 +19,7 @@ const Image = styled.img`
   `}
 }`
 
-const SmartContracts = () => (
+const SmartContractsSlide = () => (
   <CarouselSlide>
    <CarouselSlideMainTitle>
     <CarouselSlideColoredSpan
@@ -54,4 +54,4 @@ const SmartContracts = () => (
   </CarouselSlide>
 );
 
-export default SmartContracts;
+export default SmartContractsSlide;

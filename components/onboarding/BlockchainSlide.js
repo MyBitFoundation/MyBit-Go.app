@@ -5,7 +5,7 @@ import {
   CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const Blockchain = () => (
+const BlockchainSlide = () => (
   <CarouselSlide>
     <CarouselSlideMainTitle>
       What is{" "}
@@ -37,4 +37,4 @@ const Blockchain = () => (
   </CarouselSlide>
 );
 
-export default Blockchain;
+export default BlockchainSlide;

@@ -1,17 +1,16 @@
 import CarouselWithNavigation from "ui/CarouselWithNavigation";
-import {
-  IntroSlide,
-  LocationSlide,
-  AvailableAssetsSlide,
-  AssetLocationSlide,
-  DocsSlide,
-  FeesSlide,
-  CollateralSlide,
-  ConfirmSlide,
-  SuccessSlide,
-  TermsOfServiceSlide,
-  GeneralDescriptionSlide
-} from "./slides";
+
+import IntroSlide from 'components/list-asset/IntroSlide';
+import AvailableAssetsSlide from 'components/list-asset/AvailableAssetsSlide';
+import AssetLocationSlide from 'components/list-asset/AssetLocationSlide';
+import DocsSlide from 'components/list-asset/DocsSlide';
+import FeesSlide from 'components/list-asset/FeesSlide';
+import CollateralSlide from 'components/list-asset/CollateralSlide';
+import ConfirmSlide from 'components/list-asset/ConfirmSlide';
+import SuccessSlide from 'components/list-asset/SuccessSlide';
+import TermsOfServiceSlide from 'components/list-asset/TermsOfServiceSlide';
+import GeneralDescriptionSlide from 'components/list-asset/GeneralDescriptionSlide';
+
 
 const MAX_WIDTH_DESKTOP = "500px";
 

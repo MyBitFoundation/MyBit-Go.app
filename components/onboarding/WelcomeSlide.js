@@ -30,7 +30,7 @@ const WelcomeWrapper = styled.div`
   }
 `;
 
-const Welcome = () => (
+const WelcomeSlide = () => (
   <CarouselSlide>
     <Image
       src={MyBitGoLogo}
@@ -63,4 +63,4 @@ const Welcome = () => (
   </CarouselSlide>
 )
 
-export default Welcome;
+export default WelcomeSlide;

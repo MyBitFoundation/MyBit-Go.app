@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import styled, { keyframes, css } from 'styled-components';
-import getConfig from 'next/config';
 import axios from 'axios';
 export const { Provider, Consumer } = React.createContext({});
 
@@ -77,7 +76,7 @@ class CivicProvider extends Component {
   }
 
   componentDidMount() {
-    const { publicRuntimeConfig } = getConfig();
+    const { publicRuntimeConfig } = process.env;
 
     this.civicSip = new window.civic.sip({
       appId: publicRuntimeConfig.REACT_APP_CIVIC_APP_ID,

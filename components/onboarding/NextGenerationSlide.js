@@ -20,7 +20,7 @@ const Image = styled.img`
   `}
 }`
 
-const NextGeneration = () => (
+const NextGenerationSlide = () => (
   <CarouselSlide>
     <Image
       src={Globe}
@@ -73,4 +73,4 @@ const NextGeneration = () => (
   </CarouselSlide>
 )
 
-export default NextGeneration;
+export default NextGenerationSlide;

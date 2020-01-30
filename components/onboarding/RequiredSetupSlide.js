@@ -23,7 +23,7 @@ import {
   withBancorContext,
 } from 'components/BancorContext';
 
-const RequiredSetup = withBancorContext(({
+const RequiredSetupSlide = withBancorContext(({
   bancorContext,
 }) => (
   <CarouselSlide>
@@ -84,4 +84,4 @@ const RequiredSetup = withBancorContext(({
   </CarouselSlide>
 ));
 
-export default RequiredSetup;
+export default RequiredSetupSlide;

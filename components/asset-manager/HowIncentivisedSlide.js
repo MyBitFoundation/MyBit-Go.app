@@ -5,7 +5,7 @@ import {
   CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const HowIncentivised = () => (
+const HowIncentivisedSlide = () => (
   <CarouselSlide>
     <CarouselSlideMainTitle
       isLong
@@ -37,4 +37,4 @@ const HowIncentivised = () => (
   </CarouselSlide>
 )
 
-export default HowIncentivised;
+export default HowIncentivisedSlide;

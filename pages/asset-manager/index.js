@@ -1,9 +1,50 @@
 import Router from 'next/router';
-import {
-  Slides,
-} from './slides';
-
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
+
+import WhatSlide from 'components/asset-manager/WhatSlide';
+import WhySlide from 'components/asset-manager/WhySlide';
+import WhoSlide from 'components/asset-manager/WhoSlide';
+import HowIncentivisedSlide from 'components/asset-manager/HowIncentivisedSlide';
+import HowJobSlide from 'components/asset-manager/HowJobSlide';
+
+const slides = [{
+  Component: WhatSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: false,
+    nextButtonText: 'Next',
+  }
+}, {
+  Component: WhySlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'Next',
+  }
+}, {
+  Component: WhoSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'Next',
+  }
+}, {
+  Component: HowIncentivisedSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'Next',
+  }
+}, {
+  Component: HowJobSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'Get Started',
+  }
+}];
+
+
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: "KYC" },
@@ -21,7 +62,7 @@ const AssetManager = () => (
         as: 'list-asset',
       }}
       navigationTooltips={SliderNavigationTooltips}
-      slides={Slides}
+      slides={slides}
       onFinish={() => Router.push("/list-asset")}
       maxWidthDesktop="550px"
       nextButtonHasArrow

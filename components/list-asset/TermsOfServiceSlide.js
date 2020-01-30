@@ -35,7 +35,7 @@ const AlertMessageWrapper = styled.div`
 
 `
 
-export const TermsOfServiceSlide = ({
+const TermsOfServiceSlide = ({
   maxWidthDesktop,
   desktopMode,
   onClick,
@@ -71,3 +71,5 @@ export const TermsOfServiceSlide = ({
     </CarouselSlide>
   );
 }
+
+export default TermsOfServiceSlide;

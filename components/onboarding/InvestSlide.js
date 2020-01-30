@@ -4,7 +4,7 @@ import {
   CarouselSlideParagraph,
 } from 'components/CarouselSlide/';
 
-const Invest = () => (
+const InvestSlide = () => (
   <CarouselSlide>
     <CarouselSlideMainTitle>
       How do I invest?
@@ -26,4 +26,4 @@ const Invest = () => (
   </CarouselSlide>
 );
 
-export default Invest;
+export default InvestSlide;

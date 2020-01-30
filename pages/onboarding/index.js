@@ -1,9 +1,91 @@
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
-import {
-  Slides,
-} from './slides';
 import Router from 'next/router';
 import BancorProvider from 'components/BancorContext';
+
+import WelcomeSlide from 'components/onboarding/WelcomeSlide';
+import NextGenerationSlide from 'components/onboarding/NextGenerationSlide';
+import InvestmentFundSlide from 'components/onboarding/InvestmentFundSlide';
+import BlockchainSlide from 'components/onboarding/BlockchainSlide';
+import BenefitsSlide from 'components/onboarding/BenefitsSlide';
+import EthereumSlide from 'components/onboarding/EthereumSlide';
+import SmartContractsSlide from 'components/onboarding/SmartContractsSlide';
+import InvestSlide from 'components/onboarding/InvestSlide';
+import SecuritySlide from 'components/onboarding/SecuritySlide';
+import RequiredSetupSlide from 'components/onboarding/RequiredSetupSlide';
+
+const slides = [{
+  Component: WelcomeSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: false,
+    nextButtonText: 'More on MyBit Go',
+  }
+}, {
+  Component: NextGenerationSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: `What it isn't`,
+  }
+}, {
+  Component: InvestmentFundSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'What is blockchain?',
+  }
+}, {
+  Component: BlockchainSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'Next',
+  }
+}, {
+  Component: BenefitsSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'What is Ethereum?',
+  }
+}, {
+  Component: EthereumSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'Smart contracts',
+  }
+}, {
+  Component: SmartContractsSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'How do I invest?',
+  }
+}, {
+  Component: InvestSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'How to secure my assets?',
+  }
+}, {
+  Component: SecuritySlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'Next',
+  }
+}, {
+  Component: RequiredSetupSlide,
+  buttons: {
+    hasNextButton: true,
+    hasBackButton: true,
+    nextButtonText: 'Get started and explore',
+  }
+}];
+
+
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: 'What is MyBit Go?' },
@@ -59,7 +141,7 @@ class OnboardingPage extends React.Component {
           <CarouselWithNavigation
             redirectOnClose={this.firstLocation}
             navigationTooltips={SliderNavigationTooltips}
-            slides={Slides}
+            slides={slides}
             onFinish={this.finishOnboarding}
             maxWidthDesktop="600px"
             nextButtonHasArrow

@@ -19,7 +19,7 @@ const Image = styled.img`
   `}
 `
 
-const Ethereum = () => (
+const EthereumSlide = () => (
   <CarouselSlide>
     <CarouselSlideMainTitle>
       Ethereum
@@ -45,4 +45,4 @@ const Ethereum = () => (
   </CarouselSlide>
 );
 
-export default Ethereum;
+export default EthereumSlide;

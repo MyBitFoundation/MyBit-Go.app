@@ -5,7 +5,7 @@ import {
   CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
 
-const Who = ({
+const WhoSlide = ({
   next,
   previous,
 }) => (
@@ -44,4 +44,4 @@ const Who = ({
   </CarouselSlide>
 )
 
-export default Who;
+export default WhoSlide;

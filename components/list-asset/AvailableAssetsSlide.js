@@ -6,7 +6,6 @@ import {
   Button,
   Select,
 } from "antd";
-import getConfig from 'next/config';
 import GoogleAutoComplete from 'ui/GoogleAutoComplete';
 import AlertMessage from 'ui/AlertMessage';
 import {
@@ -28,7 +27,7 @@ import ThinkingIcon from 'public/ic_thinking.svg';
 import Spin from 'public/spin.svg';
 import LabelWithTooltip from 'ui/LabelWithTooltip';
 
-const { publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig } = process.env;
 
 const Image = styled.img`
   position: relative;
@@ -118,7 +117,7 @@ const AssetValueContainer = styled.div`
   `}
 `
 
-export const AvailableAssetsSlide = ({
+const AvailableAssetsSlide = ({
   handleSelectChange,
   formData,
   maxWidthDesktop,
@@ -330,3 +329,5 @@ export const AvailableAssetsSlide = ({
     </CarouselSlide>
   );
 };
+
+export default AvailableAssetsSlide;

@@ -19,7 +19,7 @@ const Image = styled.img`
   `}
 }`
 
-const Benefits = () => (
+const BenefitsSlide = () => (
   <CarouselSlide>
     <CarouselSlideMainTitle>
       What are the{" "}
@@ -59,4 +59,4 @@ const Benefits = () => (
   </CarouselSlide>
 );
 
-export default Benefits;
+export default BenefitsSlide;

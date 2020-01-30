@@ -27,7 +27,7 @@ const formatter = (value) => {
   return `${value}%`;
 }
 
-export const FeesSlide = ({
+const FeesSlide = ({
   maxWidthDesktop,
   handleSelectChange,
   managementFee,
@@ -93,3 +93,5 @@ export const FeesSlide = ({
     )}
   </CarouselSlide>
 );
+
+export default FeesSlide;

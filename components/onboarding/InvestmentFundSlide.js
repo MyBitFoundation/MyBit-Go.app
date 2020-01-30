@@ -45,7 +45,7 @@ const ButtonWrapper = styled(Button)`
   `}
 `
 
-const InvestmentFund = ({
+const InvestmentFundSlide = ({
   goToSlide,
 }) => (
   <CarouselSlide>
@@ -96,4 +96,4 @@ const InvestmentFund = ({
   </CarouselSlide>
 );
 
-export default InvestmentFund;
+export default InvestmentFundSlide;
