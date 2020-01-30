@@ -1,17 +1,14 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/node:11.15.0
-
-    working_directory: ~/repo
-
+      - image: circleci/node:latest
     steps:
       - checkout
-
       - deploy:
           name: Deploy to IPFS
           command: |
-            npm run build
-            npm run export
+            yarn install
+            yarn run build
+            yarn run export
             npx ipfs-deploy -p pinata -d cloudflare build

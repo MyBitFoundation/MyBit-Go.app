@@ -1,12 +1,10 @@
+os: linux
 language: node_js
-node_js:
-  - "11.15"
 cache:
-  directories:
-  - node_modules
+  yarn: true
 install: true
-yarn: true
 script:
-  - npm run build
-  - npm run export
+  - yarn install
+  - yarn run build
+  - yarn run export
   - npx ipfs-deploy -p pinata -d cloudflare build
