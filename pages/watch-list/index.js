@@ -15,8 +15,8 @@ import {
   FundingStages,
 } from 'constants/fundingStages';
 import { LocalStorageKeys } from 'constants/localStorageKeys';
-import WatchListFilters from './watchListFilters';
-import WatchListSwitch from './watchListSwitch';
+import WatchListFilters from 'components/watch-list/watchListFilters';
+import WatchListSwitch from 'components/watch-list/watchListSwitch';
 import NoResults from 'components/NoResults';
 import AssetDisplayer from 'components/AssetDisplayer';
 import { DefaultAsset } from 'ui/Asset';

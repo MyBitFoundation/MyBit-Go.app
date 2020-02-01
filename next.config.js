@@ -12,6 +12,5 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 module.exports = withBundleAnalyzer(withCss({
-  distDir: 'build',
-  env: { GOOGLE_PLACES_API_KEY }
+  env: { GOOGLE_PLACES_API_KEY },
 }));

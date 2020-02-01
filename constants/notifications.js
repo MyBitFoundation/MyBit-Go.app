@@ -79,13 +79,10 @@ export const getContentForNotification = (obj) => {
         case NotificationStatus.SUCCESS:
           return {
             title: <span style={{marginRight: '10px'}}>Listed {listAsset.assetName} successfully</span>,
-            message: <span>You can find the asset listing{' '}
-              <Link
-                as={`/asset/${listAsset.assetId}`}
-                href={`/asset?id=${listAsset.assetId}`}
-              >
-              <a>here</a>
-              </Link>.</span>,
+            message: <span>
+              You can find the asset listing{' '}
+              <Link href={`/asset?id=${listAsset.assetId}`}>here</Link>.
+            </span>,
           }
         case NotificationStatus.INFO:
           return {
@@ -138,10 +135,7 @@ export const getContentForNotification = (obj) => {
                     <span
                       style={{display: 'block', textAlign: 'right'}}
                     >
-                      <Link
-                        href={`/portfolio?type=${PortfolioTypes.INVESTMENTS}`}
-                        as={`/portfolio/${PortfolioTypes.INVESTMENTS}`}
-                      >
+                      <Link href={`/portfolio?type=${PortfolioTypes.INVESTMENTS}`}>
                         Go to Portfolio
                       </Link>
                     </span>
@@ -203,10 +197,7 @@ export const getContentForNotification = (obj) => {
                     <React.Fragment>
                       <p>Investors are now able to withdraw their share. And so can you! Check your{' '}
                         <span>
-                          <Link
-                            href={`/portfolio?type=${PortfolioTypes.INVESTMENTS}`}
-                            as={`/portfolio/${PortfolioTypes.INVESTMENTS}`}
-                          >
+                          <Link href={`/portfolio?type=${PortfolioTypes.INVESTMENTS}`}>
                             Portfolio
                           </Link>
                         .</span>

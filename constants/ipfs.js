@@ -1,3 +1,1 @@
-export const HOST = 'ipfs.mybit.io';
-export const PROTOCOL = 'https';
-export const PORT = '443';
+export const IPFS_URL = 'https://ipfs.mybit.io';

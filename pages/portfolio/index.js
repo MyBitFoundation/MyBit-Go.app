@@ -4,22 +4,17 @@ import { withMetamaskErrors } from 'components/MetamaskErrors';
 import {
   PortfolioTypes,
 } from 'constants/portfolioTypes';
+import { withRouter } from 'next/router';
 
 class PortfolioPage extends React.Component {
-  static getInitialProps (ctx) {
-    if(!ctx.query.type){
-      return {type: PortfolioTypes.INVESTMENTS};
-    }
-    return {type: ctx.query.type};
-  }
-
   render(){
-  	return(
-  		<PortfolioModule>
-  	   {props => <Portfolio {...props} type={this.props.type}/>}
+    const type = this.props.router.query.type || PortfolioTypes.INVESTMENTS;
+    return (
+      <PortfolioModule>
+        {props => <Portfolio {...props} type={type}/>}
       </PortfolioModule>
-  	)
+    );
   }
 }
 
-export default withMetamaskErrors(PortfolioPage, false);
+export default withRouter(withMetamaskErrors(PortfolioPage, false));

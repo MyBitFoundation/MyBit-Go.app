@@ -56,10 +56,7 @@ const SuccessSlide = ({
       maxWidthDesktop={maxWidthDesktop}
     >
       Your asset has been succesfully listed. <br />You can access it{' '}
-      <Link
-        as={`/asset/${assetId}`}
-        href={`/asset?id=${assetId}`}
-      ><a>here</a></Link>.
+      <Link href={`/asset?id=${assetId}`}><a>here</a></Link>.
     </CarouselSlideParagraph>
     <Checkmark />
     <Earth />

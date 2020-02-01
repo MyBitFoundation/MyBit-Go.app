@@ -31,7 +31,7 @@ const AssetTemplate = ({
       <AssetTemplateImageHolder
         backgroundImage={backgroundImage}
         height={height}
-        onClick={() => Router.push(`/asset?id=${assetId}`, `/asset/${assetId}`)}
+        onClick={() => Router.push(`/asset?id=${assetId}`)}
       >
         {(addInvestmentLabel && userInvestment > 0) && (
           <InvestmentLabel

@@ -20,10 +20,6 @@
       { "ssr": true, "displayName": true, "preprocess": false }
     ],
     ["inline-react-svg"],
-    [
-      "transform-assets-import-to-string",
-      { "baseDir": "public", "baseUri": "/" }
-    ],
     ["transform-remove-console"]
   ]
 }

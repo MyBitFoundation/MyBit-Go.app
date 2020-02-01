@@ -31,11 +31,7 @@ const Links = ({
     }) => {
       if(internal){
         return (
-          <Link
-            href={url}
-            as={as ? as : undefined}
-            key={name}
-          >
+          <Link href={url} key={name} >
             <a>{name}</a>
           </Link>
         )

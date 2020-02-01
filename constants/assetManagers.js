@@ -15,15 +15,12 @@ const GetColumns = (sortedInfo, filteredInfo, network) => [{
   render: (text, record) => (
     <Media query="(min-width: 769px)">
       {matches =>
-        <Link
-          as={`/asset-managers/${record.key}`}
-          href={`/asset-managers?id=${record.key}`}
-        ><a>
+        <Link href={`/asset-managers?id=${record.key}`}>
         { matches ?
           <ThreeBoxProfile address={record.key} icon name long/> :
           <ThreeBoxProfile address={record.key} name short={[4,3]}/>
         }
-        </a></Link>
+        </Link>
       }
     </Media>
   )

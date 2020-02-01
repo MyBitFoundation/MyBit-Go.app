@@ -6,7 +6,6 @@ import {
   CarouselSlideList,
   CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
-import Myb from 'public/asset-manager/myb.png';
 
 const Image = styled.img`
   margin: 0px auto;
@@ -36,7 +35,7 @@ const HowJobSlide = ({
       do you ensure Asset Managers do their job?
     </CarouselSlideMainTitle>
     <Image
-      src={Myb}
+      src="/asset-manager/myb.png"
       width="90"
       alt="Tools"
     />

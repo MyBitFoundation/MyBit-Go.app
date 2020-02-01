@@ -7,7 +7,7 @@ import {
   CarouselNextButton,
 } from 'components/CarouselSlide/';
 import GoogleAutoComplete from 'ui/GoogleAutoComplete';
-const { publicRuntimeConfig } = process.env;
+const { GOOGLE_PLACES_API_KEY } = process.env;
 
 const AssetLocationSlide = ({
   maxWidthDesktop,
@@ -50,7 +50,7 @@ const AssetLocationSlide = ({
         This is where your asset is going to be once fully funded.
       </CarouselSlideParagraph>
       <GoogleAutoComplete
-        apiKey={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
+        apiKey={GOOGLE_PLACES_API_KEY}
         input={searchAddress1}
         countryCode={countryCode}
         onSelectSuggest={handleSelectSuggest}

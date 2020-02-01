@@ -6,7 +6,6 @@ import {
   CarouselSlideList,
   CarouselSlideColoredSpan,
 } from 'components/CarouselSlide/';
-import Tools from 'public/asset-manager/tools.png';
 
 const Image = styled.img`
   margin: 0px auto;
@@ -35,7 +34,7 @@ const WhySlide = ({
       </CarouselSlideColoredSpan> is an Asset Manager needed?
     </CarouselSlideMainTitle>
     <Image
-      src={Tools}
+      src="/asset-manager/tools.png"
       width="190"
       alt="Tools"
     />

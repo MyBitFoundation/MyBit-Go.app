@@ -49,10 +49,7 @@ const AssetDetailsManagerInfo = ({
       <AssetDetailsManagerInfoTitle>
         Asset manager
       </AssetDetailsManagerInfoTitle>
-      <Link
-        as={`/asset-managers/${address}`}
-        href={`/asset-managers?id=${address}`}
-      >
+      <Link href={`/asset-managers?id=${address}`}>
         <UserWrapper>
           <ThreeBoxProfile address={address} name icon showDefault={isAssetManager} />
         </UserWrapper>

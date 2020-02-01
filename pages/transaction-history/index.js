@@ -9,8 +9,8 @@ import Loading from 'components/Loading';
 import { withBlockchainContext } from 'components/BlockchainContext'
 import { withMetamaskErrors } from 'components/MetamaskErrors';
 import GetColumns from 'constants/transactions';
-import TransactionsPageWrapper from './transactionsPageWrapper';
-import TransactionsPageStatusIcon from './transactionsPageStatusIcon';
+import TransactionsPageWrapper from 'components/transaction-history/transactionsPageWrapper';
+import TransactionsPageStatusIcon from 'components/transaction-history/transactionsPageStatusIcon';
 import ErrorPage from 'components/ErrorPage';
 
 class TransactionHistoryPage extends React.Component {

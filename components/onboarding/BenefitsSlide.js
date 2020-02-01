@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import SafeGraphic from 'public/onboarding/safe-graphic.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -51,7 +50,7 @@ const BenefitsSlide = () => (
       </li>
     </CarouselSlideList>
     <Image
-      src={SafeGraphic}
+      src="/onboarding/safe-graphic.png"
       width="113"
       alt="MyBit Safe"
       isStatic

@@ -1,6 +1,7 @@
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
-import Router from 'next/router';
+import Router, { withRouter } from 'next/router';
 import BancorProvider from 'components/BancorContext';
+import isNil from "lodash/isNil"
 
 import WelcomeSlide from 'components/onboarding/WelcomeSlide';
 import NextGenerationSlide from 'components/onboarding/NextGenerationSlide';
@@ -101,22 +102,20 @@ const SliderNavigationTooltips = [
 ];
 
 class OnboardingPage extends React.Component {
-  static async getInitialProps (ctx) {
-    if(ctx.req){
-      return {redirectTo: ctx.query.redirectTo};
-    } else {
-      return {};
-    }
-  }
-
-  componentDidMount = () => {
+  componentDidMount() {
     const {
       redirectTo,
+      router,
     } = this.props;
     // When we redirect to this page on the server the
     // URL doesn't actually update. We already have
     // onboarding.js at this point so its inconsequent.
     // until a fix is found at least.
+
+    if (isNil(redirectTo) === true && isNil(router.query.redirectTo) === false) {
+      redirectTo = router.query.redirectTo;
+    }
+
     if(window && redirectTo) {
       Router.push('/onboarding');
     }
@@ -152,4 +151,4 @@ class OnboardingPage extends React.Component {
   }
 }
 
-export default OnboardingPage;
+export default withRouter(OnboardingPage);

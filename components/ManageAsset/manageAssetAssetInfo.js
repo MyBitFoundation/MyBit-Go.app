@@ -3,7 +3,6 @@ import React from 'react';
 import {
   Button,
 } from 'antd';
-import Fee from 'public/fee.png';
 import PieChart from 'public/chart-pie.svg';
 import LineChart from 'public/chart-line.svg';
 import ValueDisplay from 'ui/ValueDisplay';

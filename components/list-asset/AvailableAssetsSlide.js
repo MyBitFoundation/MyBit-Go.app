@@ -27,7 +27,7 @@ import ThinkingIcon from 'public/ic_thinking.svg';
 import Spin from 'public/spin.svg';
 import LabelWithTooltip from 'ui/LabelWithTooltip';
 
-const { publicRuntimeConfig } = process.env;
+const { GOOGLE_PLACES_API_KEY } = process.env;
 
 const Image = styled.img`
   position: relative;
@@ -215,7 +215,7 @@ const AvailableAssetsSlide = ({
                   ))}
                 </CarouselSlideSelect>
                 <GoogleAutoComplete
-                  apiKey={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
+                  apiKey={GOOGLE_PLACES_API_KEY}
                   input={searchCity}
                   countryCode={countryCode}
                   onSelectSuggest={handleCitySuggest}

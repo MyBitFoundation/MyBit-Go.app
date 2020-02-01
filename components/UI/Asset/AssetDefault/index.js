@@ -93,21 +93,15 @@ const AssetDefault = ({
             totalRevenue={formatMonetaryValue(totalRevenue)}
             collateralLocked={formatMonetaryValue(collateralLocked, PLATFORM_TOKEN)}
           >
-            <ThreeBoxProfile address={assetManager} icon />
-
-          <Link
-            as={`/asset-managers/${assetManager}`}
-            href={`/asset-managers?id=${assetManager}`}
-          >
+          <ThreeBoxProfile address={assetManager} icon />
+          <Link href={`/asset-managers?id=${assetManager}`}>
             <a>
               <ThreeBoxProfile address={assetManager} name />
             </a>
           </Link>
           </AssetManagerTooltip>
         </ProfileContainer>
-        <Link
-          as={`/asset/${assetId}`}
-          href={`/asset?id=${assetId}`}
+        <Link href={`/asset?id=${assetId}`}
         >
           <AssetDefaultContributeButton
             type={buttonType}

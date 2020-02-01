@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Globe from 'public/onboarding/globe.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -23,7 +22,7 @@ const Image = styled.img`
 const NextGenerationSlide = () => (
   <CarouselSlide>
     <Image
-      src={Globe}
+      src="/onboarding/globe.png"
       width="164"
       alt="MyBit Onboarding Slide 2"
       isGlobe

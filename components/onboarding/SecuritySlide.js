@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Key from 'public/onboarding/key.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -23,7 +22,7 @@ const Image = styled.img`
 const SecuritySlide = () => (
   <CarouselSlide>
     <Image
-      src={Key}
+      src="/onboarding/key.png"
       width="69"
       alt="Key"
       isKey

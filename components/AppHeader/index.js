@@ -103,10 +103,7 @@ const AppHeader = ({
               <AppHeaderAddress>
                 <span>{network}</span>
                 <div/>
-                <Link
-                  as={`/asset-managers/${user.address}`}
-                  href={`/asset-managers?id=${user.address}`}
-                >
+                <Link href={`/asset-managers?id=${user.address}`}>
                   <span style={{cursor: 'pointer'}}><ThreeBoxProfile address={user.address} name /></span>
                 </Link>
               </AppHeaderAddress>

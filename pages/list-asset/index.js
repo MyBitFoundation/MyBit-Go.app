@@ -14,8 +14,8 @@ import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
 import { withAssetsContext } from 'components/AssetsContext';
-import ListAssetMobile from './listAssetMobile';
-import ListAssetDesktop from './listAssetDesktop';
+import ListAssetMobile from 'components/list-asset/listAssetMobile';
+import ListAssetDesktop from 'components/list-asset/listAssetDesktop';
 import getTokenWithSufficientBalance from 'constants/getTokenWithSufficientBalance';
 import {
   COUNTRIES,
@@ -42,7 +42,7 @@ import {
   FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
 const dev = process.env.NODE_ENV === 'development';
-const { publicRuntimeConfig } = process.env;
+const { GOOGLE_PLACES_API_KEY } = process.env;
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
@@ -229,7 +229,7 @@ class ListAssetPage extends React.Component {
   };
 
   handleDetectLocationClicked = () => {
-    Geocode.setApiKey(publicRuntimeConfig.GOOGLE_PLACES_API_KEY);
+    Geocode.setApiKey(GOOGLE_PLACES_API_KEY);
 
     navigator.geolocation.getCurrentPosition(location => {
       const {

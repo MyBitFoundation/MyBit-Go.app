@@ -11,14 +11,77 @@ import {
   FAQ,
   Buttons,
 } from 'constants/knowledgeBase';
-import HelpPageWrapper from './helpPageWrapper';
-import HelpPageButtons from './helpPageButtons';
-import HelpPageQuestion from './helpPageQuestion';
-import HelpPageAnswer from './helpPageAnswer';
-import HelpPageButton from './helpPageButton';
+import ScrollableAnchor, { goToAnchor } from 'react-scrollable-anchor'
+import styled, { css } from 'styled-components';
 
 const { Panel } = Collapse;
-import ScrollableAnchor, { goToAnchor } from 'react-scrollable-anchor'
+
+const HelpPageAnswer = styled.p`
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+}`
+
+const HelpPageButton = styled.a`
+  ${props => props.isTelegram && css`
+    background-image: linear-gradient(79deg, #001358, #125ac4);
+    border-radius: 4px;
+
+    button{
+      background-color: transparent;
+      border-color: transparent;
+
+      &:hover{
+        background-color: transparent;
+        border-color: transparent;
+      }
+    }
+
+    .anticon{
+      margin: 0px 3px;
+      position: relative;
+      left: 8px;
+      top: 1px;
+
+      svg{
+        fill: white;
+      }
+    }
+  `}
+}`
+
+
+const HelpPageButtons = styled.div`
+  display: none;
+
+  ${({theme}) => theme.tablet`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+
+    & a{
+      margin: 0px 10px;
+      width: max-content;
+    }
+  `}
+}`
+
+const HelpPageQuestion = styled.p`
+  line-height: 22px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1890ff;
+  margin-bottom: 2px;
+}`
+
+
+const HelpPageWrapper = styled.div`
+  color: #001358;
+
+  .ant-collapse-header{
+    font-weight: 500;
+  }
+}`
+
 
 class HelpPage extends React.Component {
   state = {

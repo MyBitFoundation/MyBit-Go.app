@@ -1,5 +1,4 @@
 import React from "react";
-import { hot } from "react-hot-loader/root";
 import App from "next/app";
 import Head from 'next/head';
 import BlockchainProvider from "components/BlockchainContext";
@@ -171,4 +170,4 @@ const WithProviders = ({
   </NotificationsProvider>
 );
 
-export default hot(MyApp);
+export default MyApp;

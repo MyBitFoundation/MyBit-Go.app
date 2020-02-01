@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import EthereumGraphic from 'public/onboarding/ethereum.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -38,7 +37,7 @@ const EthereumSlide = () => (
       nearly every business industry.
     </CarouselSlideParagraph>
     <Image
-      src={EthereumGraphic}
+      src="/onboarding/ethereum.png"
       width="230"
       alt="MyBit Globe"
     />

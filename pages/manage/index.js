@@ -1,16 +1,24 @@
 import ManageAssetModule from 'components/ManageAssetModule';
 import ManageAsset from 'components/ManageAsset';
+import { withRouter } from 'next/router';
+import isNil from "lodash/isNil";
 
 const ManageAssetPage = ({
   assetId,
-}) => (
-  <ManageAssetModule
-    assetId={assetId}
-  >
-    {props => <ManageAsset {...props}/>}
-  </ManageAssetModule>
-);
+  router,
+}) => {
 
-ManageAssetPage.getInitialProps = ctx => ({assetId: ctx.query.id});
+  if (isNil(assetId) === true) {
+    assetId = router.query.id;
+  }
 
-export default ManageAssetPage;
+  return (
+    <ManageAssetModule
+      assetId={assetId}
+    >
+      {props => <ManageAsset {...props}/>}
+    </ManageAssetModule>
+  )
+};
+
+export default withRouter(ManageAssetPage);

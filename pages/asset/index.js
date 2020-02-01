@@ -9,11 +9,10 @@ import { withAssetsContextPageWrapper } from 'components/AssetsContext';
 import GoBackTextAndArrow from 'components/GoBackTextAndArrow';
 import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
+import { withRouter } from 'next/router';
+import isNil from "lodash/isNil";
 
 class AssetPage extends React.Component {
-  static async getInitialProps (ctx) {
-    return {assetId: ctx.query.id};
-  }
   render(){
     const {
       assetsContext,
@@ -53,7 +52,10 @@ class AssetPage extends React.Component {
       );
     }
 
-    const asset = assets.find(({ assetId }) => assetId === this.props.assetId);
+    const asset = assets.find((
+      { assetId }) => assetId === this.props.router.query.id
+    );
+
     let toRender;
     if (!asset) {
       toRender = (
@@ -95,6 +97,7 @@ const enhance = compose(
   withBlockchainContextPageWrapper,
   withMetamaskContextPageWrapper,
   withAssetsContextPageWrapper,
+  withRouter,
 );
 
 export default enhance(AssetPage);
