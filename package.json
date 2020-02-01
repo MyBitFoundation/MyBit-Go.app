@@ -50,7 +50,7 @@
     "styled-components": "5.0.0"
   },
   "scripts": {
-    "clean": "rm -rf .next build",
+    "clean": "rm -rf .next out",
     "dev": "cross-env NODE_ENV=development ANALYZE=false next dev -p 8081 -H 127.0.0.1 || true",
     "build": "cross-env NODE_ENV=production ANALYZE=false next build",
     "export": "cross-env NODE_ENV=production ANALYZE=false next export",
