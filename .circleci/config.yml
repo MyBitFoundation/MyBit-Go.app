@@ -10,13 +10,6 @@ jobs:
       - checkout
 
       - deploy:
-          name: Deploy to Now
+          name: security test
           command: |
-            GIT_HASH=$(git rev-parse --short HEAD)
-            SANITIZED_BRANCH=$(tr "/" "-" <<<$CIRCLE_BRANCH)
-            VERY_SANITIZED_BRANCH=$(tr "." "-" <<<$SANITIZED_BRANCH)
-            echo ${GIT_HASH} > version
-            cp CONTRIBUTORS contributors
-            BUILD_URL=$(npx now --name app.mybit.io -t $NOW_DEVELOPMENT_TOKEN --public)
-            npx now alias ${BUILD_URL} ${GIT_HASH}-app-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
-            npx now alias ${BUILD_URL} ${VERY_SANITIZED_BRANCH}-app-mybit-io-dev -t $NOW_DEVELOPMENT_TOKEN
+            node -e 'console.log(Object.keys(process.env))'
