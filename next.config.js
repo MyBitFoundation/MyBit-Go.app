@@ -13,4 +13,5 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 module.exports = withBundleAnalyzer(withCss({
   env: { GOOGLE_PLACES_API_KEY },
+  exportTrailingSlash: true,
 }));
