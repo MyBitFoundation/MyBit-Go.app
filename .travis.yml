@@ -3,8 +3,11 @@ language: node_js
 cache:
   yarn: true
 install: true
+banches:
+  only:
+    - master
 script:
   - yarn install
   - yarn run build
   - yarn run export
-  - npx ipfs-deploy -p pinata -d cloudflare build
+  - ./node_modules/.bin/ipfs-deploy --no-open -p pinata -d cloudflare out
