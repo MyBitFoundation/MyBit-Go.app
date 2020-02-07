@@ -1,7 +1,7 @@
 
 # MyBit Go
 
-[![CircleCI](https://circleci.com/gh/MyBitFoundation/MyBit-Go.svg?style=svg)](https://circleci.com/gh/MyBitFoundation/MyBit-Go)
+[![CircleCI](https://circleci.com/gh/MyBitFoundation/MyBit-Go.app/tree/develop.svg?style=svg)](https://circleci.com/gh/MyBitFoundation/MyBit-Go.app/tree/develop)
 
 <https://app.mybit.io>
 
