@@ -5,7 +5,7 @@ jobs:
       - image: circleci/node:11.15.0
     steps:
       - checkout
-      - build:
+      - run:
           name: Build the static site with next js
           command: |
             yarn install
