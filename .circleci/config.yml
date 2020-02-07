@@ -17,7 +17,5 @@ jobs:
             branches:
               only:
               - master
-          requires:
-            - next_build
           context: deploy-mybit-dapp
           command: ipfs-deploy --no-open -p pinata -d cloudflare out
