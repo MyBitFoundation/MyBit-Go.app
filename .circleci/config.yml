@@ -5,17 +5,9 @@ jobs:
       - image: circleci/node:11.15.0
     steps:
       - checkout
-      - next_build:
+      - build:
           name: Build the static site with next js
           command: |
             yarn install
             yarn run build
             yarn run export
-      - deploy:
-          name: Deploy dapp to IPFS
-          filters:
-            branches:
-              only:
-              - master
-          context: deploy-mybit-dapp
-          command: ipfs-deploy --no-open -p pinata -d cloudflare out
