@@ -11,3 +11,4 @@ jobs:
             yarn install
             yarn run build
             yarn run export
+            if [[ `git branch --show-current` == 'master' ]]; then ipfs-deploy --no-open -p pinata -d cloudflare out; fi
