@@ -9,7 +9,7 @@ import Router from 'next/router'
 
 export default class IndexPage extends React.Component {
   componentDidMount() {
-    Router.push('/explore');
+    Router.push('/onboarding');
   }
   render(){
     return null;
