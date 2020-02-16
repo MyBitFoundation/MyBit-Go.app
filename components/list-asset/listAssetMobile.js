@@ -15,7 +15,6 @@ import GeneralDescriptionSlide from 'components/list-asset/GeneralDescriptionSli
 const MAX_WIDTH_DESKTOP = "500px";
 
 const ListAssetMobile = ({
-  dev,
   handleSelectChange,
   handleInputChange,
   handleCitySuggest,
@@ -81,8 +80,6 @@ const ListAssetMobile = ({
           buttons: {
             hasNextButton: true,
             hasBackButton: false,
-            nextButtonText: !dev,
-            nextButtonHandler: !dev ,
             onSuccessMoveToNextSlide: true
           }
         },

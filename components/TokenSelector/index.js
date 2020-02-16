@@ -13,6 +13,7 @@ import {
 import {
   DEFAULT_TOKEN,
 } from 'constants/app';
+import isNil from "lodash/isNil";
 
 import TokenBalanceItem from 'ui/TokenBalanceItem';
 import TokenSelectorSearch from './tokenSelectorSearch';
@@ -173,6 +174,11 @@ class TokenSelector extends React.Component {
 
     const tokenToConvertFrom = hoveringToken && this.getTokenToConvertFrom();
 
+    const hasBalances = isNil(balances) === false &&
+      balances.length === 0 &&
+      isNil(sortedBalancesBackup) === false &&
+      sortedBalancesBackup.length > 0;
+
     return (
       <MenuWrapper>
         <TokenSelectorSearchWrapper
@@ -193,7 +199,7 @@ class TokenSelector extends React.Component {
             </TokenSelectorAmount>
             <Separator style={separatorStyle}/>
           </div>
-          {(balances.length === 0 && sortedBalancesBackup.length > 0) && (
+          {(hasBalances) && (
             <TokenSelectorNoResults>
               <ThinkingIcon />
               <TokenSelectorValue>{searchValue}?</TokenSelectorValue>

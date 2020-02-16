@@ -41,7 +41,6 @@ const CustomTimeline = React.memo(
     formData,
     goToStep,
     listedAssetId,
-    dev,
     readToS,
     isUserListingAsset,
     tokenWithSufficientBalance,

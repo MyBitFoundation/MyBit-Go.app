@@ -57,7 +57,6 @@ const PageTitle = styled.div`
 
 const ListAssetDesktop = ({
   step,
-  dev,
   handleSelectChange,
   handleInputChange,
   handleCitySuggest,
@@ -120,7 +119,6 @@ const ListAssetDesktop = ({
         maxWidthDesktop="600px"
         desktopMode
         onClick={goToNextStep}
-        dev={dev}
       />
     )
   }
@@ -132,7 +130,6 @@ const ListAssetDesktop = ({
         formData={formData}
         goToStep={goToStep}
         listedAssetId={listedAssetId}
-        dev={dev}
         readToS={readToS}
         isUserListingAsset={isUserListingAsset}
         tokenWithSufficientBalance={tokenWithSufficientBalance}
