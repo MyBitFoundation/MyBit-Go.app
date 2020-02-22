@@ -207,7 +207,7 @@ class TokenSelector extends React.Component {
             </TokenSelectorNoResults>
           )}
         </TokenSelectorSearchWrapper>
-      {balances.map((value, index) => {
+      {hasBalances && balances.map((value, index) => {
         const {
           balance,
           balanceInDai,

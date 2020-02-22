@@ -41,6 +41,7 @@ import { calculateSlippage } from 'constants/calculateSlippage';
 import {
   FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
+import isNil from "lodash/isNil";
 const dev = process.env.NODE_ENV === 'development';
 const { GOOGLE_PLACES_API_KEY } = process.env;
 BN.config({ EXPONENTIAL_AT: 80 });
@@ -140,7 +141,7 @@ class ListAssetPage extends React.Component {
     const { additionalCosts = 0 } = this.state.data;
     const {
       operator: operatorAddress,
-      fundingGoal,
+      fundingGoal = 10,
       cryptoPayout,
       cryptoPurchase,
       name,
@@ -188,6 +189,12 @@ class ListAssetPage extends React.Component {
     }, () => console.log(this.state))
 
     const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+
+    if (isNil(collateralInDefaultToken) === true || collateralInDefaultToken === 0) {
+      console.warn('cannot calculate slippage with no balance')
+      return
+    }
+
     const tokenSlippagePercentages = calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInDefaultToken, false)
       .then(tokenSlippagePercentages => {
         this.setState({tokenSlippagePercentages, loadingConversionInfo: false})

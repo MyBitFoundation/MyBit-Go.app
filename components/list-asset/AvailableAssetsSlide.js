@@ -26,6 +26,7 @@ import {
 import ThinkingIcon from 'public/ic_thinking.svg';
 import Spin from 'public/spin.svg';
 import LabelWithTooltip from 'ui/LabelWithTooltip';
+import isNil from "lodash/isNil";
 
 const { GOOGLE_PLACES_API_KEY } = process.env;
 
@@ -116,6 +117,15 @@ const AssetValueContainer = styled.div`
     }
   `}
 `
+
+const defaultCategoryName = 'Default category'
+
+function formatCategoryName(txt) {
+  if (isNil(txt) === true || txt === 'undefined') {
+    return defaultCategoryName
+  }
+  return txt
+}
 
 const AvailableAssetsSlide = ({
   handleSelectChange,
@@ -254,7 +264,7 @@ const AvailableAssetsSlide = ({
                   >
                     {Object.keys(categories).map(cat => (
                         <Select.Option key={cat} value={cat}>
-                          {cat}
+                          {formatCategoryName(cat)}
                         </Select.Option>
                       ))}
                   </CarouselSlideSelect>
@@ -276,17 +286,12 @@ const AvailableAssetsSlide = ({
                   <SelectedAssetValueLabel>Selected Asset value:</SelectedAssetValueLabel>
                   <AssetValueContainer cryptoPurchase={cryptoPurchase}>
                     <CarouselSlideInputNumber
-                      isCentered
-                      disabled
-                      placeholder="Funding Goal"
+                      placeholder="Selected Asset value"
                       name="assetValue"
                       value={assetValue}
-                      formatter={value =>
-                       !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                       style={cryptoPurchase === false ? {marginRight: '10px', marginBottom: '5px'} : {}}
+                      onChange={value => handleSelectChange(value, "assetValue")}
                     />
+                    <div style={{padding: '0.4rem'}}>{DEFAULT_TOKEN}</div>
                     {cryptoPurchase === false && (
                       <LabelWithTooltip
                         title={'8% fiat fee incl.'}
