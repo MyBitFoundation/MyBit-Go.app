@@ -77,7 +77,7 @@ class IpfsDataManager {
         ...jsonResult,
       });
     }catch(error) {
-      console.log(error)
+      console.error(error)
     }
     cb();
   }

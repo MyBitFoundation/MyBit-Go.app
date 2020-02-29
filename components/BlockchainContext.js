@@ -12,7 +12,7 @@ import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import * as Brain from '../apis/brain';
 import { ErrorTypes } from 'constants/errorTypes';
-import { ExternalLinks } from 'constants/links';
+import { gasPriceOracle } from "utils/etherchain";
 import {
   NotificationTypes,
   NotificationsMetamask,
@@ -111,11 +111,11 @@ class BlockchainProvider extends React.Component {
     } catch (err) {
       debug(err);
     }
-    this.createIntervals();
+    // this.createIntervals();
   }
 
   // handle case where account, login, enabled or network variable change
-  componentDidUpdate = async prevProps => {
+  /*componentDidUpdate = async prevProps => {
     const { metamaskContext: oldProps } = prevProps;
     const { metamaskContext: newProps } = this.props;
     const oldEnabled = oldProps.privacyModeEnabled;
@@ -138,23 +138,23 @@ class BlockchainProvider extends React.Component {
       })
       this.fetchTransactionHistory();
     }
-  }
+  }*/
 
-  componentWillUnmount = () => {
-    this.resetIntervals();
-  }
+  // componentWillUnmount = () => {
+    // this.resetIntervals();
+  // }
 
-  createIntervals = () => {
-    this.intervalFetchTransactionHistory =
+  // createIntervals = () => {
+    /*this.intervalFetchTransactionHistory =
       setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
     this.intervalFetchGasPrice =
-      setInterval(this.fetchGasPrice, FETCH_GAS_PRICE);
-  }
+      setInterval(this.fetchGasPrice, FETCH_GAS_PRICE);*/
+  // }
 
-  resetIntervals = () => {
-    clearInterval(this.intervalFetchTransactionHistory);
-    clearInterval(this.intervalFetchGasPrice);
-  }
+  // resetIntervals = () => {
+    // clearInterval(this.intervalFetchTransactionHistory);
+    // clearInterval(this.intervalFetchGasPrice);
+  // }
 
   fetchGasPrice = async () => {
     let {
@@ -162,7 +162,7 @@ class BlockchainProvider extends React.Component {
     } = this.state;
 
     try{
-      const response = await axios(ExternalLinks.GAS_PRICE_URL);
+      const response = await gasPriceOracle()
       if(response.data){
         const {
           fast,
@@ -713,32 +713,6 @@ class BlockchainProvider extends React.Component {
           setUserListingAsset(false, assetId);
         }
       }
-
-      throw new Error("replace airtable save");
-
-      /*
-      {
-        assetId,
-        assetName,
-        country,
-        city,
-        collateralPercentage,
-        about,
-        financials,
-        risks,
-        fees,
-        assetAddress1,
-        assetAddress2,
-        assetProvince,
-        assetPostalCode,
-        modelId,
-        files: filesInfo.string,
-      }, performInternalAction, network)
-      */
-
-      throw new Error("replace AWS upload")
-
-      // filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
 
     const onError = (type) => {
@@ -1103,9 +1077,9 @@ class BlockchainProvider extends React.Component {
       })
       .catch((err) => {
         debug(err);
-        if (this.props.metamaskContext.userIsLoggedIn) {
+        /*if (this.props.metamaskContext.userIsLoggedIn) {
           setTimeout(this.fetchTransactionHistory, 5000);
-        }
+        }*/
       });
   }
 

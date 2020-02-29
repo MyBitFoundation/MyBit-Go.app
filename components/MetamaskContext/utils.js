@@ -30,7 +30,7 @@ export const getBalanceOfERC20Token = async (tokenAddress, decimals, walletAddre
     const tokensFormatted = Number(window.web3js.utils.fromWei(tokens, 'ether')); // Change the string to be in Ether not Wei, and show it in the console
     return tokensFormatted;
   } catch(err) {
-    console.log(err);
+    console.error(err);
     return 0;
   }
 }

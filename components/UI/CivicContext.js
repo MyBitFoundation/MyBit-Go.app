@@ -114,7 +114,7 @@ class CivicProvider extends Component {
       const email = responseIsValid ? res.data.data.find(({label}) => label === 'contact.personal.email').value : 'user@mybit.io'
       this.setState({email, loading: false}, () => cb && cb());
     })
-    .catch(error => console.log(error))
+    .catch(error => console.error(error))
   }
 
   logout() {

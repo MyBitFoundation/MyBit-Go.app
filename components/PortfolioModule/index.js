@@ -26,11 +26,13 @@ class PortfolioModule extends React.Component {
     }
   }
 
-  componentDidMount = () => this.loadData(this.props);
-
-  componentWillReceiveProps = (nextProps) => {
-    this.loadData(nextProps)
+  componentDidMount() {
+    this.loadData(this.props);
   }
+
+  /*componentDidUpdate(prevProps) {
+    this.loadData(prevProps)
+  }*/
 
   loadData(props){
     const {

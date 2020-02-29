@@ -1,4 +1,4 @@
-import { getExpectedAndSlippage } from 'components/KyberContext';
+import { getExpectedAndSlippage } from 'utils/kyber';
 import { toWei } from 'utils/helpers';
 
 /*

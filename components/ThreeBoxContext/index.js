@@ -52,7 +52,8 @@ class ThreeBoxProvider extends React.Component {
       this.setState({ syncingThreeBox: false })
     }
 
-    openBox = async (userAddress) => {
+    async openBox(userAddress) {
+      const self = this;
       this.setState({ loadingThreeBox: true, loadingThreeBoxThreadAPIAuthorization: true })
       const currentProvider = window.web3js && window.web3js.currentProvider ?
         window.web3js.currentProvider :
@@ -61,7 +62,10 @@ class ThreeBoxProvider extends React.Component {
         currentProvider :
         (async (provider) => {
           this.setState({ loadingThreeBox: true });
+
           const box = await Box.openBox(userAddress, provider)
+          self.box = box;
+
           box.onSyncDone( this.syncBoxDone );
           console.log('[ ThreeBoxProvider - openBox ] - box', box)
           this.setState({
@@ -73,6 +77,12 @@ class ThreeBoxProvider extends React.Component {
           });
           return box;
         })(currentProvider)
+    }
+
+    logout() {
+      if (this.box !== undefined) {
+        this.box.logout();
+      }
     }
 
     getPosts = async (threadName, moderator) => {

@@ -43,7 +43,6 @@ class GeneralDescriptionEditor extends React.PureComponent {
       ...this.buildInitialState(props.asset),
       changes: false,
     }
-    console.log(this.state)
   }
 
   buildInitialState = asset => {
@@ -58,7 +57,6 @@ class GeneralDescriptionEditor extends React.PureComponent {
 
   handleOnClick = () => {
     try{
-      console.log("here")
       this.setState({
         changes: false,
         uploading: true,
@@ -74,14 +72,12 @@ class GeneralDescriptionEditor extends React.PureComponent {
           newAsset[section] = this.state[section]
         }
       })
-      console.log("new asset: ", newAsset)
       updateAssetListingIpfs(newAsset, success => {
         this.setState({uploading: false, changes: !success})
       })
     } catch(err){
-      console.log(err)
+      console.error(err)
     }
-
   }
 
   handleInputChange = (value, section) => {
@@ -114,7 +110,6 @@ class GeneralDescriptionEditor extends React.PureComponent {
                 placeholder={this.state[section]}
                 textAreaName={section}
                 onChange={e => {
-                  console.log(e.target.value)
                   this.handleInputChange(e.target.value, section)
                 }}
                 value={this.state[section]}

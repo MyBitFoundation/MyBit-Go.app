@@ -110,18 +110,18 @@ class DocumentsManager extends React.Component{
     const { asset } = this.props;
     const { assetId } = asset;
     const { updateAssetListingIpfs } = this.props.blockchainContext;
-    throw new Error("replace AWS S3 upload")
+    // throw new Error("replace AWS S3 upload")
     // const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
-    if(result){
-      const assetWithUpdatedFiles = {...asset, files: asset.files ? [...asset.files] : []};
-      //update asset object with new files
-      files.forEach(file => {
-        assetWithUpdatedFiles.files.push(file)
-      })
-      updateAssetListingIpfs(assetWithUpdatedFiles, success => {
-        this.setState({uploading: false, filesTmp: success ? [] : files})
-      })
-    }
+    // if(result){
+    const assetWithUpdatedFiles = {...asset, files: asset.files ? [...asset.files] : []};
+    //update asset object with new files
+    files.forEach(file => {
+      assetWithUpdatedFiles.files.push(file)
+    })
+    updateAssetListingIpfs(assetWithUpdatedFiles, success => {
+      this.setState({uploading: false, filesTmp: success ? [] : files})
+    })
+    // }
   }
 
   handleFileUpload = () => {
@@ -131,9 +131,9 @@ class DocumentsManager extends React.Component{
       this.setState({uploading: true})
       this.upload(filesTmp, files);
     }catch(err){
-      console.log(err);
-      this.setState({uploading: false})
+      console.error(err);
     }
+    this.setState({uploading: false})
   }
 
   render = () => {

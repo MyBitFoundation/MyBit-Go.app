@@ -1,4 +1,4 @@
-import React from 'react';
+  import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Modal,
@@ -87,19 +87,19 @@ class AssetFunding extends React.Component {
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  /*componentDidUpdate(prevProps) {
     const {
       asset: currentAsset,
     } = this.props;
 
     const {
       asset: newAsset,
-    } = nextProps;
+    } = prevProps;
 
     if(!currentAsset.funded && newAsset.funded){
       this.changeStep(0);
     }
-  }
+  }*/
 
   render(){
     const {

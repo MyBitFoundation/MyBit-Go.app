@@ -11,8 +11,8 @@ class AssetDisplayer extends React.Component{
     currentPage: 0,
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    const maxPage = Math.ceil(nextProps.assets.length / assetsPerPage)
+  /*componentDidUpdate(prevProps) {
+    const maxPage = Math.ceil(prevProps.assets.length / assetsPerPage)
     //resets pagination if the data changed and we don't have assets to show
     // due to the page we're on
     if((this.state.currentPage + 1) > maxPage){
@@ -20,7 +20,7 @@ class AssetDisplayer extends React.Component{
         currentPage: 0,
       });
     }
-  }
+  }*/
 
   render = () => {
     const {

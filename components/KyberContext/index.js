@@ -7,17 +7,16 @@ import {
   toWei,
 } from 'utils/helpers';
 import {
-  ABI,
-  ADDRESS,
-  getSupportedTokensUrl,
-} from './constants';
-import {
   getDefaultTokenContract,
   getPlatformTokenContract,
 } from 'constants/app';
 import {
   FALLBACK_NETWORK,
 } from 'constants/supportedNetworks';
+import {
+  getSupportedTokens,
+  getExpectedAndSlippage,
+} from "utils/kyber";
 
 const DEFAULT_QUANTITY = 0.5;
 const { Provider, Consumer } = React.createContext({});
@@ -59,140 +58,93 @@ export const withKyberContext = (Component) => {
   };
 }
 
-export const getExpectedAndSlippage = async (src, dest, amount) => {
-    try{
-      if(src === dest){
-        return {
-          expectedRate: 1,
-          slippageRate: 1,
-        };
-      }
-
-      const result = await kyberContract.methods.getExpectedRate(src, dest, amount).call();
-      let {
-        expectedRate,
-        slippageRate,
-      } = result;
-
-      if(expectedRate !== '0'){
-        expectedRate = fromWeiToEth(expectedRate);
-        slippageRate = fromWeiToEth(slippageRate);
-
-        return {
-          expectedRate,
-          slippageRate,
-        };
-      }
-    } catch {
-      // Might mean token is under maintenance
-    }
-    return null;
-  }
-
 class KyberProvider extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       loading: true,
+      fetching: false,
     }
   }
 
-  componentWillUnmount = () => {
-    clearInterval(this.intervalSupportedTokens);
+  componentDidMount() {
+    const { network, userHasMetamask } = this.props;
+    this.fetchSupportedTokens(network);
   }
 
-  componentDidUpdate = prevProps => {
-    const {
-      network: oldNetwork,
-      userHasMetamask: oldUserHasMetamask,
-    } = prevProps;
-
-    const {
-      network: newNetwork,
-      userHasMetamask,
-    } = this.props;
-
-    if(oldNetwork !== newNetwork){
-      this.setState({loading: true});
-      this.fetchSupportedTokens(newNetwork);
-    } else if(!oldUserHasMetamask && userHasMetamask){
-      kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
-      this.fetchSupportedTokens();
-      this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, LOAD_SUPPORTED_TOKENS_TIME)
+  async fetchSupportedTokens(network) {
+    if (this.state.fetching) {
+      return;
     }
-  }
 
-  fetchSupportedTokens = async network => {
-    try{
-      const {
+    const {
        userHasMetamask,
        supportedNetworks,
       } = this.props;
 
-      network = this.props.network || FALLBACK_NETWORK;
+    this.setState({ fetching: true });
+    network = this.props.network || FALLBACK_NETWORK;
+    const supportedTokensInfo = {};
 
-      const supportedTokensInfo = {};
+    if(supportedNetworks.includes(network) || !userHasMetamask){
+      const supportedTokens = await getSupportedTokens(network);
+      // const supportedTokensData = await supportedTokens.json();
+      const supportedTokensData = supportedTokens.data;
+      const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
+      const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+      const amountToConvert = toWei(DEFAULT_QUANTITY);
 
-      if(supportedNetworks.includes(network) || !userHasMetamask){
-        const supportedTokens = await fetch(getSupportedTokensUrl(network));
-        const supportedTokensData = await supportedTokens.json();
-        const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
-        const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+      await Promise.all(supportedTokensData.data.map(async({
+        symbol,
+        address: contractAddress,
+        name,
+        decimals,
+      }) => {
+        if(symbol === 'ETH'){
+          const [
+            exchangeRateDefaultToken,
+            exchangeRatePlatformToken,
+          ] = await Promise.all([
+            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, amountToConvert),
+            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, amountToConvert),
+          ])
 
-        const amountToConvert = toWei(DEFAULT_QUANTITY);
-        await Promise.all(supportedTokensData.data.map(async({
-          symbol,
-          address: contractAddress,
-          name,
-          decimals,
-        }) => {
-          if(symbol === 'ETH'){
-            const [
-              exchangeRateDefaultToken,
-              exchangeRatePlatformToken,
-            ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, amountToConvert),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, amountToConvert),
-            ])
+          supportedTokensInfo['ETH'] = {
+            contractAddress,
+            name,
+            decimals: 18,
+            exchangeRateDefaultToken,
+            exchangeRatePlatformToken,
+          }
+        } else {
+          const [
+            exchangeRateDefaultToken,
+            exchangeRatePlatformToken,
+          ] = await Promise.all([
+            getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, amountToConvert),
+            getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, amountToConvert),
+          ])
 
-            supportedTokensInfo['ETH'] = {
+          // This kind of filtering needs to be tested
+          if(exchangeRateDefaultToken && exchangeRatePlatformToken){
+            supportedTokensInfo[symbol] = {
               contractAddress,
               name,
-              decimals: 18,
+              decimals,
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
-            }
-          } else {
-            const [
-              exchangeRateDefaultToken,
-              exchangeRatePlatformToken,
-            ] = await Promise.all([
-              getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, amountToConvert),
-              getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, amountToConvert),
-            ])
-
-            // This kind of filtering needs to be tested
-            if(exchangeRateDefaultToken && exchangeRatePlatformToken){
-              supportedTokensInfo[symbol] = {
-                contractAddress,
-                name,
-                decimals,
-                exchangeRateDefaultToken,
-                exchangeRatePlatformToken,
-              }
             }
           }
-        }));
-      }
-
-      this.setState({
-        supportedTokensInfo,
-        loading: false,
-        network,
-      })
-    }catch(err){
-      debug("kyberContext error: ", err);
+        }
+      }));
     }
+
+    this.setState({
+      supportedTokensInfo,
+      loading: false,
+      fetching: false,
+      network,
+    })
   }
 
   render = () => {

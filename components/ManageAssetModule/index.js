@@ -31,6 +31,7 @@ class ManageAssetModule extends React.Component{
     const {
       openSpace,
       openBox,
+      logout,
       postThread,
       getPostsFromThread,
       hasAuthorizedThreeBox,
@@ -194,7 +195,7 @@ class ManageAssetModule extends React.Component{
       this._processingAssetInfo = false;
     }catch(err){
       this._processingAssetInfo = false;
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -206,11 +207,13 @@ class ManageAssetModule extends React.Component{
 
   componentWillUnmount = () => {
     this._mounted = false;
+    this.props.threeBoxContext.logout();
   }
 
-  componentWillReceiveProps = nextProps => {
-    this.getData(nextProps);
-  }
+  /*componentDidUpdate(prevProps) {
+    console.log("ManageAssetModule componentDidUpdate")
+    this.getData(prevProps);
+  }*/
 
   getData = async (props) => {
     const {

@@ -47,24 +47,28 @@ class AssetFundingModule extends React.Component {
     this.setStaticParameters();
   }
 
-  componentWillReceiveProps = nextProps => {
-    const { asset } = this.props;
-    const { loading } = this.props.blockchainContext;
+  /*componentDidUpdate(prevProps) {
+    console.log("AssetFundingModule componentDidUpdate")
+    const { props } = this;
+    const { asset } = props;
+    const { loading } = props.blockchainContext;
     const { loadingUserInfo } = loading;
-    const { loadingBalancesForNewUser } = this.props.metamaskContext;
-    if(nextProps.blockchainContext.loading.loadingUserInfo !== loadingUserInfo){
+    const { loadingBalancesForNewUser } = props.metamaskContext;
+
+    if(prevProps.blockchainContext.loading.loadingUserInfo !== loadingUserInfo){
       this.setState({loadingUserInfo});
     }
+
     // if the user changed, recalculate exchange rate for the tokens the new user has
-    if(!nextProps.metamaskContext.loadingBalancesForNewUser && loadingBalancesForNewUser){
-      this.loadExchangeRateForAmountToPay(nextProps.metamaskContext.user.balances);
+    if(!prevProps.metamaskContext.loadingBalancesForNewUser && loadingBalancesForNewUser){
+      this.loadExchangeRateForAmountToPay(prevProps.metamaskContext.user.balances);
     }
 
     // update due to changes in the asset
-    if(asset.fundingProgress !== nextProps.asset.fundingProgress){
-      this.setStaticParameters(nextProps);
+    if(asset.fundingProgress !== prevProps.asset.fundingProgress){
+      this.setStaticParameters(prevProps);
     }
-  }
+  }*/
 
   setStaticParameters = props => {
     const { asset } = props || this.props;

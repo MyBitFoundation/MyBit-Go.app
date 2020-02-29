@@ -74,5 +74,7 @@ export const ABI = [{
 
 export const ADDRESS = '0x818E6FECD516Ecc3849DAf6845e3EC868087B755';
 
+/*
 export const getSupportedTokensUrl = network =>
   `https://${network === 'ropsten' ? 'ropsten-' : ''}api.kyber.network/currencies`
+*/

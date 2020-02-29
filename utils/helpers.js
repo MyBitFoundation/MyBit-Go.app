@@ -102,7 +102,7 @@ export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {
       }
     }
   } catch(err){
-    console.log(err)
+    console.error(err)
   }
 
   return valueIfNoExists;
@@ -119,7 +119,7 @@ export const setValueLocalStorage = (key, value, isObject) => {
       return value;
     }
   } catch(err){
-    console.log(err)
+    console.error(err)
   }
 
   return value;

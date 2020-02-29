@@ -8,7 +8,7 @@ export const addFileToIpfs = async data => {
     const ipfsHash = result[result.length - 1].hash;
     return ipfsHash;
   } catch(err){
-    console.log(err)
+    console.error(err)
     return null;
   }
 }
@@ -18,7 +18,7 @@ export const addJsonFileToIpfs = async obj => {
     const buffer = Buffer.from(JSON.stringify(obj));
     return addFileToIpfs(buffer);
   } catch(err){
-    console.log(err);
+    console.error(err);
   }
 }
 
@@ -30,6 +30,6 @@ export const addUserFileToIpfs = file => {
     }
     return addFileToIpfs(fileDetails);
   } catch(err){
-    console.log(err);
+    console.error(err);
   }
 }

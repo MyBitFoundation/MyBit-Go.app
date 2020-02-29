@@ -52,7 +52,7 @@ class TokenSelector extends React.Component {
     this.processBalances(this.props, true);
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  /*componentWillReceiveProps = (nextProps) => {
     const {
       balances,
       amountToPay,
@@ -72,7 +72,7 @@ class TokenSelector extends React.Component {
     } else if(balances && !nextProps.balances){
       this.processBalances(nextProps, true);
     }
-  }
+  }*/
 
   onHover = (hoveringToken) => {
     if(hoveringToken !== this.state.hoveringToken){

@@ -24,6 +24,8 @@ import { FALLBACK_NETWORK } from 'constants/supportedNetworks';
 import SupportedBrowsers from 'ui/SupportedBrowsers';
 
 const { Provider, Consumer } = React.createContext({});
+let userInfoLoaded = false;
+let getUserInfoTries = 0;
 
 // Required so we can trigger getInitialProps in our exported pages
 export const withMetamaskContextPageWrapper = (Component) => {
@@ -132,64 +134,64 @@ class MetamaskProvider extends Component {
     }
   }
 
-  componentDidMount = async () => {
-    try{
-      if(typeof window !== 'undefined') {
-        this.detect = require('detect-browser');
-      }
-      // Modern dapp browsers...
-      if (window.ethereum) {
-        this.props.setUserHasMetamask(true);
-        const { ethereum } = window;
-        window.web3js = new Web3(ethereum);
-        // don't auto refresh
-        ethereum.autoRefreshOnNetworkChange = false;
-        ethereum.on('networkChanged', network => {
-          network = NETWORKS[network];
-          const {
-            setNetwork,
-          } = this.props;
+  async componentDidMount() {
+    if(typeof window !== 'undefined') {
+      this.detect = require('detect-browser');
+    }
+    // Modern dapp browsers...
+    if (window.ethereum) {
+      this.props.setUserHasMetamask(true);
+      const { ethereum } = window;
+      window.web3js = new Web3(ethereum);
+      // don't auto refresh
+      ethereum.autoRefreshOnNetworkChange = false;
+      ethereum.on('networkChanged', network => {
+        network = NETWORKS[network];
+        const {
+          setNetwork,
+        } = this.props;
 
-          if(setNetwork){
-            setNetwork(network);
-          }
-        })
-        const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
-        await this.userHasMetamask(accessToAccounts);
-
-      } else if (window.web3) {
-        window.web3js = new Web3(window.web3.currentProvider);
-        await this.userHasMetamask(false);
-        this.props.setUserHasMetamask(true);
-      } else {
-        if(this.props.backupProvider){
-          window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider));
+        if(setNetwork){
+          setNetwork(network);
         }
-        this.isBrowserSupported();
-        this.props.setUserHasMetamask(false);
+      })
+      const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
+      await this.userHasMetamask(accessToAccounts);
+
+    } else if (window.web3) {
+      window.web3js = new Web3(window.web3.currentProvider);
+      await this.userHasMetamask(false);
+      this.props.setUserHasMetamask(true);
+    } else {
+      if(this.props.backupProvider){
+        window.web3js = new Web3(new Web3.providers.HttpProvider(this.props.backupProvider));
       }
-    } catch(err){
-      console.log(err);
+      this.isBrowserSupported();
+      this.props.setUserHasMetamask(false);
     }
   }
 
-  componentWillReceiveProps = (nextProps, nextState) => {
-    const {
+  // componentDidUpdate(prevProps) {
+    /*const {
       supportedTokensInfo: oldSupportedTokensInfo,
     } = this.props;
 
     const {
       supportedTokensInfo: newSupportedTokensInfo,
-    } = nextProps;
+    } = prevProps;*/
 
     /*
     * Updates when it receives a new object containing the supported tokens
     * when it didn't have one or when the object is new (kyberContext updated)
     */
-    if(!oldSupportedTokensInfo && newSupportedTokensInfo || (oldSupportedTokensInfo && (oldSupportedTokensInfo.key !== newSupportedTokensInfo.key))){
-      this.getUserInfo(this.state.privacyModeEnabled, this.state.network, nextProps.supportedTokensInfo);
+    // if(!oldSupportedTokensInfo && newSupportedTokensInfo || (oldSupportedTokensInfo && (oldSupportedTokensInfo.key !== newSupportedTokensInfo.key))){
+      // this.getUserInfo(this.state.privacyModeEnabled, this.state.network, prevProps.supportedTokensInfo);
+    // }
+    /*if (userInfoLoaded === false) {
+      this.getUserInfo(this.state.privacyModeEnabled, this.state.network, prevProps.supportedTokensInfo);
+      userInfoLoaded = true;
     }
-  }
+  }*/
 
   fetchUserBalances = async (supportedTokensInfo, ethBalance, userAddress) => {
     const { user } = this.state;
@@ -217,6 +219,7 @@ class MetamaskProvider extends Component {
         }
         // we are only interested in listing balances > 0
         if(balance > 0){
+          console.log("tokenData", tokenData)
           const balanceInDai = tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRateDefaultToken.expectedRate;
           const balanceInPlatformToken = tokenData.contractAddress === PLATFORM_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRatePlatformToken.expectedRate;
           sumOfBalances += balanceInDai;
@@ -328,6 +331,7 @@ class MetamaskProvider extends Component {
   }
 
   getUserInfo = async (privacyModeEnabled, network, supportedTokensInfo) => {
+    getUserInfoTries += 1;
     try{
       network = network || this.state.network;
       const accounts = await window.web3js.eth.getAccounts();
@@ -344,7 +348,11 @@ class MetamaskProvider extends Component {
         this.updateStateNoAccess(privacyModeEnabled, network, userIsLoggedIn);
       }
     }catch(err){
-      console.log(err)
+      console.error(err)
+      if (getUserInfoTries > 10) {
+        // it was caught in an infinite loop
+        return;
+      }
       this.getUserInfo(privacyModeEnabled, network, supportedTokensInfo);
     }
   }

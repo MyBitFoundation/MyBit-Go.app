@@ -39,7 +39,7 @@ class NotificationsProvider extends React.Component {
     });
   };
 
-  componentDidUpdate = () => {
+  /*componentDidUpdate = () => {
     const toRemove = [];
     const entries = Object.entries(this.state.notifications);
     entries.map(([id, notification]) => {
@@ -51,7 +51,7 @@ class NotificationsProvider extends React.Component {
     if(toRemove.length > 0){
       this.removeNotifications(toRemove);
     }
-  }
+  }*/
 
   removeNotifications = (notificationsToRemove) => {
     const notifications = Object.assign({}, this.state.notifications);

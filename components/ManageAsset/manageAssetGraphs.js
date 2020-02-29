@@ -45,10 +45,6 @@ const ManageAssetGraphs = ({
 }) => {
 
   let graphData = getTimeFilteredData(managerPercentage, revenueData, profitChartView);
-
-  console.log("Graph data: ", graphData)
-  console.log("Revenue data: ", revenueData);
-
   const ds = new DataSet();
   const dv = ds.createView().source(graphData.data);
   dv.transform({

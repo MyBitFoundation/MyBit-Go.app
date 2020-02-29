@@ -42,13 +42,13 @@ class ThreeBoxProfile extends React.Component {
       this.loadData();
     }
 
-    componentDidUpdate = prevProps => {
+    /*componentDidUpdate = prevProps => {
       const { address: oldAddress } = prevProps;
       const { address: newAddress } = this.props;
       if(oldAddress !== newAddress){
         this.loadData();
       }
-    }
+    }*/
 
     loadData = () => {
       const { address, threeBoxContext } = this.props;

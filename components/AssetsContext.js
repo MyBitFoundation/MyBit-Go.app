@@ -33,7 +33,7 @@ class AssetsProvider extends React.PureComponent {
   }
 
   // handle case where account, login, enabled or network variable change
-  componentDidUpdate = async prevProps => {
+  /*componentDidUpdate = async prevProps => {
     const { metamaskContext: oldProps } = prevProps;
     const { metamaskContext: newProps } = this.props;
     const oldEnabled = oldProps.privacyModeEnabled;
@@ -54,7 +54,7 @@ class AssetsProvider extends React.PureComponent {
       this.initialiseSDK();
       this.init();
     }
-  }
+  }*/
 
   componentDidMount = () => {
     const { userHasMetamask } = this.props.metamaskContext;
@@ -385,10 +385,10 @@ class AssetsProvider extends React.PureComponent {
 
   getLoadingState = (loadingIpfs, loadingSdk) => {
     if(!loadingSdk && !loadingIpfs){
-      console.log("Done loading assets")
+      // console.log("Done loading assets")
       return false;
     } else {
-      console.log("Not done loading assets")
+      // console.log("Not done loading assets")
       return true;
     }
   }
@@ -454,7 +454,7 @@ class AssetsProvider extends React.PureComponent {
           loadingAssets: this.getLoadingState(loadingIpfs, loadingSdk),
         }
       }, () => {
-        console.log("New Assets State: ", this.state)
+        // console.log("New Assets State: ", this.state)
         cb && cb()
       })
     }

@@ -19,7 +19,11 @@
       "styled-components",
       { "ssr": true, "displayName": true, "preprocess": false }
     ],
-    ["inline-react-svg"],
-    ["transform-remove-console"]
-  ]
+    ["inline-react-svg"]
+  ],
+  "env": {
+    "production": {
+      "plugins": ["transform-remove-console"]
+    }
+  }
 }

@@ -34,11 +34,12 @@ class PortfolioPage extends React.Component{
     currentPage: 0,
   }
 
-  componentWillReceiveProps = nextProps => {
-    if(nextProps.type !== this.props.type){
+  /*componentDidUpdate(prevProps) {
+    console.log("portfolio componentDidUpdate")
+    if(prevProps.type !== this.props.type){
       this.setState({currentPage: 0})
     }
-  }
+  }*/
 
   render = () => {
     const {
