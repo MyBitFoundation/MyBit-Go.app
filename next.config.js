@@ -1,58 +1,35 @@
-/* eslint-disable */
-const path = require('path')
-const withBundleAnalyzer = require('@zeit/next-bundle-analyzer')
-const withCss = require('@zeit/next-css')
+// https://nextjs.org/docs/api-reference/next.config.js/introduction
 
-// fix: prevents error when .css files are required by node
-if (typeof require !== 'undefined') {
-  require.extensions['.css'] = file => {}
+const withCss = require('@zeit/next-css');
+const set = require("lodash/set");
+const { ANALYZE, GOOGLE_PLACES_API_KEY, NODE_ENV } = process.env;
+const isPrd = NODE_ENV === "production";
+const analyze = [true, "true", "1"].includes(ANALYZE);
+
+function webpack(cfg) {
+  set(cfg, "watchOptions.ignored", [
+    "**/.git/**",
+    "**/.next/**",
+    "**/node_modules/**",
+    "**/out/**",
+  ]);
+  return cfg;
 }
 
-module.exports = withBundleAnalyzer(withCss({
-  webpack: (config, { dev, isServer }) => {
-    if(!dev) {
-      config.devtool = false
+const nextConfig = withCss({
+  env: { GOOGLE_PLACES_API_KEY },
+  exportTrailingSlash: isPrd,
+  compress: isPrd,
+  generateEtags: isPrd,
+  webpack,
+});
 
-       // disable soucemaps of babel-loader
-      for (const r of config.module.rules) {
-        if (r.loader === 'babel-loader') {
-          r.options.sourceMaps = false
-        }
-      }
-    }
+if (analyze) {
+  const bundleAnalyzer = require('@next/bundle-analyzer');
+  const withBundleAnalyzer = bundleAnalyzer({
+    openAnalyzer: false
+  });
+  nextConfig = withBundleAnalyzer(nextConfig);
+}
 
-    if (!isServer) {
-      const cacheGroups = config.optimization.splitChunks.cacheGroups
-      delete cacheGroups.react
-      cacheGroups.default = false
-      cacheGroups.vendors = {
-        name: 'vendors',
-        test: /[\\/](node_modules|packages)[\\/]/,
-        enforce: true,
-        priority: 20,
-      }
-      cacheGroups.commons = {
-        name: 'commons',
-        minChunks: 2,
-        priority: 10,
-      }
-    }
-
-    return config
-  },
-  analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  bundleAnalyzerConfig: {
-    server: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/server.html'
-    },
-    browser: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/client.html'
-    }
-  },
-  publicRuntimeConfig: {
-    GOOGLE_PLACES_API_KEY: process.NODE_ENV === 'production' && process.env.GOOGLE_PLACES_API_KEY,
-  }
-}));
+module.exports = nextConfig;
