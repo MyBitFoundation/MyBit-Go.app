@@ -23,6 +23,8 @@ import {
   toWei,
 } from '../utils/helpers';
 import { CONTRACTS } from 'constants/supportedNetworks';
+import { getTransactions } from 'utils/etherscan';
+import { getNetworkName } from 'utils/web3';
 
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
@@ -44,19 +46,14 @@ export const fetchTransactionHistory = async userAddress =>
     *  than it is to keep converting it for every iteration
     */
       const userAddressLowerCase = userAddress.toLowerCase();
-      const endpoint = ExternalLinks.ETHERSCAN_TX_BY_ADDR_ENDPOINT(userAddress);
-      const result = await fetch(endpoint);
-      const jsonResult = await result.json();
-      if (
-        !jsonResult.message ||
-        (jsonResult.message &&
-          jsonResult.message !== 'No transactions found' &&
-          jsonResult.message !== 'OK')
-      ) {
-        throw new Error(jsonResult.result);
-      }
+      const network = await getNetworkName();
+      const res = await getTransactions({
+        network,
+        address: userAddressLowerCase
+      });
+      const result = res.data.result;
 
-      const ethTransactionHistory = jsonResult.result
+      const ethTransactionHistory = result
         .filter(txResult =>
           txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
         .map((txResult, index) => {
@@ -400,8 +397,6 @@ export const fetchAsset = async (asset, userAddress) => {
       assetManager,
       blockNumber,
     } = asset;
-
-    console.log("fetchAsset", asset);
 
     let [
       dividendToken,
