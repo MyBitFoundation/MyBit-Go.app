@@ -1,8 +1,3 @@
-const baseUrl = 'http://localhost'
-const port = 8081;
-const secondPort = 8082;
-const host = `${baseUrl}:${port}`
-const secondHost = `${baseUrl}:${secondPort}`
 
 export const ExternalLinks = {
   METAMASK_FIREFOX: 'https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/',
