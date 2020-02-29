@@ -7,7 +7,6 @@ import AssetDetailsInfoTitle from './assetDetailsInfoTitle';
 import AssetDetailsInfoDescription from './assetDetailsInfoDescription';
 import AssetDetailsInfoWrapper from './assetDetailsInfoWrapper';
 import Watch from 'ui/Watch';
-import { InternalLinks } from 'constants/links';
 import Panel from 'ui/Panel';
 
 const FilesToRender = withAssetsContext(({

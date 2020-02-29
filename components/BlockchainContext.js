@@ -12,7 +12,6 @@ import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import * as Brain from '../apis/brain';
 import { ErrorTypes } from 'constants/errorTypes';
-import {InternalLinks } from 'constants/links';
 import {
   NotificationTypes,
   NotificationsMetamask,
@@ -41,7 +40,7 @@ import {
   addJsonFileToIpfs,
   addUserFileToIpfs,
 } from 'utils/ipfs';
-
+import { gasPriceOracle } from "utils/etherchain";
 
 BN.config({ EXPONENTIAL_AT: 80 });
 
@@ -168,7 +167,7 @@ class BlockchainProvider extends React.Component {
     } = this.state;
 
     try{
-      const response = await axios(InternalLinks.GAS_PRICE);
+      const response = await gasPriceOracle();
       if(response.data){
         const {
           fast,

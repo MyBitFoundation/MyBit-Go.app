@@ -3,11 +3,6 @@ const port = 8081;
 const secondPort = 8082;
 const host = `${baseUrl}:${port}`
 const secondHost = `${baseUrl}:${secondPort}`
-const apiEndpoint = 'https://api.mybit.io';
-
-export const InternalLinks = {
-  GAS_PRICE: `${apiEndpoint}/gasprice`,
-}
 
 export const ExternalLinks = {
   METAMASK_FIREFOX: 'https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/',
