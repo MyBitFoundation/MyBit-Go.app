@@ -40,7 +40,6 @@ const ListAssetMobile = ({
   setCheckedToS,
   checkedToS,
   tokenWithSufficientBalance,
-  airtableContext,
   loadingBalancesForNewUser,
   loadingConversionInfo,
   tokenSlippagePercentages,
@@ -100,7 +99,6 @@ const ListAssetMobile = ({
               handleDetectLocationClicked={handleDetectLocationClicked}
               handleCitySuggest={handleCitySuggest}
               error={false || metamaskErrorsToRender.render}
-              airtableContext={airtableContext}
               autoLocationOffline={autoLocationOffline}
               getCategoriesForAssets={getCategoriesForAssets}
             />

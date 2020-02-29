@@ -416,7 +416,6 @@ class ListAssetPage extends React.Component {
       formData: data,
       balances: user.balances,
       shouldShowToSCheckmark: this.readTermsOfService,
-      airtableContext: this.props.airtableContext,
     }
     return (
       <div>

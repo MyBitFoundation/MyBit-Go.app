@@ -84,7 +84,6 @@ const ListAssetDesktop = ({
   shouldShowToSCheckmark,
   setCheckedToS,
   tokenWithSufficientBalance,
-  airtableContext,
   userAddress,
   loadingBalancesForNewUser,
   loadingConversionInfo,
@@ -154,7 +153,6 @@ const ListAssetDesktop = ({
           nextButtonDisabled={!category || !asset || !assetValue || metamaskErrorsToRender.render}
           onClick={goToNextStep}
           error={false || metamaskErrorsToRender.render}
-          airtableContext={airtableContext}
           autoLocationOffline={autoLocationOffline}
           getCategoriesForAssets={getCategoriesForAssets}
         />

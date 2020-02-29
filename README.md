@@ -52,9 +52,6 @@ Free to generate at infura's [website](https://infura.io/). Required.
 - BUCKET_REGION | AWS_ACCESS_KEY | BUCKET_NAME | AWS_SECRET_KEY
 Currently the application won't work without these.
 
-- AIRTABLE_KEY
-Create a free account at [airtable](https://airtable.com) and copy [our table](https://airtable.com/shrpZZvivqhhoUbWn), then use your own [API key](url). Required.
-
 ### Contexts
 The application is built around a series of Contexts (See [React Context](https://reactjs.org/docs/context.html)) in conjunction with [HOCs](https://reactjs.org/docs/higher-order-components.html) to provide different data to different components across the appliacation.
 
@@ -62,7 +59,6 @@ The following Contexts are available:
 
 - [Metamask](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/MetamaskContext/index.js)
 - [Blockchain](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/BlockchainContext.js)
-- [Airtable](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/Airtable.js)
 - [Kyber](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/KyberContext.js)
 - [Notifications](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/NotificationsContext.js)
 - [Civic](https://github.com/MyBitFoundation/MyBit-Go.app/tree/develop/components/UI/CivicContext.js)

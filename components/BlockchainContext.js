@@ -720,24 +720,6 @@ class BlockchainProvider extends React.Component {
         }
       }
 
-      Brain.updateAirTableWithNewAsset({
-        assetId,
-        assetName,
-        country,
-        city,
-        collateralPercentage,
-        about,
-        financials,
-        risks,
-        fees,
-        assetAddress1,
-        assetAddress2,
-        assetProvince,
-        assetPostalCode,
-        modelId,
-        files: filesInfo.string,
-      }, performInternalAction, network)
-
       filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
 

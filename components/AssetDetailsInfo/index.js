@@ -18,12 +18,11 @@ const FilesToRender = withAssetsContext(({
   if(!files || files.length === 0){
     return <span>None</span>;
   }
-  const { usingAirtable } = assetsContext;
   return files.map(file => (
     <a
       target="_blank"
       rel="noopener noreferrer"
-      href={usingAirtable ? `${InternalLinks.S3}${assetId}:${file.name}` : `https://cloudflare-ipfs.com/ipfs/${file.hash}`}
+      href={`https://cloudflare-ipfs.com/ipfs/${file.hash}`}
       key={file.hash}
       style={{display: "block"}}
     >

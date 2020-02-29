@@ -233,45 +233,6 @@ export const uploadFilesToAWS = async (
   }
 }
 
-export const updateAirTableWithNewAsset = async (
-  data,
-  performInternalAction,
-  network,
-) => {
-  try{
-    await axios.post(InternalLinks.updateAirtableAssets(network), {
-      ...data,
-    });
-    performInternalAction();
-  } catch(err){
-    setTimeout(() =>
-      updateAirTableWithNewAsset(
-        data,
-        performInternalAction,
-        network,
-      ), 5000);
-    debug(err);
-  }
-}
-
-export const updateAirTableWithNewOffChainData = async (
-  data,
-  network,
-) => {
-  try{
-    await axios.post(InternalLinks.updateAirtableAssetListing(network), {
-      ...data,
-    });
-  } catch(err){
-    setTimeout(() =>
-      updateAirTableWithNewOffChainData(
-        data,
-        network,
-      ), 5000);
-    debug(err);
-  }
-}
-
 export const payoutAsset = ({
   userAddress,
   assetId,
