@@ -5,7 +5,6 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { ErrorTypes } from 'constants/errorTypes';
 import {
-  InternalLinks,
   ExternalLinks,
 } from 'constants/links';
 import {
@@ -201,35 +200,6 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
     onCreateAsset.onReceipt(response.asset);
   } catch (error) {
     debug(error)
-  }
-}
-
-export const uploadFilesToAWS = async (
-  assetId,
-  fileList,
-  performInternalAction,
-) => {
-  try{
-    let data = new FormData();
-    data.append('assetId', assetId);
-    for(const file of fileList){
-      data.append('file', file.originFileObj ? file.originFileObj : file.file ? file.file : file);
-    }
-    const result = await axios.post(InternalLinks.S3_UPLOAD,
-      data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    )
-    if(performInternalAction){
-      performInternalAction();
-    } else {
-      return result;
-    }
-  } catch(err){
-    setTimeout(() => uploadFilesToAWS(assetId, fileList, performInternalAction), 5000);
-    debug(err);
   }
 }
 
@@ -430,6 +400,8 @@ export const fetchAsset = async (asset, userAddress) => {
       assetManager,
       blockNumber,
     } = asset;
+
+    console.log("fetchAsset", asset);
 
     let [
       dividendToken,

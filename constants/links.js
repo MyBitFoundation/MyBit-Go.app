@@ -6,9 +6,6 @@ const secondHost = `${baseUrl}:${secondPort}`
 const apiEndpoint = 'https://api.mybit.io';
 
 export const InternalLinks = {
-  S3: 'https://s3.eu-central-1.amazonaws.com/mybit-go/',
-  S3_UPLOAD: process.env.NODE_ENV === 'development' ? `${host}/api/files/upload` : '/api/files/upload',
-  S3_ASSET_FILES: process.env.NODE_ENV === 'development' ? `${host}/api/assets/files` : '/api/assets/files',
   GAS_PRICE: `${apiEndpoint}/gasprice`,
 }
 

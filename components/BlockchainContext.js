@@ -719,8 +719,6 @@ class BlockchainProvider extends React.Component {
           setUserListingAsset(false, assetId);
         }
       }
-
-      filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
 
     const onError = (type) => {

@@ -1,5 +1,7 @@
-const ipfsClient = require('ipfs-http-client')
-import { HOST, PROTOCOL, PORT } from 'constants/ipfs';
+import ipfsClient from 'ipfs-http-client';
+import urlJoin from 'url-join';
+import { IPFS_URL, HOST, PROTOCOL, PORT } from 'constants/ipfs';
+
 const ipfs = new ipfsClient(HOST, PORT, {  protocol: PROTOCOL });
 
 export const addFileToIpfs = async data => {
@@ -34,4 +36,10 @@ export const addUserFileToIpfs = file => {
   }
 }
 
-
+/**
+ * Join the IPFS prefix with the hash to make a full URL
+ * @method
+ * @param {string} hash
+ * @returns {string}
+ */
+export const ipfsHashUrl = hash => urlJoin(IPFS_URL, hash)

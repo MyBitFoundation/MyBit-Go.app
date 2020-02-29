@@ -1,5 +1,4 @@
 import { hot } from 'react-hot-loader/root'
-import { InternalLinks } from 'constants/links';
 import * as Brain from '../apis/brain';
 import {
   SUPPORTED_NETWORKS,
@@ -386,7 +385,7 @@ class AssetsProvider extends React.PureComponent {
   }
 
   getLoadingState = (loadingIpfs, loadingSdk) => {
-    if(!loadingSdk && && !loadingIpfs){
+    if(!loadingSdk && !loadingIpfs){
       console.log("Done loading assets")
       return false;
     } else {
