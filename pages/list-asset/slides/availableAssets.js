@@ -27,8 +27,7 @@ import {
 import ThinkingIcon from 'static/ic_thinking.svg';
 import Spin from 'static/spin.svg';
 import LabelWithTooltip from 'ui/LabelWithTooltip';
-
-const { publicRuntimeConfig } = getConfig();
+const { GOOGLE_PLACES_API_KEY } = process.env;
 
 const Image = styled.img`
   position: relative;
@@ -216,7 +215,7 @@ export const AvailableAssetsSlide = ({
                   ))}
                 </CarouselSlideSelect>
                 <GoogleAutoComplete
-                  apiKey={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
+                  apiKey={GOOGLE_PLACES_API_KEY}
                   input={searchCity}
                   countryCode={countryCode}
                   onSelectSuggest={handleCitySuggest}
@@ -278,16 +277,12 @@ export const AvailableAssetsSlide = ({
                   <AssetValueContainer cryptoPurchase={cryptoPurchase}>
                     <CarouselSlideInputNumber
                       isCentered
-                      disabled
                       placeholder="Funding Goal"
                       name="assetValue"
                       value={assetValue}
-                      formatter={value =>
-                       !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                       style={cryptoPurchase === false ? {marginRight: '10px', marginBottom: '5px'} : {}}
+                      onChange={value => handleSelectChange(value, "assetValue")}
                     />
+                    <div style={{padding:"0.4rem"}}>{DEFAULT_TOKEN}</div>
                     {cryptoPurchase === false && (
                       <LabelWithTooltip
                         title={'8% fiat fee incl.'}

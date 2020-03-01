@@ -6,7 +6,7 @@ import {
   CarouselNextButton
 } from "components/CarouselSlide/";
 
-export const IntroSlide = ({ maxWidthDesktop, desktopMode, onClick, dev }) => (
+export const IntroSlide = ({ maxWidthDesktop, desktopMode, onClick }) => (
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
     hasBoxShadow={desktopMode}
@@ -50,6 +50,6 @@ export const IntroSlide = ({ maxWidthDesktop, desktopMode, onClick, dev }) => (
         and investors.
       </p>
     </CarouselSlideList>
-    {desktopMode && dev && <CarouselNextButton onClick={onClick} />}
+    {desktopMode && <CarouselNextButton onClick={onClick} />}
   </CarouselSlide>
 );

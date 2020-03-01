@@ -1,39 +1,58 @@
-import ipfsClient from 'ipfs-http-client';
+import IPFS from "ipfs";
+// import IpfsHttpClient from 'ipfs-http-client';
 import urlJoin from 'url-join';
-import { IPFS_URL, HOST, PROTOCOL, PORT } from 'constants/ipfs';
+import isNil from "lodash/isNil";
+import isFunction from "lodash/isFunction";
+import { IPFS_URL/*, HOST, PROTOCOL, PORT*/ } from 'constants/ipfs';
 
-const ipfs = new ipfsClient(HOST, PORT, {  protocol: PROTOCOL });
+// const ipfsHttpClient = new ipfsHttpClient(HOST, PORT, {  protocol: PROTOCOL });
+let jsipfs;
 
-export const addFileToIpfs = async data => {
-  try{
-    const result = await ipfs.add(data);
-    const ipfsHash = result[result.length - 1].hash;
-    return ipfsHash;
-  } catch(err){
-    console.log(err)
-    return null;
+/**
+ * Create an IPFS for use in the browser
+ * @method getIpfs
+ * @returns {object}
+ */
+export async function getIpfsClient() {
+  if (isNil(jsipfs) === false) {
+    return jsipfs;
   }
+
+  /*
+
+  We might get an old or new IPFS depending on 3box
+
+  */
+  if (isFunction(IPFS.create)) {
+    // new API is like this
+    ipfs = await IPFS.create();
+  } else {
+    // the older API is like this
+    jsipfs = new IPFS();
+  }
+  return jsipfs;
 }
 
-export const addJsonFileToIpfs = async obj => {
-  try{
-    const buffer = Buffer.from(JSON.stringify(obj));
-    return addFileToIpfs(buffer);
-  } catch(err){
-    console.log(err);
-  }
+export async function addFileToIpfs(data) {
+  const client = await getIpfsClient();
+  const result = await client.add(data);
+  const ipfsHash = result[0].hash;
+  return ipfsHash;
 }
 
-export const addUserFileToIpfs = file => {
-  try{
-    const fileDetails = {
-      path: file.name,
-      content: file
-    }
-    return addFileToIpfs(fileDetails);
-  } catch(err){
-    console.log(err);
+export async function addJsonFileToIpfs(obj) {
+  const client = await getIpfsClient();
+  const buffer = Buffer.from(JSON.stringify(obj));
+  return addFileToIpfs(buffer);
+}
+
+export async function addUserFileToIpfs(file) {
+  const client = await getIpfsClient();
+  const fileDetails = {
+    path: file.name,
+    content: file
   }
+  return addFileToIpfs(fileDetails);
 }
 
 /**

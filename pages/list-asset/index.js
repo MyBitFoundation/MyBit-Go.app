@@ -42,8 +42,8 @@ import { calculateSlippage } from 'constants/calculateSlippage';
 import {
   FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
-const dev = process.env.NODE_ENV === 'development';
-const { publicRuntimeConfig } = getConfig();
+const { NODE_ENV, GOOGLE_PLACES_API_KEY } = process.env;
+const dev = NODE_ENV === 'development';
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
@@ -141,7 +141,7 @@ class ListAssetPage extends React.Component {
     const { additionalCosts = 0 } = this.state.data;
     const {
       operator: operatorAddress,
-      fundingGoal,
+      fundingGoal = 10,
       cryptoPayout,
       cryptoPurchase,
       name,
@@ -230,7 +230,7 @@ class ListAssetPage extends React.Component {
   };
 
   handleDetectLocationClicked = () => {
-    Geocode.setApiKey(publicRuntimeConfig.GOOGLE_PLACES_API_KEY);
+    Geocode.setApiKey(GOOGLE_PLACES_API_KEY);
 
     navigator.geolocation.getCurrentPosition(location => {
       const {
