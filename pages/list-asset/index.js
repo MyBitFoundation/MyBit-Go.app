@@ -15,8 +15,8 @@ import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
 import { withAssetsContext } from 'components/AssetsContext';
-import ListAssetMobile from './listAssetMobile';
-import ListAssetDesktop from './listAssetDesktop';
+import ListAssetMobile from 'components/list-asset/listAssetMobile';
+import ListAssetDesktop from 'components/list-asset/listAssetDesktop';
 import getTokenWithSufficientBalance from 'constants/getTokenWithSufficientBalance';
 import {
   COUNTRIES,

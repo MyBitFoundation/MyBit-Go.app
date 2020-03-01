@@ -23,7 +23,7 @@ import DocumentsManagerError from './documentsManagerError';
 import DocumentsManagerNoFiles from './documentsManagerNoFiles';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import ChangesButtonWithLabel from 'components/ChangesButtonWithLabel';
-import { ipfsUrl } from 'utils/ipfs';
+import { ipfsHashUrl } from 'utils/ipfs';
 
 const CloseIconWrapper = styled(CloseIcon)`
   position: absolute;
@@ -187,7 +187,7 @@ class DocumentsManager extends React.Component{
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={ipfsUrl(file.hash)}>{file.name || file}
+                      href={ipfsHashUrl(file.hash)}>{file.name || file}
                     </a>
                     {file.deletable && (
                       <CloseIconWrapper onClick={this.handleRemoveUpload.bind(this, file.name || file)}/>

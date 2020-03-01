@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import {
   Slides,
-} from './slides';
+} from 'components/asset-manager/slides';
 
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 

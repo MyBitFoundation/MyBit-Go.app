@@ -10,7 +10,7 @@ import {
 import GoogleAutoComplete from 'ui/GoogleAutoComplete';
 const { GOOGLE_PLACES_API_KEY } = process.env;
 
-export const AssetLocationSlide = ({
+const AssetLocationSlide = ({
   maxWidthDesktop,
   handleInputChange,
   formData,
@@ -119,3 +119,5 @@ export const AssetLocationSlide = ({
     </CarouselSlide>
   )
 };
+
+export default AssetLocationSlide;

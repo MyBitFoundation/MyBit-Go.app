@@ -1,17 +1,16 @@
 import CarouselWithNavigation from "ui/CarouselWithNavigation";
-import {
-  IntroSlide,
-  LocationSlide,
-  AvailableAssetsSlide,
-  AssetLocationSlide,
-  DocsSlide,
-  FeesSlide,
-  CollateralSlide,
-  ConfirmSlide,
-  SuccessSlide,
-  TermsOfServiceSlide,
-  GeneralDescriptionSlide
-} from "./slides";
+
+import IntroSlide from "./intro";
+import AvailableAssetsSlide from "./availableAssets";
+import AssetLocationSlide from "./assetLocation";
+import DocsSlide from "./docs";
+import FeesSlide from "./fees";
+import CollateralSlide from "./collateral";
+import ConfirmSlide from "./confirm";
+import SuccessSlide from "./success";
+import TermsOfServiceSlide from "./termsOfService";
+import GeneralDescriptionSlide from "./generalDescription";
+
 
 const MAX_WIDTH_DESKTOP = "500px";
 

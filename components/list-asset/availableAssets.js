@@ -117,7 +117,7 @@ const AssetValueContainer = styled.div`
   `}
 `
 
-export const AvailableAssetsSlide = ({
+const AvailableAssetsSlide = ({
   handleSelectChange,
   formData,
   maxWidthDesktop,
@@ -325,3 +325,5 @@ export const AvailableAssetsSlide = ({
     </CarouselSlide>
   );
 };
+
+export default AvailableAssetsSlide;

@@ -33,7 +33,7 @@ const Button = styled(ButtonAnt)`
   font-weight: 500;
 `
 
-export const SuccessSlide = ({
+const SuccessSlide = ({
   maxWidthDesktop,
   assetId,
   desktopMode,
@@ -81,3 +81,5 @@ export const SuccessSlide = ({
 
   </CarouselSlide>
 );
+
+export default SuccessSlide;

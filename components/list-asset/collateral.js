@@ -118,7 +118,7 @@ const Loading = styled(Spin)`
   width: 32px;
 `
 
-export const CollateralSlide = ({
+const CollateralSlide = ({
   maxWidthDesktop,
   collateralPercentage,
   formData,
@@ -270,3 +270,5 @@ export const CollateralSlide = ({
       )}
     </CarouselSlide>
   )}
+
+export default CollateralSlide;

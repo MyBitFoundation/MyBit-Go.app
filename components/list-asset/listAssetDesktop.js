@@ -1,17 +1,16 @@
 import styled, { css } from 'styled-components';
-import {
-  IntroSlide,
-  LocationSlide,
-  AvailableAssetsSlide,
-  AssetLocationSlide,
-  DocsSlide,
-  FeesSlide,
-  CollateralSlide,
-  ConfirmSlideDesktop,
-  SuccessSlide,
-  TermsOfServiceSlide,
-  GeneralDescriptionSlide,
-} from "./slides";
+
+import AssetLocationSlide from "./assetLocation";
+import AvailableAssetsSlide from "./availableAssets";
+import CollateralSlide from "./collateral";
+import ConfirmSlideDesktop from "./confirmDesktop";
+import DocsSlide from "./docs";
+import FeesSlide from "./fees";
+import GeneralDescriptionSlide from "./generalDescription";
+import IntroSlide from "./intro";
+import SuccessSlide from "./success";
+import TermsOfServiceSlide from "./termsOfService";
+
 import CustomTimeline from './customTimeline';
 
 const MAX_WIDTH_DESKTOP = "450px";

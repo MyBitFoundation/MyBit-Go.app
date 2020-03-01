@@ -35,7 +35,7 @@ const AlertMessageWrapper = styled.div`
 
 `
 
-export const ConfirmSlideDesktop = ({
+const ConfirmSlideDesktop = ({
   formData,
   isUserListingAsset,
   setUserListingAsset,
@@ -99,3 +99,5 @@ export const ConfirmSlideDesktop = ({
     </InformationWrapper>
   </CarouselSlide>
 )
+
+export default ConfirmSlideDesktop;
