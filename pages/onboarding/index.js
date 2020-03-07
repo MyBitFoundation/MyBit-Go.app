@@ -19,14 +19,6 @@ const SliderNavigationTooltips = [
 ];
 
 class OnboardingPage extends React.Component {
-  static async getInitialProps (ctx) {
-    if(ctx.req){
-      return {redirectTo: ctx.query.redirectTo};
-    } else {
-      return {};
-    }
-  }
-
   componentDidMount = () => {
     const {
       redirectTo,

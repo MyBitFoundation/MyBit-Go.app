@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import SetupGraphic from 'static/onboarding/setup.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -28,7 +27,7 @@ const RequiredSetup = withBancorContext(({
 }) => (
   <CarouselSlide>
     <Image
-      src={SetupGraphic}
+      src="/onboarding/setup.png"
       width="77"
       alt="Setup"
       isSetup

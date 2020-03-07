@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Spin from 'static/spin.svg';
+import Spin from 'public/spin.svg';
 import StyledSpin from './styledSpin';
 import BalanceLabel from './balanceLabel';
 import BalanceAmount from './balanceAmount';

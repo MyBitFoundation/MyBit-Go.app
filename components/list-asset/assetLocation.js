@@ -1,4 +1,3 @@
-import getConfig from 'next/config';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,

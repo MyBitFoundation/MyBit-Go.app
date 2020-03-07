@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components';
 import { withThreeBoxContext } from 'components/ThreeBoxContext';
-import Freddy from 'static/freddy.svg';
+import Freddy from 'public/freddy.svg';
 import {
     shortenAddress,
 } from 'utils/helpers';

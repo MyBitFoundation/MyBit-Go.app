@@ -46,14 +46,8 @@ BN.config({ EXPONENTIAL_AT: 80 });
 
 const { Provider, Consumer } = React.createContext({});
 
-// Required so we can trigger getInitialProps in our exported pages
 export const withBlockchainContextPageWrapper = (Component) => {
   return class BlockchainContextPageWrapper extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
     render(){
       return (
         <Consumer>

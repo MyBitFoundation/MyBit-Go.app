@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import MyBitDesk from 'static/onboarding/desk.png';
 import {
   Button,
 } from 'antd';
@@ -50,7 +49,7 @@ const InvestmentFund = ({
 }) => (
   <CarouselSlide>
     <Image
-      src={MyBitDesk}
+      src="/onboarding/desk.png"
       width="190"
       alt="MyBit Onboarding Slide 3"
     />

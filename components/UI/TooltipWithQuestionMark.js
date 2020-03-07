@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import questionTooltip from "static/list-asset/questionTooltip.png";
 import Tooltip from 'ui/Tooltip';
 
 const Img = styled.img`
@@ -9,7 +8,7 @@ const Img = styled.img`
 
 const TooltipWithQuestionMark = (props) => (
   <Tooltip tooltipProps={{...props}}>
-    <Img src={questionTooltip} />
+    <Img src="/list-asset/questionTooltip.png" />
   </Tooltip>
 )
 

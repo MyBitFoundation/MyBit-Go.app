@@ -37,10 +37,6 @@ const AssetManager = ({
   }
 }
 
-AssetManager.getInitialProps = ctx => {
-  return { managerAddress: ctx.query.id };
-}
-
 const enhance = compose(
   withAssetsContextPageWrapper,
   withMetamaskContextPageWrapper,

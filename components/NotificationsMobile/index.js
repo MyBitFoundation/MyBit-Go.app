@@ -7,7 +7,7 @@ import NotificationsMobileWrapper from './notificationsMobileWrapper';
 import NotificationsMobileTitle from './notificationsMobileTitle';
 import NotificationsMobileContentWrapper from './notificationsMobileContentWrapper';
 import NotificationsMobileCounter from './notificationsMobileCounter';
-import Bell from 'static/bell.svg';
+import Bell from 'public/bell.svg';
 
 import {
    getContentForNotification,

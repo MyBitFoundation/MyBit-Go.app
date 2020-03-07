@@ -1,17 +1,12 @@
 import React from 'react';
 import Box from '3box';
-import Freddy from 'static/freddy.svg';
+import Freddy from 'public/freddy.svg';
 const { Provider, Consumer } = React.createContext({});
 
 const SPACE_ID = 'MYBIT_GO'
 
 export const withThreeBoxContext = (Component) => {
     return class Higher extends React.Component{
-      static getInitialProps(ctx) {
-        if(Component.getInitialProps)
-          return Component.getInitialProps(ctx);
-        else return {};
-      }
       render(){
         return (
           <Consumer>

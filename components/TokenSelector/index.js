@@ -20,7 +20,7 @@ import Separator from 'ui/Separator';
 import TokenSelectorSearchWrapper from './tokenSelectorSearchWrapper';
 import TokenSelectorAmount from './tokenSelectorAmount';
 import TokenSelectorNoResults from './tokenSelectorNoResults';
-import ThinkingIcon from 'static/ic_thinking.svg';
+import ThinkingIcon from 'public/ic_thinking.svg';
 import TokenSelectorLabel from './tokenSelectorLabel';
 import TokenSelectorValue from './tokenSelectorValue';
 

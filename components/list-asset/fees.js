@@ -13,8 +13,6 @@ import {
   Slider
 } from 'antd';
 
-import Coins from "static/list-asset/assetList_coins.png";
-
 const Image = styled.img`
   position: relative;
   margin: 40px auto;
@@ -62,7 +60,7 @@ const FeesSlide = ({
       asset maintained and in full working order.
     </CarouselSlideParagraph>
     <Image
-      src={Coins}
+      src="/list-asset/assetList_coins.png"
       alt="Earth"
     />
     <CarouselSlideSlider

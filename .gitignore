@@ -71,6 +71,8 @@ typings/
 # compiled server
 lib
 
+# nextjs
 .next
+out
 
 bundles

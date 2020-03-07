@@ -7,11 +7,11 @@ import {
 } from 'antd';
 import ValueDisplay from 'ui/ValueDisplay';
 import { PortfolioAsset, ManagedAsset } from 'ui/Asset';
-import PieChart from 'static/chart-pie.svg';
-import LineChart from 'static/chart-line.svg';
-import Sliders from 'static/sliders.svg';
-import RealisedProfit from 'static/realised-profit.svg';
-import UnrealisedProfit from 'static/unrealised-profit.svg';
+import PieChart from 'public/chart-pie.svg';
+import LineChart from 'public/chart-line.svg';
+import Sliders from 'public/sliders.svg';
+import RealisedProfit from 'public/realised-profit.svg';
+import UnrealisedProfit from 'public/unrealised-profit.svg';
 import {
   formatMonetaryValue,
   fromWeiToEth,

@@ -470,14 +470,8 @@ class AssetsProvider extends React.PureComponent {
   }
 };
 
-// Required so we can trigger getInitialProps in our exported pages
 export const withAssetsContextPageWrapper = (Component) => {
   return class AssetContextPageWrapper extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
     render(){
       return (
         <Consumer>

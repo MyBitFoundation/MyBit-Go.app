@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import SmartContract from 'static/onboarding/smart_contract.png';
 
 import {
   CarouselSlide,
@@ -46,7 +45,7 @@ const SmartContracts = () => (
       because no manual process involving human labour is needed.
     </CarouselSlideParagraph>
     <Image
-      src={SmartContract}
+      src="/onboarding/smart_contract.png"
       width="199"
       alt="Smart Contract"
       isStatic

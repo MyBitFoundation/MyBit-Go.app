@@ -1,6 +1,6 @@
 import React from "react";
 import { hot } from "react-hot-loader/root";
-import App, { Container } from "next/app";
+import App from "next/app";
 import BlockchainProvider from "components/BlockchainContext";
 import KyberProvider from "components/KyberContext";
 import AssetsProvider from "components/AssetsContext";
@@ -21,6 +21,8 @@ import { navbarOptions } from "constants/navigationBar";
 import { FULL_SCREEN_PAGES } from "constants/fullScreenPages";
 import { COOKIES } from "constants/cookies";
 import { SUPPORTED_NETWORKS } from "constants/supportedNetworks";
+import { init as ipfsInit } from 'utils/ipfs';
+import 'antd/dist/antd.min.css';
 
 class MyApp extends App {
   state = {
@@ -46,22 +48,11 @@ class MyApp extends App {
 
   setUserHasMetamask = userHasMetamask => this.setState({ userHasMetamask });
 
-  prefetchPages = () => {
-    Router.prefetch("/onboarding");
-    Router.prefetch("/asset-manager");
-    Router.prefetch("/asset");
-    Router.prefetch("/transaction-history");
-    Router.prefetch("/explore");
-    Router.prefetch("/portfolio");
-    Router.prefetch("/help");
-    Router.prefetch("/watch-list");
-    Router.prefetch("/list-asset");
-  };
-
-  componentDidMount = () => {
-    require("utils/disableReactDevTools");
-    this.prefetchPages();
+  async componentDidMount() {
     this.saveFirstVisit();
+
+    // initialize and connect to the ipfs network for use later
+    await ipfsInit();
   };
 
   handleMobileMenuClicked = state => {
@@ -77,10 +68,10 @@ class MyApp extends App {
     const isFullScreenPage = FULL_SCREEN_PAGES.includes(router.pathname);
 
     return (
-      <Container>
-        <GlobalStyle />
-        <Head />
-        <Theme>
+      <Theme>
+        <div>
+          <GlobalStyle />
+          <Head />
           <WithProviders
             setNetwork={this.setNetwork}
             setUserHasMetamask={this.setUserHasMetamask}
@@ -107,8 +98,8 @@ class MyApp extends App {
               </React.Fragment>
             </MobileMenu>
           </WithProviders>
-        </Theme>
-      </Container>
+        </div>
+      </Theme>
     );
   }
 }

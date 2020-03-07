@@ -18,7 +18,7 @@ import {
 import { withMetamaskContext } from 'components/MetamaskContext';
 import TokenSelector from 'components/TokenSelector';
 import NumericInput from 'ui/NumericInput';
-import Spin from 'static/spin.svg';
+import Spin from 'public/spin.svg';
 import LabelWithValueAndTooltip from 'ui/LabelWithValueAndTooltip';
 import TooltipWithQuestionMarkGrey from 'ui/TooltipWithQuestionMarkGrey';
 

@@ -7,7 +7,6 @@ import {
   Tooltip,
   Carousel,
 } from "antd";
-import getConfig from 'next/config';
 import Cookie from 'js-cookie';
 import Geocode from "react-geocode";
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
@@ -42,8 +41,8 @@ import { calculateSlippage } from 'constants/calculateSlippage';
 import {
   FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
-const { NODE_ENV, GOOGLE_PLACES_API_KEY } = process.env;
-const dev = NODE_ENV === 'development';
+const { GOOGLE_PLACES_API_KEY } = process.env;
+
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
@@ -383,7 +382,6 @@ class ListAssetPage extends React.Component {
     const tokenWithSufficientBalance = collateralInDefaultToken > 0 ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken) : undefined;
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
-      dev,
       step,
       loadingAssets,
       kyberLoading,

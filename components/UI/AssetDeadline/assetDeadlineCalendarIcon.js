@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import CalendarIcon from 'static/calendar.svg';
+import CalendarIcon from 'public/calendar.svg';
 
 const AssetDeadlineCalendarIcon = styled(CalendarIcon)`
   position: relative;

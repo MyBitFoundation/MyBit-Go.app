@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import MyBitGoLogo from 'static/onboarding/mybitgo.png';
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -33,7 +32,7 @@ const WelcomeWrapper = styled.div`
 const Welcome = () => (
   <CarouselSlide>
     <Image
-      src={MyBitGoLogo}
+      src="/onboarding/mybitgo.png"
       width="90"
       alt="MyBit Onboarding Slide 1"
     />

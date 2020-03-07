@@ -3,9 +3,8 @@ import React from 'react';
 import {
   Button,
 } from 'antd';
-import Fee from 'static/fee.png';
-import PieChart from 'static/chart-pie.svg';
-import LineChart from 'static/chart-line.svg';
+import PieChart from 'public/chart-pie.svg';
+import LineChart from 'public/chart-line.svg';
 import ValueDisplay from 'ui/ValueDisplay';
 import AssetTemplate from 'ui/Asset/AssetTemplate';
 import ManageAssetWrapper from './manageAssetWrapper';

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Mybit from "static/footer/logo-dark.svg";
+import Mybit from "public/footer/logo-dark.svg";
 
 const AboutWrapper = styled.div`
   color: #575757;
