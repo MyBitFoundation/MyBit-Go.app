@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Spin from 'static/spin.svg';
+import Spin from 'public/spin.svg';
 
 const FundingCalculatorSpin = styled(Spin)`
   position: relative;

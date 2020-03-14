@@ -1,12 +1,12 @@
 import React from 'react';
-import ExploreIcon from '../static/search.svg';
-import PortfolioIcon from '../static/chart-area.svg';
-import TransactionsIcon from '../static/history.svg';
-import ListAssetIcon from '../static/plus.svg';
-import KnowledgeBaseIcon from '../static/question.svg';
-import WatchIcon from '../static/watchList.svg';
-import AssetManagers from '../static/asset-managers.svg';
-import MyHedge from '../static/my-hedge.svg';
+import ExploreIcon from 'public/search.svg';
+import PortfolioIcon from 'public/chart-area.svg';
+import TransactionsIcon from 'public/history.svg';
+import ListAssetIcon from 'public/plus.svg';
+import KnowledgeBaseIcon from 'public/question.svg';
+import WatchIcon from 'public/watchList.svg';
+import AssetManagers from 'public/asset-managers.svg';
+import MyHedge from 'public/my-hedge.svg';
 
 export const navbarOptions = (currentPath) => [
   {

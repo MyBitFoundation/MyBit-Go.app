@@ -22,14 +22,9 @@ import {
 const DEFAULT_QUANTITY = 0.5;
 const { Provider, Consumer } = React.createContext({});
 let kyberContract;
-// Required so we can trigger getInitialProps in our exported pages
+
 export const withKyberContextPageWrapper = (Component) => {
   return class Higher extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
     render(){
       return (
         <Consumer>

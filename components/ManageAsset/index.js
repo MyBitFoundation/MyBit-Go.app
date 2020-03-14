@@ -5,9 +5,6 @@ import {
   Row,
 } from 'antd';
 import Loading from 'components/Loading';
-import {
-  InternalLinks,
-} from 'constants/links';
 import ManageAssetNavButtons from './manageAssetNavButtons';
 import ManageAssetContentWrapper from './manageAssetContentWrapper';
 import ManageAssetAssetInfo from './manageAssetAssetInfo';
@@ -50,21 +47,6 @@ class ManageAsset extends React.Component {
 
   displayCollateral() {
     this.setState({ chartBoxView: "collateral" });
-  }
-
-  getFilesToRender(files, assetId){
-    if(!files || files.length === 0){
-      return <span>None</span>;
-    }
-    const toReturn = files.map(file => (
-      <a
-        href={`${InternalLinks.S3}${assetId}:${file}`}
-      >
-        {file}
-      </a>
-    ))
-
-    return toReturn;
   }
 
   getNavBarButtons = (asset, error, isCallingPayout, payoutAsset) => {

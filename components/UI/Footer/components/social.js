@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import Medium from 'static/footer/medium.svg';
-import Reddit from 'static/footer/reddit.svg';
-import Telegram from 'static/footer/telegram.svg';
-import Twitter from 'static/footer/twitter.svg';
-import Facebook from 'static/footer/facebook.svg';
+import Medium from 'public/footer/medium.svg';
+import Reddit from 'public/footer/reddit.svg';
+import Telegram from 'public/footer/telegram.svg';
+import Twitter from 'public/footer/twitter.svg';
+import Facebook from 'public/footer/facebook.svg';
 
 const IconWrapper = styled.div`
   display: flex;

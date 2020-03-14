@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import HamburguerIcon from 'static/hamburguer-icon.svg';
+import HamburguerIcon from 'public/hamburguer-icon.svg';
 
 const AppHeaderHamburguerButton = styled(HamburguerIcon)`
   position: absolute;

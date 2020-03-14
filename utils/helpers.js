@@ -6,7 +6,8 @@ import {
   DEFAULT_TOKEN_MAX_DECIMALS,
 } from 'constants/app';
 
-export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
+const { NODE_ENV } = process.env;
+export const debug = NODE_ENV === 'development' ? console.log : () => {};
 
 export const fromWeiToEth = weiValue => Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
 
@@ -67,6 +68,10 @@ export const convertFromDefaultToken = (convertTo, tokens, amount) => {
   }
 
   const tokenConvertTo = tokens[convertTo];
+
+  if (tokenConvertTo === undefined) {
+    return 0;
+  }
 
   return amount / tokenConvertTo.exchangeRateDefaultToken.expectedRate;
 }

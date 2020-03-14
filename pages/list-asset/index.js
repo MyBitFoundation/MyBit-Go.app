@@ -7,7 +7,6 @@ import {
   Tooltip,
   Carousel,
 } from "antd";
-import getConfig from 'next/config';
 import Cookie from 'js-cookie';
 import Geocode from "react-geocode";
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
@@ -15,8 +14,8 @@ import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
 import { withAssetsContext } from 'components/AssetsContext';
-import ListAssetMobile from './listAssetMobile';
-import ListAssetDesktop from './listAssetDesktop';
+import ListAssetMobile from 'components/list-asset/listAssetMobile';
+import ListAssetDesktop from 'components/list-asset/listAssetDesktop';
 import getTokenWithSufficientBalance from 'constants/getTokenWithSufficientBalance';
 import {
   COUNTRIES,
@@ -42,8 +41,8 @@ import { calculateSlippage } from 'constants/calculateSlippage';
 import {
   FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
-const dev = process.env.NODE_ENV === 'development';
-const { publicRuntimeConfig } = getConfig();
+const { GOOGLE_PLACES_API_KEY } = process.env;
+
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
@@ -141,7 +140,7 @@ class ListAssetPage extends React.Component {
     const { additionalCosts = 0 } = this.state.data;
     const {
       operator: operatorAddress,
-      fundingGoal,
+      fundingGoal = 10,
       cryptoPayout,
       cryptoPurchase,
       name,
@@ -230,7 +229,7 @@ class ListAssetPage extends React.Component {
   };
 
   handleDetectLocationClicked = () => {
-    Geocode.setApiKey(publicRuntimeConfig.GOOGLE_PLACES_API_KEY);
+    Geocode.setApiKey(GOOGLE_PLACES_API_KEY);
 
     navigator.geolocation.getCurrentPosition(location => {
       const {
@@ -383,7 +382,6 @@ class ListAssetPage extends React.Component {
     const tokenWithSufficientBalance = collateralInDefaultToken > 0 ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken) : undefined;
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
-      dev,
       step,
       loadingAssets,
       kyberLoading,
@@ -416,7 +414,6 @@ class ListAssetPage extends React.Component {
       formData: data,
       balances: user.balances,
       shouldShowToSCheckmark: this.readTermsOfService,
-      airtableContext: this.props.airtableContext,
     }
     return (
       <div>

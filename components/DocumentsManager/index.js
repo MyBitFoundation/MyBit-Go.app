@@ -9,9 +9,9 @@ import {
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
 } from 'constants/app';
-import CloseIcon from 'static/ic_close.svg';
-import { InternalLinks } from 'constants/links';
-import FileImg from 'static/file-icon.svg';
+import CloseIcon from 'public/ic_close.svg';
+import { ExternalLinks } from 'constants/links';
+import FileImg from 'public/file-icon.svg';
 import * as Brain from '../../apis/brain';
 import DocumentsManagerTitle from './documentsManagerTitle';
 import DocumentsManagerNav from './documentsManagerNav';
@@ -23,6 +23,7 @@ import DocumentsManagerError from './documentsManagerError';
 import DocumentsManagerNoFiles from './documentsManagerNoFiles';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import ChangesButtonWithLabel from 'components/ChangesButtonWithLabel';
+import { ipfsHashUrl } from 'utils/ipfs';
 
 const CloseIconWrapper = styled(CloseIcon)`
   position: absolute;
@@ -111,17 +112,14 @@ class DocumentsManager extends React.Component{
     const { asset } = this.props;
     const { assetId } = asset;
     const { updateAssetListingIpfs } = this.props.blockchainContext;
-    const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
-    if(result){
-      const assetWithUpdatedFiles = {...asset, files: asset.files ? [...asset.files] : []};
-      //update asset object with new files
-      files.forEach(file => {
-        assetWithUpdatedFiles.files.push(file)
-      })
-      updateAssetListingIpfs(assetWithUpdatedFiles, success => {
-        this.setState({uploading: false, filesTmp: success ? [] : files})
-      })
-    }
+    const assetWithUpdatedFiles = {...asset, files: asset.files ? [...asset.files] : []};
+    //update asset object with new files
+    files.forEach(file => {
+      assetWithUpdatedFiles.files.push(file)
+    })
+    updateAssetListingIpfs(assetWithUpdatedFiles, success => {
+      this.setState({uploading: false, filesTmp: success ? [] : files})
+    })
   }
 
   handleFileUpload = () => {
@@ -189,7 +187,7 @@ class DocumentsManager extends React.Component{
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={`${InternalLinks.S3}${assetId}:${file.name || file}`}>{file.name || file}
+                      href={ipfsHashUrl(file.hash)}>{file.name || file}
                     </a>
                     {file.deletable && (
                       <CloseIconWrapper onClick={this.handleRemoveUpload.bind(this, file.name || file)}/>

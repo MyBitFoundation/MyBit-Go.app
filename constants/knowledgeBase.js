@@ -1,5 +1,5 @@
 import React from 'react';
-import Telegram from '../static/telegram.svg';
+import Telegram from 'public/telegram.svg';
 
 const sectionHowItWorks = [{
   question: 'Investors',

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {
   Tooltip,
 } from 'antd';
-import WatchIcon from 'static/watch.svg';
+import WatchIcon from 'public/watch.svg';
 import WatchWrapper from './watchWrapper';
 
 const Watch = ({

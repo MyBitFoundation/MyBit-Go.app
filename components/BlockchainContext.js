@@ -12,7 +12,6 @@ import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import * as Brain from '../apis/brain';
 import { ErrorTypes } from 'constants/errorTypes';
-import {InternalLinks } from 'constants/links';
 import {
   NotificationTypes,
   NotificationsMetamask,
@@ -41,20 +40,14 @@ import {
   addJsonFileToIpfs,
   addUserFileToIpfs,
 } from 'utils/ipfs';
-
+import { gasPriceOracle } from "utils/etherchain";
 
 BN.config({ EXPONENTIAL_AT: 80 });
 
 const { Provider, Consumer } = React.createContext({});
 
-// Required so we can trigger getInitialProps in our exported pages
 export const withBlockchainContextPageWrapper = (Component) => {
   return class BlockchainContextPageWrapper extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
     render(){
       return (
         <Consumer>
@@ -168,7 +161,7 @@ class BlockchainProvider extends React.Component {
     } = this.state;
 
     try{
-      const response = await axios(InternalLinks.GAS_PRICE);
+      const response = await gasPriceOracle();
       if(response.data){
         const {
           fast,
@@ -719,26 +712,6 @@ class BlockchainProvider extends React.Component {
           setUserListingAsset(false, assetId);
         }
       }
-
-      Brain.updateAirTableWithNewAsset({
-        assetId,
-        assetName,
-        country,
-        city,
-        collateralPercentage,
-        about,
-        financials,
-        risks,
-        fees,
-        assetAddress1,
-        assetAddress2,
-        assetProvince,
-        assetPostalCode,
-        modelId,
-        files: filesInfo.string,
-      }, performInternalAction, network)
-
-      filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
     }
 
     const onError = (type) => {

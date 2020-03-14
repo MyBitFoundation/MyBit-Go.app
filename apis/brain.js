@@ -5,7 +5,6 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { ErrorTypes } from 'constants/errorTypes';
 import {
-  InternalLinks,
   ExternalLinks,
 } from 'constants/links';
 import {
@@ -24,6 +23,8 @@ import {
   toWei,
 } from '../utils/helpers';
 import { CONTRACTS } from 'constants/supportedNetworks';
+import { getTransactions } from 'utils/etherscan';
+import { getNetworkName } from 'utils/web3';
 
 import BN from 'bignumber.js';
 BN.config({ EXPONENTIAL_AT: 80 });
@@ -45,19 +46,14 @@ export const fetchTransactionHistory = async userAddress =>
     *  than it is to keep converting it for every iteration
     */
       const userAddressLowerCase = userAddress.toLowerCase();
-      const endpoint = ExternalLinks.ETHERSCAN_TX_BY_ADDR_ENDPOINT(userAddress);
-      const result = await fetch(endpoint);
-      const jsonResult = await result.json();
-      if (
-        !jsonResult.message ||
-        (jsonResult.message &&
-          jsonResult.message !== 'No transactions found' &&
-          jsonResult.message !== 'OK')
-      ) {
-        throw new Error(jsonResult.result);
-      }
+      const network = await getNetworkName();
+      const res = await getTransactions({
+        network,
+        address: userAddressLowerCase
+      });
+      const result = res.data.result;
 
-      const ethTransactionHistory = jsonResult.result
+      const ethTransactionHistory = result
         .filter(txResult =>
           txResult.to === userAddressLowerCase || txResult.from === userAddressLowerCase)
         .map((txResult, index) => {
@@ -201,74 +197,6 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
     onCreateAsset.onReceipt(response.asset);
   } catch (error) {
     debug(error)
-  }
-}
-
-export const uploadFilesToAWS = async (
-  assetId,
-  fileList,
-  performInternalAction,
-) => {
-  try{
-    let data = new FormData();
-    data.append('assetId', assetId);
-    for(const file of fileList){
-      data.append('file', file.originFileObj ? file.originFileObj : file.file ? file.file : file);
-    }
-    const result = await axios.post(InternalLinks.S3_UPLOAD,
-      data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    )
-    if(performInternalAction){
-      performInternalAction();
-    } else {
-      return result;
-    }
-  } catch(err){
-    setTimeout(() => uploadFilesToAWS(assetId, fileList, performInternalAction), 5000);
-    debug(err);
-  }
-}
-
-export const updateAirTableWithNewAsset = async (
-  data,
-  performInternalAction,
-  network,
-) => {
-  try{
-    await axios.post(InternalLinks.updateAirtableAssets(network), {
-      ...data,
-    });
-    performInternalAction();
-  } catch(err){
-    setTimeout(() =>
-      updateAirTableWithNewAsset(
-        data,
-        performInternalAction,
-        network,
-      ), 5000);
-    debug(err);
-  }
-}
-
-export const updateAirTableWithNewOffChainData = async (
-  data,
-  network,
-) => {
-  try{
-    await axios.post(InternalLinks.updateAirtableAssetListing(network), {
-      ...data,
-    });
-  } catch(err){
-    setTimeout(() =>
-      updateAirTableWithNewOffChainData(
-        data,
-        network,
-      ), 5000);
-    debug(err);
   }
 }
 

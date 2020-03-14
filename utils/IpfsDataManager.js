@@ -1,4 +1,4 @@
-const isIPFS = require('is-ipfs');
+import isIPFS from 'is-ipfs';
 import { IPFS_URL } from 'constants/ipfs';
 
 const MAX_DOWNLOADS_PARALLEL = 10;

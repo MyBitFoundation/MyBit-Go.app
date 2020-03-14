@@ -25,14 +25,9 @@ import SupportedBrowsers from 'ui/SupportedBrowsers';
 
 const { Provider, Consumer } = React.createContext({});
 
-// Required so we can trigger getInitialProps in our exported pages
+
 export const withMetamaskContextPageWrapper = (Component) => {
   return class Higher extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
     render(){
       return (
         <Consumer>
@@ -217,8 +212,21 @@ class MetamaskProvider extends Component {
         }
         // we are only interested in listing balances > 0
         if(balance > 0){
-          const balanceInDai = tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRateDefaultToken.expectedRate;
-          const balanceInPlatformToken = tokenData.contractAddress === PLATFORM_TOKEN_CONTRACT ? balance : balance * tokenData.exchangeRatePlatformToken.expectedRate;
+          let balanceInDai = 0;
+          let balanceInPlatformToken = 0;
+
+          if (tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT) {
+            balanceInDai = balance;
+          } else if (tokenData.exchangeRateDefaultToken && tokenData.exchangeRateDefaultToken.expectedRate) {
+            balanceInDai = balance * tokenData.exchangeRateDefaultToken.expectedRate;
+          }
+
+          if (tokenData.contractAddress === PLATFORM_TOKEN_CONTRACT) {
+            balanceInPlatformToken = balance;
+          } else if (tokenData.exchangeRatePlatformToken && tokenData.exchangeRatePlatformToken.expectedRate) {
+            balanceInPlatformToken = balance * tokenData.exchangeRatePlatformToken.expectedRate;
+          }
+
           sumOfBalances += balanceInDai;
           updatedTokensWithBalance[symbol] = {
             ...tokenData,

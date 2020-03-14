@@ -1,6 +1,6 @@
 import React from 'react';
-import Wrong from '../static/wrong.svg';
-import Check from '../static/check.svg';
+import Wrong from 'public/wrong.svg';
+import Check from 'public/check.svg';
 
 export const TableRows = [{
   name: 'Single point of failure',

@@ -110,7 +110,7 @@ class AssetExplorer extends React.Component {
     } = this.props;
 
     const { fundingActive } = this.state;
-    let assetsFiltered = assets.slice();
+    let assetsFiltered = (assets || []).slice();
     let {
       selectedFilters,
       sortByFilterSelected,

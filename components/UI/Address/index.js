@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-import Spin from 'static/spin.svg';
+import Spin from 'public/spin.svg';
 import AddressWrapper from './addressWrapper';
 import AddressLoader from './addressLoader';
 import AddressText from './addressText';

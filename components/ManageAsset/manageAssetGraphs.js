@@ -20,6 +20,7 @@ import {
   DEFAULT_TOKEN,
   DEFAULT_TOKEN_MAX_DECIMALS,
 } from 'constants/app';
+import DataSet from '@antv/data-set';
 let Bizcharts;
 if(typeof window !== 'undefined'){
   Bizcharts = require('bizcharts');
@@ -48,7 +49,7 @@ const ManageAssetGraphs = ({
   console.log("Graph data: ", graphData)
   console.log("Revenue data: ", revenueData);
 
-  const ds = new window.DataSet();
+  const ds = new DataSet();
   const dv = ds.createView().source(graphData.data);
   dv.transform({
     type: 'fold',

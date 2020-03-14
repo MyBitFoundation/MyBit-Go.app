@@ -6,13 +6,6 @@ import {
 } from 'constants/portfolioTypes';
 
 class PortfolioPage extends React.Component {
-  static getInitialProps (ctx) {
-    if(!ctx.query.type){
-      return {type: PortfolioTypes.INVESTMENTS};
-    }
-    return {type: ctx.query.type};
-  }
-
   render(){
   	return(
   		<PortfolioModule>

@@ -11,7 +11,6 @@ import CarouselWithNavigationButtons from "./carouselWithNavigationButtons";
 import CarouselWithNavigationButton from "./carouselWithNavigationButton";
 import CarouselWithNavigationArrow from "./carouselWithNavigationArrow";
 import CarouselWithNavigationWrapper from "./carouselWithNavigationWrapper";
-import RightArrow from "../../static/onboarding/arrow-right.png";
 
 class CarouselWithNavigation extends React.Component {
   constructor(props) {
