@@ -208,9 +208,9 @@ const AvailableAssetsSlide = ({
                   value={userCountry}
                 >
                   {countries.map(country => (
-                    <Option key={country} value={country}>
+                    <Select.Option key={country} value={country}>
                       {country}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </CarouselSlideSelect>
                 <GoogleAutoComplete

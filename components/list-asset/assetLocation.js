@@ -7,6 +7,9 @@ import {
   CarouselNextButton,
 } from 'components/CarouselSlide/';
 import GoogleAutoComplete from 'ui/GoogleAutoComplete';
+import {
+  Select,
+} from 'antd';
 const { GOOGLE_PLACES_API_KEY } = process.env;
 
 const AssetLocationSlide = ({
@@ -89,9 +92,9 @@ const AssetLocationSlide = ({
         }
       >
         {countries.map(country => (
-          <Option key={country} value={country}>
+          <Select.Option key={country} value={country}>
             {country}
-          </Option>
+          </Select.Option>
         ))}
       </CarouselSlideSelect>
       <CarouselSlideInput
