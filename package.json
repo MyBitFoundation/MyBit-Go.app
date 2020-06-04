@@ -60,6 +60,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development node lib/index.js",
+    "start:dev": "npm run compile-server && npm run dev",
     "build": "next build",
     "export": "next export -o build",
     "start": "NODE_ENV=production node lib/index.js",
