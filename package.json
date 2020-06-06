@@ -6,7 +6,7 @@
     "terser": "3.14.1"
   },
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "dependencies": {
     "3box": "^1.9.0",
