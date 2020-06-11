@@ -19,9 +19,7 @@ const ListAssetMobile = ({
   dev,
   handleSelectChange,
   handleInputChange,
-  handleCitySuggest,
   countries,
-  handleDetectLocationClicked,
   loadingAssets,
   formData,
   handleFileUpload,
@@ -97,11 +95,8 @@ const ListAssetMobile = ({
               loadingAssets={loadingAssets}
               handleInputChange={handleInputChange}
               countries={countries}
-              handleDetectLocationClicked={handleDetectLocationClicked}
-              handleCitySuggest={handleCitySuggest}
               error={false || metamaskErrorsToRender.render}
               airtableContext={airtableContext}
-              autoLocationOffline={autoLocationOffline}
               getCategoriesForAssets={getCategoriesForAssets}
             />
           ),

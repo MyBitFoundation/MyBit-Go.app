@@ -2,14 +2,7 @@ import Router from "next/router";
 import Media from 'react-media';
 import BN from 'bignumber.js';
 import { compose } from 'recompose'
-import {
-  Button,
-  Tooltip,
-  Carousel,
-} from "antd";
-import getConfig from 'next/config';
 import Cookie from 'js-cookie';
-import Geocode from "react-geocode";
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
@@ -43,7 +36,6 @@ import {
   FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
 const dev = process.env.NODE_ENV === 'development';
-const { publicRuntimeConfig } = getConfig();
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
@@ -229,36 +221,6 @@ class ListAssetPage extends React.Component {
     }
   };
 
-  handleDetectLocationClicked = () => {
-    Geocode.setApiKey(publicRuntimeConfig.GOOGLE_PLACES_API_KEY);
-
-    navigator.geolocation.getCurrentPosition(location => {
-      const {
-        latitude,
-        longitude,
-      } = location.coords;
-      Geocode.fromLatLng(latitude, longitude).then(
-        response => {
-          const locationData = processLocationData(response.results, ['country', 'locality']);
-          const {
-            locality,
-            country,
-          } = locationData;
-          const countryData = getCountry(country);
-          const countryCode = countryData ? countryData.iso2.toLowerCase() : '';
-
-          this.setState({
-            data: { ...this.state.data, userCity: locality, userCountry: country, countryCode, }
-          })
-        },
-        error => {
-          this.setState({autoLocationOffline: true})
-          console.error(error);
-        }
-      );
-    })
-  }
-
   handleSelectSuggest = suggest => {
     const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1', "street_number"]);
     const {
@@ -277,20 +239,6 @@ class ListAssetPage extends React.Component {
         assetProvince: locality,
         assetPostalCode: postal_code,
         searchAddress1: '',
-      }
-    })
-  }
-
-  handleCitySuggest = suggest => {
-    const locationData = processLocationData(suggest.address_components, ['locality']);
-    const {
-      locality,
-    } = locationData;
-    this.setState({
-      data: {
-        ...this.state.data,
-        userCity: locality,
-        searchCity: '',
       }
     })
   }
@@ -404,11 +352,9 @@ class ListAssetPage extends React.Component {
       setCheckedToS: this.setCheckedToS,
       handleSelectChange: this.handleSelectChange,
       handleInputChange: this.handleInputChange,
-      handleCitySuggest: this.handleCitySuggest,
       handleSelectedTokenChange: this.handleSelectedTokenChange,
       handleFileUpload: this.handleFileUpload,
       setUserListingAsset: this.setUserListingAsset,
-      handleDetectLocationClicked: this.handleDetectLocationClicked,
       handleSelectSuggest: this.handleSelectSuggest,
       goToNextStep: this.goToNextStep,
       goToStep: this.goToStep,
