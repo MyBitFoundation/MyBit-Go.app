@@ -52,7 +52,5 @@ module.exports = withBundleAnalyzer(withCss({
       reportFilename: '../bundles/client.html'
     }
   },
-  publicRuntimeConfig: {
-    GOOGLE_PLACES_API_KEY: process.NODE_ENV === 'production' && process.env.GOOGLE_PLACES_API_KEY,
-  }
+  publicRuntimeConfig: {}
 }));
