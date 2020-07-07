@@ -8,7 +8,6 @@ const multer = require('multer');
 const multerStorage = multer.memoryStorage();
 const port = process.env.port || 8081;
 const dev = process.env.NODE_ENV !== 'production';
-import * as CivicController from './controllers/civicController';
 import * as AwsController from './controllers/awsController';
 import * as AirTableController from './controllers/airTableController';
 
@@ -86,7 +85,7 @@ app
   server.get('/api/list-asset/auth', async (req, res) => {
     try{
       const jwt = req.header('Authorization').split('Bearer ')[1];
-      const userData = await CivicController.exchangeCode(jwt);
+      const userData = {};
       res.send(userData);
     }catch(err){
       res.statusCode = 500;
