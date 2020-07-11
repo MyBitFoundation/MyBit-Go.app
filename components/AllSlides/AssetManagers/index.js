@@ -4,7 +4,7 @@ import Who from './who';
 import HowIncentivised from './howIncentivised';
 import HowJob from './howJob';
 
-export const Slides = [{
+const Slides = [{
   Component: What,
   buttons: {
     hasNextButton: true,
@@ -40,3 +40,5 @@ export const Slides = [{
     nextButtonText: 'Get Started',
   }
 }];
+
+export default Slides;

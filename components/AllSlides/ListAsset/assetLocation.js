@@ -1,14 +1,16 @@
-import getConfig from 'next/config';
+import getConfig from "next/config";
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
   CarouselSlideParagraph,
   CarouselSlideInput,
   CarouselSlideSelect,
-  CarouselNextButton,
-} from 'components/CarouselSlide/';
-import GoogleAutoComplete from 'ui/GoogleAutoComplete';
+  CarouselNextButton
+} from "components/CarouselSlide/";
+import GoogleAutoComplete from "ui/GoogleAutoComplete";
 const { publicRuntimeConfig } = getConfig();
+
+console.log(publicRuntimeConfig);
 
 export const AssetLocationSlide = ({
   maxWidthDesktop,
@@ -18,7 +20,7 @@ export const AssetLocationSlide = ({
   handleSelectSuggest,
   desktopMode,
   onClick,
-  nextButtonDisabled,
+  nextButtonDisabled
 }) => {
   const {
     userCountry,
@@ -28,7 +30,7 @@ export const AssetLocationSlide = ({
     assetCity,
     assetProvince,
     assetPostalCode,
-    countryCode,
+    countryCode
   } = formData;
   return (
     <CarouselSlide
@@ -44,10 +46,7 @@ export const AssetLocationSlide = ({
       >
         Asset location?
       </CarouselSlideMainTitle>
-      <CarouselSlideParagraph
-        isCentered
-        maxWidthDesktop={maxWidthDesktop}
-      >
+      <CarouselSlideParagraph isCentered maxWidthDesktop={maxWidthDesktop}>
         This is where your asset is going to be once fully funded.
       </CarouselSlideParagraph>
       <GoogleAutoComplete
@@ -85,8 +84,7 @@ export const AssetLocationSlide = ({
         disabled={true}
         optionFilterProp="children"
         filterOption={(input, option) =>
-          option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-          0
+          option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
       >
         {countries.map(country => (
@@ -117,5 +115,5 @@ export const AssetLocationSlide = ({
         />
       )}
     </CarouselSlide>
-  )
+  );
 };

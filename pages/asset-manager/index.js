@@ -1,24 +1,22 @@
-import Router from 'next/router';
-import {
-  Slides,
-} from './slides';
+import Router from "next/router";
+import Slides from "../../components/AllSlides/AssetManagers";
 
-import CarouselWithNavigation from 'ui/CarouselWithNavigation';
+import CarouselWithNavigation from "ui/CarouselWithNavigation";
 
 const SliderNavigationTooltips = [
   { slide: 0, tooltip: "KYC" },
   { slide: 1, tooltip: "Location" },
   { slide: 2, tooltip: "Select Asset" },
   { slide: 3, tooltip: "Asset Location" },
-  { slide: 4, tooltip: "Supporting Documents" },
-]
+  { slide: 4, tooltip: "Supporting Documents" }
+];
 
 const AssetManager = () => (
   <React.Fragment>
     <CarouselWithNavigation
       redirectOnClose={{
-        href: 'list-asset',
-        as: 'list-asset',
+        href: "list-asset",
+        as: "list-asset"
       }}
       navigationTooltips={SliderNavigationTooltips}
       slides={Slides}

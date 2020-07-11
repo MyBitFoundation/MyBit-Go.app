@@ -11,7 +11,7 @@ import {
   SuccessSlide,
   TermsOfServiceSlide,
   GeneralDescriptionSlide
-} from "./slides";
+} from "../../components/AllSlides/ListAsset";
 
 const MAX_WIDTH_DESKTOP = "500px";
 
@@ -84,7 +84,7 @@ const ListAssetMobile = ({
             hasNextButton: true,
             hasBackButton: false,
             nextButtonText: !dev,
-            nextButtonHandler: !dev ,
+            nextButtonHandler: !dev,
             onSuccessMoveToNextSlide: true
           }
         },
