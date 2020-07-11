@@ -1,6 +1,6 @@
 import React from "react";
 import { hot } from "react-hot-loader/root";
-import App, { Container } from "next/app";
+import App from "next/app";
 import AirtableProvider, {
   withAirtableContext
 } from "components/AirtableContext";
@@ -80,7 +80,7 @@ class MyApp extends App {
     const isFullScreenPage = FULL_SCREEN_PAGES.includes(router.pathname);
 
     return (
-      <Container>
+      <>
         <GlobalStyle />
         <Head />
         <Theme>
@@ -111,7 +111,7 @@ class MyApp extends App {
             </MobileMenu>
           </WithProviders>
         </Theme>
-      </Container>
+      </>
     );
   }
 }

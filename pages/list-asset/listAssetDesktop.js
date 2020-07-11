@@ -61,9 +61,7 @@ const ListAssetDesktop = ({
   dev,
   handleSelectChange,
   handleInputChange,
-  handleCitySuggest,
   countries,
-  handleDetectLocationClicked,
   loadingAssets,
   formData,
   handleFileUpload,
@@ -148,14 +146,10 @@ const ListAssetDesktop = ({
           loadingAssets={loadingAssets}
           handleInputChange={handleInputChange}
           countries={countries}
-          handleDetectLocationClicked={handleDetectLocationClicked}
-          handleCitySuggest={handleCitySuggest}
           desktopMode
           nextButtonDisabled={!category || !asset || !assetValue || metamaskErrorsToRender.render}
           onClick={goToNextStep}
           error={false || metamaskErrorsToRender.render}
-          airtableContext={airtableContext}
-          autoLocationOffline={autoLocationOffline}
           getCategoriesForAssets={getCategoriesForAssets}
         />
       )}

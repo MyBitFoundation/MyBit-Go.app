@@ -10,7 +10,7 @@ export const debug = process.env.NODE_ENV === 'development' ? console.log : () =
 
 export const fromWeiToEth = weiValue => Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
 
-export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
+export const toWei = value => window.web3js.utils.toWei(isNaN(value) ? '0' :value.toString(), 'ether');
 
 export const formatValueForToken = (value, symbol) => {
   const decimalsForToken = getDecimalsForToken(symbol)
