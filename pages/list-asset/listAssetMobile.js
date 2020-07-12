@@ -11,7 +11,7 @@ import {
   SuccessSlide,
   TermsOfServiceSlide,
   GeneralDescriptionSlide
-} from "../../components/AllSlides/ListAsset";
+} from "./slides";
 
 const MAX_WIDTH_DESKTOP = "500px";
 

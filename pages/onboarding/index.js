@@ -1,5 +1,5 @@
 import CarouselWithNavigation from "ui/CarouselWithNavigation";
-import { Slides } from "../../components/AllSlides/Onboarding";
+import { Slides } from "./slides";
 import Router from "next/router";
 import BancorProvider from "components/BancorContext";
 

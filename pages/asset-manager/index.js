@@ -1,5 +1,5 @@
 import Router from "next/router";
-import Slides from "../../components/AllSlides/AssetManagers";
+import Slides from "./slides";
 
 import CarouselWithNavigation from "ui/CarouselWithNavigation";
 
