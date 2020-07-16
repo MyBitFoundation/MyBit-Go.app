@@ -23,7 +23,7 @@ const AboutWrapper = styled.div`
 const About = () => (
   <AboutWrapper>
     <Mybit />
-    <p>
+    <div>
       MyBit is operated and maintained by a DAO
       <div>DAO address:</div>
       <a
@@ -33,7 +33,7 @@ const About = () => (
       >
         0xcD3d9b832BfF15E0a519610372c6AAC651872DdE
       </a>
-    </p>
+    </div>
     <a
       href="https://github.com/MyBitFoundation/MyBit-Go.website/blob/develop/TOC.md"
       rel="noopener noreferrer"

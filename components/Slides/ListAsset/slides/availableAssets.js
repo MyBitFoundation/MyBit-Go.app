@@ -1,13 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import Router from 'next/router';
-import {
-  InputNumber,
-  Button,
-  Select,
-} from "antd";
-import getConfig from 'next/config';
-import GoogleAutoComplete from 'ui/GoogleAutoComplete';
+import { Select } from "antd";
 import AlertMessage from 'ui/AlertMessage';
 import {
   CarouselSlide,
@@ -28,39 +21,11 @@ import ThinkingIcon from 'static/ic_thinking.svg';
 import Spin from 'static/spin.svg';
 import LabelWithTooltip from 'ui/LabelWithTooltip';
 
-const { publicRuntimeConfig } = getConfig();
-
-const Image = styled.img`
-  position: relative;
-  margin: 10px auto;
-  width: 120px;
-  height: 120px;
-  margin-bottom: 40px;
-}`
-
-const ButtonWrapper = styled(Button)`
-  display: block;
-  margin: 0 auto;
-  margin-top: 50px;
-`
-
 const Loading = styled(Spin)`
   display: block;
   margin: 0 auto;
   height: 32px;
   width: 32px;
-`
-
-const DetectLocation = styled.p`
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 22px;
-  text-align: center;
-  color: ${({theme}) => theme.colors.blueMain};
-  cursor: pointer;
-  width: max-content;
-  margin: 0 auto;
-  margin-bottom: 1rem;
 `
 
 const SelectedAssetValueLabel = styled.p`
@@ -121,18 +86,14 @@ const AssetValueContainer = styled.div`
 export const AvailableAssetsSlide = ({
   handleSelectChange,
   formData,
-  airtableContext,
   maxWidthDesktop,
   loadingAssets,
-  handleDetectLocationClicked,
   countries,
   handleInputChange,
-  handleCitySuggest,
   desktopMode,
   onClick,
   nextButtonDisabled,
   error,
-  autoLocationOffline,
   getCategoriesForAssets,
 }) => {
   const {
@@ -141,8 +102,6 @@ export const AvailableAssetsSlide = ({
     assetValue,
     userCity,
     userCountry,
-    searchCity,
-    countryCode,
     cryptoPurchase,
   } = formData;
 
@@ -196,7 +155,6 @@ export const AvailableAssetsSlide = ({
               >
                 Different assets will be available to fund depending on where you are.
               </CarouselSlideParagraph>
-              {!autoLocationOffline && <DetectLocation onClick={handleDetectLocationClicked}>Detect Your Location</DetectLocation>}
               <div className="Slider__input-container">
                 <CarouselSlideSelect
                   isCentered
@@ -211,26 +169,19 @@ export const AvailableAssetsSlide = ({
                   value={userCountry}
                 >
                   {countries.map(country => (
-                    <Option key={country} value={country}>
+                    <Select.Option key={country} value={country}>
                       {country}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </CarouselSlideSelect>
-                <GoogleAutoComplete
-                  apiKey={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
-                  input={searchCity}
-                  countryCode={countryCode}
-                  onSelectSuggest={handleCitySuggest}
-                >
-                  <CarouselSlideInput
-                    isCentered
-                    placeholder="City"
-                    name="userCity"
-                    onChange={e => handleInputChange(e)}
-                    value={userCity}
-                    disabled={!userCountry}
-                  />
-                </GoogleAutoComplete>
+                <CarouselSlideInput
+                  isCentered
+                  placeholder="City"
+                  name="userCity"
+                  onChange={e => handleInputChange(e)}
+                  value={userCity}
+                  disabled={!userCountry}
+                />
               </div>
               <p style={{textAlign: 'center'}}>
                 {(!userCountry || !userCity)
