@@ -6,7 +6,17 @@ import {
   CarouselNextButton
 } from "components/CarouselSlide/";
 
+<<<<<<< HEAD:pages/list-asset/slides/intro.js
 export const IntroSlide = ({ maxWidthDesktop, desktopMode, onClick, dev }) => (
+=======
+export const IntroSlide = ({
+  maxWidthDesktop,
+  desktopMode,
+  onClick,
+  dev,
+  civic,
+}) => (
+>>>>>>> Move components from pages to components:components/Slides/ListAsset/slides/intro.js
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
     hasBoxShadow={desktopMode}
