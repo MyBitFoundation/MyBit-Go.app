@@ -8,8 +8,7 @@ const multer = require('multer');
 const multerStorage = multer.memoryStorage();
 const port = process.env.port || 8081;
 const dev = process.env.NODE_ENV !== 'production';
-import * as CivicController from './controllers/civicController';
-import * as AwsController from './controllers/awsController';
+// import * as AwsController from './controllers/awsController';
 import * as AirTableController from './controllers/airTableController';
 
 import {
@@ -83,28 +82,17 @@ app
     }
   });
 
-  server.get('/api/list-asset/auth', async (req, res) => {
-    try{
-      const jwt = req.header('Authorization').split('Bearer ')[1];
-      const userData = await CivicController.exchangeCode(jwt);
-      res.send(userData);
-    }catch(err){
-      res.statusCode = 500;
-      res.send(err);
-    }
-  });
-
-  server.get('/api/assets/files', (req, res) => {
-    res.json({
-      filesByAssetId: AwsController.filesByAssetId,
-    });
-  });
+  // server.get('/api/assets/files', (req, res) => {
+  //   res.json({
+  //     filesByAssetId: AwsController.filesByAssetId,
+  //   });
+  // });
 
   server.post('/api/files/upload', multipleUpload, async (req, res) => {
     const assetId = req.body.assetId;
     const files = req.files;
 
-    await AwsController.handleFileUpload(files, assetId, req, res);
+    // await AwsController.handleFileUpload(files, assetId, req, res);
     res.sendStatus(200);
   });
 
@@ -147,4 +135,4 @@ app
   process.exit(1)
 })
 
-AwsController.ProcessFilesForAssets();
+// AwsController.ProcessFilesForAssets();
