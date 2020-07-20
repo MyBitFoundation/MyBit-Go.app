@@ -11,11 +11,11 @@ import {
   FAQ,
   Buttons,
 } from 'constants/knowledgeBase';
-import HelpPageWrapper from './helpPageWrapper';
-import HelpPageButtons from './helpPageButtons';
-import HelpPageQuestion from './helpPageQuestion';
-import HelpPageAnswer from './helpPageAnswer';
-import HelpPageButton from './helpPageButton';
+import HelpPageWrapper from 'components/Help/helpPageWrapper';
+import HelpPageButtons from 'components/Help/helpPageButtons';
+import HelpPageQuestion from 'components/Help/helpPageQuestion';
+import HelpPageAnswer from 'components/Help/helpPageAnswer';
+import HelpPageButton from 'components/Help/helpPageButton';
 
 const { Panel } = Collapse;
 import ScrollableAnchor, { goToAnchor } from 'react-scrollable-anchor'

@@ -11,7 +11,7 @@ import {
   SuccessSlide,
   TermsOfServiceSlide,
   GeneralDescriptionSlide,
-} from "./slides";
+} from "components/Slides/ListAsset/slides";
 import CustomTimeline from './customTimeline';
 
 const MAX_WIDTH_DESKTOP = "450px";

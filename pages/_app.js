@@ -1,29 +1,27 @@
-import React from "react";
-import { hot } from "react-hot-loader/root";
-import App, { Container } from "next/app";
-import AirtableProvider, {
-  withAirtableContext
-} from "components/AirtableContext";
-import BlockchainProvider from "components/BlockchainContext";
-import KyberProvider from "components/KyberContext";
-import AssetsProvider from "components/AssetsContext";
-import NotificationsProvider from "components/NotificationsContext";
-import ThreeBoxProvider from "components/ThreeBoxContext";
-import TermsOfServiceProvider from "components/TermsOfServiceContext";
-import Notifications from "components/Notifications";
-import MetamaskProvider from "components/MetamaskContext";
-import Head from "components/Head";
-import GlobalStyle from "components/globalStyle";
-import AppWrapper from "components/AppWrapper";
-import Theme from "components/Theme";
-import MobileMenu from "components/MobileMenu";
-import Cookie from "js-cookie";
-import Router from "next/router";
-import Footer from "ui/Footer";
-import { navbarOptions } from "constants/navigationBar";
-import { FULL_SCREEN_PAGES } from "constants/fullScreenPages";
-import { COOKIES } from "constants/cookies";
-import { SUPPORTED_NETWORKS } from "constants/supportedNetworks";
+import React from 'react';
+import { hot } from 'react-hot-loader/root'
+import App, { Container } from 'next/app';
+import AirtableProvider, { withAirtableContext } from 'components/AirtableContext';
+import BlockchainProvider from 'components/BlockchainContext';
+import KyberProvider from 'components/KyberContext';
+import AssetsProvider from 'components/AssetsContext';
+import NotificationsProvider from 'components/NotificationsContext';
+import ThreeBoxProvider from 'components/ThreeBoxContext';
+import TermsOfServiceProvider from 'components/TermsOfServiceContext';
+import Notifications from 'components/Notifications';
+import MetamaskProvider from 'components/MetamaskContext';
+import Head from 'components/Head';
+import GlobalStyle from 'components/globalStyle';
+import AppWrapper from 'components/AppWrapper';
+import Theme from 'components/Theme'
+import MobileMenu from 'components/MobileMenu'
+import Cookie from 'js-cookie';
+import Router from 'next/router';
+import Footer from 'ui/Footer';
+import { navbarOptions } from 'constants/navigationBar';
+import { FULL_SCREEN_PAGES } from 'constants/fullScreenPages';
+import { COOKIES } from 'constants/cookies';
+import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
 
 class MyApp extends App {
   state = {
@@ -45,9 +43,9 @@ class MyApp extends App {
     }
   };
 
-  setNetwork = network => this.setState({ network });
+  setNetwork = network => this.setState({ network })
 
-  setUserHasMetamask = userHasMetamask => this.setState({ userHasMetamask });
+  setUserHasMetamask = userHasMetamask => this.setState({ userHasMetamask })
 
   prefetchPages = () => {
     Router.prefetch("/onboarding");
@@ -116,15 +114,12 @@ class MyApp extends App {
   }
 }
 
-const WithProviders = ({
-  children,
-  setNetwork,
-  network,
-  setUserHasMetamask,
-  userHasMetamask
-}) => (
+const WithProviders = ({ children, setNetwork, network, setUserHasMetamask, userHasMetamask }) => (
   <NotificationsProvider>
-    <AirtableProvider network={network} userHasMetamask={userHasMetamask}>
+    <AirtableProvider
+      network={network}
+      userHasMetamask={userHasMetamask}
+    >
       <KyberProvider
         network={network}
         supportedNetworks={SUPPORTED_NETWORKS}
@@ -136,9 +131,13 @@ const WithProviders = ({
           setUserHasMetamask={setUserHasMetamask}
         >
           <AssetsProvider>
-            <BlockchainProvider supportedNetworks={SUPPORTED_NETWORKS}>
+            <BlockchainProvider
+              supportedNetworks={SUPPORTED_NETWORKS}
+            >
               <ThreeBoxProvider>
-                <TermsOfServiceProvider>{children}</TermsOfServiceProvider>
+                <TermsOfServiceProvider>
+                  {children}
+                </TermsOfServiceProvider>
               </ThreeBoxProvider>
             </BlockchainProvider>
           </AssetsProvider>
