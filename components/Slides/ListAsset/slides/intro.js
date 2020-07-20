@@ -6,9 +6,6 @@ import {
   CarouselNextButton
 } from "components/CarouselSlide/";
 
-<<<<<<< HEAD:pages/list-asset/slides/intro.js
-export const IntroSlide = ({ maxWidthDesktop, desktopMode, onClick, dev }) => (
-=======
 export const IntroSlide = ({
   maxWidthDesktop,
   desktopMode,
@@ -16,7 +13,6 @@ export const IntroSlide = ({
   dev,
   civic,
 }) => (
->>>>>>> Move components from pages to components:components/Slides/ListAsset/slides/intro.js
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
     hasBoxShadow={desktopMode}
@@ -38,7 +34,10 @@ export const IntroSlide = ({
     >
       Here is a list of things you’ll need.
     </CarouselSlideParagraph>
-    <CarouselSlideList hasDescriptions maxWidthDesktop={maxWidthDesktop}>
+    <CarouselSlideList
+      hasDescriptions
+      maxWidthDesktop={maxWidthDesktop}
+    >
       <li>Location of your asset</li>
       <p>
         Enter a location. For investors, it's important they know exactly where

@@ -39,7 +39,7 @@ const Welcome = () => (
     />
     <WelcomeWrapper>
       <CarouselSlideMainTitle>
-        Welcome to MyBit Go
+        Welcome to MyBit
       </CarouselSlideMainTitle>
     </WelcomeWrapper>
     <CarouselSlideParagraph
@@ -47,12 +47,12 @@ const Welcome = () => (
       isShorter
     >
       <strong>
-        MyBit Go brings power and control back to you. Invest without a
+        MyBit brings power and control back to you. Invest without a
         bank, broker, fund or third-party.
       </strong>
     </CarouselSlideParagraph>
     <CarouselSlideParagraph>
-      MyBit Go is a secure investment platform available to anyone. It
+      MyBit is a secure investment platform available to anyone. It
       enables you to invest in high ROI opportunities and receive
       revenue in real-time.
     </CarouselSlideParagraph>

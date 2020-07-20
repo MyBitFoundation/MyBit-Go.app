@@ -25,12 +25,12 @@ import SupportedBrowsers from 'ui/SupportedBrowsers';
 
 const { Provider, Consumer } = React.createContext({});
 
-// Required so we can trigger getInitialProps in our exported pages
+// Required so we can trigger getServerSideProps in our exported pages
 export const withMetamaskContextPageWrapper = (Component) => {
   return class Higher extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
+    static getServerSideProps(ctx) {
+      if(Component.getServerSideProps)
+        return Component.getServerSideProps(ctx);
       else return {};
     }
     render(){

@@ -37,7 +37,7 @@ const AssetManager = ({
   }
 }
 
-AssetManager.getInitialProps = ctx => {
+AssetManager.getServerSideProps = ctx => {
   return { managerAddress: ctx.query.id };
 }
 

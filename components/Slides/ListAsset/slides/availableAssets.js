@@ -7,7 +7,6 @@ import {
   Select,
 } from "antd";
 import getConfig from 'next/config';
-import GoogleAutoComplete from 'ui/GoogleAutoComplete';
 import AlertMessage from 'ui/AlertMessage';
 import {
   CarouselSlide,
@@ -27,8 +26,6 @@ import {
 import ThinkingIcon from 'static/ic_thinking.svg';
 import Spin from 'static/spin.svg';
 import LabelWithTooltip from 'ui/LabelWithTooltip';
-
-const { publicRuntimeConfig } = getConfig();
 
 const Image = styled.img`
   position: relative;
@@ -56,7 +53,7 @@ const DetectLocation = styled.p`
   font-size: 14px;
   line-height: 22px;
   text-align: center;
-  color: ${({theme}) => theme.colors.blueMain};
+  color: ${({ theme }) => theme.colors.blueMain};
   cursor: pointer;
   width: max-content;
   margin: 0 auto;
@@ -81,7 +78,7 @@ const NoResults = styled.div`
   p:nth-child(2){
     margin: 0px;
     font-size: 16px;
-    color: ${({theme}) => theme.colors.blackish};
+    color: ${({ theme }) => theme.colors.blackish};
     font-weight: 500;
   }
 `
@@ -124,7 +121,6 @@ export const AvailableAssetsSlide = ({
   airtableContext,
   maxWidthDesktop,
   loadingAssets,
-  handleDetectLocationClicked,
   countries,
   handleInputChange,
   handleCitySuggest,
@@ -149,11 +145,11 @@ export const AvailableAssetsSlide = ({
   let areAssetsAvailable = true;
   let categories = {};
   let assetsAvailable = [];
-  if(userCountry && userCity && !loadingAssets){
-    categories = getCategoriesForAssets(userCountry, userCity);
-    assetsAvailable = (category && categories[category]) || [];
-    areAssetsAvailable = Object.keys(categories).length > 0;
-  }
+  // if (userCountry && userCity) {
+  //   categories = getCategoriesForAssets(userCountry, userCity);
+  //   assetsAvailable = (category && categories[category]) || [];
+  //   areAssetsAvailable = Object.keys(categories).length > 0;
+  // }
 
   return (
     <CarouselSlide
@@ -177,16 +173,16 @@ export const AvailableAssetsSlide = ({
             </React.Fragment>
           </CarouselSlideMainTitle>
           {loadingAssets && (
-              <React.Fragment>
-                <CarouselSlideParagraph
-                  isCentered
-                  maxWidthDesktop={maxWidthDesktop}
-                  style={{marginTop: '60px'}}
-                >
-                  Loading assets
+            <React.Fragment>
+              <CarouselSlideParagraph
+                isCentered
+                maxWidthDesktop={maxWidthDesktop}
+                style={{ marginTop: '60px' }}
+              >
+                Loading assets
                 </CarouselSlideParagraph>
-                 <Loading />
-              </React.Fragment>
+              <Loading />
+            </React.Fragment>
           )}
           {!loadingAssets && (
             <React.Fragment>
@@ -196,7 +192,6 @@ export const AvailableAssetsSlide = ({
               >
                 Different assets will be available to fund depending on where you are.
               </CarouselSlideParagraph>
-              {!autoLocationOffline && <DetectLocation onClick={handleDetectLocationClicked}>Detect Your Location</DetectLocation>}
               <div className="Slider__input-container">
                 <CarouselSlideSelect
                   isCentered
@@ -216,31 +211,61 @@ export const AvailableAssetsSlide = ({
                     </Option>
                   ))}
                 </CarouselSlideSelect>
-                <GoogleAutoComplete
-                  apiKey={publicRuntimeConfig.GOOGLE_PLACES_API_KEY}
-                  input={searchCity}
-                  countryCode={countryCode}
-                  onSelectSuggest={handleCitySuggest}
-                >
-                  <CarouselSlideInput
-                    isCentered
-                    placeholder="City"
-                    name="userCity"
-                    onChange={e => handleInputChange(e)}
-                    value={userCity}
-                    disabled={!userCountry}
-                  />
-                </GoogleAutoComplete>
-              </div>
-              <p style={{textAlign: 'center'}}>
-                {(!userCountry || !userCity)
-                  ? 'The list of assets available to you will be shown below'
+                <CarouselSlideInput
+                  isCentered
+                  placeholder="City"
+                  name="userCity"
+                  onChange={e => handleInputChange(e)}
+                  value={userCity}
+                  disabled={!userCountry}
+                />
+
+                {/* <p style={{ textAlign: 'center' }}>
+                  {(!userCountry || !userCity)
+                    ? 'The list of assets available to you will be shown below'
                     : areAssetsAvailable
-                  ? 'Below is the list of assets available to you.'
-                    : ''
-                }
-              </p>
-              {(areAssetsAvailable && userCountry && userCity) && (
+                      ? 'Below is the list of assets available to you.'
+                      : ''
+                  }
+                </p> */}
+
+                <CarouselSlideInput
+                  isCentered
+                  placeholder="Asset Name"
+                  name="asset"
+                  onChange={e => handleInputChange(e)}
+                  value={asset}
+                />
+
+                <SelectedAssetValueLabel>Selected Asset value:</SelectedAssetValueLabel>
+                <AssetValueContainer cryptoPurchase={cryptoPurchase}>
+                  {/* <CarouselSlideInput
+                    isCentered
+                    placeholder="Asset Name"
+                    type="number"
+                    name="assetValue"
+                    onChange={e => handleInputChange(e)}
+                    value={asset}
+                  /> */}
+                  <CarouselSlideInputNumber
+                    isCentered
+                    placeholder="Funding Goal"
+                    name="assetValue"
+                    value={assetValue}
+                    onChange={e => handleInputChange(e)}
+                    style={cryptoPurchase === false ? { marginRight: '10px', marginBottom: '5px' } : {}}
+                  />
+                  {cryptoPurchase === false && (
+                    <LabelWithTooltip
+                      title={'8% fiat fee incl.'}
+                      tooltipText="The asset incurs an additional 8% fee on top of the total investment to cover most exchanges
+                          fees in order to transfer the money into its fiat equivalent."
+                      isDark
+                    />
+                  )}
+                </AssetValueContainer>
+              </div>
+              {/* {(areAssetsAvailable && userCountry && userCity) && (
                 <React.Fragment>
                   <CarouselSlideSelect
                     isCentered
@@ -255,24 +280,25 @@ export const AvailableAssetsSlide = ({
                     }
                   >
                     {Object.keys(categories).map(cat => (
-                        <Select.Option key={cat} value={cat}>
-                          {cat}
-                        </Select.Option>
-                      ))}
+                      <Select.Option key={cat} value={cat}>
+                        {cat}
+                      </Select.Option>
+                    ))}
                   </CarouselSlideSelect>
                   <CarouselSlideSelect
                     isCentered
                     showSearch
                     placeholder="Available Assets"
-                    onChange={value => handleSelectChange({modelId: value}, "asset")}
+                    onChange={value => handleSelectChange({ modelId: value }, "asset")}
                     value={asset}
                   >
                     {assetsAvailable.map(asset => {
                       return (
                         <Select.Option key={asset.name} value={asset.modelId}>
-                          <span style={{display: 'flex', justifyContent: 'space-between'}}><span>{asset.name}</span><a href={asset.url} target="_blank">View</a></span>
+                          <span style={{ display: 'flex', justifyContent: 'space-between' }}><span>{asset.name}</span><a href={asset.url} target="_blank">View</a></span>
                         </Select.Option>
-                      )}
+                      )
+                    }
                     )}
                   </CarouselSlideSelect>
                   <SelectedAssetValueLabel>Selected Asset value:</SelectedAssetValueLabel>
@@ -284,10 +310,10 @@ export const AvailableAssetsSlide = ({
                       name="assetValue"
                       value={assetValue}
                       formatter={value =>
-                       !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       }
                       parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                       style={cryptoPurchase === false ? {marginRight: '10px', marginBottom: '5px'} : {}}
+                      style={cryptoPurchase === false ? { marginRight: '10px', marginBottom: '5px' } : {}}
                     />
                     {cryptoPurchase === false && (
                       <LabelWithTooltip
@@ -299,7 +325,7 @@ export const AvailableAssetsSlide = ({
                     )}
                   </AssetValueContainer>
                 </React.Fragment>
-              )}
+              )} */}
               {error && (
                 <AlertMessageWrapper>
                   <AlertMessage
@@ -309,13 +335,6 @@ export const AvailableAssetsSlide = ({
                     closable={false}
                   />
                 </AlertMessageWrapper>
-              )}
-              {(!areAssetsAvailable && !error) && (
-                <NoResults>
-                  <ThinkingIcon />
-                  <p>No Assets Available Yet</p>
-                  <p>Looks like your region is not yet available</p>
-                </NoResults>
               )}
               {desktopMode && (
                 <CarouselNextButton

@@ -45,7 +45,7 @@ const NextGeneration = () => (
       isTitle
       isBig
     >
-      What can you use MyBit Go for?
+      What can you use MyBit for?
     </CarouselSlideParagraph>
     <CarouselSlideList>
       <li>
@@ -66,7 +66,7 @@ const NextGeneration = () => (
         annual distributions
       </li>
       <li>
-        Be protected from failure. If MyBit Go ceases to exist, your
+        Be protected from failure. If MyBit ceases to exist, your
         investments will still be safe
       </li>
     </CarouselSlideList>

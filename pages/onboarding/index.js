@@ -6,8 +6,8 @@ import Router from 'next/router';
 import BancorProvider from 'components/BancorContext';
 
 const SliderNavigationTooltips = [
-  { slide: 0, tooltip: 'What is MyBit Go?' },
-  { slide: 1, tooltip: 'What can you use MyBit Go for?' },
+  { slide: 0, tooltip: 'What is MyBit?' },
+  { slide: 1, tooltip: 'What can you use MyBit for?' },
   { slide: 2, tooltip: 'What it isn\'t?' },
   { slide: 3, tooltip: 'What is blockchain?' },
   { slide: 4, tooltip: 'What are the benefits?' },
@@ -19,7 +19,7 @@ const SliderNavigationTooltips = [
 ];
 
 class OnboardingPage extends React.Component {
-  static async getInitialProps (ctx) {
+  static async getServerSideProps (ctx) {
     if(ctx.req){
       return {redirectTo: ctx.query.redirectTo};
     } else {

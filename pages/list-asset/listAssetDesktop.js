@@ -33,7 +33,7 @@ const ListAssetDesktopWrapper = styled.div`
     width: 60%;
   }
 
-  ${({theme}) => theme.laptop`
+  ${({ theme }) => theme.laptop`
     & > ul{
      margin-left: auto;
      margin-right: 50px;
@@ -46,12 +46,12 @@ const PageTitle = styled.div`
   font-family: Gilroy;
   font-size: 32px;
   line-height: 40px;
-  color: ${({theme}) => theme.colors.black};
+  color: ${({ theme }) => theme.colors.black};
   position: absolute;
   left: 10px;
   top: -70px;
 
-  ${({theme}) => theme.laptop`
+  ${({ theme }) => theme.laptop`
     left: -5px;
   `}
 `
@@ -63,7 +63,6 @@ const ListAssetDesktop = ({
   handleInputChange,
   handleCitySuggest,
   countries,
-  handleDetectLocationClicked,
   loadingAssets,
   formData,
   handleFileUpload,
@@ -96,6 +95,7 @@ const ListAssetDesktop = ({
     category,
     asset,
     assetValue,
+    userCity,
     userCountry,
     assetAddress1,
     assetCity,
@@ -116,7 +116,7 @@ const ListAssetDesktop = ({
     fees,
   } = formData;
 
-  if(step === 0){
+  if (step === 0) {
     return (
       <IntroSlide
         maxWidthDesktop="600px"
@@ -148,10 +148,9 @@ const ListAssetDesktop = ({
           loadingAssets={loadingAssets}
           handleInputChange={handleInputChange}
           countries={countries}
-          handleDetectLocationClicked={handleDetectLocationClicked}
           handleCitySuggest={handleCitySuggest}
           desktopMode
-          nextButtonDisabled={!category || !asset || !assetValue || metamaskErrorsToRender.render}
+          nextButtonDisabled={!userCountry || !userCity || !asset || assetValue > 0}
           onClick={goToNextStep}
           error={false || metamaskErrorsToRender.render}
           airtableContext={airtableContext}
@@ -184,8 +183,8 @@ const ListAssetDesktop = ({
             assetCity !== "" &&
             assetProvince !== "" &&
             assetPostalCode !== ""
-              ? false
-              : true
+            ? false
+            : true
           }
           onClick={goToNextStep}
         />
@@ -237,8 +236,8 @@ const ListAssetDesktop = ({
           assetId={listedAssetId}
           desktopMode
         />
-       )}
-       {(step === 7 && !listedAssetId && readToS) && (
+      )}
+      {(step === 7 && !listedAssetId && readToS) && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}

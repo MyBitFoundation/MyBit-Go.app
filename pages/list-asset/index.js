@@ -9,7 +9,6 @@ import {
 } from "antd";
 import getConfig from 'next/config';
 import Cookie from 'js-cookie';
-import Geocode from "react-geocode";
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
@@ -26,7 +25,7 @@ import {
   DEFAULT_TOKEN,
   getPlatformTokenContract,
 } from 'constants/app';
-import { COOKIES } from 'constants/cookies';
+import { COOKIES } from 'constants/cookies';
 import calculateCollateral from 'constants/calculateCollateral';
 import {
   convertFromPlatformToken,
@@ -43,7 +42,6 @@ import {
   FIAT_TO_CRYPTO_CONVERSION_FEE,
 } from 'constants/platformFees';
 const dev = process.env.NODE_ENV === 'development';
-const { publicRuntimeConfig } = getConfig();
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
@@ -60,6 +58,7 @@ class ListAssetPage extends React.Component {
         partnerContractAddress: '',
         hasAdditionalCosts: false,
         additionalCosts: 0,
+        assetValue: 0
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
@@ -86,12 +85,12 @@ class ListAssetPage extends React.Component {
   }
 
   componentWillUnmount = () => {
-     this.ismounted = false;
-     document.removeEventListener('keydown', this.handleKeyDown);
+    this.ismounted = false;
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   setUserListingAsset = (isUserListingAsset, listedAssetId) => {
-    if(!this.ismounted){
+    if (!this.ismounted) {
       return;
     }
     this.setState({
@@ -101,29 +100,35 @@ class ListAssetPage extends React.Component {
   }
 
   handleInputChange = e => {
-    const {
-      name,
-      value,
-    } = e.target;
-
-    if(name === 'assetAddress1'){
+    if (e.target) {
+      const {
+        name,
+        value,
+      } = e.target;
+      if (name === 'assetAddress1') {
+        this.setState({
+          data: { ...this.state.data, assetAddress1: value, searchAddress1: value, }
+        });
+      } else if (name === 'userCity') {
+        this.setState({
+          data: { ...this.state.data, searchCity: value, userCity: value, }
+        });
+      }
+      else {
+        this.setState({
+          data: { ...this.state.data, [name]: value }
+        });
+      }
+    } else {
+      // selected asset value
       this.setState({
-        data: { ...this.state.data, assetAddress1: value, searchAddress1: value, }
-      });
-    } else if(name === 'userCity'){
-      this.setState({
-        data: { ...this.state.data, searchCity: value, userCity: value, }
-      });
-    }
-    else {
-      this.setState({
-        data: { ...this.state.data, [name]: value }
-      });
+        data: { ...this.state.data, assetValue: e }
+      })
     }
   };
 
   handleSelectedTokenChange = selectedToken => {
-    this.setState({data: {...this.state.data, selectedToken}}, () => this.recalculateCollateral(this.state.data.modelId))
+    this.setState({ data: { ...this.state.data, selectedToken } }, () => this.recalculateCollateral(this.state.data.modelId))
   }
 
   recalculateCollateral = modelId => {
@@ -191,12 +196,12 @@ class ListAssetPage extends React.Component {
     const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
     const tokenSlippagePercentages = calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInDefaultToken, false)
       .then(tokenSlippagePercentages => {
-        this.setState({tokenSlippagePercentages, loadingConversionInfo: false})
+        this.setState({ tokenSlippagePercentages, loadingConversionInfo: false })
       })
   }
 
   handleSelectChange = (value, name) => {
-    if(name === 'asset'){
+    if (name === 'asset') {
       const modelId = value.modelId;
       this.recalculateCollateral(modelId);
     } else {
@@ -205,19 +210,19 @@ class ListAssetPage extends React.Component {
           data: { ...this.state.data, [name]: value }
         },
         () => {
-          switch(name) {
+          switch (name) {
             case 'userCountry': {
               const countryData = getCountry(value);
               const countryCode = countryData ? countryData.iso2.toLowerCase() : '';
 
               this.setState({
-                data: { ...this.state.data, assetCountry: value, category: '', asset: undefined, assetValue: undefined, countryCode, userCity: undefined}
-              });break;
+                data: { ...this.state.data, assetCountry: value, category: '', asset: undefined, assetValue: undefined, countryCode, userCity: undefined }
+              }); break;
             }
             case 'category': {
               this.setState({
                 data: { ...this.state.data, category: value, asset: undefined, assetValue: undefined, }
-              });break;
+              }); break;
             }
             case 'additionalCosts': {
               this.recalculateCollateral();
@@ -228,36 +233,6 @@ class ListAssetPage extends React.Component {
       );
     }
   };
-
-  handleDetectLocationClicked = () => {
-    Geocode.setApiKey(publicRuntimeConfig.GOOGLE_PLACES_API_KEY);
-
-    navigator.geolocation.getCurrentPosition(location => {
-      const {
-        latitude,
-        longitude,
-      } = location.coords;
-      Geocode.fromLatLng(latitude, longitude).then(
-        response => {
-          const locationData = processLocationData(response.results, ['country', 'locality']);
-          const {
-            locality,
-            country,
-          } = locationData;
-          const countryData = getCountry(country);
-          const countryCode = countryData ? countryData.iso2.toLowerCase() : '';
-
-          this.setState({
-            data: { ...this.state.data, userCity: locality, userCountry: country, countryCode, }
-          })
-        },
-        error => {
-          this.setState({autoLocationOffline: true})
-          console.error(error);
-        }
-      );
-    })
-  }
 
   handleSelectSuggest = suggest => {
     const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1', "street_number"]);
@@ -300,15 +275,15 @@ class ListAssetPage extends React.Component {
     filesObject.file.status = 'success';
     let files = filesObject.fileList;
     // apply file size restriction
-    for(let i = 0; i < files.length; i++){
-      if(files[i].size > MAX_FILE_SIZE){
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
         files = files.filter(file => file !== files[i]);
         i--;
       }
     }
 
     // apply number of files restriction
-    if(files.length > MAX_FILES_UPLOAD){
+    if (files.length > MAX_FILES_UPLOAD) {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
@@ -319,16 +294,16 @@ class ListAssetPage extends React.Component {
   };
 
   goToNextStep = () => {
-    this.setState({step: this.state.step + 1});
+    this.setState({ step: this.state.step + 1 });
   }
 
   goToStep = step => {
-    if(!this.state.listedAssetId){
-      this.setState({step});
+    if (!this.state.listedAssetId) {
+      this.setState({ step });
     }
   }
 
-  setCheckedToS = () => this.setState(prevState => ({checkedToS: !prevState.checkedToS}));
+  setCheckedToS = () => this.setState(prevState => ({ checkedToS: !prevState.checkedToS }));
 
   render() {
     const {
@@ -362,7 +337,7 @@ class ListAssetPage extends React.Component {
       checkedToS,
       tokenSlippagePercentages,
       autoLocationOffline,
-     } = this.state;
+    } = this.state;
 
     const {
       managementFee,
@@ -408,7 +383,6 @@ class ListAssetPage extends React.Component {
       handleSelectedTokenChange: this.handleSelectedTokenChange,
       handleFileUpload: this.handleFileUpload,
       setUserListingAsset: this.setUserListingAsset,
-      handleDetectLocationClicked: this.handleDetectLocationClicked,
       handleSelectSuggest: this.handleSelectSuggest,
       goToNextStep: this.goToNextStep,
       goToStep: this.goToStep,
@@ -423,10 +397,10 @@ class ListAssetPage extends React.Component {
         <Media query="(min-width: 768px)">
           {matches =>
             matches ? (
-              <ListAssetDesktop {...propsToPass}/>
+              <ListAssetDesktop {...propsToPass} />
             ) : (
-              <ListAssetMobile {...propsToPass} />
-            )
+                <ListAssetMobile {...propsToPass} />
+              )
           }
         </Media>
       </div>

@@ -7,9 +7,9 @@ const SPACE_ID = 'MYBIT_GO'
 
 export const withThreeBoxContext = (Component) => {
     return class Higher extends React.Component{
-      static getInitialProps(ctx) {
-        if(Component.getInitialProps)
-          return Component.getInitialProps(ctx);
+      static getServerSideProps(ctx) {
+        if(Component.getServerSideProps)
+          return Component.getServerSideProps(ctx);
         else return {};
       }
       render(){

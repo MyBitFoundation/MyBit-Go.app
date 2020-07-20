@@ -11,6 +11,6 @@ const ManageAssetPage = ({
   </ManageAssetModule>
 );
 
-ManageAssetPage.getInitialProps = ctx => ({assetId: ctx.query.id});
+ManageAssetPage.getServerSideProps = ctx => ({assetId: ctx.query.id});
 
 export default ManageAssetPage;

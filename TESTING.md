@@ -4,18 +4,18 @@
 >— Aristotle
 
 
-#### What is MyBit Go?
-MyBit Go enables anyone to invest directly in IoT assets.
+#### What is MyBit?
+MyBit enables anyone to invest directly in IoT assets.
 The app is in its' concept and implementation decentralized.  
 It is composed to avoid any single point of failure.  The data are stored using blockchain, providing trustless interaction.
 
 
-#### MyBit Go Requirements
-In order to use MyBit Go, make sure you have up to date browser and a good Internet connection. Internet Explorer is not up to date browser.
+#### MyBit Requirements
+In order to use MyBit, make sure you have up to date browser and a good Internet connection. Internet Explorer is not up to date browser.
 Recommended browsers are [Brave](https://brave.com/), [Firefox](https://www.mozilla.org/en-US/firefox/new/) or [Chrome](https://www.google.com/chrome/). 
 
 [Metamask](https://metamask.io/) web3 plugin is required for blockchain interplay as browser extension.
-MyBit Go don't require a middleman to function or to manage a user's data.
+MyBit don't require a middleman to function or to manage a user's data.
 
 
 ##### How to install Metamask?
@@ -31,12 +31,12 @@ MyBit Go don't require a middleman to function or to manage a user's data.
 5. Now you can view your wallet address on Etherscan
 
 
-##### MyBit Go Metamask Warning Popup
-MyBit Go requires Metamask as the bridge to Ethereum blockchain. If the extension is not properly governing the Warning popup will be prompted. After the extension is installed and a user wallet is properly set up the app will be fully operative. 
+##### MyBit Metamask Warning Popup
+MyBit requires Metamask as the bridge to Ethereum blockchain. If the extension is not properly governing the Warning popup will be prompted. After the extension is installed and a user wallet is properly set up the app will be fully operative. 
 
 
 #### Blockchain Networks
-Currently, MyBit Go performs at the Ethereum Ropsten Network. Practicing Metamask proper network needs to be selected. Main Network will be supported after the testing phase. 
+Currently, MyBit performs at the Ethereum Ropsten Network. Practicing Metamask proper network needs to be selected. Main Network will be supported after the testing phase. 
 The app will show warning popup if the wrong network is selected.
 
 
@@ -78,7 +78,7 @@ The data are stored using Ethereum blockchain. The MyBit Smart Contracts are let
 
 
 #### Portfolio and Investments
-Activity on MyBit Go platform is designated in Portfolio section. Total Portfolio Value and particular Asset value is presented. 
+Activity on MyBit platform is designated in Portfolio section. Total Portfolio Value and particular Asset value is presented. 
 
 
 #### Transaction list

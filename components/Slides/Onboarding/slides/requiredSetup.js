@@ -44,7 +44,7 @@ const RequiredSetup = withBancorContext(({
     <CarouselSlideParagraph
       isTitle
     >
-      Before you are able to use the MyBit Go platform, you will
+      Before you are able to use the MyBit platform, you will
       need the following:
     </CarouselSlideParagraph>
     <CarouselSlideParagraph
@@ -65,7 +65,7 @@ const RequiredSetup = withBancorContext(({
       isShorter
     >
       Cryptocurrency, such as Ether or DAI, which are the main
-      cryptocurrencies MyBit Go uses to invest in assets; however,
+      cryptocurrencies MyBit uses to invest in assets; however,
       many more are supported.{" "}
       <a
         href="/bankor"

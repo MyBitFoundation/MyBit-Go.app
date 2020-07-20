@@ -58,7 +58,7 @@ const InvestmentFund = ({
       isLong
       isSmallMobile
     >
-      MyBit Go is&nbsp;
+      MyBit is&nbsp;
       <CarouselSlideColoredSpan
         isRed
       >

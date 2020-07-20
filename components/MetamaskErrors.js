@@ -8,9 +8,9 @@ import BackButton from 'ui/BackButton';
 
 export const withMetamaskErrors = (Component, shouldRenderComponent = true, hasBackButton = false) => {
   return class withMetamaskErrors extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
+    static getServerSideProps(ctx) {
+      if(Component.getServerSideProps)
+        return Component.getServerSideProps(ctx);
       else return {};
     }
     render(){

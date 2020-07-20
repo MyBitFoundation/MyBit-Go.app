@@ -42,7 +42,7 @@ const Why = ({
     <CarouselSlideParagraph
       hasMarginTop
     >
-        In a perfect, futuristic world the MyBit Go ecosystem could be fully automated.
+        In a perfect, futuristic world the MyBit ecosystem could be fully automated.
     </CarouselSlideParagraph>
     <CarouselSlideParagraph>
         So, when an asset has an issue, it could request another

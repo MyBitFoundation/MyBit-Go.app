@@ -14,7 +14,7 @@ export const Slides = [{
   buttons: {
     hasNextButton: true,
     hasBackButton: false,
-    nextButtonText: 'More on MyBit Go',
+    nextButtonText: 'More on MyBit',
   }
 }, {
   Component: NextGeneration,

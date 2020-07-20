@@ -25,7 +25,7 @@ const What = ({
       isIntro
       isFullWidth
     >
-      Asset Managers are critical to the MyBit Go platform.
+      Asset Managers are critical to the MyBit platform.
       They supervise the assets and are responsible for:
     </CarouselSlideParagraph>
 

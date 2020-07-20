@@ -22,7 +22,7 @@ import ScrollableAnchor, { goToAnchor } from 'react-scrollable-anchor'
 
 class HelpPage extends React.Component {
   state = {
-    activeKey: 'Value of MyBit Go',
+    activeKey: 'Value of MyBit',
   }
   componentDidMount(){
     const anchor = window.location.hash !== '' && window.location.hash;
