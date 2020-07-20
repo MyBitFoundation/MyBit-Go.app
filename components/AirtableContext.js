@@ -105,7 +105,7 @@ class AirtableProvider extends React.PureComponent {
       assetModels[fields['Model ID']] = {
         category: fields['Category'],
         name: fields['Asset'],
-        imageSrc: `https://s3.eu-central-1.amazonaws.com/mybit-go/assetImages:${fields['Image']}`,
+        imageSrc: `/assets/${fields['Image']}`,
         location: this.getLocationFromString(fields['Location']),
         files: this.getFiles(fields['Files']),
         fundingGoal: fields['Funding Goal'],

@@ -129,7 +129,7 @@ const getAssetListings = async assetModels => {
         const assetPostalCode = record.get('Postal Code');
         const files = record.get('Files');
         let defaultData = assetModels[modelId];
-        defaultData.imageSrc = `https://s3.eu-central-1.amazonaws.com/mybit-go/assetImages:${defaultData.image}`
+        defaultData.imageSrc = `/assets/${defaultData.image}`
         assetListings[assetId] = {
           modelId,
           files,
