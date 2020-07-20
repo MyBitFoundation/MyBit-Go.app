@@ -150,7 +150,7 @@ const ListAssetDesktop = ({
           countries={countries}
           handleCitySuggest={handleCitySuggest}
           desktopMode
-          nextButtonDisabled={!userCountry || !userCity || !asset || assetValue > 0}
+          nextButtonDisabled={!userCountry || !userCity || !asset || assetValue <= 0}
           onClick={goToNextStep}
           error={false || metamaskErrorsToRender.render}
           airtableContext={airtableContext}

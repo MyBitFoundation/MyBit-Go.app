@@ -137,20 +137,20 @@ class ListAssetPage extends React.Component {
       metamaskContext,
       supportedTokensInfo,
     } = this.props;
-    modelId = modelId || this.state.data.modelId;
+    // modelId = modelId || this.state.data.modelId;
     const {
       assetModels,
       assetManagers,
     } = assetsContext;
-    const model = assetModels[modelId];
+    // const model = assetModels[modelId]; // not needed again, power belongs to the community now
     const { additionalCosts = 0 } = this.state.data;
     const {
-      operator: operatorAddress,
-      fundingGoal,
-      cryptoPayout,
-      cryptoPurchase,
-      name,
-    } = model;
+      assetValue: fundingGoal,
+      asset: name,
+    } = this.state.data;
+    let cryptoPayout = true;
+    let cryptoPurchase = true;
+
     let assetValue = BN(fundingGoal);
     // Add 8% fee if it applies and AM expenses
     const fiatToCryptoFee = !cryptoPurchase ? assetValue.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;

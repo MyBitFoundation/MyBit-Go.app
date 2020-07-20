@@ -145,11 +145,12 @@ export const AvailableAssetsSlide = ({
   let areAssetsAvailable = true;
   let categories = {};
   let assetsAvailable = [];
-  // if (userCountry && userCity) {
-  //   categories = getCategoriesForAssets(userCountry, userCity);
+  if (userCountry && userCity) {
+    categories = getCategoriesForAssets(userCountry, userCity);
   //   assetsAvailable = (category && categories[category]) || [];
   //   areAssetsAvailable = Object.keys(categories).length > 0;
-  // }
+  }
+  console.log(categories)
 
   return (
     <CarouselSlide
@@ -220,15 +221,6 @@ export const AvailableAssetsSlide = ({
                   disabled={!userCountry}
                 />
 
-                {/* <p style={{ textAlign: 'center' }}>
-                  {(!userCountry || !userCity)
-                    ? 'The list of assets available to you will be shown below'
-                    : areAssetsAvailable
-                      ? 'Below is the list of assets available to you.'
-                      : ''
-                  }
-                </p> */}
-
                 <CarouselSlideInput
                   isCentered
                   placeholder="Asset Name"
@@ -239,14 +231,6 @@ export const AvailableAssetsSlide = ({
 
                 <SelectedAssetValueLabel>Selected Asset value:</SelectedAssetValueLabel>
                 <AssetValueContainer cryptoPurchase={cryptoPurchase}>
-                  {/* <CarouselSlideInput
-                    isCentered
-                    placeholder="Asset Name"
-                    type="number"
-                    name="assetValue"
-                    onChange={e => handleInputChange(e)}
-                    value={asset}
-                  /> */}
                   <CarouselSlideInputNumber
                     isCentered
                     placeholder="Funding Goal"
@@ -265,67 +249,6 @@ export const AvailableAssetsSlide = ({
                   )}
                 </AssetValueContainer>
               </div>
-              {/* {(areAssetsAvailable && userCountry && userCity) && (
-                <React.Fragment>
-                  <CarouselSlideSelect
-                    isCentered
-                    showSearch
-                    placeholder="Asset Category"
-                    optionFilterProp="children"
-                    onChange={value => handleSelectChange(value, "category")}
-                    filterOption={(input, option) =>
-                      option.props.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {Object.keys(categories).map(cat => (
-                      <Select.Option key={cat} value={cat}>
-                        {cat}
-                      </Select.Option>
-                    ))}
-                  </CarouselSlideSelect>
-                  <CarouselSlideSelect
-                    isCentered
-                    showSearch
-                    placeholder="Available Assets"
-                    onChange={value => handleSelectChange({ modelId: value }, "asset")}
-                    value={asset}
-                  >
-                    {assetsAvailable.map(asset => {
-                      return (
-                        <Select.Option key={asset.name} value={asset.modelId}>
-                          <span style={{ display: 'flex', justifyContent: 'space-between' }}><span>{asset.name}</span><a href={asset.url} target="_blank">View</a></span>
-                        </Select.Option>
-                      )
-                    }
-                    )}
-                  </CarouselSlideSelect>
-                  <SelectedAssetValueLabel>Selected Asset value:</SelectedAssetValueLabel>
-                  <AssetValueContainer cryptoPurchase={cryptoPurchase}>
-                    <CarouselSlideInputNumber
-                      isCentered
-                      disabled
-                      placeholder="Funding Goal"
-                      name="assetValue"
-                      value={assetValue}
-                      formatter={value =>
-                        !value ? 'Funding Goal' : `${value} ${DEFAULT_TOKEN}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                      style={cryptoPurchase === false ? { marginRight: '10px', marginBottom: '5px' } : {}}
-                    />
-                    {cryptoPurchase === false && (
-                      <LabelWithTooltip
-                        title={'8% fiat fee incl.'}
-                        tooltipText="The asset incurs an additional 8% fee on top of the total investment to cover most exchanges
-                          fees in order to transfer the money into its fiat equivalent."
-                        isDark
-                      />
-                    )}
-                  </AssetValueContainer>
-                </React.Fragment>
-              )} */}
               {error && (
                 <AlertMessageWrapper>
                   <AlertMessage

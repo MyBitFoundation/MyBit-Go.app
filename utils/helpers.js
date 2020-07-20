@@ -66,7 +66,7 @@ export const convertFromDefaultToken = (convertTo, tokens, amount) => {
     return Number(amount);
   }
 
-  const tokenConvertTo = tokens[convertTo];
+  const tokenConvertTo = tokens['ETH'];
 
   return amount / tokenConvertTo.exchangeRateDefaultToken.expectedRate;
 }
