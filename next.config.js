@@ -53,6 +53,5 @@ module.exports = withBundleAnalyzer(withCss({
     }
   },
   publicRuntimeConfig: {
-    GOOGLE_PLACES_API_KEY: process.NODE_ENV === 'production' && process.env.GOOGLE_PLACES_API_KEY,
   }
 }));
