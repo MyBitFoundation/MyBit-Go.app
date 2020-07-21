@@ -5,15 +5,15 @@ const withCss = require('@zeit/next-css')
 
 // fix: prevents error when .css files are required by node
 if (typeof require !== 'undefined') {
-  require.extensions['.css'] = file => {}
+  require.extensions['.css'] = file => { }
 }
 
 module.exports = withBundleAnalyzer(withCss({
   webpack: (config, { dev, isServer }) => {
-    if(!dev) {
+    if (!dev) {
       config.devtool = false
 
-       // disable soucemaps of babel-loader
+      // disable soucemaps of babel-loader
       for (const r of config.module.rules) {
         if (r.loader === 'babel-loader') {
           r.options.sourceMaps = false
@@ -52,6 +52,5 @@ module.exports = withBundleAnalyzer(withCss({
       reportFilename: '../bundles/client.html'
     }
   },
-  publicRuntimeConfig: {
-  }
+  publicRuntimeConfig: {}
 }));

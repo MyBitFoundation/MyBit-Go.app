@@ -11,7 +11,7 @@ import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
 
 class AssetPage extends React.Component {
-  static async getServerSideProps (ctx) {
+  static async getInitialProps (ctx) {
     return {assetId: ctx.query.id};
   }
   render(){

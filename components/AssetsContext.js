@@ -501,12 +501,12 @@ class AssetsProvider extends React.PureComponent {
   }
 };
 
-// Required so we can trigger getServerSideProps in our exported pages
+// Required so we can trigger getInitialProps in our exported pages
 export const withAssetsContextPageWrapper = (Component) => {
   return class AssetContextPageWrapper extends React.Component{
-    static async getServerSideProps(ctx) {
-      if(Component.getServerSideProps)
-        return await Component.getServerSideProps(ctx);
+    static async getInitialProps(ctx) {
+      if(Component.getInitialProps)
+        return await Component.getInitialProps(ctx);
       else return {};
     }
     render(){

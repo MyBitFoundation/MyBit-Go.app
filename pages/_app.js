@@ -22,7 +22,12 @@ import { navbarOptions } from 'constants/navigationBar';
 import { FULL_SCREEN_PAGES } from 'constants/fullScreenPages';
 import { COOKIES } from 'constants/cookies';
 import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
+import * as Sentry from '@sentry/browser';
 
+Sentry.init({
+  enabled: process.env.NODE_ENV === 'production',
+  dsn: 'https://f1d70091b2dd46b5970f57e913c15175@o423064.ingest.sentry.io/5352731'
+});
 class MyApp extends App {
   state = {
     mobileMenuOpen: false,
@@ -70,6 +75,18 @@ class MyApp extends App {
       mobileMenuOpen: state
     });
   };
+
+  componentDidCatch(error, errorInfo) {
+    Sentry.withScope((scope) => {
+      Object.keys(errorInfo).forEach((key) => {
+        scope.setExtra(key, errorInfo[key]);
+      });
+
+      Sentry.captureException(error);
+    });
+
+    super.componentDidCatch(error, errorInfo);
+  }
 
   render() {
     const { Component, pageProps, router } = this.props;
