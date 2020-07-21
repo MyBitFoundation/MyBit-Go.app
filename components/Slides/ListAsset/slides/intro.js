@@ -11,7 +11,6 @@ export const IntroSlide = ({
   desktopMode,
   onClick,
   dev,
-  civic,
 }) => (
   <CarouselSlide
     maxWidthDesktop={maxWidthDesktop}
@@ -59,6 +58,10 @@ export const IntroSlide = ({
         and investors.
       </p>
     </CarouselSlideList>
-    {desktopMode && dev && <CarouselNextButton onClick={onClick} />}
+    {desktopMode && (
+      <CarouselNextButton
+        onClick={onClick}
+      />
+    )}
   </CarouselSlide>
 );

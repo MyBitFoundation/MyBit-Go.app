@@ -19,13 +19,6 @@ const SliderNavigationTooltips = [
 ];
 
 class OnboardingPage extends React.Component {
-  static async getInitialProps (ctx) {
-    if(ctx.req){
-      return {redirectTo: ctx.query.redirectTo};
-    } else {
-      return {};
-    }
-  }
 
   componentDidMount = () => {
     const {
@@ -35,14 +28,14 @@ class OnboardingPage extends React.Component {
     // URL doesn't actually update. We already have
     // onboarding.js at this point so its inconsequent.
     // until a fix is found at least.
-    if(window && redirectTo) {
+    if (window && redirectTo) {
       Router.push('/onboarding');
     }
     this.firstLocation = redirectTo;
     // The path / should redirect to /explore, user's first visit for example
-    if(!redirectTo || (redirectTo && redirectTo.href === '/' && redirectTo.as === '/')) {
+    if (!redirectTo || (redirectTo && redirectTo.href === '/' && redirectTo.as === '/')) {
       this.firstLocation = {
-        href:'/explore',
+        href: '/explore',
         as: '/explore',
       };
     }
@@ -67,6 +60,14 @@ class OnboardingPage extends React.Component {
         </BancorProvider>
       </React.Fragment>
     )
+  }
+}
+
+export const getInitialProps = async (ctx) => {
+  if (ctx.req) {
+    return { props: { redirectTo: ctx.query.redirectTo } };
+  } else {
+    return { props: {} };
   }
 }
 

@@ -6,7 +6,7 @@ import {
   FALLBACK_NETWORK,
   CONTRACTS_PATH,
 } from 'constants/supportedNetworks';
- import { DEFAULT_ASSET_INFO } from 'constants/app';
+import { DEFAULT_ASSET_INFO } from 'constants/app';
 import { SDK_EVENTS } from 'constants/sdkEvents';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import { withAirtableContext } from 'components/AirtableContext';
@@ -16,7 +16,7 @@ const Contracts = require('@mybit/contracts');
 const { Provider, Consumer } = React.createContext({});
 
 class AssetsProvider extends React.PureComponent {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       loadingUserInfo: false,
@@ -50,12 +50,12 @@ class AssetsProvider extends React.PureComponent {
     const newEnabled = newProps.privacyModeEnabled;
     const newNetwork = newProps.network;
 
-    if((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)){
+    if ((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)) {
       this.setState({
         loadingUserInfo: true,
       })
       this.fetchAssetsFromSDK()
-    } else if(newNetwork !== oldNetwork){
+    } else if (newNetwork !== oldNetwork) {
       this.initialiseSDK();
       this.init();
     }
@@ -63,11 +63,11 @@ class AssetsProvider extends React.PureComponent {
 
   componentDidMount = () => {
     const { userHasMetamask } = this.props.metamaskContext;
-    if(userHasMetamask){
+    if (userHasMetamask) {
       this.initialiseSDK();
       this.init();
     } else {
-      this.setState({loadingAssets: false})
+      this.setState({ loadingAssets: false })
     }
   }
 
@@ -79,7 +79,7 @@ class AssetsProvider extends React.PureComponent {
     const { usingAirtable } = this.state;
     const { metamaskContext } = this.props;
     const { network } = metamaskContext;
-    if(SUPPORTED_NETWORKS.includes(network)){
+    if (SUPPORTED_NETWORKS.includes(network)) {
       this.setState({
         loadingAssets: true,
         loadingUserInfo: true,
@@ -100,7 +100,7 @@ class AssetsProvider extends React.PureComponent {
     this.setState({ loadingSdk: true });
     Brain.fetchAssets(user.address, network, ({ assetListings, operators, assetModels }) => {
       const assetManagers = this.getAssetManagers(assetListings);
-      this.setState({ loadingSdk: false , loadingUserInfo: false, assetManagers}, () => {
+      this.setState({ loadingSdk: false, loadingUserInfo: false, assetManagers }, () => {
         this.setData({
           assetListings,
           operators,
@@ -116,7 +116,7 @@ class AssetsProvider extends React.PureComponent {
     const network = this.props.metamaskContext.network;
     const isASupportedNetwork = SUPPORTED_NETWORKS.includes(network);
     let contracts, block;
-    if(isASupportedNetwork){
+    if (isASupportedNetwork) {
       contracts = CONTRACTS_PATH[network];
       block = Contracts.block[network];
     } else {
@@ -125,18 +125,18 @@ class AssetsProvider extends React.PureComponent {
     }
     Brain.initialiseSDK(contracts, block);
     const blockNumber = await window.web3js.eth.getBlockNumber();
-    Brain.subscribe(() => {}, this.handlePlatformUpdates, blockNumber + 1)
+    Brain.subscribe(() => { }, this.handlePlatformUpdates, blockNumber + 1)
   }
 
   startIpfs = (network, assetListings, assetModels, operators) => {
     const { usingIpfs, loadingIpfs } = this.state;
-    if(usingIpfs){
+    if (usingIpfs) {
       this.getAssetsFromIpfs(network, assetListings, assetModels, operators);
     }
   }
 
   getAssetsFromIpfs = (network, assetListings, assetModels, operators) => {
-    this.setState({loadingIpfs: true, loadingAirtable: false})
+    this.setState({ loadingIpfs: true, loadingAirtable: false })
     this.ipfs = new IpfsDataManager(
       network,
       assetListings,
@@ -149,12 +149,12 @@ class AssetsProvider extends React.PureComponent {
 
   getAssetsFromAirtable = (network) => {
     const { getAssetsFromAirtable } = this.props;
-    this.setState({loadingAirtable: true, loadingIpfs: false})
+    this.setState({ loadingAirtable: true, loadingIpfs: false })
     getAssetsFromAirtable(network, this.handleLoadedAirtable)
   }
 
   handleListingUpdateIpfs = (assetId, asset) => {
-    if(!Array.isArray(asset.files)){
+    if (!Array.isArray(asset.files)) {
       asset.files = [];
     }
     asset['offChainData'] = true;
@@ -172,7 +172,7 @@ class AssetsProvider extends React.PureComponent {
   * Returns an array of assets, containing all the
   * information about said asset
   */
-  getAssets = (assetListings, assetModels, operators, ) => {
+  getAssets = (assetListings, assetModels, operators,) => {
     operators = operators !== undefined ? operators : this.state.operators;
     assetListings = assetListings !== undefined ? assetListings : this.state.assetListings;
     assetModels = assetModels !== undefined ? assetModels : this.state.assetModels;
@@ -201,8 +201,8 @@ class AssetsProvider extends React.PureComponent {
     const modelId = assetListings[assetId] ? assetListings[assetId].modelId : undefined;
     const operatorAddress = (modelId && assetModels[modelId]) ? assetModels[modelId].operator : undefined;
     return {
-      operator: {...operators[operatorAddress]},
-      model: {...assetModels[modelId]},
+      operator: { ...operators[operatorAddress] },
+      model: { ...assetModels[modelId] },
       ...assetListings[assetId],
       assetManagerData: assetManagers[assetListings[assetId].assetManager],
     }
@@ -219,7 +219,7 @@ class AssetsProvider extends React.PureComponent {
         funded,
       } = asset;
 
-      if(!assetManagers[assetManager]){
+      if (!assetManagers[assetManager]) {
         assetManagers[assetManager] = {
           startDate: listingDate,
           totalAssets: 1,
@@ -242,7 +242,7 @@ class AssetsProvider extends React.PureComponent {
     const { assetListings } = this.state;
     const { user } = this.props.metamaskContext;
     const assetListing = assetListings[assetId];
-    if(assetListing){
+    if (assetListing) {
       const newAssetListing = await Brain.fetchAsset(assetListing, user.address);
       this.updateListingProps(assetId, newAssetListing);
     }
@@ -257,11 +257,11 @@ class AssetsProvider extends React.PureComponent {
     }
 
     const onAssetListing = async data => {
-      const { assetListings, usingAirtable, usingIpfs, assetModels, assetManagers} = this.state;
+      const { assetListings, usingAirtable, usingIpfs, assetModels, assetManagers } = this.state;
       const { fetchNewAssetListing } = this.props;
       const { user, network } = this.props.metamaskContext;
       const { asset: assetId, manager: assetManager } = event.returnValues;
-      if(usingAirtable){
+      if (usingAirtable) {
         fetchNewAssetListing(network, this.setData, assetId);
       }
       const { blockNumber } = event;
@@ -271,13 +271,13 @@ class AssetsProvider extends React.PureComponent {
         blockNumber,
       }, user.address);
       const { assetsWithPendingIpfs } = this.state;
-      if(assetsWithPendingIpfs[assetId]){
+      if (assetsWithPendingIpfs[assetId]) {
         asset.ipfs = assetsWithPendingIpfs[assetId];
         delete assetsWithPendingIpfs[assetId];
         this.setState({
           assetsWithPendingIpfs,
         })
-        if(usingIpfs){
+        if (usingIpfs) {
           this.ipfs.fetchNewResource(assetId, asset, this.handleListingUpdateIpfs);
         }
       }
@@ -306,7 +306,7 @@ class AssetsProvider extends React.PureComponent {
     };
     const eventType = event.returnValues ? event.returnValues.message : '';
     const handler = handlers[eventType];
-    if(handler){
+    if (handler) {
       handler(event);
     }
   }
@@ -316,8 +316,8 @@ class AssetsProvider extends React.PureComponent {
     const { metamaskContext } = this.props;
     const { network } = metamaskContext;
     const asset = assetListings[assetId];
-    await Brain.updateAirTableWithNewOffChainData({assetId, files: files.string, risks, financials, about, fees,}, network)
-    this.updateListingProps(assetId, {...asset, files: files.array, risks, financials, about, fees})
+    await Brain.updateAirTableWithNewOffChainData({ assetId, files: files.string, risks, financials, about, fees, }, network)
+    this.updateListingProps(assetId, { ...asset, files: files.array, risks, financials, about, fees })
   }
 
   updateModelProps = (modelId, props) => {
@@ -334,9 +334,9 @@ class AssetsProvider extends React.PureComponent {
         }
       }
       const assetsArray = assets.slice();
-      for(let i=0;i<assetsArray.length;i++){
+      for (let i = 0; i < assetsArray.length; i++) {
         let asset = assetsArray[i];
-        if(asset.modelId === modelId){
+        if (asset.modelId === modelId) {
           const { assetId } = asset;
           assetsArray[i] = {
             ...asset,
@@ -370,7 +370,7 @@ class AssetsProvider extends React.PureComponent {
       const assetManagers = this.getAssetManagers(assetListingsNew);
       const assetsArray = assets.slice();
       const assetIndex = assetsArray.findIndex(asset => asset.assetId === assetId)
-      if(assetIndex === -1){
+      if (assetIndex === -1) {
         assetsArray.splice(assetIndex, 0, props)
       } else {
         assetsArray[assetIndex] = {
@@ -401,7 +401,7 @@ class AssetsProvider extends React.PureComponent {
   }
 
   getLoadingState = (loadingAirtable, loadingIpfs, loadingSdk) => {
-    if(!loadingSdk && !loadingAirtable && !loadingIpfs){
+    if (!loadingSdk && !loadingAirtable && !loadingIpfs) {
       console.log("Done loading assets")
       return false;
     } else {
@@ -412,26 +412,26 @@ class AssetsProvider extends React.PureComponent {
 
   handleLoadedAirtable = data => {
     const { usingAirtable, loadingAirtable } = this.state;
-    if(usingAirtable && loadingAirtable){
+    if (usingAirtable && loadingAirtable) {
       this.setState({ loadingAirtable: false }, () => this.setData(data))
     }
   }
 
   mergeObjects = (a, b, propertyToAdd, injectProperty) => {
     const entriesA = Object.entries(a);
-    if(entriesA.length === 0){
+    if (entriesA.length === 0) {
       return b;
     }
     entriesA.map(([id, value]) => {
       const entry = b[id];
       a[id][propertyToAdd] = true;
-      if(entry){
+      if (entry) {
         a[id] = {
           ...entry,
           ...a[id],
         }
       }
-      if(injectProperty){
+      if (injectProperty) {
         a[id]['handleAssetFavorited'] = this.handleAssetFavorited.bind(this, id);
       }
     })
@@ -444,12 +444,12 @@ class AssetsProvider extends React.PureComponent {
   * both resolve the whole data up until then, so we can merge the data like so.
   */
   setData = ({
-    assetModels={},
-    assetModelsLoading={},
-    assetListingsLoading={},
+    assetModels = {},
+    assetModelsLoading = {},
+    assetListingsLoading = {},
     assetListings,
-    operatorsLoading={},
-    operators={},
+    operatorsLoading = {},
+    operators = {},
     network,
     ipfs,
     airtable,
@@ -461,7 +461,7 @@ class AssetsProvider extends React.PureComponent {
     } = this.state;
     const { metamaskContext } = this.props;
     const { network: currentNetwork } = metamaskContext;
-    if(((usingIpfs && ipfs) || (usingAirtable && airtable) || sdk) && (network === currentNetwork)){
+    if (((usingIpfs && ipfs) || (usingAirtable && airtable) || sdk) && (network === currentNetwork)) {
       this.setState(prevState => {
         const {
           assetListings: currentAssetListings,
@@ -492,7 +492,7 @@ class AssetsProvider extends React.PureComponent {
     }
   }
 
-  render(){
+  render() {
     return (
       <Provider value={this.state}>
         {this.props.children}
@@ -501,15 +501,10 @@ class AssetsProvider extends React.PureComponent {
   }
 };
 
-// Required so we can trigger getInitialProps in our exported pages
+// Required so we can trigger getServerSideProps in our exported pages
 export const withAssetsContextPageWrapper = (Component) => {
-  return class AssetContextPageWrapper extends React.Component{
-    static async getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return await Component.getInitialProps(ctx);
-      else return {};
-    }
-    render(){
+  return class AssetContextPageWrapper extends React.Component {
+    render() {
       return (
         <Consumer>
           {state => <Component {...this.props} assetsContext={state} />}
@@ -519,11 +514,15 @@ export const withAssetsContextPageWrapper = (Component) => {
   }
 }
 
+export const getStaticProps = () => ({
+  props: {}
+})
+
 export const withAssetsContext = (Component) => {
   return function WrapperComponent(props) {
     return (
       <Consumer>
-          {state => <Component {...props} assetsContext={state} />}
+        {state => <Component {...props} assetsContext={state} />}
       </Consumer>
     );
   };

@@ -8,10 +8,10 @@ import {
   verifyDataAirtable,
   PULL_ASSETS_TIME,
   PULL_CATEGORIES_TIME,
- } from 'constants/airtable';
- import {
+} from 'constants/airtable';
+import {
   DEFAULT_ASSET_INFO
- } from 'constants/app';
+} from 'constants/app';
 import {
   FALLBACK_NETWORK,
 } from 'constants/supportedNetworks';
@@ -20,24 +20,23 @@ const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
 export const withAirtableContext = (Component) => {
-  return class Higher extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
-    render(){
+  return class Higher extends React.Component {
+    render() {
       return (
         <Consumer>
-          {state => <Component {...this.props} {...state}/>}
+          {state => <Component {...this.props} {...state} />}
         </Consumer>
       )
     }
   }
 }
 
+export const getStaticProps = () => ({
+  props: {}
+})
+
 class AirtableProvider extends React.PureComponent {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       getAssetsFromAirtable: this.getAssets,
@@ -47,13 +46,13 @@ class AirtableProvider extends React.PureComponent {
 
   getFiles = filesString => {
     const ipfsFiles = [];
-    try{
-      if(filesString){
+    try {
+      if (filesString) {
         const filesArr = filesString.split('|');
-        for(let i=0;i<filesArr.length;i+=2){
-          if(i+1 < filesArr.length){
+        for (let i = 0; i < filesArr.length; i += 2) {
+          if (i + 1 < filesArr.length) {
             const name = filesArr[i];
-            const hash = filesArr[i+1];
+            const hash = filesArr[i + 1];
             ipfsFiles.push({
               name,
               hash,
@@ -62,7 +61,7 @@ class AirtableProvider extends React.PureComponent {
         }
       }
     }
-    catch(err){
+    catch (err) {
       console.log("Error getting asset with filesString: ", filesString)
     }
     return ipfsFiles;
@@ -70,13 +69,13 @@ class AirtableProvider extends React.PureComponent {
 
   getLocationFromString = locations => {
     let location = undefined;
-    if(locations){
+    if (locations) {
       let countries = locations.split(',');
       location = {};
       countries.forEach(country => {
         country = country.trim();
         let cities = /\(([^)]+)\)/g.exec(country);
-        if(cities){
+        if (cities) {
           country = country.substring(0, country.indexOf('(')).trim()
           cities = cities[1].split(';');
           location[country] = cities;
@@ -90,7 +89,7 @@ class AirtableProvider extends React.PureComponent {
 
   processOperators = data => {
     const operators = {};
-    data.forEach(({fields}) => {
+    data.forEach(({ fields }) => {
       operators[fields['Address']] = {
         name: fields['Name'],
         files: this.getFiles(fields['IPFS Files']),
@@ -101,7 +100,7 @@ class AirtableProvider extends React.PureComponent {
 
   processAssetModels = data => {
     const assetModels = {};
-    data.forEach(({fields}) => {
+    data.forEach(({ fields }) => {
       assetModels[fields['Model ID']] = {
         category: fields['Category'],
         name: fields['Asset'],
@@ -117,7 +116,7 @@ class AirtableProvider extends React.PureComponent {
 
   processAssetListings = data => {
     const assetListings = {};
-    data.forEach(({fields}) => {
+    data.forEach(({ fields }) => {
       assetListings[fields['Asset ID']] = {
         financials: fields['Financials'] || DEFAULT_ASSET_INFO.Financials,
         about: fields['About'] || DEFAULT_ASSET_INFO.About,
@@ -139,18 +138,18 @@ class AirtableProvider extends React.PureComponent {
   fetchNewAssetListing = async (network, updateFunction, assetId) => {
     let assetListings = await fetch(InternalLinks.getAirtableAssetListings(network))
     assetListings = await assetListings.json();
-    const { records: listingsRecords  } = assetListings;
+    const { records: listingsRecords } = assetListings;
     const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
     let assetListingsProcessed = this.processAssetListings(assetListingsFiltered);
-    if(assetListingsProcessed[assetId]){
-      updateFunction({assetListings: assetListingsProcessed, network, airtable: true})
+    if (assetListingsProcessed[assetId]) {
+      updateFunction({ assetListings: assetListingsProcessed, network, airtable: true })
     } else {
       setTimeout(() => this.fetchNewAssetListing(network, updateFunction, assetId), 200);
     }
   }
 
   getAssets = async (network, updateFunction) => {
-    try{
+    try {
       this.updateFunction = updateFunction;
 
       let [assetModels, assetListings, operators] = await Promise.all([
@@ -163,9 +162,9 @@ class AirtableProvider extends React.PureComponent {
         assetListings.json(),
         operators.json(),
       ]);
-      const { records: modelsRecords  } = assetModels;
-      const { records: listingsRecords  } = assetListings;
-      const { records: operatorsRecords  } = operators;
+      const { records: modelsRecords } = assetModels;
+      const { records: listingsRecords } = assetListings;
+      const { records: operatorsRecords } = operators;
 
       const assetModelsFiltered = verifyDataAirtable(AIRTABLE_ASSET_MODELS, modelsRecords);
       const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
@@ -185,13 +184,13 @@ class AirtableProvider extends React.PureComponent {
         airtable: true,
       });
 
-    }catch(err){
+    } catch (err) {
       console.log(err)
       setTimeout(() => this.getAssets(network, updateFunction), 1000);
     }
   }
 
-  render(){
+  render() {
     return (
       <Provider value={this.state}>
         {this.props.children}

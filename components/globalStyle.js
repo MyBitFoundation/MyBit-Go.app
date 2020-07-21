@@ -1,5 +1,4 @@
 import { createGlobalStyle } from 'styled-components'
-import 'antd/dist/antd.min.css';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {

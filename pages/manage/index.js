@@ -4,13 +4,13 @@ import ManageAsset from 'components/ManageAsset';
 const ManageAssetPage = ({
   assetId,
 }) => (
-  <ManageAssetModule
-    assetId={assetId}
-  >
-    {props => <ManageAsset {...props}/>}
-  </ManageAssetModule>
-);
+    <ManageAssetModule
+      assetId={assetId}
+    >
+      {props => <ManageAsset {...props} />}
+    </ManageAssetModule>
+  );
 
-ManageAssetPage.getInitialProps = ctx => ({assetId: ctx.query.id});
+export const getInitialProps = ctx => ({ props: { assetId: ctx.query.id } });
 
 export default ManageAssetPage;

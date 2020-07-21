@@ -6,20 +6,21 @@ import {
 } from 'constants/portfolioTypes';
 
 class PortfolioPage extends React.Component {
-  static getInitialProps (ctx) {
-    if(!ctx.query.type){
-      return {type: PortfolioTypes.INVESTMENTS};
-    }
-    return {type: ctx.query.type};
-  }
 
-  render(){
-  	return(
-  		<PortfolioModule>
-  	   {props => <Portfolio {...props} type={this.props.type}/>}
+
+  render() {
+    return (
+      <PortfolioModule>
+        {props => <Portfolio {...props} type={this.props.type} />}
       </PortfolioModule>
-  	)
+    )
   }
 }
 
+export const getInitialProps = (ctx) => {
+  if (!ctx.query.type) {
+    return { props: { type: PortfolioTypes.INVESTMENTS } };
+  }
+  return { pros: { type: ctx.query.type } };
+}
 export default withMetamaskErrors(PortfolioPage, false);

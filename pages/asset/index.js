@@ -11,10 +11,8 @@ import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
 
 class AssetPage extends React.Component {
-  static async getInitialProps (ctx) {
-    return {assetId: ctx.query.id};
-  }
-  render(){
+
+  render() {
     const {
       assetsContext,
       blockchainContext,
@@ -81,13 +79,17 @@ class AssetPage extends React.Component {
       )
     }
 
-    return(
+    return (
       <React.Fragment>
         <GoBackTextAndArrow />
         {toRender}
       </React.Fragment>
     )
   }
+}
+
+export const getInitialProps = async (ctx) => {
+  return { props: { assetId: ctx.query.id } };
 }
 
 const enhance = compose(

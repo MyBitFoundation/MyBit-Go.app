@@ -35,44 +35,43 @@ const CustomTimelineWrapper = styled(props => (
 
 CustomTimelineWrapper.OmitProps = ["listedAssetId"];
 
-const CustomTimeline = React.memo(
-  ({
-    step,
-    formData,
-    goToStep,
-    listedAssetId,
-    dev,
-    readToS,
-    isUserListingAsset,
-    tokenWithSufficientBalance,
-    metamaskErrors
-  }) => {
-    const {
-      category,
-      asset,
-      assetValue,
-      assetAddress1,
-      assetAddress2,
-      userCountry,
-      assetCity,
-      assetPostalCode,
-      fileList,
-      managementFee,
-      collateralPercentage,
-      collateralInPlatformToken,
-      collateralInSelectedToken,
-      selectedToken
-    } = formData;
-    let maxStep = 1;
-    if (isUserListingAsset || tokenWithSufficientBalance) {
-      maxStep = 8;
-    } else if (managementFee > 0) {
-      maxStep = 7;
-    } else if (userCountry && assetCity) {
-      maxStep = 5;
-    } else if (assetValue && !metamaskErrors) {
-      maxStep = 3;
-    }
+const CustomTimeline = React.memo(({
+  step,
+  formData,
+  goToStep,
+  listedAssetId,
+  dev,
+  readToS,
+  isUserListingAsset,
+  tokenWithSufficientBalance,
+  metamaskErrors,
+}) => {
+  const{
+    category,
+    asset,
+    assetValue,
+    assetAddress1,
+    assetAddress2,
+    userCountry,
+    assetCity,
+    assetPostalCode,
+    fileList,
+    managementFee,
+    collateralPercentage,
+    collateralInPlatformToken,
+    collateralInSelectedToken,
+    selectedToken,
+  } = formData;
+  let maxStep = 1;
+  if(isUserListingAsset || tokenWithSufficientBalance){
+    maxStep = 8;
+  } else if(managementFee > 0){
+    maxStep = 7;
+  } else if(userCountry && assetCity){
+    maxStep = 5;
+  } else if(assetValue && !metamaskErrors){
+    maxStep = 3;
+  }
 
   return (
     <CustomTimelineWrapper

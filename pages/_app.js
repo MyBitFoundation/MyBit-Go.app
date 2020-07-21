@@ -24,6 +24,8 @@ import { COOKIES } from 'constants/cookies';
 import { SUPPORTED_NETWORKS } from 'constants/supportedNetworks';
 import * as Sentry from '@sentry/browser';
 
+import '../antd-custom.less'
+
 Sentry.init({
   enabled: process.env.NODE_ENV === 'production',
   dsn: 'https://f1d70091b2dd46b5970f57e913c15175@o423064.ingest.sentry.io/5352731'

@@ -11,8 +11,8 @@ import { withAssetsContext } from 'components/AssetsContext';
 import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import * as Brain from '../apis/brain';
-import { ErrorTypes } from 'constants/errorTypes';
-import {InternalLinks } from 'constants/links';
+import { ErrorTypes } from 'constants/errorTypes';
+import { InternalLinks } from 'constants/links';
 import {
   NotificationTypes,
   NotificationsMetamask,
@@ -49,13 +49,8 @@ const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
 export const withBlockchainContextPageWrapper = (Component) => {
-  return class BlockchainContextPageWrapper extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
-    render(){
+  return class BlockchainContextPageWrapper extends React.Component {
+    render() {
       return (
         <Consumer>
           {state => <Component {...this.props} blockchainContext={state} />}
@@ -65,11 +60,15 @@ export const withBlockchainContextPageWrapper = (Component) => {
   }
 }
 
+export const getStaticProps = () => ({
+  props: {}
+})
+
 export const withBlockchainContext = (Component) => {
   return function WrapperComponent(props) {
     return (
       <Consumer>
-          {state => <Component {...props} blockchainContext={state} />}
+        {state => <Component {...props} blockchainContext={state} />}
       </Consumer>
     );
   };
@@ -133,10 +132,10 @@ class BlockchainProvider extends React.Component {
     const newEnabled = newProps.privacyModeEnabled;
     const newNetwork = newProps.network;
 
-    if((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)){
+    if ((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)) {
       console.log("Updating blockchainContext due to a change in: address or login or privacy mode")
       this.handleMetamaskUpdate();
-    } else if(newNetwork !== oldNetwork){
+    } else if (newNetwork !== oldNetwork) {
       this.setState({
         loading: {
           transactionHistory: true,
@@ -167,9 +166,9 @@ class BlockchainProvider extends React.Component {
       gasPrice,
     } = this.state;
 
-    try{
+    try {
       const response = await axios(InternalLinks.GAS_PRICE);
-      if(response.data){
+      if (response.data) {
         const {
           fast,
         } = response.data;
@@ -179,7 +178,7 @@ class BlockchainProvider extends React.Component {
           gasPrice,
         })
       }
-    }catch(err){
+    } catch (err) {
       debug("Error pulling gas price");
       debug(err)
     }
@@ -192,7 +191,7 @@ class BlockchainProvider extends React.Component {
 
     const categories = {};
 
-    for(const key in assetModels){
+    for (const key in assetModels) {
       const asset = assetModels[key];
       const {
         category,
@@ -205,7 +204,7 @@ class BlockchainProvider extends React.Component {
       * If the asset does not have a specified location
       * then anyone from anywhere can list it
       */
-      if(!location){
+      if (!location) {
         shouldAdd = true;
       }
       /*
@@ -213,14 +212,14 @@ class BlockchainProvider extends React.Component {
       * and either the city also matches or there are no city specified
       * which means the user is eligible to list this asset
       */
-      else if((location && location[country] && Array.isArray(location[country]) && (location && location[country].includes(city.toLowerCase())) || (location && location[country] && Object.keys(location[country]).length === 0))){
+      else if ((location && location[country] && Array.isArray(location[country]) && (location && location[country].includes(city.toLowerCase())) || (location && location[country] && Object.keys(location[country]).length === 0))) {
         shouldAdd = true;
       }
-      if(shouldAdd){
-        if(!categories[category]){
+      if (shouldAdd) {
+        if (!categories[category]) {
           categories[category] = [];
         }
-        categories[category].push({...asset, modelId: key, url});
+        categories[category].push({ ...asset, modelId: key, url });
       }
     }
     return categories;
@@ -282,9 +281,9 @@ class BlockchainProvider extends React.Component {
     }
 
     const onReceipt = (wasSuccessful) => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         onSuccess();
-      } else{
+      } else {
         onError(ErrorTypes.ETHEREUM);
       }
     }
@@ -292,7 +291,7 @@ class BlockchainProvider extends React.Component {
     const onError = (type) => {
       cb && cb(false);
       updateAssetListingsIpfs();
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           operationType: NotificationsMetamask.ASSET_FILES_UPLOAD
         });
@@ -336,7 +335,7 @@ class BlockchainProvider extends React.Component {
   payoutAsset = async asset => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, model} = asset;
+    const { assetId, model } = asset;
     const { name: assetName } = model;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
@@ -360,16 +359,16 @@ class BlockchainProvider extends React.Component {
     }
 
     const onReceipt = (wasSuccessful) => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         onSuccess();
-      } else{
+      } else {
         onError(ErrorTypes.ETHEREUM);
       }
     }
 
     const onError = (type) => {
       updateCallingPayout();
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           operationType: NotificationsMetamask.ASSET_PAYOUT
         });
@@ -407,7 +406,7 @@ class BlockchainProvider extends React.Component {
   withdrawProfitAssetManager = async (asset, amount) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, model} = asset;
+    const { assetId, model } = asset;
     const { name: assetName } = model;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
@@ -431,16 +430,16 @@ class BlockchainProvider extends React.Component {
     }
 
     const onReceipt = (wasSuccessful) => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         onSuccess();
-      } else{
+      } else {
         onError(ErrorTypes.ETHEREUM);
       }
     }
 
     const onError = (type) => {
       updatewithdrawingAssetManager();
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           operationType: NotificationsMetamask.WITHDRAW_MANAGER,
           assetName,
@@ -482,7 +481,7 @@ class BlockchainProvider extends React.Component {
   withdrawCollateral = async (asset, percentage, amount, updateAssetCollateralPage) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, model} = asset;
+    const { assetId, model } = asset;
     const { name: assetName } = model;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
@@ -508,16 +507,16 @@ class BlockchainProvider extends React.Component {
     }
 
     const onReceipt = (wasSuccessful) => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         onSuccess();
-      } else{
+      } else {
         onError(ErrorTypes.ETHEREUM);
       }
     }
 
     const onError = (type) => {
       updateWithdrawingCollateral();
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           operationType: NotificationsMetamask.WITHDRAW_COLLATERAL,
           assetName,
@@ -567,32 +566,32 @@ class BlockchainProvider extends React.Component {
     let filesString = '';
     const existingFiles = [];
     const filesToUpload = [];
-    for(let i=0;i<fileList.length;i++){
+    for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
-      if(file.hash){
+      if (file.hash) {
         existingFiles.push(file);
-      } else{
+      } else {
         filesToUpload.push(file);
       }
     }
-    for(const file of filesToUpload){
+    for (const file of filesToUpload) {
       toWait.push(addUserFileToIpfs(file.originFileObj ? file.originFileObj : file.file ? file.file : file));
     }
     const ipfsHashes = await Promise.all(toWait);
-    if(ipfsHashes.length > 0){
-      for(let i=0;i<ipfsHashes.length;i++){
+    if (ipfsHashes.length > 0) {
+      for (let i = 0; i < ipfsHashes.length; i++) {
         const hash = ipfsHashes[i];
         const name = filesToUpload[i].name;
         files.push({
           hash,
           name,
         })
-        filesString+=`${name}|${hash}|`
+        filesString += `${name}|${hash}|`
       }
     }
     existingFiles.map(file => {
-      files.push({...file})
-      filesString+=`${file.name}|${file.hash}|`
+      files.push({ ...file })
+      filesString += `${file.name}|${file.hash}|`
     })
     return {
       array: files,
@@ -639,10 +638,10 @@ class BlockchainProvider extends React.Component {
       user,
       network,
     } = metamaskContext;
-    const userAddress =  user.address;
+    const userAddress = user.address;
     const notificationId = Date.now();
 
-    if(selectedToken !== 'ETH') {
+    if (selectedToken !== 'ETH') {
       // Going to call Approve
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.APPROVE,
@@ -674,7 +673,7 @@ class BlockchainProvider extends React.Component {
     }
 
     const onReceiptApprove = wasSuccessful => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
           formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
           type: NotificationTypes.APPROVE,
@@ -711,7 +710,7 @@ class BlockchainProvider extends React.Component {
       // we need to perform a few actions before declaring the listing of the asset as successful
       const performInternalAction = async () => {
         counterCallsToInternalActions++;
-        if(counterCallsToInternalActions === requiredCallsToInternalActions){
+        if (counterCallsToInternalActions === requiredCallsToInternalActions) {
           buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
             assetName,
             assetId,
@@ -743,7 +742,7 @@ class BlockchainProvider extends React.Component {
 
     const onError = (type) => {
       setUserListingAsset(false);
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           assetName,
           operationType: NotificationsMetamask.LIST_ASSET,
@@ -756,24 +755,24 @@ class BlockchainProvider extends React.Component {
     }
 
     await Brain.createAsset({
-        onTransactionHash,
-        onReceipt,
-        onError,
-      }, {
-        onTransactionHash: onTransactionHashApprove,
-        onReceipt: onReceiptApprove,
-        onError,
-      }, {
-        managerPercentage: managementFee,
-        amountToBeRaised: assetValue,
-        assetName,
-        collateral: collateralInSelectedToken,
-        userAddress,
-        paymentTokenAddress,
-        gasPrice,
-        ipfs: ipfsHash,
-        modelId,
-      },
+      onTransactionHash,
+      onReceipt,
+      onError,
+    }, {
+      onTransactionHash: onTransactionHashApprove,
+      onReceipt: onReceiptApprove,
+      onError,
+    }, {
+      managerPercentage: managementFee,
+      amountToBeRaised: assetValue,
+      assetName,
+      collateral: collateralInSelectedToken,
+      userAddress,
+      paymentTokenAddress,
+      gasPrice,
+      ipfs: ipfsHash,
+      modelId,
+    },
       network,
     );
   }
@@ -788,14 +787,14 @@ class BlockchainProvider extends React.Component {
       const notificationId = Date.now();
       const amountFormatted = formatMonetaryValue(amountContributed);
       const {
-        name : assetName,
+        name: assetName,
       } = currentAsset.model;
 
       const {
         buildNotification,
       } = this.props.notificationsContext;
 
-      if(paymentTokenSymbol === 'ETH'){
+      if (paymentTokenSymbol === 'ETH') {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
           operationType: NotificationsMetamask.FUNDING,
           assetName,
@@ -823,7 +822,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onReceipt = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           onSuccessRefreshData();
         } else {
           onError(ErrorTypes.ETHEREUM)
@@ -831,7 +830,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onReceiptApprove = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
             formattedAmount: formatMonetaryValue(amountToPay, paymentTokenSymbol),
             type: NotificationTypes.APPROVE,
@@ -842,7 +841,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onError = (type) => {
-        if(type === ErrorTypes.METAMASK){
+        if (type === ErrorTypes.METAMASK) {
           buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
             operationType: NotificationsMetamask.FUNDING,
           });
@@ -891,7 +890,7 @@ class BlockchainProvider extends React.Component {
 
       const formattedAmount = formatMonetaryValue(amount);
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
-      const { name : assetName } = currentAsset.model;
+      const { name: assetName } = currentAsset.model;
 
       // Call Approve first
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -913,7 +912,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onReceipt = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           onSuccessRefreshData();
         } else {
           onError(ErrorTypes.ETHEREUM)
@@ -921,7 +920,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onReceiptApprove = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.SUCCESS, {
             formattedAmount,
             type: NotificationTypes.APPROVE,
@@ -932,7 +931,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onError = (type) => {
-        if(type === ErrorTypes.METAMASK){
+        if (type === ErrorTypes.METAMASK) {
           buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
             operationType: NotificationsMetamask.PAY_DIVIDENDS,
           });
@@ -979,7 +978,7 @@ class BlockchainProvider extends React.Component {
       } = this.state;
 
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
-      const{
+      const {
         name: assetName,
       } = currentAsset.model;
 
@@ -1010,7 +1009,7 @@ class BlockchainProvider extends React.Component {
       }
 
       const onReceipt = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           onSuccessRefreshData();
         } else {
           onError(ErrorTypes.ETHEREUM);
@@ -1019,7 +1018,7 @@ class BlockchainProvider extends React.Component {
 
       const onError = (type) => {
         removeassetIdFromList();
-        if(type === ErrorTypes.METAMASK){
+        if (type === ErrorTypes.METAMASK) {
           buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
             operationType: NotificationsMetamask.WITHDRAW_INVESTOR,
           });
@@ -1083,11 +1082,11 @@ class BlockchainProvider extends React.Component {
     });
   }
 
-  fetchTransactionHistory = async () =>  {
-    if(!this.props.metamaskContext.user.address){
+  fetchTransactionHistory = async () => {
+    if (!this.props.metamaskContext.user.address) {
       this.setState({
         transactions: [],
-        loading: {
+        loading: {
           ...this.state.loading,
           transactionHistory: false,
         },

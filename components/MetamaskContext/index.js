@@ -28,11 +28,6 @@ const { Provider, Consumer } = React.createContext({});
 // Required so we can trigger getInitialProps in our exported pages
 export const withMetamaskContextPageWrapper = (Component) => {
   return class Higher extends React.Component {
-    static getInitialProps(ctx) {
-      if (Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
     render() {
       return (
         <Consumer>
@@ -42,6 +37,10 @@ export const withMetamaskContextPageWrapper = (Component) => {
     }
   }
 }
+
+export const getStaticProps = () => ({
+  props: {}
+})
 
 export const withMetamaskContext = (Component) => {
   return function WrapperComponent(props) {

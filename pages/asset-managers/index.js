@@ -12,14 +12,14 @@ const AssetManager = ({
   managerAddress,
 }) => {
   const hasMetamaskErrors = metamaskContext.metamaskErrors();
-  if(hasMetamaskErrors.error &&hasMetamaskErrors.error !== METAMASK_ERRORS.NO_METAMASK){
+  if (hasMetamaskErrors.error && hasMetamaskErrors.error !== METAMASK_ERRORS.NO_METAMASK) {
     return (
       <MetamaskErrors
         shouldRenderComponent={false}
       />
     )
   }
-  if(!managerAddress){
+  if (!managerAddress) {
     return (
       <AllAssetManagers
         assetsContext={assetsContext}
@@ -37,8 +37,8 @@ const AssetManager = ({
   }
 }
 
-AssetManager.getInitialProps = ctx => {
-  return { managerAddress: ctx.query.id };
+export const getInitialProps = ctx => {
+  return { props: { managerAddress: ctx.query.id } };
 }
 
 const enhance = compose(

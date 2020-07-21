@@ -77,16 +77,14 @@ const ListAssetMobile = ({
       maxWidthDesktop={MAX_WIDTH_DESKTOP}
       nextButtonHasArrow
       disableMovingForward
-      slides={[
-        {
-          toRender: <IntroSlide maxWidthDesktop={MAX_WIDTH_DESKTOP} />,
-          buttons: {
-            hasNextButton: true,
-            hasBackButton: false,
-            nextButtonText: !dev,
-            nextButtonHandler: !dev ,
-            onSuccessMoveToNextSlide: true
-          }
+      slides={[{
+        toRender: (
+          <IntroSlide maxWidthDesktop={MAX_WIDTH_DESKTOP}/>
+        ),
+        buttons: {
+          hasNextButton: true,
+          hasBackButton: false,
+          onSuccessMoveToNextSlide: true,
         },
         {
           toRender: (

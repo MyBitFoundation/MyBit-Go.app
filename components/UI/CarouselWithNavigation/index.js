@@ -120,64 +120,47 @@ class CarouselWithNavigation extends React.Component {
             hasOneButton={!hasTwoButtons}
             hasTwoButtons={hasTwoButtons}
           >
-            {hasBackButton && (
-              <CarouselWithNavigationButton
-                key={`${nextButtonText} ${currentSlide} 'back'`}
-                onClick={this.previous}
-                desktopAt={desktopAt}
-                isBack
-              >
-                Back
-              </CarouselWithNavigationButton>
-            )}
-            {hasNextButton && (
-              <CarouselWithNavigationButton
-                key={`${nextButtonText} ${currentSlide} 'next'`}
-                desktopAt={desktopAt}
-                type="primary"
-                onClick={
-                  nextButtonHandler
-                    ? onSuccessMoveToNextSlide
-                      ? () => nextButtonHandler(this.next)
-                      : nextButtonHandler
-                    : currentSlide === slides.length - 1
-                    ? onFinish
-                    : this.next
-                }
-                disabled={nextButtonDisabled}
-                loading={nextButtonLoading}
-                isNext
-              >
-                {(nextButtonDisabled && "All fields are required") ||
-                  nextButtonText || "Next"}
-                {!nextButtonLoading && <Icon type="right" />}
-              </CarouselWithNavigationButton>
-            )}
-          </CarouselWithNavigationButtons>
-        )}
-        <CarouselWithNavigationNav hideAt={desktopAt}>
-          {navigationTooltips.map(slideTooltip => {
-            return (
-              <Tooltip
-                tooltipProps={{
-                  title: slideTooltip.tooltip
-                }}
-                key={`slideTooltip${slideTooltip.slide}`}
-              >
-                <CarouselWithNavigationNavButton
-                  isActive={currentSlide === slideTooltip.slide}
-                  onClick={() => this.goToSlide(slideTooltip.slide)}
-                  disabled={
-                    disableMovingForward && slideTooltip.slide > currentSlide
-                  }
-                />
-              </Tooltip>
-            );
-          })}
-        </CarouselWithNavigationNav>
-      </CarouselWithNavigationWrapper>
-    );
-  }
+            Back
+          </CarouselWithNavigationButton>
+          )}
+          {hasNextButton && (
+            <CarouselWithNavigationButton
+              key={`${nextButtonText} ${currentSlide} 'next'`}
+              desktopAt={desktopAt}
+              type="primary"
+              onClick={nextButtonHandler ? onSuccessMoveToNextSlide ? () => nextButtonHandler(this.next) : nextButtonHandler : currentSlide === slides.length - 1 ? onFinish : this.next}
+              disabled={nextButtonDisabled}
+              loading={nextButtonLoading}
+              isNext
+            >
+              {(nextButtonDisabled && 'All fields are required') || (nextButtonText || 'Next')}
+              {!nextButtonLoading && <Icon type="right" />}
+            </CarouselWithNavigationButton>
+          )}
+        </CarouselWithNavigationButtons>
+      )}
+      <CarouselWithNavigationNav
+        hideAt={desktopAt}
+      >
+        {navigationTooltips.map((slideTooltip) => {
+          return (
+            <Tooltip
+              tooltipProps={{
+                title: slideTooltip.tooltip,
+              }}
+              key={`slideTooltip${slideTooltip.slide}`}
+            >
+              <CarouselWithNavigationNavButton
+                isActive={currentSlide === slideTooltip.slide}
+                onClick={() => this.goToSlide(slideTooltip.slide)}
+                disabled={disableMovingForward && slideTooltip.slide > currentSlide}
+              />
+            </Tooltip>
+          );
+        })}
+      </CarouselWithNavigationNav>
+    </CarouselWithNavigationWrapper>
+  )}
 }
 
 export default CarouselWithNavigation;
