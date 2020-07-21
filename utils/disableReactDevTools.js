@@ -1,7 +1,6 @@
 if (
   process.env.NODE_ENV === 'production' &&
-  window.__REACT_DEVTOOLS_GLOBAL_HOOK__ &&
-  Object.keys(window.__REACT_DEVTOOLS_GLOBAL_HOOK__._renderers).length
+  typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'object'
 ) {
-  window.__REACT_DEVTOOLS_GLOBAL_HOOK__._renderers = {};
+  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = {};
 }
