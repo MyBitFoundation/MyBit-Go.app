@@ -43,7 +43,7 @@ const ListAssetDesktopWrapper = styled.div`
 `;
 
 const PageTitle = styled.div`
-  font-family: Gilroy;
+  font-family: 'Assistant', sans-serif;
   font-size: 32px;
   line-height: 40px;
   color: ${({ theme }) => theme.colors.black};
