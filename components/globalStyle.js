@@ -2,15 +2,15 @@ import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
-    font-family: 'Gilroy';
-    src: url('/static/fonts/gilroy-extrabold.otf') format('opentype');
+    font-family: 'Assistant', sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap') format('opentype');
     font-weight: bold;
   }
 
   body {
     margin: 0;
     padding: 0;
-    font-family: 'Roboto' !important;
+    font-family: 'Assistant', sans-serif;
     position: relative;
     font-weight: normal;
     background-color: #ffffff;
@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   [class*='ant'] {
-    font-family: 'Roboto' !important;
+    font-family: 'Assistant', sans-serif;
   }
 
   html, body {
