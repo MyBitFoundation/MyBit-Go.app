@@ -206,7 +206,7 @@ export const AvailableAssetsSlide = ({
                   placeholder="Asset Name"
                   name="asset"
                   onChange={e => handleInputChange(e)}
-                  value={asset => (asset || '').toUpperCase()}
+                  value={asset ? asset.toUpperCase() : ""}
                 />
 
                 <SelectedAssetValueLabel>Asset value:</SelectedAssetValueLabel>
