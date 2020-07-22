@@ -23,23 +23,13 @@ const AboutWrapper = styled.div`
 const About = () => (
   <AboutWrapper>
     <Mybit />
-    <p>
-      MyBit is operated and maintained by a DAO
-      <div>DAO address:</div>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://mainnet.aragon.org/#/0xcD3d9b832BfF15E0a519610372c6AAC651872DdE/"
-      >
-        0xcD3d9b832BfF15E0a519610372c6AAC651872DdE
-      </a>
-    </p>
+    <p>MyBit is a Community Driven Project</p>
+    <p>that is operated and maintained by a DAO.</p>
     <a
-      href="https://github.com/MyBitFoundation/MyBit-Go.website/blob/develop/TOC.md"
-      rel="noopener noreferrer"
+      href="https://mainnet.aragon.org/#/0xcD3d9b832BfF15E0a519610372c6AAC651872DdE/"
       target="_blank"
     >
-      Terms & Conditions
+       https://mainnet.aragon.org/#/0xcD3d9b832BfF15E0a519610372c6AAC651872DdE/
     </a>
   </AboutWrapper>
 );

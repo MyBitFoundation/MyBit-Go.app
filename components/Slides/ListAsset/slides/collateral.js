@@ -64,7 +64,26 @@ const InputsWrapper = styled.div`
     margin: 0% 2%;
   }
 
-  ${({theme}) => theme.tablet`
+  ${({ theme }) => theme.tablet`
+    width: 95%;
+  `}
+`;
+
+const InputWrapper = styled.div`
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .ant-slider{
+    margin-bottom: 20px;
+  }
+
+  span{
+    margin: 0% 2%;
+  }
+
+  ${({ theme }) => theme.tablet`
     width: 95%;
   `}
 `;
@@ -108,7 +127,7 @@ const Label = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  color: ${({theme}) => theme.colors.grayBase};
+  color: ${({ theme }) => theme.colors.grayBase};
 `
 
 const Loading = styled(Spin)`
@@ -120,6 +139,7 @@ const Loading = styled(Spin)`
 
 export const CollateralSlide = ({
   maxWidthDesktop,
+  handleInputChange,
   collateralPercentage,
   formData,
   handleSelectedTokenChange,
@@ -138,6 +158,7 @@ export const CollateralSlide = ({
     collateralInDefaultToken,
     collateralInSelectedToken,
     asset,
+    escrow,
   } = formData;
 
   const noBalance = !balances || Object.keys(balances).length === 0;
@@ -146,11 +167,11 @@ export const CollateralSlide = ({
   const collateralSelectedTokenFormatted = formatValueForToken(collateralInSelectedToken, selectedToken);
 
   let buttonText = 'Next';
-  if(loadingBalancesForNewUser){
+  if (loadingBalancesForNewUser) {
     buttonText = 'Loading Balances'
-  } else if(noBalance){
+  } else if (noBalance) {
     buttonText = 'Insufficient Funds'
-  } else if(loadingConversionInfo){
+  } else if (loadingConversionInfo) {
     buttonText = 'Loading Slippage Info'
   }
 
@@ -175,8 +196,7 @@ export const CollateralSlide = ({
         maxWidthDesktop={maxWidthDesktop}
         removeFocus
       >
-        This a type of decentralised insurance for investors. It is calculated
-        based on the type of asset and your history as an asset manager.
+        This a type of decentralised insurance for investors.
         <a href="/help#How%20is%20asset%20manager%20collateral%20calculated?" target="_blank">
           {' '}Learn More
         </a>
@@ -186,18 +206,29 @@ export const CollateralSlide = ({
           <CarouselSlideParagraph
             isCentered
             maxWidthDesktop={maxWidthDesktop}
-            style={{marginTop: '60px'}}
+            style={{ marginTop: '60px' }}
           >
             Loading data from Kyber
           </CarouselSlideParagraph>
-           <Loading />
+          <Loading />
         </React.Fragment>
       )}
       {!kyberLoading && (
         <React.Fragment>
-          <LabelWithValueAndTooltip
-            {...formData}
-          />
+          <InputWrapper>
+            <MybitInput>
+              <Label>Choose Escrow Amount</Label>
+              <NumericInput
+                defaultValue={escrow}
+                max={100}
+                min={0}
+                onChange={e => handleInputChange({ target: { value: e, name: 'escrow' } })}
+                value={escrow}
+                label="%"
+                decimalPlaces={2}
+              />
+            </MybitInput>
+          </InputWrapper>
           <InputsWrapper>
             <MybitInput>
               <Label>Required Escrow</Label>
@@ -269,4 +300,5 @@ export const CollateralSlide = ({
         </React.Fragment>
       )}
     </CarouselSlide>
-  )}
+  )
+}

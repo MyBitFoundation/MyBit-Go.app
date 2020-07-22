@@ -86,7 +86,104 @@ const ListAssetMobile = ({
           hasBackButton: false,
           onSuccessMoveToNextSlide: true,
         },
-        {
+      }, {
+        toRender: (
+          <AvailableAssetsSlide
+            handleSelectChange={handleSelectChange}
+            formData={formData}
+            maxWidthDesktop={MAX_WIDTH_DESKTOP}
+            loadingAssets={loadingAssets}
+            handleInputChange={handleInputChange}
+            countries={countries}
+            handleCitySuggest={handleCitySuggest}
+            error={false || metamaskErrorsToRender.render}
+            airtableContext={airtableContext}
+            autoLocationOffline={autoLocationOffline}
+            getCategoriesForAssets={getCategoriesForAssets}
+          />
+        ), buttons: {
+          hasNextButton: true,
+          hasBackButton: true,
+          nextButtonDisabled: !userCountry || !userCity || !asset || !assetValue
+        }
+      }, {
+        toRender: (
+          <GeneralDescriptionSlide
+            formData={formData}
+            maxWidthDesktop={MAX_WIDTH_DESKTOP}
+            handleInputChange={handleInputChange}
+          />
+        ), buttons: {
+          hasNextButton: true,
+          hasBackButton: true,
+          nextButtonDisabled: !about || !financials || !risks || (hasAdditionalCosts && (!fees || additionalCosts <= 0)),
+        }
+      }, {
+        toRender: (
+          <AssetLocationSlide
+            handleInputChange={handleInputChange}
+            handleSelectChange={handleSelectChange}
+            formData={formData}
+            countries={countries}
+            maxWidthDesktop={MAX_WIDTH_DESKTOP}
+            handleSelectSuggest={handleSelectSuggest}
+          />
+        ), buttons: {
+          hasNextButton: true,
+          hasBackButton: true,
+          nextButtonDisabled:
+            userCountry !== "" &&
+            assetAddress1 !== "" &&
+            assetCity !== "" &&
+            assetProvince !== "" &&
+            assetPostalCode !== ""
+              ? false
+              : true,
+        }
+      }, {
+        toRender: (
+          <DocsSlide
+            fileList={fileList}
+            handleFileUpload={handleFileUpload}
+            maxWidthDesktop={MAX_WIDTH_DESKTOP}
+          />
+        ), buttons: {
+          hasNextButton: true,
+          hasBackButton: true,
+        }
+      }, {
+        toRender: (
+          <FeesSlide
+            handleSelectChange={handleSelectChange}
+            managementFee={managementFee}
+            maxWidthDesktop={MAX_WIDTH_DESKTOP}
+          />
+        ), buttons: {
+          hasNextButton: true,
+          hasBackButton: true,
+          nextButtonDisabled: managementFee !== 0 ? false : true,
+        }
+      }, {
+        toRender:
+          <CollateralSlide
+            selectedToken={selectedToken}
+            handleSelectedTokenChange={handleSelectedTokenChange}
+            formData={formData}
+            handleInputChange={handleInputChange}
+            maxWidthDesktop={MAX_WIDTH_DESKTOP}
+            balances={balances}
+            kyberLoading={kyberLoading}
+            loadingBalancesForNewUser={loadingBalancesForNewUser}
+            loadingConversionInfo={loadingConversionInfo}
+            tokenSlippagePercentages={tokenSlippagePercentages}
+          />
+        , buttons: {
+          hasNextButton: true,
+          hasBackButton: true,
+          nextButtonDisabled: managementFee !== 0 ? false : true,
+        }
+      },
+        !readToS ? {
           toRender: (
             <AvailableAssetsSlide
               handleSelectChange={handleSelectChange}

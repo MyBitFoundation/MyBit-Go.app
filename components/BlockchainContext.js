@@ -634,6 +634,8 @@ class BlockchainProvider extends React.Component {
 
     const { buildNotification } = notificationsContext;
 
+    console.log('AssetContext', formData)
+
     const {
       user,
       network,

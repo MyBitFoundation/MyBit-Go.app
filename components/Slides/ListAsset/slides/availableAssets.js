@@ -1,13 +1,9 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
-import Router from 'next/router';
-import {
-  InputNumber,
-  Button,
-  Select,
-} from "antd";
-import getConfig from 'next/config';
-import AlertMessage from 'ui/AlertMessage';
+import React from "react";
+import styled, { css } from "styled-components";
+import Router from "next/router";
+import { InputNumber, Button, Select } from "antd";
+import getConfig from "next/config";
+import AlertMessage from "ui/AlertMessage";
 import {
   CarouselSlide,
   CarouselSlideMainTitle,
@@ -18,14 +14,12 @@ import {
   CarouselSlideInput,
   CarouselSlideSelect,
   CarouselSlideInputNumber,
-  CarouselNextButton,
-} from 'components/CarouselSlide/';
-import {
-  DEFAULT_TOKEN,
-} from 'constants/app';
-import ThinkingIcon from 'static/ic_thinking.svg';
-import Spin from 'static/spin.svg';
-import LabelWithTooltip from 'ui/LabelWithTooltip';
+  CarouselNextButton
+} from "components/CarouselSlide/";
+import { DEFAULT_TOKEN } from "constants/app";
+import ThinkingIcon from "static/ic_thinking.svg";
+import Spin from "static/spin.svg";
+import LabelWithTooltip from "ui/LabelWithTooltip";
 
 const Image = styled.img`
   position: relative;
@@ -33,20 +27,20 @@ const Image = styled.img`
   width: 120px;
   height: 120px;
   margin-bottom: 40px;
-}`
+}`;
 
 const ButtonWrapper = styled(Button)`
   display: block;
   margin: 0 auto;
   margin-top: 50px;
-`
+`;
 
 const Loading = styled(Spin)`
   display: block;
   margin: 0 auto;
   height: 32px;
   width: 32px;
-`
+`;
 
 const DetectLocation = styled.p`
   font-weight: 500;
@@ -58,13 +52,13 @@ const DetectLocation = styled.p`
   width: max-content;
   margin: 0 auto;
   margin-bottom: 1rem;
-`
+`;
 
 const SelectedAssetValueLabel = styled.p`
   width: 80%;
   margin: 0 auto;
   margin-bottom: 10px;
-`
+`;
 
 const NoResults = styled.div`
   text-align: center;
@@ -75,15 +69,15 @@ const NoResults = styled.div`
   justify-content: space-evenly;
   margin-top: 50px;
 
-  p:nth-child(2){
+  p:nth-child(2) {
     margin: 0px;
     font-size: 16px;
     color: ${({ theme }) => theme.colors.blackish};
     font-weight: 500;
   }
-`
+`;
 const AlertMessageWrapper = styled.div`
-  .ant-alert{
+  .ant-alert {
     padding: 8px 10px 8px 37px;
   }
 
@@ -94,26 +88,28 @@ const AlertMessageWrapper = styled.div`
   width: 80%;
   margin: 0 auto;
   margin-bottom: 20px;
-`
+`;
 
 const AssetValueContainer = styled.div`
   display: flex;
   margin: 0 auto;
   justify-content: center;
 
-  ${props => props.cryptoPurchase === false && css`
-    ${({ theme }) => theme.mobileL`
+  ${props =>
+    props.cryptoPurchase === false &&
+    css`
+      ${({ theme }) => theme.mobileL`
       margin-bottom: 20px;
       flex-direction: row;
     `}
 
-    .ant-input-number{
-      width: auto;
-      margin: 0px;
-      width: 155px;
-    }
-  `}
-`
+      .ant-input-number {
+        width: auto;
+        margin: 0px;
+        width: 155px;
+      }
+    `}
+`;
 
 export const AvailableAssetsSlide = ({
   handleSelectChange,
@@ -129,7 +125,7 @@ export const AvailableAssetsSlide = ({
   nextButtonDisabled,
   error,
   autoLocationOffline,
-  getCategoriesForAssets,
+  getCategoriesForAssets
 }) => {
   const {
     category,
@@ -139,18 +135,12 @@ export const AvailableAssetsSlide = ({
     userCountry,
     searchCity,
     countryCode,
-    cryptoPurchase,
+    cryptoPurchase
   } = formData;
 
   let areAssetsAvailable = true;
   let categories = {};
   let assetsAvailable = [];
-  if (userCountry && userCity) {
-    categories = getCategoriesForAssets(userCountry, userCity);
-  //   assetsAvailable = (category && categories[category]) || [];
-  //   areAssetsAvailable = Object.keys(categories).length > 0;
-  }
-  console.log(categories)
 
   return (
     <CarouselSlide
@@ -166,33 +156,22 @@ export const AvailableAssetsSlide = ({
             isCentered
             maxWidthDesktop={maxWidthDesktop}
           >
-            <React.Fragment>
-              Assets available
-              <CarouselSlideTooltip
-                title="More assets will become available in the future."
-              />
-            </React.Fragment>
+            <React.Fragment>Select Asset</React.Fragment>
           </CarouselSlideMainTitle>
           {loadingAssets && (
             <React.Fragment>
               <CarouselSlideParagraph
                 isCentered
                 maxWidthDesktop={maxWidthDesktop}
-                style={{ marginTop: '60px' }}
+                style={{ marginTop: "60px" }}
               >
                 Loading assets
-                </CarouselSlideParagraph>
+              </CarouselSlideParagraph>
               <Loading />
             </React.Fragment>
           )}
           {!loadingAssets && (
             <React.Fragment>
-              <CarouselSlideParagraph
-                isCentered
-                maxWidthDesktop={maxWidthDesktop}
-              >
-                Different assets will be available to fund depending on where you are.
-              </CarouselSlideParagraph>
               <div className="Slider__input-container">
                 <CarouselSlideSelect
                   isCentered
@@ -201,8 +180,9 @@ export const AvailableAssetsSlide = ({
                   optionFilterProp="children"
                   onChange={value => handleSelectChange(value, "userCountry")}
                   filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                    0
+                    option.props.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
                   }
                   value={userCountry}
                 >
@@ -226,22 +206,32 @@ export const AvailableAssetsSlide = ({
                   placeholder="Asset Name"
                   name="asset"
                   onChange={e => handleInputChange(e)}
-                  value={asset}
+                  value={asset.toUpperCase()}
                 />
 
-                <SelectedAssetValueLabel>Selected Asset value:</SelectedAssetValueLabel>
+                <SelectedAssetValueLabel>Asset value:</SelectedAssetValueLabel>
                 <AssetValueContainer cryptoPurchase={cryptoPurchase}>
                   <CarouselSlideInputNumber
                     isCentered
-                    placeholder="Funding Goal"
+                    step={1}
+                    precision={0}
+                    placeholder="Asset Value"
                     name="assetValue"
                     value={assetValue}
-                    onChange={e => handleInputChange(e)}
-                    style={cryptoPurchase === false ? { marginRight: '10px', marginBottom: '5px' } : {}}
+                    onChange={e =>
+                      handleInputChange({
+                        target: { value: e, name: "assetValue" }
+                      })
+                    }
+                    style={
+                      cryptoPurchase === false
+                        ? { marginRight: "10px", marginBottom: "5px" }
+                        : {}
+                    }
                   />
                   {cryptoPurchase === false && (
                     <LabelWithTooltip
-                      title={'8% fiat fee incl.'}
+                      title={"8% fiat fee incl."}
                       tooltipText="The asset incurs an additional 8% fee on top of the total investment to cover most exchanges
                           fees in order to transfer the money into its fiat equivalent."
                       isDark

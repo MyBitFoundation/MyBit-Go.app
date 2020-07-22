@@ -6,11 +6,12 @@ import {
   DEFAULT_TOKEN_MAX_DECIMALS,
 } from 'constants/app';
 
-export const debug = process.env.NODE_ENV === 'development' ? console.log : () => {};
+export const debug = process.env.NODE_ENV === 'development' ? console.log : () => { };
 
 export const fromWeiToEth = weiValue => Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
 
-export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
+// export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
+export const toWei = value => Math.ceil(value * 10 ** 18).toString()
 
 export const formatValueForToken = (value, symbol) => {
   const decimalsForToken = getDecimalsForToken(symbol)
@@ -18,7 +19,7 @@ export const formatValueForToken = (value, symbol) => {
 }
 
 export const getDecimalsForToken = symbol => {
-  switch(symbol){
+  switch (symbol) {
     case PLATFORM_TOKEN: return {
       decimals: PLATFORM_TOKEN_MAX_DECIMALS,
       step: getStepsFromDecimals(PLATFORM_TOKEN_MAX_DECIMALS),
@@ -35,11 +36,11 @@ export const getDecimalsForToken = symbol => {
 }
 
 const getStepsFromDecimals = decimals => {
-  if(decimals <= 0 ){
+  if (decimals <= 0) {
     return 1;
   } else {
     let step = '0.';
-    for(let i = 0; i < decimals - 1; i++){
+    for (let i = 0; i < decimals - 1; i++) {
       step = `${step}0`;
     }
     step = `${step}1`;
@@ -50,7 +51,7 @@ const getStepsFromDecimals = decimals => {
 export const getNumberOfDecimals = value => value.toString().split(".")[1].length;
 
 export const convertTokenAmount = (convertTo, convertFrom, tokens, amount) => {
-  if(convertTo === convertFrom){
+  if (convertTo === convertFrom) {
     return Number(amount);
   }
 
@@ -62,7 +63,7 @@ export const convertTokenAmount = (convertTo, convertFrom, tokens, amount) => {
 }
 
 export const convertFromDefaultToken = (convertTo, tokens, amount) => {
-  if(convertTo === DEFAULT_TOKEN){
+  if (convertTo === DEFAULT_TOKEN) {
     return Number(amount);
   }
 
@@ -72,7 +73,7 @@ export const convertFromDefaultToken = (convertTo, tokens, amount) => {
 }
 
 export const convertFromPlatformToken = (convertTo, tokens, amount) => {
-  if(convertTo === PLATFORM_TOKEN){
+  if (convertTo === PLATFORM_TOKEN) {
     return Number(amount);
   }
 
@@ -88,20 +89,20 @@ export const convertFromTokenToDefault = (convertFrom, tokens, amount) => {
 }
 
 export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {
-  try{
+  try {
     if (typeof localStorage !== 'undefined') {
       let value = localStorage.getItem(key);
-      if(isObject && value){
+      if (isObject && value) {
         value = JSON.parse(value);
       }
-      if(!value){
+      if (!value) {
         valueIfNoExists && setValueLocalStorage(key, valueIfNoExists, isObject);
         return valueIfNoExists;
       } else {
         return value;
       }
     }
-  } catch(err){
+  } catch (err) {
     console.log(err)
   }
 
@@ -109,16 +110,16 @@ export const getValueFromLocalStorage = (key, valueIfNoExists, isObject) => {
 }
 
 export const setValueLocalStorage = (key, value, isObject) => {
-  try{
+  try {
     if (typeof localStorage !== 'undefined') {
-      if(isObject){
+      if (isObject) {
         localStorage.setItem(key, JSON.stringify(value))
       } else {
         localStorage.setItem(key, value);
       }
       return value;
     }
-  } catch(err){
+  } catch (err) {
     console.log(err)
   }
 
@@ -133,7 +134,7 @@ export const formatMonetaryValue = (number, symbol = DEFAULT_TOKEN, includeToken
     });
 
     return includeToken ? `${value} ${symbol}` : value;
-  }catch(err) {
+  } catch (err) {
     debug({
       "Function Name: ": "formatMonetaryValue()",
       err: err,
@@ -152,14 +153,14 @@ export const generateRandomURI = (web3) => {
   return text;
 }
 
-export const shortenAddress = (address, leftSide=15, rightSide=8) => {
+export const shortenAddress = (address, leftSide = 15, rightSide = 8) => {
   const size = address.length;
   let splitAddress = [address.slice(0, leftSide), address.slice(size - rightSide, size)]
   return splitAddress[0] + "..." + splitAddress[1];
 }
 
 export const getDayInText = number => {
-  switch(number){
+  switch (number) {
     case 0: return 'Sun';
     case 1: return 'Mon';
     case 2: return 'Tue';
@@ -172,7 +173,7 @@ export const getDayInText = number => {
 }
 
 export const getMonthInText = number => {
-  switch(number){
+  switch (number) {
     case 0: return 'Jan';
     case 1: return 'Fev';
     case 2: return 'Mar';

@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components";
 import {
   IntroSlide,
   LocationSlide,
@@ -10,9 +10,9 @@ import {
   ConfirmSlideDesktop,
   SuccessSlide,
   TermsOfServiceSlide,
-  GeneralDescriptionSlide,
+  GeneralDescriptionSlide
 } from "components/Slides/ListAsset/slides";
-import CustomTimeline from './customTimeline';
+import CustomTimeline from "./customTimeline";
 
 const MAX_WIDTH_DESKTOP = "450px";
 
@@ -24,12 +24,12 @@ const ListAssetDesktopWrapper = styled.div`
   margin-top: 90px;
   max-width: 850px;
 
-  & > ul{
-   margin-left: 20px;
-   width: 30%;
+  & > ul {
+    margin-left: 20px;
+    width: 30%;
   }
 
-  & > div{
+  & > div {
     width: 60%;
   }
 
@@ -40,7 +40,7 @@ const ListAssetDesktopWrapper = styled.div`
      width: 40%;
     }
   `}
-`
+`;
 
 const PageTitle = styled.div`
   font-family: Gilroy;
@@ -54,7 +54,7 @@ const PageTitle = styled.div`
   ${({ theme }) => theme.laptop`
     left: -5px;
   `}
-`
+`;
 
 const ListAssetDesktop = ({
   step,
@@ -89,7 +89,7 @@ const ListAssetDesktop = ({
   loadingConversionInfo,
   tokenSlippagePercentages,
   autoLocationOffline,
-  getCategoriesForAssets,
+  getCategoriesForAssets
 }) => {
   const {
     category,
@@ -113,7 +113,7 @@ const ListAssetDesktop = ({
     risks,
     hasAdditionalCosts,
     additionalCosts,
-    fees,
+    fees
   } = formData;
 
   if (step === 0) {
@@ -124,7 +124,7 @@ const ListAssetDesktop = ({
         onClick={goToNextStep}
         dev={dev}
       />
-    )
+    );
   }
   return (
     <ListAssetDesktopWrapper>
@@ -150,7 +150,9 @@ const ListAssetDesktop = ({
           countries={countries}
           handleCitySuggest={handleCitySuggest}
           desktopMode
-          nextButtonDisabled={!userCountry || !userCity || !asset || assetValue <= 0}
+          nextButtonDisabled={
+            !userCountry || !userCity || !asset || !assetValue
+          }
           onClick={goToNextStep}
           error={false || metamaskErrorsToRender.render}
           airtableContext={airtableContext}
@@ -165,7 +167,12 @@ const ListAssetDesktop = ({
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={goToNextStep}
-          nextButtonDisabled={!about || !financials || !risks || (hasAdditionalCosts && (!fees || additionalCosts <= 0))}
+          nextButtonDisabled={
+            !about ||
+            !financials ||
+            !risks ||
+            (hasAdditionalCosts && (!fees || additionalCosts <= 0))
+          }
           handleSelectChange={handleSelectChange}
         />
       )}
@@ -178,13 +185,14 @@ const ListAssetDesktop = ({
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           handleSelectSuggest={handleSelectSuggest}
           desktopMode
-          nextButtonDisabled={userCountry !== "" &&
+          nextButtonDisabled={
+            userCountry !== "" &&
             assetAddress1 !== "" &&
             assetCity !== "" &&
             assetProvince !== "" &&
             assetPostalCode !== ""
-            ? false
-            : true
+              ? false
+              : true
           }
           onClick={goToNextStep}
         />
@@ -211,6 +219,7 @@ const ListAssetDesktop = ({
       {step === 6 && (
         <CollateralSlide
           selectedToken={selectedToken}
+          handleInputChange={handleInputChange}
           handleSelectedTokenChange={handleSelectedTokenChange}
           formData={formData}
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
@@ -223,21 +232,22 @@ const ListAssetDesktop = ({
           loadingConversionInfo={loadingConversionInfo}
           tokenSlippagePercentages={tokenSlippagePercentages}
         />
-      )}{step === 7 && !readToS && (
+      )}
+      {step === 7 && !readToS && (
         <TermsOfServiceSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={setReadToS}
         />
       )}
-      {(step === 7 && listedAssetId && readToS) && (
+      {step === 7 && listedAssetId && readToS && (
         <SuccessSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           assetId={listedAssetId}
           desktopMode
         />
       )}
-      {(step === 7 && !listedAssetId && readToS) && (
+      {step === 7 && !listedAssetId && readToS && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}
@@ -256,7 +266,7 @@ const ListAssetDesktop = ({
         />
       )}
     </ListAssetDesktopWrapper>
-  )
-}
+  );
+};
 
 export default ListAssetDesktop;
