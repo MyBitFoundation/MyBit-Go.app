@@ -183,7 +183,7 @@ const ListAssetMobile = ({
           nextButtonDisabled: managementFee !== 0 ? false : true,
         }
       },
-        !readToS ? {
+        !readToS && {
           toRender: (
             <AvailableAssetsSlide
               handleSelectChange={handleSelectChange}

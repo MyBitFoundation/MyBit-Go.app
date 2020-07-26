@@ -54,15 +54,6 @@ const CarouselWithNavigationButton = styled(props => <Button {...omit(props, Car
       height: 32px;
     }
   `}
-<<<<<<< HEAD
-`;
-
-CarouselWithNavigationButton.OmitProps = [
-  "desktopAt",
-  "isNext",
-  "isBack"
-];
-=======
 `
 
 CarouselWithNavigationButton.OmitProps = [
@@ -70,6 +61,5 @@ CarouselWithNavigationButton.OmitProps = [
   'isNext',
   'isBack',
 ]
->>>>>>> Fix produuction deployment
 
 export default CarouselWithNavigationButton;

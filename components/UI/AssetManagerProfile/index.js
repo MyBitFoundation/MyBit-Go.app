@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-import React from "react";
-import dayjs from "dayjs";
-import styled, { css } from "styled-components";
-import Divider from "ui/Divider";
-=======
 import React from 'react';
 import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import CheckMark from 'static/ic_unreal.svg';
 import Divider from 'ui/Divider';
->>>>>>> Fix produuction deployment
 
 const AssetManagerProfileDataWrapper = styled.div`
   display: grid;
@@ -33,12 +26,7 @@ const PoweredBy = styled.p`
   a:focus {
     text-decoration: none;
   }
-<<<<<<< HEAD
-`;
-
-=======
 `
->>>>>>> Fix produuction deployment
 
 const DataWrapper = styled.div`
   display: flex;
