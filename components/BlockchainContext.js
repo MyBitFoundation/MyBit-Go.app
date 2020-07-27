@@ -735,7 +735,6 @@ class BlockchainProvider extends React.Component {
         assetAddress2,
         assetProvince,
         assetPostalCode,
-        modelId,
         files: filesInfo.string,
       }, performInternalAction, network)
 
@@ -773,7 +772,6 @@ class BlockchainProvider extends React.Component {
       paymentTokenAddress,
       gasPrice,
       ipfs: ipfsHash,
-      modelId,
     },
       network,
     );

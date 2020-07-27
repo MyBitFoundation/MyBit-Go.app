@@ -169,7 +169,6 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
       paymentTokenAddress,
       gasPrice,
       ipfs,
-      modelId,
     } = params;
 
     const randomURI = generateRandomURI(window.web3js);
@@ -184,7 +183,6 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
       fundingToken: getDefaultTokenContract(network),
       paymentToken: paymentTokenAddress,
       ipfs,
-      modelID: modelId,
       createAsset: {
         onTransactionHash: onCreateAsset.onTransactionHash,
         onError: error => processErrorType(error, onCreateAsset.onError),

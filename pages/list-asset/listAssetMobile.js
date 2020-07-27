@@ -52,6 +52,7 @@ const ListAssetMobile = ({
     asset,
     assetValue,
     userCountry,
+    userCity,
     assetAddress1,
     assetCity,
     assetProvince,
