@@ -39,7 +39,6 @@ const AssetDetails = ({
     funded,
     pastDate,
     percentageOwnedByUser,
-    model,
     fundingGoal,
     fundingProgress,
     userInvestment,
@@ -47,16 +46,9 @@ const AssetDetails = ({
     financials,
     risks,
     fees,
-    modelImage,
-    modelName,
     assetManagerData,
     handleAssetFavorited,
   } = asset;
-
-  const {
-    imageSrc,
-    name,
-  } = model;
 
   return (
     <AssetDetailsWrapper>

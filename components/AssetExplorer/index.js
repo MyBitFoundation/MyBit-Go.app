@@ -118,7 +118,6 @@ class AssetExplorer extends React.Component {
 
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      const assetCategory = asset && asset.model && asset.model.category;
       if (((fundingActive && asset.fundingStage === FundingStages.IN_PROGRESS && !asset.pastDate) || (!fundingActive && (asset.funded || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
         return true;
       }

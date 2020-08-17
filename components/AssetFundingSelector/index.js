@@ -44,8 +44,6 @@ const AssetFundingSelector = ({
         fundingGoal={formatMonetaryValue(asset.fundingGoal)}
         fundingProgress={formatMonetaryValue(asset.fundingProgress)}
         style={{marginTop: '20px'}}
-        cryptoPayout={asset.model.cryptoPayout}
-        cryptoPurchase={asset.model.cryptoPurchase}
       />
     </div>
     <Separator style={separatorStyle}/>

@@ -9,7 +9,6 @@ const apiEndpoint = 'https://api.mybit.io';
 
 export const InternalLinks = {
   S3: 'https://s3.eu-central-1.amazonaws.com/mybit-go/',
-  getAirtableAssetModels: network => process.env.NODE_ENV === 'development' ? `${host}/api/airtable/assetModels/${network}` : `/api/airtable/assetModels/${network}`,
   getAirtableAssetListings: network => process.env.NODE_ENV === 'development' ? `${host}/api/airtable/assetListings/${network}` : `/api/airtable/assetListings/${network}`,
   getAirtableOperators: network => process.env.NODE_ENV === 'development' ? `${host}/api/airtable/operators/${network}` : `/api/airtable/operators/${network}`,
   updateAirtableAssets: network => process.env.NODE_ENV === 'development' ? `${host}/api/airtable/update/${network}` : `/api/airtable/update/${network}`,

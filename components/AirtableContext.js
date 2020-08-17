@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { InternalLinks } from 'constants/links';
 import {
-  AIRTABLE_ASSET_MODELS,
   AIRTABLE_ASSET_LISTINGS,
   AIRTABLE_CATEGORIES_RULES,
   AIRTABLE_OPERATORS,
@@ -98,22 +97,6 @@ class AirtableProvider extends React.PureComponent {
     return operators;
   }
 
-  processAssetModels = data => {
-    const assetModels = {};
-    data.forEach(({ fields }) => {
-      assetModels[fields['Model ID']] = {
-        category: fields['Category'],
-        name: fields['Asset'],
-        imageSrc: `/assets/${fields['Image']}`,
-        location: this.getLocationFromString(fields['Location']),
-        files: this.getFiles(fields['Files']),
-        fundingGoal: fields['Funding Goal'],
-        url: fields['URL'],
-      }
-    })
-    return assetModels;
-  }
-
   processAssetListings = data => {
     const assetListings = {};
     data.forEach(({ fields }) => {
@@ -121,7 +104,6 @@ class AirtableProvider extends React.PureComponent {
         financials: fields['Financials'] || DEFAULT_ASSET_INFO.Financials,
         about: fields['About'] || DEFAULT_ASSET_INFO.About,
         risks: fields['Risks'] || DEFAULT_ASSET_INFO.Risks,
-        modelId: fields['Model ID'],
         city: fields['City'],
         country: fields['Country'],
         collateralPercentage: fields['Collateral Percentage'],
@@ -152,24 +134,19 @@ class AirtableProvider extends React.PureComponent {
     try {
       this.updateFunction = updateFunction;
 
-      let [assetModels, assetListings, operators] = await Promise.all([
-        fetch(InternalLinks.getAirtableAssetModels(network)),
+      let [ assetListings, operators] = await Promise.all([
         fetch(InternalLinks.getAirtableAssetListings(network)),
         fetch(InternalLinks.getAirtableOperators(network)),
       ]);
-      [assetModels, assetListings, operators] = await Promise.all([
-        assetModels.json(),
+      [assetListings, operators] = await Promise.all([
         assetListings.json(),
         operators.json(),
       ]);
-      const { records: modelsRecords } = assetModels;
       const { records: listingsRecords } = assetListings;
       const { records: operatorsRecords } = operators;
 
-      const assetModelsFiltered = verifyDataAirtable(AIRTABLE_ASSET_MODELS, modelsRecords);
       const assetListingsFiltered = verifyDataAirtable(AIRTABLE_ASSET_LISTINGS, listingsRecords);
       const operatorsFiltered = verifyDataAirtable(AIRTABLE_OPERATORS, operatorsRecords);
-      const assetModelsProcessed = this.processAssetModels(assetModelsFiltered);
       const operatorsProcessed = this.processOperators(operatorsFiltered)
       const assetListingsProcessed = this.processAssetListings(assetListingsFiltered);
       /*
@@ -177,7 +154,6 @@ class AirtableProvider extends React.PureComponent {
       * uses the correct airtable data when pulling the assets, from the correct network
       */
       updateFunction({
-        assetModels: assetModelsProcessed,
         assetListings: assetListingsProcessed,
         operators: operatorsProcessed,
         network,

@@ -28,7 +28,6 @@ class AssetsProvider extends React.PureComponent {
       loadingAssets: true,
       assetListings: {},
       operators: {},
-      assetModels: {},
       assetManagers: {},
       assetsWithPendingIpfs: {},
       getAssetListingFull: this.getAssetListingFull,
@@ -85,7 +84,6 @@ class AssetsProvider extends React.PureComponent {
         loadingUserInfo: true,
         assetListings: {},
         operators: {},
-        assetModels: {},
         assetManagers: {},
         assetsWithPendingIpfs: {},
       })
@@ -98,16 +96,15 @@ class AssetsProvider extends React.PureComponent {
     const { metamaskContext } = this.props;
     const { network, user } = metamaskContext;
     this.setState({ loadingSdk: true });
-    Brain.fetchAssets(user.address, network, ({ assetListings, operators, assetModels }) => {
+    Brain.fetchAssets(user.address, network, ({ assetListings, operators }) => {
       const assetManagers = this.getAssetManagers(assetListings);
       this.setState({ loadingSdk: false, loadingUserInfo: false, assetManagers }, () => {
         this.setData({
           assetListings,
           operators,
-          assetModels,
           sdk: true,
           network,
-        }, () => this.startIpfs(network, assetListings, assetModels, operators))
+        }, () => this.startIpfs(network, assetListings, operators))
       })
     });
   }
@@ -128,22 +125,20 @@ class AssetsProvider extends React.PureComponent {
     Brain.subscribe(() => { }, this.handlePlatformUpdates, blockNumber + 1)
   }
 
-  startIpfs = (network, assetListings, assetModels, operators) => {
+  startIpfs = (network, assetListings, operators) => {
     const { usingIpfs, loadingIpfs } = this.state;
     if (usingIpfs) {
-      this.getAssetsFromIpfs(network, assetListings, assetModels, operators);
+      this.getAssetsFromIpfs(network, assetListings, operators);
     }
   }
 
-  getAssetsFromIpfs = (network, assetListings, assetModels, operators) => {
+  getAssetsFromIpfs = (network, assetListings, operators) => {
     this.setState({ loadingIpfs: true, loadingAirtable: false })
     this.ipfs = new IpfsDataManager(
       network,
       assetListings,
-      assetModels,
       operators,
       this.handleListingUpdateIpfs,
-      this.handleModelUpdateIpfs,
     );
   }
 
@@ -161,25 +156,17 @@ class AssetsProvider extends React.PureComponent {
     this.updateListingProps(assetId, asset);
   }
 
-  handleModelUpdateIpfs = (modelId, model) => {
-    model['fundingGoal'] = model.goal;
-    model['offChainData'] = true;
-    delete model.goal;
-    this.updateModelProps(modelId, model);
-  }
-
   /*
   * Returns an array of assets, containing all the
   * information about said asset
   */
-  getAssets = (assetListings, assetModels, operators,) => {
+  getAssets = (assetListings, operators,) => {
     operators = operators !== undefined ? operators : this.state.operators;
     assetListings = assetListings !== undefined ? assetListings : this.state.assetListings;
-    assetModels = assetModels !== undefined ? assetModels : this.state.assetModels;
     const assets = [];
     Object.entries(assetListings).forEach(([assetId, asset]) => {
       assets.push({
-        ...this.getAssetListingFull(assetId, assetListings, assetModels, operators),
+        ...this.getAssetListingFull(assetId, assetListings, operators),
       })
     })
     assets.reverse();
@@ -188,21 +175,15 @@ class AssetsProvider extends React.PureComponent {
 
   getOperator = address => this.state.operators[address]
 
-  getAssetModel = modelId => this.state.assetModels[modelId]
-
   getAssetListing = assetId => this.state.assetListings[assetId]
 
-  getAssetListingFull = (assetId, assetListings, assetModels, operators) => {
+  getAssetListingFull = (assetId, assetListings, operators) => {
     operators = operators !== undefined ? operators : this.state.operators;
     assetListings = assetListings !== undefined ? assetListings : this.state.assetListings;
-    assetModels = assetModels !== undefined ? assetModels : this.state.assetModels;
 
     const { assetManagers } = this.state;
-    const modelId = assetListings[assetId] ? assetListings[assetId].modelId : undefined;
-    const operatorAddress = (modelId && assetModels[modelId]) ? assetModels[modelId].operator : undefined;
     return {
       operator: { ...operators[operatorAddress] },
-      model: { ...assetModels[modelId] },
       ...assetListings[assetId],
       assetManagerData: assetManagers[assetListings[assetId].assetManager],
     }
@@ -257,7 +238,7 @@ class AssetsProvider extends React.PureComponent {
     }
 
     const onAssetListing = async data => {
-      const { assetListings, usingAirtable, usingIpfs, assetModels, assetManagers } = this.state;
+      const { assetListings, usingAirtable, usingIpfs, assetManagers } = this.state;
       const { fetchNewAssetListing } = this.props;
       const { user, network } = this.props.metamaskContext;
       const { asset: assetId, manager: assetManager } = event.returnValues;
@@ -281,7 +262,6 @@ class AssetsProvider extends React.PureComponent {
           this.ipfs.fetchNewResource(assetId, asset, this.handleListingUpdateIpfs);
         }
       }
-      asset['model'] = assetModels[asset.modelId];
       asset['assetManagerData'] = assetManagers[assetManager];
       this.updateListingProps(assetId, asset);
     }
@@ -318,37 +298,6 @@ class AssetsProvider extends React.PureComponent {
     const asset = assetListings[assetId];
     await Brain.updateAirTableWithNewOffChainData({ assetId, files: files.string, risks, financials, about, fees, }, network)
     this.updateListingProps(assetId, { ...asset, files: files.array, risks, financials, about, fees })
-  }
-
-  updateModelProps = (modelId, props) => {
-    this.setState(prevState => {
-      let { assetModels, assets, } = prevState;
-      const imageIpfs = props.images && props.images.length > 0 && props.images[0];
-      const imageSrc = imageIpfs ? `${IPFS_URL}${imageIpfs}` : '';
-      const assetModelsNew = {
-        ...assetModels,
-        [modelId]: {
-          ...assetModels[modelId],
-          ...props,
-          imageSrc,
-        }
-      }
-      const assetsArray = assets.slice();
-      for (let i = 0; i < assetsArray.length; i++) {
-        let asset = assetsArray[i];
-        if (asset.modelId === modelId) {
-          const { assetId } = asset;
-          assetsArray[i] = {
-            ...asset,
-            model: assetModelsNew[modelId],
-          };
-        }
-      }
-      return {
-        assetModels: assetModelsNew,
-        assets: assetsArray,
-      }
-    })
   }
 
   updateListingProps = (assetId, props) => {
@@ -444,8 +393,6 @@ class AssetsProvider extends React.PureComponent {
   * both resolve the whole data up until then, so we can merge the data like so.
   */
   setData = ({
-    assetModels = {},
-    assetModelsLoading = {},
     assetListingsLoading = {},
     assetListings,
     operatorsLoading = {},
@@ -466,22 +413,18 @@ class AssetsProvider extends React.PureComponent {
         const {
           assetListings: currentAssetListings,
           operators: currentOperators,
-          assetModels: currentAssetModels,
           loadingAirtable,
           loadingIpfs,
           loadingSdk,
         } = prevState;
         const assetListingsMerged = this.mergeObjects(assetListings, currentAssetListings, getNameOfPropertyFromData(sdk), true);
         const operatorsMerged = this.mergeObjects(operators, currentOperators, getNameOfPropertyFromData(sdk), true);
-        const assetModelsMerged = this.mergeObjects(assetModels, currentAssetModels, getNameOfPropertyFromData(sdk), true);
-        const assetsArray = this.getAssets(assetListingsMerged, assetModelsMerged, operatorsMerged);
+        const assetsArray = this.getAssets(assetListingsMerged, operatorsMerged);
         return {
-          assetModelsLoading,
           assetListingsLoading,
           operatorsLoading,
           assetListings: assetListingsMerged,
           operators: operatorsMerged,
-          assetModels: assetModelsMerged,
           assets: assetsArray, // for backwards compatability
           loadingAssets: this.getLoadingState(loadingAirtable, loadingIpfs, loadingSdk),
         }

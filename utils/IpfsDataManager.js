@@ -4,18 +4,16 @@ import { IPFS_URL } from 'constants/ipfs';
 const MAX_DOWNLOADS_PARALLEL = 10;
 
 class IpfsDataManager {
-  constructor(network, assetListings, assetModels, operators, updateListing, updateModel, updateOperator){
+  constructor(network, assetListings, operators, updateListing, updateOperator){
     this.updateListing = updateListing;
-    this.updateModel = updateModel;
     this.updateOperator = updateOperator;
     this.network = network;
-    this.assetModels = {};
     this.operators = {};
     this.resourcesToResolve = [];
     this.assetListings = {};
     this.index = 0;
     this.downloading = 0;
-    this.buildResourcesToResolve(assetListings, assetModels, operators);
+    this.buildResourcesToResolve(assetListings, operators);
   }
 
   addResource = (id, value, updater) => {
@@ -34,9 +32,8 @@ class IpfsDataManager {
     this.downloadResources();
   }
 
-  buildResourcesToResolve = (assetListings, assetModels, operators) => {
+  buildResourcesToResolve = (assetListings, operators) => {
     this.addToResources(operators, this.updateOperator);
-    this.addToResources(assetModels, this.updateModel);
     this.addToResources(assetListings, this.updateListing);
     this.downloadResources();
   }

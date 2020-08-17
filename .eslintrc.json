@@ -3,8 +3,17 @@
     "browser": true,
     "jest": true
   },
+  "parser": "babel-eslint",
   "extends": "airbnb",
   "rules": {
-    "react/jsx-filename-extension": 0
+    "react/jsx-filename-extension": 0,
+    "import/order": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": [".", "./components"]
+      }
+    }
   }
 }

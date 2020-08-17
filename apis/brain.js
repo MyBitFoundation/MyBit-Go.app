@@ -372,7 +372,6 @@ const getAssetDetails = (api, assetId, blockNumber) => {
       Network.getFundingProgress(assetId),
       api.methods.getAssetManagerFee(assetId).call(),
       window.web3js.eth.getBlock(blockNumber),
-      api.methods.getAssetModelID(assetId).call(),
       api.methods.getAssetFundingToken(assetId).call(),
     ]);
   } catch(err){
@@ -479,7 +478,6 @@ export const fetchAsset = async (asset, userAddress) => {
       fundingProgress,
       managerPercentage,
       blockInfo,
-      modelId,
       fundingToken,
     ] = await getAssetDetails(api, assetId, blockNumber);
     const listingDate = blockInfo.timestamp * 1000;
@@ -566,7 +564,6 @@ export const fetchAsset = async (asset, userAddress) => {
     const availableSharesFormatted = fromWeiToEth(availableShares);
     return {
       ...asset,
-      modelId,
       managerHasToCallPayout,
       fundingStage,
       pastDate,
@@ -604,17 +601,13 @@ export const fetchAssets = async (userAddress,network, updateFunction) => {
     const [
       assets,
       operators,
-      assetModels,
     ] = await Promise.all([
       Network.getTotalAssetsWithBlockNumberAndManager(),
       Network.getOperators(),
-      Network.getAssetModels(getDefaultTokenContract(network)),
     ])
 
     console.log("operators")
     console.log(operators)
-    console.log("assetModels")
-    console.log(assetModels)
     console.log("assets")
     console.log(assets)
 
@@ -641,7 +634,6 @@ export const fetchAssets = async (userAddress,network, updateFunction) => {
     updateFunction({
       assetListings: objectToReturn,
       operators,
-      assetModels,
     });
   } catch (error) {
     debug('failed to fetch assets, error: ', error);

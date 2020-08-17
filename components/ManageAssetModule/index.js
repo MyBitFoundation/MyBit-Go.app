@@ -94,7 +94,6 @@ class ManageAssetModule extends React.Component{
         remainingEscrow,
         assetManagerCollateral,
         owedToAssetManager,
-        model,
         managerHasToCallPayout,
       } = asset;
 
@@ -173,7 +172,7 @@ class ManageAssetModule extends React.Component{
             methods: {
               withdrawCollateral: !isWithdrawingCollateral ? () => withdrawCollateral(asset, percentageMax, withdrawMax) : undefined,
               withdrawProfitAssetManager: !isWithdrawingAssetManager ? () => withdrawProfitAssetManager(asset, owedToAssetManager) : undefined,
-              payoutAsset: (!isCallingPayout && managerHasToCallPayout) ? () => payoutAsset({assetId, model}) : undefined,
+              payoutAsset: (!isCallingPayout && managerHasToCallPayout) ? () => payoutAsset({assetId}) : undefined,
             },
             finantialDetails: {
               assetManagerProfits,

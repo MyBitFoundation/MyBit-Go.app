@@ -184,47 +184,6 @@ class BlockchainProvider extends React.Component {
     }
   }
 
-  getCategoriesForAssets = (country, city) => {
-    const {
-      assetModels,
-    } = this.props.assetsContext;
-
-    const categories = {};
-
-    for (const key in assetModels) {
-      const asset = assetModels[key];
-      const {
-        category,
-        location,
-        url,
-      } = asset;
-
-      let shouldAdd = false;
-      /*
-      * If the asset does not have a specified location
-      * then anyone from anywhere can list it
-      */
-      if (!location) {
-        shouldAdd = true;
-      }
-      /*
-      * The user's country needs to an allowed location for the asset
-      * and either the city also matches or there are no city specified
-      * which means the user is eligible to list this asset
-      */
-      else if ((location && location[country] && Array.isArray(location[country]) && (location && location[country].includes(city.toLowerCase())) || (location && location[country] && Object.keys(location[country]).length === 0))) {
-        shouldAdd = true;
-      }
-      if (shouldAdd) {
-        if (!categories[category]) {
-          categories[category] = [];
-        }
-        categories[category].push({ ...asset, modelId: key, url });
-      }
-    }
-    return categories;
-  }
-
   updateAssetListingIpfs = async (asset, cb) => {
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
@@ -244,7 +203,6 @@ class BlockchainProvider extends React.Component {
       fundingToken,
       files,
     } = asset;
-    const { name: assetName } = asset.model;
     const notificationId = Date.now();
 
     let filesInfo = await this.handleIpfsFileUpload(files);
@@ -335,8 +293,7 @@ class BlockchainProvider extends React.Component {
   payoutAsset = async asset => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, model } = asset;
-    const { name: assetName } = model;
+    const { assetId } = asset;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
@@ -406,8 +363,6 @@ class BlockchainProvider extends React.Component {
   withdrawProfitAssetManager = async (asset, amount) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, model } = asset;
-    const { name: assetName } = model;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
@@ -481,8 +436,6 @@ class BlockchainProvider extends React.Component {
   withdrawCollateral = async (asset, percentage, amount, updateAssetCollateralPage) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, model } = asset;
-    const { name: assetName } = model;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
@@ -624,7 +577,6 @@ class BlockchainProvider extends React.Component {
       financials,
       risks,
       fees,
-      modelId,
       assetAddress1,
       assetAddress2,
       assetCity,
@@ -771,7 +723,7 @@ class BlockchainProvider extends React.Component {
       userAddress,
       paymentTokenAddress,
       gasPrice,
-      ipfs: ipfsHash,
+      ipfs: ipfsHash || 'ipfshash',
     },
       network,
     );
@@ -786,9 +738,6 @@ class BlockchainProvider extends React.Component {
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
       const amountFormatted = formatMonetaryValue(amountContributed);
-      const {
-        name: assetName,
-      } = currentAsset.model;
 
       const {
         buildNotification,
@@ -890,7 +839,6 @@ class BlockchainProvider extends React.Component {
 
       const formattedAmount = formatMonetaryValue(amount);
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
-      const { name: assetName } = currentAsset.model;
 
       // Call Approve first
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -978,9 +926,6 @@ class BlockchainProvider extends React.Component {
       } = this.state;
 
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
-      const {
-        name: assetName,
-      } = currentAsset.model;
 
       const {
         buildNotification,

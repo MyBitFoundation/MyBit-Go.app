@@ -3,10 +3,9 @@ import request from 'request';
 import { fetchAssets } from '../utils';
 require('dotenv').config();
 const Airtable = require('airtable');
-const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appy9WN6JEvAuyA0S';
-const AIRTABLE_BASE_ASSETS_MAINNET = 'app98ncQl4JjSLBNA';
+const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appgmqryjeBhR6fzy';
+const AIRTABLE_BASE_ASSETS_MAINNET = 'appgmqryjeBhR6fzy';
 export let assetListings;
-export let assetModels;
 let calledGetAssets = false;
 // TODO Change to AIRTABLE_BASE_ASSETS_MAINNET once live on mainnet
 const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS_MAINNET);
@@ -41,42 +40,6 @@ const getOperators = async () => {
   })
 }
 
-const getAssetModels = async () => {
-  return new Promise(async (resolve, reject) => {
-    const assetModels = {};
-    base('Asset Models').select().eachPage((records, fetchNextPage) => {
-      records.forEach(record => {
-        const category = record.get('Category');
-        const name = record.get('Asset');
-        const fundingGoal = record.get('Funding Goal');
-        const modelId = record.get('Model ID');
-        const files = record.get('Files');
-        const image = record.get('Image');
-        assetModels[modelId] = {
-          category,
-          name,
-          fundingGoal,
-          partnerAddress,
-          files,
-          image,
-        };
-      });
-
-      // To fetch the next page of records, call `fetchNextPage`.
-      // If there are more records, `page` will get called again.
-      // If there are no more records, `done` will get called.
-      fetchNextPage();
-
-    }, error =>  {
-      if (error) {
-        console.error(error);
-        reject();
-      } else {
-        resolve(assetModels);
-      }
-    });
-  })
-}
 
 const getCorrectBase = network => {
   const baseId = network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET;
@@ -91,31 +54,18 @@ export const updateAssetListing = async (data, network) => {
     records.forEach(record => {
       if(record.get('Asset ID') === assetId){
         recordId = record.id
-        base('Asset Models').update(recordId, {
-          "Files": files,
-          "About": about,
-          "Financials": financials,
-          "Risks": risks,
-          "Fees": fees,
-        }, (err, record) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        });
       }
     })
     fetchNextPage();
   })
 }
 
-const getAssetListings = async assetModels => {
+const getAssetListings = () => {
   return new Promise(async (resolve, reject) => {
     const assetListings = {};
     base('Asset Listings').select().eachPage((records, fetchNextPage) => {
       records.forEach(record => {
         const assetId = record.get('Asset ID');
-        const modelId = record.get('Model ID');
         const financials = record.get('Financials');
         const risks = record.get('Risks');
         const about = record.get('About');
@@ -128,10 +78,7 @@ const getAssetListings = async assetModels => {
         const assetProvince = record.get('Province');
         const assetPostalCode = record.get('Postal Code');
         const files = record.get('Files');
-        let defaultData = assetModels[modelId];
-        defaultData.imageSrc = `/assets/${defaultData.image}`
         assetListings[assetId] = {
-          modelId,
           files,
           financials,
           about,
@@ -144,7 +91,6 @@ const getAssetListings = async assetModels => {
           assetProvince,
           assetPostalCode,
           collateralPercentage,
-          defaultData,
         };
       });
 
@@ -167,11 +113,9 @@ const getAllAssetsInfo = async (newAsset = false) => {
   try{
     [
       assetOperators,
-      assetModels,
       assetListings,
     ] = await Promise.all([
       getOperators,
-      getAssetModels,
       getAssetListings,
     ])
   }catch(err){
@@ -191,7 +135,6 @@ export const addNewAsset = async (data, network) => {
       financials,
       risks,
       fees,
-      modelId,
       assetAddress1,
       assetAddress2,
       assetProvince,
@@ -201,7 +144,6 @@ export const addNewAsset = async (data, network) => {
     const base = getCorrectBase(network);
     await base('Asset Listings').create({
       'Asset ID': assetId,
-      'Model ID': modelId,
       'About': about,
       'Financials': financials,
       'Risks': risks,
@@ -223,8 +165,6 @@ export const addNewAsset = async (data, network) => {
   }
 }
 
-export const pipeAssetModels = network =>
-  request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Asset%20Models?api_key=${process.env.AIRTABLE_KEY}`)
 
 export const pipeAssetListings = network =>
   request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Asset%20Listings?api_key=${process.env.AIRTABLE_KEY}`)

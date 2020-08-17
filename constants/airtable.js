@@ -1,16 +1,7 @@
 export const PULL_ASSETS_TIME = 1000 * 60;
 
-export const AIRTABLE_ASSET_MODELS = [
-  'Asset',
-  'Category',
-  'Funding Goal',
-  'Image',
-  'Model ID',
-];
-
 export const AIRTABLE_ASSET_LISTINGS = [
   'Asset ID',
-  'Model ID',
   'Financials',
   'Risks',
   'About',

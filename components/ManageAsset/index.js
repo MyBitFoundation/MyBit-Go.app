@@ -210,7 +210,6 @@ class ManageAsset extends React.Component {
       imageSrc,
       partner,
       files,
-      model,
       assetManagerCollateral,
       funded,
       managerHasToCallPayout,
@@ -229,9 +228,7 @@ class ManageAsset extends React.Component {
             <ManageAssetContentWrapper>
               <Col {...COLUMN_SIZE}>
                 <ManageAssetAssetInfo
-                  imageSrc={model.imageSrc}
                   assetId={assetId}
-                  name={model.name}
                   city={city}
                   country={country}
                   fundingGoal={fundingGoal}

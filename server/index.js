@@ -51,16 +51,6 @@ app
       }
     });
 
-    server.get('/api/airtable/assetModels/:network', (req, res) => {
-      try {
-        const network = req.params.network;
-        req.pipe(AirTableController.pipeAssetModels(network)).pipe(res);
-      } catch (err) {
-        res.statusCode = 500;
-        res.send(error);
-      }
-    });
-
     server.get('/api/airtable/assetListings/:network', (req, res) => {
       try {
         const network = req.params.network;

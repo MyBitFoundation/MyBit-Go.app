@@ -73,15 +73,9 @@ export const DefaultAsset = props => (
 const Asset = props => {
   const {
     assetId,
-    model,
     colSize,
     toRender: ToRender,
   } = props;
-
-  const {
-    imageSrc,
-    name,
-  } = model;
 
   return (
     <Col {...colSize} key={assetId}>
