@@ -73,7 +73,7 @@
     "dev": "cross-env NODE_ENV=development node lib/index.js",
     "build": "next build && npm run export",
     "export": "next export -o build",
-    "start": " cross-envNODE_ENV=production node lib/index.js",
+    "start": " cross-env NODE_ENV=production node lib/index.js",
     "lint": "eslint --ignore-path .gitignore .",
     "lint:fix": "eslint --ignore-path .gitignore --fix .",
     "compile-server": "rimraf lib/ && babel -d lib/ server/",
