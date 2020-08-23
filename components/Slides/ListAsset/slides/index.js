@@ -9,3 +9,4 @@ export * from './success';
 export * from './confirmDesktop';
 export * from './termsOfService';
 export * from './generalDescription';
+export * from './coverPicture';

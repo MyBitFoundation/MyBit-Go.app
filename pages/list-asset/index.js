@@ -1,39 +1,40 @@
-import Router from "next/router";
-import Media from "react-media";
-import BN from "bignumber.js";
-import { compose } from "recompose";
-import { Button, Tooltip, Carousel } from "antd";
-import getConfig from "next/config";
-import Cookie from "js-cookie";
-import { withMetamaskContextPageWrapper } from "components/MetamaskContext";
-import { withBlockchainContext } from "components/BlockchainContext";
-import { withKyberContext } from "components/KyberContext";
-import { withTermsOfServiceContext } from "components/TermsOfServiceContext";
-import { withAssetsContext } from "components/AssetsContext";
-import ListAssetMobile from "./listAssetMobile";
-import ListAssetDesktop from "./listAssetDesktop";
-import getTokenWithSufficientBalance from "constants/getTokenWithSufficientBalance";
+import Router from 'next/router';
+import Media from 'react-media';
+import BN from 'bignumber.js';
+import { compose } from 'recompose';
+import { Button, Tooltip, Carousel } from 'antd';
+import getConfig from 'next/config';
+import Cookie from 'js-cookie';
+import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
+import { withBlockchainContext } from 'components/BlockchainContext';
+import { withKyberContext } from 'components/KyberContext';
+import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
+import { withAssetsContext } from 'components/AssetsContext';
+import ListAssetMobile from './listAssetMobile';
+import ListAssetDesktop from './listAssetDesktop';
+import getTokenWithSufficientBalance from 'constants/getTokenWithSufficientBalance';
 import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
   PLATFORM_TOKEN,
   DEFAULT_TOKEN,
-  getPlatformTokenContract
-} from "constants/app";
-import { COOKIES } from "constants/cookies";
-import calculateCollateral from "constants/calculateCollateral";
+  getPlatformTokenContract,
+} from 'constants/app';
+import { COOKIES } from 'constants/cookies';
+import calculateCollateral from 'constants/calculateCollateral';
 import {
   convertFromPlatformToken,
   convertFromDefaultToken,
   convertFromTokenToDefault,
-  formatValueForToken
-} from "utils/helpers";
-import { processLocationData } from "utils/locationData";
-import getCountry from "utils/countryCodes";
-import { calculateSlippage } from "constants/calculateSlippage";
-import { FIAT_TO_CRYPTO_CONVERSION_FEE } from "constants/platformFees";
-const dev = process.env.NODE_ENV === "development";
+  formatValueForToken,
+} from 'utils/helpers';
+import { processLocationData } from 'utils/locationData';
+import getCountry from 'utils/countryCodes';
+import { calculateSlippage } from 'constants/calculateSlippage';
+import { FIAT_TO_CRYPTO_CONVERSION_FEE } from 'constants/platformFees';
+
+const dev = process.env.NODE_ENV === 'development';
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
@@ -42,33 +43,34 @@ class ListAssetPage extends React.Component {
     this.state = {
       data: {
         fileList: [],
+        coverPicture: null,
         managementFee: 0,
         collateralPercentage: 0,
         collateralInPlatformToken: 0,
         collateralInDefaultToken: 0,
         collateralInSelectedToken: 0,
-        partnerContractAddress: "",
+        partnerContractAddress: '',
         hasAdditionalCosts: false,
         additionalCosts: 0,
         assetValue: 0,
-        escrow: 0
+        escrow: 0,
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
       step: 0,
-      checkedToS: false
+      checkedToS: false,
     };
     this.readTermsOfService = props.ToSContext.readToS;
   }
 
   componentWillMount = () => {
     try {
-      document.addEventListener("keydown", this.handleKeyDown);
+      document.addEventListener('keydown', this.handleKeyDown);
       if (!Cookie.get(COOKIES.LIST_ASSET_VISIT)) {
-        Cookie.set(COOKIES.LIST_ASSET_VISIT, "true");
-        Router.push("/asset-manager", {
-          href: "/list-asset",
-          as: "/list-asset"
+        Cookie.set(COOKIES.LIST_ASSET_VISIT, 'true');
+        Router.push('/asset-manager', {
+          href: '/list-asset',
+          as: '/list-asset',
         });
       }
     } catch (err) {
@@ -79,7 +81,7 @@ class ListAssetPage extends React.Component {
 
   componentWillUnmount = () => {
     this.ismounted = false;
-    document.removeEventListener("keydown", this.handleKeyDown);
+    document.removeEventListener('keydown', this.handleKeyDown);
   };
 
   setUserListingAsset = (isUserListingAsset, listedAssetId) => {
@@ -88,54 +90,52 @@ class ListAssetPage extends React.Component {
     }
     this.setState({
       isUserListingAsset,
-      listedAssetId
+      listedAssetId,
     });
   };
 
-  handleInputChange = e => {
+  handleInputChange = (e) => {
     console.log('Asset Value ', e);
     if (e.target) {
       const { name, value } = e.target;
-      if (name === "assetAddress1") {
+      if (name === 'assetAddress1') {
         this.setState({
           data: {
             ...this.state.data,
             assetAddress1: value,
-            searchAddress1: value
-          }
+            searchAddress1: value,
+          },
         });
-      } else if (name === "userCity") {
+      } else if (name === 'userCity') {
         this.setState({
-          data: { ...this.state.data, searchCity: value, userCity: value }
+          data: { ...this.state.data, searchCity: value, userCity: value },
         });
       } else {
         this.setState({
-          data: { ...this.state.data, [name]: value }
+          data: { ...this.state.data, [name]: value },
         });
       }
     } else {
       // selected asset value
       this.setState({
-        data: { ...this.state.data, assetValue: e }
+        data: { ...this.state.data, assetValue: e },
       });
     }
   };
 
-  handleSelectedTokenChange = selectedToken => {
-    this.setState({ data: { ...this.state.data, selectedToken } }, () =>
-      this.recalculateCollateral(this.state.data.modelId)
-    );
+  handleSelectedTokenChange = (selectedToken) => {
+    this.setState({ data: { ...this.state.data, selectedToken } }, () => this.recalculateCollateral(this.state.data.modelId));
   };
 
-  recalculateCollateral = modelId => {
+  recalculateCollateral = (modelId) => {
     const { assetsContext, metamaskContext, supportedTokensInfo } = this.props;
     // modelId = modelId || this.state.data.modelId;
     const { assetModels, assetManagers } = assetsContext;
     // const model = assetModels[modelId]; // not needed again, power belongs to the community now
     const { additionalCosts = 0 } = this.state.data;
     const { assetValue: fundingGoal, asset: name } = this.state.data;
-    let cryptoPayout = true;
-    let cryptoPurchase = true;
+    const cryptoPayout = true;
+    const cryptoPurchase = true;
 
     let assetValue = BN(fundingGoal);
     // Add 8% fee if it applies and AM expenses
@@ -153,29 +153,28 @@ class ListAssetPage extends React.Component {
     const totalFundedAssets = assetManagers[user.address]
       ? assetManagers[user.address].totalFundedAssets
       : 0;
-    const paymentTokenAddress =
-      selectedToken &&
-      balances &&
-      balances[selectedToken] &&
-      balances[selectedToken].contractAddress;
+    const paymentTokenAddress = selectedToken
+      && balances
+      && balances[selectedToken]
+      && balances[selectedToken].contractAddress;
 
     const {
       collateralBasedOnHistory,
       collateralCryptoPurchase,
       collateralCryptoPayouts,
-      collateralPercentage
+      collateralPercentage,
     } = calculateCollateral(totalFundedAssets, cryptoPayout, cryptoPurchase);
 
     const collateralInDefaultToken = assetValue * (collateralPercentage / 100);
     const collateralInPlatformToken = convertFromDefaultToken(
       PLATFORM_TOKEN,
       supportedTokensInfo,
-      collateralInDefaultToken
+      collateralInDefaultToken,
     );
     const collateralInSelectedToken = convertFromDefaultToken(
       selectedToken || DEFAULT_TOKEN,
       supportedTokensInfo,
-      collateralInDefaultToken
+      collateralInDefaultToken,
     );
 
     this.setState(
@@ -194,11 +193,11 @@ class ListAssetPage extends React.Component {
           collateralInSelectedToken,
           paymentTokenAddress,
           cryptoPurchase,
-          modelId
+          modelId,
         },
-        loadingConversionInfo: true
+        loadingConversionInfo: true,
       },
-      () => console.log(this.state)
+      () => console.log(this.state),
     );
 
     const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
@@ -209,71 +208,71 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectChange = (value, name) => {
-    if (name === "asset") {
+    if (name === 'asset') {
       const modelId = value.modelId;
       this.recalculateCollateral(modelId);
     } else {
       this.setState(
         {
-          data: { ...this.state.data, [name]: value }
+          data: { ...this.state.data, [name]: value },
         },
         () => {
           switch (name) {
-            case "userCountry": {
+            case 'userCountry': {
               const countryData = getCountry(value);
               const countryCode = countryData
                 ? countryData.iso2.toLowerCase()
-                : "";
+                : '';
 
               this.setState({
                 data: {
                   ...this.state.data,
                   assetCountry: value,
-                  category: "",
+                  category: '',
                   asset: undefined,
                   assetValue: undefined,
                   countryCode,
-                  userCity: undefined
-                }
+                  userCity: undefined,
+                },
               });
               break;
             }
-            case "category": {
+            case 'category': {
               this.setState({
                 data: {
                   ...this.state.data,
                   category: value,
                   asset: undefined,
-                  assetValue: undefined
-                }
+                  assetValue: undefined,
+                },
               });
               break;
             }
-            case "additionalCosts": {
+            case 'additionalCosts': {
               this.recalculateCollateral();
             }
             default:
               return null;
           }
-        }
+        },
       );
     }
   };
 
-  handleSelectSuggest = suggest => {
+  handleSelectSuggest = (suggest) => {
     const locationData = processLocationData(suggest.address_components, [
-      "locality",
-      "route",
-      "postal_code",
-      "administrative_area_level_1",
-      "street_number"
+      'locality',
+      'route',
+      'postal_code',
+      'administrative_area_level_1',
+      'street_number',
     ]);
     const {
       locality,
       route,
       postal_code,
       administrative_area_level_1,
-      street_number
+      street_number,
     } = locationData;
     this.setState({
       data: {
@@ -283,28 +282,36 @@ class ListAssetPage extends React.Component {
         assetCity: administrative_area_level_1,
         assetProvince: locality,
         assetPostalCode: postal_code,
-        searchAddress1: ""
-      }
+        searchAddress1: '',
+      },
     });
   };
 
-  handleCitySuggest = suggest => {
+  handleCitySuggest = (suggest) => {
     const locationData = processLocationData(suggest.address_components, [
-      "locality"
+      'locality',
     ]);
     const { locality } = locationData;
     this.setState({
       data: {
         ...this.state.data,
         userCity: locality,
-        searchCity: ""
-      }
+        searchCity: '',
+      },
     });
   };
 
-  handleFileUpload = filesObject => {
+  handleCoverPicture = (fileInfo) => {
+    if (fileInfo.file.status !== 'uploading') return;
+    fileInfo.file.status = 'success';
+    this.setState({
+      data: { ...this.state.data, coverPicture: fileInfo.file.originFileObj },
+    });
+  }
+
+  handleFileUpload = (filesObject) => {
     // so that we get no loading animation in the UI next to the file name
-    filesObject.file.status = "success";
+    filesObject.file.status = 'success';
     let files = filesObject.fileList;
     // apply file size restriction
     for (let i = 0; i < files.length; i++) {
@@ -319,9 +326,9 @@ class ListAssetPage extends React.Component {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
-    console.log("Files going to be uploaded: ", files);
+    console.log('Files going to be uploaded: ', files);
     this.setState({
-      data: { ...this.state.data, fileList: files }
+      data: { ...this.state.data, fileList: files },
     });
   };
 
@@ -329,27 +336,26 @@ class ListAssetPage extends React.Component {
     this.setState({ step: this.state.step + 1 });
   };
 
-  goToStep = step => {
+  goToStep = (step) => {
     if (!this.state.listedAssetId) {
       this.setState({ step });
     }
   };
 
-  setCheckedToS = () =>
-    this.setState(prevState => ({ checkedToS: !prevState.checkedToS }));
+  setCheckedToS = () => this.setState(prevState => ({ checkedToS: !prevState.checkedToS }));
 
   render() {
     const {
       metamaskContext,
       blockchainContext,
       kyberLoading,
-      ToSContext
+      ToSContext,
     } = this.props;
 
     const {
       handleListAsset,
       loadingAssets,
-      getCategoriesForAssets
+      getCategoriesForAssets,
     } = blockchainContext;
 
     const { user, loadingBalancesForNewUser } = metamaskContext;
@@ -363,7 +369,7 @@ class ListAssetPage extends React.Component {
       step,
       checkedToS,
       tokenSlippagePercentages,
-      autoLocationOffline
+      autoLocationOffline,
     } = this.state;
 
     const {
@@ -379,14 +385,13 @@ class ListAssetPage extends React.Component {
       category,
       userCity,
       userCountry,
-      loadingConversionInfo
+      loadingConversionInfo,
     } = this.state.data;
 
-    const tokenWithSufficientBalance =
-      collateralInDefaultToken > 0
-        ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken)
-        : undefined;
-    const metamaskErrorsToRender = metamaskContext.metamaskErrors("");
+    const tokenWithSufficientBalance = collateralInDefaultToken > 0
+      ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken)
+      : undefined;
+    const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
       dev,
       step,
@@ -411,6 +416,7 @@ class ListAssetPage extends React.Component {
       handleInputChange: this.handleInputChange,
       handleCitySuggest: this.handleCitySuggest,
       handleSelectedTokenChange: this.handleSelectedTokenChange,
+      handleCoverPicture: this.handleCoverPicture,
       handleFileUpload: this.handleFileUpload,
       setUserListingAsset: this.setUserListingAsset,
       handleSelectSuggest: this.handleSelectSuggest,
@@ -420,17 +426,16 @@ class ListAssetPage extends React.Component {
       formData: data,
       balances: user.balances,
       shouldShowToSCheckmark: this.readTermsOfService,
-      airtableContext: this.props.airtableContext
+      airtableContext: this.props.airtableContext,
     };
     return (
       <div>
         <Media query="(min-width: 768px)">
-          {matches =>
-            matches ? (
-              <ListAssetDesktop {...propsToPass} />
-            ) : (
-              <ListAssetMobile {...propsToPass} />
-            )
+          {matches => (matches ? (
+            <ListAssetDesktop {...propsToPass} />
+          ) : (
+            <ListAssetMobile {...propsToPass} />
+          ))
           }
         </Media>
       </div>
@@ -443,7 +448,7 @@ const enhance = compose(
   withBlockchainContext,
   withMetamaskContextPageWrapper,
   withTermsOfServiceContext,
-  withAssetsContext
+  withAssetsContext,
 );
 
 export default enhance(ListAssetPage);

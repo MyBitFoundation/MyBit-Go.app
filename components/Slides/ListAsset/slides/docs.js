@@ -1,7 +1,8 @@
+import React from 'react';
 import {
   Upload,
   Icon,
-} from "antd";
+} from 'antd';
 
 import {
   CarouselSlide,
@@ -19,7 +20,7 @@ export const DocsSlide = ({
   onClick,
 }) => {
   const props = {
-    name: "file",
+    name: 'file',
     multiple: true,
     // so that the Upload component doesn't attempt to upload the files
     // we're doing that later
@@ -39,14 +40,14 @@ export const DocsSlide = ({
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
-      <React.Fragment>
+        <React.Fragment>
         Supporting docs
-        <CarouselSlideTooltip
-          title="Supporting documents build trust with investors, confirming that you have
+          <CarouselSlideTooltip
+            title="Supporting documents build trust with investors, confirming that you have
                  the required documents to install the asset in its stated location."
-        />
-      </React.Fragment>
-    </CarouselSlideMainTitle>
+          />
+        </React.Fragment>
+      </CarouselSlideMainTitle>
       <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
@@ -70,10 +71,10 @@ export const DocsSlide = ({
       {desktopMode && (
         <CarouselNextButton
           onClick={onClick}
-          style={{marginTop: '40px'}}
+          style={{ marginTop: '40px' }}
           desktopMode={desktopMode}
         />
       )}
     </CarouselSlide>
   );
-}
+};
