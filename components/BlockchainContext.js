@@ -713,7 +713,7 @@ class BlockchainProvider extends React.Component {
       userAddress,
       paymentTokenAddress,
       gasPrice,
-      ipfs: ipfsHash || 'ipfshash',
+      ipfs: ipfsHash || 'no-ipfs',
     },
     network);
   }
