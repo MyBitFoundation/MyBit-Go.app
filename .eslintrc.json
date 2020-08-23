@@ -7,7 +7,14 @@
   "extends": "airbnb",
   "rules": {
     "react/jsx-filename-extension": 0,
-    "import/order": "off"
+    "import/order": "off",
+    "prefer-destructuring": "off",
+    "import/prefer-default-export": "off",
+    "quote-props": "off",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-closing-tag-location": "off"
   },
   "settings": {
     "import/resolver": {
