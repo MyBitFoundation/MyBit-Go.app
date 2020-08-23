@@ -80,7 +80,7 @@ const Asset = props => {
   return (
     <Col {...colSize} key={assetId}>
       <AssetTemplate
-        backgroundImage={imageSrc}
+        // backgroundImage={imageSrc}
         name={name}
         {...props}
       >

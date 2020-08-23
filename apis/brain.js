@@ -364,7 +364,6 @@ const getAssetDetails = (api, assetId, blockNumber) => {
     return Promise.all([
       Network.dividendToken(assetId),
       api.methods.getAssetPlatformFee(assetId).call(),
-      Network.getAssetOperator(assetId),
       api.methods.crowdsaleFinalized(assetId).call(),
       api.methods.getCrowdsaleDeadline(assetId).call(),
       Network.getFundingGoal(assetId),
@@ -425,16 +424,6 @@ export const issueDividends = async (
   }
 }
 
-export const getOperators = async () =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const platformOperators = await Network.getOperators();
-      return platformOperators;
-    } catch(err){
-      return {}
-    }
-  })
-
 export const updateAssetListingIpfs = async ({
   userAddress,
   fundingToken,
@@ -470,7 +459,6 @@ export const fetchAsset = async (asset, userAddress) => {
     let [
       dividendToken,
       platformFee,
-      assetOperator,
       crowdsaleFinalized,
       fundingDeadline,
       fundingGoal,
@@ -600,14 +588,10 @@ export const fetchAssets = async (userAddress,network, updateFunction) => {
   try {
     const [
       assets,
-      operators,
     ] = await Promise.all([
       Network.getTotalAssetsWithBlockNumberAndManager(),
-      Network.getOperators(),
     ])
 
-    console.log("operators")
-    console.log(operators)
     console.log("assets")
     console.log(assets)
 
@@ -629,11 +613,11 @@ export const fetchAssets = async (userAddress,network, updateFunction) => {
 
     const assetDetails = await Promise.all(assetsRenamed.map(asset => fetchAsset(asset, userAddress)));
 
+    console.log(assetDetails, assetsRenamed)
     const objectToReturn = {};
     assetDetails.forEach(asset => objectToReturn[asset.assetId] = asset);
     updateFunction({
       assetListings: objectToReturn,
-      operators,
     });
   } catch (error) {
     debug('failed to fetch assets, error: ', error);

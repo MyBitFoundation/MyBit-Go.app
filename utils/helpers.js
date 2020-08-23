@@ -8,7 +8,15 @@ import {
 
 export const debug = process.env.NODE_ENV === 'development' ? console.log : () => { };
 
-export const fromWeiToEth = weiValue => Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
+export const fromWeiToEth = weiValue =>
+{
+  try {
+    return Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
+  } catch (e) {
+    console.error(e);
+    return 0;
+  }
+}
 
 export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
 // export const toWei = value => Math.ceil(value * 10 ** 18).toString()
