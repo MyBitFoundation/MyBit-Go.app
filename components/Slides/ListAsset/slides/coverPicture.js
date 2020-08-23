@@ -36,6 +36,7 @@ export const CoverPictureSlide = ({
   maxWidthDesktop,
   desktopMode,
   onClick,
+  nextButtonDisabled,
 }) => {
   const props = {
     name: 'cover-picture',
@@ -50,7 +51,7 @@ export const CoverPictureSlide = ({
 
   useEffect(() => {
     if (coverPicture) {
-      getBase64(coverPicture, data => setImageUrl(data));
+      getBase64(coverPicture.originFileObj || coverPicture.file || coverPicture, data => setImageUrl(data));
     }
   }, [coverPicture]);
 
@@ -74,7 +75,7 @@ export const CoverPictureSlide = ({
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
-        Upload a clear cover picture reperesenting the asset up to 2MB.
+        Upload a clear cover picture reperesenting the asset. You can upload an image up to 2MB.
       </CarouselSlideParagraph>
       <Upload.Dragger
         {...props}
@@ -100,6 +101,7 @@ export const CoverPictureSlide = ({
           onClick={onClick}
           style={{ marginTop: '40px' }}
           desktopMode={desktopMode}
+          disabled={nextButtonDisabled}
         />
       )}
     </CarouselSlide>

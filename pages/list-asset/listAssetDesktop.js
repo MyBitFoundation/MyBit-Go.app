@@ -205,6 +205,7 @@ const ListAssetDesktop = ({
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           onClick={goToNextStep}
           desktopMode
+          nextButtonDisabled={!coverPicture}
         />
       )}
       {step === 5 && (

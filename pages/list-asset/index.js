@@ -305,7 +305,7 @@ class ListAssetPage extends React.Component {
     if (fileInfo.file.status !== 'uploading') return;
     fileInfo.file.status = 'success';
     this.setState({
-      data: { ...this.state.data, coverPicture: fileInfo.file.originFileObj },
+      data: { ...this.state.data, coverPicture: fileInfo.file },
     });
   }
 

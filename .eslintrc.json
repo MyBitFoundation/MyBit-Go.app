@@ -14,7 +14,11 @@
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/destructuring-assignment": "off",
-    "react/jsx-closing-tag-location": "off"
+    "react/jsx-closing-tag-location": "off",
+    "react/no-multi-comp": "off",
+    "no-plusplus": "off",
+    "no-unused-expressions": ["error", { "allowShortCircuit": true }],
+    "no-restricted-syntax": "off"
   },
   "settings": {
     "import/resolver": {

@@ -25,6 +25,7 @@ const ListAssetMobile = ({
   handleDetectLocationClicked,
   loadingAssets,
   formData,
+  handleCoverPicture,
   handleFileUpload,
   handleSelectedTokenChange,
   balances,
@@ -63,6 +64,7 @@ const ListAssetMobile = ({
     collateralInDefaultToken,
     selectedToken,
     collateralPercentage,
+    coverPicture,
     fileList,
     about,
     financials,
@@ -146,14 +148,15 @@ const ListAssetMobile = ({
       }, {
         toRender: (
           <CoverPictureSlide
-            fileList={fileList}
-            handleFileUpload={handleFileUpload}
+            coverPicture={coverPicture}
+            handleCoverPicture={handleCoverPicture}
             maxWidthDesktop={MAX_WIDTH_DESKTOP}
           />
         ),
         buttons: {
           hasNextButton: true,
           hasBackButton: true,
+          nextButtonDisabled: !coverPicture,
         },
       }, {
         toRender: (

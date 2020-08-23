@@ -32,7 +32,7 @@ const getOperators = async () => new Promise(async (resolve, reject) => {
   }, (error) => {
     if (error) {
       console.error(error);
-      reject();
+      reject(error);
     } else {
       resolve(operators);
     }
@@ -73,13 +73,29 @@ export const updateAssetFiles = async (data, network) => {
   const { assetId, files } = data;
   const record = await getAssetListingRecord(assetId, network);
   const base = getCorrectBase(network);
+  console.log(files);
   await base('Asset Listings').update([{
     'id': record.id,
     'fields': {
       'Files': files.map(file => ({
         url: file.secure_url,
-        filename: file.original_filename,
+        filename: file.original_extension ? `${file.original_filename}.${file.original_extension}` : file.original_filename,
       })),
+    },
+  }]);
+};
+
+export const updateCoverPicture = async (data, network) => {
+  const { assetId, file } = data;
+  const record = await getAssetListingRecord(assetId, network);
+  const base = getCorrectBase(network);
+  await base('Asset Listings').update([{
+    'id': record.id,
+    'fields': {
+      'Cover Picture': [{
+        url: file.secure_url,
+        filename: file.original_filename,
+      }],
     },
   }]);
 };
@@ -162,6 +178,11 @@ export const addNewAsset = async (data, network) => {
       assetPostalCode,
     } = data;
     const base = getCorrectBase(network);
+    const exists = await getAssetListingRecord(assetId, network);
+    if (exists) {
+      throw new Error('Asset record already exists!');
+    }
+
     await base('Asset Listings').create({
       'Asset ID': assetId,
       'About': about,

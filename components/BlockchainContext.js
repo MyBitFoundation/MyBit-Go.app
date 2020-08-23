@@ -1,7 +1,7 @@
 /* eslint-disable  react/no-unused-state */
 /* eslint-disable  camelcase */
 
-import { compose } from 'recompose'
+import { compose } from 'recompose';
 import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -48,31 +48,27 @@ BN.config({ EXPONENTIAL_AT: 80 });
 const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
-export const withBlockchainContextPageWrapper = (Component) => {
-  return class BlockchainContextPageWrapper extends React.Component {
-    render() {
-      return (
-        <Consumer>
-          {state => <Component {...this.props} blockchainContext={state} />}
-        </Consumer>
-      )
-    }
-  }
-}
-
-export const getStaticProps = () => ({
-  props: {}
-})
-
-export const withBlockchainContext = (Component) => {
-  return function WrapperComponent(props) {
+export const withBlockchainContextPageWrapper = Component => class BlockchainContextPageWrapper extends React.Component {
+  render() {
     return (
       <Consumer>
-        {state => <Component {...props} blockchainContext={state} />}
+        {state => <Component {...this.props} blockchainContext={state} />}
       </Consumer>
     );
-  };
-}
+  }
+};
+
+export const getStaticProps = () => ({
+  props: {},
+});
+
+export const withBlockchainContext = Component => function WrapperComponent(props) {
+  return (
+    <Consumer>
+      {state => <Component {...props} blockchainContext={state} />}
+    </Consumer>
+  );
+};
 
 class BlockchainProvider extends React.Component {
   constructor(props) {
@@ -104,7 +100,7 @@ class BlockchainProvider extends React.Component {
       withdrawingCollateral: [],
       callingPayout: [],
       withdrawingAssetManager: [],
-      gasPrice: '10000000000', //10 GWEI
+      gasPrice: '10000000000', // 10 GWEI
       updatingAssetListingsIpfs: [],
     };
   }
@@ -120,7 +116,7 @@ class BlockchainProvider extends React.Component {
   }
 
   // handle case where account, login, enabled or network variable change
-  componentDidUpdate = async prevProps => {
+  componentDidUpdate = async (prevProps) => {
     const { metamaskContext: oldProps } = prevProps;
     const { metamaskContext: newProps } = this.props;
     const oldEnabled = oldProps.privacyModeEnabled;
@@ -133,14 +129,14 @@ class BlockchainProvider extends React.Component {
     const newNetwork = newProps.network;
 
     if ((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)) {
-      console.log("Updating blockchainContext due to a change in: address or login or privacy mode")
+      console.log('Updating blockchainContext due to a change in: address or login or privacy mode');
       this.handleMetamaskUpdate();
     } else if (newNetwork !== oldNetwork) {
       this.setState({
         loading: {
           transactionHistory: true,
-        }
-      })
+        },
+      });
       this.fetchTransactionHistory();
     }
   }
@@ -150,10 +146,8 @@ class BlockchainProvider extends React.Component {
   }
 
   createIntervals = () => {
-    this.intervalFetchTransactionHistory =
-      setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
-    this.intervalFetchGasPrice =
-      setInterval(this.fetchGasPrice, FETCH_GAS_PRICE);
+    this.intervalFetchTransactionHistory = setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
+    this.intervalFetchGasPrice = setInterval(this.fetchGasPrice, FETCH_GAS_PRICE);
   }
 
   resetIntervals = () => {
@@ -173,14 +167,14 @@ class BlockchainProvider extends React.Component {
           fast,
         } = response.data;
 
-        gasPrice = BN(fast).times(100000000).toString(); //converts to WEI, from GWEI
+        gasPrice = BN(fast).times(100000000).toString(); // converts to WEI, from GWEI
         this.setState({
           gasPrice,
-        })
+        });
       }
     } catch (err) {
-      debug("Error pulling gas price");
-      debug(err)
+      debug('Error pulling gas price');
+      debug(err);
     }
   }
 
@@ -205,7 +199,7 @@ class BlockchainProvider extends React.Component {
     } = asset;
     const notificationId = Date.now();
 
-    let filesInfo = await this.handleIpfsFileUpload(files);
+    const filesInfo = await this.handleIpfsFileUpload(files);
     const ipfsHash = await addJsonFileToIpfs({
       financials,
       about,
@@ -219,8 +213,8 @@ class BlockchainProvider extends React.Component {
       assetProvince,
       assetPostalCode,
       files: filesInfo.array,
-    })
-    //update state so users can't trigger multiple saves
+    });
+    // update state so users can't trigger multiple saves
     const updatingAssetListingsIpfs = this.state.updatingAssetListingsIpfs.slice();
     updatingAssetListingsIpfs.push(assetId);
     this.setState({
@@ -236,7 +230,7 @@ class BlockchainProvider extends React.Component {
       buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.INFO, {
         assetName,
       });
-    }
+    };
 
     const onReceipt = (wasSuccessful) => {
       if (wasSuccessful) {
@@ -244,19 +238,19 @@ class BlockchainProvider extends React.Component {
       } else {
         onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const onError = (type) => {
       cb && cb(false);
       updateAssetListingsIpfs();
       if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
-          operationType: NotificationsMetamask.ASSET_FILES_UPLOAD
+          operationType: NotificationsMetamask.ASSET_FILES_UPLOAD,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.ERROR);
       }
-    }
+    };
 
     const updateAssetListingsIpfs = () => {
       let updatingAssetListingsIpfs = this.state.updatingAssetListingsIpfs.slice();
@@ -264,7 +258,7 @@ class BlockchainProvider extends React.Component {
       this.setState({
         updatingAssetListingsIpfs,
       });
-    }
+    };
 
     const onSuccess = async () => {
       await Promise.all([
@@ -276,7 +270,7 @@ class BlockchainProvider extends React.Component {
       buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.SUCCESS, {
         assetName,
       });
-    }
+    };
 
     Brain.updateAssetListingIpfs({
       userAddress: this.props.metamaskContext.user.address,
@@ -290,14 +284,14 @@ class BlockchainProvider extends React.Component {
     });
   }
 
-  payoutAsset = async asset => {
+  payoutAsset = async (asset) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
     const { assetId } = asset;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
-    //update state so users can't trigger payout multiple times
+    // update state so users can't trigger payout multiple times
     const callingPayout = this.state.callingPayout.slice();
     callingPayout.push(assetId);
     this.setState({
@@ -313,7 +307,7 @@ class BlockchainProvider extends React.Component {
       buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.INFO, {
         assetName,
       });
-    }
+    };
 
     const onReceipt = (wasSuccessful) => {
       if (wasSuccessful) {
@@ -321,18 +315,18 @@ class BlockchainProvider extends React.Component {
       } else {
         onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const onError = (type) => {
       updateCallingPayout();
       if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
-          operationType: NotificationsMetamask.ASSET_PAYOUT
+          operationType: NotificationsMetamask.ASSET_PAYOUT,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.ERROR);
       }
-    }
+    };
 
     const updateCallingPayout = () => {
       let callingPayout = this.state.callingPayout.slice();
@@ -340,7 +334,7 @@ class BlockchainProvider extends React.Component {
       this.setState({
         callingPayout,
       });
-    }
+    };
 
     const onSuccess = async () => {
       await Promise.all([this.fetchTransactionHistory, forceUpdateListingWithOnChainData(assetId)]);
@@ -348,7 +342,7 @@ class BlockchainProvider extends React.Component {
       buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.SUCCESS, {
         assetName,
       });
-    }
+    };
 
     Brain.payoutAsset({
       userAddress: this.props.metamaskContext.user.address,
@@ -366,7 +360,7 @@ class BlockchainProvider extends React.Component {
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
-    //update state so users can't trigger the withdrawal multiple times
+    // update state so users can't trigger the withdrawal multiple times
     const withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
     withdrawingAssetManager.push(assetId);
     this.setState({
@@ -382,7 +376,7 @@ class BlockchainProvider extends React.Component {
       buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.INFO, {
         assetName,
       });
-    }
+    };
 
     const onReceipt = (wasSuccessful) => {
       if (wasSuccessful) {
@@ -390,7 +384,7 @@ class BlockchainProvider extends React.Component {
       } else {
         onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const onError = (type) => {
       updatewithdrawingAssetManager();
@@ -404,7 +398,7 @@ class BlockchainProvider extends React.Component {
           assetName,
         });
       }
-    }
+    };
 
     const updatewithdrawingAssetManager = () => {
       let withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
@@ -412,7 +406,7 @@ class BlockchainProvider extends React.Component {
       this.setState({
         withdrawingAssetManager,
       });
-    }
+    };
 
     const onSuccess = async () => {
       await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
@@ -421,7 +415,7 @@ class BlockchainProvider extends React.Component {
         assetName,
         amount: formatMonetaryValue(amount),
       });
-    }
+    };
 
     Brain.withdrawAssetManager(
       this.props.metamaskContext.user.address,
@@ -441,7 +435,7 @@ class BlockchainProvider extends React.Component {
 
     const formattedAmount = formatMonetaryValue(amount, PLATFORM_TOKEN);
 
-    //update state so users can't trigger the withdrawal multiple times
+    // update state so users can't trigger the withdrawal multiple times
     const withdrawingCollateral = this.state.withdrawingCollateral.slice();
     withdrawingCollateral.push(assetId);
     this.setState({
@@ -457,7 +451,7 @@ class BlockchainProvider extends React.Component {
       buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.INFO, {
         assetName,
       });
-    }
+    };
 
     const onReceipt = (wasSuccessful) => {
       if (wasSuccessful) {
@@ -465,7 +459,7 @@ class BlockchainProvider extends React.Component {
       } else {
         onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const onError = (type) => {
       updateWithdrawingCollateral();
@@ -479,7 +473,7 @@ class BlockchainProvider extends React.Component {
           assetName,
         });
       }
-    }
+    };
 
     const updateWithdrawingCollateral = () => {
       let withdrawingCollateral = this.state.withdrawingCollateral.slice();
@@ -487,7 +481,7 @@ class BlockchainProvider extends React.Component {
       this.setState({
         withdrawingCollateral,
       });
-    }
+    };
 
     const onSuccess = async () => {
       await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
@@ -497,7 +491,7 @@ class BlockchainProvider extends React.Component {
         percentage,
         amount: formattedAmount,
       });
-    }
+    };
 
     Brain.withdrawEscrow(
       this.props.metamaskContext.user.address,
@@ -513,8 +507,8 @@ class BlockchainProvider extends React.Component {
   * This method may take an array containing both
   * existing files and the new files
   */
-  handleIpfsFileUpload = async fileList => {
-    const toWait = []
+  handleIpfsFileUpload = async (fileList) => {
+    const toWait = [];
     const files = [];
     let filesString = '';
     const existingFiles = [];
@@ -538,18 +532,18 @@ class BlockchainProvider extends React.Component {
         files.push({
           hash,
           name,
-        })
-        filesString += `${name}|${hash}|`
+        });
+        filesString += `${name}|${hash}|`;
       }
     }
-    existingFiles.map(file => {
-      files.push({ ...file })
-      filesString += `${file.name}|${file.hash}|`
-    })
+    existingFiles.map((file) => {
+      files.push({ ...file });
+      filesString += `${file.name}|${file.hash}|`;
+    });
     return {
       array: files,
       string: filesString,
-    }
+    };
   }
 
   handleListAsset = async (formData, setUserListingAsset) => {
@@ -567,6 +561,7 @@ class BlockchainProvider extends React.Component {
       userCountry: country,
       userCity: city,
       managementFee,
+      coverPicture,
       fileList,
       collateralInSelectedToken,
       collateralPercentage,
@@ -586,7 +581,7 @@ class BlockchainProvider extends React.Component {
 
     const { buildNotification } = notificationsContext;
 
-    console.log('AssetContext', formData)
+    console.log('AssetContext', formData);
 
     const {
       user,
@@ -612,30 +607,29 @@ class BlockchainProvider extends React.Component {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
         assetName,
       });
-
-    }
+    };
 
     const onTransactionHashApprove = () => {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
         formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
         type: NotificationTypes.APPROVE,
       });
-    }
+    };
 
     const onReceipt = (assetId) => {
       onSuccess(assetId);
-    }
+    };
 
-    const onReceiptApprove = wasSuccessful => {
+    const onReceiptApprove = (wasSuccessful) => {
       if (wasSuccessful) {
         buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
           formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
           type: NotificationTypes.APPROVE,
         });
       } else {
-        onError(ErrorTypes.ETHEREUM)
+        onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const filesInfo = await this.handleIpfsFileUpload(fileList);
 
@@ -652,26 +646,23 @@ class BlockchainProvider extends React.Component {
       assetProvince,
       assetPostalCode,
       files: filesInfo.array,
-    })
+    });
 
     const onSuccess = async (assetId) => {
       const numberOfInternalActions = 1;
-      const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
-      const filesUploaded = fileList.length > 0;
-      const requiredCallsToInternalActions = filesUploaded ? numberOfInternalActionsWithFileUpload : numberOfInternalActions;
       let counterCallsToInternalActions = 0;
 
       // we need to perform a few actions before declaring the listing of the asset as successful
       const performInternalAction = async () => {
         counterCallsToInternalActions++;
-        if (counterCallsToInternalActions === requiredCallsToInternalActions) {
+        if (counterCallsToInternalActions === numberOfInternalActions) {
           buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
             assetName,
             assetId,
           });
           setUserListingAsset(false, assetId);
         }
-      }
+      };
 
       Brain.updateAirTableWithNewAsset({
         assetId,
@@ -687,11 +678,10 @@ class BlockchainProvider extends React.Component {
         assetAddress2,
         assetProvince,
         assetPostalCode,
-        files: filesInfo.string,
-      }, performInternalAction, network)
-
-      filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
-    }
+        coverPicture,
+        files: fileList,
+      }, performInternalAction, network);
+    };
 
     const onError = (type) => {
       setUserListingAsset(false);
@@ -705,7 +695,7 @@ class BlockchainProvider extends React.Component {
           assetName,
         });
       }
-    }
+    };
 
     await Brain.createAsset({
       onTransactionHash,
@@ -725,8 +715,7 @@ class BlockchainProvider extends React.Component {
       gasPrice,
       ipfs: ipfsHash || 'ipfshash',
     },
-      network,
-    );
+    network);
   }
 
   fundAsset = (assetId, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
@@ -761,22 +750,22 @@ class BlockchainProvider extends React.Component {
           assetName,
           amount: amountFormatted,
         });
-      }
+      };
 
       const onTransactionHashApprove = () => {
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
           formattedAmount: formatMonetaryValue(amountToPay, paymentTokenSymbol),
           type: NotificationTypes.APPROVE,
         });
-      }
+      };
 
       const onReceipt = (wasSuccessful) => {
         if (wasSuccessful) {
           onSuccessRefreshData();
         } else {
-          onError(ErrorTypes.ETHEREUM)
+          onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onReceiptApprove = (wasSuccessful) => {
         if (wasSuccessful) {
@@ -785,9 +774,9 @@ class BlockchainProvider extends React.Component {
             type: NotificationTypes.APPROVE,
           });
         } else {
-          onError(ErrorTypes.ETHEREUM)
+          onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onError = (type) => {
         if (type === ErrorTypes.METAMASK) {
@@ -799,7 +788,7 @@ class BlockchainProvider extends React.Component {
             assetName,
           });
         }
-      }
+      };
 
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchTransactionHistory()]);
@@ -807,7 +796,7 @@ class BlockchainProvider extends React.Component {
           assetName,
           amount: amountFormatted,
         });
-      }
+      };
 
       Brain.fundAsset({
         onTransactionHash,
@@ -824,7 +813,6 @@ class BlockchainProvider extends React.Component {
         paymentToken,
         gasPrice,
       });
-
     } catch (err) {
       debug(err);
     }
@@ -850,22 +838,22 @@ class BlockchainProvider extends React.Component {
         buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.INFO, {
           formattedAmount,
         });
-      }
+      };
 
       const onTransactionHashApprove = () => {
         buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.INFO, {
           formattedAmount,
           type: NotificationTypes.APPROVE,
         });
-      }
+      };
 
       const onReceipt = (wasSuccessful) => {
         if (wasSuccessful) {
           onSuccessRefreshData();
         } else {
-          onError(ErrorTypes.ETHEREUM)
+          onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onReceiptApprove = (wasSuccessful) => {
         if (wasSuccessful) {
@@ -874,9 +862,9 @@ class BlockchainProvider extends React.Component {
             type: NotificationTypes.APPROVE,
           });
         } else {
-          onError(ErrorTypes.ETHEREUM)
+          onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onError = (type) => {
         if (type === ErrorTypes.METAMASK) {
@@ -888,7 +876,7 @@ class BlockchainProvider extends React.Component {
             assetName,
           });
         }
-      }
+      };
 
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
@@ -896,7 +884,7 @@ class BlockchainProvider extends React.Component {
           assetName,
           formattedAmount,
         });
-      }
+      };
 
       Brain.issueDividends({
         onTransactionHash,
@@ -912,7 +900,6 @@ class BlockchainProvider extends React.Component {
         amount,
         gasPrice,
       });
-
     } catch (err) {
       debug(err);
     }
@@ -939,7 +926,7 @@ class BlockchainProvider extends React.Component {
       withdrawingAssetIds.push(assetId);
       this.setState({
         withdrawingAssetIds,
-      })
+      });
 
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.WITHDRAW_INVESTOR,
@@ -951,7 +938,7 @@ class BlockchainProvider extends React.Component {
           assetName,
           amount,
         });
-      }
+      };
 
       const onReceipt = (wasSuccessful) => {
         if (wasSuccessful) {
@@ -959,7 +946,7 @@ class BlockchainProvider extends React.Component {
         } else {
           onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onError = (type) => {
         removeassetIdFromList();
@@ -972,15 +959,15 @@ class BlockchainProvider extends React.Component {
             assetName,
           });
         }
-      }
+      };
 
       const removeassetIdFromList = () => {
         let withdrawingAssetIds = this.state.withdrawingAssetIds.slice();
         withdrawingAssetIds = withdrawingAssetIds.filter(assetIdTmp => assetIdTmp !== assetId);
         this.setState({
           withdrawingAssetIds,
-        })
-      }
+        });
+      };
 
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
@@ -989,7 +976,7 @@ class BlockchainProvider extends React.Component {
           assetName,
           amount,
         });
-      }
+      };
 
       await Brain.withdrawInvestorProfit(
         this.props.metamaskContext.user.address,
@@ -999,7 +986,6 @@ class BlockchainProvider extends React.Component {
         onError,
         gasPrice,
       );
-
     } catch (err) {
       debug(err);
     }
@@ -1022,7 +1008,7 @@ class BlockchainProvider extends React.Component {
     this.setState({
       loading: {
         ...this.state.loading,
-        transactionHistory: !userIsLoggedIn ? false : true,
+        transactionHistory: !!userIsLoggedIn,
       },
     });
   }
@@ -1035,7 +1021,7 @@ class BlockchainProvider extends React.Component {
           ...this.state.loading,
           transactionHistory: false,
         },
-      })
+      });
       return;
     }
     await Brain.fetchTransactionHistory(this.props.metamaskContext.user.address)
@@ -1053,13 +1039,11 @@ class BlockchainProvider extends React.Component {
       });
   }
 
-  render = () => {
-    return (
-      <Provider value={this.state}>
-        {this.props.children}
-      </Provider>
-    );
-  }
+  render = () => (
+    <Provider value={this.state}>
+      {this.props.children}
+    </Provider>
+  )
 }
 
 const enhance = compose(
