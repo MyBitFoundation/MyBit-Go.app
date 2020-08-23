@@ -1,130 +1,151 @@
-import regeneratorRuntime from "regenerator-runtime";
+import regeneratorRuntime from 'regenerator-runtime';
 import request from 'request';
 import { fetchAssets } from '../utils';
+
 require('dotenv').config();
 const Airtable = require('airtable');
+
 const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appgmqryjeBhR6fzy';
 const AIRTABLE_BASE_ASSETS_MAINNET = 'appgmqryjeBhR6fzy';
 export let assetListings;
-let calledGetAssets = false;
+const calledGetAssets = false;
 // TODO Change to AIRTABLE_BASE_ASSETS_MAINNET once live on mainnet
-const base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(AIRTABLE_BASE_ASSETS_MAINNET);
+const base = new Airtable({ apiKey: process.env.AIRTABLE_KEY }).base(AIRTABLE_BASE_ASSETS_MAINNET);
 
-const getOperators = async () => {
-  return new Promise(async (resolve, reject) => {
-    const operators = {};
-    base('Operators').select().eachPage((records, fetchNextPage) => {
-      records.forEach(record => {
-        const address = record.get('Address');
-        const name = record.get('Name');
-        const files = record.get('Files');
-        operators[address] = {
-          name,
-          files,
-        };
-      });
-
-      // To fetch the next page of records, call `fetchNextPage`.
-      // If there are more records, `page` will get called again.
-      // If there are no more records, `done` will get called.
-      fetchNextPage();
-
-    }, error =>  {
-      if (error) {
-        console.error(error);
-        reject();
-      } else {
-        resolve(operators);
-      }
+const getOperators = async () => new Promise(async (resolve, reject) => {
+  const operators = {};
+  base('Operators').select().eachPage((records, fetchNextPage) => {
+    records.forEach((record) => {
+      const address = record.get('Address');
+      const name = record.get('Name');
+      const files = record.get('Files');
+      operators[address] = {
+        name,
+        files,
+      };
     });
-  })
-}
+
+    // To fetch the next page of records, call `fetchNextPage`.
+    // If there are more records, `page` will get called again.
+    // If there are no more records, `done` will get called.
+    fetchNextPage();
+  }, (error) => {
+    if (error) {
+      console.error(error);
+      reject();
+    } else {
+      resolve(operators);
+    }
+  });
+});
 
 
-const getCorrectBase = network => {
+const getCorrectBase = (network) => {
   const baseId = network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET;
-  return new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(baseId);
-}
+  return new Airtable({ apiKey: process.env.AIRTABLE_KEY }).base(baseId);
+};
+
+const getAssetListingRecord = async (assetId, network) => {
+  let recordId;
+  const base = getCorrectBase(network);
+  const records = await base('Asset Listings').select({ filterByFormula: `{Asset ID} = "${assetId}"` }).firstPage();
+  if (!records.length) { return null; }
+  return records[0];
+};
 
 export const updateAssetListing = async (data, network) => {
-  const { assetId, files, risks, about, financials, fees } = data;
+  const {
+    assetId, files, risks, about, financials, fees,
+  } = data;
   let recordId;
-  const base = getCorrectBase(network)
+  const base = getCorrectBase(network);
   base('Asset Listings').select().eachPage((records, fetchNextPage) => {
-    records.forEach(record => {
-      if(record.get('Asset ID') === assetId){
-        recordId = record.id
-      }
-    })
-    fetchNextPage();
-  })
-}
-
-const getAssetListings = () => {
-  return new Promise(async (resolve, reject) => {
-    const assetListings = {};
-    base('Asset Listings').select().eachPage((records, fetchNextPage) => {
-      records.forEach(record => {
-        const assetId = record.get('Asset ID');
-        const financials = record.get('Financials');
-        const risks = record.get('Risks');
-        const about = record.get('About');
-        const fees = record.get('Fees');
-        const city = record.get('City');
-        const country = record.get('Country');
-        const collateralPercentage = record.get('Collateral Percentage');
-        const assetAddress1 = record.get('Route');
-        const assetAddress2 = record.get('Street Number');
-        const assetProvince = record.get('Province');
-        const assetPostalCode = record.get('Postal Code');
-        const files = record.get('Files');
-        assetListings[assetId] = {
-          files,
-          financials,
-          about,
-          risks,
-          fees,
-          city,
-          country,
-          assetAddress1,
-          assetAddress2,
-          assetProvince,
-          assetPostalCode,
-          collateralPercentage,
-        };
-      });
-
-      // To fetch the next page of records, call `fetchNextPage`.
-      // If there are more records, `page` will get called again.
-      // If there are no more records, `done` will get called.
-      fetchNextPage();
-
-    }, error =>  {
-      if (error) {
-        console.error(error);
-        reject();
-      } else {
-        resolve(assetListings);
+    records.forEach((record) => {
+      if (record.get('Asset ID') === assetId) {
+        recordId = record.id;
       }
     });
-  })
-}
+    fetchNextPage();
+  });
+};
+
+export const updateAssetFiles = async (data, network) => {
+  const { assetId, files } = data;
+  const record = await getAssetListingRecord(assetId, network);
+  const base = getCorrectBase(network);
+  await base('Asset Listings').update([{
+    'id': record.id,
+    'fields': {
+      'Files': files.map(file => ({
+        url: file.secure_url,
+        filename: file.original_filename,
+      })),
+    },
+  }]);
+};
+
+const getAssetListings = () => new Promise(async (resolve, reject) => {
+  const assetListings = {};
+  base('Asset Listings').select().eachPage((records, fetchNextPage) => {
+    records.forEach((record) => {
+      const assetId = record.get('Asset ID');
+      const financials = record.get('Financials');
+      const risks = record.get('Risks');
+      const about = record.get('About');
+      const fees = record.get('Fees');
+      const city = record.get('City');
+      const country = record.get('Country');
+      const collateralPercentage = record.get('Collateral Percentage');
+      const assetAddress1 = record.get('Route');
+      const assetAddress2 = record.get('Street Number');
+      const assetProvince = record.get('Province');
+      const assetPostalCode = record.get('Postal Code');
+      const files = record.get('Files');
+      assetListings[assetId] = {
+        files,
+        financials,
+        about,
+        risks,
+        fees,
+        city,
+        country,
+        assetAddress1,
+        assetAddress2,
+        assetProvince,
+        assetPostalCode,
+        collateralPercentage,
+      };
+    });
+
+    // To fetch the next page of records, call `fetchNextPage`.
+    // If there are more records, `page` will get called again.
+    // If there are no more records, `done` will get called.
+    fetchNextPage();
+  }, (error) => {
+    if (error) {
+      console.error(error);
+      reject();
+    } else {
+      resolve(assetListings);
+    }
+  });
+});
 const getAllAssetsInfo = async (newAsset = false) => {
-  try{
+  try {
     [
       assetOperators,
       assetListings,
     ] = await Promise.all([
       getOperators,
       getAssetListings,
-    ])
-  }catch(err){
+    ]);
+  } catch (err) {
     setTimeout(getAllAssetsInfo, 2000);
   }
-}
+};
 
 export const addNewAsset = async (data, network) => {
-  try{
+  try {
     const {
       assetId,
       country,
@@ -139,7 +160,6 @@ export const addNewAsset = async (data, network) => {
       assetAddress2,
       assetProvince,
       assetPostalCode,
-      files,
     } = data;
     const base = getCorrectBase(network);
     await base('Asset Listings').create({
@@ -155,22 +175,19 @@ export const addNewAsset = async (data, network) => {
       'Street Number': assetAddress2,
       'Province': assetProvince,
       'Postal Code': assetPostalCode,
-      'Files': files,
     });
 
     // force refresh assets in the server
     getAllAssetsInfo(true);
-  } catch(err){
-    console.log(err)
+  } catch (err) {
+    console.log(err);
   }
-}
+};
 
 
-export const pipeAssetListings = network =>
-  request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Asset%20Listings?api_key=${process.env.AIRTABLE_KEY}`)
+export const pipeAssetListings = network => request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Asset%20Listings?api_key=${process.env.AIRTABLE_KEY}`);
 
-export const pipeOperators = network =>
-    request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Operators?api_key=${process.env.AIRTABLE_KEY}`)
+export const pipeOperators = network => request(`https://api.airtable.com/v0/${network === 'ropsten' ? AIRTABLE_BASE_ASSETS_ROPSTEN : AIRTABLE_BASE_ASSETS_MAINNET}/Operators?api_key=${process.env.AIRTABLE_KEY}`);
 
 getAllAssetsInfo();
 setTimeout(getAllAssetsInfo, 10000);

@@ -1,5 +1,6 @@
 import regeneratorRuntime from "regenerator-runtime";
 import cors from 'cors';
+
 require('dotenv').config();
 const express = require('express');
 const compression = require('compression');
@@ -9,6 +10,7 @@ const multerStorage = multer.memoryStorage();
 const port = process.env.port || 8081;
 const dev = process.env.NODE_ENV !== 'production';
 import * as AirTableController from './controllers/airTableController';
+import { uploadFiles } from './controllers/cloudinaryController'
 
 import {
   handleRedirects,
@@ -77,11 +79,20 @@ app
       });
     });
 
-    server.post('/api/files/upload', multipleUpload, async (req, res) => {
-      const assetId = req.body.assetId;
-      const files = req.files;
+    server.post('/api/files/upload/:network?', multipleUpload, async (req, res) => {
+      try {
+        const network = req.params.network;
+        const assetId = req.body.assetId;
+        const files = req.files;
+        const uploadedFiles = await uploadFiles(files);
 
-      res.sendStatus(200);
+        await AirTableController.updateAssetFiles({ assetId, files: uploadedFiles }, network);
+        res.sendStatus(200);
+      } catch (error) {
+        console.error(error);
+        res.statusCode = 500;
+        res.send(error);
+      }
     });
 
     server.get("/manage/:id", (req, res) => {
