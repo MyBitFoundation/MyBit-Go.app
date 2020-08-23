@@ -74,7 +74,7 @@ class ListAssetPage extends React.Component {
         });
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
     this.ismounted = true;
   };
@@ -95,7 +95,6 @@ class ListAssetPage extends React.Component {
   };
 
   handleInputChange = (e) => {
-    console.log('Asset Value ', e);
     if (e.target) {
       const { name, value } = e.target;
       if (name === 'assetAddress1') {
@@ -197,7 +196,6 @@ class ListAssetPage extends React.Component {
         },
         loadingConversionInfo: true,
       },
-      () => console.log(this.state),
     );
 
     const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
@@ -326,7 +324,6 @@ class ListAssetPage extends React.Component {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
-    console.log('Files going to be uploaded: ', files);
     this.setState({
       data: { ...this.state.data, fileList: files },
     });

@@ -58,7 +58,7 @@ class AirtableProvider extends React.PureComponent {
         }
       }
     } catch (err) {
-      console.log('Error getting asset with filesString: ', filesString);
+      console.error('Error getting asset with filesString: ', filesString);
     }
     return ipfsFiles;
   }
@@ -148,7 +148,7 @@ class AirtableProvider extends React.PureComponent {
         airtable: true,
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       setTimeout(() => this.getAssets(network, updateFunction), 1000);
     }
   }

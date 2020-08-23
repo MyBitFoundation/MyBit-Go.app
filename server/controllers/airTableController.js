@@ -73,7 +73,7 @@ export const updateAssetFiles = async (data, network) => {
   const { assetId, files } = data;
   const record = await getAssetListingRecord(assetId, network);
   const base = getCorrectBase(network);
-  console.log(files);
+
   await base('Asset Listings').update([{
     'id': record.id,
     'fields': {
@@ -203,7 +203,7 @@ export const addNewAsset = async (data, network) => {
     // force refresh assets in the server
     getAllAssetsInfo(true);
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 

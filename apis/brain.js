@@ -358,7 +358,7 @@ export const fundAsset = async (onFundAsset, onApprove, params) => {
 };
 
 const processErrorType = (error, handleError) => {
-  console.log(error);
+  console.error(error);
   if (error.message.includes('User denied transaction signature')) {
     handleError(ErrorTypes.METAMASK);
   } else {
@@ -381,7 +381,7 @@ const getAssetDetails = (api, assetId, blockNumber) => {
       api.methods.getAssetFundingToken(assetId).call(),
     ]);
   } catch (err) {
-    console.log('getAssetDetails error: ', err);
+    console.error('getAssetDetails error: ', err);
   }
 };
 
@@ -583,7 +583,7 @@ export const fetchAsset = async (asset, userAddress) => {
       fundingToken,
     };
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -594,9 +594,6 @@ export const fetchAssets = async (userAddress, network, updateFunction) => {
     ] = await Promise.all([
       Network.getTotalAssetsWithBlockNumberAndManager(),
     ]);
-
-    console.log('assets');
-    console.log(assets);
 
     const assetsRenamed = assets
       .map(({
@@ -613,7 +610,6 @@ export const fetchAssets = async (userAddress, network, updateFunction) => {
 
     const assetDetails = await Promise.all(assetsRenamed.map(asset => fetchAsset(asset, userAddress)));
 
-    console.log(assetDetails, assetsRenamed);
     const objectToReturn = {};
     assetDetails.forEach(asset => objectToReturn[asset.assetId] = asset);
     updateFunction({

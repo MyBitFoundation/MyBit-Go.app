@@ -129,7 +129,7 @@ class BlockchainProvider extends React.Component {
     const newNetwork = newProps.network;
 
     if ((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)) {
-      console.log('Updating blockchainContext due to a change in: address or login or privacy mode');
+      console.info('Updating blockchainContext due to a change in: address or login or privacy mode');
       this.handleMetamaskUpdate();
     } else if (newNetwork !== oldNetwork) {
       this.setState({
@@ -581,7 +581,7 @@ class BlockchainProvider extends React.Component {
 
     const { buildNotification } = notificationsContext;
 
-    console.log('AssetContext', formData);
+    console.info('AssetContext', formData);
 
     const {
       user,

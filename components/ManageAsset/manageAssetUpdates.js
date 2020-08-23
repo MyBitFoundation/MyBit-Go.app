@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Button  } from 'antd';
+import { Input, Button } from 'antd';
 import styled from 'styled-components';
 import ManageAssetCustomRow from './manageAssetCustomRow';
 import ManageAssetRectangleContainer from './manageAssetRectangleContainer';
@@ -8,7 +8,7 @@ const { TextArea } = Input;
 const ButtonGroup = Button.Group;
 const ManageStyledTextArea = styled(TextArea)`
     margin: 10px;
-`
+`;
 
 class ManageAssetUpdates extends React.Component {
   constructor(props) {
@@ -16,37 +16,36 @@ class ManageAssetUpdates extends React.Component {
     this.loadPosts = this.loadPosts.bind(this);
   }
 
-  state =  {
+  state = {
     updateText: null,
     posts: [],
     loadingPosts: false,
   }
 
-  async loadPosts () {
-    this.setState({ loadingPosts: true })
+  async loadPosts() {
+    this.setState({ loadingPosts: true });
     const { getPostsFromCurrentThread } = this.props;
-    const posts = await getPostsFromCurrentThread()
+    const posts = await getPostsFromCurrentThread();
     this.setState({ posts, loadingPosts: false });
   }
 
   render() {
+    const {
+      authorizeThreeBoxSpace,
+      loadingThreeBoxThreadAPIAuthorization,
+      loadingThreeBoxSpaceAuthorization,
+      loadingThreeBoxThreadPostRequest,
+      hasAuthorizedThreeBox,
+      hasOpenedGoSpace,
+      openThreeBoxSpace,
+      postUpdateOnThread,
+      syncingThreeBox,
+    } = this.props;
 
-  const {
-    authorizeThreeBoxSpace,
-    loadingThreeBoxThreadAPIAuthorization,
-    loadingThreeBoxSpaceAuthorization,
-    loadingThreeBoxThreadPostRequest,
-    hasAuthorizedThreeBox,
-    hasOpenedGoSpace,
-    openThreeBoxSpace,
-    postUpdateOnThread,
-    syncingThreeBox,
-  } = this.props;
+    const { posts, loadingPosts } = this.state;
 
-  const { posts, loadingPosts } = this.state;
-
-  return (
-    <ManageAssetCustomRow>
+    return (
+      <ManageAssetCustomRow>
         <ManageAssetRectangleContainer
           hasShadow
           isFullWidth
@@ -54,19 +53,21 @@ class ManageAssetUpdates extends React.Component {
           height="250px"
         >
           <b>Updates</b>
-          <p>Use the following section to post updates
-              to investors of this asset.</p>
+          <p>
+Use the following section to post updates
+              to investors of this asset.
+          </p>
           <ManageStyledTextArea
             rows={3}
             disabled={!hasAuthorizedThreeBox || !hasOpenedGoSpace}
             placeholder={
-              !hasAuthorizedThreeBox || !hasOpenedGoSpace ?
-              `Please authorize 3Box Threads API to sync with your account. You might need` +
-              `to repeat these steps multiple times.` :
-              `Add your update here. The update will show up in the asset ` +
-              `listing and can not be removed afterwards.`
+              !hasAuthorizedThreeBox || !hasOpenedGoSpace
+                ? 'Please authorize 3Box Threads API to sync with your account. You might need'
+              + 'to repeat these steps multiple times.'
+                : 'Add your update here. The update will show up in the asset '
+              + 'listing and can not be removed afterwards.'
             }
-            onChange={(e) => this.setState({ updateText: e.target.value })}
+            onChange={e => this.setState({ updateText: e.target.value })}
             value={this.state.updateText}
           />
           <div
@@ -74,81 +75,86 @@ class ManageAssetUpdates extends React.Component {
               display: 'flex',
               justifyContent: 'space-between',
               width: '100%',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
-          <ButtonGroup size="medium">
-            {
-              !hasAuthorizedThreeBox ?
-              <Button
-                type="secondary"
-                disabled={loadingThreeBoxThreadAPIAuthorization}
-                loading={loadingThreeBoxThreadAPIAuthorization}
-                onClick={() => { console.log('Authorizing Space'); authorizeThreeBoxSpace(); }}
-              >
-                {
-                  !loadingThreeBoxThreadAPIAuthorization ?
-                  'Authorize 3Box' :
-                  'Authorizing...'
+            <ButtonGroup size="medium">
+              {
+              !hasAuthorizedThreeBox
+                ? (
+                  <Button
+                    type="secondary"
+                    disabled={loadingThreeBoxThreadAPIAuthorization}
+                    loading={loadingThreeBoxThreadAPIAuthorization}
+                    onClick={() => { authorizeThreeBoxSpace(); }}
+                  >
+                    {
+                  !loadingThreeBoxThreadAPIAuthorization
+                    ? 'Authorize 3Box'
+                    : 'Authorizing...'
                 }
-              </Button> :
-              (!hasOpenedGoSpace && <Button
-                type="secondary"
-                disabled={loadingThreeBoxSpaceAuthorization}
-                loading={loadingThreeBoxSpaceAuthorization}
-                onClick={async () => {
-                  console.log('[ ManageAssetUpdates - onClick ] - calling openThreeBoxSpace');
-                  const space = await openThreeBoxSpace();
-                  this.loadPosts();
-                }}
-              >
-                {
-                  !loadingThreeBoxSpaceAuthorization ?
-                  'Open Asset Thread' :
-                  'Opening...'
+                  </Button>
+                )
+                : (!hasOpenedGoSpace && (
+                <Button
+                  type="secondary"
+                  disabled={loadingThreeBoxSpaceAuthorization}
+                  loading={loadingThreeBoxSpaceAuthorization}
+                  onClick={async () => {
+                    await openThreeBoxSpace();
+                    this.loadPosts();
+                  }}
+                >
+                  {
+                  !loadingThreeBoxSpaceAuthorization
+                    ? 'Open Asset Thread'
+                    : 'Opening...'
                 }
-              </Button>)
+                </Button>
+                ))
             }
 
-            <Button
-              type="primary"
-              disabled={!hasOpenedGoSpace || !hasAuthorizedThreeBox || syncingThreeBox}
-              loading={loadingThreeBoxThreadPostRequest || syncingThreeBox}
-              onClick={() => {
-                  postUpdateOnThread(this.state.updateText, this.loadPosts)
-                  this.setState({ updateText: '' })
+              <Button
+                type="primary"
+                disabled={!hasOpenedGoSpace || !hasAuthorizedThreeBox || syncingThreeBox}
+                loading={loadingThreeBoxThreadPostRequest || syncingThreeBox}
+                onClick={() => {
+                  postUpdateOnThread(this.state.updateText, this.loadPosts);
+                  this.setState({ updateText: '' });
                 }
               }
-            >
-              {
-                syncingThreeBox ?
-                'Syncing w/3Box...':
-                  !loadingThreeBoxThreadPostRequest ?
-                  'Post Update' :
-                  'Posting...'
+              >
+                {
+                syncingThreeBox
+                  ? 'Syncing w/3Box...'
+                  : !loadingThreeBoxThreadPostRequest
+                    ? 'Post Update'
+                    : 'Posting...'
               }
-            </Button>
-          </ButtonGroup>
-          {
-            hasOpenedGoSpace &&
+              </Button>
+            </ButtonGroup>
+            {
+            hasOpenedGoSpace
+              && (
               <Button
                 type="primary"
                 loading={loadingPosts || syncingThreeBox}
                 disabled={loadingPosts || syncingThreeBox}
               >
                 {
-                  syncingThreeBox ?
-                  'Waiting for sync...':
-                    !loadingPosts ?
-                    `See Updates (${posts.length})` :
-                    'Loading posts...'
+                  syncingThreeBox
+                    ? 'Waiting for sync...'
+                    : !loadingPosts
+                      ? `See Updates (${posts.length})`
+                      : 'Loading posts...'
                 }
               </Button>
+              )
           }
           </div>
         </ManageAssetRectangleContainer>
-    </ManageAssetCustomRow>
-  );
+      </ManageAssetCustomRow>
+    );
   }
 }
 

@@ -26,31 +26,27 @@ import SupportedBrowsers from 'ui/SupportedBrowsers';
 const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
-export const withMetamaskContextPageWrapper = (Component) => {
-  return class Higher extends React.Component {
-    render() {
-      return (
-        <Consumer>
-          {state => <Component {...this.props} metamaskContext={state} />}
-        </Consumer>
-      )
-    }
-  }
-}
-
-export const getStaticProps = () => ({
-  props: {}
-})
-
-export const withMetamaskContext = (Component) => {
-  return function WrapperComponent(props) {
+export const withMetamaskContextPageWrapper = Component => class Higher extends React.Component {
+  render() {
     return (
       <Consumer>
-        {state => <Component {...props} metamaskContext={state} />}
+        {state => <Component {...this.props} metamaskContext={state} />}
       </Consumer>
     );
-  };
-}
+  }
+};
+
+export const getStaticProps = () => ({
+  props: {},
+});
+
+export const withMetamaskContext = Component => function WrapperComponent(props) {
+  return (
+    <Consumer>
+      {state => <Component {...props} metamaskContext={state} />}
+    </Consumer>
+  );
+};
 
 class MetamaskProvider extends Component {
   constructor(props) {
@@ -66,15 +62,15 @@ class MetamaskProvider extends Component {
       loadingBalances: true,
     };
     this.hasSetInitialState = false;
-  };
+  }
 
-  metamaskErrors = className => {
+  metamaskErrors = (className) => {
     const {
       userHasMetamask,
       extensionUrl,
       userIsLoggedIn,
       network,
-      privacyModeEnabled
+      privacyModeEnabled,
     } = this.state;
 
     const {
@@ -86,16 +82,25 @@ class MetamaskProvider extends Component {
     if (!userHasMetamask && extensionUrl) {
       error = METAMASK_ERRORS.NO_METAMASK;
       toRender = (
-        <span>Please connect via <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a> to be able to view, fund and list assets.
-          You can download the extension via{' '}
-          <a href={extensionUrl} target="_blank" rel="noopener noreferrer">this</a> link.
+        <span>
+Please connect via
+          {' '}
+          <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">MetaMask</a>
+          {' '}
+to be able to view, fund and list assets.
+          You can download the extension via
+          {' '}
+          <a href={extensionUrl} target="_blank" rel="noopener noreferrer">this</a>
+          {' '}
+link.
         </span>
       );
     } else if (!userHasMetamask && !extensionUrl) {
       error = METAMASK_ERRORS.NOT_SUPPORTED;
       toRender = (
         <div>
-          <span>Your browser is not supported. MetaMask supports the following browsers:
+          <span>
+Your browser is not supported. MetaMask supports the following browsers:
             <SupportedBrowsers />
           </span>
         </div>
@@ -108,7 +113,11 @@ class MetamaskProvider extends Component {
     } else if (privacyModeEnabled === undefined) {
       error = METAMASK_ERRORS.NOT_CONNECTED;
       toRender = (
-        <span><span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span> your MetaMask account to get started.</span>
+        <span>
+          <span className="MetamaksErrors__connect" onClick={window.ethereum.enable}>Connect</span>
+          {' '}
+your MetaMask account to get started.
+        </span>
       );
     } else if (!supportedNetworks.includes(network)) {
       error = METAMASK_ERRORS.NOT_NETWORK;
@@ -116,7 +125,7 @@ class MetamaskProvider extends Component {
         <span>
           The selected network is not supported at the moment, please use MetaMask to change to one of the following networks:
           <span style={{ display: 'block' }}>
-            {supportedNetworks.map((network, index) => index === supportedNetworks.length - 1 ? network : `${network}, `)}
+            {supportedNetworks.map((network, index) => (index === supportedNetworks.length - 1 ? network : `${network}, `))}
           </span>
         </span>
       );
@@ -128,7 +137,7 @@ class MetamaskProvider extends Component {
         </div>
       ),
       error,
-    }
+    };
   }
 
   componentDidMount = async () => {
@@ -143,7 +152,7 @@ class MetamaskProvider extends Component {
         window.web3js = new Web3(ethereum);
         // don't auto refresh
         ethereum.autoRefreshOnNetworkChange = false;
-        ethereum.on('networkChanged', network => {
+        ethereum.on('networkChanged', (network) => {
           network = NETWORKS[network];
           const {
             setNetwork,
@@ -152,10 +161,9 @@ class MetamaskProvider extends Component {
           if (setNetwork) {
             setNetwork(network);
           }
-        })
+        });
         const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
         await this.userHasMetamask(accessToAccounts);
-
       } else if (window.web3) {
         window.web3js = new Web3(window.web3.currentProvider);
         await this.userHasMetamask(false);
@@ -168,7 +176,7 @@ class MetamaskProvider extends Component {
         this.props.setUserHasMetamask(false);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -216,10 +224,10 @@ class MetamaskProvider extends Component {
         }
         // we are only interested in listing balances > 0
         if (balance > 0) {
-          let balanceInDai = 0
-          let balanceInPlatformToken = 0
-          let exchangeRateDefaultToken = tokenData.exchangeRateDefaultToken
-          let exchangeRatePlatformToken = tokenData.exchangeRatePlatformToken
+          let balanceInDai = 0;
+          let balanceInPlatformToken = 0;
+          const exchangeRateDefaultToken = tokenData.exchangeRateDefaultToken;
+          const exchangeRatePlatformToken = tokenData.exchangeRatePlatformToken;
 
           if (exchangeRateDefaultToken) {
             balanceInDai = tokenData.contractAddress === DEFAULT_TOKEN_CONTRACT ? balance : balance * exchangeRateDefaultToken.expectedRate;
@@ -235,7 +243,7 @@ class MetamaskProvider extends Component {
             balance,
             balanceInDai,
             balanceInPlatformToken,
-          }
+          };
         }
       }));
       avgBalance = Number(parseFloat(sumOfBalances.toFixed(2)));
@@ -245,7 +253,7 @@ class MetamaskProvider extends Component {
         for (const token of Object.entries(updatedTokensWithBalance)) {
           const [
             symbol,
-            tokenInfo
+            tokenInfo,
           ] = token;
           if (currentBalances[symbol].balance !== tokenInfo.balance) {
             shouldUpdateState = true;
@@ -280,9 +288,7 @@ class MetamaskProvider extends Component {
     }
   }
 
-  isReadOnlyMode = (userHasMetamask, userIsLoggedIn, network, privacyModeEnabled) => {
-    return !userHasMetamask || !userIsLoggedIn || !this.props.supportedNetworks.includes(network) || privacyModeEnabled === undefined;
-  }
+  isReadOnlyMode = (userHasMetamask, userIsLoggedIn, network, privacyModeEnabled) => !userHasMetamask || !userIsLoggedIn || !this.props.supportedNetworks.includes(network) || privacyModeEnabled === undefined
 
   updateStateWithUserInfo = (privacyModeEnabled, network, ethBalance, address, userIsLoggedIn, supportedTokensInfo) => {
     const {
@@ -314,7 +320,7 @@ class MetamaskProvider extends Component {
         userIsLoggedIn,
         isReadOnlyMode: this.isReadOnlyMode(true, userIsLoggedIn, network, privacyModeEnabled),
         loadingBalancesForNewUser: addressChanged,
-      })
+      });
     }
   }
 
@@ -333,7 +339,7 @@ class MetamaskProvider extends Component {
         userIsLoggedIn,
         privacyModeEnabled,
         isReadOnlyMode: this.isReadOnlyMode(true, userIsLoggedIn, network, privacyModeEnabled),
-      })
+      });
     }
   }
 
@@ -354,7 +360,7 @@ class MetamaskProvider extends Component {
         this.updateStateNoAccess(privacyModeEnabled, network, userIsLoggedIn);
       }
     } catch (err) {
-      console.log(err)
+      console.error(err);
       this.getUserInfo(privacyModeEnabled, network, supportedTokensInfo);
     }
   }
@@ -363,9 +369,8 @@ class MetamaskProvider extends Component {
     if (window.ethereum) {
       return await window.ethereum._metamask.isApproved();
     }
-    else {
-      return true;
-    }
+
+    return true;
   }
 
   async userHasMetamask(privacyModeEnabled) {
@@ -375,7 +380,7 @@ class MetamaskProvider extends Component {
     if (!stateNetwork && network && setNetwork) {
       setNetwork(network);
     }
-    //subscribe to metamask updates
+    // subscribe to metamask updates
     window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
 
     await this.getUserInfo(privacyModeEnabled, network);
@@ -392,13 +397,12 @@ class MetamaskProvider extends Component {
     if (ethereum) {
       return await window.ethereum._metamask.isUnlocked();
     }
-    else {
-      const accounts = await window.web3js.eth.getAccounts();
-      if (accounts && accounts.length > 0) {
-        return true;
-      }
-      return false;
+
+    const accounts = await window.web3js.eth.getAccounts();
+    if (accounts && accounts.length > 0) {
+      return true;
     }
+    return false;
   }
 
   async checkNetwork() {
@@ -443,7 +447,7 @@ class MetamaskProvider extends Component {
       <Provider value={this.state}>
         {this.props.children}
       </Provider>
-    )
+    );
   }
 }
 

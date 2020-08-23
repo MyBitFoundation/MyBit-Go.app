@@ -30,7 +30,7 @@ const CloseIconWrapper = styled(CloseIcon)`
   top: 0px;
   transform: translate(0%,100%);
   cursor: pointer;
-`
+`;
 
 const ChangesWrapper = styled.div`
   display: flex;
@@ -44,16 +44,16 @@ const ChangesWrapper = styled.div`
     margin-left: 20px;
     width: 124px;
   }
-`
+`;
 
-class DocumentsManager extends React.Component{
-  constructor(props){
+class DocumentsManager extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
       files: this.props.files || [],
       error: undefined,
       filesTmp: [],
-    }
+    };
   }
 
   handleFileUploaded = (file) => {
@@ -67,43 +67,41 @@ class DocumentsManager extends React.Component{
     const canUpload = MAX_FILES_UPLOAD - currentNumberOfFiles;
 
     let error;
-    if(currentNumberOfFiles + uploadedNumberOfFiles > MAX_FILES_UPLOAD){
-      error = 'A maximum of 5 files can be uploaded.'
+    if (currentNumberOfFiles + uploadedNumberOfFiles > MAX_FILES_UPLOAD) {
+      error = 'A maximum of 5 files can be uploaded.';
       this.setState({
         error,
-      })
+      });
       return;
     }
     let counter = 0;
-    let hasRepeatedNames = false;
-    for(file of Object.values(uploadedFiles)){
-      if(file.size > MAX_FILE_SIZE) {
-        error = `Some files are over 5MB. They were skipped.`
+    const hasRepeatedNames = false;
+    for (file of Object.values(uploadedFiles)) {
+      if (file.size > MAX_FILE_SIZE) {
+        error = 'Some files are over 5MB. They were skipped.';
       } else {
-        filesTmp.push({name: file.name, deletable: true, file});
-        counter+=1;
-        if(counter === canUpload && counter !== 1){
+        filesTmp.push({ name: file.name, deletable: true, file });
+        counter += 1;
+        if (counter === canUpload && counter !== 1) {
           break;
         }
       }
     }
 
-    if(filesTmp.length > 0){
+    if (filesTmp.length > 0) {
       this.setState({
         filesTmp,
         error,
-      })
+      });
     }
   }
 
-  handleRemoveUpload = fileName => {
+  handleRemoveUpload = (fileName) => {
     const { uploading } = this.state;
-    if(!uploading){
-      this.setState(prevState => {
-        return {
-          filesTmp: prevState.filesTmp.filter(file => file.name !== fileName),
-        }
-      })
+    if (!uploading) {
+      this.setState(prevState => ({
+        filesTmp: prevState.filesTmp.filter(file => file.name !== fileName),
+      }));
     }
   }
 
@@ -111,28 +109,28 @@ class DocumentsManager extends React.Component{
     const { asset } = this.props;
     const { assetId } = asset;
     const { updateAssetListingIpfs } = this.props.blockchainContext;
-    const result =  await Brain.uploadFilesToAWS(this.props.assetId, files);
-    if(result){
-      const assetWithUpdatedFiles = {...asset, files: asset.files ? [...asset.files] : []};
-      //update asset object with new files
-      files.forEach(file => {
-        assetWithUpdatedFiles.files.push(file)
-      })
-      updateAssetListingIpfs(assetWithUpdatedFiles, success => {
-        this.setState({uploading: false, filesTmp: success ? [] : files})
-      })
+    const result = await Brain.uploadFilesToAWS(this.props.assetId, files);
+    if (result) {
+      const assetWithUpdatedFiles = { ...asset, files: asset.files ? [...asset.files] : [] };
+      // update asset object with new files
+      files.forEach((file) => {
+        assetWithUpdatedFiles.files.push(file);
+      });
+      updateAssetListingIpfs(assetWithUpdatedFiles, (success) => {
+        this.setState({ uploading: false, filesTmp: success ? [] : files });
+      });
     }
   }
 
   handleFileUpload = () => {
-    try{
+    try {
       const { filesTmp } = this.state;
       const { files = [] } = this.props;
-      this.setState({uploading: true})
+      this.setState({ uploading: true });
       this.upload(filesTmp, files);
-    }catch(err){
-      console.log(err);
-      this.setState({uploading: false})
+    } catch (err) {
+      console.error(err);
+      this.setState({ uploading: false });
     }
   }
 
@@ -181,23 +179,23 @@ class DocumentsManager extends React.Component{
         </DocumentsManagerNav>
         {!noFiles && (
           <DocumentsManagerList>
-            {files.concat(filesTmp).map((file, index) => {
-              return (
-                <DocumentsManagerFile key={`file${index}`}>
-                  <div>
-                    <FileImg />
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={`${InternalLinks.S3}${assetId}:${file.name || file}`}>{file.name || file}
-                    </a>
-                    {file.deletable && (
-                      <CloseIconWrapper onClick={this.handleRemoveUpload.bind(this, file.name || file)}/>
-                    )}
-                  </div>
-                </DocumentsManagerFile>
-              )
-            })}
+            {files.concat(filesTmp).map((file, index) => (
+              <DocumentsManagerFile key={`file${index}`}>
+                <div>
+                  <FileImg />
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`${InternalLinks.S3}${assetId}:${file.name || file}`}
+                  >
+                    {file.name || file}
+                  </a>
+                  {file.deletable && (
+                  <CloseIconWrapper onClick={this.handleRemoveUpload.bind(this, file.name || file)} />
+                  )}
+                </div>
+              </DocumentsManagerFile>
+            ))}
           </DocumentsManagerList>
         )}
         {(!noFiles || !noFilesToUpload) && (
@@ -217,7 +215,7 @@ class DocumentsManager extends React.Component{
           >
             <Icon type="warning" />
             <span>{error}</span>
-            <Icon type="cross" onClick={() => this.setState({error: undefined})}/>
+            <Icon type="cross" onClick={() => this.setState({ error: undefined })} />
           </DocumentsManagerError>
         )}
         {success && (
@@ -226,12 +224,12 @@ class DocumentsManager extends React.Component{
           >
             <Icon type="check" />
             <span>{`${success} file(s) successfully uploaded.`}</span>
-            <Icon type="cross" onClick={() => this.setState({success: undefined})}/>
+            <Icon type="cross" onClick={() => this.setState({ success: undefined })} />
           </DocumentsManagerError>
         )}
       </DocumentsManagerWrapper>
-    )
+    );
   }
 }
 
-export default withBlockchainContext(DocumentsManager)
+export default withBlockchainContext(DocumentsManager);

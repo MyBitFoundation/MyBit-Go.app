@@ -392,10 +392,10 @@ class AssetsProvider extends React.PureComponent {
 
   getLoadingState = (loadingAirtable, loadingIpfs, loadingSdk) => {
     if (!loadingSdk && !loadingAirtable && !loadingIpfs) {
-      console.log('Done loading assets');
+      console.info('Done loading assets');
       return false;
     }
-    console.log('Not done loading assets');
+    console.info('Not done loading assets');
     return true;
   };
 
@@ -483,7 +483,7 @@ class AssetsProvider extends React.PureComponent {
           };
         },
         () => {
-          console.log('New Assets State: ', this.state);
+          console.info('New Assets State: ', this.state);
           cb && cb();
         },
       );

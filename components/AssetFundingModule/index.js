@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import BN from 'bignumber.js';
 import { withKyberContext } from 'components/KyberContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
@@ -21,12 +21,12 @@ import { calculateSlippage } from 'constants/calculateSlippage';
 
 BN.config({ EXPONENTIAL_AT: 80 });
 
-const GAS_FUNDING = require("@mybit/network.js/gas").buyAssetOrderERC20;
-const GAS_APPROVE = require("@mybit/network.js/gas").approve;
+const GAS_FUNDING = require('@mybit/network.js/gas').buyAssetOrderERC20;
+const GAS_APPROVE = require('@mybit/network.js/gas').approve;
 
 class AssetFundingModule extends React.Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       loadingConversionInfo: true,
       selectedToken: DEFAULT_TOKEN,
@@ -40,33 +40,33 @@ class AssetFundingModule extends React.Component {
       maxInvestment: 0,
       maxOwnership: 0,
       selectedAmountDefaultToken: 0,
-    }
+    };
   }
 
   componentWillMount = () => {
     this.setStaticParameters();
   }
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps = (nextProps) => {
     const { asset } = this.props;
     const { loading } = this.props.blockchainContext;
     const { loadingUserInfo } = loading;
     const { loadingBalancesForNewUser } = this.props.metamaskContext;
-    if(nextProps.blockchainContext.loading.loadingUserInfo !== loadingUserInfo){
-      this.setState({loadingUserInfo});
+    if (nextProps.blockchainContext.loading.loadingUserInfo !== loadingUserInfo) {
+      this.setState({ loadingUserInfo });
     }
     // if the user changed, recalculate exchange rate for the tokens the new user has
-    if(!nextProps.metamaskContext.loadingBalancesForNewUser && loadingBalancesForNewUser){
+    if (!nextProps.metamaskContext.loadingBalancesForNewUser && loadingBalancesForNewUser) {
       this.loadExchangeRateForAmountToPay(nextProps.metamaskContext.user.balances);
     }
 
     // update due to changes in the asset
-    if(asset.fundingProgress !== nextProps.asset.fundingProgress){
+    if (asset.fundingProgress !== nextProps.asset.fundingProgress) {
       this.setStaticParameters(nextProps);
     }
   }
 
-  setStaticParameters = props => {
+  setStaticParameters = (props) => {
     const { asset } = props || this.props;
 
     const {
@@ -84,7 +84,7 @@ class AssetFundingModule extends React.Component {
     let maxInvestment = Number(availableShares.toFixed(2));
     let minInvestment = 0.01;
 
-    if(ended){
+    if (ended) {
       minInvestment = 0;
       maxInvestment = 0;
     } else if (maxInvestment < 0.01) {
@@ -105,15 +105,15 @@ class AssetFundingModule extends React.Component {
       ended,
       totalGas,
       gasInDefaultToken,
-    })
+    });
   }
 
   /*
   * Exchange rate varies with the amount to pay.
   * We calculate the exchange rate for all the tokens the user has.
   */
-  loadExchangeRateForAmountToPay = newBalances => {
-    this.setState({loadingConversionInfo: true})
+  loadExchangeRateForAmountToPay = (newBalances) => {
+    this.setState({ loadingConversionInfo: true });
     const {
       amountToPayDefaultToken,
     } = this.state;
@@ -135,30 +135,28 @@ class AssetFundingModule extends React.Component {
     const { selectedToken } = this.state;
     const gasPriceInEth = fromWeiToEth(gasPrice);
     const approveGastCost = selectedToken === 'ETH' ? 0 : gasPriceInEth * GAS_APPROVE;
-    const transactionGasCost =  gasPriceInEth * GAS_FUNDING;
+    const transactionGasCost = gasPriceInEth * GAS_FUNDING;
     const totalGas = approveGastCost + transactionGasCost;
     return totalGas;
   }
 
-  getOwnershipOffSelectedAmountAndTotalSupply = (amount, totalSupply) => {
-    return ((amount / totalSupply) * 100).toFixed(2);
-  }
+  getOwnershipOffSelectedAmountAndTotalSupply = (amount, totalSupply) => ((amount / totalSupply) * 100).toFixed(2)
 
   handleDeadlineHit = () => {
-    console.log("Hit deadline");
+    console.warn('Hit deadline');
   }
 
-  setAcceptedToS = acceptedToS => this.setState({acceptedToS})
+  setAcceptedToS = acceptedToS => this.setState({ acceptedToS })
 
-  onChangeSelectedToken = selectedToken => {
+  onChangeSelectedToken = (selectedToken) => {
     const { selectedToken: currentSelectedToken } = this.state;
-    this.setState({selectedToken}, () => {
+    this.setState({ selectedToken }, () => {
       // the gas cost changes depending on whether we need to call approve(), which we do only for when selectedToken !== ETH
-      if(currentSelectedToken !== 'ETH' && selectedToken === 'ETH' || currentSelectedToken === 'ETH' && selectedToken !== 'ETH'){
+      if (currentSelectedToken !== 'ETH' && selectedToken === 'ETH' || currentSelectedToken === 'ETH' && selectedToken !== 'ETH') {
         const totalGas = this.calculateGasCost();
-        this.setState({totalGas})
+        this.setState({ totalGas });
       }
-    })
+    });
   }
 
   getAmountToPayAndFees = (amount, asset) => {
@@ -168,17 +166,17 @@ class AssetFundingModule extends React.Component {
     return {
       mybitPlatformFeeDefaultToken,
       amountToPayDefaultToken,
-    }
+    };
   }
 
-  onChangeContributionDefaultToken = value => {
+  onChangeContributionDefaultToken = (value) => {
     value = value || 0;
     const {
       maxInvestment,
       totalGas,
-    } = this.state
+    } = this.state;
 
-    if(value <= maxInvestment){
+    if (value <= maxInvestment) {
       const {
         asset,
         kyberLoading,
@@ -192,15 +190,15 @@ class AssetFundingModule extends React.Component {
         selectedOwnership: value > 0 ? this.getOwnershipOffSelectedAmountAndTotalSupply(value, totalSupply) : 0,
         selectedMaxValue: false,
         ...amountToPayAndFee,
-      })
+      });
     }
   }
 
-  onChangeContributionPercentage = value => {
+  onChangeContributionPercentage = (value) => {
     value = value || 0;
-    const { maxOwnership } = this.state
+    const { maxOwnership } = this.state;
 
-    if(value <= maxOwnership){
+    if (value <= maxOwnership) {
       const {
         asset,
         kyberLoading,
@@ -222,12 +220,12 @@ class AssetFundingModule extends React.Component {
         selectedOwnership: Number(value),
         selectedAmountDefaultToken,
         ...amountToPayAndFee,
-      })
+      });
     }
   }
 
   render = () => {
-    const props = {...this.state, ...this.props};
+    const props = { ...this.state, ...this.props };
     return this.props.children(props);
   }
 }
