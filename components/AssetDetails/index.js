@@ -48,6 +48,8 @@ const AssetDetails = ({
     fees,
     assetManagerData,
     handleAssetFavorited,
+    coverPicture,
+    name,
   } = asset;
 
   return (
@@ -55,7 +57,7 @@ const AssetDetails = ({
       <AssetDetailsLeftCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetDetailsInfo
           name={name}
-          imageSrc={imageSrc}
+          imageSrc={coverPicture?.url}
           city={city}
           country={country}
           assetId={assetId}
@@ -81,7 +83,7 @@ const AssetDetails = ({
           blockchainContext={blockchainContext}
           gasPrice={gasPrice}
         >
-          {props => <AssetFunding {...props}/>}
+          {props => <AssetFunding {...props} />}
         </AssetFundingModule>
         <AssetDetailsManagerInfo
           assetManager={assetManagerData}
@@ -92,6 +94,6 @@ const AssetDetails = ({
         />
       </AssetDetailsRightCol>
     </AssetDetailsWrapper>
-  )
-}
+  );
+};
 export default AssetDetails;

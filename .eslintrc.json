@@ -6,19 +6,22 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
   "rules": {
-    "react/jsx-filename-extension": 0,
     "import/order": "off",
     "prefer-destructuring": "off",
     "import/prefer-default-export": "off",
     "quote-props": "off",
+    "no-plusplus": "off",
+    "no-unused-expressions": ["error", { "allowShortCircuit": true }],
+    "no-restricted-syntax": "off",
+    "dot-notation": "off",
+    "no-console": ["error", {"allow": ["warn", "info", "error"]}],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/destructuring-assignment": "off",
     "react/jsx-closing-tag-location": "off",
     "react/no-multi-comp": "off",
-    "no-plusplus": "off",
-    "no-unused-expressions": ["error", { "allowShortCircuit": true }],
-    "no-restricted-syntax": "off"
+    "react/jsx-filename-extension": 0,
+    "react/prefer-stateless-function": "off"
   },
   "settings": {
     "import/resolver": {

@@ -48,7 +48,7 @@ export const ManagedAsset = props => (
     toRender={AssetPortfolioManaged}
     {...props}
   />
-)
+);
 
 export const PortfolioAsset = props => (
   <Asset
@@ -58,7 +58,7 @@ export const PortfolioAsset = props => (
     toRender={AssetPortfolioInvestment}
     {...props}
   />
-)
+);
 
 export const DefaultAsset = props => (
   <Asset
@@ -68,19 +68,20 @@ export const DefaultAsset = props => (
     toRender={AssetDefault}
     {...props}
   />
-)
+);
 
-const Asset = props => {
+const Asset = (props) => {
   const {
     assetId,
     colSize,
+    coverPicture,
     toRender: ToRender,
   } = props;
 
   return (
     <Col {...colSize} key={assetId}>
       <AssetTemplate
-        // backgroundImage={imageSrc}
+        backgroundImage={coverPicture?.url}
         name={name}
         {...props}
       >
@@ -89,5 +90,5 @@ const Asset = props => {
         />
       </AssetTemplate>
     </Col>
-  )
-}
+  );
+};
