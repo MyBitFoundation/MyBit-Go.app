@@ -25,6 +25,7 @@ import { TERMS_OF_SERVICE } from 'constants/termsOfService';
 import { withTermsOfServiceContext } from 'components/TermsOfServiceContext';
 import Panel from 'ui/Panel';
 import BN from 'bignumber.js';
+
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class AssetFunding extends React.Component {
@@ -34,10 +35,10 @@ class AssetFunding extends React.Component {
   };
 
   changeStep = (step) => {
-    if(step === 1){
+    if (step === 1) {
       this.props.loadExchangeRateForAmountToPay();
     }
-    this.setState({step})
+    this.setState({ step });
   }
 
   resetStep = () => this.changeStep(0);
@@ -46,42 +47,43 @@ class AssetFunding extends React.Component {
     const {
       readToS,
       setReadToS,
-   } = this.props.ToSContext;
+    } = this.props.ToSContext;
 
     const handleUIUpdate = () => {
       this.changeStep(2);
 
       this.props.blockchainContext.fundAsset(
         this.props.asset.assetId,
+        this.props.asset.assetName,
         amountToPay,
         amountContributed,
         paymentToken,
         selectedToken,
       );
-    }
+    };
 
-    if(!readToS){
+    if (!readToS) {
       this.setState({
         renderToS: (
           <Modal
-            visible={true}
+            visible
             okButtonProps={{
               type: 'primary',
               text: 'Confirm',
             }}
             okText="I Agree"
             onOk={() => {
-              this.setState({renderToS: undefined});
+              this.setState({ renderToS: undefined });
               handleUIUpdate(),
               setReadToS();
             }}
-            onCancel={() => this.setState({renderToS: undefined})}
-            title={`Terms of Service`}
+            onCancel={() => this.setState({ renderToS: undefined })}
+            title="Terms of Service"
           >
             {TERMS_OF_SERVICE}
           </Modal>
         ),
-      })
+      });
     } else {
       handleUIUpdate();
     }
@@ -96,12 +98,12 @@ class AssetFunding extends React.Component {
       asset: newAsset,
     } = nextProps;
 
-    if(!currentAsset.funded && newAsset.funded){
+    if (!currentAsset.funded && newAsset.funded) {
       this.changeStep(0);
     }
   }
 
-  render(){
+  render() {
     const {
       step,
       renderToS,
@@ -132,7 +134,7 @@ class AssetFunding extends React.Component {
           />
         )}
         {step === 2 && (
-          <AssetFundingConfirming cancel={this.resetStep}/>
+          <AssetFundingConfirming cancel={this.resetStep} />
         )}
       </Panel>
     );

@@ -182,6 +182,7 @@ class BlockchainProvider extends React.Component {
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
     const {
+      assetName,
       assetId,
       financials,
       about,
@@ -287,7 +288,7 @@ class BlockchainProvider extends React.Component {
   payoutAsset = async (asset) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId } = asset;
+    const { assetId, assetName } = asset;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
@@ -360,6 +361,8 @@ class BlockchainProvider extends React.Component {
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
+    const { assetName, assetId } = asset;
+
     // update state so users can't trigger the withdrawal multiple times
     const withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
     withdrawingAssetManager.push(assetId);
@@ -373,9 +376,11 @@ class BlockchainProvider extends React.Component {
     });
 
     const onTransactionHash = () => {
-      buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.INFO, {
-        assetName,
-      });
+      buildNotification(
+        notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.INFO, {
+          assetName,
+        },
+      );
     };
 
     const onReceipt = (wasSuccessful) => {
@@ -432,6 +437,7 @@ class BlockchainProvider extends React.Component {
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
+    const { assetName, assetId } = asset;
 
     const formattedAmount = formatMonetaryValue(amount, PLATFORM_TOKEN);
 
@@ -718,7 +724,7 @@ class BlockchainProvider extends React.Component {
     network);
   }
 
-  fundAsset = (assetId, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
+  fundAsset = (assetId, assetName, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
     try {
       const {
         gasPrice,
@@ -827,6 +833,7 @@ class BlockchainProvider extends React.Component {
 
       const formattedAmount = formatMonetaryValue(amount);
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
+      const { assetName } = currentAsset;
 
       // Call Approve first
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -913,6 +920,7 @@ class BlockchainProvider extends React.Component {
       } = this.state;
 
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
+      const { assetName } = currentAsset;
 
       const {
         buildNotification,

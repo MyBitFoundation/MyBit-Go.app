@@ -21,7 +21,8 @@
     "react/jsx-closing-tag-location": "off",
     "react/no-multi-comp": "off",
     "react/jsx-filename-extension": 0,
-    "react/prefer-stateless-function": "off"
+    "react/prefer-stateless-function": "off",
+    "react/no-access-state-in-setstate": "off"
   },
   "settings": {
     "import/resolver": {
