@@ -117,6 +117,7 @@ const getAssetListings = () => new Promise(async (resolve, reject) => {
       const assetProvince = record.get('Province');
       const assetPostalCode = record.get('Postal Code');
       const files = record.get('Files');
+      const coverPicture = record.get('Cover Picture');
       assetListings[assetId] = {
         files,
         financials,
@@ -130,6 +131,7 @@ const getAssetListings = () => new Promise(async (resolve, reject) => {
         assetProvince,
         assetPostalCode,
         collateralPercentage,
+        coverPicture,
       };
     });
 
