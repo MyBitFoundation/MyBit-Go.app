@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { LOAD_SUPPORTED_TOKENS_TIME } from 'constants/timers';
-const SDK_CONTRACTS = require("@mybit/contracts/networks/ropsten/Contracts");
 import {
   debug,
   fromWeiToEth,
@@ -19,94 +18,93 @@ import {
   FALLBACK_NETWORK,
 } from 'constants/supportedNetworks';
 
+const SDK_CONTRACTS = require('@mybit/contracts/networks/ropsten/Contracts');
+
 const DEFAULT_QUANTITY = 0.5;
 const { Provider, Consumer } = React.createContext({});
 let kyberContract;
 // Required so we can trigger getInitialProps in our exported pages
-export const withKyberContextPageWrapper = (Component) => {
-  return class Higher extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
-    render(){
-      return (
-        <Consumer>
-          {state =>
-            <Component
-              {...this.props}
-              supportedTokensInfo={state.supportedTokensInfo}
-              kyberLoading={state.loading}
-              kyberNetwork={state.network}
-            />
-          }
-        </Consumer>
-      )
-    }
+export const withKyberContextPageWrapper = Component => class Higher extends React.Component {
+  static getInitialProps(ctx) {
+    if (Component.getInitialProps) return Component.getInitialProps(ctx);
+    return {};
   }
-}
 
-export const withKyberContext = (Component) => {
-  return function WrapperComponent(props) {
+  render() {
     return (
       <Consumer>
-        {state =>
+        {state => (
           <Component
-            {...props}
+            {...this.props}
             supportedTokensInfo={state.supportedTokensInfo}
             kyberLoading={state.loading}
             kyberNetwork={state.network}
           />
-        }
+        )}
       </Consumer>
     );
-  };
-}
+  }
+};
+
+export const withKyberContext = Component => function WrapperComponent(props) {
+  return (
+    <Consumer>
+      {state => (
+        <Component
+          {...props}
+          supportedTokensInfo={state.supportedTokensInfo}
+          kyberLoading={state.loading}
+          kyberNetwork={state.network}
+        />
+      )}
+    </Consumer>
+  );
+};
 
 export const getExpectedAndSlippage = async (src, dest, amount) => {
-    try{
-      if(src === dest){
-        return {
-          expectedRate: 1,
-          slippageRate: 1,
-        };
-      }
+  try {
+    if (src === dest) {
+      return {
+        expectedRate: 1,
+        slippageRate: 1,
+      };
+    }
 
-      const result = await kyberContract.methods.getExpectedRate(src, dest, amount).call();
-      let {
+    const result = await kyberContract.methods.getExpectedRate(src, dest, amount).call();
+    let {
+      expectedRate,
+      slippageRate,
+    } = result;
+
+    if (expectedRate !== '0') {
+      expectedRate = fromWeiToEth(expectedRate);
+      slippageRate = fromWeiToEth(slippageRate);
+
+      return {
         expectedRate,
         slippageRate,
-      } = result;
-
-      if(expectedRate !== '0'){
-        expectedRate = fromWeiToEth(expectedRate);
-        slippageRate = fromWeiToEth(slippageRate);
-
-        return {
-          expectedRate,
-          slippageRate,
-        };
-      }
-    } catch {
-      // Might mean token is under maintenance
+      };
     }
-    return null;
+  } catch (e) {
+    console.error(e);
+    // Might mean token is under maintenance
   }
+  return null;
+};
 
 class KyberProvider extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       loading: true,
-    }
+    };
   }
 
   componentWillUnmount = () => {
     clearInterval(this.intervalSupportedTokens);
   }
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate = (prevProps) => {
     const {
       network: oldNetwork,
       userHasMetamask: oldUserHasMetamask,
@@ -117,48 +115,49 @@ class KyberProvider extends React.Component {
       userHasMetamask,
     } = this.props;
 
-    if(oldNetwork !== newNetwork){
-      this.setState({loading: true});
+
+    if (oldNetwork !== newNetwork) {
+      this.setState({ loading: true });
       this.fetchSupportedTokens(newNetwork);
-    } else if(!oldUserHasMetamask && userHasMetamask){
+    } else if (!oldUserHasMetamask && userHasMetamask) {
       kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
       this.fetchSupportedTokens();
-      this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, LOAD_SUPPORTED_TOKENS_TIME)
+      this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, LOAD_SUPPORTED_TOKENS_TIME);
     }
   }
 
-  fetchSupportedTokens = async network => {
-    try{
+  fetchSupportedTokens = async (network) => {
+    try {
       const {
-       userHasMetamask,
-       supportedNetworks,
+        userHasMetamask,
+        supportedNetworks,
       } = this.props;
 
       network = this.props.network || FALLBACK_NETWORK;
 
       const supportedTokensInfo = {};
 
-      if(supportedNetworks.includes(network) || !userHasMetamask){
+      if (supportedNetworks.includes(network) || !userHasMetamask) {
         const supportedTokens = await fetch(getSupportedTokensUrl(network));
         const supportedTokensData = await supportedTokens.json();
         const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
         const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
 
         const amountToConvert = toWei(DEFAULT_QUANTITY);
-        await Promise.all(supportedTokensData.data.map(async({
+        await Promise.all(supportedTokensData.data.map(async ({
           symbol,
           address: contractAddress,
           name,
           decimals,
         }) => {
-          if(symbol === 'ETH'){
+          if (symbol === 'ETH') {
             const [
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
             ] = await Promise.all([
               getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, amountToConvert),
               getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, amountToConvert),
-            ])
+            ]);
 
             supportedTokensInfo['ETH'] = {
               contractAddress,
@@ -166,7 +165,7 @@ class KyberProvider extends React.Component {
               decimals: 18,
               exchangeRateDefaultToken,
               exchangeRatePlatformToken,
-            }
+            };
           } else {
             const [
               exchangeRateDefaultToken,
@@ -174,17 +173,17 @@ class KyberProvider extends React.Component {
             ] = await Promise.all([
               getExpectedAndSlippage(contractAddress, DEFAULT_TOKEN_CONTRACT, amountToConvert),
               getExpectedAndSlippage(contractAddress, PLATFORM_TOKEN_CONTRACT, amountToConvert),
-            ])
+            ]);
 
             // This kind of filtering needs to be tested
-            if(exchangeRateDefaultToken && exchangeRatePlatformToken){
+            if (exchangeRateDefaultToken && exchangeRatePlatformToken) {
               supportedTokensInfo[symbol] = {
                 contractAddress,
                 name,
                 decimals,
                 exchangeRateDefaultToken,
                 exchangeRatePlatformToken,
-              }
+              };
             }
           }
         }));
@@ -194,19 +193,17 @@ class KyberProvider extends React.Component {
         supportedTokensInfo,
         loading: false,
         network,
-      })
-    }catch(err){
-      debug("kyberContext error: ", err);
+      });
+    } catch (err) {
+      debug('kyberContext error: ', err);
     }
   }
 
-  render = () => {
-    return (
-      <Provider value={this.state}>
-        {this.props.children}
-      </Provider>
-    );
-  }
+  render = () => (
+    <Provider value={this.state}>
+      {this.props.children}
+    </Provider>
+  )
 }
 
 export default KyberProvider;

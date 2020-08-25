@@ -16,10 +16,11 @@ import {
 } from 'utils/helpers';
 import WithdrawCollateral from 'components/WithdrawCollateral';
 import {
-  PLATFORM_TOKEN,
   DEFAULT_TOKEN,
   DEFAULT_TOKEN_MAX_DECIMALS,
+  getPlatformToken,
 } from 'constants/app';
+import { useMetamaskContext } from 'components/MetamaskContext';
 
 let Bizcharts;
 if (typeof window !== 'undefined') {
@@ -43,6 +44,7 @@ const ManageAssetGraphs = ({
   isWithdrawingCollateral,
   withdrawCollateral,
 }) => {
+  const { network } = useMetamaskContext();
   const graphData = getTimeFilteredData(managerPercentage, revenueData, profitChartView);
 
   const ds = new window.DataSet();
@@ -100,7 +102,7 @@ const ManageAssetGraphs = ({
             <ManageAssetColoredValue
               isBlue
             >
-              {formatMonetaryValue(assetManagerCollateral, PLATFORM_TOKEN)}
+              {formatMonetaryValue(assetManagerCollateral, getPlatformToken(network))}
             </ManageAssetColoredValue>
             <br />
           </div>

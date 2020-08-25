@@ -9,14 +9,14 @@ export const calculateSlippage = async (balances, toToken, amountToPay, converti
   const userTokensSlippage = await Promise.all(tokensUserHas.map(async ([key, value]) => {
     const { balanceInDai, contractAddress, balance } = value;
     const amountToConvert = amountToPay * balance / balanceInDai;
-    return getExpectedAndSlippage(contractAddress, toToken, toWei(amountToConvert))
-  }))
+    return getExpectedAndSlippage(contractAddress, toToken, toWei(amountToConvert));
+  }));
   const tokenSlippagePercentages = {};
   userTokensSlippage.forEach((slippage, index) => {
     const { expectedRate, slippageRate } = slippage;
     const tokenName = tokensUserHas[index][0];
     let toTokenExchangeRate;
-    if(convertingToDefaultToken){
+    if (convertingToDefaultToken) {
       toTokenExchangeRate = tokensUserHas[index][1].exchangeRateDefaultToken;
     } else {
       toTokenExchangeRate = tokensUserHas[index][1].exchangeRatePlatformToken;
@@ -28,4 +28,4 @@ export const calculateSlippage = async (balances, toToken, amountToPay, converti
   });
 
   return tokenSlippagePercentages;
-}
+};

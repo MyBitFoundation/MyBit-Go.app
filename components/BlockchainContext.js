@@ -30,7 +30,7 @@ import {
   fromWeiToEth,
 } from 'utils/helpers';
 import {
-  PLATFORM_TOKEN,
+  getPlatformToken,
 } from 'constants/app';
 import {
   SUPPORTED_NETWORKS,
@@ -434,12 +434,13 @@ class BlockchainProvider extends React.Component {
 
   withdrawCollateral = async (asset, percentage, amount, updateAssetCollateralPage) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
+    const { network } = this.props.metamaskContext;
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
     const { assetName, assetId } = asset;
 
-    const formattedAmount = formatMonetaryValue(amount, PLATFORM_TOKEN);
+    const formattedAmount = formatMonetaryValue(amount, getPlatformToken(network));
 
     // update state so users can't trigger the withdrawal multiple times
     const withdrawingCollateral = this.state.withdrawingCollateral.slice();

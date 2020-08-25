@@ -95,7 +95,6 @@ const AssetFundingConfirm = ({
   const totalToPayInSelectedToken = selectedToken === DEFAULT_TOKEN ? totalToPayInDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, totalToPayInDefaultToken);
   const amountToPaySelectedToken = selectedToken === DEFAULT_TOKEN ? amountToPayDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, amountToPayDefaultToken);
   const mybitPlatformFeeSelectedToken = selectedToken === DEFAULT_TOKEN ? mybitPlatformFeeDefaultToken : kyberLoading ? 0 : convertFromDefaultToken(selectedToken, supportedTokensInfo, mybitPlatformFeeDefaultToken);
-  console.log(supportedTokensInfo);
 
   const metamaskErrors = metamaskContext.metamaskErrors();
   const footer = getFooter(

@@ -14,6 +14,7 @@
     "no-unused-expressions": ["error", { "allowShortCircuit": true }],
     "no-restricted-syntax": "off",
     "dot-notation": "off",
+    "max-len": "off",
     "no-console": ["error", {"allow": ["warn", "info", "error"]}],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",

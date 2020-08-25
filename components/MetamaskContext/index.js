@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Web3 from 'web3';
 import { withKyberContext } from 'components/KyberContext';
@@ -23,7 +23,10 @@ import {
 import { FALLBACK_NETWORK } from 'constants/supportedNetworks';
 import SupportedBrowsers from 'ui/SupportedBrowsers';
 
-const { Provider, Consumer } = React.createContext({});
+const metamaskContext = React.createContext({});
+const { Provider, Consumer } = metamaskContext;
+
+export const useMetamaskContext = () => useContext(metamaskContext);
 
 // Required so we can trigger getInitialProps in our exported pages
 export const withMetamaskContextPageWrapper = Component => class Higher extends React.Component {

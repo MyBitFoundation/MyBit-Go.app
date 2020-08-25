@@ -13,22 +13,20 @@ import {
   formatValueForToken,
 } from 'utils/helpers';
 import {
-  PLATFORM_TOKEN,
+  getPlatformToken,
 } from 'constants/app';
-import { withMetamaskContext } from 'components/MetamaskContext';
+import { withMetamaskContext, useMetamaskContext } from 'components/MetamaskContext';
 import TokenSelector from 'components/TokenSelector';
 import NumericInput from 'ui/NumericInput';
 import Spin from 'static/spin.svg';
 import LabelWithValueAndTooltip from 'ui/LabelWithValueAndTooltip';
 import TooltipWithQuestionMarkGrey from 'ui/TooltipWithQuestionMarkGrey';
 
-const formatter = (value) => {
-  return `${value}%`;
-}
+const formatter = value => `${value}%`;
 
 const StyledTooltip = styled(TooltipWithQuestionMarkGrey)`
   margin-left: 5px;
-`
+`;
 
 const SlippageWrapper = styled.div`
   display: flex;
@@ -37,12 +35,12 @@ const SlippageWrapper = styled.div`
   margin-top: 20px;
   font-size: 16px;
   line-height: 24px;
-`
+`;
 
 const SlippageLabel = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const SlippageValue = styled.div`
   ${props => props.value >= 5 && css`
@@ -51,7 +49,7 @@ const SlippageValue = styled.div`
   ${props => props.value >= 10 && css`
     color: #FF0000;
   `}
-`
+`;
 
 const InputsWrapper = styled.div`
   margin: 0 auto;
@@ -92,12 +90,12 @@ const Separator = styled.span`
   position: relative;
   top: 5px;
   left: 5px;
-`
+`;
 
 const MybitInput = styled.div`
   width: 46%;
   display: inline-block;
-`
+`;
 const TokenSelectorWrapper = styled.div`
   width: 46%;
   display: inline-block;
@@ -120,7 +118,7 @@ const TokenSelectorWrapper = styled.div`
       border-color: #d9d9d9;
     `}
   }
-`
+`;
 
 const Label = styled.div`
   margin-left: 6px;
@@ -128,19 +126,18 @@ const Label = styled.div`
   font-size: 14px;
   line-height: 22px;
   color: ${({ theme }) => theme.colors.grayBase};
-`
+`;
 
 const Loading = styled(Spin)`
   display: block;
   margin: 0 auto;
   height: 32px;
   width: 32px;
-`
+`;
 
 export const CollateralSlide = ({
   maxWidthDesktop,
   handleInputChange,
-  collateralPercentage,
   formData,
   handleSelectedTokenChange,
   selectedToken,
@@ -157,22 +154,23 @@ export const CollateralSlide = ({
     collateralInPlatformToken,
     collateralInDefaultToken,
     collateralInSelectedToken,
+    collateralPercentage,
     asset,
-    escrow,
   } = formData;
+  const { network } = useMetamaskContext();
 
   const noBalance = !balances || Object.keys(balances).length === 0;
   const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
-  const decimalsOfPlatformToken = getDecimalsForToken(PLATFORM_TOKEN);
+  const decimalsOfPlatformToken = getDecimalsForToken(getPlatformToken(network));
   const collateralSelectedTokenFormatted = formatValueForToken(collateralInSelectedToken, selectedToken);
 
   let buttonText = 'Next';
   if (loadingBalancesForNewUser) {
-    buttonText = 'Loading Balances'
+    buttonText = 'Loading Balances';
   } else if (noBalance) {
-    buttonText = 'Insufficient Funds'
+    buttonText = 'Insufficient Funds';
   } else if (loadingConversionInfo) {
-    buttonText = 'Loading Slippage Info'
+    buttonText = 'Loading Slippage Info';
   }
 
   const slippagePercentage = (!tokenSlippagePercentages || loadingConversionInfo) ? 0 : tokenSlippagePercentages[selectedToken];
@@ -198,7 +196,7 @@ export const CollateralSlide = ({
       >
         This a type of decentralised insurance for investors.
         <a href="/help#How%20is%20asset%20manager%20collateral%20calculated?" target="_blank">
-          {' '}Learn More
+          Learn More
         </a>
       </CarouselSlideParagraph>
       {kyberLoading && (
@@ -219,11 +217,11 @@ export const CollateralSlide = ({
             <MybitInput>
               <Label>Choose Escrow Amount</Label>
               <NumericInput
-                defaultValue={escrow}
+                defaultValue={collateralPercentage}
                 max={100}
                 min={0}
-                onChange={e => handleInputChange({ target: { value: e, name: 'escrow' } })}
-                value={escrow}
+                onChange={e => handleInputChange({ target: { value: +e, name: 'collateralPercentage' } })}
+                value={collateralPercentage}
                 label="%"
                 decimalPlaces={2}
               />
@@ -235,7 +233,7 @@ export const CollateralSlide = ({
               <NumericInput
                 defaultValue={collateralInPlatformToken}
                 value={collateralInPlatformToken}
-                label={PLATFORM_TOKEN}
+                label={getPlatformToken(network)}
                 decimalPlaces={2}
                 step={1}
                 disabled
@@ -254,7 +252,7 @@ export const CollateralSlide = ({
                   disabled
                   step={decimalsOfSelectedTokens.step}
                   decimalPlaces={decimalsOfSelectedTokens.decimals}
-                  label={
+                  label={(
                     <TokenSelector
                       balances={balances}
                       amountToPay={collateralInDefaultToken}
@@ -262,7 +260,7 @@ export const CollateralSlide = ({
                       loading={loadingBalancesForNewUser}
                       selectedToken={selectedToken}
                     />
-                  }
+                  )}
                 />
 
               </TokenSelectorWrapper>
@@ -280,7 +278,8 @@ export const CollateralSlide = ({
                 />
               </SlippageLabel>
               <SlippageValue value={slippagePercentage}>
-                {slippagePercentage}%
+                {slippagePercentage}
+%
               </SlippageValue>
             </SlippageWrapper>
           </InputsWrapper>
@@ -300,5 +299,5 @@ export const CollateralSlide = ({
         </React.Fragment>
       )}
     </CarouselSlide>
-  )
-}
+  );
+};

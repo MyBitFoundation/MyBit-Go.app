@@ -2,9 +2,10 @@ import React from 'react';
 import { Timeline } from 'antd';
 import styled, { css } from 'styled-components';
 import { formatMonetaryValue } from 'utils/helpers';
-import { PLATFORM_TOKEN } from 'constants/app';
+import { getPlatformToken } from 'constants/app';
 import { omit } from 'lodash';
 import CustomTimelineItem from './customTimelineItem';
+import { useMetamaskContext } from 'components/MetamaskContext';
 
 const CustomTimelineWrapper = styled(props => (
   <Timeline {...omit(props, CustomTimelineWrapper.OmitProps)} />
@@ -71,6 +72,8 @@ const CustomTimeline = React.memo(({
   } else if (assetValue && !metamaskErrors) {
     maxStep = 3;
   }
+
+  const { network } = useMetamaskContext();
 
   return (
     <CustomTimelineWrapper
@@ -157,7 +160,7 @@ Category:
         content={step > 7
           ? collateralPercentage === 0 ? 'No collateral' : (
             <div>
-              <div>{`${collateralPercentage}% of the asset = ${formatMonetaryValue(collateralInPlatformToken, PLATFORM_TOKEN)}`}</div>
+              <div>{`${collateralPercentage}% of the asset = ${formatMonetaryValue(collateralInPlatformToken, getPlatformToken(network))}`}</div>
               <div>
 Currency you pay in:
                 {' '}

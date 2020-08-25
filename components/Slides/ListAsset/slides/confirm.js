@@ -6,12 +6,13 @@ import {
 } from 'components/CarouselSlide/';
 import AlertMessage from 'ui/AlertMessage';
 import {
-  PLATFORM_TOKEN,
+  getPlatformToken,
 } from 'constants/app';
 import {
   formatValueForToken,
 } from 'utils/helpers';
 import TermsAndConditions from 'ui/TermsAndConditions';
+import { useMetamaskContext } from 'components/MetamaskContext';
 
 const InformationWrapper = styled.div`
   b{
@@ -23,7 +24,7 @@ const InformationWrapper = styled.div`
     font-size: 14px;
   }
 
-  ${({theme}) => theme.tablet`
+  ${({ theme }) => theme.tablet`
     width: 90%;
     margin: 0 auto;
   `}
@@ -38,7 +39,7 @@ const AlertMessageWrapper = styled.div`
     margin: 0px 0px !important;
   }
 
-`
+`;
 
 export const ConfirmSlide = ({
   formData,
@@ -51,7 +52,8 @@ export const ConfirmSlide = ({
   checkedToS,
   setCheckedToS,
 }) => {
-  const formattedCollateral = formatValueForToken(formData.collateralInPlatformToken, PLATFORM_TOKEN);
+  const { network } = useMetamaskContext();
+  const formattedCollateral = formatValueForToken(formData.collateralInPlatformToken, getPlatformToken(network));
   return (
     <CarouselSlide>
       <CarouselSlideMainTitle
@@ -61,7 +63,7 @@ export const ConfirmSlide = ({
         maxWidthDesktop={maxWidthDesktop}
       >
       Confirm information
-    </CarouselSlideMainTitle>
+      </CarouselSlideMainTitle>
       <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
@@ -72,59 +74,61 @@ export const ConfirmSlide = ({
         <section>
           <b>Location</b>
           <p>
-            {formData.userCity === "" ? "[city missing]" : formData.assetCity}/
-            {formData.userCountry === ""
-              ? "[country missing]"
+            {formData.userCity === '' ? '[city missing]' : formData.assetCity}
+/
+            {formData.userCountry === ''
+              ? '[country missing]'
               : formData.userCountry}
           </p>
         </section>
         <section>
           <b>Asset</b>
           <p>
-            {formData.asset === "" ? "[asset missing]" : formData.asset}
+            {formData.asset === '' ? '[asset missing]' : formData.asset}
           </p>
         </section>
         <section>
           <b>Asset location</b>
           <p>
-            {formData.assetAddress1 === ""
-              ? "[address missing]"
+            {formData.assetAddress1 === ''
+              ? '[address missing]'
               : formData.assetAddress1}
-            {(!formData.assetAddress2 || formData.assetAddress2 === "") ? "" : `,${formData.assetAddress2}`}
+            {(!formData.assetAddress2 || formData.assetAddress2 === '') ? '' : `,${formData.assetAddress2}`}
           </p>
         </section>
         <section>
           <b>Supporting documents</b>
           <p>
             {formData.fileList.length === 0
-              ? "[files not uploaded]"
+              ? '[files not uploaded]'
               : formData.fileList.map(file => (
-                  <span
-                    key={file.name}
-                    className="Slider__confirm-entry-file"
-                  >
-                    {file.name}
-                  </span>
-                ))}
+                <span
+                  key={file.name}
+                  className="Slider__confirm-entry-file"
+                >
+                  {file.name}
+                </span>
+              ))}
           </p>
         </section>
         <section>
           <b>Management fee</b>
           <p>
-            {formData.managementFee}%
+            {formData.managementFee}
+%
           </p>
         </section>
         <section>
           <b>Asset collateral</b>
           <p>
-            {`${formattedCollateral} ${PLATFORM_TOKEN} ${formData.collateralPercentage}%`}
+            {`${formattedCollateral} ${getPlatformToken(network)} ${formData.collateralPercentage}%`}
           </p>
         </section>
         {shouldShowToSCheckmark && (
           <TermsAndConditions
             checked={checkedToS}
             onChange={event => setCheckedToS(event.target.checked)}
-            style={{marginTop: '50px'}}
+            style={{ marginTop: '50px' }}
           />
         )}
         {error && (
@@ -140,4 +144,4 @@ export const ConfirmSlide = ({
       </InformationWrapper>
     </CarouselSlide>
   );
-}
+};

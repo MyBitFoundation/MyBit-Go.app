@@ -6,7 +6,7 @@ export const BLOCK_NUMBER_CONTRACT_CREATION = 4619384;
 export const DEFAULT_TOKEN = 'DAI';
 export const DEFAULT_TOKEN_MAX_DECIMALS = 2;
 export const ERC20_TOKEN_MAX_DECIMALS = 4;
-export const PLATFORM_TOKEN = 'MYB';
+export const getPlatformToken = network => (network === 'ropsten' ? 'KNC' : 'MYB');
 export const PLATFORM_TOKEN_MAX_DECIMALS = 3;
 export const getDefaultTokenContract = network => (network === 'ropsten' ? '0xad6d458402f60fd3bd25163575031acdce07538d' : '0x6b175474e89094c44da98b954eedeac495271d0f');
 export const getPlatformTokenContract = network => (network === 'ropsten' ? '0x7b2810576aa1cce68f2b118cef1f36467c648f92' : '0x5d60d8d7eF6d37E16EBABc324de3bE57f135e0BC');

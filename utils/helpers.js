@@ -4,6 +4,7 @@ import {
   PLATFORM_TOKEN_MAX_DECIMALS,
   ERC20_TOKEN_MAX_DECIMALS,
   DEFAULT_TOKEN_MAX_DECIMALS,
+  getPlatformToken,
 } from 'constants/app';
 
 export const debug = process.env.NODE_ENV === 'development' ? console.info : () => { };
@@ -27,10 +28,10 @@ export const formatValueForToken = (value, symbol) => {
 
 export const getDecimalsForToken = (symbol) => {
   switch (symbol) {
-    case PLATFORM_TOKEN: return {
-      decimals: PLATFORM_TOKEN_MAX_DECIMALS,
-      step: getStepsFromDecimals(PLATFORM_TOKEN_MAX_DECIMALS),
-    };
+    // case PLATFORM_TOKEN: return {
+    //   decimals: PLATFORM_TOKEN_MAX_DECIMALS,
+    //   step: getStepsFromDecimals(PLATFORM_TOKEN_MAX_DECIMALS),
+    // };
     case DEFAULT_TOKEN: return {
       decimals: DEFAULT_TOKEN_MAX_DECIMALS,
       step: getStepsFromDecimals(DEFAULT_TOKEN_MAX_DECIMALS),
@@ -73,13 +74,13 @@ export const convertFromDefaultToken = (convertTo, tokens, amount) => {
     return Number(amount);
   }
 
-  const tokenConvertTo = tokens['ETH'];
+  const tokenConvertTo = tokens[convertTo];
 
   return amount / tokenConvertTo.exchangeRateDefaultToken.expectedRate;
 };
 
-export const convertFromPlatformToken = (convertTo, tokens, amount) => {
-  if (convertTo === PLATFORM_TOKEN) {
+export const convertFromPlatformToken = (convertTo, tokens, amount, network = 'mainnet') => {
+  if (convertTo === getPlatformToken(network)) {
     return Number(amount);
   }
 

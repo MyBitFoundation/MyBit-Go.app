@@ -17,7 +17,7 @@ import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
-  PLATFORM_TOKEN,
+  getPlatformToken,
   DEFAULT_TOKEN,
   getPlatformTokenContract,
 } from 'constants/app';
@@ -109,6 +109,10 @@ class ListAssetPage extends React.Component {
         this.setState({
           data: { ...this.state.data, searchCity: value, userCity: value },
         });
+      } else if (name === 'collateralPercentage') {
+        this.setState({
+          data: { ...this.state.data, collateralPercentage: +value },
+        }, () => this.recalculateCollateral());
       } else {
         this.setState({
           data: { ...this.state.data, [name]: value },
@@ -123,17 +127,15 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectedTokenChange = (selectedToken) => {
-    this.setState({ data: { ...this.state.data, selectedToken } }, () => this.recalculateCollateral(this.state.data.modelId));
+    this.setState({ data: { ...this.state.data, selectedToken } }, () => this.recalculateCollateral());
   };
 
-  recalculateCollateral = (modelId) => {
+  recalculateCollateral = () => {
     const { assetsContext, metamaskContext, supportedTokensInfo } = this.props;
-    // modelId = modelId || this.state.data.modelId;
-    const { assetModels, assetManagers } = assetsContext;
-    // const model = assetModels[modelId]; // not needed again, power belongs to the community now
-    const { additionalCosts = 0 } = this.state.data;
+    const { assetManagers } = assetsContext;
+    const { additionalCosts = 0, collateralPercentage } = this.state.data;
     const { assetValue: fundingGoal, asset: name } = this.state.data;
-    const cryptoPayout = true;
+    // const cryptoPayout = true;
     const cryptoPurchase = true;
 
     let assetValue = BN(fundingGoal);
@@ -157,16 +159,9 @@ class ListAssetPage extends React.Component {
       && balances[selectedToken]
       && balances[selectedToken].contractAddress;
 
-    const {
-      collateralBasedOnHistory,
-      collateralCryptoPurchase,
-      collateralCryptoPayouts,
-      collateralPercentage,
-    } = calculateCollateral(totalFundedAssets, cryptoPayout, cryptoPurchase);
-
     const collateralInDefaultToken = assetValue * (collateralPercentage / 100);
     const collateralInPlatformToken = convertFromDefaultToken(
-      PLATFORM_TOKEN,
+      getPlatformToken(network),
       supportedTokensInfo,
       collateralInDefaultToken,
     );
@@ -183,26 +178,22 @@ class ListAssetPage extends React.Component {
           asset: name,
           assetValue,
           collateralInPlatformToken,
-          collateralBasedOnHistory,
-          collateralCryptoPurchase,
-          collateralCryptoPayouts,
           collateralPercentage,
           totalFundedAssets,
           collateralInDefaultToken,
           collateralInSelectedToken,
           paymentTokenAddress,
           cryptoPurchase,
-          modelId,
         },
         loadingConversionInfo: true,
       },
     );
 
     const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
-    // const tokenSlippagePercentages = calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInDefaultToken, false)
-    //   .then(tokenSlippagePercentages => {
-    //     this.setState({ tokenSlippagePercentages, loadingConversionInfo: false })
-    //   })
+    calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInDefaultToken, false)
+      .then((slippagePercentages) => {
+        this.setState({ tokenSlippagePercentages: slippagePercentages, loadingConversionInfo: false });
+      });
   };
 
   handleSelectChange = (value, name) => {
@@ -367,6 +358,7 @@ class ListAssetPage extends React.Component {
       checkedToS,
       tokenSlippagePercentages,
       autoLocationOffline,
+      loadingConversionInfo,
     } = this.state;
 
     const {
@@ -382,7 +374,6 @@ class ListAssetPage extends React.Component {
       category,
       userCity,
       userCountry,
-      loadingConversionInfo,
     } = this.state.data;
 
     const tokenWithSufficientBalance = collateralInDefaultToken > 0
