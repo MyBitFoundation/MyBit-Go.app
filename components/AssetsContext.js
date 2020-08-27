@@ -377,7 +377,7 @@ class AssetsProvider extends React.PureComponent {
     });
   };
 
-  handleAssetFavorited = (assetId) => {
+  handleAssetFavorited = (assetId, asset) => {
     const searchQuery = `mybit_watchlist_${assetId}`;
     const alreadyFavorite = window.localStorage.getItem(searchQuery) === 'true';
     if (alreadyFavorite) {
@@ -386,6 +386,7 @@ class AssetsProvider extends React.PureComponent {
       localStorage.setItem(searchQuery, true);
     }
     this.updateListingProps(assetId, {
+      ...asset,
       watchListed: !alreadyFavorite,
     });
   };
@@ -424,6 +425,7 @@ class AssetsProvider extends React.PureComponent {
         a[id]['handleAssetFavorited'] = this.handleAssetFavorited.bind(
           this,
           id,
+          a[id],
         );
       }
     });
