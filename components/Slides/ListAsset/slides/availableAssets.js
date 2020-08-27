@@ -203,7 +203,7 @@ export const AvailableAssetsSlide = ({
                   placeholder="Asset Name"
                   name="asset"
                   onChange={e => handleInputChange(e)}
-                  value={asset ? asset.toUpperCase() : ''}
+                  value={asset}
                 />
 
                 <CarouselSlideLabel required>Asset value:</CarouselSlideLabel>
@@ -216,7 +216,6 @@ export const AvailableAssetsSlide = ({
                     name="assetValue"
                     value={assetValue ?? ''}
                     onChange={(e) => {
-                      console.log(e);
                       handleInputChange({
                         target: { value: e, name: 'assetValue' },
                       });
