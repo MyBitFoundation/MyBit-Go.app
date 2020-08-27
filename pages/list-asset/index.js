@@ -53,7 +53,7 @@ class ListAssetPage extends React.Component {
         partnerContractAddress: '',
         hasAdditionalCosts: false,
         additionalCosts: 0,
-        assetValue: 0,
+        assetValue: '',
         escrow: 0,
         asset: '', // asset name
       },
@@ -208,7 +208,7 @@ class ListAssetPage extends React.Component {
       },
       () => {
         switch (name) {
-          case 'userCountry': {
+          case 'userCountry':
             const countryData = getCountry(value);
             const countryCode = countryData
               ? countryData.iso2.toLowerCase()
@@ -218,29 +218,14 @@ class ListAssetPage extends React.Component {
               data: {
                 ...this.state.data,
                 assetCountry: value,
-                category: '',
-                asset: '',
-                assetValue: undefined,
                 countryCode,
-                userCity: undefined,
+                userCity: '',
               },
             });
             break;
-          }
-          case 'category': {
-            this.setState({
-              data: {
-                ...this.state.data,
-                category: value,
-                asset: '',
-                assetValue: undefined,
-              },
-            });
-            break;
-          }
-          case 'additionalCosts': {
+          case 'additionalCosts':
             this.recalculateCollateral();
-          }
+            break;
           default:
             return null;
         }

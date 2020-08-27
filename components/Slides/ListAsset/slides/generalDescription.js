@@ -14,12 +14,12 @@ import NumericInput from 'ui/NumericInput';
 
 const TextAreaWrapper = styled.div`
   margin-bottom: 10px;
-`
+`;
 const Label = styled.div`
   font-weight: 500;
   display: block;
-  color: ${({theme}) => theme.colors.grayBase};
-`
+  color: ${({ theme }) => theme.colors.grayBase};
+`;
 
 export const GeneralDescriptionSlide = ({
   maxWidthDesktop,
@@ -65,6 +65,7 @@ export const GeneralDescriptionSlide = ({
           onChange={handleInputChange}
           value={formData.about}
           rows={5}
+          required
         />
       </TextAreaWrapper>
       <TextAreaWrapper>
@@ -75,6 +76,7 @@ export const GeneralDescriptionSlide = ({
           onChange={handleInputChange}
           value={formData.financials}
           rows={5}
+          required
         />
       </TextAreaWrapper>
       <TextAreaWrapper>
@@ -85,12 +87,13 @@ export const GeneralDescriptionSlide = ({
           onChange={handleInputChange}
           value={formData.risks}
           rows={5}
+          required
         />
       </TextAreaWrapper>
       <Checkbox
         checked={hasAdditionalCosts}
-        onChange={(e) => handleSelectChange(e.target.checked, 'hasAdditionalCosts')}
-        style={{marginBottom: '10px'}}
+        onChange={e => handleSelectChange(e.target.checked, 'hasAdditionalCosts')}
+        style={{ marginBottom: '10px' }}
       >
         Has additional costs
       </Checkbox>
@@ -106,9 +109,9 @@ export const GeneralDescriptionSlide = ({
             min={1}
             decimalPlaces={2}
             step={1}
-            style={{width: '167px'}}
+            style={{ width: '167px' }}
           />
-          <TextAreaWrapper style={{marginTop: '10px'}}>
+          <TextAreaWrapper style={{ marginTop: '10px' }}>
             <TextAreaWithLabel
               label="What do you need the money for?"
               placeholder="If there are any extra costs you will incur in please detail them below.
@@ -125,10 +128,10 @@ export const GeneralDescriptionSlide = ({
         <CarouselNextButton
           onClick={onClick}
           disabled={nextButtonDisabled}
-          style={{marginTop: '20px'}}
+          style={{ marginTop: '20px' }}
           desktopMode={desktopMode}
         />
       )}
     </CarouselSlide>
-  )
+  );
 };
