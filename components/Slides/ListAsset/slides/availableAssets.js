@@ -1,7 +1,9 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import Router from 'next/router';
-import { InputNumber, Button, Select } from 'antd';
+import {
+  InputNumber, Button, Select, Form,
+} from 'antd';
 import getConfig from 'next/config';
 import AlertMessage from 'ui/AlertMessage';
 import {
@@ -58,6 +60,17 @@ const SelectedAssetValueLabel = styled.p`
   width: 80%;
   margin: 0 auto;
   margin-bottom: 10px;
+
+${props => props.required && `&::before {
+    display: inline-block;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+  }
+`}
 `;
 
 const NoResults = styled.div`
@@ -172,6 +185,7 @@ export const AvailableAssetsSlide = ({
           {!loadingAssets && (
             <React.Fragment>
               <div className="Slider__input-container">
+                <SelectedAssetValueLabel required>Location:</SelectedAssetValueLabel>
                 <CarouselSlideSelect
                   isCentered
                   showSearch
@@ -199,6 +213,7 @@ export const AvailableAssetsSlide = ({
                   disabled={!userCountry}
                 />
 
+                <SelectedAssetValueLabel required>Asset Name:</SelectedAssetValueLabel>
                 <CarouselSlideInput
                   isCentered
                   placeholder="Asset Name"
@@ -207,7 +222,7 @@ export const AvailableAssetsSlide = ({
                   value={asset ? asset.toUpperCase() : ''}
                 />
 
-                <SelectedAssetValueLabel>Asset value:</SelectedAssetValueLabel>
+                <SelectedAssetValueLabel required>Asset value:</SelectedAssetValueLabel>
                 <AssetValueContainer cryptoPurchase={cryptoPurchase}>
                   <CarouselSlideInputNumber
                     isCentered

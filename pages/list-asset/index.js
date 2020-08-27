@@ -107,9 +107,17 @@ class ListAssetPage extends React.Component {
           },
         });
       } else if (name === 'userCity') {
-        this.setState({
-          data: { ...this.state.data, searchCity: value, userCity: value },
-        });
+        if (new RegExp(/^[a-zA-Z ]+$/i).test(value)) { // check if value is only alphabetical letters.
+          this.setState({
+            data: { ...this.state.data, searchCity: value, userCity: value },
+          });
+        }
+      } else if (name === 'assetValue') {
+        if (new RegExp(/^[0-9]+$/i).test(value)) {
+          this.setState({
+            data: { ...this.state.data, assetValue: value },
+          });
+        }
       } else if (name === 'collateralPercentage') {
         this.setState({
           data: { ...this.state.data, collateralPercentage: +value },
