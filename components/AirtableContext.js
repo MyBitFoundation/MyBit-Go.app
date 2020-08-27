@@ -98,7 +98,7 @@ class AirtableProvider extends React.PureComponent {
     const assetListings = {};
     data.forEach(({ fields }) => {
       assetListings[fields['Asset ID']] = {
-        assetName: fields['Asset Name'],
+        name: fields['Asset Name'],
         financials: fields.Financials || DEFAULT_ASSET_INFO.Financials,
         about: fields.About || DEFAULT_ASSET_INFO.About,
         risks: fields.Risks || DEFAULT_ASSET_INFO.Risks,

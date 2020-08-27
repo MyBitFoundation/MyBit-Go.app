@@ -85,7 +85,7 @@ successfully
             title: <span style={{ marginRight: '10px' }}>
 Listed
               {' '}
-              {listAsset.assetName}
+              {listAsset.name}
               {' '}
 successfully
             </span>,
@@ -103,12 +103,12 @@ You can find the asset listing
           };
         case NotificationStatus.INFO:
           return {
-            title: `${listAsset.assetName} is being listed for investors`,
+            title: `${listAsset.name} is being listed for investors`,
             message: slowEthereumMessage,
           };
         case NotificationStatus.ERROR:
           return {
-            title: `Failed to start the crowdsale for ${listAsset.assetName}`,
+            title: `Failed to start the crowdsale for ${listAsset.name}`,
             message: transactionFailed,
           };
         default:
@@ -153,7 +153,7 @@ successfully
             title: <span style={{ marginRight: '10px' }}>
 Contributed successfully to
               {' '}
-              {funding.assetName}
+              {funding.name}
             </span>,
             message: (
               <React.Fragment>
@@ -180,12 +180,12 @@ Amount contributed:
           };
         case NotificationStatus.INFO:
           return {
-            title: `Contributing ${funding.amount} to ${funding.assetName}`,
+            title: `Contributing ${funding.amount} to ${funding.name}`,
             message: slowEthereumMessage,
           };
         case NotificationStatus.ERROR:
           return {
-            title: `Failed to contribute to ${funding.assetName}`,
+            title: `Failed to contribute to ${funding.name}`,
             message: transactionFailed,
           };
         default:
@@ -196,7 +196,7 @@ Amount contributed:
     const {
       type,
       formattedAmount,
-      assetName,
+      name,
     } = payDividends;
     if (type === NotificationTypes.APPROVE) {
       switch (status) {
@@ -231,7 +231,7 @@ successfully
             title: <span style={{ marginRight: '10px' }}>
 Dividends of
               {' '}
-              {assetName}
+              {name}
               {' '}
 paid out successfully
             </span>,
@@ -272,7 +272,7 @@ Investors are now able to withdraw their share. And so can you! Check your
           };
         case NotificationStatus.ERROR:
           return {
-            title: `Failed to pay out dividends of ${assetName}`,
+            title: `Failed to pay out dividends of ${name}`,
             message: transactionFailed,
           };
         default:
@@ -286,7 +286,7 @@ Investors are now able to withdraw their share. And so can you! Check your
           title: <span style={{ marginRight: '10px' }}>
 Withdrew profits from
             {' '}
-            {withdrawInvestor.assetName}
+            {withdrawInvestor.name}
             {' '}
 successfully
           </span>,
@@ -303,12 +303,12 @@ Amount received:
         };
       case NotificationStatus.INFO:
         return {
-          title: `Withdrawing profits from ${withdrawInvestor.assetName}`,
+          title: `Withdrawing profits from ${withdrawInvestor.name}`,
           message: slowEthereumMessage,
         };
       case NotificationStatus.ERROR:
         return {
-          title: `Failed to withdraw from ${withdrawInvestor.assetName}`,
+          title: `Failed to withdraw from ${withdrawInvestor.name}`,
           message: transactionFailed,
         };
       default:
@@ -321,7 +321,7 @@ Amount received:
           title: <span style={{ marginRight: '10px' }}>
 Withdrew collateral of
             {' '}
-            {withdrawCollateral.assetName}
+            {withdrawCollateral.name}
             {' '}
 successfully
           </span>,
@@ -337,12 +337,12 @@ Amount received:
         };
       case NotificationStatus.INFO:
         return {
-          title: `Withdrawing collateral of ${withdrawCollateral.assetName}`,
+          title: `Withdrawing collateral of ${withdrawCollateral.name}`,
           message: slowEthereumMessage,
         };
       case NotificationStatus.ERROR:
         return {
-          title: `Failed to withdraw the collateral from ${withdrawCollateral.assetName}`,
+          title: `Failed to withdraw the collateral from ${withdrawCollateral.name}`,
           message: transactionFailed,
         };
       default:
@@ -355,7 +355,7 @@ Amount received:
           title: <span style={{ marginRight: '10px' }}>
 Withdrew profits of
             {' '}
-            {withdrawManager.assetName}
+            {withdrawManager.name}
             {' '}
 successfully
           </span>,
@@ -371,12 +371,12 @@ Amount received:
         };
       case NotificationStatus.INFO:
         return {
-          title: `Withdrawing profits of ${withdrawManager.assetName}`,
+          title: `Withdrawing profits of ${withdrawManager.name}`,
           message: slowEthereumMessage,
         };
       case NotificationStatus.ERROR:
         return {
-          title: `Failed to withdraw profits from ${withdrawManager.assetName}`,
+          title: `Failed to withdraw profits from ${withdrawManager.name}`,
           message: transactionFailed,
         };
       default:
@@ -387,11 +387,11 @@ Amount received:
       case NotificationStatus.SUCCESS:
         return {
           title: <span style={{ marginRight: '10px' }}>Funds sent successfuly</span>,
-          message: `The funds generated through the listing of ${assetPayout.assetName} were sent to the operator.`,
+          message: `The funds generated through the listing of ${assetPayout.name} were sent to the operator.`,
         };
       case NotificationStatus.INFO:
         return {
-          title: `Sending funds to Operator of ${assetPayout.assetName}`,
+          title: `Sending funds to Operator of ${assetPayout.name}`,
           message: slowEthereumMessage,
         };
       case NotificationStatus.ERROR:
@@ -409,18 +409,18 @@ Amount received:
           title: <span style={{ marginRight: '10px' }}>
 Successfully updated the files of
             {' '}
-            {assetFilesUpload.assetName}
+            {assetFilesUpload.name}
           </span>,
           message: 'Done done :)',
         };
       case NotificationStatus.INFO:
         return {
-          title: `Updating the files of ${assetFilesUpload.assetName}`,
+          title: `Updating the files of ${assetFilesUpload.name}`,
           message: slowEthereumMessage,
         };
       case NotificationStatus.ERROR:
         return {
-          title: `Failed to update the files of ${assetFilesUpload.assetName}`,
+          title: `Failed to update the files of ${assetFilesUpload.name}`,
           message: transactionFailed,
         };
       default:
@@ -433,7 +433,7 @@ Successfully updated the files of
         switch (status) {
           case NotificationStatus.INFO:
             return {
-              title: `Listing ${metamask.assetName} for investors`,
+              title: `Listing ${metamask.name} for investors`,
               message: approveTemplateMessage('list the asset'),
             };
           case NotificationStatus.ERROR:
@@ -445,7 +445,7 @@ Successfully updated the files of
         switch (status) {
           case NotificationStatus.INFO:
             return {
-              title: `Contributing to ${metamask.assetName}`,
+              title: `Contributing to ${metamask.name}`,
               message: approveTemplateMessage('contribute to the crowdsale'),
             };
           case NotificationStatus.ERROR:
@@ -457,7 +457,7 @@ Successfully updated the files of
         switch (status) {
           case NotificationStatus.INFO:
             return {
-              title: `Withdrawing profits of ${metamask.assetName}`,
+              title: `Withdrawing profits of ${metamask.name}`,
               message: approveTemplateMessage('withdraw your profits'),
             };
           case NotificationStatus.ERROR:
@@ -469,7 +469,7 @@ Successfully updated the files of
         switch (status) {
           case NotificationStatus.INFO:
             return {
-              title: `Withdrawing collateral of ${metamask.assetName}`,
+              title: `Withdrawing collateral of ${metamask.name}`,
               message: approveTemplateMessage('withdraw your collateral'),
             };
           case NotificationStatus.ERROR:
@@ -481,7 +481,7 @@ Successfully updated the files of
         switch (status) {
           case NotificationStatus.INFO:
             return {
-              title: `Withdrawing profits of ${metamask.assetName}`,
+              title: `Withdrawing profits of ${metamask.name}`,
               message: approveTemplateMessage('withdraw your profits'),
             };
           case NotificationStatus.ERROR:
@@ -493,7 +493,7 @@ Successfully updated the files of
         switch (status) {
           case NotificationStatus.INFO:
             return {
-              title: `Sending funds to Operator of ${metamask.assetName}`,
+              title: `Sending funds to Operator of ${metamask.name}`,
               message: approveTemplateMessage('send the crowdsale funds to the Operator'),
             };
           case NotificationStatus.ERROR:
@@ -517,7 +517,7 @@ Successfully updated the files of
         switch (status) {
           case NotificationStatus.INFO:
             return {
-              title: `Approving change in files of ${metamask.assetName}`,
+              title: `Approving change in files of ${metamask.name}`,
               message: `Please confirm the transaction in Metamask to register this action in the ethereum network. Your asset will
                         be removed from the platform eventually otherwise, once we update the platform to only rely on data from IPFS.`,
             };

@@ -75,6 +75,7 @@ const Asset = (props) => {
     assetId,
     colSize,
     coverPicture,
+    name,
     toRender: ToRender,
   } = props;
 

@@ -54,7 +54,7 @@ class AssetFunding extends React.Component {
 
       this.props.blockchainContext.fundAsset(
         this.props.asset.assetId,
-        this.props.asset.assetName,
+        this.props.asset.name,
         amountToPay,
         amountContributed,
         paymentToken,

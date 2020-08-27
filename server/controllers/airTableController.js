@@ -105,7 +105,7 @@ const getAssetListings = () => new Promise(async (resolve, reject) => {
   base('Asset Listings').select().eachPage((records, fetchNextPage) => {
     records.forEach((record) => {
       const assetId = record.get('Asset ID');
-      const assetName = record.get('Asset Name');
+      const name = record.get('Asset Name');
       const financials = record.get('Financials');
       const risks = record.get('Risks');
       const about = record.get('About');
@@ -116,7 +116,7 @@ const getAssetListings = () => new Promise(async (resolve, reject) => {
       const files = record.get('Files');
       const coverPicture = record.get('Cover Picture');
       assetListings[assetId] = {
-        assetName,
+        name,
         files,
         financials,
         about,
@@ -163,7 +163,7 @@ export const addNewAsset = async (data, network) => {
       country,
       city,
       collateralPercentage,
-      assetName,
+      name,
       about,
       financials,
       risks,
@@ -177,7 +177,7 @@ export const addNewAsset = async (data, network) => {
 
     await base('Asset Listings').create({
       'Asset ID': assetId,
-      'Asset Name': assetName,
+      'Asset Name': name,
       'About': about,
       'Financials': financials,
       'Risks': risks,

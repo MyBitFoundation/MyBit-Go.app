@@ -182,7 +182,7 @@ class BlockchainProvider extends React.Component {
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
     const {
-      assetName,
+      name,
       assetId,
       financials,
       about,
@@ -216,12 +216,12 @@ class BlockchainProvider extends React.Component {
 
     buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
       operationType: NotificationsMetamask.ASSET_FILES_UPLOAD,
-      assetName,
+      name,
     });
 
     const onTransactionHash = () => {
       buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.INFO, {
-        assetName,
+        name,
       });
     };
 
@@ -261,7 +261,7 @@ class BlockchainProvider extends React.Component {
       cb && cb(true);
       updateAssetListingsIpfs();
       buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.SUCCESS, {
-        assetName,
+        name,
       });
     };
 
@@ -280,7 +280,7 @@ class BlockchainProvider extends React.Component {
   payoutAsset = async (asset) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, assetName } = asset;
+    const { assetId, name } = asset;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
@@ -293,12 +293,12 @@ class BlockchainProvider extends React.Component {
 
     buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
       operationType: NotificationsMetamask.ASSET_PAYOUT,
-      assetName,
+      name,
     });
 
     const onTransactionHash = () => {
       buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.INFO, {
-        assetName,
+        name,
       });
     };
 
@@ -333,7 +333,7 @@ class BlockchainProvider extends React.Component {
       await Promise.all([this.fetchTransactionHistory, forceUpdateListingWithOnChainData(assetId)]);
       updateCallingPayout();
       buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.SUCCESS, {
-        assetName,
+        name,
       });
     };
 
@@ -353,7 +353,7 @@ class BlockchainProvider extends React.Component {
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
-    const { assetName, assetId } = asset;
+    const { name, assetId } = asset;
 
     // update state so users can't trigger the withdrawal multiple times
     const withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
@@ -364,13 +364,13 @@ class BlockchainProvider extends React.Component {
 
     buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
       operationType: NotificationsMetamask.WITHDRAW_MANAGER,
-      assetName,
+      name,
     });
 
     const onTransactionHash = () => {
       buildNotification(
         notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.INFO, {
-          assetName,
+          name,
         },
       );
     };
@@ -388,11 +388,11 @@ class BlockchainProvider extends React.Component {
       if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           operationType: NotificationsMetamask.WITHDRAW_MANAGER,
-          assetName,
+          name,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.ERROR, {
-          assetName,
+          name,
         });
       }
     };
@@ -409,7 +409,7 @@ class BlockchainProvider extends React.Component {
       await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
       updatewithdrawingAssetManager();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.SUCCESS, {
-        assetName,
+        name,
         amount: formatMonetaryValue(amount),
       });
     };
@@ -430,7 +430,7 @@ class BlockchainProvider extends React.Component {
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
-    const { assetName, assetId } = asset;
+    const { name, assetId } = asset;
 
     const formattedAmount = formatMonetaryValue(amount, getPlatformToken(network));
 
@@ -443,12 +443,12 @@ class BlockchainProvider extends React.Component {
 
     buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
       operationType: NotificationsMetamask.WITHDRAW_COLLATERAL,
-      assetName,
+      name,
     });
 
     const onTransactionHash = () => {
       buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.INFO, {
-        assetName,
+        name,
       });
     };
 
@@ -465,11 +465,11 @@ class BlockchainProvider extends React.Component {
       if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           operationType: NotificationsMetamask.WITHDRAW_COLLATERAL,
-          assetName,
+          name,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.ERROR, {
-          assetName,
+          name,
         });
       }
     };
@@ -486,7 +486,7 @@ class BlockchainProvider extends React.Component {
       await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
       updateWithdrawingCollateral();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.SUCCESS, {
-        assetName,
+        name,
         percentage,
         amount: formattedAmount,
       });
@@ -556,7 +556,7 @@ class BlockchainProvider extends React.Component {
     } = this.props;
 
     const {
-      asset: assetName,
+      asset: name,
       userCountry: country,
       userCity: city,
       managementFee,
@@ -593,13 +593,13 @@ class BlockchainProvider extends React.Component {
     } else {
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.LIST_ASSET,
-        assetName,
+        name,
       });
     }
 
     const onTransactionHash = async () => {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
-        assetName,
+        name,
       });
     };
 
@@ -647,7 +647,7 @@ class BlockchainProvider extends React.Component {
         counterCallsToInternalActions++;
         if (counterCallsToInternalActions === numberOfInternalActions) {
           buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
-            assetName,
+            name,
             assetId,
           });
           setUserListingAsset(false, assetId);
@@ -656,7 +656,7 @@ class BlockchainProvider extends React.Component {
 
       Brain.updateAirTableWithNewAsset({
         assetId,
-        assetName,
+        name,
         country,
         city,
         collateralPercentage,
@@ -673,12 +673,12 @@ class BlockchainProvider extends React.Component {
       setUserListingAsset(false);
       if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
-          assetName,
+          name,
           operationType: NotificationsMetamask.LIST_ASSET,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.ERROR, {
-          assetName,
+          name,
         });
       }
     };
@@ -694,7 +694,7 @@ class BlockchainProvider extends React.Component {
     }, {
       managerPercentage: managementFee,
       amountToBeRaised: assetValue,
-      assetName,
+      name,
       collateralAndFee: paymentInSelectedToken,
       userAddress,
       paymentTokenAddress,
@@ -704,7 +704,7 @@ class BlockchainProvider extends React.Component {
     network);
   }
 
-  fundAsset = (assetId, assetName, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
+  fundAsset = (assetId, name, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
     try {
       const {
         gasPrice,
@@ -721,7 +721,7 @@ class BlockchainProvider extends React.Component {
       if (paymentTokenSymbol === 'ETH') {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
           operationType: NotificationsMetamask.FUNDING,
-          assetName,
+          name,
         });
       } else {
         // will call Approve first
@@ -733,7 +733,7 @@ class BlockchainProvider extends React.Component {
 
       const onTransactionHash = () => {
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
-          assetName,
+          name,
           amount: amountFormatted,
         });
       };
@@ -771,7 +771,7 @@ class BlockchainProvider extends React.Component {
           });
         } else {
           buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.ERROR, {
-            assetName,
+            name,
           });
         }
       };
@@ -779,7 +779,7 @@ class BlockchainProvider extends React.Component {
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchTransactionHistory()]);
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
-          assetName,
+          name,
           amount: amountFormatted,
         });
       };
@@ -813,7 +813,7 @@ class BlockchainProvider extends React.Component {
 
       const formattedAmount = formatMonetaryValue(amount);
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
-      const { assetName } = currentAsset;
+      const { name } = currentAsset;
 
       // Call Approve first
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -860,7 +860,7 @@ class BlockchainProvider extends React.Component {
           });
         } else {
           buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.ERROR, {
-            assetName,
+            name,
           });
         }
       };
@@ -868,7 +868,7 @@ class BlockchainProvider extends React.Component {
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
         buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.SUCCESS, {
-          assetName,
+          name,
           formattedAmount,
         });
       };
@@ -900,7 +900,7 @@ class BlockchainProvider extends React.Component {
       } = this.state;
 
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
-      const { assetName } = currentAsset;
+      const { name } = currentAsset;
 
       const {
         buildNotification,
@@ -918,12 +918,12 @@ class BlockchainProvider extends React.Component {
 
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.WITHDRAW_INVESTOR,
-        assetName,
+        name,
       });
 
       const onTransactionHash = () => {
         buildNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.INFO, {
-          assetName,
+          name,
           amount,
         });
       };
@@ -944,7 +944,7 @@ class BlockchainProvider extends React.Component {
           });
         } else {
           buildNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.ERROR, {
-            assetName,
+            name,
           });
         }
       };
@@ -961,7 +961,7 @@ class BlockchainProvider extends React.Component {
         await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
         removeassetIdFromList();
         buildNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.SUCCESS, {
-          assetName,
+          name,
           amount,
         });
       };
