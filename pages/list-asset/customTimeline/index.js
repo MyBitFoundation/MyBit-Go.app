@@ -87,14 +87,13 @@ const CustomTimeline = React.memo(({
         content={step > 1 ? (
           <React.Fragment>
             <span>
-Category:
+              Name:
               {' '}
-              {category}
+              {asset}
             </span>
             <br />
             <span>
-              {asset}
-, Value:
+              Value:
               {' '}
               {formatMonetaryValue(assetValue)}
             </span>
