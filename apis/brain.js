@@ -161,7 +161,7 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
     const {
       userAddress,
       managerPercentage,
-      collateral,
+      collateralAndFee,
       amountToBeRaised,
       paymentTokenAddress,
       gasPrice,
@@ -171,7 +171,7 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
     const randomURI = generateRandomURI(window.web3js);
     const api = await Network.api();
     const response = await Network.createAsset({
-      escrow: toWei(collateral),
+      escrow: toWei(collateralAndFee),
       assetURI: randomURI,
       assetManager: userAddress,
       fundingLength: CROWDSALE_DURATION,

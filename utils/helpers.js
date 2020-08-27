@@ -6,6 +6,7 @@ import {
   DEFAULT_TOKEN_MAX_DECIMALS,
   getPlatformToken,
 } from 'constants/app';
+import BN from 'bignumber.js';
 
 export const debug = process.env.NODE_ENV === 'development' ? console.info : () => { };
 
@@ -18,7 +19,10 @@ export const fromWeiToEth = (weiValue) => {
   }
 };
 
-export const toWei = value => window.web3js.utils.toWei(value.toString(), 'ether');
+export const toWei = (value) => {
+  const weiValue = new BN(value).multipliedBy(10 ** 18);
+  return weiValue.toFixed(0, BN.ROUND_CEIL);
+};
 // export const toWei = value => Math.ceil(value * 10 ** 18).toString()
 
 export const formatValueForToken = (value, symbol) => {

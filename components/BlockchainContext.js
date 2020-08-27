@@ -570,7 +570,7 @@ class BlockchainProvider extends React.Component {
       managementFee,
       coverPicture,
       fileList,
-      collateralInSelectedToken,
+      paymentInSelectedToken,
       collateralPercentage,
       paymentTokenAddress,
       selectedToken,
@@ -601,7 +601,7 @@ class BlockchainProvider extends React.Component {
       // Going to call Approve
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.APPROVE,
-        formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
+        formattedAmount: formatMonetaryValue(paymentInSelectedToken, selectedToken),
       });
     } else {
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -618,7 +618,7 @@ class BlockchainProvider extends React.Component {
 
     const onTransactionHashApprove = () => {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
-        formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
+        formattedAmount: formatMonetaryValue(paymentInSelectedToken, selectedToken),
         type: NotificationTypes.APPROVE,
       });
     };
@@ -630,7 +630,7 @@ class BlockchainProvider extends React.Component {
     const onReceiptApprove = (wasSuccessful) => {
       if (wasSuccessful) {
         buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
-          formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
+          formattedAmount: formatMonetaryValue(paymentInSelectedToken, selectedToken),
           type: NotificationTypes.APPROVE,
         });
       } else {
@@ -716,7 +716,7 @@ class BlockchainProvider extends React.Component {
       managerPercentage: managementFee,
       amountToBeRaised: assetValue,
       assetName,
-      collateral: collateralInSelectedToken,
+      collateralAndFee: paymentInSelectedToken,
       userAddress,
       paymentTokenAddress,
       gasPrice,

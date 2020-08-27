@@ -1,5 +1,7 @@
 import { getExpectedAndSlippage } from 'components/KyberContext';
 import { toWei } from 'utils/helpers';
+import BigNumber from 'bignumber.js';
+import { message } from 'antd';
 
 /*
 * Use only for calculations with Platform and Default application tokens
@@ -13,8 +15,19 @@ export const calculateSlippage = async (balances, toToken, amountToPay, converti
   }));
   const tokenSlippagePercentages = {};
   userTokensSlippage.forEach((slippage, index) => {
-    const { expectedRate, slippageRate } = slippage;
     const tokenName = tokensUserHas[index][0];
+
+    if (!slippage) {
+      tokenSlippagePercentages[tokenName] = Infinity;
+      return;
+    }
+
+    const { expectedRate, slippageRate } = slippage;
+    if (BigNumber(amountToPay).isZero()) {
+      tokenSlippagePercentages[tokenName] = 0;
+      return;
+    }
+
     let toTokenExchangeRate;
     if (convertingToDefaultToken) {
       toTokenExchangeRate = tokensUserHas[index][1].exchangeRateDefaultToken;

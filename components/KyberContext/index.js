@@ -17,6 +17,7 @@ import {
 import {
   FALLBACK_NETWORK,
 } from 'constants/supportedNetworks';
+import BigNumber from 'bignumber.js';
 
 const SDK_CONTRACTS = require('@mybit/contracts/networks/ropsten/Contracts');
 
@@ -62,6 +63,13 @@ export const withKyberContext = Component => function WrapperComponent(props) {
 };
 
 export const getExpectedAndSlippage = async (src, dest, amount) => {
+  if (BigNumber(amount).isZero()) {
+    return {
+      expectedRate: 0,
+      slippageRate: 0,
+    };
+  }
+
   try {
     if (src === dest) {
       return {

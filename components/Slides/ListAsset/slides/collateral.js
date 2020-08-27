@@ -13,7 +13,7 @@ import {
   formatValueForToken,
 } from 'utils/helpers';
 import {
-  getPlatformToken,
+  getPlatformToken, DEFAULT_TOKEN, LISTING_FEE_IN_DEFAULT_TOKEN,
 } from 'constants/app';
 import { withMetamaskContext, useMetamaskContext } from 'components/MetamaskContext';
 import TokenSelector from 'components/TokenSelector';
@@ -58,7 +58,7 @@ const InputsWrapper = styled.div`
     margin-bottom: 20px;
   }
 
-  span{
+  & > span{
     margin: 0% 2%;
   }
 
@@ -77,7 +77,7 @@ const InputWrapper = styled.div`
     margin-bottom: 20px;
   }
 
-  span{
+  & > span{
     margin: 0% 2%;
   }
 
@@ -96,8 +96,14 @@ const MybitInput = styled.div`
   width: 46%;
   display: inline-block;
 `;
+
+const EscrowInput = styled(MybitInput)`
+  width: 35%;
+  display: inline-block;
+`;
+
 const TokenSelectorWrapper = styled.div`
-  width: 46%;
+  width: 35%;
   display: inline-block;
 
   button{
@@ -153,7 +159,7 @@ export const CollateralSlide = ({
   const {
     collateralInPlatformToken,
     collateralInDefaultToken,
-    collateralInSelectedToken,
+    paymentInSelectedToken,
     collateralPercentage,
     asset,
   } = formData;
@@ -162,7 +168,7 @@ export const CollateralSlide = ({
   const noBalance = !balances || Object.keys(balances).length === 0;
   const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
   const decimalsOfPlatformToken = getDecimalsForToken(getPlatformToken(network));
-  const collateralSelectedTokenFormatted = formatValueForToken(collateralInSelectedToken, selectedToken);
+  const collateralSelectedTokenFormatted = formatValueForToken(paymentInSelectedToken, selectedToken);
 
   let buttonText = 'Next';
   if (loadingBalancesForNewUser) {
@@ -194,7 +200,7 @@ export const CollateralSlide = ({
         maxWidthDesktop={maxWidthDesktop}
         removeFocus
       >
-        This a type of decentralised insurance for investors.
+        This is a type of decentralised insurance for investors.
         <a href="/help#How%20is%20asset%20manager%20collateral%20calculated?" target="_blank">
           Learn More
         </a>
@@ -228,7 +234,7 @@ export const CollateralSlide = ({
             </MybitInput>
           </InputWrapper>
           <InputsWrapper>
-            <MybitInput>
+            <EscrowInput>
               <Label>Required Escrow</Label>
               <NumericInput
                 defaultValue={collateralInPlatformToken}
@@ -238,7 +244,22 @@ export const CollateralSlide = ({
                 step={1}
                 disabled
               />
-            </MybitInput>
+            </EscrowInput>
+            <Separator>
+              <span>
+                +
+                {' '}
+                {LISTING_FEE_IN_DEFAULT_TOKEN}
+                {' '}
+                DAI
+              </span>
+              <StyledTooltip
+                arrowPointAtCenter
+                placement="top"
+                destroyTooltipOnHide
+                title={`${LISTING_FEE_IN_DEFAULT_TOKEN} ${DEFAULT_TOKEN} will be charged as listing fee.`}
+              />
+            </Separator>
             <Separator>=</Separator>
             {asset && (
               <TokenSelectorWrapper
@@ -246,8 +267,8 @@ export const CollateralSlide = ({
               >
                 <Label>Currency you pay in</Label>
                 <NumericInput
-                  defaultValue={collateralInSelectedToken}
-                  value={collateralInSelectedToken}
+                  defaultValue={paymentInSelectedToken}
+                  value={paymentInSelectedToken}
                   min={0}
                   disabled
                   step={decimalsOfSelectedTokens.step}
@@ -279,7 +300,7 @@ export const CollateralSlide = ({
               </SlippageLabel>
               <SlippageValue value={slippagePercentage}>
                 {slippagePercentage}
-%
+                %
               </SlippageValue>
             </SlippageWrapper>
           </InputsWrapper>
@@ -288,7 +309,7 @@ export const CollateralSlide = ({
               loading={loadingBalancesForNewUser || loadingConversionInfo}
               desktopMode={desktopMode}
               onClick={onClick}
-              disabled={nextButtonDisabled || noBalance}
+              disabled={nextButtonDisabled || noBalance || slippagePercentage === Infinity}
               style={{
                 marginTop: '40px',
               }}

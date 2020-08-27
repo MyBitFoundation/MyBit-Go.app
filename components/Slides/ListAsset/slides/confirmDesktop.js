@@ -18,7 +18,7 @@ const InformationWrapper = styled.div`
     font-size: 14px;
   }
 
-  ${({theme}) => theme.tablet`
+  ${({ theme }) => theme.tablet`
     width: 90%;
     margin: 0 auto;
   `}
@@ -33,7 +33,7 @@ const AlertMessageWrapper = styled.div`
     margin: 0px 0px !important;
   }
 
-`
+`;
 
 export const ConfirmSlideDesktop = ({
   formData,
@@ -83,7 +83,7 @@ export const ConfirmSlideDesktop = ({
         <TermsAndConditions
           checked={checkedToS}
           onChange={event => setCheckedToS(event.target.checked)}
-          style={{marginTop: '141px'}}
+          style={{ marginTop: '141px' }}
           disabled={isUserListingAsset}
         />
       )}
@@ -91,11 +91,11 @@ export const ConfirmSlideDesktop = ({
         onClick={onClick}
         disabled={nextButtonDisabled || error || (!checkedToS && shouldShowToSCheckmark && readToS) || !tokenWithSufficientBalance}
         loading={isUserListingAsset}
-        style={shouldShowToSCheckmark ? {} : {marginTop: '176px'}}
+        style={shouldShowToSCheckmark ? {} : { marginTop: '176px' }}
         desktopMode
       >
         Confirm & List Asset
       </CarouselNextButton>
     </InformationWrapper>
   </CarouselSlide>
-)
+);

@@ -59,7 +59,7 @@ const CustomTimeline = React.memo(({
     managementFee,
     collateralPercentage,
     collateralInPlatformToken,
-    collateralInSelectedToken,
+    paymentInSelectedToken,
     selectedToken,
   } = formData;
   let maxStep = 1;
@@ -130,7 +130,7 @@ Category:
         title="Cover Picture"
         content={step > 4 ? (
           <div>
-            {fileList.length === 0 ? 'No files have been uploaded.' : fileList.map(file => <div>{file.name}</div>)}
+            Selected
           </div>
         ) : 'Upload a cover picture of the asset.'}
         step={5}
@@ -164,7 +164,7 @@ Category:
               <div>
 Currency you pay in:
                 {' '}
-                {formatMonetaryValue(collateralInSelectedToken, selectedToken)}
+                {formatMonetaryValue(paymentInSelectedToken, selectedToken)}
               </div>
             </div>
           )

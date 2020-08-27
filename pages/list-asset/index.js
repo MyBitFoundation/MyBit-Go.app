@@ -20,6 +20,7 @@ import {
   getPlatformToken,
   DEFAULT_TOKEN,
   getPlatformTokenContract,
+  LISTING_FEE_IN_DEFAULT_TOKEN,
 } from 'constants/app';
 import { COOKIES } from 'constants/cookies';
 import calculateCollateral from 'constants/calculateCollateral';
@@ -48,7 +49,7 @@ class ListAssetPage extends React.Component {
         collateralPercentage: 0,
         collateralInPlatformToken: 0,
         collateralInDefaultToken: 0,
-        collateralInSelectedToken: 0,
+        paymentInSelectedToken: 0,
         partnerContractAddress: '',
         hasAdditionalCosts: false,
         additionalCosts: 0,
@@ -165,10 +166,10 @@ class ListAssetPage extends React.Component {
       supportedTokensInfo,
       collateralInDefaultToken,
     );
-    const collateralInSelectedToken = convertFromDefaultToken(
+    const paymentInSelectedToken = convertFromDefaultToken(
       selectedToken || DEFAULT_TOKEN,
       supportedTokensInfo,
-      collateralInDefaultToken,
+      collateralInDefaultToken + LISTING_FEE_IN_DEFAULT_TOKEN,
     );
 
     this.setState(
@@ -181,7 +182,7 @@ class ListAssetPage extends React.Component {
           collateralPercentage,
           totalFundedAssets,
           collateralInDefaultToken,
-          collateralInSelectedToken,
+          paymentInSelectedToken,
           paymentTokenAddress,
           cryptoPurchase,
         },
@@ -368,16 +369,16 @@ class ListAssetPage extends React.Component {
       assetValue,
       fileList,
       selectedToken,
-      collateralInSelectedToken,
       collateralInDefaultToken,
+      paymentInSelectedToken,
       asset,
       category,
       userCity,
       userCountry,
     } = this.state.data;
 
-    const tokenWithSufficientBalance = collateralInDefaultToken > 0
-      ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken)
+    const tokenWithSufficientBalance = paymentInSelectedToken > 0
+      ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken + LISTING_FEE_IN_DEFAULT_TOKEN)
       : undefined;
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {

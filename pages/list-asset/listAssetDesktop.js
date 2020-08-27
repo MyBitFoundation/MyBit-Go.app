@@ -104,7 +104,7 @@ const ListAssetDesktop = ({
     assetProvince,
     assetPostalCode,
     managementFee,
-    collateralInSelectedToken,
+    paymentInSelectedToken,
     collateralInDefaultToken,
     selectedToken,
     collateralPercentage,
