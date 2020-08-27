@@ -52,8 +52,6 @@ const AssetDetails = ({
     name,
   } = asset;
 
-  console.log(asset);
-
   return (
     <AssetDetailsWrapper>
       <AssetDetailsLeftCol xs={24} sm={24} md={24} lg={12} xl={12}>
