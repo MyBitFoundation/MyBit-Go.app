@@ -1,14 +1,13 @@
 import { getExpectedAndSlippage } from 'components/KyberContext';
 import { toWei } from 'utils/helpers';
 import BigNumber from 'bignumber.js';
-import { message } from 'antd';
 
 /*
 * Use only for calculations with Platform and Default application tokens
 */
 export const calculateSlippage = async (balances, toToken, amountToPay, convertingToDefaultToken) => {
   const tokensUserHas = balances ? Object.entries(balances) : [];
-  const userTokensSlippage = await Promise.all(tokensUserHas.map(async ([key, value]) => {
+  const userTokensSlippage = await Promise.all(tokensUserHas.map(async ([, value]) => {
     const { balanceInDai, contractAddress, balance } = value;
     const amountToConvert = amountToPay * balance / balanceInDai;
     return getExpectedAndSlippage(contractAddress, toToken, toWei(amountToConvert));
