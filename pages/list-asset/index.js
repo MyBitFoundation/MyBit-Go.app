@@ -99,16 +99,8 @@ class ListAssetPage extends React.Component {
   handleInputChange = (e) => {
     if (e.target) {
       const { name, value } = e.target;
-      if (name === 'assetAddress1') {
-        this.setState({
-          data: {
-            ...this.state.data,
-            assetAddress1: value,
-            searchAddress1: value,
-          },
-        });
-      } else if (name === 'userCity') {
-        if (new RegExp(/^[a-zA-Z ]+$/i).test(value)) { // check if value is only alphabetical letters.
+      if (name === 'userCity') {
+        if (value === '' || new RegExp(/^[a-zA-Z ]+$/i).test(value)) { // check if value is only alphabetical letters.
           this.setState({
             data: { ...this.state.data, searchCity: value, userCity: value },
           });
@@ -217,7 +209,6 @@ class ListAssetPage extends React.Component {
             this.setState({
               data: {
                 ...this.state.data,
-                assetCountry: value,
                 countryCode,
                 userCity: '',
               },
@@ -231,34 +222,6 @@ class ListAssetPage extends React.Component {
         }
       },
     );
-  };
-
-  handleSelectSuggest = (suggest) => {
-    const locationData = processLocationData(suggest.address_components, [
-      'locality',
-      'route',
-      'postal_code',
-      'administrative_area_level_1',
-      'street_number',
-    ]);
-    const {
-      locality,
-      route,
-      postal_code,
-      administrative_area_level_1,
-      street_number,
-    } = locationData;
-    this.setState({
-      data: {
-        ...this.state.data,
-        assetAddress1: route,
-        assetAddress2: street_number,
-        assetCity: administrative_area_level_1,
-        assetProvince: locality,
-        assetPostalCode: postal_code,
-        searchAddress1: '',
-      },
-    });
   };
 
   handleCitySuggest = (suggest) => {
@@ -392,7 +355,6 @@ class ListAssetPage extends React.Component {
       handleCoverPicture: this.handleCoverPicture,
       handleFileUpload: this.handleFileUpload,
       setUserListingAsset: this.setUserListingAsset,
-      handleSelectSuggest: this.handleSelectSuggest,
       goToNextStep: this.goToNextStep,
       goToStep: this.goToStep,
       countries: COUNTRIES,

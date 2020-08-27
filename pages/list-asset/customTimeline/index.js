@@ -40,7 +40,6 @@ const CustomTimeline = React.memo(({
   formData,
   goToStep,
   listedAssetId,
-  dev,
   readToS,
   isUserListingAsset,
   tokenWithSufficientBalance,
@@ -50,27 +49,31 @@ const CustomTimeline = React.memo(({
     category,
     asset,
     assetValue,
-    assetAddress1,
-    assetAddress2,
     userCountry,
-    assetCity,
-    assetPostalCode,
     fileList,
     managementFee,
     collateralPercentage,
     collateralInPlatformToken,
     paymentInSelectedToken,
     selectedToken,
+    userCity,
+    about,
+    financials,
+    risks,
+    coverPicture,
   } = formData;
-  let maxStep = 1;
-  if (isUserListingAsset || tokenWithSufficientBalance) {
-    maxStep = 9;
-  } else if (managementFee > 0) {
-    maxStep = 8;
-  } else if (userCountry && assetCity) {
-    maxStep = 5;
-  } else if (assetValue && !metamaskErrors) {
+  let maxStep = 8;
+
+  if (!asset || !assetValue || !userCountry || !userCity) {
+    maxStep = 1;
+  } else if (!about || !financials || !risks) {
+    maxStep = 2;
+  } else if (!coverPicture) {
     maxStep = 3;
+  } else if (!managementFee) {
+    maxStep = 5;
+  } else if (!tokenWithSufficientBalance) {
+    maxStep = 6;
   }
 
   const { network } = useMetamaskContext();

@@ -9,9 +9,6 @@ export const AIRTABLE_ASSET_LISTINGS = [
   'City',
   'Country',
   'Collateral Percentage',
-  // 'Route',
-  // 'Province',
-  // 'Postal Code',
   'Cover Picture',
 ];
 

@@ -191,10 +191,6 @@ class BlockchainProvider extends React.Component {
       country,
       city,
       collateralPercentage,
-      assetAddress1,
-      assetAddress2,
-      assetProvince,
-      assetPostalCode,
       fundingToken,
       files,
     } = asset;
@@ -209,10 +205,6 @@ class BlockchainProvider extends React.Component {
       country,
       city,
       collateralPercentage,
-      assetAddress1,
-      assetAddress2,
-      assetProvince,
-      assetPostalCode,
       files: filesInfo.array,
     });
     // update state so users can't trigger multiple saves
@@ -579,11 +571,6 @@ class BlockchainProvider extends React.Component {
       financials,
       risks,
       fees,
-      assetAddress1,
-      assetAddress2,
-      assetCity,
-      assetProvince,
-      assetPostalCode,
     } = formData;
 
     const { buildNotification } = notificationsContext;
@@ -648,10 +635,6 @@ class BlockchainProvider extends React.Component {
       country,
       city,
       collateralPercentage,
-      assetAddress1,
-      assetAddress2,
-      assetProvince,
-      assetPostalCode,
       files: filesInfo.array,
     });
 
@@ -681,10 +664,6 @@ class BlockchainProvider extends React.Component {
         financials,
         risks,
         fees,
-        assetAddress1,
-        assetAddress2,
-        assetProvince,
-        assetPostalCode,
         coverPicture,
         files: fileList,
       }, performInternalAction, network);
