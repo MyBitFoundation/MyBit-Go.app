@@ -55,6 +55,7 @@ class ListAssetPage extends React.Component {
         additionalCosts: 0,
         assetValue: 0,
         escrow: 0,
+        asset: '', // asset name
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
@@ -113,7 +114,7 @@ class ListAssetPage extends React.Component {
           });
         }
       } else if (name === 'assetValue') {
-        if (new RegExp(/^[0-9]+$/i).test(value)) {
+        if (value === '' || new RegExp(/^[0-9]+$/i).test(value)) {
           this.setState({
             data: { ...this.state.data, assetValue: value },
           });
@@ -127,11 +128,6 @@ class ListAssetPage extends React.Component {
           data: { ...this.state.data, [name]: value },
         });
       }
-    } else {
-      // selected asset value
-      this.setState({
-        data: { ...this.state.data, assetValue: e },
-      });
     }
   };
 
@@ -143,7 +139,7 @@ class ListAssetPage extends React.Component {
     const { assetsContext, metamaskContext, supportedTokensInfo } = this.props;
     const { assetManagers } = assetsContext;
     const { additionalCosts = 0, collateralPercentage } = this.state.data;
-    const { assetValue: fundingGoal, asset: name } = this.state.data;
+    const { assetValue: fundingGoal = 0, asset: name } = this.state.data;
     // const cryptoPayout = true;
     const cryptoPurchase = true;
 
@@ -206,55 +202,50 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectChange = (value, name) => {
-    if (name === 'asset') {
-      const modelId = value.modelId;
-      this.recalculateCollateral(modelId);
-    } else {
-      this.setState(
-        {
-          data: { ...this.state.data, [name]: value },
-        },
-        () => {
-          switch (name) {
-            case 'userCountry': {
-              const countryData = getCountry(value);
-              const countryCode = countryData
-                ? countryData.iso2.toLowerCase()
-                : '';
+    this.setState(
+      {
+        data: { ...this.state.data, [name]: value },
+      },
+      () => {
+        switch (name) {
+          case 'userCountry': {
+            const countryData = getCountry(value);
+            const countryCode = countryData
+              ? countryData.iso2.toLowerCase()
+              : '';
 
-              this.setState({
-                data: {
-                  ...this.state.data,
-                  assetCountry: value,
-                  category: '',
-                  asset: undefined,
-                  assetValue: undefined,
-                  countryCode,
-                  userCity: undefined,
-                },
-              });
-              break;
-            }
-            case 'category': {
-              this.setState({
-                data: {
-                  ...this.state.data,
-                  category: value,
-                  asset: undefined,
-                  assetValue: undefined,
-                },
-              });
-              break;
-            }
-            case 'additionalCosts': {
-              this.recalculateCollateral();
-            }
-            default:
-              return null;
+            this.setState({
+              data: {
+                ...this.state.data,
+                assetCountry: value,
+                category: '',
+                asset: '',
+                assetValue: undefined,
+                countryCode,
+                userCity: undefined,
+              },
+            });
+            break;
           }
-        },
-      );
-    }
+          case 'category': {
+            this.setState({
+              data: {
+                ...this.state.data,
+                category: value,
+                asset: '',
+                assetValue: undefined,
+              },
+            });
+            break;
+          }
+          case 'additionalCosts': {
+            this.recalculateCollateral();
+          }
+          default:
+            return null;
+        }
+      },
+    );
   };
 
   handleSelectSuggest = (suggest) => {

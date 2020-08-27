@@ -98,66 +98,49 @@ Category:
           </React.Fragment>
         ) : 'Pick the asset you will be managing.'}
         step={1}
-        currentStep={step - 1}
+        currentStep={step}
         goToStep={maxStep > 1 ? goToStep : undefined}
       />
       <CustomTimelineItem
         title="General Description"
         content={step > 2 ? 'Provided information about the asset, financial aspects and associated risks.'
           : 'Tell the community about the project. Why do you think it will work? Provide financial details and the associated risks.'}
-        step={3}
+        step={2}
         currentStep={step}
         goToStep={maxStep > 2 ? goToStep : undefined}
       />
       <CustomTimelineItem
-        title="Asset Location"
-        content={step > 3 ? (
-          <React.Fragment>
-            <div>
-              {userCountry}
-,
-              {' '}
-              {assetCity}
-            </div>
-            <div>{`${assetAddress1}${assetAddress2 ? `, ${assetAddress2}` : ''}${assetPostalCode ? `, ${assetPostalCode}` : ''}`}</div>
-          </React.Fragment>
-        ) : "Enter a location. For investor, it's important they know exactly where the asset is based."}
-        step={4}
-        currentStep={step}
-        goToStep={maxStep > 3 ? goToStep : undefined}
-      />
-      <CustomTimelineItem
         title="Cover Picture"
-        content={step > 4 ? (
+        content={step > 3 ? (
           <div>
             Selected
           </div>
         ) : 'Upload a cover picture of the asset.'}
-        step={5}
+        step={3}
         currentStep={step}
-        goToStep={maxStep > 4 ? goToStep : undefined}
+        goToStep={maxStep > 3 ? goToStep : undefined}
       />
       <CustomTimelineItem
         title="Supporting Documents"
-        content={step > 5 ? (
+        content={step > 4 ? (
           <div>
             {fileList.length === 0 ? 'No files have been uploaded.' : fileList.map(file => <div>{file.name}</div>)}
           </div>
         ) : 'Confirm you have the necessary legal and property rights to install the asset.'}
-        step={6}
+        step={4}
+        currentStep={step}
+        goToStep={maxStep > 4 ? goToStep : undefined}
+      />
+      <CustomTimelineItem
+        title="Management Fee"
+        content={step > 5 ? `${managementFee}%` : 'How much will it cost for you to operate the asset?'}
+        step={5}
         currentStep={step}
         goToStep={maxStep > 5 ? goToStep : undefined}
       />
       <CustomTimelineItem
-        title="Management Fee"
-        content={step > 6 ? `${managementFee}%` : 'How much will it cost for you to operate the asset?'}
-        step={7}
-        currentStep={step}
-        goToStep={maxStep > 6 ? goToStep : undefined}
-      />
-      <CustomTimelineItem
         title="Asset Collateral"
-        content={step > 7
+        content={step > 6
           ? collateralPercentage === 0 ? 'No collateral' : (
             <div>
               <div>{`${collateralPercentage}% of the asset = ${formatMonetaryValue(collateralInPlatformToken, getPlatformToken(network))}`}</div>
@@ -169,25 +152,25 @@ Currency you pay in:
             </div>
           )
           : "You'll need some MyBit tokens to put down as collateral for your asset and investors."}
-        step={8}
+        step={6}
         currentStep={step}
-        goToStep={maxStep > 7 ? goToStep : undefined}
+        goToStep={maxStep > 6 ? goToStep : undefined}
       />
       {!readToS && (
         <CustomTimelineItem
           title="Terms and Conditions"
           content="Read the risks and understand the high degree of risk associated with MyBit"
-          step={9}
+          step={7}
           currentStep={step}
-          goToStep={maxStep > 8 ? goToStep : undefined}
+          goToStep={maxStep > 7 ? goToStep : undefined}
         />
       )}
       <CustomTimelineItem
         title="Confirm with MetaMask"
         content={listedAssetId ? 'Asset Listed successfully' : 'Check if everything is right, confirm and deposit collateral with MetaMask.'}
-        step={!readToS ? 10 : 9}
-        currentStep={listedAssetId ? (!readToS ? 10 : 9) : step}
-        goToStep={maxStep > (!readToS ? 10 : 9) ? goToStep : undefined}
+        step={!readToS ? 8 : 7}
+        currentStep={listedAssetId ? (!readToS ? 8 : 7) : step}
+        goToStep={maxStep > (!readToS ? 8 : 7) ? goToStep : undefined}
       />
     </CustomTimelineWrapper>
   );

@@ -17,6 +17,7 @@ import {
   CarouselSlideSelect,
   CarouselSlideInputNumber,
   CarouselNextButton,
+  CarouselSlideLabel,
 } from 'components/CarouselSlide/';
 import { DEFAULT_TOKEN } from 'constants/app';
 import ThinkingIcon from 'static/ic_thinking.svg';
@@ -54,23 +55,6 @@ const DetectLocation = styled.p`
   width: max-content;
   margin: 0 auto;
   margin-bottom: 1rem;
-`;
-
-const SelectedAssetValueLabel = styled.p`
-  width: 80%;
-  margin: 0 auto;
-  margin-bottom: 10px;
-
-${props => props.required && `&::before {
-    display: inline-block;
-    margin-right: 4px;
-    color: #ff4d4f;
-    font-size: 14px;
-    font-family: SimSun, sans-serif;
-    line-height: 1;
-    content: '*';
-  }
-`}
 `;
 
 const NoResults = styled.div`
@@ -185,7 +169,7 @@ export const AvailableAssetsSlide = ({
           {!loadingAssets && (
             <React.Fragment>
               <div className="Slider__input-container">
-                <SelectedAssetValueLabel required>Location:</SelectedAssetValueLabel>
+                <CarouselSlideLabel required>Location:</CarouselSlideLabel>
                 <CarouselSlideSelect
                   isCentered
                   showSearch
@@ -213,7 +197,7 @@ export const AvailableAssetsSlide = ({
                   disabled={!userCountry}
                 />
 
-                <SelectedAssetValueLabel required>Asset Name:</SelectedAssetValueLabel>
+                <CarouselSlideLabel required>Asset Name:</CarouselSlideLabel>
                 <CarouselSlideInput
                   isCentered
                   placeholder="Asset Name"
@@ -222,7 +206,7 @@ export const AvailableAssetsSlide = ({
                   value={asset ? asset.toUpperCase() : ''}
                 />
 
-                <SelectedAssetValueLabel required>Asset value:</SelectedAssetValueLabel>
+                <CarouselSlideLabel required>Asset value:</CarouselSlideLabel>
                 <AssetValueContainer cryptoPurchase={cryptoPurchase}>
                   <CarouselSlideInputNumber
                     isCentered
@@ -230,10 +214,13 @@ export const AvailableAssetsSlide = ({
                     precision={0}
                     placeholder="Asset Value"
                     name="assetValue"
-                    value={assetValue}
-                    onChange={e => handleInputChange({
-                      target: { value: e, name: 'assetValue' },
-                    })
+                    value={assetValue ?? ''}
+                    onChange={(e) => {
+                      console.log(e);
+                      handleInputChange({
+                        target: { value: e, name: 'assetValue' },
+                      });
+                    }
                     }
                     style={
                       cryptoPurchase === false

@@ -1,9 +1,7 @@
 import CarouselWithNavigation from 'ui/CarouselWithNavigation';
 import {
   IntroSlide,
-  LocationSlide,
   AvailableAssetsSlide,
-  AssetLocationSlide,
   DocsSlide,
   FeesSlide,
   CollateralSlide,
@@ -126,27 +124,6 @@ const ListAssetMobile = ({
         },
       }, {
         toRender: (
-          <AssetLocationSlide
-            handleInputChange={handleInputChange}
-            handleSelectChange={handleSelectChange}
-            formData={formData}
-            countries={countries}
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            handleSelectSuggest={handleSelectSuggest}
-          />
-        ),
-        buttons: {
-          hasNextButton: true,
-          hasBackButton: true,
-          nextButtonDisabled:
-            !(userCountry !== ''
-            && assetAddress1 !== ''
-            && assetCity !== ''
-            && assetProvince !== ''
-            && assetPostalCode !== ''),
-        },
-      }, {
-        toRender: (
           <CoverPictureSlide
             coverPicture={coverPicture}
             handleCoverPicture={handleCoverPicture}
@@ -197,120 +174,6 @@ const ListAssetMobile = ({
             loadingConversionInfo={loadingConversionInfo}
             tokenSlippagePercentages={tokenSlippagePercentages}
           />),
-        buttons: {
-          hasNextButton: true,
-          hasBackButton: true,
-          nextButtonDisabled: managementFee === 0,
-        },
-      },
-      !readToS && {
-        toRender: (
-          <AvailableAssetsSlide
-            handleSelectChange={handleSelectChange}
-            formData={formData}
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            loadingAssets={loadingAssets}
-            handleInputChange={handleInputChange}
-            countries={countries}
-            handleDetectLocationClicked={handleDetectLocationClicked}
-            handleCitySuggest={handleCitySuggest}
-            error={false || metamaskErrorsToRender.render}
-            airtableContext={airtableContext}
-            autoLocationOffline={autoLocationOffline}
-            getCategoriesForAssets={getCategoriesForAssets}
-          />
-        ),
-        buttons: {
-          hasNextButton: true,
-          hasBackButton: true,
-          nextButtonDisabled:
-              !category
-              || !asset
-              || !assetValue
-              || metamaskErrorsToRender.render,
-        },
-      },
-      {
-        toRender: (
-          <GeneralDescriptionSlide
-            formData={formData}
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            handleInputChange={handleInputChange}
-          />
-        ),
-        buttons: {
-          hasNextButton: true,
-          hasBackButton: true,
-          nextButtonDisabled:
-              !about
-              || !financials
-              || !risks
-              || (hasAdditionalCosts && (!fees || additionalCosts <= 0)),
-        },
-      },
-      {
-        toRender: (
-          <AssetLocationSlide
-            handleInputChange={handleInputChange}
-            handleSelectChange={handleSelectChange}
-            formData={formData}
-            countries={countries}
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            handleSelectSuggest={handleSelectSuggest}
-          />
-        ),
-        buttons: {
-          hasNextButton: true,
-          hasBackButton: true,
-          nextButtonDisabled:
-              !(userCountry !== ''
-              && assetAddress1 !== ''
-              && assetCity !== ''
-              && assetProvince !== ''
-              && assetPostalCode !== ''),
-        },
-      },
-      {
-        toRender: (
-          <DocsSlide
-            fileList={fileList}
-            handleFileUpload={handleFileUpload}
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-          />
-        ),
-        buttons: {
-          hasNextButton: true,
-          hasBackButton: true,
-        },
-      },
-      {
-        toRender: (
-          <FeesSlide
-            handleSelectChange={handleSelectChange}
-            managementFee={managementFee}
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-          />
-        ),
-        buttons: {
-          hasNextButton: true,
-          hasBackButton: true,
-          nextButtonDisabled: managementFee === 0,
-        },
-      },
-      {
-        toRender: (
-          <CollateralSlide
-            selectedToken={selectedToken}
-            handleSelectedTokenChange={handleSelectedTokenChange}
-            formData={formData}
-            maxWidthDesktop={MAX_WIDTH_DESKTOP}
-            balances={balances}
-            kyberLoading={kyberLoading}
-            loadingBalancesForNewUser={loadingBalancesForNewUser}
-            loadingConversionInfo={loadingConversionInfo}
-            tokenSlippagePercentages={tokenSlippagePercentages}
-          />
-        ),
         buttons: {
           hasNextButton: true,
           hasBackButton: true,

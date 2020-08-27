@@ -1,9 +1,7 @@
 import styled, { css } from 'styled-components';
 import {
   IntroSlide,
-  LocationSlide,
   AvailableAssetsSlide,
-  AssetLocationSlide,
   DocsSlide,
   FeesSlide,
   CollateralSlide,
@@ -180,25 +178,6 @@ const ListAssetDesktop = ({
         />
       )}
       {step === 3 && (
-        <AssetLocationSlide
-          handleInputChange={handleInputChange}
-          handleSelectChange={handleSelectChange}
-          formData={formData}
-          countries={countries}
-          maxWidthDesktop={MAX_WIDTH_DESKTOP}
-          handleSelectSuggest={handleSelectSuggest}
-          desktopMode
-          nextButtonDisabled={
-            !(userCountry !== ''
-            && assetAddress1 !== ''
-            && assetCity !== ''
-            && assetProvince !== ''
-            && assetPostalCode !== '')
-          }
-          onClick={goToNextStep}
-        />
-      )}
-      {step === 4 && (
         <CoverPictureSlide
           coverPicture={coverPicture}
           handleCoverPicture={handleCoverPicture}
@@ -208,7 +187,7 @@ const ListAssetDesktop = ({
           nextButtonDisabled={!coverPicture}
         />
       )}
-      {step === 5 && (
+      {step === 4 && (
         <DocsSlide
           fileList={fileList}
           handleFileUpload={handleFileUpload}
@@ -217,7 +196,7 @@ const ListAssetDesktop = ({
           desktopMode
         />
       )}
-      {step === 6 && (
+      {step === 5 && (
         <FeesSlide
           handleSelectChange={handleSelectChange}
           managementFee={managementFee}
@@ -227,7 +206,7 @@ const ListAssetDesktop = ({
           nextButtonDisabled={managementFee === 0}
         />
       )}
-      {step === 7 && (
+      {step === 6 && (
         <CollateralSlide
           selectedToken={selectedToken}
           handleInputChange={handleInputChange}
@@ -244,21 +223,21 @@ const ListAssetDesktop = ({
           tokenSlippagePercentages={tokenSlippagePercentages}
         />
       )}
-      {step === 8 && !readToS && (
+      {step === 7 && !readToS && (
         <TermsOfServiceSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={setReadToS}
         />
       )}
-      {step === 8 && listedAssetId && readToS && (
+      {step === 7 && listedAssetId && readToS && (
         <SuccessSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           assetId={listedAssetId}
           desktopMode
         />
       )}
-      {step === 8 && !listedAssetId && readToS && (
+      {step === 7 && !listedAssetId && readToS && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}

@@ -8,4 +8,5 @@ export * from './components/carouselSlideInput';
 export * from './components/carouselSlideSelect';
 export * from './components/carouselSlideInputNumber';
 export * from './components/carouselSlideSlider';
+export * from './components/carouselSlideLabel';
 export * from './components/carouselNextButton';
