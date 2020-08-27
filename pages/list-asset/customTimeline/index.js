@@ -65,15 +65,15 @@ const CustomTimeline = React.memo(({
   let maxStep = 8;
 
   if (!asset || !assetValue || !userCountry || !userCity) {
-    maxStep = 1;
-  } else if (!about || !financials || !risks) {
     maxStep = 2;
-  } else if (!coverPicture) {
+  } else if (!about || !financials || !risks) {
     maxStep = 3;
+  } else if (!coverPicture) {
+    maxStep = 4;
   } else if (!managementFee) {
-    maxStep = 5;
-  } else if (!tokenWithSufficientBalance) {
     maxStep = 6;
+  } else if (!tokenWithSufficientBalance) {
+    maxStep = 7;
   }
 
   const { network } = useMetamaskContext();
