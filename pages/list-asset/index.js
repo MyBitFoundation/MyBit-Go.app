@@ -173,7 +173,6 @@ class ListAssetPage extends React.Component {
         data: {
           ...this.state.data,
           asset: name,
-          assetValue,
           collateralInPlatformToken,
           collateralPercentage,
           totalFundedAssets,
