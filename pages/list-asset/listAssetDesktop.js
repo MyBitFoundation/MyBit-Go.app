@@ -105,8 +105,6 @@ const ListAssetDesktop = ({
     about,
     financials,
     risks,
-    hasAdditionalCosts,
-    additionalCosts,
     fees,
   } = formData;
 
@@ -165,7 +163,6 @@ const ListAssetDesktop = ({
             !about
             || !financials
             || !risks
-            || (hasAdditionalCosts && (!fees || additionalCosts <= 0))
           }
           handleSelectChange={handleSelectChange}
         />

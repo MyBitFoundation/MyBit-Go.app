@@ -51,8 +51,6 @@ class ListAssetPage extends React.Component {
         collateralInDefaultToken: 0,
         paymentInSelectedToken: 0,
         partnerContractAddress: '',
-        hasAdditionalCosts: false,
-        additionalCosts: 0,
         assetValue: '',
         escrow: 0,
         asset: '', // asset name
@@ -130,7 +128,7 @@ class ListAssetPage extends React.Component {
   recalculateCollateral = () => {
     const { assetsContext, metamaskContext, supportedTokensInfo } = this.props;
     const { assetManagers } = assetsContext;
-    const { additionalCosts = 0, collateralPercentage } = this.state.data;
+    const { collateralPercentage } = this.state.data;
     const { assetValue: fundingGoal = 0, asset: name } = this.state.data;
     // const cryptoPayout = true;
     const cryptoPurchase = true;
@@ -142,7 +140,6 @@ class ListAssetPage extends React.Component {
       : 0;
     assetValue = assetValue
       .plus(fiatToCryptoFee)
-      .plus(additionalCosts)
       .toNumber();
 
     const { selectedToken } = this.state.data;
@@ -212,9 +209,6 @@ class ListAssetPage extends React.Component {
                 userCity: '',
               },
             });
-            break;
-          case 'additionalCosts':
-            this.recalculateCollateral();
             break;
           default:
             return null;
