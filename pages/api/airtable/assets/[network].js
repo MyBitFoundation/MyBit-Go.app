@@ -10,3 +10,9 @@ export default (req, res) => {
   }
   return res.sendStatus(404);
 };
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

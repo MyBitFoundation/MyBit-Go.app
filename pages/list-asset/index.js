@@ -23,7 +23,6 @@ import {
   LISTING_FEE_IN_DEFAULT_TOKEN,
 } from 'constants/app';
 import { COOKIES } from 'constants/cookies';
-import calculateCollateral from 'constants/calculateCollateral';
 import {
   convertFromPlatformToken,
   convertFromDefaultToken,
@@ -46,7 +45,6 @@ class ListAssetPage extends React.Component {
         fileList: [],
         coverPicture: null,
         managementFee: 0,
-        collateralPercentage: 0,
         collateralInPlatformToken: 0,
         collateralInDefaultToken: 0,
         paymentInSelectedToken: 0,
@@ -109,9 +107,9 @@ class ListAssetPage extends React.Component {
             data: { ...this.state.data, assetValue: value },
           });
         }
-      } else if (name === 'collateralPercentage') {
+      } else if (name === 'collateralInPlatformToken') {
         this.setState({
-          data: { ...this.state.data, collateralPercentage: +value },
+          data: { ...this.state.data, collateralInPlatformToken: +value },
         }, () => this.recalculateCollateral());
       } else {
         this.setState({
@@ -128,7 +126,7 @@ class ListAssetPage extends React.Component {
   recalculateCollateral = () => {
     const { assetsContext, metamaskContext, supportedTokensInfo } = this.props;
     const { assetManagers } = assetsContext;
-    const { collateralPercentage } = this.state.data;
+    const { collateralInPlatformToken } = this.state.data;
     const { assetValue: fundingGoal = 0, asset: name } = this.state.data;
     // const cryptoPayout = true;
     const cryptoPurchase = true;
@@ -153,12 +151,7 @@ class ListAssetPage extends React.Component {
       && balances[selectedToken]
       && balances[selectedToken].contractAddress;
 
-    const collateralInDefaultToken = assetValue * (collateralPercentage / 100);
-    const collateralInPlatformToken = convertFromDefaultToken(
-      getPlatformToken(network),
-      supportedTokensInfo,
-      collateralInDefaultToken,
-    );
+    const collateralInDefaultToken = convertFromPlatformToken(DEFAULT_TOKEN, supportedTokensInfo, collateralInPlatformToken, network);
     const paymentInSelectedToken = convertFromDefaultToken(
       selectedToken || DEFAULT_TOKEN,
       supportedTokensInfo,
@@ -171,7 +164,6 @@ class ListAssetPage extends React.Component {
           ...this.state.data,
           asset: name,
           collateralInPlatformToken,
-          collateralPercentage,
           totalFundedAssets,
           collateralInDefaultToken,
           paymentInSelectedToken,
@@ -305,7 +297,6 @@ class ListAssetPage extends React.Component {
     const {
       managementFee,
       collateralInPlatformToken,
-      collateralPercentage,
       assetValue,
       fileList,
       selectedToken,

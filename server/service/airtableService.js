@@ -112,7 +112,6 @@ const getAssetListings = () => new Promise(async (resolve, reject) => {
       const fees = record.get('Fees');
       const city = record.get('City');
       const country = record.get('Country');
-      const collateralPercentage = record.get('Collateral Percentage');
       const files = record.get('Files');
       const coverPicture = record.get('Cover Picture');
       assetListings[assetId] = {
@@ -124,7 +123,6 @@ const getAssetListings = () => new Promise(async (resolve, reject) => {
         fees,
         city,
         country,
-        collateralPercentage,
         coverPicture,
       };
     });
@@ -162,7 +160,6 @@ export const addNewAsset = async (data, network) => {
       assetId,
       country,
       city,
-      collateralPercentage,
       name,
       about,
       financials,
@@ -184,7 +181,6 @@ export const addNewAsset = async (data, network) => {
       'Fees': fees,
       'City': city,
       'Country': country,
-      'Collateral Percentage': collateralPercentage,
     });
 
     // force refresh assets in the server

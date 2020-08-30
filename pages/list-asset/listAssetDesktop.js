@@ -95,17 +95,12 @@ const ListAssetDesktop = ({
     userCity,
     userCountry,
     managementFee,
-    paymentInSelectedToken,
-    collateralInDefaultToken,
     selectedToken,
-    collateralPercentage,
-    collateralInPlatformToken,
     fileList,
     coverPicture,
     about,
     financials,
     risks,
-    fees,
   } = formData;
 
   if (step === 0) {

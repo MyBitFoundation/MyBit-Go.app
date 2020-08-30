@@ -52,7 +52,6 @@ const CustomTimeline = React.memo(({
     userCountry,
     fileList,
     managementFee,
-    collateralPercentage,
     collateralInPlatformToken,
     paymentInSelectedToken,
     selectedToken,
@@ -143,9 +142,9 @@ const CustomTimeline = React.memo(({
       <CustomTimelineItem
         title="Asset Collateral"
         content={step > 6
-          ? collateralPercentage === 0 ? 'No collateral' : (
+          ? collateralInPlatformToken === 0 ? 'No collateral' : (
             <div>
-              <div>{`${collateralPercentage}% of the asset = ${formatMonetaryValue(collateralInPlatformToken, getPlatformToken(network))}`}</div>
+              <div>{`${formatMonetaryValue(collateralInPlatformToken, getPlatformToken(network))}`}</div>
               <div>
 Currency you pay in:
                 {' '}

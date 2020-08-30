@@ -41,6 +41,7 @@
     "dotenv": "6.2.0",
     "dotenv-webpack": "1.7.0",
     "express": "4.16.4",
+    "formidable": "^1.2.2",
     "ipfs-http-client": "^33.1.0",
     "is-ipfs": "^0.6.1",
     "js-cookie": "2.2.0",

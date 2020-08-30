@@ -47,22 +47,17 @@ const ListAssetMobile = ({
   getCategoriesForAssets,
 }) => {
   const {
-    category,
     asset,
     assetValue,
     userCountry,
     userCity,
     managementFee,
-    paymentInSelectedToken,
-    collateralInDefaultToken,
     selectedToken,
-    collateralPercentage,
     coverPicture,
     fileList,
     about,
     financials,
     risks,
-    fees,
   } = formData;
 
   return (

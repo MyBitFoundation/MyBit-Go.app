@@ -187,10 +187,8 @@ class BlockchainProvider extends React.Component {
       financials,
       about,
       risks,
-      fees,
       country,
       city,
-      collateralPercentage,
       fundingToken,
       files,
     } = asset;
@@ -201,10 +199,8 @@ class BlockchainProvider extends React.Component {
       financials,
       about,
       risks,
-      fees,
       country,
       city,
-      collateralPercentage,
       files: filesInfo.array,
     });
     // update state so users can't trigger multiple saves
@@ -563,7 +559,6 @@ class BlockchainProvider extends React.Component {
       coverPicture,
       fileList,
       paymentInSelectedToken,
-      collateralPercentage,
       paymentTokenAddress,
       selectedToken,
       assetValue,
@@ -634,7 +629,6 @@ class BlockchainProvider extends React.Component {
       fees,
       country,
       city,
-      collateralPercentage,
       files: filesInfo.array,
     });
 
@@ -659,7 +653,6 @@ class BlockchainProvider extends React.Component {
         name,
         country,
         city,
-        collateralPercentage,
         about,
         financials,
         risks,

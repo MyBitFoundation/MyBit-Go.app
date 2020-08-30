@@ -104,7 +104,6 @@ class AirtableProvider extends React.PureComponent {
         risks: fields.Risks || DEFAULT_ASSET_INFO.Risks,
         city: fields.City,
         country: fields.Country,
-        collateralPercentage: fields['Collateral Percentage'],
         files: fields['Files'],
         coverPicture: fields['Cover Picture']?.[0],
       };

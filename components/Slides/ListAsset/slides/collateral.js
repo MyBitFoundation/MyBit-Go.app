@@ -51,41 +51,6 @@ const SlippageValue = styled.div`
   `}
 `;
 
-const InputsWrapper = styled.div`
-  margin: 0 auto;
-
-  .ant-slider{
-    margin-bottom: 20px;
-  }
-
-  & > span{
-    margin: 0% 2%;
-  }
-
-  ${({ theme }) => theme.tablet`
-    width: 95%;
-  `}
-`;
-
-const InputWrapper = styled.div`
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .ant-slider{
-    margin-bottom: 20px;
-  }
-
-  & > span{
-    margin: 0% 2%;
-  }
-
-  ${({ theme }) => theme.tablet`
-    width: 95%;
-  `}
-`;
-
 const Separator = styled.span`
   position: relative;
   top: 5px;
@@ -93,8 +58,10 @@ const Separator = styled.span`
 `;
 
 const MybitInput = styled.div`
-  width: 46%;
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 `;
 
 const EscrowInput = styled(MybitInput)`
@@ -102,10 +69,7 @@ const EscrowInput = styled(MybitInput)`
   display: inline-block;
 `;
 
-const TokenSelectorWrapper = styled.div`
-  width: 35%;
-  display: inline-block;
-
+const TokenSelectorWrapper = styled(MybitInput)`
   button{
     background-color: transparent;
     border: none;
@@ -126,8 +90,34 @@ const TokenSelectorWrapper = styled.div`
   }
 `;
 
+const Text = styled.div`
+  margin: 0% 2%;
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+`;
+
+const Line = styled.div`
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .ant-slider{
+    margin-bottom: 20px;
+  }
+
+  & > span{
+    margin: 0% 2%;
+  }
+
+  ${({ theme }) => theme.tablet`
+    width: 90%;
+  `}
+`;
+
 const Label = styled.div`
-  margin-left: 6px;
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
@@ -139,6 +129,10 @@ const Loading = styled(Spin)`
   margin: 0 auto;
   height: 32px;
   width: 32px;
+`;
+
+const NumberInput = styled(NumericInput)`
+  width: 120px;
 `;
 
 export const CollateralSlide = ({
@@ -155,13 +149,12 @@ export const CollateralSlide = ({
   loadingBalancesForNewUser,
   loadingConversionInfo,
   tokenSlippagePercentages,
+  minCollateralAmount,
 }) => {
   const {
     collateralInPlatformToken,
     collateralInDefaultToken,
     paymentInSelectedToken,
-    collateralPercentage,
-    asset,
   } = formData;
   const { network } = useMetamaskContext();
 
@@ -219,91 +212,69 @@ export const CollateralSlide = ({
       )}
       {!kyberLoading && (
         <React.Fragment>
-          <InputWrapper>
+          <Text>
+            The minimum collateral amount is {minCollateralAmount} MYB
+          </Text>
+          <Line>
             <MybitInput>
-              <Label>Choose Escrow Amount</Label>
-              <NumericInput
-                defaultValue={collateralPercentage}
+              <Label>Choose Collateral Amount</Label>
+              <NumberInput
+                defaultValue={collateralInPlatformToken}
                 max={100}
                 min={0}
-                onChange={e => handleInputChange({ target: { value: +e, name: 'collateralPercentage' } })}
-                value={collateralPercentage}
-                label="%"
-                decimalPlaces={2}
-              />
-            </MybitInput>
-          </InputWrapper>
-          <InputsWrapper>
-            <EscrowInput>
-              <Label>Required Escrow</Label>
-              <NumericInput
-                defaultValue={collateralInPlatformToken}
+                onChange={e => handleInputChange({ target: { value: +e, name: 'collateralInPlatformToken' } })}
                 value={collateralInPlatformToken}
                 label={getPlatformToken(network)}
                 decimalPlaces={2}
                 step={1}
-                disabled
               />
-            </EscrowInput>
-            <Separator>
-              <span>
-                +
-                {' '}
-                {LISTING_FEE_IN_DEFAULT_TOKEN}
-                {' '}
-                DAI
-              </span>
+            </MybitInput>
+          </Line>
+          <Line>
+            <div>Listing fee</div>
+            <div>{LISTING_FEE_IN_DEFAULT_TOKEN} {DEFAULT_TOKEN}</div>
+          </Line>
+          <Line>
+            <TokenSelectorWrapper
+              selectorIsDisabled={noBalance}
+            >
+              <Label>Currency you pay in</Label>
+              <NumberInput
+                defaultValue={paymentInSelectedToken}
+                value={paymentInSelectedToken}
+                min={0}
+                disabled
+                step={decimalsOfSelectedTokens.step}
+                decimalPlaces={decimalsOfSelectedTokens.decimals}
+                label={(
+                  <TokenSelector
+                    balances={balances}
+                    amountToPay={collateralInDefaultToken}
+                    onChange={handleSelectedTokenChange}
+                    loading={loadingBalancesForNewUser}
+                    selectedToken={selectedToken}
+                  />
+                  )}
+              />
+            </TokenSelectorWrapper>
+          </Line>
+          <SlippageWrapper>
+            <SlippageLabel>
+                Slippage rate
               <StyledTooltip
                 arrowPointAtCenter
                 placement="top"
                 destroyTooltipOnHide
-                title={`${LISTING_FEE_IN_DEFAULT_TOKEN} ${DEFAULT_TOKEN} will be charged as listing fee.`}
-              />
-            </Separator>
-            <Separator>=</Separator>
-            {asset && (
-              <TokenSelectorWrapper
-                selectorIsDisabled={noBalance}
-              >
-                <Label>Currency you pay in</Label>
-                <NumericInput
-                  defaultValue={paymentInSelectedToken}
-                  value={paymentInSelectedToken}
-                  min={0}
-                  disabled
-                  step={decimalsOfSelectedTokens.step}
-                  decimalPlaces={decimalsOfSelectedTokens.decimals}
-                  label={(
-                    <TokenSelector
-                      balances={balances}
-                      amountToPay={collateralInDefaultToken}
-                      onChange={handleSelectedTokenChange}
-                      loading={loadingBalancesForNewUser}
-                      selectedToken={selectedToken}
-                    />
-                  )}
-                />
-
-              </TokenSelectorWrapper>
-            )}
-            <SlippageWrapper>
-              <SlippageLabel>
-                Slippage rate
-                <StyledTooltip
-                  arrowPointAtCenter
-                  placement="top"
-                  destroyTooltipOnHide
-                  title="Slippage is a necessary part of automated trading reserves.
+                title="Slippage is a necessary part of automated trading reserves.
                   As the relative balance of the two currencies shift due to a purchase,
                   so does the price."
-                />
-              </SlippageLabel>
-              <SlippageValue value={slippagePercentage}>
-                {slippagePercentage}
+              />
+            </SlippageLabel>
+            <SlippageValue value={slippagePercentage}>
+              {slippagePercentage}
                 %
-              </SlippageValue>
-            </SlippageWrapper>
-          </InputsWrapper>
+            </SlippageValue>
+          </SlippageWrapper>
           {desktopMode && (
             <CarouselNextButton
               loading={loadingBalancesForNewUser || loadingConversionInfo}

@@ -1,8 +1,21 @@
 import * as AirtableService from '../service/airtableService';
 import { uploadFiles } from '../service/cloudinaryService';
+import multer from 'multer';
 
 const FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 const COVERPICTURE_SIZE_LIMIT = 2 * 1024 * 1024;
+
+const multerStorage = multer.memoryStorage();
+const multipleUpload = multer({
+  storage: multerStorage,
+}).any(); // TODO: use more specific validation of any()
+
+const parseMultipartForm = (req, res) => new Promise((resolve, reject) => {
+  multipleUpload(req, res, (err) => {
+    if (err) reject(err);
+    resolve();
+  });
+});
 
 export const getAssets = (req, res) => {
   const { query: { network } } = req;
@@ -10,7 +23,9 @@ export const getAssets = (req, res) => {
 };
 
 export const postAssets = async (req, res) => {
-  const network = req.params.network;
+  const { query: { network } } = req;
+
+  await parseMultipartForm(req, res);
   const assetDetails = JSON.parse(req.body.details);
   const { assetId } = assetDetails;
 
@@ -32,5 +47,5 @@ export const postAssets = async (req, res) => {
   await AirtableService.updateCoverPicture(
     { assetId, file: uploadedCoverPicture }, network,
   );
-  res.sendStatus(200);
+  res.status(200).end();
 };
