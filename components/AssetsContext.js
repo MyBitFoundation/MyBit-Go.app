@@ -254,6 +254,7 @@ class AssetsProvider extends React.PureComponent {
       } = this.state;
       const { fetchNewAssetListing } = this.props;
       const { user, network } = this.props.metamaskContext;
+      console.log(event);
       const { asset: assetId, manager: assetManager } = event.returnValues;
       if (usingAirtable) {
         fetchNewAssetListing(network, this.setData, assetId);
@@ -472,6 +473,8 @@ class AssetsProvider extends React.PureComponent {
           const assetsArray = this.getAssets(
             assetListingsMerged,
           );
+
+          console.log('assets', assetsArray);
 
           return {
             assetListingsLoading,

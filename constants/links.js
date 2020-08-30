@@ -1,20 +1,15 @@
 import { ETHERSCAN_API_KEY } from './apiKeys';
 
-const baseUrl = 'http://localhost';
-const port = 8081;
-const secondPort = 8082;
-const host = `${baseUrl}:${port}`;
-const secondHost = `${baseUrl}:${secondPort}`;
 const apiEndpoint = 'https://api.mybit.io';
 
 export const InternalLinks = {
   S3: 'https://s3.eu-central-1.amazonaws.com/mybit-go/',
-  getAirtableAssetListings: network => (process.env.NODE_ENV === 'development' ? `${host}/api/airtable/assetListings/${network}` : `/api/airtable/assetListings/${network}`),
-  getAirtableOperators: network => (process.env.NODE_ENV === 'development' ? `${host}/api/airtable/operators/${network}` : `/api/airtable/operators/${network}`),
-  updateAirtableAssets: network => (process.env.NODE_ENV === 'development' ? `${host}/api/airtable/update/${network}` : `/api/airtable/update/${network}`),
-  updateAirtableAssetListing: network => (process.env.NODE_ENV === 'development' ? `${host}/api/airtable/updateAssetListing/${network}` : `/api/airtable/updateAssetListing/${network}`),
-  S3_UPLOAD: process.env.NODE_ENV === 'development' ? `${host}/api/files/upload` : '/api/files/upload',
-  S3_ASSET_FILES: process.env.NODE_ENV === 'development' ? `${host}/api/assets/files` : '/api/assets/files',
+  getAirtableAssetListings: network => `/api/airtable/assets/${network}`,
+  getAirtableOperators: network => `/api/airtable/operators/${network}`,
+  updateAirtableAssets: network => `/api/airtable/assets/${network}`,
+  // updateAirtableAssetListing: network => `/api/airtable/assets/${network}`,
+  // S3_UPLOAD: '/api/files/upload',
+  // S3_ASSET_FILES: '/api/assets/files',
   GAS_PRICE: `${apiEndpoint}/gasprice`,
 };
 
