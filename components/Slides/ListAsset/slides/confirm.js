@@ -112,7 +112,7 @@ export const ConfirmSlide = ({
         <section>
           <b>Asset collateral</b>
           <p>
-            {`${formattedCollateral} ${getPlatformToken(network)} ${formData.collateralPercentage}%`}
+            {`${formattedCollateral} ${getPlatformToken(network)}`}
           </p>
         </section>
         {shouldShowToSCheckmark && (

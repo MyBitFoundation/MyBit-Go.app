@@ -31,19 +31,12 @@ const AssetDetails = ({
     country,
     assetId,
     assetManager: assetManagerAddress,
-    numberOfInvestors,
     watchListed,
     files,
     managerPercentage,
-    collateralPercentage,
-    funded,
-    pastDate,
-    percentageOwnedByUser,
-    fundingGoal,
-    fundingProgress,
-    userInvestment,
-    about,
     financials,
+    assetManagerCollateral,
+    about,
     risks,
     fees,
     assetManagerData,
@@ -89,7 +82,7 @@ const AssetDetails = ({
           assetManager={assetManagerData}
           address={assetManagerAddress}
           managerPercentage={managerPercentage}
-          collateralPercentage={collateralPercentage}
+          collateralAmount={assetManagerCollateral}
           isAssetManager={isAssetManager}
         />
       </AssetDetailsRightCol>

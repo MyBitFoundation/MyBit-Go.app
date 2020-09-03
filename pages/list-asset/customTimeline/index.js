@@ -125,7 +125,8 @@ const CustomTimeline = React.memo(({
         title="Supporting Documents"
         content={step > 4 ? (
           <div>
-            {fileList.length === 0 ? 'No files have been uploaded.' : fileList.map(file => <div>{file.name}</div>)}
+            {/* eslint-disable-next-line react/no-array-index-key */}
+            {fileList.length === 0 ? 'No files have been uploaded.' : fileList.map((file, index) => <div key={index}>{file.name}</div>)}
           </div>
         ) : 'Confirm you have the necessary legal and property rights to install the asset.'}
         step={4}

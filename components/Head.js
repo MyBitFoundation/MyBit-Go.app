@@ -1,6 +1,6 @@
-import Head from "next/head";
+import Head from 'next/head';
 
-export default () => (
+const HEAD = () => (
   <div>
     <Head>
       <meta charSet="utf-8" />
@@ -114,7 +114,9 @@ export default () => (
       />
       <meta property="og:site_name" content="MyBit" />
       <title>MyBit</title>
-      <script src="//gw.alipayobjects.com/os/antv/assets/data-set/0.8.6/data-set.min.js"></script>
+      <script src="//gw.alipayobjects.com/os/antv/assets/data-set/0.8.6/data-set.min.js" />
     </Head>
   </div>
 );
+
+export default HEAD;

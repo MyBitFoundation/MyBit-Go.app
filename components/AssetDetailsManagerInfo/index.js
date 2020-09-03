@@ -39,7 +39,7 @@ const UserWrapper = styled.a`
 const AssetDetailsManagerInfo = ({
   address,
   managerPercentage,
-  collateralPercentage,
+  collateralAmount,
   assetManager,
   isAssetManager,
 }) => {
@@ -91,7 +91,7 @@ const AssetDetailsManagerInfo = ({
         <ValueDisplay
           text="Asset Collateral"
           icon={<MyBitLogo />}
-          value={`${collateralPercentage}%`}
+          value={`${collateralAmount.toFixed(2)} ${getPlatformToken(network)}`}
           style={{
             margin: '5px 0',
           }}
