@@ -258,10 +258,7 @@ class ManageAssetModule extends React.Component {
     }
   }
 
-  render = () => {
-    console.log(this.props);
-    return this.props.children(this.state);
-  };
+  render = () => this.props.children(this.state);
 }
 
 const enhance = compose(

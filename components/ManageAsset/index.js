@@ -207,7 +207,6 @@ class ManageAsset extends React.Component {
       city,
       country,
       name,
-      imageSrc,
       partner,
       files,
       assetManagerCollateral,
@@ -218,6 +217,8 @@ class ManageAsset extends React.Component {
       financials,
       fees,
     } = asset;
+
+    const imageSrc = asset.coverPicture.url;
 
     const assetListingUrl = `/explore/${assetId}`;
 
@@ -241,6 +242,7 @@ class ManageAsset extends React.Component {
               managerPercentage={managerPercentage}
               funded={funded}
               managerHasToCallPayout={managerHasToCallPayout}
+              imageSrc={imageSrc}
             />
             <ManageAssetUpdates
               authorizeThreeBoxSpace={authorizeThreeBoxSpace}
