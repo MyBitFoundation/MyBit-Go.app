@@ -1,6 +1,7 @@
-import { compose } from 'recompose'
+import { compose } from 'recompose';
+import { useRouter } from 'next/router';
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
-import { withAssetsContextPageWrapper } from 'components/AssetsContext'
+import { withAssetsContextPageWrapper } from 'components/AssetsContext';
 import AssetManagerFullProfile from 'components/AssetManagerFullProfile';
 import { METAMASK_ERRORS } from 'components/MetamaskContext/constants';
 import MetamaskErrors from 'components/MetamaskErrors';
@@ -9,37 +10,37 @@ import AllAssetManagers from 'components/AllAssetManagers';
 const AssetManager = ({
   assetsContext,
   metamaskContext,
-  managerAddress,
 }) => {
+  const { query: { slugs } } = useRouter();
+  const managerAddress = slugs?.[0];
+
   const hasMetamaskErrors = metamaskContext.metamaskErrors();
   if (hasMetamaskErrors.error && hasMetamaskErrors.error !== METAMASK_ERRORS.NO_METAMASK) {
     return (
       <MetamaskErrors
         shouldRenderComponent={false}
       />
-    )
+    );
   }
+
+
   if (!managerAddress) {
     return (
       <AllAssetManagers
         assetsContext={assetsContext}
         network={metamaskContext.network}
       />
-    )
-  } else {
-    return (
-      <AssetManagerFullProfile
-        assetsContext={assetsContext}
-        metamaskContext={metamaskContext}
-        managerAddress={managerAddress}
-      />
-    )
+    );
   }
-}
 
-export const getInitialProps = ctx => {
-  return { props: { managerAddress: ctx.query.id } };
-}
+  return (
+    <AssetManagerFullProfile
+      assetsContext={assetsContext}
+      metamaskContext={metamaskContext}
+      managerAddress={managerAddress}
+    />
+  );
+};
 
 const enhance = compose(
   withAssetsContextPageWrapper,

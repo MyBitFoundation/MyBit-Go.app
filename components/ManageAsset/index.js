@@ -29,7 +29,7 @@ const COLUMN_SIZE = {
   md: 24,
   lg: 12,
   xl: 12,
-}
+};
 
 class ManageAsset extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class ManageAsset extends React.Component {
     this.displayProfit = this.displayProfit.bind(this);
     this.displayCollateral = this.displayCollateral.bind(this);
     this.state = {
-      chartBoxView: "profit",
+      chartBoxView: 'profit',
       profitChartView: 'weekly',
       supportingDocuments: false,
       generalDocuments: false,
@@ -45,15 +45,15 @@ class ManageAsset extends React.Component {
   }
 
   displayProfit(type) {
-    this.setState({ chartBoxView: "profit", profitChartView: type });
+    this.setState({ chartBoxView: 'profit', profitChartView: type });
   }
 
   displayCollateral() {
-    this.setState({ chartBoxView: "collateral" });
+    this.setState({ chartBoxView: 'collateral' });
   }
 
-  getFilesToRender(files, assetId){
-    if(!files || files.length === 0){
+  getFilesToRender(files, assetId) {
+    if (!files || files.length === 0) {
       return <span>None</span>;
     }
     const toReturn = files.map(file => (
@@ -62,7 +62,7 @@ class ManageAsset extends React.Component {
       >
         {file}
       </a>
-    ))
+    ));
 
     return toReturn;
   }
@@ -73,7 +73,7 @@ class ManageAsset extends React.Component {
       managerHasToCallPayout,
     } = asset;
 
-    let sendFundsToOperatorButton = managerHasToCallPayout ? (
+    const sendFundsToOperatorButton = managerHasToCallPayout ? (
       <Button
         type="primary"
         onClick={() => payoutAsset()}
@@ -93,30 +93,30 @@ class ManageAsset extends React.Component {
         {!error && (
           <React.Fragment>
             <ManageAssetDocsButton
-                type="secondary"
-                selected={this.state.supportingDocuments}
-                onClick={() => this.setState(prevProps => ({
-                  supportingDocuments: !prevProps.supportingDocuments,
-                  generalDocuments: false,
-                }))}
-              >
+              type="secondary"
+              selected={this.state.supportingDocuments}
+              onClick={() => this.setState(prevProps => ({
+                supportingDocuments: !prevProps.supportingDocuments,
+                generalDocuments: false,
+              }))}
+            >
               Supporting Documents
             </ManageAssetDocsButton>
             <ManageAssetDocsButton
-                type="secondary"
-                selected={this.state.generalDocuments}
-                onClick={() => this.setState(prevProps => ({
-                  generalDocuments: !prevProps.generalDocuments,
-                  supportingDocuments: false,
-                }))}
-              >
+              type="secondary"
+              selected={this.state.generalDocuments}
+              onClick={() => this.setState(prevProps => ({
+                generalDocuments: !prevProps.generalDocuments,
+                supportingDocuments: false,
+              }))}
+            >
               General Description
             </ManageAssetDocsButton>
             {sendFundsToOperatorButton}
           </React.Fragment>
         )}
       </ManageAssetNavButtons>
-    )
+    );
   }
 
   render() {
@@ -129,22 +129,22 @@ class ManageAsset extends React.Component {
     } = this.props;
 
 
-    if(loading) {
-      return(
+    if (loading) {
+      return (
         <Loading
           message="Loading asset information"
           hasBackButton
           oldBackButton
         />
-      )
-    } else if(error){
+      );
+    } if (error) {
       const description = getErrorMessage(error.type);
       return (
         <ErrorPage
           title="Error"
           description={description}
         />
-      )
+      );
     }
 
     const {
@@ -168,8 +168,8 @@ class ManageAsset extends React.Component {
       syncingThreeBoxThread,
       loadingThreeBoxThreadAPIAuthorization,
       loadingThreeBoxSpaceAuthorization,
-      loadingThreeBoxThreadPostRequest
-    } = threeBox
+      loadingThreeBoxThreadPostRequest,
+    } = threeBox;
 
     const {
       withdrawCollateral,
@@ -224,73 +224,73 @@ class ManageAsset extends React.Component {
     return (
       <div>
         {this.getNavBarButtons(asset, error, isCallingPayout, payoutAsset)}
-          {!error && (
-            <ManageAssetContentWrapper>
-              <Col {...COLUMN_SIZE}>
-                <ManageAssetAssetInfo
-                  assetId={assetId}
-                  city={city}
-                  country={country}
-                  fundingGoal={fundingGoal}
-                  assetIncome={assetIncome}
-                  profit={profit}
-                  averageProfit={averageProfit}
-                  toWithdraw={toWithdraw}
-                  isWithdrawingAssetManager={isWithdrawingAssetManager}
-                  withdrawProfitAssetManager={withdrawProfitAssetManager}
-                  managerPercentage={managerPercentage}
-                  funded={funded}
-                  managerHasToCallPayout={managerHasToCallPayout}
-                />
-                <ManageAssetUpdates
-                  authorizeThreeBoxSpace={authorizeThreeBoxSpace}
-                  hasAuthorizedThreeBox={hasAuthorizedThreeBox}
-                  openThreeBoxSpace={openThreeBoxSpace}
-                  hasOpenedGoSpace={hasOpenedGoSpace}
-                  postUpdateOnThread={postUpdateOnThread}
-                  getPostsFromCurrentThread={getPostsFromCurrentThread}
-                  syncingThreeBox={syncingThreeBox}
-                  syncingThreeBoxThread={syncingThreeBoxThread}
-                  loadingThreeBoxThreadPostRequest={loadingThreeBoxThreadPostRequest}
-                  loadingThreeBoxThreadAPIAuthorization={loadingThreeBoxThreadAPIAuthorization}
-                  loadingThreeBoxSpaceAuthorization={loadingThreeBoxSpaceAuthorization}
-                />
-              </Col>
-              {!supportingDocuments && !generalDocuments && (
-                <Col {...COLUMN_SIZE}>
-                  <ManageAssetGraphs
-                    chartBoxView={chartBoxView}
-                    revenueData={revenueData}
-                    profitChartView={profitChartView}
-                    managerPercentage={managerPercentage}
-                    displayProfit={this.displayProfit}
-                    displayCollateral={this.displayCollateral}
-                    assetManagerCollateral={assetManagerCollateral}
-                    collateralData={collateralData}
-                    fundingGoal={fundingGoal}
-                    isWithdrawingCollateral={isWithdrawingCollateral}
-                    withdrawCollateral={withdrawCollateral}
-                  />
-                </Col>
-              )}
-              {supportingDocuments && (
-                <Col {...COLUMN_SIZE}>
-                  <DocumentsManager
-                    asset={asset}
-                  />
-                </Col>
-              )}
-              {generalDocuments && (
-                <Col {...COLUMN_SIZE}>
-                  <GeneralDescriptionEditor
-                    asset={asset}
-                  />
-                </Col>
-              )}
-            </ManageAssetContentWrapper>
+        {!error && (
+        <ManageAssetContentWrapper>
+          <Col {...COLUMN_SIZE}>
+            <ManageAssetAssetInfo
+              assetId={assetId}
+              city={city}
+              country={country}
+              fundingGoal={fundingGoal}
+              assetIncome={assetIncome}
+              profit={profit}
+              averageProfit={averageProfit}
+              toWithdraw={toWithdraw}
+              isWithdrawingAssetManager={isWithdrawingAssetManager}
+              withdrawProfitAssetManager={withdrawProfitAssetManager}
+              managerPercentage={managerPercentage}
+              funded={funded}
+              managerHasToCallPayout={managerHasToCallPayout}
+            />
+            <ManageAssetUpdates
+              authorizeThreeBoxSpace={authorizeThreeBoxSpace}
+              hasAuthorizedThreeBox={hasAuthorizedThreeBox}
+              openThreeBoxSpace={openThreeBoxSpace}
+              hasOpenedGoSpace={hasOpenedGoSpace}
+              postUpdateOnThread={postUpdateOnThread}
+              getPostsFromCurrentThread={getPostsFromCurrentThread}
+              syncingThreeBox={syncingThreeBox}
+              syncingThreeBoxThread={syncingThreeBoxThread}
+              loadingThreeBoxThreadPostRequest={loadingThreeBoxThreadPostRequest}
+              loadingThreeBoxThreadAPIAuthorization={loadingThreeBoxThreadAPIAuthorization}
+              loadingThreeBoxSpaceAuthorization={loadingThreeBoxSpaceAuthorization}
+            />
+          </Col>
+          {!supportingDocuments && !generalDocuments && (
+          <Col {...COLUMN_SIZE}>
+            <ManageAssetGraphs
+              chartBoxView={chartBoxView}
+              revenueData={revenueData}
+              profitChartView={profitChartView}
+              managerPercentage={managerPercentage}
+              displayProfit={this.displayProfit}
+              displayCollateral={this.displayCollateral}
+              assetManagerCollateral={assetManagerCollateral}
+              collateralData={collateralData}
+              fundingGoal={fundingGoal}
+              isWithdrawingCollateral={isWithdrawingCollateral}
+              withdrawCollateral={withdrawCollateral}
+            />
+          </Col>
           )}
+          {supportingDocuments && (
+          <Col {...COLUMN_SIZE}>
+            <DocumentsManager
+              asset={asset}
+            />
+          </Col>
+          )}
+          {generalDocuments && (
+          <Col {...COLUMN_SIZE}>
+            <GeneralDescriptionEditor
+              asset={asset}
+            />
+          </Col>
+          )}
+        </ManageAssetContentWrapper>
+        )}
       </div>
-      )
+    );
   }
 }
 
