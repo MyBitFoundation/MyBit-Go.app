@@ -186,9 +186,9 @@ class DocumentsManager extends React.Component {
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={`${InternalLinks.S3}${assetId}:${file.name || file}`}
+                    href={file.url}
                   >
-                    {file.name || file}
+                    {file.filename}
                   </a>
                   {file.deletable && (
                   <CloseIconWrapper onClick={this.handleRemoveUpload.bind(this, file.name || file)} />
