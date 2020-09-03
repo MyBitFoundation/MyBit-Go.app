@@ -10,7 +10,7 @@ import BN from 'bignumber.js';
 
 export const debug = process.env.NODE_ENV === 'development' ? console.info : () => { };
 
-export const fromWeiToEth = (weiValue) => {
+export const fromWeiToEth = (weiValue = 0) => {
   try {
     return Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
   } catch (e) {
@@ -139,7 +139,7 @@ export const setValueLocalStorage = (key, value, isObject) => {
 export const formatMonetaryValue = (number, symbol = DEFAULT_TOKEN, includeToken = true) => {
   try {
     const decimalsForToken = getDecimalsForToken(symbol);
-    const value = Number(number).toLocaleString('en-US', {
+    const value = Number(number || 0).toLocaleString('en-US', {
       maximumFractionDigits: decimalsForToken.decimals,
     });
 

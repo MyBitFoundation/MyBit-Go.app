@@ -11,7 +11,7 @@ const AssetUpdatesTitle = styled.p`
   margin-bottom: 10px;
   display: inline-block;
   padding-top: 10px;
-}`
+}`;
 
 class AssetUpdates extends React.Component {
   constructor(props) {
@@ -20,25 +20,29 @@ class AssetUpdates extends React.Component {
       posts: [],
       author: 'Loading...',
       avatar: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=',
-    }
+    };
   }
+
   async componentWillMount() {
-    const { getPosts, asset, getProfile, getAvatar } = this.props;
+    const {
+      getPosts, asset, getProfile, getAvatar,
+    } = this.props;
     const [
       posts,
       author,
       avatar,
     ] = await Promise.all([
-      asset && asset.assetId && asset.assetManager ?
-      await getPosts(asset.assetId, asset.assetManager) : [],
+      asset && asset.assetId && asset.assetManager
+        ? await getPosts(asset.assetId, asset.assetManager) : [],
       getProfile(asset.assetManager),
       getAvatar(asset.assetManager),
-    ])
+    ]);
     // order posts by date in desc order
     posts.reverse();
-    const postsWithoutEmptyMessages = posts.filter(post => post.message && post.message !== "")
-    this.setState({ posts: postsWithoutEmptyMessages, author, avatar })
+    const postsWithoutEmptyMessages = posts.filter(post => post.message && post.message !== '');
+    this.setState({ posts: postsWithoutEmptyMessages, author, avatar });
   }
+
   render() {
     const { loadingThreeBox } = this.props;
     const { posts, author, avatar } = this.state;
@@ -54,32 +58,37 @@ class AssetUpdates extends React.Component {
       >
         <AssetUpdatesTitle>Updates from Asset Manager</AssetUpdatesTitle>
         {
-          loadingThreeBox ?
-          <p>
+          loadingThreeBox
+            ? (
+              <p>
             Loading updates from Asset Manager...
-          </p> : numberOfPosts === 0 ?
-            <p>
+              </p>
+            ) : numberOfPosts === 0
+              ? (
+                <p>
               No updates from the asset manager.
-            </p> :
-            <List
-              header={numberOfPosts === 1 ? `${numberOfPosts} update` : `${numberOfPosts} updates`}
-              itemLayout='horizontal'
-              dataSource={posts}
-              renderItem={post => (
-                <li>
-                  <Comment
-                    author={author.name}
-                    avatar={avatar}
-                    content={post.message}
-                    datetime={dayjs(post.timestamp * 1000).format('ddd, MMM D, H:mm:ss')}
-                  />
-                </li>
-              )}
-            >
-            </List>
+                </p>
+              )
+              : (
+                <List
+                  header={numberOfPosts === 1 ? `${numberOfPosts} update` : `${numberOfPosts} updates`}
+                  itemLayout="horizontal"
+                  dataSource={posts}
+                  renderItem={post => (
+                    <li>
+                      <Comment
+                        author={author.name}
+                        avatar={avatar}
+                        content={post.message}
+                        datetime={dayjs(post.timestamp * 1000).format('ddd, MMM D, H:mm:ss')}
+                      />
+                    </li>
+                  )}
+                />
+              )
         }
       </Panel>
-    )
+    );
   }
 }
 

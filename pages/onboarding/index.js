@@ -19,7 +19,6 @@ const SliderNavigationTooltips = [
 ];
 
 class OnboardingPage extends React.Component {
-
   componentDidMount = () => {
     const {
       redirectTo,
@@ -59,16 +58,15 @@ class OnboardingPage extends React.Component {
           />
         </BancorProvider>
       </React.Fragment>
-    )
+    );
   }
 }
 
 export const getInitialProps = async (ctx) => {
   if (ctx.req) {
     return { props: { redirectTo: ctx.query.redirectTo } };
-  } else {
-    return { props: {} };
   }
-}
+  return { props: {} };
+};
 
 export default OnboardingPage;
