@@ -62,13 +62,13 @@ const AssetDetails = ({
           fees={fees}
           handleAssetFavorited={handleAssetFavorited}
         />
-        <AssetUpdates
+        {/* <AssetUpdates
           asset={asset}
           getPosts={getPosts}
           getProfile={getProfile}
           getAvatar={getAvatar}
           loadingThreeBox={loadingThreeBox}
-        />
+        /> */}
       </AssetDetailsLeftCol>
       <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetFundingModule

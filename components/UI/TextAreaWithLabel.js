@@ -29,10 +29,11 @@ const TextAreaWithLabel = ({
   textAreaName,
   rows,
   required, // only for displaying purpose (*)
+  ...otherProps
 }) => (
   <React.Fragment>
     <Label required={required}>{label}</Label>
-    <TextArea rows={rows} placeholder={placeholder} name={textAreaName} onChange={onChange} value={value} />
+    <TextArea rows={rows} placeholder={placeholder} name={textAreaName} onChange={onChange} value={value} {...otherProps} />
   </React.Fragment>
 );
 

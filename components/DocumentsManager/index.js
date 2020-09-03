@@ -150,7 +150,7 @@ class DocumentsManager extends React.Component {
     return (
       <DocumentsManagerWrapper>
         <DocumentsManagerTitle>Supporting Documents</DocumentsManagerTitle>
-        <DocumentsManagerNav>
+        {/* <DocumentsManagerNav>
           <UploadButton
             inputProps={{
               onChange: this.handleFileUploaded,
@@ -176,7 +176,7 @@ class DocumentsManager extends React.Component {
           <DocumentsManagerDescription>
             Up to a maximum of 5 files can be uploaded, a maximum of 5MB each. Files cannot be removed.
           </DocumentsManagerDescription>
-        </DocumentsManagerNav>
+        </DocumentsManagerNav> */}
         {!noFiles && (
           <DocumentsManagerList>
             {files.concat(filesTmp).map((file, index) => (
@@ -198,14 +198,14 @@ class DocumentsManager extends React.Component {
             ))}
           </DocumentsManagerList>
         )}
-        {(!noFiles || !noFilesToUpload) && (
+        {/* {(!noFiles || !noFilesToUpload) && (
           <ChangesButtonWithLabel
             onClick={this.handleFileUpload}
             loading={uploading}
             loadingText="Uploading"
             changes={!noFilesToUpload}
           />
-        )}
+        )} */}
         {noFiles && (
           <DocumentsManagerNoFiles />
         )}

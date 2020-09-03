@@ -244,7 +244,7 @@ class ManageAsset extends React.Component {
               managerHasToCallPayout={managerHasToCallPayout}
               imageSrc={imageSrc}
             />
-            <ManageAssetUpdates
+            {/* <ManageAssetUpdates
               authorizeThreeBoxSpace={authorizeThreeBoxSpace}
               hasAuthorizedThreeBox={hasAuthorizedThreeBox}
               openThreeBoxSpace={openThreeBoxSpace}
@@ -256,7 +256,7 @@ class ManageAsset extends React.Component {
               loadingThreeBoxThreadPostRequest={loadingThreeBoxThreadPostRequest}
               loadingThreeBoxThreadAPIAuthorization={loadingThreeBoxThreadAPIAuthorization}
               loadingThreeBoxSpaceAuthorization={loadingThreeBoxSpaceAuthorization}
-            />
+            /> */}
           </Col>
           {!supportingDocuments && !generalDocuments && (
           <Col {...COLUMN_SIZE}>
