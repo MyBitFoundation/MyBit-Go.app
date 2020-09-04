@@ -83,7 +83,6 @@ export const getExpectedAndSlippage = async (src, dest, amount) => {
       expectedRate,
       slippageRate,
     } = result;
-    console.log(result, amount, 'kyber result');
 
     if (expectedRate !== '0') {
       expectedRate = fromWeiToEth(expectedRate);

@@ -327,7 +327,6 @@ class ListAssetPage extends React.Component {
       ? getTokenWithSufficientBalance(user.balances, paymentInDefaultToken)
       : undefined;
 
-    console.log(tokenWithSufficientBalance, paymentInSelectedToken, selectedToken);
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
       dev,
