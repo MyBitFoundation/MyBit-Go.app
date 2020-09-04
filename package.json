@@ -75,13 +75,10 @@
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development NODE_OPTIONS='--max_old_space_size=4096' next dev",
-    "build": "next build && npm run export",
-    "export": "next export -o build",
+    "build": "next build",
     "start": " cross-env NODE_ENV=production next start",
     "lint": "eslint --ignore-path .gitignore .",
     "lint:fix": "eslint --ignore-path .gitignore --fix .",
-    "compile-server": "rimraf lib/ && babel -d lib/ server/",
-    "now-start": "npm run compile-server && npm run start",
     "analyze": "cross-env BUNDLE_ANALYZE=both next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
