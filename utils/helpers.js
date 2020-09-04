@@ -12,7 +12,7 @@ export const debug = process.env.NODE_ENV === 'development' ? console.info : () 
 
 export const fromWeiToEth = (weiValue = 0) => {
   try {
-    return Number(window.web3js.utils.fromWei(weiValue.toString(), 'ether'));
+    return Number(window.web3js.utils.fromWei(new BN(weiValue).toString(), 'ether'));
   } catch (e) {
     console.error(e);
     return 0;

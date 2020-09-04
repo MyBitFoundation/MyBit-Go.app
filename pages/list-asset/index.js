@@ -21,6 +21,7 @@ import {
   DEFAULT_TOKEN,
   getPlatformTokenContract,
   LISTING_FEE_IN_DEFAULT_TOKEN,
+  MINIMUM_COLLATERAL_IN_DEFAULT_TOKEN,
 } from 'constants/app';
 import { COOKIES } from 'constants/cookies';
 import {
@@ -185,17 +186,15 @@ class ListAssetPage extends React.Component {
       network,
     );
 
-    // const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
-    // calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInDefaultToken, false)
-    //   .then((slippagePercentages) => {
-    //     this.setState({ tokenSlippagePercentages: slippagePercentages, loadingConversionInfo: false });
-    //   });
+    const PLATFORM_TOKEN = getPlatformToken(network);
+    const minimumCollateralInPlatformToken = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokensInfo, MINIMUM_COLLATERAL_IN_DEFAULT_TOKEN);
 
     return {
       paymentInDefaultToken,
       paymentInSelectedToken,
       totalFundedAssets,
       paymentTokenAddress,
+      minimumCollateralInPlatformToken,
     };
   }
 
@@ -325,9 +324,18 @@ class ListAssetPage extends React.Component {
       userCountry,
     } = this.state.data;
 
-    const { paymentInDefaultToken, paymentInSelectedToken, paymentTokenAddress } = (this.props.kyberLoading && {}) || this.calculateCollateral();
+    const {
+      paymentInDefaultToken,
+      paymentInSelectedToken,
+      paymentTokenAddress,
+      minimumCollateralInPlatformToken,
+    } = (this.props.kyberLoading && {}) || this.calculateCollateral();
     const formData = {
-      ...data, paymentInDefaultToken, paymentInSelectedToken, paymentTokenAddress,
+      ...data,
+      paymentInDefaultToken,
+      paymentInSelectedToken,
+      paymentTokenAddress,
+      minimumCollateralInPlatformToken,
     };
 
     const tokenWithSufficientBalance = paymentInSelectedToken > 0

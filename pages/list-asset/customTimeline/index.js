@@ -60,7 +60,14 @@ const CustomTimeline = React.memo(({
     financials,
     risks,
     coverPicture,
+    minimumCollateralInPlatformToken,
   } = formData;
+
+  const { network, user: { balances } } = useMetamaskContext();
+
+  const isSelectedBalanceEnough = () => balances?.[selectedToken]?.balance >= paymentInSelectedToken
+    && collateralInPlatformToken >= minimumCollateralInPlatformToken;
+
   let maxStep = 8;
 
   if (!asset || !assetValue || !userCountry || !userCity) {
@@ -71,11 +78,10 @@ const CustomTimeline = React.memo(({
     maxStep = 4;
   } else if (!managementFee) {
     maxStep = 6;
-  } else if (!tokenWithSufficientBalance) {
+  } else if (!tokenWithSufficientBalance || !isSelectedBalanceEnough()) {
     maxStep = 7;
   }
 
-  const { network } = useMetamaskContext();
 
   return (
     <CustomTimelineWrapper

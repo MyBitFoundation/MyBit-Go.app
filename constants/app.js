@@ -7,6 +7,7 @@ export const DEFAULT_TOKEN = 'DAI';
 
 // listing fee in default token
 export const LISTING_FEE_IN_DEFAULT_TOKEN = 5; // TODO: could dynamically get from the smart contract
+export const MINIMUM_COLLATERAL_IN_DEFAULT_TOKEN = 100;
 
 export const DEFAULT_TOKEN_MAX_DECIMALS = 2;
 export const ERC20_TOKEN_MAX_DECIMALS = 4;

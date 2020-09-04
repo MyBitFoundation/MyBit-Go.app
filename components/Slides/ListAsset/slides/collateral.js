@@ -148,12 +148,12 @@ export const CollateralSlide = ({
   loadingBalancesForNewUser,
   loadingConversionInfo,
   tokenSlippagePercentages,
-  minCollateralAmount,
 }) => {
   const {
     collateralInPlatformToken,
     paymentInDefaultToken,
     paymentInSelectedToken,
+    minimumCollateralInPlatformToken,
   } = formData;
   const { network } = useMetamaskContext();
 
@@ -169,7 +169,7 @@ export const CollateralSlide = ({
     buttonText = 'Loading Slippage Info';
   }
 
-  const isBalanceEnough = balances?.[selectedToken]?.balance >= paymentInSelectedToken;
+  const isBalanceEnough = balances?.[selectedToken]?.balance >= paymentInSelectedToken && minimumCollateralInPlatformToken <= collateralInPlatformToken;
 
   const slippagePercentage = (!tokenSlippagePercentages || loadingConversionInfo) ? 0 : tokenSlippagePercentages[selectedToken];
 
@@ -212,7 +212,7 @@ export const CollateralSlide = ({
       {!kyberLoading && (
         <React.Fragment>
           <Text>
-            The minimum collateral amount is {minCollateralAmount} MYB
+            The minimum collateral amount is {minimumCollateralInPlatformToken.toFixed(2)} {getPlatformToken(network)}
           </Text>
           <Line>
             <MybitInput>
