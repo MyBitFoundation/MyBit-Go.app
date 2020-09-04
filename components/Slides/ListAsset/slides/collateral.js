@@ -169,6 +169,8 @@ export const CollateralSlide = ({
     buttonText = 'Loading Slippage Info';
   }
 
+  const isBalanceEnough = balances?.[selectedToken]?.balance >= paymentInSelectedToken;
+
   const slippagePercentage = (!tokenSlippagePercentages || loadingConversionInfo) ? 0 : tokenSlippagePercentages[selectedToken];
 
   return (
@@ -277,7 +279,7 @@ export const CollateralSlide = ({
               loading={loadingBalancesForNewUser || loadingConversionInfo}
               desktopMode={desktopMode}
               onClick={onClick}
-              disabled={nextButtonDisabled || noBalance || slippagePercentage === Infinity}
+              disabled={nextButtonDisabled || noBalance || slippagePercentage === Infinity || !isBalanceEnough}
               style={{
                 marginTop: '40px',
               }}
