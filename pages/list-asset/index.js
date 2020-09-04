@@ -46,12 +46,11 @@ class ListAssetPage extends React.Component {
         coverPicture: null,
         managementFee: 0,
         collateralInPlatformToken: 0,
-        collateralInDefaultToken: 0,
-        paymentInSelectedToken: 0,
         partnerContractAddress: '',
         assetValue: '',
         escrow: 0,
         asset: '', // asset name
+        cryptoPurchase: true,
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
@@ -82,6 +81,26 @@ class ListAssetPage extends React.Component {
     document.removeEventListener('keydown', this.handleKeyDown);
   };
 
+  componentDidUpdate = (prevProps, prevState) => {
+    // debugger;
+    if (prevState.data.collateralInPlatformToken !== this.state.data.collateralInPlatformToken
+      || prevState.data.selectedToken !== this.state.data.selectedToken) {
+      this.fetchSlippageRates();
+    }
+  }
+
+  fetchSlippageRates = async () => {
+    const { network, user: { balances } } = this.props.metamaskContext;
+    this.setState({ loadingConversionInfo: true });
+    const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+
+    const { paymentInDefaultToken } = this.calculateCollateral();
+
+    const slippagePercentages = await calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, paymentInDefaultToken, false)
+      .finally(() => this.setState({ loadingConversionInfo: false }));
+    this.setState({ tokenSlippagePercentages: slippagePercentages });
+  }
+
   setUserListingAsset = (isUserListingAsset, listedAssetId) => {
     if (!this.ismounted) {
       return;
@@ -110,7 +129,7 @@ class ListAssetPage extends React.Component {
       } else if (name === 'collateralInPlatformToken') {
         this.setState({
           data: { ...this.state.data, collateralInPlatformToken: +value },
-        }, () => this.recalculateCollateral());
+        });
       } else {
         this.setState({
           data: { ...this.state.data, [name]: value },
@@ -120,14 +139,16 @@ class ListAssetPage extends React.Component {
   };
 
   handleSelectedTokenChange = (selectedToken) => {
-    this.setState({ data: { ...this.state.data, selectedToken } }, () => this.recalculateCollateral());
+    this.setState({ data: { ...this.state.data, selectedToken } });
   };
 
-  recalculateCollateral = () => {
-    const { assetsContext, metamaskContext, supportedTokensInfo } = this.props;
+  calculateCollateral = () => {
+    const {
+      assetsContext, metamaskContext, supportedTokensInfo,
+    } = this.props;
     const { assetManagers } = assetsContext;
     const { collateralInPlatformToken } = this.state.data;
-    const { assetValue: fundingGoal = 0, asset: name } = this.state.data;
+    const { assetValue: fundingGoal = 0 } = this.state.data;
     // const cryptoPayout = true;
     const cryptoPurchase = true;
 
@@ -147,39 +168,31 @@ class ListAssetPage extends React.Component {
       ? assetManagers[user.address].totalFundedAssets
       : 0;
     const paymentTokenAddress = selectedToken
-      && balances
-      && balances[selectedToken]
-      && balances[selectedToken].contractAddress;
+    && balances
+    && balances[selectedToken]
+    && balances[selectedToken].contractAddress;
 
-    const collateralInDefaultToken = convertFromPlatformToken(DEFAULT_TOKEN, supportedTokensInfo, collateralInPlatformToken, network);
+    const paymentInDefaultToken = convertFromPlatformToken(DEFAULT_TOKEN, supportedTokensInfo, collateralInPlatformToken, network) + LISTING_FEE_IN_DEFAULT_TOKEN;
+
     const paymentInSelectedToken = convertFromDefaultToken(
       selectedToken || DEFAULT_TOKEN,
       supportedTokensInfo,
-      collateralInDefaultToken + LISTING_FEE_IN_DEFAULT_TOKEN,
+      paymentInDefaultToken,
     );
 
-    this.setState(
-      {
-        data: {
-          ...this.state.data,
-          asset: name,
-          collateralInPlatformToken,
-          totalFundedAssets,
-          collateralInDefaultToken,
-          paymentInSelectedToken,
-          paymentTokenAddress,
-          cryptoPurchase,
-        },
-        loadingConversionInfo: true,
-      },
-    );
+    // const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+    // calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInDefaultToken, false)
+    //   .then((slippagePercentages) => {
+    //     this.setState({ tokenSlippagePercentages: slippagePercentages, loadingConversionInfo: false });
+    //   });
 
-    const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
-    calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInDefaultToken, false)
-      .then((slippagePercentages) => {
-        this.setState({ tokenSlippagePercentages: slippagePercentages, loadingConversionInfo: false });
-      });
-  };
+    return {
+      paymentInDefaultToken,
+      paymentInSelectedToken,
+      totalFundedAssets,
+      paymentTokenAddress,
+    };
+  }
 
   handleSelectChange = (value, name) => {
     this.setState(
@@ -294,23 +307,27 @@ class ListAssetPage extends React.Component {
       loadingConversionInfo,
     } = this.state;
 
+
     const {
       managementFee,
       collateralInPlatformToken,
       assetValue,
       fileList,
       selectedToken,
-      collateralInDefaultToken,
-      paymentInSelectedToken,
       asset,
       category,
       userCity,
       userCountry,
     } = this.state.data;
 
+    const { paymentInDefaultToken, paymentInSelectedToken } = (this.props.kyberLoading && {}) || this.calculateCollateral();
+    const formData = { ...data, paymentInDefaultToken, paymentInSelectedToken };
+
     const tokenWithSufficientBalance = paymentInSelectedToken > 0
-      ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken + LISTING_FEE_IN_DEFAULT_TOKEN)
+      ? getTokenWithSufficientBalance(user.balances, paymentInDefaultToken)
       : undefined;
+
+    console.log(tokenWithSufficientBalance, paymentInSelectedToken, selectedToken);
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
       dev,
@@ -342,7 +359,7 @@ class ListAssetPage extends React.Component {
       goToNextStep: this.goToNextStep,
       goToStep: this.goToStep,
       countries: COUNTRIES,
-      formData: data,
+      formData,
       balances: user.balances,
       shouldShowToSCheckmark: this.readTermsOfService,
       airtableContext: this.props.airtableContext,
