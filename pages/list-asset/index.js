@@ -177,7 +177,12 @@ class ListAssetPage extends React.Component {
     const paymentInSelectedToken = convertFromDefaultToken(
       selectedToken || DEFAULT_TOKEN,
       supportedTokensInfo,
-      paymentInDefaultToken,
+      LISTING_FEE_IN_DEFAULT_TOKEN,
+    ) + convertFromPlatformToken(
+      selectedToken || DEFAULT_TOKEN,
+      supportedTokensInfo,
+      collateralInPlatformToken,
+      network,
     );
 
     // const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
@@ -320,8 +325,10 @@ class ListAssetPage extends React.Component {
       userCountry,
     } = this.state.data;
 
-    const { paymentInDefaultToken, paymentInSelectedToken } = (this.props.kyberLoading && {}) || this.calculateCollateral();
-    const formData = { ...data, paymentInDefaultToken, paymentInSelectedToken };
+    const { paymentInDefaultToken, paymentInSelectedToken, paymentTokenAddress } = (this.props.kyberLoading && {}) || this.calculateCollateral();
+    const formData = {
+      ...data, paymentInDefaultToken, paymentInSelectedToken, paymentTokenAddress,
+    };
 
     const tokenWithSufficientBalance = paymentInSelectedToken > 0
       ? getTokenWithSufficientBalance(user.balances, paymentInDefaultToken)
