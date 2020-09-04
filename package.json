@@ -11,7 +11,7 @@
     "@mybit/network.js": "0.0.51",
     "@zeit/next-bundle-analyzer": "0.1.2",
     "@zeit/next-css": "1.0.1",
-    "airtable": "0.5.8",
+    "airtable": "0.7.2",
     "antd": "3.13.6",
     "aws-sdk": "2.366.0",
     "axios": "0.19.0",
