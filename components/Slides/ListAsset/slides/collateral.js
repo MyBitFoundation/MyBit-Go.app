@@ -152,15 +152,13 @@ export const CollateralSlide = ({
 }) => {
   const {
     collateralInPlatformToken,
-    collateralInDefaultToken,
+    paymentInDefaultToken,
     paymentInSelectedToken,
   } = formData;
   const { network } = useMetamaskContext();
 
   const noBalance = !balances || Object.keys(balances).length === 0;
   const decimalsOfSelectedTokens = getDecimalsForToken(selectedToken);
-  const decimalsOfPlatformToken = getDecimalsForToken(getPlatformToken(network));
-  const collateralSelectedTokenFormatted = formatValueForToken(paymentInSelectedToken, selectedToken);
 
   let buttonText = 'Next';
   if (loadingBalancesForNewUser) {
@@ -248,7 +246,7 @@ export const CollateralSlide = ({
                 label={(
                   <TokenSelector
                     balances={balances}
-                    amountToPay={collateralInDefaultToken}
+                    amountToPay={paymentInDefaultToken}
                     onChange={handleSelectedTokenChange}
                     loading={loadingBalancesForNewUser}
                     selectedToken={selectedToken}
