@@ -27,7 +27,7 @@ import TokenSelectorValue from './tokenSelectorValue';
 const separatorStyle = {
   position: 'relative',
   top: '5px',
-}
+};
 
 const MenuWrapper = styled(Menu)`
   min-height: 268px;
@@ -35,15 +35,15 @@ const MenuWrapper = styled(Menu)`
   width: 284px;
   overflow-y: auto;
   overflow-x: hidden;
-`
+`;
 
 class TokenSelector extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       selectedToken: DEFAULT_TOKEN,
       hoveringToken: null,
-    }
+    };
     this.searchInput = React.createRef();
   }
 
@@ -56,32 +56,32 @@ class TokenSelector extends React.Component {
       balances,
       amountToPay,
       loading,
-    } = this.props
+    } = this.props;
     // refresh info when MetamaskContext signals it finished loading new balances
-    if(loading === true && nextProps.loading === false){
+    if (loading === true && nextProps.loading === false) {
       this.processBalances(nextProps, true);
-    } else if(nextProps.balances && nextProps.balances != balances || nextProps.amountToPay !== amountToPay){
+    } else if (nextProps.balances && nextProps.balances != balances || nextProps.amountToPay !== amountToPay) {
       // Due to the async nature of the app, the balances object may be empty initially,
       // in which case we want to call onChange
-      if(Object.keys(nextProps.balances).length > 0 && (!balances || Object.keys(balances).length === 0)){
+      if (Object.keys(nextProps.balances).length > 0 && (!balances || Object.keys(balances).length === 0)) {
         this.processBalances(nextProps, true);
       } else {
         this.processBalances(nextProps, false);
       }
-    } else if(balances && !nextProps.balances){
+    } else if (balances && !nextProps.balances) {
       this.processBalances(nextProps, true);
     }
   }
 
   onHover = (hoveringToken) => {
-    if(hoveringToken !== this.state.hoveringToken){
-      this.setState({hoveringToken})
+    if (hoveringToken !== this.state.hoveringToken) {
+      this.setState({ hoveringToken });
     }
   }
 
   onMouseOut = () => {
-    if(this.state.hoveringToken){
-      this.setState({hoveringToken: undefined})
+    if (this.state.hoveringToken) {
+      this.setState({ hoveringToken: undefined });
     }
   }
 
@@ -98,10 +98,10 @@ class TokenSelector extends React.Component {
     const totalTokens = tokensEnum.length;
     const sortedBalances = this.getSortedBalances(tokensEnum, amountToPay);
 
-    if(totalTokens === 0 || !sortedBalances[0].enoughFunds){
+    if (totalTokens === 0 || !sortedBalances[0].enoughFunds) {
       selectedToken = DEFAULT_TOKEN;
     } else {
-      selectedToken = balances[manuallySelectedToken] ? manuallySelectedToken : sortedBalances[0].symbol;
+      selectedToken = balances[manuallySelectedToken].enoughFunds ? manuallySelectedToken : sortedBalances[0].symbol;
     }
 
     this.setState({
@@ -110,9 +110,10 @@ class TokenSelector extends React.Component {
       tokensEnum,
       sortedBalances,
       sortedBalancesBackup: sortedBalances,
-    })
+    });
 
-    if((manuallySelectedToken !== selectedToken) || callOnChange) {
+    if ((manuallySelectedToken !== selectedToken) || callOnChange) {
+      this.setState({ selectedToken });
       onChange(selectedToken);
     }
   }
@@ -124,18 +125,18 @@ class TokenSelector extends React.Component {
     } = this.state;
 
     const searchValue = e.target.value;
-    if(searchValue.trim() === ''){
+    if (searchValue.trim() === '') {
       this.setState({
         sortedBalances: sortedBalancesBackup,
         searchValue,
-      })
+      });
       return;
     }
-    const matches = sortedBalancesBackup.filter(balance => balance.symbol.includes(searchValue.toUpperCase()))
+    const matches = sortedBalancesBackup.filter(balance => balance.symbol.includes(searchValue.toUpperCase()));
     this.setState({
       sortedBalances: matches,
       searchValue,
-    })
+    });
   }
 
   getTokenToConvertFrom = () => {
@@ -158,7 +159,7 @@ class TokenSelector extends React.Component {
         symbol,
         balance,
         balanceInDai,
-      }
+      };
     });
 
     balancesToReturn.sort((a, b) => b.balanceInDai - a.balanceInDai);
@@ -191,7 +192,7 @@ class TokenSelector extends React.Component {
                 <span>{formatMonetaryValue(amountToPay)}</span>
               </div>
             </TokenSelectorAmount>
-            <Separator style={separatorStyle}/>
+            <Separator style={separatorStyle} />
           </div>
           {(balances.length === 0 && sortedBalancesBackup.length > 0) && (
             <TokenSelectorNoResults>
@@ -201,46 +202,46 @@ class TokenSelector extends React.Component {
             </TokenSelectorNoResults>
           )}
         </TokenSelectorSearchWrapper>
-      {balances.map((value, index) => {
-        const {
-          balance,
-          balanceInDai,
-          enoughFunds,
-          symbol,
-        } = value;
-        return (
-          <Menu.Item
-            key={symbol}
-            onClick={() => this.handleItemClicked(symbol)}
-            disabled={!enoughFunds}
-            onMouseOver={!enoughFunds ? this.onHover.bind(this, symbol) : undefined}
-            onMouseOut={!enoughFunds ? this.onMouseOut.bind(this, symbol) : undefined}
-          >
-            <TokenBalanceItem
-              name={symbol}
-              balance={formatMonetaryValue(balance, symbol, false)}
-              balanceInDai={formatMonetaryValue(balanceInDai)}
-              enoughFunds={enoughFunds}
-              hovering={hoveringToken === symbol}
-              tokenToConvertFrom={tokenToConvertFrom}
-            />
-            {(index !== totalTokens - 1) && <Separator style={separatorStyle}/>}
-          </Menu.Item>
-        )}
-      )}
+        {balances.map((value, index) => {
+          const {
+            balance,
+            balanceInDai,
+            enoughFunds,
+            symbol,
+          } = value;
+          return (
+            <Menu.Item
+              key={symbol}
+              onClick={() => this.handleItemClicked(symbol)}
+              disabled={!enoughFunds}
+              onMouseOver={!enoughFunds ? this.onHover.bind(this, symbol) : undefined}
+              onMouseOut={!enoughFunds ? this.onMouseOut.bind(this, symbol) : undefined}
+            >
+              <TokenBalanceItem
+                name={symbol}
+                balance={formatMonetaryValue(balance, symbol, false)}
+                balanceInDai={formatMonetaryValue(balanceInDai)}
+                enoughFunds={enoughFunds}
+                hovering={hoveringToken === symbol}
+                tokenToConvertFrom={tokenToConvertFrom}
+              />
+              {(index !== totalTokens - 1) && <Separator style={separatorStyle} />}
+            </Menu.Item>
+          );
+        })}
       </MenuWrapper>
-    )
+    );
   }
 
   handleItemClicked = (selectedToken) => {
     this.setState({
       selectedToken,
       visible: false,
-    })
-    this.props.onChange(selectedToken)
+    });
+    this.props.onChange(selectedToken);
   }
 
-  render(){
+  render() {
     const {
       selectedToken,
       tokensEnum,
@@ -263,13 +264,13 @@ class TokenSelector extends React.Component {
         placement="topRight"
         disabled={totalTokens === 0}
         visible={visible}
-        onVisibleChange={visible => this.setState({visible})}
+        onVisibleChange={visible => this.setState({ visible })}
       >
         <Button>
           {selectedToken} <Icon type="down" />
         </Button>
       </Dropdown>
-    )
+    );
   }
 }
 
