@@ -101,7 +101,7 @@ class TokenSelector extends React.Component {
     if (totalTokens === 0 || !sortedBalances[0].enoughFunds) {
       selectedToken = DEFAULT_TOKEN;
     } else {
-      selectedToken = balances[manuallySelectedToken].enoughFunds ? manuallySelectedToken : sortedBalances[0].symbol;
+      selectedToken = balances[manuallySelectedToken]?.enoughFunds ? manuallySelectedToken : sortedBalances[0].symbol;
     }
 
     this.setState({
