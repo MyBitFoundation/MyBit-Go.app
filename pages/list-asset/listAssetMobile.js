@@ -58,7 +58,13 @@ const ListAssetMobile = ({
     about,
     financials,
     risks,
+    paymentInSelectedToken,
+    collateralInPlatformToken,
+    minimumCollateralInPlatformToken,
   } = formData;
+
+  const isSelectedBalanceEnough = () => balances?.[selectedToken]?.balance >= paymentInSelectedToken
+    && collateralInPlatformToken >= minimumCollateralInPlatformToken;
 
   return (
     <CarouselWithNavigation
@@ -165,7 +171,8 @@ const ListAssetMobile = ({
         buttons: {
           hasNextButton: true,
           hasBackButton: true,
-          nextButtonDisabled: managementFee === 0,
+          nextButtonDisabled: !isSelectedBalanceEnough(),
+          nextButtonDisabledText: 'Insufficient balance',
         },
       },
       !readToS
