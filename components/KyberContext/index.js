@@ -83,6 +83,7 @@ export const getExpectedAndSlippage = async (src, dest, amount) => {
       expectedRate,
       slippageRate,
     } = result;
+    console.log(result, amount, 'kyber result');
 
     if (expectedRate !== '0') {
       expectedRate = fromWeiToEth(expectedRate);
@@ -91,6 +92,7 @@ export const getExpectedAndSlippage = async (src, dest, amount) => {
       return {
         expectedRate,
         slippageRate,
+        amount,
       };
     }
   } catch (e) {
@@ -134,7 +136,7 @@ class KyberProvider extends React.Component {
     }
   }
 
-  fetchSupportedTokens = async (network) => {
+  fetchSupportedTokens = async (network, amount) => {
     try {
       const {
         userHasMetamask,
@@ -151,7 +153,7 @@ class KyberProvider extends React.Component {
         const DEFAULT_TOKEN_CONTRACT = getDefaultTokenContract(network);
         const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
 
-        const amountToConvert = toWei(DEFAULT_QUANTITY);
+        const amountToConvert = toWei(amount || DEFAULT_QUANTITY);
         await Promise.all(supportedTokensData.data.map(async ({
           symbol,
           address: contractAddress,
@@ -199,11 +201,14 @@ class KyberProvider extends React.Component {
 
       this.setState({
         supportedTokensInfo,
-        loading: false,
         network,
       });
     } catch (err) {
       debug('kyberContext error: ', err);
+    } finally {
+      this.setState({
+        loading: false,
+      });
     }
   }
 
