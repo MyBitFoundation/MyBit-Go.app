@@ -68,14 +68,14 @@ export const CoverPictureSlide = ({
         maxWidthDesktop={maxWidthDesktop}
       >
         <React.Fragment>
-          Supporting docs
+          Cover Picture
         </React.Fragment>
       </CarouselSlideMainTitle>
       <CarouselSlideParagraph
         isCentered
         maxWidthDesktop={maxWidthDesktop}
       >
-        Upload a clear cover picture reperesenting the asset. You can upload an image up to 2MB.
+        Upload a clear cover picture reperesenting the asset.
       </CarouselSlideParagraph>
       <Upload.Dragger
         {...props}
