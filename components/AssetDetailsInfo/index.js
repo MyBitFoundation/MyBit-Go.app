@@ -15,7 +15,7 @@ const FilesToRender = withAssetsContext(({
   assetId,
   assetsContext,
 }) => {
-  if(!files || files.length === 0){
+  if (!files || files.length === 0) {
     return <span>None</span>;
   }
   const { usingAirtable } = assetsContext;
@@ -23,24 +23,22 @@ const FilesToRender = withAssetsContext(({
     <a
       target="_blank"
       rel="noopener noreferrer"
-      href={usingAirtable ? `${InternalLinks.S3}${assetId}:${file.name}` : `https://cloudflare-ipfs.com/ipfs/${file.hash}`}
-      key={file.hash}
-      style={{display: "block"}}
+      href={usingAirtable ? file.url : `https://cloudflare-ipfs.com/ipfs/${file.hash}`}
+      key={file.id}
+      style={{ display: 'block' }}
     >
-      {file.name}
+      {file.filename}
     </a>
-  ))
-})
+  ));
+});
 
-const newLineToParagraphs = text => {
-  try{
-    return text.split('\n').map((item, i) => {
-      return <p key={i}>{item}</p>;
-    });
-  }catch {
+const newLineToParagraphs = (text) => {
+  try {
+    return text.split('\n').map((item, i) => <p key={i}>{item}</p>);
+  } catch {
     return '';
   }
-}
+};
 
 const AssetDetailsInfo = ({
   name,
@@ -63,19 +61,21 @@ const AssetDetailsInfo = ({
       <AssetDetailsInfoName>
         {name}
       </AssetDetailsInfoName>
-      <AssetDetailsInfoLocationIcon
-      />
+      <AssetDetailsInfoLocationIcon />
       <AssetDetailsInfoLocation>
-        {country}, {city}
+        {country}
+,
+        {' '}
+        {city}
       </AssetDetailsInfoLocation>
       <AssetDetailsInfoImage
         background={imageSrc}
       >
-      <Watch
-        active={watchListed}
-        handleClick={handleAssetFavorited}
-        assetId={assetId}
-      />
+        <Watch
+          active={watchListed}
+          handleClick={handleAssetFavorited}
+          assetId={assetId}
+        />
       </AssetDetailsInfoImage>
 
       <AssetDetailsInfoTitle>
@@ -109,9 +109,9 @@ const AssetDetailsInfo = ({
       <AssetDetailsInfoTitle>
         Supporting documents
       </AssetDetailsInfoTitle>
-      <FilesToRender files={files} assetId={assetId}/>
+      <FilesToRender files={files} assetId={assetId} />
     </Panel>
   </AssetDetailsInfoWrapper>
-)
+);
 
 export default React.memo(AssetDetailsInfo);

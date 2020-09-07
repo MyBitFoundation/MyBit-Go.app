@@ -41,7 +41,7 @@ const separatorStyleFullWidth = {
   position: 'absolute',
   left: '0px',
   marginTop: '10px',
-}
+};
 
 const separatorStyle = {
   marginTop: '15px',
@@ -55,7 +55,7 @@ const StyledSlippageValue = styled.span`
   ${props => props.value >= 10 && css`
     color: #FF0000;
   `}
-`
+`;
 
 const AssetFundingConfirm = ({
   metamaskContext,
@@ -85,7 +85,7 @@ const AssetFundingConfirm = ({
   const {
     balances,
     address: userAddress,
-   } = user;
+  } = user;
 
   // total the user pays (contribution + platform fee + transaction fee)
   const totalToPayInDefaultToken = amountToPayDefaultToken + gasInDefaultToken;
@@ -104,9 +104,9 @@ const AssetFundingConfirm = ({
     selectedAmountDefaultToken,
     balances,
     fundAsset,
-    !kyberLoading && supportedTokensInfo[selectedToken].contractAddress,
+    !kyberLoading && supportedTokensInfo[selectedToken]?.contractAddress,
     selectedToken,
-    kyberLoading
+    kyberLoading,
   );
 
   const slippage = tokenSlippagePercentages && tokenSlippagePercentages[selectedToken];
@@ -128,10 +128,10 @@ const AssetFundingConfirm = ({
     >
       {buttonProps.text}
     </AssetFundingButton>
-  )
+  );
 
-  let footerMessage = messageProps ?
-    !messageProps.href ? (
+  const footerMessage = messageProps
+    ? !messageProps.href ? (
       <AssetFundingConfirmFooterMessage>
         {messageProps.text}
       </AssetFundingConfirmFooterMessage>
@@ -145,13 +145,13 @@ const AssetFundingConfirm = ({
       </AssetFundingConfirmFooterMessageUrl>
     ) : null;
 
-  return  (
+  return (
     <React.Fragment>
       <AssetFundingTitle
         text={`You will own ${selectedOwnership}% of the asset`}
         onClick={onCancel}
       />
-      <Separator style={separatorStyleFullWidth}/>
+      <Separator style={separatorStyleFullWidth} />
       <AssetFundingConfirmListWrapper>
         <Item
           title="Contribution"
@@ -159,14 +159,14 @@ const AssetFundingConfirm = ({
           secondValue={formatMonetaryValue(amountInSelectedToken, selectedToken)}
           loading={loadingConversionInfo || !selectedToken}
         />
-        <Separator style={separatorStyle}/>
+        <Separator style={separatorStyle} />
         <Item
           title={`MyBit Foundation Fee (${MYBIT_FOUNDATION_FEE * 100}%)`}
           firstValue={formatMonetaryValue(mybitPlatformFeeDefaultToken)}
           secondValue={formatMonetaryValue(mybitPlatformFeeSelectedToken, selectedToken)}
           loading={loadingConversionInfo || !selectedToken}
         />
-        <Separator style={separatorStyle}/>
+        <Separator style={separatorStyle} />
         <Item
           title="Gas Fee"
           firstValue={formatMonetaryValue(gasInDefaultToken)}
@@ -175,9 +175,9 @@ const AssetFundingConfirm = ({
         />
         {slippage > 0 && (
           <React.Fragment>
-            <Separator style={separatorStyle}/>
+            <Separator style={separatorStyle} />
             <Item
-              title={
+              title={(
                 <LabelWithTooltip
                   title="Slippage rate"
                   tooltipText="Slippage is a necessary part of automated trading reserves.
@@ -185,22 +185,24 @@ const AssetFundingConfirm = ({
                     so does the price."
                   isDark
                 />
-              }
-              firstValue={
+)}
+              firstValue={(
                 <StyledSlippageValue
                   value={tokenSlippagePercentages[selectedToken]}
                 >
-                  {tokenSlippagePercentages[selectedToken]}%
+                  {tokenSlippagePercentages[selectedToken]}
+%
                 </StyledSlippageValue>
-              }
+)}
             />
           </React.Fragment>
         )}
-        <Separator style={separatorStyle}/>
+        <Separator style={separatorStyle} />
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
-        }}>
+        }}
+        >
           <AssetFundingConfirmTotalLabel>
             Total to pay:
           </AssetFundingConfirmTotalLabel>
@@ -223,18 +225,20 @@ const AssetFundingConfirm = ({
             loading={loadingBalancesForNewUser}
           />
         </AssetFundingConfirmDropdownButton>
-        <Separator style={separatorStyleFullWidth}/>
+        <Separator style={separatorStyleFullWidth} />
         <AssetFundingFooter>
-          {readToS && <TermsAndConditions
+          {readToS && (
+          <TermsAndConditions
             checked={acceptedToS}
             onChange={event => setAcceptedToS(event.target.checked)}
-          />}
+          />
+          )}
           {footerButton}
           {footerMessage}
         </AssetFundingFooter>
       </AssetFundingConfirmListWrapper>
     </React.Fragment>
-  )
-}
+  );
+};
 
 export default AssetFundingConfirm;

@@ -1,14 +1,25 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import { Input } from 'antd';
+
 const { TextArea } = Input;
 
 const Label = styled.span`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: ${({theme}) => theme.colors.grayBase};
-`
+  color: ${({ theme }) => theme.colors.grayBase};
+
+  ${props => props.required && `&::after {
+    display: inline-block;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+  }
+  `}
+`;
 
 const TextAreaWithLabel = ({
   label,
@@ -17,13 +28,13 @@ const TextAreaWithLabel = ({
   placeholder,
   textAreaName,
   rows,
-}) => {
-  return (
-    <React.Fragment>
-      <Label>{label}</Label>
-      <TextArea rows={rows} placeholder={placeholder} name={textAreaName} onChange={onChange} value={value}/>
-    </React.Fragment>
-  )
-}
+  required, // only for displaying purpose (*)
+  ...otherProps
+}) => (
+  <React.Fragment>
+    <Label required={required}>{label}</Label>
+    <TextArea rows={rows} placeholder={placeholder} name={textAreaName} onChange={onChange} value={value} {...otherProps} />
+  </React.Fragment>
+);
 
 export default TextAreaWithLabel;

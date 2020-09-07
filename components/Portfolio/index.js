@@ -24,19 +24,19 @@ import PortfolioPageNavButtons from './portfolioPageNavButtons';
 import PortfolioPageExplore from './portfolioPageExplore';
 import Loading from 'components/Loading';
 import ErrorPage from 'components/ErrorPage';
+import Pagination from 'components/AssetDisplayer/pagination';
 
 const ButtonGroup = Button.Group;
 const assetsPerPage = 6;
-import Pagination from 'components/AssetDisplayer/pagination';
 
-class PortfolioPage extends React.Component{
+class PortfolioPage extends React.Component {
   state = {
     currentPage: 0,
   }
 
-  componentWillReceiveProps = nextProps => {
-    if(nextProps.type !== this.props.type){
-      this.setState({currentPage: 0})
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.type !== this.props.type) {
+      this.setState({ currentPage: 0 });
     }
   }
 
@@ -55,7 +55,7 @@ class PortfolioPage extends React.Component{
       currentPage,
     } = this.state;
 
-    if(loading){
+    if (loading) {
       return <Loading message="Loading Portfolio" />;
     }
 
@@ -75,15 +75,11 @@ class PortfolioPage extends React.Component{
 
     const currentView = type;
 
-    const assetsToRender = currentView === PortfolioTypes.INVESTMENTS ?
-      assets.filter(assetFinantialDetails =>
-        assetFinantialDetails.investmentDetails || false
-      ) : assets.filter(assetFinantialDetails =>
-        assetFinantialDetails.managerDetails || false
-      )
+    const assetsToRender = currentView === PortfolioTypes.INVESTMENTS
+      ? assets.filter(assetFinantialDetails => assetFinantialDetails.investmentDetails || false) : assets.filter(assetFinantialDetails => assetFinantialDetails.managerDetails || false);
 
     let AssetToRender = PortfolioAsset;
-    if(currentView === PortfolioTypes.MANAGED_ASSETS){
+    if (currentView === PortfolioTypes.MANAGED_ASSETS) {
       AssetToRender = ManagedAsset;
     }
 
@@ -93,17 +89,19 @@ class PortfolioPage extends React.Component{
     const assetsToDisplay = assetsToRender.slice(startIndex, endIndex);
 
     const error = assetsToRender.length === 0 && (
-       <ErrorPage
-          title="Empty Portfolio"
-          description={currentView === PortfolioTypes.MANAGED_ASSETS
-              ? <span>You don't manage any assets yet. Click{' '}
-                  <Link href="/list-asset">
+    <ErrorPage
+      title="Empty Portfolio"
+      description={currentView === PortfolioTypes.MANAGED_ASSETS
+        ? (
+          <span>You don't manage any assets yet. Click{' '}
+            <Link href="/list-asset">
                     here
-                  </Link>{' '}to list an asset.
-                </span>
-              : `You haven't invested in any assets yet.`}
-        />
-    )
+            </Link>{' '}to list an asset.
+          </span>
+        )
+        : 'You haven\'t invested in any assets yet.'}
+    />
+    );
 
     return (
       <div>
@@ -112,10 +110,14 @@ class PortfolioPage extends React.Component{
         >
           <PortfolioPageNavButtons>
             <ButtonGroup size="large">
-              <Button onClick={() => Router.push(`/portfolio?type=${PortfolioTypes.INVESTMENTS}`, `/portfolio/${PortfolioTypes.INVESTMENTS}`)}
-                type={currentView === PortfolioTypes.INVESTMENTS ? 'primary' : 'secondary'}>Investments</Button>
-              <Button onClick={() => Router.push(`/portfolio?type=${PortfolioTypes.MANAGED_ASSETS}`, `/portfolio/${PortfolioTypes.MANAGED_ASSETS}`)}
-                type={currentView === PortfolioTypes.MANAGED_ASSETS ? "primary" : "secondary"}>Managed assets</Button>
+              <Button
+                onClick={() => Router.push(`/portfolio?type=${PortfolioTypes.INVESTMENTS}`, `/portfolio/${PortfolioTypes.INVESTMENTS}`)}
+                type={currentView === PortfolioTypes.INVESTMENTS ? 'primary' : 'secondary'}
+              >Investments</Button>
+              <Button
+                onClick={() => Router.push(`/portfolio?type=${PortfolioTypes.MANAGED_ASSETS}`, `/portfolio/${PortfolioTypes.MANAGED_ASSETS}`)}
+                type={currentView === PortfolioTypes.MANAGED_ASSETS ? 'primary' : 'secondary'}
+              >Managed assets</Button>
             </ButtonGroup>
           </PortfolioPageNavButtons>
           <ValueDisplay
@@ -155,27 +157,27 @@ class PortfolioPage extends React.Component{
         </PortfolioPageValueDisplays>
         {assetsToDisplay.length > 0 && (
           <React.Fragment>
-          <PortfolioPageExplore>
-            {assetsToDisplay.map(asset =>
-              <AssetToRender
-                {...asset.managerDetails}
-                {...asset.investmentDetails}
-                key={asset.assetId}
-                withdrawInvestorProfit={withdrawInvestorProfit}
-                withdrawing={withdrawingAssetIds.includes(asset.assetId)}
-                callingPayout={callingPayout.includes(asset.assetId)}
-                payoutAsset={payoutAsset}
-              />
-            )}
-          </PortfolioPageExplore>
-          <Pagination
-            onChange={newPage => this.setState({ currentPage: newPage - 1 })}
-            total={assetsToRender.length}
-            current={currentPage + 1}
-            pageSize={assetsPerPage}
-            defaultCurrent={1}
-          />
-         </React.Fragment>
+            <PortfolioPageExplore>
+              {assetsToDisplay.map(asset => (
+                <AssetToRender
+                  {...asset.managerDetails}
+                  {...asset.investmentDetails}
+                  key={asset.assetId}
+                  withdrawInvestorProfit={withdrawInvestorProfit}
+                  withdrawing={withdrawingAssetIds.includes(asset.assetId)}
+                  callingPayout={callingPayout.includes(asset.assetId)}
+                  payoutAsset={payoutAsset}
+                />
+              ))}
+            </PortfolioPageExplore>
+            <Pagination
+              onChange={newPage => this.setState({ currentPage: newPage - 1 })}
+              total={assetsToRender.length}
+              current={currentPage + 1}
+              pageSize={assetsPerPage}
+              defaultCurrent={1}
+            />
+          </React.Fragment>
         )}
         {error && error}
       </div>

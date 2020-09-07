@@ -6,7 +6,7 @@ import SupportedBrowsers from 'ui/SupportedBrowsers';
 import getTokenWithSufficientBalance from 'constants/getTokenWithSufficientBalance';
 
 const getMetamaskErrors = (metamaskError, extensionUrl) => {
-  switch(metamaskError){
+  switch (metamaskError) {
     case METAMASK_ERRORS.NO_METAMASK:
       return {
         buttonProps: {
@@ -22,7 +22,7 @@ const getMetamaskErrors = (metamaskError, extensionUrl) => {
       return {
         buttonProps: {
           text: 'Connect MetaMask',
-          onClick: window.ethereum.enable,
+          onClick: async () => await window.ethereum.enable(),
         },
       };
     case METAMASK_ERRORS.NOT_SUPPORTED:
@@ -48,7 +48,7 @@ const getMetamaskErrors = (metamaskError, extensionUrl) => {
       return {
         buttonProps: {
           text: 'Connect MetaMask',
-          onClick: window.ethereum.enable,
+          onClick: async () => await window.ethereum.enable(),
         },
       };
     case METAMASK_ERRORS.NOT_NETWORK:
@@ -60,7 +60,7 @@ const getMetamaskErrors = (metamaskError, extensionUrl) => {
         messageProps: {
           text: `Select one of the supported networks in MetaMask: ${
             SUPPORTED_NETWORKS.map((network, index) => index === SUPPORTED_NETWORKS.length - 1 ? network : `${network}, `)
-          }`,
+            }`,
         }
       };
   }
@@ -68,15 +68,15 @@ const getMetamaskErrors = (metamaskError, extensionUrl) => {
 
 const getBalancesError = () => {
   return {
-      buttonProps: {
-        text: 'Insufficient Funds',
-        error: true,
-      },
-      messageProps: {
-        text: 'A bank is worth stealing if the plan is right.',
-      }
-    };
-  }
+    buttonProps: {
+      text: 'Insufficient Funds',
+      error: true,
+    },
+    messageProps: {
+      text: 'A bank is worth stealing if the plan is right.',
+    }
+  };
+}
 
 export const getFooter = (
   metamaskError,
@@ -89,7 +89,7 @@ export const getFooter = (
   paymentTokenSymbol,
   kyberLoading
 ) => {
-  if(kyberLoading){
+  if (kyberLoading) {
     return {
       buttonProps: {
         text: 'Loading data from Kyber',
@@ -97,11 +97,11 @@ export const getFooter = (
       }
     };
   }
-  if(metamaskError){
-     return getMetamaskErrors(metamaskError, extensionUrl);
+  if (metamaskError) {
+    return getMetamaskErrors(metamaskError, extensionUrl);
   }
   const tokenWithSufficientBalance = getTokenWithSufficientBalance(balances, amountContributed);
-  if(!tokenWithSufficientBalance){
+  if (!tokenWithSufficientBalance) {
     return getBalancesError();
   } else {
     return {

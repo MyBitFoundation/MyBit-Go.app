@@ -45,17 +45,21 @@ const AssetPortfolioInvestment = ({
     <AssetPortfolioInvestmentWrapper>
       <AssetPortfolioInvestmentSection>
         <span>Unrealised profit:</span>
-        {!funded ?
-          <AssetPortfolioInvestmentValue
-            isGray
-          >
+        {!funded
+          ? (
+            <AssetPortfolioInvestmentValue
+              isGray
+            >
             Funding in progress
-          </AssetPortfolioInvestmentValue> :
-          <AssetPortfolioInvestmentValue
-            isGreen={unrealizedProfit > 0}
-          >
-            {formatMonetaryValue(unrealizedProfit)}
-          </AssetPortfolioInvestmentValue>}
+            </AssetPortfolioInvestmentValue>
+          )
+          : (
+            <AssetPortfolioInvestmentValue
+              isGreen={unrealizedProfit > 0}
+            >
+              {formatMonetaryValue(unrealizedProfit)}
+            </AssetPortfolioInvestmentValue>
+          )}
       </AssetPortfolioInvestmentSection>
       {funded && (
         <AssetPortfolioInvestmentSection>
@@ -63,7 +67,7 @@ const AssetPortfolioInvestment = ({
           <div>
             <AssetPortfolioInvestmentValue>
               {formatMonetaryValue(totalProfit)}
-              </AssetPortfolioInvestmentValue>
+            </AssetPortfolioInvestmentValue>
           </div>
         </AssetPortfolioInvestmentSection>
       )}
@@ -74,7 +78,8 @@ const AssetPortfolioInvestment = ({
         <span>Your ownership:</span>
         <div>
           <AssetPortfolioInvestmentValue>
-            {parseFloat((ownership * 100).toFixed(2))}%
+            {parseFloat(((ownership || 0) * 100).toFixed(2))}
+%
           </AssetPortfolioInvestmentValue>
         </div>
       </AssetPortfolioInvestmentSection>
@@ -82,33 +87,34 @@ const AssetPortfolioInvestment = ({
         hasNoMarginBottom
       >
         <div>
-        {funded ? (
-          <AssetPortfolioManagedContribution>
-            <AssetPortfolioInvestmentFundingLabel>
+          {funded ? (
+            <AssetPortfolioManagedContribution>
+              <AssetPortfolioInvestmentFundingLabel>
               Your contribution:
-            </AssetPortfolioInvestmentFundingLabel>
-            <AssetPortfolioInvestmentValue>
-              {formatMonetaryValue(userInvestment)}
-            </AssetPortfolioInvestmentValue>
-            </AssetPortfolioManagedContribution>
-        ) : (
-          <React.Fragment>
-            <AssetPortfolioInvestmentFundingLabel>
-              Funding:
-            </AssetPortfolioInvestmentFundingLabel>
-            <span>
-              {formatMonetaryValue(fundingProgress)}/
+              </AssetPortfolioInvestmentFundingLabel>
               <AssetPortfolioInvestmentValue>
-                {formatMonetaryValue(fundingGoal)}
+                {formatMonetaryValue(userInvestment)}
               </AssetPortfolioInvestmentValue>
-            </span>
-          </React.Fragment>
-        )}
+            </AssetPortfolioManagedContribution>
+          ) : (
+            <React.Fragment>
+              <AssetPortfolioInvestmentFundingLabel>
+              Funding:
+              </AssetPortfolioInvestmentFundingLabel>
+              <span>
+                {formatMonetaryValue(fundingProgress)}
+/
+                <AssetPortfolioInvestmentValue>
+                  {formatMonetaryValue(fundingGoal)}
+                </AssetPortfolioInvestmentValue>
+              </span>
+            </React.Fragment>
+          )}
         </div>
         {withdrawButton}
       </AssetPortfolioInvestmentSection>
     </AssetPortfolioInvestmentWrapper>
-  )
+  );
 };
 
 export default React.memo(AssetPortfolioInvestment);

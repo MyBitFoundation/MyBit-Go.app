@@ -1,15 +1,10 @@
-import Router from "next/router";
+import Router from 'next/router';
 import Media from 'react-media';
 import BN from 'bignumber.js';
-import { compose } from 'recompose'
-import {
-  Button,
-  Tooltip,
-  Carousel,
-} from "antd";
+import { compose } from 'recompose';
+import { Button, Tooltip, Carousel } from 'antd';
 import getConfig from 'next/config';
 import Cookie from 'js-cookie';
-import Geocode from "react-geocode";
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import { withBlockchainContext } from 'components/BlockchainContext';
 import { withKyberContext } from 'components/KyberContext';
@@ -22,28 +17,25 @@ import {
   COUNTRIES,
   MAX_FILES_UPLOAD,
   MAX_FILE_SIZE,
-  PLATFORM_TOKEN,
+  getPlatformToken,
   DEFAULT_TOKEN,
   getPlatformTokenContract,
+  LISTING_FEE_IN_DEFAULT_TOKEN,
+  MINIMUM_COLLATERAL_IN_DEFAULT_TOKEN,
 } from 'constants/app';
-import { COOKIES } from 'constants/cookies';
-import calculateCollateral from 'constants/calculateCollateral';
+import { COOKIES } from 'constants/cookies';
 import {
   convertFromPlatformToken,
   convertFromDefaultToken,
   convertFromTokenToDefault,
   formatValueForToken,
 } from 'utils/helpers';
-import {
-  processLocationData,
-} from 'utils/locationData';
+import { processLocationData } from 'utils/locationData';
 import getCountry from 'utils/countryCodes';
 import { calculateSlippage } from 'constants/calculateSlippage';
-import {
-  FIAT_TO_CRYPTO_CONVERSION_FEE,
-} from 'constants/platformFees';
+import { FIAT_TO_CRYPTO_CONVERSION_FEE } from 'constants/platformFees';
+
 const dev = process.env.NODE_ENV === 'development';
-const { publicRuntimeConfig } = getConfig();
 BN.config({ EXPONENTIAL_AT: 80 });
 
 class ListAssetPage extends React.Component {
@@ -52,14 +44,14 @@ class ListAssetPage extends React.Component {
     this.state = {
       data: {
         fileList: [],
+        coverPicture: null,
         managementFee: 0,
-        collateralPercentage: 0,
         collateralInPlatformToken: 0,
-        collateralInDefaultToken: 0,
-        collateralInSelectedToken: 0,
         partnerContractAddress: '',
-        hasAdditionalCosts: false,
-        additionalCosts: 0,
+        assetValue: '',
+        escrow: 0,
+        asset: '', // asset name
+        cryptoPurchase: true,
       },
       isUserListingAsset: false,
       listedAssetId: undefined,
@@ -76,259 +68,219 @@ class ListAssetPage extends React.Component {
         Cookie.set(COOKIES.LIST_ASSET_VISIT, 'true');
         Router.push('/asset-manager', {
           href: '/list-asset',
-          as: '/list-asset'
+          as: '/list-asset',
         });
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
     this.ismounted = true;
-  }
+  };
 
   componentWillUnmount = () => {
-     this.ismounted = false;
-     document.removeEventListener('keydown', this.handleKeyDown);
+    this.ismounted = false;
+    document.removeEventListener('keydown', this.handleKeyDown);
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    // debugger;
+    if (prevState.data.collateralInPlatformToken !== this.state.data.collateralInPlatformToken
+      || prevState.data.selectedToken !== this.state.data.selectedToken) {
+      this.fetchSlippageRates();
+    }
+  }
+
+  fetchSlippageRates = async () => {
+    const { network, user: { balances } } = this.props.metamaskContext;
+    this.setState({ loadingConversionInfo: true });
+    const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
+
+    const { paymentInDefaultToken } = this.calculateCollateral();
+
+    const slippagePercentages = await calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, paymentInDefaultToken, false)
+      .finally(() => this.setState({ loadingConversionInfo: false }));
+    this.setState({ tokenSlippagePercentages: slippagePercentages });
   }
 
   setUserListingAsset = (isUserListingAsset, listedAssetId) => {
-    if(!this.ismounted){
+    if (!this.ismounted) {
       return;
     }
     this.setState({
       isUserListingAsset,
       listedAssetId,
-    })
-  }
+    });
+  };
 
-  handleInputChange = e => {
-    const {
-      name,
-      value,
-    } = e.target;
-
-    if(name === 'assetAddress1'){
-      this.setState({
-        data: { ...this.state.data, assetAddress1: value, searchAddress1: value, }
-      });
-    } else if(name === 'userCity'){
-      this.setState({
-        data: { ...this.state.data, searchCity: value, userCity: value, }
-      });
-    }
-    else {
-      this.setState({
-        data: { ...this.state.data, [name]: value }
-      });
+  handleInputChange = (e) => {
+    if (e.target) {
+      const { name, value } = e.target;
+      if (name === 'userCity') {
+        if (value === '' || new RegExp(/^[a-zA-Z ]+$/i).test(value)) { // check if value is only alphabetical letters.
+          this.setState({
+            data: { ...this.state.data, searchCity: value, userCity: value },
+          });
+        }
+      } else if (name === 'assetValue') {
+        if (value === '' || new RegExp(/^[0-9]+$/i).test(value)) {
+          this.setState({
+            data: { ...this.state.data, assetValue: value },
+          });
+        }
+      } else if (name === 'collateralInPlatformToken') {
+        this.setState({
+          data: { ...this.state.data, collateralInPlatformToken: +value },
+        });
+      } else {
+        this.setState({
+          data: { ...this.state.data, [name]: value },
+        });
+      }
     }
   };
 
-  handleSelectedTokenChange = selectedToken => {
-    this.setState({data: {...this.state.data, selectedToken}}, () => this.recalculateCollateral(this.state.data.modelId))
-  }
+  handleSelectedTokenChange = (selectedToken) => {
+    this.setState({ data: { ...this.state.data, selectedToken } });
+  };
 
-  recalculateCollateral = modelId => {
+  calculateCollateral = () => {
     const {
-      assetsContext,
-      metamaskContext,
-      supportedTokensInfo,
+      assetsContext, metamaskContext, supportedTokensInfo,
     } = this.props;
-    modelId = modelId || this.state.data.modelId;
-    const {
-      assetModels,
-      assetManagers,
-    } = assetsContext;
-    const model = assetModels[modelId];
-    const { additionalCosts = 0 } = this.state.data;
-    const {
-      operator: operatorAddress,
-      fundingGoal,
-      cryptoPayout,
-      cryptoPurchase,
-      name,
-    } = model;
+    const { assetManagers } = assetsContext;
+    const { collateralInPlatformToken } = this.state.data;
+    const { assetValue: fundingGoal = 0 } = this.state.data;
+    // const cryptoPayout = true;
+    const cryptoPurchase = true;
+
     let assetValue = BN(fundingGoal);
     // Add 8% fee if it applies and AM expenses
-    const fiatToCryptoFee = !cryptoPurchase ? assetValue.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber() : 0;
-    assetValue = assetValue.plus(fiatToCryptoFee).plus(additionalCosts).toNumber();
+    const fiatToCryptoFee = !cryptoPurchase
+      ? assetValue.times(FIAT_TO_CRYPTO_CONVERSION_FEE).toNumber()
+      : 0;
+    assetValue = assetValue
+      .plus(fiatToCryptoFee)
+      .toNumber();
 
     const { selectedToken } = this.state.data;
     const { user, network } = metamaskContext;
     const { balances } = user;
-    const totalFundedAssets = assetManagers[user.address] ? assetManagers[user.address].totalFundedAssets : 0;
-    const paymentTokenAddress = selectedToken && balances && balances[selectedToken] && balances[selectedToken].contractAddress;
+    const totalFundedAssets = assetManagers[user.address]
+      ? assetManagers[user.address].totalFundedAssets
+      : 0;
+    const paymentTokenAddress = selectedToken
+    && balances
+    && balances[selectedToken]
+    && balances[selectedToken].contractAddress;
 
-    const {
-      collateralBasedOnHistory,
-      collateralCryptoPurchase,
-      collateralCryptoPayouts,
-      collateralPercentage,
-    } = calculateCollateral(totalFundedAssets, cryptoPayout, cryptoPurchase);
+    const paymentInDefaultToken = convertFromPlatformToken(DEFAULT_TOKEN, supportedTokensInfo, collateralInPlatformToken, network) + LISTING_FEE_IN_DEFAULT_TOKEN;
 
-    const collateralInDefaultToken = assetValue * (collateralPercentage / 100);
-    const collateralInPlatformToken = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokensInfo, collateralInDefaultToken)
-    const collateralInSelectedToken = convertFromDefaultToken(selectedToken || DEFAULT_TOKEN, supportedTokensInfo, collateralInDefaultToken)
+    const paymentInSelectedToken = convertFromDefaultToken(
+      selectedToken || DEFAULT_TOKEN,
+      supportedTokensInfo,
+      LISTING_FEE_IN_DEFAULT_TOKEN,
+    ) + convertFromPlatformToken(
+      selectedToken || DEFAULT_TOKEN,
+      supportedTokensInfo,
+      collateralInPlatformToken,
+      network,
+    );
 
-    this.setState({
-      data: {
-        ...this.state.data,
-        asset: name,
-        assetValue,
-        collateralInPlatformToken,
-        collateralBasedOnHistory,
-        collateralCryptoPurchase,
-        collateralCryptoPayouts,
-        collateralPercentage,
-        totalFundedAssets,
-        collateralInDefaultToken,
-        collateralInSelectedToken,
-        paymentTokenAddress,
-        cryptoPurchase,
-        modelId,
-      },
-      loadingConversionInfo: true,
-    }, () => console.log(this.state))
+    const PLATFORM_TOKEN = getPlatformToken(network);
+    const minimumCollateralInPlatformToken = convertFromDefaultToken(PLATFORM_TOKEN, supportedTokensInfo, MINIMUM_COLLATERAL_IN_DEFAULT_TOKEN);
 
-    const PLATFORM_TOKEN_CONTRACT = getPlatformTokenContract(network);
-    const tokenSlippagePercentages = calculateSlippage(balances, PLATFORM_TOKEN_CONTRACT, collateralInDefaultToken, false)
-      .then(tokenSlippagePercentages => {
-        this.setState({tokenSlippagePercentages, loadingConversionInfo: false})
-      })
+    return {
+      paymentInDefaultToken,
+      paymentInSelectedToken,
+      totalFundedAssets,
+      paymentTokenAddress,
+      minimumCollateralInPlatformToken,
+    };
   }
 
   handleSelectChange = (value, name) => {
-    if(name === 'asset'){
-      const modelId = value.modelId;
-      this.recalculateCollateral(modelId);
-    } else {
-      this.setState(
-        {
-          data: { ...this.state.data, [name]: value }
-        },
-        () => {
-          switch(name) {
-            case 'userCountry': {
-              const countryData = getCountry(value);
-              const countryCode = countryData ? countryData.iso2.toLowerCase() : '';
+    this.setState(
+      {
+        data: { ...this.state.data, [name]: value },
+      },
+      () => {
+        switch (name) {
+          case 'userCountry':
+            const countryData = getCountry(value);
+            const countryCode = countryData
+              ? countryData.iso2.toLowerCase()
+              : '';
 
-              this.setState({
-                data: { ...this.state.data, assetCountry: value, category: '', asset: undefined, assetValue: undefined, countryCode, userCity: undefined}
-              });break;
-            }
-            case 'category': {
-              this.setState({
-                data: { ...this.state.data, category: value, asset: undefined, assetValue: undefined, }
-              });break;
-            }
-            case 'additionalCosts': {
-              this.recalculateCollateral();
-            }
-            default: return null;
-          }
+            this.setState({
+              data: {
+                ...this.state.data,
+                countryCode,
+                userCity: '',
+              },
+            });
+            break;
+          default:
+            return null;
         }
-      );
-    }
+      },
+    );
   };
 
-  handleDetectLocationClicked = () => {
-    Geocode.setApiKey(publicRuntimeConfig.GOOGLE_PLACES_API_KEY);
-
-    navigator.geolocation.getCurrentPosition(location => {
-      const {
-        latitude,
-        longitude,
-      } = location.coords;
-      Geocode.fromLatLng(latitude, longitude).then(
-        response => {
-          const locationData = processLocationData(response.results, ['country', 'locality']);
-          const {
-            locality,
-            country,
-          } = locationData;
-          const countryData = getCountry(country);
-          const countryCode = countryData ? countryData.iso2.toLowerCase() : '';
-
-          this.setState({
-            data: { ...this.state.data, userCity: locality, userCountry: country, countryCode, }
-          })
-        },
-        error => {
-          this.setState({autoLocationOffline: true})
-          console.error(error);
-        }
-      );
-    })
-  }
-
-  handleSelectSuggest = suggest => {
-    const locationData = processLocationData(suggest.address_components, ['locality', 'route', 'postal_code', 'administrative_area_level_1', "street_number"]);
-    const {
-      locality,
-      route,
-      postal_code,
-      administrative_area_level_1,
-      street_number,
-    } = locationData;
-    this.setState({
-      data: {
-        ...this.state.data,
-        assetAddress1: route,
-        assetAddress2: street_number,
-        assetCity: administrative_area_level_1,
-        assetProvince: locality,
-        assetPostalCode: postal_code,
-        searchAddress1: '',
-      }
-    })
-  }
-
-  handleCitySuggest = suggest => {
-    const locationData = processLocationData(suggest.address_components, ['locality']);
-    const {
-      locality,
-    } = locationData;
+  handleCitySuggest = (suggest) => {
+    const locationData = processLocationData(suggest.address_components, [
+      'locality',
+    ]);
+    const { locality } = locationData;
     this.setState({
       data: {
         ...this.state.data,
         userCity: locality,
         searchCity: '',
-      }
-    })
+      },
+    });
+  };
+
+  handleCoverPicture = (fileInfo) => {
+    if (fileInfo.file.status !== 'uploading') return;
+    fileInfo.file.status = 'success';
+    this.setState({
+      data: { ...this.state.data, coverPicture: fileInfo.file },
+    });
   }
 
-  handleFileUpload = filesObject => {
+  handleFileUpload = (filesObject) => {
     // so that we get no loading animation in the UI next to the file name
     filesObject.file.status = 'success';
     let files = filesObject.fileList;
     // apply file size restriction
-    for(let i = 0; i < files.length; i++){
-      if(files[i].size > MAX_FILE_SIZE){
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
         files = files.filter(file => file !== files[i]);
         i--;
       }
     }
 
     // apply number of files restriction
-    if(files.length > MAX_FILES_UPLOAD){
+    if (files.length > MAX_FILES_UPLOAD) {
       files = files.slice(0, MAX_FILES_UPLOAD);
     }
 
-    console.log("Files going to be uploaded: ", files)
     this.setState({
-      data: { ...this.state.data, fileList: files }
+      data: { ...this.state.data, fileList: files },
     });
   };
 
   goToNextStep = () => {
-    this.setState({step: this.state.step + 1});
-  }
+    this.setState({ step: this.state.step + 1 });
+  };
 
-  goToStep = step => {
-    if(!this.state.listedAssetId){
-      this.setState({step});
+  goToStep = (step) => {
+    if (!this.state.listedAssetId) {
+      this.setState({ step });
     }
-  }
+  };
 
-  setCheckedToS = () => this.setState(prevState => ({checkedToS: !prevState.checkedToS}));
+  setCheckedToS = () => this.setState(prevState => ({ checkedToS: !prevState.checkedToS }));
 
   render() {
     const {
@@ -344,15 +296,9 @@ class ListAssetPage extends React.Component {
       getCategoriesForAssets,
     } = blockchainContext;
 
-    const {
-      user,
-      loadingBalancesForNewUser,
-    } = metamaskContext;
+    const { user, loadingBalancesForNewUser } = metamaskContext;
 
-    const {
-      readToS,
-      setReadToS,
-    } = ToSContext;
+    const { readToS, setReadToS } = ToSContext;
 
     const {
       data,
@@ -362,25 +308,40 @@ class ListAssetPage extends React.Component {
       checkedToS,
       tokenSlippagePercentages,
       autoLocationOffline,
-     } = this.state;
+      loadingConversionInfo,
+    } = this.state;
+
 
     const {
       managementFee,
       collateralInPlatformToken,
-      collateralPercentage,
       assetValue,
       fileList,
       selectedToken,
-      collateralInSelectedToken,
-      collateralInDefaultToken,
       asset,
       category,
       userCity,
       userCountry,
-      loadingConversionInfo,
     } = this.state.data;
 
-    const tokenWithSufficientBalance = collateralInDefaultToken > 0 ? getTokenWithSufficientBalance(user.balances, collateralInDefaultToken) : undefined;
+    const {
+      paymentInDefaultToken,
+      paymentInSelectedToken,
+      paymentTokenAddress,
+      minimumCollateralInPlatformToken,
+    } = (this.props.kyberLoading && {}) || this.calculateCollateral();
+    const formData = {
+      ...data,
+      paymentInDefaultToken,
+      paymentInSelectedToken,
+      paymentTokenAddress,
+      minimumCollateralInPlatformToken,
+    };
+
+    const tokenWithSufficientBalance = paymentInSelectedToken > 0
+      ? getTokenWithSufficientBalance(user.balances, paymentInDefaultToken)
+      : undefined;
+
     const metamaskErrorsToRender = metamaskContext.metamaskErrors('');
     const propsToPass = {
       dev,
@@ -406,31 +367,29 @@ class ListAssetPage extends React.Component {
       handleInputChange: this.handleInputChange,
       handleCitySuggest: this.handleCitySuggest,
       handleSelectedTokenChange: this.handleSelectedTokenChange,
+      handleCoverPicture: this.handleCoverPicture,
       handleFileUpload: this.handleFileUpload,
       setUserListingAsset: this.setUserListingAsset,
-      handleDetectLocationClicked: this.handleDetectLocationClicked,
-      handleSelectSuggest: this.handleSelectSuggest,
       goToNextStep: this.goToNextStep,
       goToStep: this.goToStep,
       countries: COUNTRIES,
-      formData: data,
+      formData,
       balances: user.balances,
       shouldShowToSCheckmark: this.readTermsOfService,
       airtableContext: this.props.airtableContext,
-    }
+    };
     return (
       <div>
         <Media query="(min-width: 768px)">
-          {matches =>
-            matches ? (
-              <ListAssetDesktop {...propsToPass}/>
-            ) : (
-              <ListAssetMobile {...propsToPass} />
-            )
+          {matches => (matches ? (
+            <ListAssetDesktop {...propsToPass} />
+          ) : (
+            <ListAssetMobile {...propsToPass} />
+          ))
           }
         </Media>
       </div>
-    )
+    );
   }
 }
 

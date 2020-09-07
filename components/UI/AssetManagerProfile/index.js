@@ -1,7 +1,8 @@
-import React from "react";
-import dayjs from "dayjs";
-import styled, { css } from "styled-components";
-import Divider from "ui/Divider";
+import React from 'react';
+import dayjs from 'dayjs';
+import styled, { css } from 'styled-components';
+import CheckMark from 'static/ic_unreal.svg';
+import Divider from 'ui/Divider';
 
 const AssetManagerProfileDataWrapper = styled.div`
   display: grid;
@@ -25,8 +26,7 @@ const PoweredBy = styled.p`
   a:focus {
     text-decoration: none;
   }
-`;
-
+`
 
 const DataWrapper = styled.div`
   display: flex;
@@ -61,6 +61,9 @@ const AssetManagerProfile = ({
 }) => {
   return (
     <div>
+      <Divider styling={{
+        ...styling.divider,
+      }}/>
       <AssetManagerProfileDataWrapper showCollateral={showCollateral}>
         <Data text="Managing Assets" value={totalAssets} styling={styling} />
         <Data

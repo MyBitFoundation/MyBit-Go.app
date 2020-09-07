@@ -3,8 +3,34 @@
     "browser": true,
     "jest": true
   },
+  "parser": "babel-eslint",
   "extends": "airbnb",
   "rules": {
-    "react/jsx-filename-extension": 0
+    "import/order": "off",
+    "prefer-destructuring": "off",
+    "import/prefer-default-export": "off",
+    "quote-props": "off",
+    "no-plusplus": "off",
+    "no-unused-expressions": ["error", { "allowShortCircuit": true }],
+    "no-restricted-syntax": "off",
+    "dot-notation": "off",
+    "max-len": "off",
+    "no-console": ["error", {"allow": ["warn", "info", "error"]}],
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-closing-tag-location": "off",
+    "react/no-multi-comp": "off",
+    "react/jsx-filename-extension": 0,
+    "react/prefer-stateless-function": "off",
+    "react/no-access-state-in-setstate": "off",
+    "react/jsx-one-expression-per-line": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": [".", "./components"]
+      }
+    }
   }
 }

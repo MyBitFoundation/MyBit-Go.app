@@ -1,26 +1,26 @@
 import BN from 'bignumber.js';
-BN.config({ EXPONENTIAL_AT: 80 });
 import {
   fromWeiToEth,
 } from 'utils/helpers';
 
-export const getAllUserAssets = (assets, address) =>
-  assets
-    .filter(asset => (asset.percentageOwnedByUser !== 0 || asset.isAssetManager))
+BN.config({ EXPONENTIAL_AT: 80 });
+
+export const getAllUserAssets = (assets, address) => assets
+  .filter(asset => (asset.percentageOwnedByUser !== 0 || asset.isAssetManager));
 
 const calculateAssetValue = (asset, toCalculate) => {
-  if(asset.percentageOwnedByUser !== 0){
-    toCalculate.totalAssetValue = BN(toCalculate.totalAssetValue).plus(BN(asset.percentageOwnedByUser).times(asset.fundingGoal).toNumber());
+  if (asset.percentageOwnedByUser !== 0) {
+    toCalculate.totalAssetValue = BN(toCalculate.totalAssetValue).plus(BN(asset.percentageOwnedByUser).times(asset.fundingGoal)).toNumber();
   }
-}
+};
 
 const calculateAssetRevenue = (asset, toCalculate) => {
   const assetManagerRevenue = asset.isAssetManager ? asset.assetIncome : 0;
   toCalculate.totalAssetRevenue = BN(toCalculate.totalAssetRevenue).plus(assetManagerRevenue).toNumber();
-}
+};
 
 const getInvestmentDetailsFromAsset = (asset, toCalculate) => {
-  const { 
+  const {
     assetId,
     name,
     owedToInvestor,
@@ -28,7 +28,7 @@ const getInvestmentDetailsFromAsset = (asset, toCalculate) => {
     percentageOwnedByUser,
   } = asset;
 
-  if(percentageOwnedByUser === 0){
+  if (percentageOwnedByUser === 0) {
     return null;
   }
 
@@ -43,10 +43,10 @@ const getInvestmentDetailsFromAsset = (asset, toCalculate) => {
     ownership: percentageOwnedByUser,
     unrealizedProfit,
   };
-}
+};
 
 const getManagerDetailsFromAsset = (asset, toCalculate) => {
-  if(!asset.isAssetManager){
+  if (!asset.isAssetManager) {
     return null;
   }
   const {
@@ -65,7 +65,7 @@ const getManagerDetailsFromAsset = (asset, toCalculate) => {
     totalProfitAssetManager,
     toWithdraw: owedToAssetManager,
   };
-}
+};
 
 export const getPortfolioAssetDetails = (assets, cb) => {
   const toCalculate = {
@@ -76,7 +76,7 @@ export const getPortfolioAssetDetails = (assets, cb) => {
     totalAssetValue: 0,
     totalAssetRevenue: 0,
   };
-  const assetData = assets.map(asset => {
+  const assetData = assets.map((asset) => {
     calculateAssetValue(asset, toCalculate);
     calculateAssetRevenue(asset, toCalculate);
     const managerDetails = getManagerDetailsFromAsset(asset, toCalculate);
@@ -86,16 +86,15 @@ export const getPortfolioAssetDetails = (assets, cb) => {
       investmentDetails,
       managerDetails,
       assetId: asset.assetId,
-    }
-  })
+    };
+  });
 
   const toReturn = {
     stats: {
       ...toCalculate,
     },
     assets: assetData,
-  }
+  };
 
   return cb ? cb(toReturn) : toReturn;
-}
-
+};

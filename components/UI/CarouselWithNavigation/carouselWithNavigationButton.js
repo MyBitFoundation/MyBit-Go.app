@@ -1,10 +1,8 @@
-import styled, { css } from "styled-components";
-import Button from "antd/lib/button";
-import { omit } from "lodash";
+import styled, { css } from 'styled-components';
+import Button from 'antd/lib/button';
+import { omit } from 'lodash';
 
-const CarouselWithNavigationButton = styled(props => (
-  <Button {...omit(props, CarouselWithNavigationButton.OmitProps)} />
-))`
+const CarouselWithNavigationButton = styled(props => <Button {...omit(props, CarouselWithNavigationButton.OmitProps)} />)`
   font-style: normal;
   font-weight: normal;
 
@@ -56,12 +54,12 @@ const CarouselWithNavigationButton = styled(props => (
       height: 32px;
     }
   `}
-`;
+`
 
 CarouselWithNavigationButton.OmitProps = [
-  "desktopAt",
-  "isNext",
-  "isBack"
-];
+  'desktopAt',
+  'isNext',
+  'isBack',
+]
 
 export default CarouselWithNavigationButton;

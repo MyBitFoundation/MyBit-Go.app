@@ -7,7 +7,7 @@ const WatchListSwitch = styled.div`
   padding-right: 10px;
 
   & span{
-    font-family: Roboto;
+    font-family: 'Assistant', sans-serif;
     font-size: 14px;
     text-align: right;
     color: #4a4a4a;

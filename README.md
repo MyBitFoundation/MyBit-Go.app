@@ -120,7 +120,7 @@ The following folders are available from anywhere (but `/server`):
 - ui
 
 ### User Documentation
-MyBit Go follows user-centered design and documentation.
+MyBit follows user-centered design and documentation.
 For User Flow docs check [this page](./TESTING.md).
 
 

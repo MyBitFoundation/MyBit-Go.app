@@ -1,7 +1,7 @@
 /* eslint-disable  react/no-unused-state */
 /* eslint-disable  camelcase */
 
-import { compose } from 'recompose'
+import { compose } from 'recompose';
 import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -11,8 +11,8 @@ import { withAssetsContext } from 'components/AssetsContext';
 import { withNotificationsContext } from 'components/NotificationsContext';
 import { withMetamaskContext } from 'components/MetamaskContext';
 import * as Brain from '../apis/brain';
-import { ErrorTypes } from 'constants/errorTypes';
-import {InternalLinks } from 'constants/links';
+import { ErrorTypes } from 'constants/errorTypes';
+import { InternalLinks } from 'constants/links';
 import {
   NotificationTypes,
   NotificationsMetamask,
@@ -30,7 +30,7 @@ import {
   fromWeiToEth,
 } from 'utils/helpers';
 import {
-  PLATFORM_TOKEN,
+  getPlatformToken,
 } from 'constants/app';
 import {
   SUPPORTED_NETWORKS,
@@ -48,32 +48,27 @@ BN.config({ EXPONENTIAL_AT: 80 });
 const { Provider, Consumer } = React.createContext({});
 
 // Required so we can trigger getInitialProps in our exported pages
-export const withBlockchainContextPageWrapper = (Component) => {
-  return class BlockchainContextPageWrapper extends React.Component{
-    static getInitialProps(ctx) {
-      if(Component.getInitialProps)
-        return Component.getInitialProps(ctx);
-      else return {};
-    }
-    render(){
-      return (
-        <Consumer>
-          {state => <Component {...this.props} blockchainContext={state} />}
-        </Consumer>
-      )
-    }
-  }
-}
-
-export const withBlockchainContext = (Component) => {
-  return function WrapperComponent(props) {
+export const withBlockchainContextPageWrapper = Component => class BlockchainContextPageWrapper extends React.Component {
+  render() {
     return (
       <Consumer>
-          {state => <Component {...props} blockchainContext={state} />}
+        {state => <Component {...this.props} blockchainContext={state} />}
       </Consumer>
     );
-  };
-}
+  }
+};
+
+export const getStaticProps = () => ({
+  props: {},
+});
+
+export const withBlockchainContext = Component => function WrapperComponent(props) {
+  return (
+    <Consumer>
+      {state => <Component {...props} blockchainContext={state} />}
+    </Consumer>
+  );
+};
 
 class BlockchainProvider extends React.Component {
   constructor(props) {
@@ -105,7 +100,7 @@ class BlockchainProvider extends React.Component {
       withdrawingCollateral: [],
       callingPayout: [],
       withdrawingAssetManager: [],
-      gasPrice: '10000000000', //10 GWEI
+      gasPrice: '10000000000', // 10 GWEI
       updatingAssetListingsIpfs: [],
     };
   }
@@ -121,7 +116,7 @@ class BlockchainProvider extends React.Component {
   }
 
   // handle case where account, login, enabled or network variable change
-  componentDidUpdate = async prevProps => {
+  componentDidUpdate = async (prevProps) => {
     const { metamaskContext: oldProps } = prevProps;
     const { metamaskContext: newProps } = this.props;
     const oldEnabled = oldProps.privacyModeEnabled;
@@ -133,15 +128,15 @@ class BlockchainProvider extends React.Component {
     const newEnabled = newProps.privacyModeEnabled;
     const newNetwork = newProps.network;
 
-    if((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)){
-      console.log("Updating blockchainContext due to a change in: address or login or privacy mode")
+    if ((newUserAddress && (oldUsername !== newUserAddress)) || (oldUserIsLoggedIn !== newIsUserLoggedIn) || (oldEnabled !== newEnabled)) {
+      console.info('Updating blockchainContext due to a change in: address or login or privacy mode');
       this.handleMetamaskUpdate();
-    } else if(newNetwork !== oldNetwork){
+    } else if (newNetwork !== oldNetwork) {
       this.setState({
         loading: {
           transactionHistory: true,
-        }
-      })
+        },
+      });
       this.fetchTransactionHistory();
     }
   }
@@ -151,10 +146,8 @@ class BlockchainProvider extends React.Component {
   }
 
   createIntervals = () => {
-    this.intervalFetchTransactionHistory =
-      setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
-    this.intervalFetchGasPrice =
-      setInterval(this.fetchGasPrice, FETCH_GAS_PRICE);
+    this.intervalFetchTransactionHistory = setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
+    this.intervalFetchGasPrice = setInterval(this.fetchGasPrice, FETCH_GAS_PRICE);
   }
 
   resetIntervals = () => {
@@ -167,103 +160,50 @@ class BlockchainProvider extends React.Component {
       gasPrice,
     } = this.state;
 
-    try{
+    try {
       const response = await axios(InternalLinks.GAS_PRICE);
-      if(response.data){
+      if (response.data) {
         const {
           fast,
         } = response.data;
 
-        gasPrice = BN(fast).times(100000000).toString(); //converts to WEI, from GWEI
+        gasPrice = BN(fast).times(100000000).toString(); // converts to WEI, from GWEI
         this.setState({
           gasPrice,
-        })
+        });
       }
-    }catch(err){
-      debug("Error pulling gas price");
-      debug(err)
+    } catch (err) {
+      debug('Error pulling gas price');
+      debug(err);
     }
-  }
-
-  getCategoriesForAssets = (country, city) => {
-    const {
-      assetModels,
-    } = this.props.assetsContext;
-
-    const categories = {};
-
-    for(const key in assetModels){
-      const asset = assetModels[key];
-      const {
-        category,
-        location,
-        url,
-      } = asset;
-
-      let shouldAdd = false;
-      /*
-      * If the asset does not have a specified location
-      * then anyone from anywhere can list it
-      */
-      if(!location){
-        shouldAdd = true;
-      }
-      /*
-      * The user's country needs to an allowed location for the asset
-      * and either the city also matches or there are no city specified
-      * which means the user is eligible to list this asset
-      */
-      else if((location && location[country] && Array.isArray(location[country]) && (location && location[country].includes(city.toLowerCase())) || (location && location[country] && Object.keys(location[country]).length === 0))){
-        shouldAdd = true;
-      }
-      if(shouldAdd){
-        if(!categories[category]){
-          categories[category] = [];
-        }
-        categories[category].push({...asset, modelId: key, url});
-      }
-    }
-    return categories;
   }
 
   updateAssetListingIpfs = async (asset, cb) => {
     const { gasPrice } = this.state;
     const { buildNotification } = this.props.notificationsContext;
     const {
+      name,
       assetId,
       financials,
       about,
       risks,
-      fees,
       country,
       city,
-      collateralPercentage,
-      assetAddress1,
-      assetAddress2,
-      assetProvince,
-      assetPostalCode,
       fundingToken,
       files,
     } = asset;
-    const { name: assetName } = asset.model;
     const notificationId = Date.now();
 
-    let filesInfo = await this.handleIpfsFileUpload(files);
+    const filesInfo = await this.handleIpfsFileUpload(files);
     const ipfsHash = await addJsonFileToIpfs({
       financials,
       about,
       risks,
-      fees,
       country,
       city,
-      collateralPercentage,
-      assetAddress1,
-      assetAddress2,
-      assetProvince,
-      assetPostalCode,
       files: filesInfo.array,
-    })
-    //update state so users can't trigger multiple saves
+    });
+    // update state so users can't trigger multiple saves
     const updatingAssetListingsIpfs = this.state.updatingAssetListingsIpfs.slice();
     updatingAssetListingsIpfs.push(assetId);
     this.setState({
@@ -272,34 +212,34 @@ class BlockchainProvider extends React.Component {
 
     buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
       operationType: NotificationsMetamask.ASSET_FILES_UPLOAD,
-      assetName,
+      name,
     });
 
     const onTransactionHash = () => {
       buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.INFO, {
-        assetName,
+        name,
       });
-    }
+    };
 
     const onReceipt = (wasSuccessful) => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         onSuccess();
-      } else{
+      } else {
         onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const onError = (type) => {
       cb && cb(false);
       updateAssetListingsIpfs();
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
-          operationType: NotificationsMetamask.ASSET_FILES_UPLOAD
+          operationType: NotificationsMetamask.ASSET_FILES_UPLOAD,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.ERROR);
       }
-    }
+    };
 
     const updateAssetListingsIpfs = () => {
       let updatingAssetListingsIpfs = this.state.updatingAssetListingsIpfs.slice();
@@ -307,7 +247,7 @@ class BlockchainProvider extends React.Component {
       this.setState({
         updatingAssetListingsIpfs,
       });
-    }
+    };
 
     const onSuccess = async () => {
       await Promise.all([
@@ -317,9 +257,9 @@ class BlockchainProvider extends React.Component {
       cb && cb(true);
       updateAssetListingsIpfs();
       buildNotification(notificationId, NotificationTypes.ASSET_FILES_UPLOAD, NotificationStatus.SUCCESS, {
-        assetName,
+        name,
       });
-    }
+    };
 
     Brain.updateAssetListingIpfs({
       userAddress: this.props.metamaskContext.user.address,
@@ -333,15 +273,14 @@ class BlockchainProvider extends React.Component {
     });
   }
 
-  payoutAsset = async asset => {
+  payoutAsset = async (asset) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, model} = asset;
-    const { name: assetName } = model;
+    const { assetId, name } = asset;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
-    //update state so users can't trigger payout multiple times
+    // update state so users can't trigger payout multiple times
     const callingPayout = this.state.callingPayout.slice();
     callingPayout.push(assetId);
     this.setState({
@@ -350,33 +289,33 @@ class BlockchainProvider extends React.Component {
 
     buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
       operationType: NotificationsMetamask.ASSET_PAYOUT,
-      assetName,
+      name,
     });
 
     const onTransactionHash = () => {
       buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.INFO, {
-        assetName,
+        name,
       });
-    }
+    };
 
     const onReceipt = (wasSuccessful) => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         onSuccess();
-      } else{
+      } else {
         onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const onError = (type) => {
       updateCallingPayout();
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
-          operationType: NotificationsMetamask.ASSET_PAYOUT
+          operationType: NotificationsMetamask.ASSET_PAYOUT,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.ERROR);
       }
-    }
+    };
 
     const updateCallingPayout = () => {
       let callingPayout = this.state.callingPayout.slice();
@@ -384,15 +323,15 @@ class BlockchainProvider extends React.Component {
       this.setState({
         callingPayout,
       });
-    }
+    };
 
     const onSuccess = async () => {
       await Promise.all([this.fetchTransactionHistory, forceUpdateListingWithOnChainData(assetId)]);
       updateCallingPayout();
       buildNotification(notificationId, NotificationTypes.ASSET_PAYOUT, NotificationStatus.SUCCESS, {
-        assetName,
+        name,
       });
-    }
+    };
 
     Brain.payoutAsset({
       userAddress: this.props.metamaskContext.user.address,
@@ -407,12 +346,12 @@ class BlockchainProvider extends React.Component {
   withdrawProfitAssetManager = async (asset, amount) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
     const { gasPrice } = this.state;
-    const { assetId, model} = asset;
-    const { name: assetName } = model;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
 
-    //update state so users can't trigger the withdrawal multiple times
+    const { name, assetId } = asset;
+
+    // update state so users can't trigger the withdrawal multiple times
     const withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
     withdrawingAssetManager.push(assetId);
     this.setState({
@@ -421,36 +360,38 @@ class BlockchainProvider extends React.Component {
 
     buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
       operationType: NotificationsMetamask.WITHDRAW_MANAGER,
-      assetName,
+      name,
     });
 
     const onTransactionHash = () => {
-      buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.INFO, {
-        assetName,
-      });
-    }
+      buildNotification(
+        notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.INFO, {
+          name,
+        },
+      );
+    };
 
     const onReceipt = (wasSuccessful) => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         onSuccess();
-      } else{
+      } else {
         onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const onError = (type) => {
       updatewithdrawingAssetManager();
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           operationType: NotificationsMetamask.WITHDRAW_MANAGER,
-          assetName,
+          name,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.ERROR, {
-          assetName,
+          name,
         });
       }
-    }
+    };
 
     const updatewithdrawingAssetManager = () => {
       let withdrawingAssetManager = this.state.withdrawingAssetManager.slice();
@@ -458,16 +399,16 @@ class BlockchainProvider extends React.Component {
       this.setState({
         withdrawingAssetManager,
       });
-    }
+    };
 
     const onSuccess = async () => {
       await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
       updatewithdrawingAssetManager();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_MANAGER, NotificationStatus.SUCCESS, {
-        assetName,
+        name,
         amount: formatMonetaryValue(amount),
       });
-    }
+    };
 
     Brain.withdrawAssetManager(
       this.props.metamaskContext.user.address,
@@ -481,15 +422,15 @@ class BlockchainProvider extends React.Component {
 
   withdrawCollateral = async (asset, percentage, amount, updateAssetCollateralPage) => {
     const { forceUpdateListingWithOnChainData } = this.props.assetsContext;
+    const { network } = this.props.metamaskContext;
     const { gasPrice } = this.state;
-    const { assetId, model} = asset;
-    const { name: assetName } = model;
     const { buildNotification } = this.props.notificationsContext;
     const notificationId = Date.now();
+    const { name, assetId } = asset;
 
-    const formattedAmount = formatMonetaryValue(amount, PLATFORM_TOKEN);
+    const formattedAmount = formatMonetaryValue(amount, getPlatformToken(network));
 
-    //update state so users can't trigger the withdrawal multiple times
+    // update state so users can't trigger the withdrawal multiple times
     const withdrawingCollateral = this.state.withdrawingCollateral.slice();
     withdrawingCollateral.push(assetId);
     this.setState({
@@ -498,36 +439,36 @@ class BlockchainProvider extends React.Component {
 
     buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
       operationType: NotificationsMetamask.WITHDRAW_COLLATERAL,
-      assetName,
+      name,
     });
 
     const onTransactionHash = () => {
       buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.INFO, {
-        assetName,
+        name,
       });
-    }
+    };
 
     const onReceipt = (wasSuccessful) => {
-      if(wasSuccessful){
+      if (wasSuccessful) {
         onSuccess();
-      } else{
+      } else {
         onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const onError = (type) => {
       updateWithdrawingCollateral();
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
           operationType: NotificationsMetamask.WITHDRAW_COLLATERAL,
-          assetName,
+          name,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.ERROR, {
-          assetName,
+          name,
         });
       }
-    }
+    };
 
     const updateWithdrawingCollateral = () => {
       let withdrawingCollateral = this.state.withdrawingCollateral.slice();
@@ -535,17 +476,17 @@ class BlockchainProvider extends React.Component {
       this.setState({
         withdrawingCollateral,
       });
-    }
+    };
 
     const onSuccess = async () => {
       await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
       updateWithdrawingCollateral();
       buildNotification(notificationId, NotificationTypes.WITHDRAW_COLLATERAL, NotificationStatus.SUCCESS, {
-        assetName,
+        name,
         percentage,
         amount: formattedAmount,
       });
-    }
+    };
 
     Brain.withdrawEscrow(
       this.props.metamaskContext.user.address,
@@ -561,43 +502,43 @@ class BlockchainProvider extends React.Component {
   * This method may take an array containing both
   * existing files and the new files
   */
-  handleIpfsFileUpload = async fileList => {
-    const toWait = []
+  handleIpfsFileUpload = async (fileList) => {
+    const toWait = [];
     const files = [];
     let filesString = '';
     const existingFiles = [];
     const filesToUpload = [];
-    for(let i=0;i<fileList.length;i++){
+    for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
-      if(file.hash){
+      if (file.hash) {
         existingFiles.push(file);
-      } else{
+      } else {
         filesToUpload.push(file);
       }
     }
-    for(const file of filesToUpload){
+    for (const file of filesToUpload) {
       toWait.push(addUserFileToIpfs(file.originFileObj ? file.originFileObj : file.file ? file.file : file));
     }
     const ipfsHashes = await Promise.all(toWait);
-    if(ipfsHashes.length > 0){
-      for(let i=0;i<ipfsHashes.length;i++){
+    if (ipfsHashes.length > 0) {
+      for (let i = 0; i < ipfsHashes.length; i++) {
         const hash = ipfsHashes[i];
         const name = filesToUpload[i].name;
         files.push({
           hash,
           name,
-        })
-        filesString+=`${name}|${hash}|`
+        });
+        filesString += `${name}|${hash}|`;
       }
     }
-    existingFiles.map(file => {
-      files.push({...file})
-      filesString+=`${file.name}|${file.hash}|`
-    })
+    existingFiles.map((file) => {
+      files.push({ ...file });
+      filesString += `${file.name}|${file.hash}|`;
+    });
     return {
       array: files,
       string: filesString,
-    }
+    };
   }
 
   handleListAsset = async (formData, setUserListingAsset) => {
@@ -611,13 +552,13 @@ class BlockchainProvider extends React.Component {
     } = this.props;
 
     const {
-      asset: assetName,
+      asset: name,
       userCountry: country,
       userCity: city,
       managementFee,
+      coverPicture,
       fileList,
-      collateralInSelectedToken,
-      collateralPercentage,
+      paymentInSelectedToken,
       paymentTokenAddress,
       selectedToken,
       assetValue,
@@ -625,64 +566,59 @@ class BlockchainProvider extends React.Component {
       financials,
       risks,
       fees,
-      modelId,
-      assetAddress1,
-      assetAddress2,
-      assetCity,
-      assetProvince,
-      assetPostalCode,
     } = formData;
 
     const { buildNotification } = notificationsContext;
+
+    console.info('AssetContext', formData);
 
     const {
       user,
       network,
     } = metamaskContext;
-    const userAddress =  user.address;
+    const userAddress = user.address;
     const notificationId = Date.now();
 
-    if(selectedToken !== 'ETH') {
+    if (selectedToken !== 'ETH') {
       // Going to call Approve
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.APPROVE,
-        formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
+        formattedAmount: formatMonetaryValue(paymentInSelectedToken, selectedToken),
       });
     } else {
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.LIST_ASSET,
-        assetName,
+        name,
       });
     }
 
     const onTransactionHash = async () => {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
-        assetName,
+        name,
       });
-
-    }
+    };
 
     const onTransactionHashApprove = () => {
       buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.INFO, {
-        formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
+        formattedAmount: formatMonetaryValue(paymentInSelectedToken, selectedToken),
         type: NotificationTypes.APPROVE,
       });
-    }
+    };
 
     const onReceipt = (assetId) => {
       onSuccess(assetId);
-    }
+    };
 
-    const onReceiptApprove = wasSuccessful => {
-      if(wasSuccessful){
+    const onReceiptApprove = (wasSuccessful) => {
+      if (wasSuccessful) {
         buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
-          formattedAmount: formatMonetaryValue(collateralInSelectedToken, selectedToken),
+          formattedAmount: formatMonetaryValue(paymentInSelectedToken, selectedToken),
           type: NotificationTypes.APPROVE,
         });
       } else {
-        onError(ErrorTypes.ETHEREUM)
+        onError(ErrorTypes.ETHEREUM);
       }
-    }
+    };
 
     const filesInfo = await this.handleIpfsFileUpload(fileList);
 
@@ -693,92 +629,75 @@ class BlockchainProvider extends React.Component {
       fees,
       country,
       city,
-      collateralPercentage,
-      assetAddress1,
-      assetAddress2,
-      assetProvince,
-      assetPostalCode,
       files: filesInfo.array,
-    })
+    });
 
     const onSuccess = async (assetId) => {
       const numberOfInternalActions = 1;
-      const numberOfInternalActionsWithFileUpload = numberOfInternalActions + 1;
-      const filesUploaded = fileList.length > 0;
-      const requiredCallsToInternalActions = filesUploaded ? numberOfInternalActionsWithFileUpload : numberOfInternalActions;
       let counterCallsToInternalActions = 0;
 
       // we need to perform a few actions before declaring the listing of the asset as successful
       const performInternalAction = async () => {
         counterCallsToInternalActions++;
-        if(counterCallsToInternalActions === requiredCallsToInternalActions){
+        if (counterCallsToInternalActions === numberOfInternalActions) {
           buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.SUCCESS, {
-            assetName,
+            name,
             assetId,
           });
           setUserListingAsset(false, assetId);
         }
-      }
+      };
 
       Brain.updateAirTableWithNewAsset({
         assetId,
-        assetName,
+        name,
         country,
         city,
-        collateralPercentage,
         about,
         financials,
         risks,
         fees,
-        assetAddress1,
-        assetAddress2,
-        assetProvince,
-        assetPostalCode,
-        modelId,
-        files: filesInfo.string,
-      }, performInternalAction, network)
-
-      filesUploaded && Brain.uploadFilesToAWS(assetId, fileList, performInternalAction);
-    }
+        coverPicture,
+        files: fileList,
+      }, performInternalAction, network);
+    };
 
     const onError = (type) => {
       setUserListingAsset(false);
-      if(type === ErrorTypes.METAMASK){
+      if (type === ErrorTypes.METAMASK) {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
-          assetName,
+          name,
           operationType: NotificationsMetamask.LIST_ASSET,
         });
       } else {
         buildNotification(notificationId, NotificationTypes.LIST_ASSET, NotificationStatus.ERROR, {
-          assetName,
+          name,
         });
       }
-    }
+    };
 
     await Brain.createAsset({
-        onTransactionHash,
-        onReceipt,
-        onError,
-      }, {
-        onTransactionHash: onTransactionHashApprove,
-        onReceipt: onReceiptApprove,
-        onError,
-      }, {
-        managerPercentage: managementFee,
-        amountToBeRaised: assetValue,
-        assetName,
-        collateral: collateralInSelectedToken,
-        userAddress,
-        paymentTokenAddress,
-        gasPrice,
-        ipfs: ipfsHash,
-        modelId,
-      },
-      network,
-    );
+      onTransactionHash,
+      onReceipt,
+      onError,
+    }, {
+      onTransactionHash: onTransactionHashApprove,
+      onReceipt: onReceiptApprove,
+      onError,
+    }, {
+      managerPercentage: managementFee,
+      amountToBeRaised: assetValue,
+      name,
+      collateralAndFee: paymentInSelectedToken,
+      userAddress,
+      paymentTokenAddress,
+      gasPrice,
+      ipfs: ipfsHash || 'no-ipfs',
+    },
+    network);
   }
 
-  fundAsset = (assetId, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
+  fundAsset = (assetId, name, amountToPay, amountContributed, paymentToken, paymentTokenSymbol) => {
     try {
       const {
         gasPrice,
@@ -787,18 +706,15 @@ class BlockchainProvider extends React.Component {
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
       const notificationId = Date.now();
       const amountFormatted = formatMonetaryValue(amountContributed);
-      const {
-        name : assetName,
-      } = currentAsset.model;
 
       const {
         buildNotification,
       } = this.props.notificationsContext;
 
-      if(paymentTokenSymbol === 'ETH'){
+      if (paymentTokenSymbol === 'ETH') {
         buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
           operationType: NotificationsMetamask.FUNDING,
-          assetName,
+          name,
         });
       } else {
         // will call Approve first
@@ -810,56 +726,56 @@ class BlockchainProvider extends React.Component {
 
       const onTransactionHash = () => {
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
-          assetName,
+          name,
           amount: amountFormatted,
         });
-      }
+      };
 
       const onTransactionHashApprove = () => {
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.INFO, {
           formattedAmount: formatMonetaryValue(amountToPay, paymentTokenSymbol),
           type: NotificationTypes.APPROVE,
         });
-      }
+      };
 
       const onReceipt = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           onSuccessRefreshData();
         } else {
-          onError(ErrorTypes.ETHEREUM)
+          onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onReceiptApprove = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
             formattedAmount: formatMonetaryValue(amountToPay, paymentTokenSymbol),
             type: NotificationTypes.APPROVE,
           });
         } else {
-          onError(ErrorTypes.ETHEREUM)
+          onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onError = (type) => {
-        if(type === ErrorTypes.METAMASK){
+        if (type === ErrorTypes.METAMASK) {
           buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
             operationType: NotificationsMetamask.FUNDING,
           });
         } else {
           buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.ERROR, {
-            assetName,
+            name,
           });
         }
-      }
+      };
 
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchTransactionHistory()]);
         buildNotification(notificationId, NotificationTypes.FUNDING, NotificationStatus.SUCCESS, {
-          assetName,
+          name,
           amount: amountFormatted,
         });
-      }
+      };
 
       Brain.fundAsset({
         onTransactionHash,
@@ -876,7 +792,6 @@ class BlockchainProvider extends React.Component {
         paymentToken,
         gasPrice,
       });
-
     } catch (err) {
       debug(err);
     }
@@ -891,7 +806,7 @@ class BlockchainProvider extends React.Component {
 
       const formattedAmount = formatMonetaryValue(amount);
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
-      const { name : assetName } = currentAsset.model;
+      const { name } = currentAsset;
 
       // Call Approve first
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
@@ -903,53 +818,53 @@ class BlockchainProvider extends React.Component {
         buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.INFO, {
           formattedAmount,
         });
-      }
+      };
 
       const onTransactionHashApprove = () => {
         buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.INFO, {
           formattedAmount,
           type: NotificationTypes.APPROVE,
         });
-      }
+      };
 
       const onReceipt = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           onSuccessRefreshData();
         } else {
-          onError(ErrorTypes.ETHEREUM)
+          onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onReceiptApprove = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.SUCCESS, {
             formattedAmount,
             type: NotificationTypes.APPROVE,
           });
         } else {
-          onError(ErrorTypes.ETHEREUM)
+          onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onError = (type) => {
-        if(type === ErrorTypes.METAMASK){
+        if (type === ErrorTypes.METAMASK) {
           buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
             operationType: NotificationsMetamask.PAY_DIVIDENDS,
           });
         } else {
           buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.ERROR, {
-            assetName,
+            name,
           });
         }
-      }
+      };
 
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
         buildNotification(notificationId, NotificationTypes.PAY_DIVIDENDS, NotificationStatus.SUCCESS, {
-          assetName,
+          name,
           formattedAmount,
         });
-      }
+      };
 
       Brain.issueDividends({
         onTransactionHash,
@@ -965,7 +880,6 @@ class BlockchainProvider extends React.Component {
         amount,
         gasPrice,
       });
-
     } catch (err) {
       debug(err);
     }
@@ -979,9 +893,7 @@ class BlockchainProvider extends React.Component {
       } = this.state;
 
       const currentAsset = this.props.assetsContext.assets.find(item => item.assetId === assetId);
-      const{
-        name: assetName,
-      } = currentAsset.model;
+      const { name } = currentAsset;
 
       const {
         buildNotification,
@@ -995,57 +907,57 @@ class BlockchainProvider extends React.Component {
       withdrawingAssetIds.push(assetId);
       this.setState({
         withdrawingAssetIds,
-      })
+      });
 
       buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.INFO, {
         operationType: NotificationsMetamask.WITHDRAW_INVESTOR,
-        assetName,
+        name,
       });
 
       const onTransactionHash = () => {
         buildNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.INFO, {
-          assetName,
+          name,
           amount,
         });
-      }
+      };
 
       const onReceipt = (wasSuccessful) => {
-        if(wasSuccessful){
+        if (wasSuccessful) {
           onSuccessRefreshData();
         } else {
           onError(ErrorTypes.ETHEREUM);
         }
-      }
+      };
 
       const onError = (type) => {
         removeassetIdFromList();
-        if(type === ErrorTypes.METAMASK){
+        if (type === ErrorTypes.METAMASK) {
           buildNotification(notificationId, NotificationTypes.METAMASK, NotificationStatus.ERROR, {
             operationType: NotificationsMetamask.WITHDRAW_INVESTOR,
           });
         } else {
           buildNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.ERROR, {
-            assetName,
+            name,
           });
         }
-      }
+      };
 
       const removeassetIdFromList = () => {
         let withdrawingAssetIds = this.state.withdrawingAssetIds.slice();
         withdrawingAssetIds = withdrawingAssetIds.filter(assetIdTmp => assetIdTmp !== assetId);
         this.setState({
           withdrawingAssetIds,
-        })
-      }
+        });
+      };
 
       const onSuccessRefreshData = async () => {
         await Promise.all([this.fetchTransactionHistory(), forceUpdateListingWithOnChainData(assetId)]);
         removeassetIdFromList();
         buildNotification(notificationId, NotificationTypes.WITHDRAW_INVESTOR, NotificationStatus.SUCCESS, {
-          assetName,
+          name,
           amount,
         });
-      }
+      };
 
       await Brain.withdrawInvestorProfit(
         this.props.metamaskContext.user.address,
@@ -1055,7 +967,6 @@ class BlockchainProvider extends React.Component {
         onError,
         gasPrice,
       );
-
     } catch (err) {
       debug(err);
     }
@@ -1078,20 +989,20 @@ class BlockchainProvider extends React.Component {
     this.setState({
       loading: {
         ...this.state.loading,
-        transactionHistory: !userIsLoggedIn ? false : true,
+        transactionHistory: !!userIsLoggedIn,
       },
     });
   }
 
-  fetchTransactionHistory = async () =>  {
-    if(!this.props.metamaskContext.user.address){
+  fetchTransactionHistory = async () => {
+    if (!this.props.metamaskContext.user.address) {
       this.setState({
         transactions: [],
-        loading: {
+        loading: {
           ...this.state.loading,
           transactionHistory: false,
         },
-      })
+      });
       return;
     }
     await Brain.fetchTransactionHistory(this.props.metamaskContext.user.address)
@@ -1109,13 +1020,11 @@ class BlockchainProvider extends React.Component {
       });
   }
 
-  render = () => {
-    return (
-      <Provider value={this.state}>
-        {this.props.children}
-      </Provider>
-    );
-  }
+  render = () => (
+    <Provider value={this.state}>
+      {this.props.children}
+    </Provider>
+  )
 }
 
 const enhance = compose(
