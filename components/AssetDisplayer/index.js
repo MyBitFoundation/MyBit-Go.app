@@ -6,16 +6,16 @@ import Pagination from './pagination';
 
 const assetsPerPage = 12;
 
-class AssetDisplayer extends React.Component{
+class AssetDisplayer extends React.Component {
   state = {
     currentPage: 0,
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const maxPage = Math.ceil(nextProps.assets.length / assetsPerPage)
-    //resets pagination if the data changed and we don't have assets to show
+    const maxPage = Math.ceil(nextProps.assets.length / assetsPerPage);
+    // resets pagination if the data changed and we don't have assets to show
     // due to the page we're on
-    if((this.state.currentPage + 1) > maxPage){
+    if ((this.state.currentPage + 1) > maxPage) {
       this.setState({
         currentPage: 0,
       });
@@ -66,7 +66,7 @@ class AssetDisplayer extends React.Component{
           </NoResults>
         )}
       </React.Fragment>
-    )
+    );
   }
 }
 

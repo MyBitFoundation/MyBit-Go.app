@@ -1,4 +1,4 @@
-import { compose } from 'recompose'
+import { compose } from 'recompose';
 import { withMetamaskContextPageWrapper } from 'components/MetamaskContext';
 import { withAssetsContextPageWrapper } from 'components/AssetsContext';
 import { LocalStorageKeys } from 'constants/localStorageKeys';
@@ -18,27 +18,27 @@ const Explore = ({
     assets,
     loadingAssets,
   } = assetsContext;
+
   const hasMetamaskErrors = metamaskContext.metamaskErrors();
-  if(hasMetamaskErrors.error){
+  if (hasMetamaskErrors.error) {
     return (
       <MetamaskErrors
         shouldRenderComponent={false}
       />
-    )
+    );
   }
   if (loadingAssets) {
     return <Loading message="Loading assets" />;
-  } else {
-    return (
-      <AssetExplorer
-        assets={assets}
-        EXPLORE_PAGE_FUNDING_ACTIVE={LocalStorageKeys.EXPLORE_PAGE_FUNDING_ACTIVE}
-        EXPLORE_PAGE_SORT_BY={LocalStorageKeys.EXPLORE_PAGE_SORT_BY}
-        EXPLORE_PAGE_SELECTED_FILTERS={LocalStorageKeys.EXPLORE_PAGE_SELECTED_FILTERS}
-        useLocalStorage
-      />
-    )
   }
+  return (
+    <AssetExplorer
+      assets={assets}
+      EXPLORE_PAGE_FUNDING_ACTIVE={LocalStorageKeys.EXPLORE_PAGE_FUNDING_ACTIVE}
+      EXPLORE_PAGE_SORT_BY={LocalStorageKeys.EXPLORE_PAGE_SORT_BY}
+      EXPLORE_PAGE_SELECTED_FILTERS={LocalStorageKeys.EXPLORE_PAGE_SELECTED_FILTERS}
+      useLocalStorage
+    />
+  );
 };
 
 const enhance = compose(

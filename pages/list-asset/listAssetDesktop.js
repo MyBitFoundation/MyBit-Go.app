@@ -1,9 +1,7 @@
 import styled, { css } from 'styled-components';
 import {
   IntroSlide,
-  LocationSlide,
   AvailableAssetsSlide,
-  AssetLocationSlide,
   DocsSlide,
   FeesSlide,
   CollateralSlide,
@@ -11,10 +9,11 @@ import {
   SuccessSlide,
   TermsOfServiceSlide,
   GeneralDescriptionSlide,
-} from "./slides";
+  CoverPictureSlide,
+} from 'components/Slides/ListAsset/slides';
 import CustomTimeline from './customTimeline';
 
-const MAX_WIDTH_DESKTOP = "450px";
+const MAX_WIDTH_DESKTOP = '450px';
 
 const ListAssetDesktopWrapper = styled.div`
   position: relative;
@@ -24,37 +23,37 @@ const ListAssetDesktopWrapper = styled.div`
   margin-top: 90px;
   max-width: 850px;
 
-  & > ul{
-   margin-left: 20px;
-   width: 30%;
+  & > ul {
+    margin-left: 20px;
+    width: 30%;
   }
 
-  & > div{
+  & > div {
     width: 60%;
   }
 
-  ${({theme}) => theme.laptop`
+  ${({ theme }) => theme.laptop`
     & > ul{
      margin-left: auto;
      margin-right: 50px;
      width: 40%;
     }
   `}
-`
+`;
 
 const PageTitle = styled.div`
-  font-family: Gilroy;
+  font-family: 'Assistant', sans-serif;
   font-size: 32px;
   line-height: 40px;
-  color: ${({theme}) => theme.colors.black};
+  color: ${({ theme }) => theme.colors.black};
   position: absolute;
   left: 10px;
   top: -70px;
 
-  ${({theme}) => theme.laptop`
+  ${({ theme }) => theme.laptop`
     left: -5px;
   `}
-`
+`;
 
 const ListAssetDesktop = ({
   step,
@@ -63,10 +62,10 @@ const ListAssetDesktop = ({
   handleInputChange,
   handleCitySuggest,
   countries,
-  handleDetectLocationClicked,
   loadingAssets,
   formData,
   handleFileUpload,
+  handleCoverPicture,
   handleSelectedTokenChange,
   balances,
   kyberLoading,
@@ -75,7 +74,6 @@ const ListAssetDesktop = ({
   setUserListingAsset,
   handleListAsset,
   metamaskErrorsToRender,
-  handleSelectSuggest,
   goToNextStep,
   goToStep,
   readToS,
@@ -85,7 +83,6 @@ const ListAssetDesktop = ({
   setCheckedToS,
   tokenWithSufficientBalance,
   airtableContext,
-  userAddress,
   loadingBalancesForNewUser,
   loadingConversionInfo,
   tokenSlippagePercentages,
@@ -93,30 +90,20 @@ const ListAssetDesktop = ({
   getCategoriesForAssets,
 }) => {
   const {
-    category,
     asset,
     assetValue,
+    userCity,
     userCountry,
-    assetAddress1,
-    assetCity,
-    assetProvince,
-    assetPostalCode,
     managementFee,
-    collateralInSelectedToken,
-    collateralInDefaultToken,
     selectedToken,
-    collateralPercentage,
-    collateralInPlatformToken,
     fileList,
+    coverPicture,
     about,
     financials,
     risks,
-    hasAdditionalCosts,
-    additionalCosts,
-    fees,
   } = formData;
 
-  if(step === 0){
+  if (step === 0) {
     return (
       <IntroSlide
         maxWidthDesktop="600px"
@@ -124,7 +111,7 @@ const ListAssetDesktop = ({
         onClick={goToNextStep}
         dev={dev}
       />
-    )
+    );
   }
   return (
     <ListAssetDesktopWrapper>
@@ -148,10 +135,11 @@ const ListAssetDesktop = ({
           loadingAssets={loadingAssets}
           handleInputChange={handleInputChange}
           countries={countries}
-          handleDetectLocationClicked={handleDetectLocationClicked}
           handleCitySuggest={handleCitySuggest}
           desktopMode
-          nextButtonDisabled={!category || !asset || !assetValue || metamaskErrorsToRender.render}
+          nextButtonDisabled={
+            !userCountry || !userCity || !asset || !assetValue
+          }
           onClick={goToNextStep}
           error={false || metamaskErrorsToRender.render}
           airtableContext={airtableContext}
@@ -166,28 +154,22 @@ const ListAssetDesktop = ({
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={goToNextStep}
-          nextButtonDisabled={!about || !financials || !risks || (hasAdditionalCosts && (!fees || additionalCosts <= 0))}
+          nextButtonDisabled={
+            !about
+            || !financials
+            || !risks
+          }
           handleSelectChange={handleSelectChange}
         />
       )}
       {step === 3 && (
-        <AssetLocationSlide
-          handleInputChange={handleInputChange}
-          handleSelectChange={handleSelectChange}
-          formData={formData}
-          countries={countries}
+        <CoverPictureSlide
+          coverPicture={coverPicture}
+          handleCoverPicture={handleCoverPicture}
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
-          handleSelectSuggest={handleSelectSuggest}
-          desktopMode
-          nextButtonDisabled={userCountry !== "" &&
-            assetAddress1 !== "" &&
-            assetCity !== "" &&
-            assetProvince !== "" &&
-            assetPostalCode !== ""
-              ? false
-              : true
-          }
           onClick={goToNextStep}
+          desktopMode
+          nextButtonDisabled={!coverPicture}
         />
       )}
       {step === 4 && (
@@ -206,12 +188,13 @@ const ListAssetDesktop = ({
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           onClick={goToNextStep}
           desktopMode
-          nextButtonDisabled={managementFee !== 0 ? false : true}
+          nextButtonDisabled={managementFee === 0}
         />
       )}
       {step === 6 && (
         <CollateralSlide
           selectedToken={selectedToken}
+          handleInputChange={handleInputChange}
           handleSelectedTokenChange={handleSelectedTokenChange}
           formData={formData}
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
@@ -219,26 +202,27 @@ const ListAssetDesktop = ({
           kyberLoading={kyberLoading}
           onClick={goToNextStep}
           desktopMode
-          nextButtonDisabled={managementFee !== 0 ? false : true}
+          nextButtonDisabled={managementFee === 0}
           loadingBalancesForNewUser={loadingBalancesForNewUser}
           loadingConversionInfo={loadingConversionInfo}
           tokenSlippagePercentages={tokenSlippagePercentages}
         />
-      )}{step === 7 && !readToS && (
+      )}
+      {step === 7 && !readToS && (
         <TermsOfServiceSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           desktopMode
           onClick={setReadToS}
         />
       )}
-      {(step === 7 && listedAssetId && readToS) && (
+      {step === 7 && listedAssetId && readToS && (
         <SuccessSlide
           maxWidthDesktop={MAX_WIDTH_DESKTOP}
           assetId={listedAssetId}
           desktopMode
         />
-       )}
-       {(step === 7 && !listedAssetId && readToS) && (
+      )}
+      {step === 7 && !listedAssetId && readToS && (
         <ConfirmSlideDesktop
           formData={formData}
           isUserListingAsset={isUserListingAsset}
@@ -257,7 +241,7 @@ const ListAssetDesktop = ({
         />
       )}
     </ListAssetDesktopWrapper>
-  )
-}
+  );
+};
 
 export default ListAssetDesktop;

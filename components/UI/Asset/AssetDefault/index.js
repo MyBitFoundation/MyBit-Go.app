@@ -6,8 +6,8 @@ import {
   Progress,
   Icon,
 } from 'antd';
-import{
-  PLATFORM_TOKEN,
+import {
+  getPlatformToken,
 } from 'constants/app';
 import AssetDefaultDetailsContainer from './assetDefaultDetailsContainer';
 import AssetDefaultFunded from './assetDefaultFunded';
@@ -18,17 +18,18 @@ import {
 } from 'utils/helpers';
 
 import AssetManagerTooltip from 'ui/AssetManagerTooltip';
+import { useMetamaskContext } from 'components/MetamaskContext';
 
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+`;
 
 const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const AssetDefault = ({
   fundingGoal,
@@ -39,6 +40,7 @@ const AssetDefault = ({
   assetManager,
   assetManagerData,
 }) => {
+  const { network } = useMetamaskContext();
   const {
     totalRevenue,
     totalAssets,
@@ -62,11 +64,13 @@ const AssetDefault = ({
       failed={!funded && pastDate}
     >
       <AssetDefaultFunded>
-        Funded:{' '}
+        Funded:
+        {' '}
         <b>{progressFormatted}</b>
       </AssetDefaultFunded>
       <AssetDefaultGoal>
-        Goal:{' '}
+        Goal:
+        {' '}
         <b>{goalFormatted}</b>
       </AssetDefaultGoal>
       <div>
@@ -91,18 +95,18 @@ const AssetDefault = ({
             totalAssets={totalAssets}
             startDate={startDate}
             totalRevenue={formatMonetaryValue(totalRevenue)}
-            collateralLocked={formatMonetaryValue(collateralLocked, PLATFORM_TOKEN)}
+            collateralLocked={formatMonetaryValue(collateralLocked, getPlatformToken(network))}
           >
             <ThreeBoxProfile address={assetManager} icon />
 
-          <Link
-            as={`/asset-managers/${assetManager}`}
-            href={`/asset-managers?id=${assetManager}`}
-          >
-            <a>
-              <ThreeBoxProfile address={assetManager} name />
-            </a>
-          </Link>
+            <Link
+              as={`/asset-managers/${assetManager}`}
+              href={`/asset-managers?id=${assetManager}`}
+            >
+              <a>
+                <ThreeBoxProfile address={assetManager} name />
+              </a>
+            </Link>
           </AssetManagerTooltip>
         </ProfileContainer>
         <Link
@@ -117,7 +121,7 @@ const AssetDefault = ({
         </Link>
       </Container>
     </AssetDefaultDetailsContainer>
-  )
+  );
 };
 
 export default React.memo(AssetDefault);

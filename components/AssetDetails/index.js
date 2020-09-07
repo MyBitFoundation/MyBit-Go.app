@@ -31,39 +31,26 @@ const AssetDetails = ({
     country,
     assetId,
     assetManager: assetManagerAddress,
-    numberOfInvestors,
     watchListed,
     files,
     managerPercentage,
-    collateralPercentage,
-    funded,
-    pastDate,
-    percentageOwnedByUser,
-    model,
-    fundingGoal,
-    fundingProgress,
-    userInvestment,
-    about,
     financials,
+    assetManagerCollateral,
+    about,
     risks,
     fees,
-    modelImage,
-    modelName,
     assetManagerData,
     handleAssetFavorited,
-  } = asset;
-
-  const {
-    imageSrc,
+    coverPicture,
     name,
-  } = model;
+  } = asset;
 
   return (
     <AssetDetailsWrapper>
       <AssetDetailsLeftCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetDetailsInfo
           name={name}
-          imageSrc={imageSrc}
+          imageSrc={coverPicture?.url}
           city={city}
           country={country}
           assetId={assetId}
@@ -75,13 +62,13 @@ const AssetDetails = ({
           fees={fees}
           handleAssetFavorited={handleAssetFavorited}
         />
-        <AssetUpdates
+        {/* <AssetUpdates
           asset={asset}
           getPosts={getPosts}
           getProfile={getProfile}
           getAvatar={getAvatar}
           loadingThreeBox={loadingThreeBox}
-        />
+        /> */}
       </AssetDetailsLeftCol>
       <AssetDetailsRightCol xs={24} sm={24} md={24} lg={12} xl={12}>
         <AssetFundingModule
@@ -89,17 +76,17 @@ const AssetDetails = ({
           blockchainContext={blockchainContext}
           gasPrice={gasPrice}
         >
-          {props => <AssetFunding {...props}/>}
+          {props => <AssetFunding {...props} />}
         </AssetFundingModule>
         <AssetDetailsManagerInfo
           assetManager={assetManagerData}
           address={assetManagerAddress}
           managerPercentage={managerPercentage}
-          collateralPercentage={collateralPercentage}
+          collateralAmount={assetManagerCollateral}
           isAssetManager={isAssetManager}
         />
       </AssetDetailsRightCol>
     </AssetDetailsWrapper>
-  )
-}
+  );
+};
 export default AssetDetails;

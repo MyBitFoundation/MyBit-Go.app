@@ -1,4 +1,4 @@
-import { compose } from 'recompose'
+import { compose } from 'recompose';
 import {
   Switch,
   Icon,
@@ -32,12 +32,12 @@ class AssetExplorer extends React.Component {
       EXPLORE_PAGE_SELECTED_FILTERS,
     } = props;
 
-    if(useLocalStorage){
+    if (useLocalStorage) {
       this.state = {
         fundingActive: getValueFromLocalStorage(EXPLORE_PAGE_FUNDING_ACTIVE, 'true') === 'true',
         sortByFilterSelected: getValueFromLocalStorage(EXPLORE_PAGE_SORT_BY),
         ...this.buildState(useLocalStorage),
-      }
+      };
     } else {
       this.state = {
         fundingActive: fundingActive === undefined ? true : fundingActive,
@@ -47,9 +47,9 @@ class AssetExplorer extends React.Component {
     }
   }
 
-  buildState = useLocalStorage => {
+  buildState = (useLocalStorage) => {
     let selectedFilters;
-    if(useLocalStorage){
+    if (useLocalStorage) {
       const { EXPLORE_PAGE_SELECTED_FILTERS } = this.props;
       selectedFilters = getValueFromLocalStorage(EXPLORE_PAGE_SELECTED_FILTERS, Categories, true);
     } else {
@@ -58,7 +58,7 @@ class AssetExplorer extends React.Component {
 
     return {
       selectedFilters,
-    }
+    };
   }
 
   handleCheckedSortBy = (sortByValue, isChecked) => {
@@ -71,9 +71,9 @@ class AssetExplorer extends React.Component {
     this.setState({
       sortByFilterSelected: value,
     });
-    if(useLocalStorage){
-      if(isChecked) {
-        setValueLocalStorage(EXPLORE_PAGE_SORT_BY, value)
+    if (useLocalStorage) {
+      if (isChecked) {
+        setValueLocalStorage(EXPLORE_PAGE_SORT_BY, value);
       } else {
         localStorage.removeItem(EXPLORE_PAGE_SORT_BY);
       }
@@ -94,11 +94,11 @@ class AssetExplorer extends React.Component {
       selectedFilters = [...selectedFilters, filterName];
     }
     this.setState({
-      selectedFilters: selectedFilters,
+      selectedFilters,
     });
 
-    if(useLocalStorage){
-      setValueLocalStorage(EXPLORE_PAGE_SELECTED_FILTERS, selectedFilters, true)
+    if (useLocalStorage) {
+      setValueLocalStorage(EXPLORE_PAGE_SELECTED_FILTERS, selectedFilters, true);
     }
   }
 
@@ -111,27 +111,26 @@ class AssetExplorer extends React.Component {
 
     const { fundingActive } = this.state;
     let assetsFiltered = assets.slice();
-    let {
+    const {
       selectedFilters,
       sortByFilterSelected,
     } = this.state;
 
     // filter by categories and whether active
     assetsFiltered = assetsFiltered.filter((asset) => {
-      const assetCategory = asset && asset.model && asset.model.category;
-      if (((fundingActive && asset.fundingStage === FundingStages.IN_PROGRESS && !asset.pastDate) || (!fundingActive && (asset.funded || asset.pastDate))) && selectedFilters.includes(assetCategory)) {
+      if (((fundingActive && asset.fundingStage === FundingStages.IN_PROGRESS && !asset.pastDate) || (!fundingActive && (asset.funded || asset.pastDate)))) {
         return true;
       }
       return false;
     });
 
-    //handle sorting
-    if(sortByFilterSelected){
+    // handle sorting
+    if (sortByFilterSelected) {
       const compareTo = SORT_BY_ASSETS.filter(sort => sort.name === sortByFilterSelected)[0].compare;
       assetsFiltered = assetsFiltered.sort(compareTo);
     }
 
-    return(
+    return (
       <React.Fragment>
         <ExploreFilters>
           <CategoryFilter
@@ -146,9 +145,9 @@ class AssetExplorer extends React.Component {
         <ExploreFiltersSwitch>
           <span>Funding Active</span>
           <Switch
-            onChange={isFundingActive => {
-              this.setState({ fundingActive: isFundingActive})
-              useLocalStorage && setValueLocalStorage(EXPLORE_PAGE_FUNDING_ACTIVE, isFundingActive)
+            onChange={(isFundingActive) => {
+              this.setState({ fundingActive: isFundingActive });
+              useLocalStorage && setValueLocalStorage(EXPLORE_PAGE_FUNDING_ACTIVE, isFundingActive);
             }}
             checked={fundingActive}
             checkedChildren={<Icon type="check" />}
@@ -161,9 +160,8 @@ class AssetExplorer extends React.Component {
           addInvestmentLabel
         />
       </React.Fragment>
-    )
+    );
   }
 }
 
 export default AssetExplorer;
-

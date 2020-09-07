@@ -1,58 +1,81 @@
-/* eslint-disable */
-const path = require('path')
-const withBundleAnalyzer = require('@zeit/next-bundle-analyzer')
-const withCss = require('@zeit/next-css')
+const withLess = require('@zeit/next-less');
+const lessToJS = require('less-vars-to-js');
+const withPlugins = require('next-compose-plugins');
 
-// fix: prevents error when .css files are required by node
-if (typeof require !== 'undefined') {
-  require.extensions['.css'] = file => {}
-}
+const fs = require('fs');
+const path = require('path');
 
-module.exports = withBundleAnalyzer(withCss({
-  webpack: (config, { dev, isServer }) => {
-    if(!dev) {
-      config.devtool = false
+const dotenv = require('dotenv');
 
-       // disable soucemaps of babel-loader
+dotenv.config();
+
+// Where your antd-custom.less file lives
+const themeVariables = lessToJS(
+  fs.readFileSync(path.resolve(__dirname, './antd-custom.less'), 'utf8'),
+);
+
+const plugins = [
+  [withLess({
+    lessLoaderOptions: {
+      javascriptEnabled: true,
+      modifyVars: themeVariables, // make your antd custom effective
+    },
+    webpack: (config, { isServer }) => {
+      if (isServer) {
+        const antStyles = /antd\/.*?\/style.*?/;
+        const origExternals = [...config.externals];
+        config.externals = [
+          (context, request, callback) => {
+            if (request.match(antStyles)) return callback();
+            if (typeof origExternals[0] === 'function') {
+              origExternals[0](context, request, callback);
+            } else {
+              callback();
+            }
+          },
+          ...(typeof origExternals[0] === 'function' ? [] : origExternals),
+        ];
+
+        config.module.rules.unshift({
+          test: antStyles,
+          use: 'null-loader',
+        });
+      }
+
+      const builtInLoader = config.module.rules.find((rule) => {
+        if (rule.oneOf) {
+          return (
+            rule.oneOf.find(deepRule => deepRule.test && deepRule.test.toString().includes('/a^/')) !== undefined
+          );
+        }
+        return false;
+      });
+
+      if (typeof builtInLoader !== 'undefined') {
+        config.module.rules.push({
+          oneOf: [
+            ...builtInLoader.oneOf.filter(rule => (rule.test && rule.test.toString().includes('/a^/')) !== true),
+          ],
+        });
+      }
+
+      config.resolve.alias['@'] = path.resolve(__dirname);
+
+      config.devtool = false;
       for (const r of config.module.rules) {
         if (r.loader === 'babel-loader') {
-          r.options.sourceMaps = false
+          r.options.sourceMaps = false;
         }
       }
-    }
 
-    if (!isServer) {
-      const cacheGroups = config.optimization.splitChunks.cacheGroups
-      delete cacheGroups.react
-      cacheGroups.default = false
-      cacheGroups.vendors = {
-        name: 'vendors',
-        test: /[\\/](node_modules|packages)[\\/]/,
-        enforce: true,
-        priority: 20,
-      }
-      cacheGroups.commons = {
-        name: 'commons',
-        minChunks: 2,
-        priority: 10,
-      }
-    }
-
-    return config
-  },
-  analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  bundleAnalyzerConfig: {
-    server: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/server.html'
+      return config;
     },
-    browser: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/client.html'
-    }
+  })],
+];
+
+const nextConfig = {
+  env: {
   },
-  publicRuntimeConfig: {
-    GOOGLE_PLACES_API_KEY: process.NODE_ENV === 'production' && process.env.GOOGLE_PLACES_API_KEY,
-  }
-}));
+};
+
+module.exports = withPlugins(plugins, nextConfig);

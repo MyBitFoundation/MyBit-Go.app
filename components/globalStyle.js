@@ -1,17 +1,16 @@
 import { createGlobalStyle } from 'styled-components'
-import 'antd/dist/antd.min.css';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
-    font-family: 'Gilroy';
-    src: url('/static/fonts/gilroy-extrabold.otf') format('opentype');
+    font-family: 'Assistant', sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap') format('opentype');
     font-weight: bold;
   }
 
   body {
     margin: 0;
     padding: 0;
-    font-family: 'Roboto' !important;
+    font-family: 'Assistant', sans-serif;
     position: relative;
     font-weight: normal;
     background-color: #ffffff;
@@ -20,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   [class*='ant'] {
-    font-family: 'Roboto' !important;
+    font-family: 'Assistant', sans-serif;
   }
 
   html, body {
@@ -69,7 +68,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: orange;
     color: white;
     text-align: center;
-    font-family: Roboto;
+    font-family: 'Assistant', sans-serif;
     font-weight: 600;
     position: relative;
     top: 0px;
@@ -107,7 +106,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: #ffffff;
     color: rgba(0, 0, 0, 0.65);
     font-size: 14px;
-    font-family: 'Roboto';
+    font-family: 'Assistant', sans-serif;
   }
   .Watch__tooltip .ant-tooltip-arrow{
     border-top-color: #ffffff !important;
