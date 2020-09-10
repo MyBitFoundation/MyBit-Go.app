@@ -131,7 +131,7 @@ const Loading = styled(Spin)`
 `;
 
 const NumberInput = styled(NumericInput)`
-  width: 120px;
+  width: 150px;
 `;
 
 export const CollateralSlide = ({
