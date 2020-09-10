@@ -5,7 +5,7 @@ const sectionHowItWorks = [{
   question: 'Investors',
   answer: 'Contribute funds to various asset listings on the explore page. If fully funded, they are allocated a tokenized ownership stake in the asset proportionate to their contribution, which entitles them to a proportionate revenue stream from the asset.',
 }, {
-  question:  'Asset Managers',
+  question: 'Asset Managers',
   answer: 'List pre-approved assets in designated locations on the list asset tab. If their asset is funded the IoT partner delivers and install the asset at the specified location and the asset manager oversees it operation to ensure it provides optimal service in the economy.',
 }, {
   question: 'IoT Partners',
@@ -14,9 +14,9 @@ const sectionHowItWorks = [{
 
 const sectionFees = [{
   question: 'Investors',
-  answer: 'Assets are assessed a 3% fee on their total value. 1% goes to the MyBit DAO (decentralised autonomous organisation) – this is to power the MyBIt ecosystem and sustain inbound contributions and maintenance. 1% goes to the MyBit Treasury – this is to maintain the MyBit Foundation which oversees the MyBit product and manages business operations. And 1% is used to buyback and burn MYB, removing them from the total supply total supply – this supports token value growth through organically increasing demand. Furthermore, MyBit keeps 1% of ownership of listed assets, or in the case of community driven operators, this ownership is provided to the community member that onboarded the operator.',
+  answer: 'A flat rate of 5 DAI is charged for each listing. Assets which are successfully funded are assessed a 5% fee on their total value.',
 }, {
-  question:  'IoT Partners',
+  question: 'IoT Partners',
   answer: 'Partners who only accept fiat in exchange for their assets will charge an 8% fee on transactions. This is not taken as profit by MyBit or not a value addition to the MyBit ecosystem, but is purely due to the third party fees associated with crypto-fiat.',
 }];
 
@@ -24,7 +24,7 @@ const sectionValueOfMyBitGo = [{
   question: 'To Investors',
   answer: 'MyBit eliminates the large fees, slow processing times, and bureaucracy associated with brokers and third-party investment companies by providing investors with a secure and automated investment application built on the Ethereum blockchain.',
 }, {
-  question:  'To Asset Managers',
+  question: 'To Asset Managers',
   answer: 'MyBit gives everyone the opportunity to earn income by overseeing revenue generating assets as they operate in the economy. Anyone can be an asset manager by simply signing up through the list asset tab on MyBit, doing some due diligence on asset viability for their location, and having an asset funded by investors on the platform.',
 }, {
   question: 'To IoT Partners',
@@ -200,38 +200,6 @@ const sectionAssetManagers = [{
   question: 'How does an asset manager get compensated for their work?',
   answer: 'Asset managers are paid a fraction of the total asset revenue as it is generated.',
 }, {
-  question: 'How is asset manager collateral calculated?',
-  anchor: true,
-  answer: <React.Fragment>Asset collateral is standardised based on payment channels of asset management and asset manager history as described below.<br /><br />
-
-Based on Asset Manager History:<br />
-0-4 Assets - 35% collateral<br />
-5-9 Assets - 25%<br />
-10-24 Assets 20%<br />
-25+ Assets: 10%<br />
-<br />
-Additional components:<br />
-If asset manager has to receive funds from fundraise to purchase the asset:<br />
-Add 100% collateral.<br />
-<br />
-If fiat is received and has to be converted into crypto to pay investors? Then, multiply asset manager history collateral by 3x.<br />
-<br />
-Example 1: It's my first asset, all fiat, (this would be a max collateral scenario)<br />
-(35%x3) + 100% = 205% collateral<br />
-<br />
-Example 2: 5th asset, payment in fiat, payout in crypto<br />
-<br />
-25% + 100% = 125%<br />
-<br />
-Example 3: 10th asset, payment in crypto, payout in fiat<br />
-<br />
-(20%x3) = 60%<br />
-<br />
-Example 4: 30th asset, payment and payout in crypto, (lowest collateral scenario)<br />
-
-= 10%<br />
-</React.Fragment>
-}, {
   question: 'How are asset managers selected?',
   answer: 'Anyone can be an asset manager by completing the verification steps and having an asset funded on the platform. Investors personally select the assets they perceive to have the best asset managers and asset situation. This can be assessed by fees, asset manager history and credentials, supporting documents surrounding asset due diligence etc.',
 }, {
@@ -249,27 +217,27 @@ export const FAQ = [{
   title: 'How it Works',
   content: sectionHowItWorks,
 },, {
-  title: 'About MyBit',
-  content: sectionAbout,
-}, {
-  title: 'Getting Started',
-  content: sectionGettingStarted,
-}, {
-  title: 'Investing',
-  content: sectionInvesting,
-}, {
-  title: 'Assets',
-  content: sectionAssets,
-}, {
-  title: 'Security',
-  content: sectionSecurity,
-}, {
-  title: 'Asset Managers',
-  content: sectionAssetManagers,
-}, {
-  title: 'Common Terms',
-  content: sectionCommonTerms,
-}];
+    title: 'About MyBit',
+    content: sectionAbout,
+  }, {
+    title: 'Getting Started',
+    content: sectionGettingStarted,
+  }, {
+    title: 'Investing',
+    content: sectionInvesting,
+  }, {
+    title: 'Assets',
+    content: sectionAssets,
+  }, {
+    title: 'Security',
+    content: sectionSecurity,
+  }, {
+    title: 'Asset Managers',
+    content: sectionAssetManagers,
+  }, {
+    title: 'Common Terms',
+    content: sectionCommonTerms,
+  }];
 
 export const Buttons = [{
   type: 'primary',
@@ -290,4 +258,3 @@ export const Buttons = [{
   text: 'Report Bug',
   url: 'https://github.com/MyBitFoundation/MyBit-Go.website/issues',
 }];
-

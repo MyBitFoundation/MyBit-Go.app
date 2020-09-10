@@ -108,7 +108,7 @@ class BlockchainProvider extends React.Component {
   componentDidMount = async () => {
     try {
       this.fetchTransactionHistory();
-      this.fetchGasPrice();
+      // this.fetchGasPrice();
     } catch (err) {
       debug(err);
     }
@@ -147,12 +147,12 @@ class BlockchainProvider extends React.Component {
 
   createIntervals = () => {
     this.intervalFetchTransactionHistory = setInterval(this.fetchTransactionHistory, FETCH_TRANSACTION_HISTORY_TIME);
-    this.intervalFetchGasPrice = setInterval(this.fetchGasPrice, FETCH_GAS_PRICE);
+    // this.intervalFetchGasPrice = setInterval(this.fetchGasPrice, FETCH_GAS_PRICE);
   }
 
   resetIntervals = () => {
     clearInterval(this.intervalFetchTransactionHistory);
-    clearInterval(this.intervalFetchGasPrice);
+    // clearInterval(this.intervalFetchGasPrice);
   }
 
   fetchGasPrice = async () => {
