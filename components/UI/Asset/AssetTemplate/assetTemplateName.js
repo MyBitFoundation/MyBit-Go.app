@@ -7,6 +7,7 @@ const AssetTemplateName = styled.b`
   color: #ffffff;
   left: 21px;
   z-index: 1;
-}`
+  text-shadow: -1px -1px 0 #555, 1px -1px 0 #555, -1px 1px 0 #555, 1px 1px 0 #555;
+}`;
 
 export default AssetTemplateName;
