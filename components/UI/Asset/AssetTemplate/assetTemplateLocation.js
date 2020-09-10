@@ -8,6 +8,7 @@ const AssetTemplateLocation = styled.p`
   padding-left: 42px;
   z-index: 1;
   margin: 0;
-}`
+  text-shadow: -1px -1px 0 #555, 1px -1px 0 #555, -1px 1px 0 #555, 1px 1px 0 #555;
+}`;
 
 export default AssetTemplateLocation;
