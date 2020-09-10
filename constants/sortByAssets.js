@@ -1,6 +1,6 @@
 export const SORT_BY_ASSETS = [{
   name: 'Highest Collateral',
-  compare: (a, b) => b.collateralInPlatformToken / b.fundingGoal - a.collateralInPlatformToken / a.fundingGoal,
+  compare: (a, b) => b.assetManagerCollateral / b.fundingGoal - a.assetManagerCollateral / a.fundingGoal,
 }, {
   name: 'Most Funded',
   compare: (a, b) => (b.fundingProgress / b.fundingGoal) - (a.fundingProgress / a.fundingGoal),

@@ -13,7 +13,7 @@ import { withAirtableContext } from 'components/AirtableContext';
 import IpfsDataManager from 'utils/IpfsDataManager';
 import { IPFS_URL } from 'constants/ipfs';
 
-const Contracts = require('@mybit/contracts');
+const Contracts = require('@mybit-v2/contracts');
 
 const { Provider, Consumer } = React.createContext({});
 
