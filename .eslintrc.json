@@ -24,7 +24,8 @@
     "react/jsx-filename-extension": 0,
     "react/prefer-stateless-function": "off",
     "react/no-access-state-in-setstate": "off",
-    "react/jsx-one-expression-per-line": "off"
+    "react/jsx-one-expression-per-line": "off",
+    "react/no-unused-state": "off"
   },
   "settings": {
     "import/resolver": {

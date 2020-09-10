@@ -29,12 +29,12 @@ import BN from 'bignumber.js';
 
 BN.config({ EXPONENTIAL_AT: 80 });
 
-const GAS = require('@mybit/network.js/gas');
+const GAS = require('@mybit-v2/network.js/gas');
 
 let Network;
 
 export const initialiseSDK = (contractAddresses, blockNumber) => {
-  Network = require('@mybit/network.js')(window.web3js, contractAddresses, blockNumber);
+  Network = require('@mybit-v2/network.js')(window.web3js, contractAddresses, blockNumber);
 };
 
 export const fetchTransactionHistory = async userAddress => new Promise(async (resolve, reject) => {
@@ -110,7 +110,7 @@ export const withdrawAssetManager = async (
   try {
     const assetManagerFunds = await Network.assetManagerFunds();
     assetManagerFunds.methods.withdraw(assetId)
-      .send({ from: userAddress, gas: '200000', gasPrice })
+      .send({ from: userAddress, gas: '200000' })
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -134,7 +134,7 @@ export const withdrawEscrow = async (
   try {
     const assetManagerEscrow = await Network.assetManagerEscrow();
     assetManagerEscrow.methods.unlockEscrow(assetId)
-      .send({ from: userAddress, gas: '200000', gasPrice })
+      .send({ from: userAddress, gas: '200000' })
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -183,13 +183,11 @@ export const createAsset = async (onCreateAsset, onApprove, params, network) => 
       createAsset: {
         onTransactionHash: onCreateAsset.onTransactionHash,
         onError: error => processErrorType(error, onCreateAsset.onError),
-        gasPrice,
       },
       approve: {
         onTransactionHash: onApprove.onTransactionHash,
         onError: error => processErrorType(error, onApprove.onError),
         onReceipt: receipt => onApprove.onReceipt(receipt.status),
-        gasPrice,
       },
     });
 
@@ -292,7 +290,6 @@ export const payoutAsset = ({
       onTransactionHash,
       onError: error => processErrorType(error, onError),
       onReceipt,
-      gasPrice,
     });
   } catch (error) {
     processErrorType(error, onError);
@@ -305,12 +302,11 @@ export const withdrawInvestorProfit = async (
   onTransactionHash,
   onReceipt,
   onError,
-  gasPrice,
 ) => {
   try {
     const dividendToken = await Network.dividendToken(assetId);
     const response = await dividendToken.methods.withdraw()
-      .send({ from: userAddress, gas: '200000', gasPrice })
+      .send({ from: userAddress, gas: '200000' })
       .on('transactionHash', (transactionHash) => {
         onTransactionHash();
       })
@@ -442,7 +438,7 @@ export const updateAssetListingIpfs = async ({
   try {
     const assetCreationContract = !fundingToken ? Network.crowdsaleGeneratorETH() : Network.crowdsaleGeneratorERC20();
     assetCreationContract.methods.updateIPFS(assetId, ipfs)
-      .send({ from: userAddress, gas: '80000', gasPrice })
+      .send({ from: userAddress, gas: '80000' })
       .on('error', error => processErrorType(error, onError))
       .on('transactionHash', onTransactionHash)
       .on('receipt', receipt => onReceipt(receipt.status));

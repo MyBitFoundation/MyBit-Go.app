@@ -19,7 +19,7 @@ import {
 } from 'constants/supportedNetworks';
 import BigNumber from 'bignumber.js';
 
-const SDK_CONTRACTS = require('@mybit/contracts/networks/ropsten/Contracts');
+const SDK_CONTRACTS = require('@mybit-v2/contracts/networks/ropsten/Contracts');
 
 const DEFAULT_QUANTITY = 0.5;
 const { Provider, Consumer } = React.createContext({});
@@ -71,7 +71,7 @@ export const getExpectedAndSlippage = async (src, dest, amount) => {
   }
 
   try {
-    if (src === dest) {
+    if (src.toLowerCase() === dest.toLowerCase()) {
       return {
         expectedRate: 1,
         slippageRate: 1,
@@ -95,10 +95,13 @@ export const getExpectedAndSlippage = async (src, dest, amount) => {
       };
     }
   } catch (e) {
-    console.error(e);
-    // Might mean token is under maintenance
+    // token under maintenance
+    // console.info('Token under maintenance')
   }
-  return null;
+  return {
+    expectedRate: 0,
+    slippageRate: 0,
+  };
 };
 
 class KyberProvider extends React.Component {
@@ -127,22 +130,26 @@ class KyberProvider extends React.Component {
 
     if (oldNetwork !== newNetwork) {
       this.setState({ loading: true });
-      this.fetchSupportedTokens(newNetwork);
+      this.fetchSupportedTokens();
     } else if (!oldUserHasMetamask && userHasMetamask) {
       kyberContract = new window.web3js.eth.Contract(ABI, ADDRESS);
       this.fetchSupportedTokens();
-      this.intervalSupportedTokens = setInterval(this.fetchSupportedTokens, LOAD_SUPPORTED_TOKENS_TIME);
+      this.intervalSupportedTokens = setInterval(() => this.fetchSupportedTokens(), LOAD_SUPPORTED_TOKENS_TIME);
     }
   }
 
-  fetchSupportedTokens = async (network, amount) => {
+  fetchSupportedTokens = async (amount) => {
     try {
       const {
         userHasMetamask,
         supportedNetworks,
+        network,
       } = this.props;
 
-      network = this.props.network || FALLBACK_NETWORK;
+      if (!network) {
+        setTimeout(() => this.fetchSupportedTokens(), LOAD_SUPPORTED_TOKENS_TIME);
+        return;
+      }
 
       const supportedTokensInfo = {};
 
