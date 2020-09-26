@@ -26,10 +26,10 @@ const About = () => (
     <p>MyBit is a Community Driven Project</p>
     <p>that is operated and maintained by a DAO.</p>
     <a
-      href="https://mainnet.aragon.org/#/0xcD3d9b832BfF15E0a519610372c6AAC651872DdE/"
+      href="https://snapshot.page/#/mybit/community"
       target="_blank"
     >
-       https://mainnet.aragon.org/#/0xcD3d9b832BfF15E0a519610372c6AAC651872DdE/
+       Click Here To Proceed To The DAO.
     </a>
   </AboutWrapper>
 );
