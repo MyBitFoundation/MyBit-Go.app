@@ -62,14 +62,20 @@ export const MyBitContribute = () => (
         url: "https://developer.mybit.io/network/docgen/docs",
         internal: false
       },
-      {
-        name: "UI Kit",
-        url: "https://ui.mybit.io/",
-        internal: false
-      },
+// TEMPORARILY REMOVED UI KIT FROM CONTRIBUTE SECTION WHILE SUBDOMAIN IS DOWN
+//      {
+//        name: "UI Kit",
+//        url: "https://ui.mybit.io/",
+//        internal: false
+//      },
       {
         name: "Chat",
         url: "https://t.me/mybitio",
+        internal: false
+      },
+      {
+        name: "Report Bug",
+        url: "https://github.com/MyBitFoundation/MyBit-Go.app/issues/new",
         internal: false
       }
     ]}
