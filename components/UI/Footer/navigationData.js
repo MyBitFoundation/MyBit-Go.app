@@ -72,7 +72,7 @@ export const MyBitContribute = () => (
         name: "Chat",
         url: "https://t.me/mybitio",
         internal: false
-      }
+      },
       {
         name: "Report Bug",
         url: "https://github.com/MyBitFoundation/MyBit-Go.app/issues/new",
