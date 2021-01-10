@@ -156,7 +156,11 @@ class AssetsProvider extends React.PureComponent {
 
   getAssetsFromAirtable = (network) => {
     const { getAssetsFromAirtable } = this.props;
-    this.setState({ loadingAirtable: true, loadingIpfs: false });
+    console.log("Fetching assets from airtable");
+    this.setState({
+      loadingAirtable: true,
+      loadingIpfs: false,
+    });
     getAssetsFromAirtable(network, this.handleLoadedAirtable);
   };
 
@@ -455,7 +459,7 @@ class AssetsProvider extends React.PureComponent {
     const { network: currentNetwork } = metamaskContext;
     if (
       ((usingIpfs && ipfs) || (usingAirtable && airtable) || sdk) &&
-      network === currentNetwork
+      (network === "mainnet" || network === "ropsten")
     ) {
       this.setState(
         (prevState) => {
