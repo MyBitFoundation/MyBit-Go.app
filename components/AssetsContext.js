@@ -73,7 +73,8 @@ class AssetsProvider extends React.PureComponent {
       this.init();
     } else {
       // just fetch from mainet even if there's no metamask
-      usingAirtable && this.getAssetsFromAirtable(SUPPORTED_NETWORKS[1]);
+      this.state.usingAirtable &&
+        this.getAssetsFromAirtable(SUPPORTED_NETWORKS[1]);
     }
   };
 
