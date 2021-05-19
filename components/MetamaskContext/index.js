@@ -168,7 +168,8 @@ your MetaMask account to get started.
         const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
         await this.userHasMetamask(accessToAccounts);
       } else if (window.web3) {
-        window.web3js = new Web3(window.web3.currentProvider);
+        // window.web3js = new Web3(window.web3.currentProvider);
+        window.web3js = new Web3(window.ethereum);
         await this.userHasMetamask(false);
         this.props.setUserHasMetamask(true);
       } else {
@@ -370,6 +371,10 @@ your MetaMask account to get started.
 
   async haveAccessToAccounts() {
     if (window.ethereum) {
+      /**
+       * @todo - rewrite permission to gain access
+       * see: https://docs.metamask.io/guide/provider-migration.html#handling-the-removal-of-isenabled-and-isapproved
+       */
       return await window.ethereum._metamask.isApproved();
     }
 
