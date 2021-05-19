@@ -168,7 +168,9 @@ your MetaMask account to get started.
         const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
         await this.userHasMetamask(accessToAccounts);
       } else if (window.web3) {
-        // window.web3js = new Web3(window.web3.currentProvider);
+        /**
+         * @todo - confirm changes valid & update permissions where required.
+         */
         window.web3js = new Web3(window.ethereum);
         await this.userHasMetamask(false);
         this.props.setUserHasMetamask(true);
