@@ -4,7 +4,7 @@ import {
   Tooltip,
 } from 'antd';
 import AssetManagerProfile from 'UI/AssetManagerProfile';
-import Divider from 'ui/Divider';
+import Divider from 'UI/Divider';
 
 const GlobalStyle = createGlobalStyle`
   .AssetManagerTooltip .ant-tooltip-inner{

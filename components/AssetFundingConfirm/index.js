@@ -35,7 +35,7 @@ import {
   fromWeiToEth,
 } from 'utils/helpers';
 import AssetFundingButton from 'components/AssetFunding/assetFundingButton';
-import LabelWithTooltip from 'ui/LabelWithTooltip';
+import LabelWithTooltip from 'UI/LabelWithTooltip';
 
 const separatorStyleFullWidth = {
   position: 'absolute',
