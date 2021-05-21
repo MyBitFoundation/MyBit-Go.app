@@ -21,7 +21,7 @@ import {
   getBalanceInDai,
 } from './utils';
 import { FALLBACK_NETWORK } from 'constants/supportedNetworks';
-import SupportedBrowsers from 'ui/SupportedBrowsers';
+import SupportedBrowsers from 'UI/SupportedBrowsers';
 
 const metamaskContext = React.createContext({});
 const { Provider, Consumer } = metamaskContext;

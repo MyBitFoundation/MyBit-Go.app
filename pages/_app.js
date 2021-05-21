@@ -17,7 +17,7 @@ import Theme from 'components/Theme';
 import MobileMenu from 'components/MobileMenu';
 import Cookie from 'js-cookie';
 import Router from 'next/router';
-import Footer from 'ui/Footer';
+import Footer from 'UI/Footer';
 import { navbarOptions } from 'constants/navigationBar';
 import { FULL_SCREEN_PAGES } from 'constants/fullScreenPages';
 import { COOKIES } from 'constants/cookies';

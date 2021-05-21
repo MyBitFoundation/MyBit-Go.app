@@ -3,7 +3,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import {
   Tooltip,
 } from 'antd';
-import AssetManagerProfile from 'ui/AssetManagerProfile';
+import AssetManagerProfile from 'UI/AssetManagerProfile';
 import Divider from 'ui/Divider';
 
 const GlobalStyle = createGlobalStyle`

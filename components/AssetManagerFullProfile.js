@@ -17,7 +17,7 @@ import {
 } from 'utils/helpers';
 import { getPlatformToken } from 'constants/app';
 import ErrorPage from 'components/ErrorPage';
-import PageTitle from 'ui/PageTitle';
+import PageTitle from 'UI/PageTitle';
 
 const Colors = Theming.colors;
 

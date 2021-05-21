@@ -17,7 +17,7 @@ import {
 } from 'utils/helpers';
 import Theming from 'components/Theme/theming';
 import Divider from 'ui/Divider';
-import Panel from 'ui/Panel';
+import Panel from 'UI/Panel';
 import { useMetamaskContext } from 'components/MetamaskContext';
 
 const Colors = Theming.colors;

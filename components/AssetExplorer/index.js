@@ -16,7 +16,7 @@ import {
   setValueLocalStorage,
 } from 'utils/helpers';
 import { Categories } from 'constants/categories';
-import { DefaultAsset } from 'ui/Asset';
+import { DefaultAsset } from 'UI/Asset';
 
 class AssetExplorer extends React.Component {
   constructor(props) {
