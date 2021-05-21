@@ -97,7 +97,7 @@ class MyApp extends App {
     const isFullScreenPage = FULL_SCREEN_PAGES.includes(router.pathname);
 
     return (
-      <Container>
+      <React.Fragment>
         <GlobalStyle />
         <Head />
         <Theme>
@@ -128,7 +128,7 @@ class MyApp extends App {
             </MobileMenu>
           </WithProviders>
         </Theme>
-      </Container>
+      </React.Fragment>
     );
   }
 }

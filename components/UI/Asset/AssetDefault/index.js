@@ -88,8 +88,6 @@ const AssetDefault = ({
           />
         )}
       </div>
-
-      <Container>
         <ProfileContainer>
           <AssetManagerTooltip
             totalAssets={totalAssets}
@@ -119,7 +117,6 @@ const AssetDefault = ({
             {buttonText}
           </AssetDefaultContributeButton>
         </Link>
-      </Container>
     </AssetDefaultDetailsContainer>
   );
 };
