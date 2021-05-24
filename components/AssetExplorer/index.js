@@ -118,7 +118,7 @@ class AssetExplorer extends React.Component {
     let assetsFiltered;
 
     /**
-     * @todo - bandaid fix
+     * @todo - altered assetsFiltered declation as part of reqs for issue #600.
      */
     if ( assets !== undefined ) {
       let assetsFiltered = assets.slice();

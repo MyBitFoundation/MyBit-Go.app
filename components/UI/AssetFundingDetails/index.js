@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { memo } from 'react';
-import Item from 'Item';
+import Item from './Item';
 import LabelWithTooltip from 'UI/LabelWithTooltip';
 
 const FundingDetailsWrapper = styled.div`
