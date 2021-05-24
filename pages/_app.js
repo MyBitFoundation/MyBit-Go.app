@@ -53,6 +53,8 @@ class MyApp extends App {
   setNetwork = network => this.setState({ network })
 
   setUserHasMetamask = userHasMetamask => this.setState({ userHasMetamask })
+  
+  setUserIsLoggedIn = userIsLoggedIn => this.setState({ userIsLoggedIn })
 
   prefetchPages = () => {
     Router.prefetch('/onboarding');
@@ -92,7 +94,7 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps, router } = this.props;
-    const { mobileMenuOpen, network, userHasMetamask } = this.state;
+    const { mobileMenuOpen, network, userHasMetamask, userIsLoggedIn } = this.state;
 
     const isFullScreenPage = FULL_SCREEN_PAGES.includes(router.pathname);
 
@@ -104,8 +106,10 @@ class MyApp extends App {
           <WithProviders
             setNetwork={this.setNetwork}
             setUserHasMetamask={this.setUserHasMetamask}
+            setUserIsLoggedIn={this.setUserIsLoggedIn}
             network={network}
             userHasMetamask={userHasMetamask}
+            userIsLoggedIn={userIsLoggedIn}
           >
             <Notifications />
             <MobileMenu
@@ -134,7 +138,7 @@ class MyApp extends App {
 }
 
 const WithProviders = ({
-  children, setNetwork, network, setUserHasMetamask, userHasMetamask,
+  children, setNetwork, network, setUserHasMetamask, userHasMetamask, setUserIsLoggedIn, userIsLoggedIn
 }) => (
   <NotificationsProvider>
     <AirtableProvider
@@ -150,6 +154,7 @@ const WithProviders = ({
           supportedNetworks={SUPPORTED_NETWORKS}
           setNetwork={setNetwork}
           setUserHasMetamask={setUserHasMetamask}
+          setUserIsLoggedIn={setUserIsLoggedIn}
         >
           <AssetsProvider>
             <BlockchainProvider

@@ -114,6 +114,7 @@ class AssetExplorer extends React.Component {
       selectedFilters,
       sortByFilterSelected,
     } = this.state;
+
     let assetsFiltered;
 
     /**

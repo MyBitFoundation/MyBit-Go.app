@@ -168,9 +168,6 @@ your MetaMask account to get started.
         const accessToAccounts = await this.haveAccessToAccounts() ? true : undefined;
         await this.userHasMetamask(accessToAccounts);
       } else if (window.web3) {
-        /**
-         * @todo - confirm changes valid & update permissions where required.
-         */
         window.web3js = new Web3(window.ethereum);
         await this.userHasMetamask(false);
         this.props.setUserHasMetamask(true);
@@ -372,15 +369,25 @@ your MetaMask account to get started.
   }
 
   async haveAccessToAccounts() {
-    if (window.ethereum) {
-      /**
-       * @todo - rewrite permission to gain access
-       * see: https://docs.metamask.io/guide/provider-migration.html#handling-the-removal-of-isenabled-and-isapproved
-       */
-      return await window.ethereum._metamask.isApproved();
+    if (window.ethereum && this.props.userIsLoggedIn) {
+      return true;
+    } else if (window.ethereum) {
+      ethereum
+        .request({ method: 'eth_requestAccounts' })
+        .then(
+          this.handleAddressChanged(),
+          this.props.setUserIsLoggedIn(true)
+          )
+        .catch((error) => {
+          if (error.code === 4001) {
+            // EIP-1193 userRejectedRequest error
+            console.log('Please connect to MetaMask.');
+          } else {
+            console.error(error);
+          }
+        });
     }
 
-    return true;
   }
 
   async userHasMetamask(privacyModeEnabled) {
@@ -391,13 +398,14 @@ your MetaMask account to get started.
       setNetwork(network);
     }
     // subscribe to metamask updates
-    window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
+    // window.web3js.currentProvider.publicConfigStore.on('update', () => this.handleAddressChanged());
+    ethereum.on('update', () => this.handleAddressChanged());
 
     await this.getUserInfo(privacyModeEnabled, network);
   }
 
   async handleAddressChanged() {
-    const privacyModeEnabled = await this.haveAccessToAccounts() ? true : undefined;
+    const privacyModeEnabled = this.props.userIsLoggedIn;
     const network = await this.checkNetwork();
     this.getUserInfo(privacyModeEnabled, network);
   }

@@ -20,16 +20,6 @@ const Explore = ({
   } = assetsContext;
 
   const hasMetamaskErrors = metamaskContext.metamaskErrors();
-  /**
-   * @todo - fix metamask error handling when wallet unavailable
-   */
-  // if (hasMetamaskErrors.error) {
-  //   return (
-  //     <MetamaskErrors
-  //       shouldRenderComponent={false}
-  //     />
-  //   );
-  // }
   if (loadingAssets) {
     return <Loading message="Loading assets" />;
   }
