@@ -6,7 +6,12 @@ require('dotenv').config();
 const Airtable = require('airtable');
 
 const AIRTABLE_BASE_ASSETS_ROPSTEN = 'appgmqryjeBhR6fzy';
-const AIRTABLE_BASE_ASSETS_MAINNET = 'app8VpZMvCf5xm09l';
+/**
+ * @todo - MAINNET = mwood77 schema key
+ */
+const AIRTABLE_BASE_ASSETS_MAINNET = 'keyHhROdA5BWrZcs8';
+// const AIRTABLE_BASE_ASSETS_MAINNET = 'app98ncQl4JjSLBNA';
+
 export let assetListings;
 const calledGetAssets = false;
 // TODO Change to AIRTABLE_BASE_ASSETS_MAINNET once live on mainnet
