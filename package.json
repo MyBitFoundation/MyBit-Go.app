@@ -12,7 +12,7 @@
     "3box": "^1.9.0",
     "@antv/data-set": "0.10.1",
     "@mybit-v2/contracts": "^2.0.1",
-    "@mybit-v2/network.js": "^2.1.0",
+    "@mwood77/network.js": "^0.0.53-beta.0",
     "@next/bundle-analyzer": "^9.4.4",
     "@sentry/browser": "^5.19.2",
     "@sentry/webpack-plugin": "^1.12.0",
