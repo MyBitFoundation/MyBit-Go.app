@@ -41,7 +41,7 @@
     "detect-browser": "4",
     "dotenv": "6.2.0",
     "dotenv-webpack": "1.7.0",
-    "express": "4.16.4",
+    "express": "4.17.3",
     "formidable": "^1.2.2",
     "ipfs-http-client": "^33.1.0",
     "is-ipfs": "^0.6.1",
